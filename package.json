@@ -1,0 +1,44 @@
+{
+  "name": "skrum",
+  "version": "0.1.0",
+  "description": "sKRum",
+  "scripts": {
+    "build-storybook": "build-storybook",
+    "install-redux": "meteor npm i --save react-redux redux redux-logger redux-thunk && mv imports/.redux imports/redux",
+    "lint": "eslint .",
+    "storybook": "start-storybook -p 6006",
+    "test": "jest"
+  },
+  "jest": {
+    "automock": false
+  },
+  "author": "tofa",
+  "private": true,
+  "dependencies": {
+    "bcrypt": "=0.8.7",
+    "immutable": "^3.8.1",
+    "meteor-node-stubs": "^0.2.4",
+    "radium": "^0.18.1",
+    "react": "^15.4.1",
+    "react-addons-pure-render-mixin": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-mounter": "^1.2.0"
+  },
+  "devDependencies": {
+    "@kadira/storybook": "^2.34.0",
+    "babel-eslint": "^7.1.1",
+    "babel-jest": "^18.0.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-1": "^6.16.0",
+    "babel-root-slash-import": "^1.1.0",
+    "eslint": "^3.11.1",
+    "eslint-plugin-class-property": "^1.0.1",
+    "eslint-plugin-react": "^6.8.0",
+    "jest": "^18.1.0",
+    "react-addons-perf": "^15.4.1",
+    "react-addons-test-utils": "^15.4.1",
+    "react-test-renderer": "^15.4.1"
+  }
+}
