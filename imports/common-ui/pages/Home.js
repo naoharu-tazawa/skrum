@@ -1,13 +1,11 @@
-import React from 'react';
-import Thing from '/imports/features/SomeFeature/components/Thing';
+import React from 'react'
+import Thing from '/imports/features/SomeFeature/components/Thing'
 
-const Home = () => {
+export default () => {
   return <div>
-    <h1>Home.</h1>
+    <h1>Home</h1>
     <div>
       <Thing />
     </div>
   </div>
-};
-
-export default Home
+}

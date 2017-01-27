@@ -19,7 +19,7 @@ ecmascript@0.5.8_1              # Enable ECMAScript2015+ syntax in app code
 react-meteor-data
 jagi:astronomy
 random@1.0.10
-static-html@1.1.12_1
+#static-html@1.1.12_1
 fourseven:scss
 zimme:active-route
 kadira:flow-router
@@ -27,6 +27,10 @@ reactive-dict@1.1.8
 universe:i18n
 babrahams:constellation
 mdg:validated-method
-accounts-base@1.2.11
+#accounts-base
+accounts-password
+std:accounts-basic
+std:accounts-ui
 practicalmeteor:mocha
 shell-server
+less

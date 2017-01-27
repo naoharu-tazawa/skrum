@@ -1,0 +1,66 @@
+@import './utils.less';
+
+@menu-height: 64px;
+@menu-pad: 12px;
+
+body {
+  .position(absolute, 0, 0, 0, 0);
+  background-color: #315481;
+  background-image: linear-gradient(to bottom, #315481, #918e82 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+#container {
+  .position(absolute, 0, 0, 0, 0);
+  // Hide anything offscreen
+  overflow: hidden;
+}
+
+#menu {
+  .position(absolute, 0, 0, 0, 0, auto, @menu-height);
+  padding: 0 @menu-pad;
+  text-align: center;
+  display: table;
+  color: white;
+  #appname, .menuitem, ul {
+    vertical-align: middle;
+    display: table-cell;
+  }
+  #appname {
+    padding-right: @menu-pad;
+  }
+  .right-nav {
+    float: right !important;
+  }
+  ul {
+    height: @menu-height;
+    width: 100%;
+  }
+  ul > li {
+    float: left;
+    font-weight: bold;
+    padding: @menu-pad @menu-pad;
+    height: 100%;
+  }
+}
+
+#content-container {
+  .position(absolute, 0, 0, 0, 0);
+  transition: all 200ms ease-out;
+  transform: translate3d(0, 0, 0);
+  background: @color-tertiary;
+  opacity: 1;
+  top: @menu-height;
+
+  .page {
+    .position(absolute, 0, 0, 0, 0);
+  }
+
+  .content-scrollable {
+    .position(absolute, 0, 0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
