@@ -1,0 +1,21 @@
+version: '2'
+services:
+  php:
+    container_name: skrum-php
+    image: php:5.6-fpm
+    volumes:
+      - ./:/var/local/
+      - "./src:/app"
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: carbondb
+    ports:
+      - "23306:13306"
+    volumes:
+      - ./mysql_conf:/etc/mysql/conf.d
+  redis:
+    image: redis:3.2.6
+    ports:
+      - "26379:6379"
