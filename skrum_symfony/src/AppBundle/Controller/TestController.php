@@ -1,6 +1,4 @@
 <?php
-
-
 namespace TestController;
 
 use Silex\Application as Application;
