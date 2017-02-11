@@ -8,3 +8,12 @@ npm-debug.log
 # Yarn
 yarn.lock
 .yarnclean
+
+# cache
+/skrum_symfony/var/cache/
+
+# log
+/skrum_symfony/var/logs/
+
+# session
+/skrum_symfony/var/sessions/
