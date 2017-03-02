@@ -11,7 +11,7 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: carbondb
     ports:
-      - "23306:13306"
+      - "13306:3306"
     volumes:
       - ./mysql_conf:/etc/mysql/conf.d
   redis:
