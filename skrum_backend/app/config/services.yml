@@ -1,9 +1,8 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/service_container.html
 parameters:
-#    parameter_name: value
+    sample_parmeter_controller: 'サンプルパラメータ in Controller'
+    sample_parmeter_service: 'サンプルパラメータ in Service'
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    api.sample_service:
+        class: AppBundle\Service\API\SampleService
+        arguments: ['@service_container']

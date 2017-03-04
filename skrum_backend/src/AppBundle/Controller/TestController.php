@@ -1,5 +1,5 @@
 <?php
-namespace TestController;
+namespace AppBundle\Controller;
 
 use Silex\Application as Application;
 use Symfony\Component\HttpFoundation\Request as Request;
