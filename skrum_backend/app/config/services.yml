@@ -4,5 +4,5 @@ parameters:
 
 services:
     api.sample_service:
-        class: AppBundle\Service\API\SampleService
+        class: AppBundle\Service\Api\SampleService
         arguments: ['@service_container']

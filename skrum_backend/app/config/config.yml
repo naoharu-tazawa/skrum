@@ -64,3 +64,8 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# FOSRestBundle Configuration
+fos_rest:
+    view:
+        view_response_listener: force

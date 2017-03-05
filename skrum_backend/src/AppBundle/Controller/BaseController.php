@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\RestBundle\Controller\FOSRestController;
 use AppBundle\Utils\LoggerManager;
 
 /**
@@ -10,7 +10,7 @@ use AppBundle\Utils\LoggerManager;
  *
  * @author naoharu.tazawa
  */
-class BaseController extends Controller
+class BaseController extends FOSRestController
 {
     /**
      * DEBUGログ出力
@@ -77,7 +77,6 @@ class BaseController extends Controller
     {
         LoggerManager::getInstance()->getLogger()->addAlert($message, $context);
     }
-
 
     //----------------------------------------------
     //ここからサービスクラスの取得メソッド

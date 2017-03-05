@@ -1,3 +1,8 @@
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+
+app_rest_sample:
+    resource: "@AppBundle/Controller/Api/SampleController.php"
+    type: rest
+    prefix: /api

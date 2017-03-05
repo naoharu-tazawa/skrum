@@ -3,12 +3,14 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JSON;
 
 /**
  * User
  *
  * @ORM\Table(name="USER")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @JSON\ExclusionPolicy("all")
  */
 class User
 {
@@ -16,6 +18,8 @@ class User
      * @var string
      *
      * @ORM\Column(name="USER_NAME_L", type="string", length=45, nullable=false)
+     * @JSON\Expose()
+     * @JSON\Type("string")
      */
     private $userNameL;
 
@@ -23,6 +27,8 @@ class User
      * @var string
      *
      * @ORM\Column(name="USER_NAME_F", type="string", length=45, nullable=true)
+     * @JSON\Expose()
+     * @JSON\Type("string")
      */
     private $userNameF;
 
@@ -37,6 +43,8 @@ class User
      * @var string
      *
      * @ORM\Column(name="USER_EMAIL", type="string", length=45, nullable=true)
+     * @JSON\Expose()
+     * @JSON\Type("string")
      */
     private $userEmail;
 
@@ -46,6 +54,8 @@ class User
      * @ORM\Column(name="USER_ID", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @JSON\Expose()
+     * @JSON\Type("integer")
      */
     private $userId;
 

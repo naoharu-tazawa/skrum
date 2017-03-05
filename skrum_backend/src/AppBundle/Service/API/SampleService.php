@@ -1,14 +1,25 @@
 <?php
 
-namespace AppBundle\Service\API;
+namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
 
+/**
+ * サンプル用のサービスクラス
+ *
+ * @author naoharu.tazawa
+ */
 class SampleService extends BaseService
 {
-    public function getString()
+    /**
+     * DEBUGログ出力
+     *
+     * @return array ユーザ情報
+     */
+    public function getUsers()
     {
         // ログを出力
+        // Controllerの場合と同じく、BaseServiceに定義してあるものを呼んでください
         $this->logDebug('サンプルdebugログ in Service');
         $this->logInfo('サンプルinfoログ in Service');
         $this->logWarning('サンプルwarningログ in Service');

@@ -33,7 +33,7 @@ class LoggerManager
      */
     private function __construct()
     {
-        $this->logger = new Logger('api');
+        $this->logger = new Logger('app');
         $this->logger->pushHandler(new StreamHandler(Constant::LOG_FILE_PATH_APPLICATION, Logger::DEBUG));
         $this->logger->pushHandler(new StreamHandler(Constant::LOG_FILE_PATH_ALERT, Logger::ALERT));
     }
