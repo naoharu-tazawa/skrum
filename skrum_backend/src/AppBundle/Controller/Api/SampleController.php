@@ -42,9 +42,10 @@ class SampleController extends BaseController
 
         // Sampleサービスの生成
         $sampleService = $this->getSampleService(); // 新しくサービスクラスを作成したらBaseControllerに定義しこのように取得してください
-        $userList = $sampleService->getUsers();
+        $userId = 2;
+        $userList = $sampleService->getUser($userId);
 
-        // リストを渡せば自動的にJsonで返してくれるように設定してあります
+        // リストを渡せば自動的にJsonで返してくれるようにymlで設定してあります
         return $userList;
     }
 }

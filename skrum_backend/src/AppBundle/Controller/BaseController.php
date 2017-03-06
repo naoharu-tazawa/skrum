@@ -13,14 +13,25 @@ use AppBundle\Utils\LoggerManager;
 class BaseController extends FOSRestController
 {
     /**
+     * ロガー取得
+     *
+     * @return Monolog\Logger monologロガーインスタンス
+     */
+    private function getLogger()
+    {
+        return LoggerManager::getInstance()->getLogger();
+    }
+
+    /**
      * DEBUGログ出力
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logDebug($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addDebug($message, $context);
+        return $this->getLogger()->addDebug($message, $context);
     }
 
     /**
@@ -28,10 +39,11 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logInfo($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addInfo($message, $context);
+        return $this->getLogger()->addInfo($message, $context);
     }
 
     /**
@@ -39,10 +51,11 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logWarning($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addWarning($message, $context);
+        return $this->getLogger()->addWarning($message, $context);
     }
 
     /**
@@ -50,10 +63,11 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logError($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addError($message, $context);
+        return $this->getLogger()->addError($message, $context);
     }
 
     /**
@@ -61,10 +75,11 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logCritical($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addCritical($message, $context);
+        return $this->getLogger()->addCritical($message, $context);
     }
 
     /**
@@ -72,11 +87,13 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logAlert($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addAlert($message, $context);
+        return $this->getLogger()->addAlert($message, $context);
     }
+
 
     //----------------------------------------------
     //ここからサービスクラスの取得メソッド

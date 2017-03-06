@@ -16,7 +16,7 @@ class SampleService extends BaseService
      *
      * @return array ユーザ情報
      */
-    public function getUsers()
+    public function getUser($userId)
     {
         // ログを出力
         // Controllerの場合と同じく、BaseServiceに定義してあるものをんでください
@@ -29,7 +29,7 @@ class SampleService extends BaseService
 
         $userRepos = $this->getUserRepository();
         //$user = $this->getUserRepository()->findOneByUserId(2);
-        $users = $userRepos->getUsers();
+        $users = $userRepos->getUser($userId);
         return $users;
 
         //return $user;

@@ -22,7 +22,7 @@ class LoggerManager
     private $logger;
 
     /**
-     * 当クラスのインスタンス
+     * 自インスタンス
      *
      * @var LoggerManager
      */
@@ -39,18 +39,18 @@ class LoggerManager
     }
 
     /**
-     * 当クラスのインスタンスを返却
+     * 自インスタンスを取得
      *
-     * @return LoggerManager 当クラスのインスタンス
+     * @return LoggerManager 自インスタンス
      */
     public static function getInstance()
     {
-        if (self::$instance === null) self::$instance = new LoggerManager();
+        if (!self::$instance) self::$instance = new LoggerManager();
         return self::$instance;
     }
 
     /**
-     * monologロガーインスタンスを返却
+     * monologロガーインスタンスを取得
      *
      * @return Logger monologロガーインスタンス
      */

@@ -38,7 +38,7 @@ class BaseService
         if (!$this->container->has('doctrine')) {
             throw new \LogicException('The DoctrineBundle is not registered in your application.');
         }
-        $this->entityManager = $this->container->get('doctrine');
+        $this->entityManager = $container->get('doctrine');
     }
 
     /**
@@ -53,14 +53,25 @@ class BaseService
     }
 
     /**
+     * ロガー取得
+     *
+     * @return Monolog\Logger monologロガーインスタンス
+     */
+    private function getLogger()
+    {
+        return LoggerManager::getInstance()->getLogger();
+    }
+
+    /**
      * DEBUGログ出力
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logDebug($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addDebug($message, $context);
+        return $this->getLogger()->addDebug($message, $context);
     }
 
     /**
@@ -68,10 +79,11 @@ class BaseService
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logInfo($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addInfo($message, $context);
+        return $this->getLogger()->addInfo($message, $context);
     }
 
     /**
@@ -79,10 +91,11 @@ class BaseService
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logWarning($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addWarning($message, $context);
+        return $this->getLogger()->addWarning($message, $context);
     }
 
     /**
@@ -90,10 +103,11 @@ class BaseService
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logError($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addError($message, $context);
+        return $this->getLogger()->addError($message, $context);
     }
 
     /**
@@ -101,10 +115,11 @@ class BaseService
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logCritical($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addCritical($message, $context);
+        return $this->getLogger()->addCritical($message, $context);
     }
 
     /**
@@ -112,10 +127,51 @@ class BaseService
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
      */
     protected function logAlert($message, array $context = array())
     {
-        LoggerManager::getInstance()->getLogger()->addAlert($message, $context);
+        return $this->getLogger()->addAlert($message, $context);
+    }
+
+    /**
+     * Doctrineエンティティマネージャの取得
+     *
+     * @return Doctrine\ORM\EntityManager Doctrineエンティティマネージャ
+     */
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * トランザクション開始
+     *
+     * @return void
+     */
+    protected function beginTransaction()
+    {
+        $this->entityManager->beginTransaction();
+    }
+
+    /**
+     * コミット
+     *
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
+    protected function commit()
+    {
+        $this->entityManager->commit();
+    }
+
+    /**
+     * ロールバック
+     *
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
+    protected function rollback()
+    {
+        $this->entityManager->rollback();
     }
 
 
