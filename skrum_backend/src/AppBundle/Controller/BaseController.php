@@ -15,7 +15,7 @@ class BaseController extends FOSRestController
     /**
      * ロガー取得
      *
-     * @return Monolog\Logger monologロガーインスタンス
+     * @return \Monolog\Logger monologロガーインスタンス
      */
     private function getLogger()
     {

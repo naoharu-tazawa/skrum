@@ -22,7 +22,7 @@ class BaseService
     /**
      * Doctrineエンティティマネージャ
      *
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
 
@@ -55,7 +55,7 @@ class BaseService
     /**
      * ロガー取得
      *
-     * @return Monolog\Logger monologロガーインスタンス
+     * @return \Monolog\Logger monologロガーインスタンス
      */
     private function getLogger()
     {
@@ -137,7 +137,7 @@ class BaseService
     /**
      * Doctrineエンティティマネージャの取得
      *
-     * @return Doctrine\ORM\EntityManager Doctrineエンティティマネージャ
+     * @return \Doctrine\ORM\EntityManager Doctrineエンティティマネージャ
      */
     protected function getEntityManager()
     {
@@ -151,17 +151,23 @@ class BaseService
      */
     protected function beginTransaction()
     {
-        $this->entityManager->beginTransaction();
+        if ($this->entityManager->getConnection()->isTransactionActive())
+        {
+            $this->entityManager->beginTransaction();
+        }
     }
 
     /**
-     * コミット
+     * トランザクション確定
      *
      * @throws \Doctrine\DBAL\ConnectionException
      */
     protected function commit()
     {
-        $this->entityManager->commit();
+        if ($this->entityManager->getConnection()->isTransactionActive())
+        {
+            $this->entityManager->commit();
+        }
     }
 
     /**
@@ -171,7 +177,10 @@ class BaseService
      */
     protected function rollback()
     {
-        $this->entityManager->rollback();
+        if ($this->entityManager->getConnection()->isTransactionActive())
+        {
+            $this->entityManager->rollback();
+        }
     }
 
 
