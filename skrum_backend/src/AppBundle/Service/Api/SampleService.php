@@ -27,7 +27,7 @@ class SampleService extends BaseService
         $this->logCritical('サンプルcriticalログ in Service');
         $this->logAlert('サンプルalertログ in Service', array('cause' => $this->getParameter('sample_parmeter_service')));
 
-        $userRepos = $this->getUserRepository();
+        $userRepos = $this->getMUserRepository();
         //$user = $this->getUserRepository()->findOneByUserId(2);
         $users = $userRepos->getUser($userId);
         return $users;

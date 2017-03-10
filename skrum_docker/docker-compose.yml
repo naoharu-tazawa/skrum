@@ -9,7 +9,7 @@ services:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: mydb
+      MYSQL_DATABASE: skm
     ports:
       - "13306:3306"
     volumes:

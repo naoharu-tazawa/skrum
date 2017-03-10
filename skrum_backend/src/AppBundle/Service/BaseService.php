@@ -188,67 +188,102 @@ class BaseService
     //ここからリポジトリクラスの取得メソッド
     //----------------------------------------------
 
-    protected function getCompanyRepository()
+    protected function getMCompanyRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:Company');
+        return $this->entityManager->getRepository('AppBundle:MCompany');
     }
 
-    protected function getGroupRepository()
+    protected function getMGroupRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:Group');
+        return $this->entityManager->getRepository('AppBundle:MGroup');
     }
 
-    protected function getGroupTagRepository()
+    protected function getMNormalTimeframeRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:GroupTag');
+        return $this->entityManager->getRepository('AppBundle:MNormalTimeframe');
     }
-    protected function getObjectiveOwnerRepository()
+    protected function getMNormalTimeframeDetailRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:ObjectiveOwner');
-    }
-
-    protected function getOkrStructureRepository()
-    {
-        return $this->entityManager->getRepository('AppBundle:OkrStructure');
+        return $this->entityManager->getRepository('AppBundle:MNormalTimeframeDetail');
     }
 
-    protected function getPaymentRepository()
+    protected function getMPermissionSettingsRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:Payment');
+        return $this->entityManager->getRepository('AppBundle:MPermissionSettings');
     }
 
-    protected function getPeriodRepository()
+    protected function getMPlanRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:Period');
+        return $this->entityManager->getRepository('AppBundle:MPlan');
     }
 
-    protected function getRestrictionInfoRepository()
+    protected function getMRolePermissionRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:RestrictionInfo');
+        return $this->entityManager->getRepository('AppBundle:MRolePermission');
     }
 
-    protected function getRoleMasterRepository()
+    protected function getMRoleRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:RoleMaster');
+        return $this->entityManager->getRepository('AppBundle:MRole');
     }
 
-    protected function getTreeRepository()
+    protected function getMUserRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:Tree');
+        return $this->entityManager->getRepository('AppBundle:MUser');
     }
 
-    protected function getUserRepository()
+    protected function getSGroupTreePathIdRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:User');
+        return $this->entityManager->getRepository('AppBundle:SGroupTreePathId');
     }
 
-    protected function getUserGroupRepository()
+    protected function getTAuthorizationRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:UserGroup');
+        return $this->entityManager->getRepository('AppBundle:TAuthorization');
     }
 
-    protected function getUserRoleRepository()
+    protected function getTContractRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:UserRole');
+        return $this->entityManager->getRepository('AppBundle:TContract');
+    }
+
+    protected function getTGroupMemberRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TGroupMember');
+    }
+
+    protected function getTGroupTreeRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TGroupTree');
+    }
+
+    protected function getTMailReservationRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TMailReservation');
+    }
+
+    protected function getTOkrActivityRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TOkrActivity');
+    }
+
+    protected function getTOkrRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TOkr');
+    }
+
+    protected function getTPaymentRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TPayment');
+    }
+
+    protected function getTPostRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TPost');
+    }
+
+    protected function getTTimeframeRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TTimeframe');
     }
 }
