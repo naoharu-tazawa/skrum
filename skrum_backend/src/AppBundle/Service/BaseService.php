@@ -38,7 +38,7 @@ class BaseService
         if (!$this->container->has('doctrine')) {
             throw new \LogicException('The DoctrineBundle is not registered in your application.');
         }
-        $this->entityManager = $container->get('doctrine');
+        $this->entityManager = $container->get('doctrine')->getManager();
     }
 
     /**

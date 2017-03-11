@@ -18,7 +18,7 @@ class BaseRepository extends EntityRepository
      * @return void
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      */
-    protected function persist($entity)
+    public function persist($entity)
     {
         $this->getEntityManager()->persist($entity);
     }
@@ -30,7 +30,7 @@ class BaseRepository extends EntityRepository
      * @return object The managed copy of the entity.
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      */
-    protected function merge($entity)
+    public function merge($entity)
     {
         $this->getEntityManager()->merge($entity);
     }
@@ -42,8 +42,20 @@ class BaseRepository extends EntityRepository
      * @return void
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      */
-    protected function remove($entity)
+    public function remove($entity)
     {
         $this->getEntityManager()->remove($entity);
+    }
+
+    /**
+     * データベースに操作を反映
+     * @param null|object|array $entity
+     * @return void
+     * @throws \Doctrine\ORM\OptimisticLockException If a version check on an entity that
+     *         makes use of optimistic locking fails.
+     */
+    public function flush($entity = null)
+    {
+        $this->getEntityManager()->flush($entity);
     }
 }

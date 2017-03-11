@@ -3,14 +3,12 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JSON;
 
 /**
  * SGroupTreePathId
  *
  * @ORM\Table(name="s_group_tree_path_id")
  * @ORM\Entity
- * @JSON\ExclusionPolicy("all")
  */
 class SGroupTreePathId
 {

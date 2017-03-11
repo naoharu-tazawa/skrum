@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JSON;
 
 /**
@@ -10,6 +11,7 @@ use JMS\Serializer\Annotation as JSON;
  *
  * @ORM\Table(name="t_contract", indexes={@ORM\Index(name="idx_contract_01", columns={"company_id"}), @ORM\Index(name="idx_contract_02", columns={"plan_id"}), @ORM\Index(name="idx_contract_03", columns={"plan_start_date"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TContractRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
  */
 class TContract
@@ -60,6 +62,7 @@ class TContract
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
@@ -67,6 +70,7 @@ class TContract
      * @var \DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 

@@ -3,6 +3,12 @@ parameters:
     sample_parmeter_service: 'サンプルパラメータ in Service'
 
 services:
+    gedmo.listener.softdeleteable:
+        class: Gedmo\SoftDeleteable\SoftDeleteableListener
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
     api.sample_service:
         class: AppBundle\Service\Api\SampleService
         arguments: ['@service_container']

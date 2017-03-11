@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JSON;
 
 /**
@@ -10,6 +11,7 @@ use JMS\Serializer\Annotation as JSON;
  *
  * @ORM\Table(name="m_plan")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MPlanRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
  */
 class MPlan
@@ -39,6 +41,7 @@ class MPlan
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
@@ -46,6 +49,7 @@ class MPlan
      * @var \DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 

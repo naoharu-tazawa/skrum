@@ -3,13 +3,15 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JSON;
 
 /**
  * MUser
  *
- * @ORM\Table(name="m_user", indexes={@ORM\Index(name="idx_user_01", columns={"company_id"}), @ORM\Index(name="idx_user_02", columns={"role_id"})})
+ * @ORM\Table(name="m_user", indexes={@ORM\Index(name="idx_user_01", columns={"company_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MUserRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
  */
 class MUser
@@ -19,7 +21,7 @@ class MUser
      *
      * @ORM\Column(name="last_name", type="string", length=255, nullable=false)
      * @JSON\Expose()
-     * @JSON\Type("string")
+-    * @JSON\Type("string")
      */
     private $lastName;
 
@@ -28,7 +30,7 @@ class MUser
      *
      * @ORM\Column(name="first_name", type="string", length=255, nullable=false)
      * @JSON\Expose()
-     * @JSON\Type("string")
+-    * @JSON\Type("string")
      */
     private $firstName;
 
@@ -37,7 +39,7 @@ class MUser
      *
      * @ORM\Column(name="email_address", type="string", length=255, nullable=false)
      * @JSON\Expose()
-     * @JSON\Type("string")
+-    * @JSON\Type("string")
      */
     private $emailAddress;
 
@@ -46,16 +48,25 @@ class MUser
      *
      * @ORM\Column(name="password", type="string", length=255, nullable=false)
      * @JSON\Expose()
-     * @JSON\Type("string")
+-    * @JSON\Type("string")
      */
     private $password;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="role_id", type="integer", nullable=false)
+     * @JSON\Expose()
+-    * @JSON\Type("integer")
+     */
+    private $roleId;
 
     /**
      * @var string
      *
      * @ORM\Column(name="position", type="string", length=255, nullable=true)
      * @JSON\Expose()
-     * @JSON\Type("string")
+-    * @JSON\Type("string")
      */
     private $position;
 
@@ -64,7 +75,7 @@ class MUser
      *
      * @ORM\Column(name="phone_number", type="string", length=45, nullable=true)
      * @JSON\Expose()
-     * @JSON\Type("string")
+-    * @JSON\Type("string")
      */
     private $phoneNumber;
 
@@ -73,7 +84,7 @@ class MUser
      *
      * @ORM\Column(name="last_access_datetime", type="datetime", nullable=true)
      * @JSON\Expose()
-     * @JSON\Type("DateTime<'Y-m-d'>")
+-    * @JSON\Type("DateTime<'Y-m-d'>")
      */
     private $lastAccessDatetime;
 
@@ -82,7 +93,7 @@ class MUser
      *
      * @ORM\Column(name="image_path", type="string", length=45, nullable=true)
      * @JSON\Expose()
-     * @JSON\Type("string")
+-    * @JSON\Type("string")
      */
     private $imagePath;
 
@@ -90,6 +101,7 @@ class MUser
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
@@ -97,6 +109,7 @@ class MUser
      * @var \DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
@@ -114,7 +127,7 @@ class MUser
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @JSON\Expose()
-     * @JSON\Type("integer")
+-    * @JSON\Type("integer")
      */
     private $userId;
 
@@ -127,16 +140,6 @@ class MUser
      * })
      */
     private $company;
-
-    /**
-     * @var \AppBundle\Entity\MRole
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MRole")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="role_id", referencedColumnName="id")
-     * })
-     */
-    private $role;
 
 
 
@@ -234,6 +237,30 @@ class MUser
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Set roleId
+     *
+     * @param integer $roleId
+     *
+     * @return MUser
+     */
+    public function setRoleId($roleId)
+    {
+        $this->roleId = $roleId;
+
+        return $this;
+    }
+
+    /**
+     * Get roleId
+     *
+     * @return integer
+     */
+    public function getRoleId()
+    {
+        return $this->roleId;
     }
 
     /**
@@ -436,29 +463,5 @@ class MUser
     public function getCompany()
     {
         return $this->company;
-    }
-
-    /**
-     * Set role
-     *
-     * @param \AppBundle\Entity\MRole $role
-     *
-     * @return MUser
-     */
-    public function setRole(\AppBundle\Entity\MRole $role = null)
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    /**
-     * Get role
-     *
-     * @return \AppBundle\Entity\MRole
-     */
-    public function getRole()
-    {
-        return $this->role;
     }
 }
