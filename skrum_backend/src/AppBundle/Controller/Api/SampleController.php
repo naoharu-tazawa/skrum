@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Api;
 use AppBundle\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\UserType;
-use AppBundle\Form\Data\User;
+use AppBundle\Form\Data\UserData;
 
 /**
  * サンプル用のコントローラ
@@ -24,16 +24,6 @@ class SampleController extends BaseController
      */
     public function getSampleAction($slug)
     {
-//         $form = $this->createForm(new UserType(), $user = new User(), [
-//                 'csrf_protection' => false,
-//         ]);
-
-//         $form->handleRequest($request);
-
-//         if (!$form->isValid()) {
-//             return $user;
-//         }
-
         // ログを出力
         // ログ出力はBaseControllerに定義しているので継承元のメソッドを呼んでください
         $this->logDebug('サンプルdebugログ in Controller', ['cause' => 'in_hurry']);
@@ -49,6 +39,25 @@ class SampleController extends BaseController
 
         // リストを渡せば自動的にJsonで返してくれるようにymlで設定してあります
         return $userList;
+    }
+
+    /**
+     * HTTPメソッド：POST
+     * http://localhost:8000/app_dev.php/api/samples.json
+     *
+     *　Formクラス及びバリデーションのサンプルです。以下のjsonをpostデータに含めてapi投げてみてください
+     * {"userId":"2","userName":"naoharu"}
+     */
+    public function postSamplesAction(Request $request)
+    {
+        $form = $this->createForm(UserType::class, new UserData());
+        $this->processForm($request, $form);
+
+        if (!$form->isValid()) {
+            return array('result' => 'NG', 'errors' => $this->getErrors($form));
+        }
+
+        return array('result'=>'OK');
     }
 
     /**

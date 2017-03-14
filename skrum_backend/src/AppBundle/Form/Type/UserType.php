@@ -5,6 +5,7 @@ namespace AppBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use AppBundle\Form\Data\UserData;
 
 /**
  * Userフォームタイプクラス
@@ -18,7 +19,8 @@ class UserType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('userId');
+        $builder->add('userId')
+                ->add('userName');
     }
 
     /**
@@ -27,7 +29,8 @@ class UserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Form\Data\User'
+            'data_class' => UserData::class,
+            'csrf_protection' => false
         ));
     }
 
@@ -36,7 +39,7 @@ class UserType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_user';
+        return 'appbundle_userData';
     }
 
 

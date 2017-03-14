@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use AppBundle\Utils\LoggerManager;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * ベースコントローラ（被継承クラス）
@@ -94,6 +96,49 @@ class BaseController extends FOSRestController
         return $this->getLogger()->addAlert($message, $context);
     }
 
+    /**
+     * リクエストデータをバインド
+     *
+     * @param Request $request リクエストデータ
+     * @param FormInterface $form フォームインターフェース
+     * @return void
+     */
+    protected function processForm(Request $request, FormInterface $form)
+    {
+        $data = json_decode($request->getContent(), true);
+//         if ($data === null) {
+//             $apiProblem = new ApiProblem(
+//                     400,
+//                     ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT
+//                     );
+//             throw new ApiProbException($apiProblem);
+//         }
+        $form->submit($data);
+    }
+
+    /**
+     * バリデーションエラー時のレスポンス生成
+     *
+     * @param FormInterface $form フォームインターフェース
+     * @return array バリデーションエラー情報
+     */
+    protected function getErrors(FormInterface $form)
+    {
+        foreach ($form->all() as $childForm)
+        {
+            if ($childForm instanceof FormInterface)
+            {
+                foreach ($childForm->getErrors() as $childError)
+                {
+                    $error['field'] = $childForm->getName();
+                    $error['message'] = $childError;
+                    $errors[] = $error;
+                }
+            }
+        }
+
+        return $errors;
+    }
 
     //----------------------------------------------
     //ここからサービスクラスの取得メソッド
