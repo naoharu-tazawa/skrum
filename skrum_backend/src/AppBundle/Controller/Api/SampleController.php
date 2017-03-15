@@ -6,6 +6,9 @@ use AppBundle\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\UserType;
 use AppBundle\Form\Data\UserData;
+use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\InvalidParameterException;
+use AppBundle\Exception\MaintenanceException;
 
 /**
  * サンプル用のコントローラ
@@ -52,6 +55,11 @@ class SampleController extends BaseController
     {
         $form = $this->createForm(UserType::class, new UserData());
         $this->processForm($request, $form);
+
+        // 例外のサンプル
+        // throw new ApplicationException("ApplicationExceptionのサンプル", true);
+        // throw new InvalidParameterException("InvalidParameterExceptionのサンプル", false);
+        // throw new MaintenanceException("MaintenanceExceptionのサンプル", false);
 
         if (!$form->isValid()) {
             return array('result' => 'NG', 'errors' => $this->getErrors($form));

@@ -3,6 +3,10 @@ parameters:
     sample_parmeter_service: 'サンプルパラメータ in Service'
 
 services:
+    app.exception_listener:
+        class: AppBundle\Listener\ExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
     gedmo.listener.softdeleteable:
         class: Gedmo\SoftDeleteable\SoftDeleteableListener
         calls:
