@@ -5,32 +5,32 @@ namespace AppBundle\Exception;
 use AppBundle\Exception\ApplicationException;
 
 /**
- * メンテナンスエラークラス
+ * 権限エラークラス
  *
  * @author naoharu.tazawa
  */
-class MaintenanceException extends ApplicationException
+class NoDataException extends ApplicationException
 {
     /**
      * HTTPステータスコード
      *
      * @integer
      */
-    protected $responseStatusCode = 503;
+    protected $responseStatusCode = 500;
 
     /**
      * APIレスポンス：message
      *
      * @string
      */
-    protected $responseMessage = 'メンテナンス中のためご利用できません';
+    protected $responseMessage = 'データ不整合が発生しました';
 
     /**
      * APIレスポンス：reason
      *
      * @string
      */
-    protected $responseReason = 'backendError';
+    protected $responseReason = 'dataInconsistency';
 
     /**
      * コンストラクタ

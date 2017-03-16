@@ -2,90 +2,63 @@
 
 namespace AppBundle\Exception;
 
+use AppBundle\Exception\ApplicationException;
+
 /**
- * パラメータ不正例外クラス
+ * パラメータ不正エラークラス
  *
  * @author naoharu.tazawa
  */
-class InvalidParameterException extends \Exception
+class InvalidParameterException extends ApplicationException
 {
-    /**
-     * アラートログ出力フラグ
-     *
-     * @Boolean
-     */
-    protected $alert = false;
-
     /**
      * HTTPステータスコード
      *
      * @integer
      */
-    const STATUS_CODE = 400;
+    protected $responseStatusCode = 400;
 
     /**
      * APIレスポンス：message
      *
      * @string
      */
-    const MESSAGE = 'パラメータが不正です';
+    protected $responseMessage = '入力値が正しくありません';
 
     /**
      * APIレスポンス：reason
      *
      * @string
      */
-    const REASON = 'invalidParameter';
+    protected $responseReason = 'invalidParameter';
+
+    /**
+     * APIレスポンス：reason
+     *
+     * @array
+     */
+    protected $responseValidationErrors = array();
 
     /**
      * コンストラクタ
      *
-	 * @param $message
-	 * @param $code
-	 * @param $previous
+	 * @param $message エラーメッセージ
+	 * @param $code エラーコード
+	 * @param $validationErrors バリデーションエラー詳細
 	 */
-    public function __construct ($message, $code = 0, \Exception $previous = null)
+    public function __construct($message, $validationErrors, $code = 0)
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, false, null);
+        $this->responseValidationErrors = $validationErrors;
     }
 
     /**
-     * アラートログ出力フラグを取得
+     * バリデーションエラー詳細を取得
      *
-     * @return Boolean
+     * @return array
      */
-    public function isAlert()
+    public function getResponseValidationErrors()
     {
-        return $this->alert;
-    }
-
-    /**
-     * HTTPステータスコードを取得
-     *
-     * @return integer
-     */
-    public function getStatusCode()
-    {
-        return self::STATUS_CODE;
-    }
-
-    /**
-     * 例外メッセージを取得
-     *
-     * @return string
-     */
-    public function getExceptionMessage()
-    {
-        return self::MESSAGE;
-    }
-
-    /**
-     * 例外理由を取得
-     *
-     * @return string
-     */
-    public function getExceptionReason()
-    {
-        return self::REASON;
+        return $this->responseValidationErrors;
     }
 }

@@ -9,6 +9,7 @@ use AppBundle\Form\Data\UserData;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\MaintenanceException;
+use AppBundle\Exception\AuthException;
 
 /**
  * サンプル用のコントローラ
@@ -57,12 +58,14 @@ class SampleController extends BaseController
         $this->processForm($request, $form);
 
         // 例外のサンプル
-        // throw new ApplicationException("ApplicationExceptionのサンプル", true);
-        // throw new InvalidParameterException("InvalidParameterExceptionのサンプル", false);
-        // throw new MaintenanceException("MaintenanceExceptionのサンプル", false);
+        // throw new ApplicationException("ApplicationExceptionのサンプル");
+        // throw new InvalidParameterException("InvalidParameterExceptionのサンプル");
+        // throw new MaintenanceException("MaintenanceExceptionのサンプル");
+        // throw new AuthException("AuthExceptionのサンプル");
 
         if (!$form->isValid()) {
-            return array('result' => 'NG', 'errors' => $this->getErrors($form));
+            throw new InvalidParameterException("InvalidParameterExceptionのサンプル", $this->getValidationErrors($form));
+            // return array('result' => 'NG', 'errors' => $this->getValidationErrors($form));
         }
 
         return array('result'=>'OK');

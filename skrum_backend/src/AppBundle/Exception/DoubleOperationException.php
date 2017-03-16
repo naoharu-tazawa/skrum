@@ -5,32 +5,32 @@ namespace AppBundle\Exception;
 use AppBundle\Exception\ApplicationException;
 
 /**
- * メンテナンスエラークラス
+ * 多重処理エラークラス
  *
  * @author naoharu.tazawa
  */
-class MaintenanceException extends ApplicationException
+class DoubleOperationException extends ApplicationException
 {
     /**
      * HTTPステータスコード
      *
      * @integer
      */
-    protected $responseStatusCode = 503;
+    protected $responseStatusCode = 409;
 
     /**
      * APIレスポンス：message
      *
      * @string
      */
-    protected $responseMessage = 'メンテナンス中のためご利用できません';
+    protected $responseMessage = '他のユーザによって更新されたため処理できませんでした';
 
     /**
      * APIレスポンス：reason
      *
      * @string
      */
-    protected $responseReason = 'backendError';
+    protected $responseReason = 'doubleOperation';
 
     /**
      * コンストラクタ

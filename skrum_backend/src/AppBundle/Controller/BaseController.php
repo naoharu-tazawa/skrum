@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use AppBundle\Utils\LoggerManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormInterface;
+use AppBundle\Exception\ApiBadRequestException;
 
 /**
  * ベースコントローラ（被継承クラス）
@@ -106,13 +107,9 @@ class BaseController extends FOSRestController
     protected function processForm(Request $request, FormInterface $form)
     {
         $data = json_decode($request->getContent(), true);
-//         if ($data === null) {
-//             $apiProblem = new ApiProblem(
-//                     400,
-//                     ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT
-//                     );
-//             throw new ApiProbException($apiProblem);
-//         }
+        if ($data === null) {
+            throw new ApiBadRequestException("APIクエリが無効です");
+        }
         $form->submit($data);
     }
 
@@ -122,7 +119,7 @@ class BaseController extends FOSRestController
      * @param FormInterface $form フォームインターフェース
      * @return array バリデーションエラー情報
      */
-    protected function getErrors(FormInterface $form)
+    protected function getValidationErrors(FormInterface $form)
     {
         foreach ($form->all() as $childForm)
         {
@@ -131,7 +128,7 @@ class BaseController extends FOSRestController
                 foreach ($childForm->getErrors() as $childError)
                 {
                     $error['field'] = $childForm->getName();
-                    $error['message'] = $childError;
+                    $error['message'] = $childError->getMessage();
                     $errors[] = $error;
                 }
             }

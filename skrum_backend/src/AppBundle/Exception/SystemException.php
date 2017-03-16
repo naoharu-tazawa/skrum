@@ -3,11 +3,11 @@
 namespace AppBundle\Exception;
 
 /**
- * アプリケーション汎用エラークラス
+ * システム汎用エラークラス
  *
  * @author naoharu.tazawa
  */
-class ApplicationException extends \Exception
+class SystemException extends \Exception
 {
     /**
      * アラートログ出力フラグ
@@ -28,21 +28,21 @@ class ApplicationException extends \Exception
      *
      * @string
      */
-    protected $responseMessage = 'アプリケーション例外が発生しました';
+    protected $responseMessage = 'システムエラーが発生しました';
 
     /**
      * APIレスポンス：reason
      *
      * @string
      */
-    protected $responseReason = 'applicationException';
+    protected $responseReason = 'systemException';
 
     /**
      * コンストラクタ
      *
 	 * @param $message
 	 * @param $code
-	 * @param $alert
+	 * @param $code
 	 * @param $previous
 	 */
     public function __construct($message, $code = 0, $alert = false, \Exception $previous = null)

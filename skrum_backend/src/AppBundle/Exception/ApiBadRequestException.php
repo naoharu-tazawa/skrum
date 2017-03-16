@@ -5,32 +5,32 @@ namespace AppBundle\Exception;
 use AppBundle\Exception\ApplicationException;
 
 /**
- * メンテナンスエラークラス
+ * 権限エラークラス
  *
  * @author naoharu.tazawa
  */
-class MaintenanceException extends ApplicationException
+class ApiBadRequestException extends ApplicationException
 {
     /**
      * HTTPステータスコード
      *
      * @integer
      */
-    protected $responseStatusCode = 503;
+    protected $responseStatusCode = 400;
 
     /**
      * APIレスポンス：message
      *
      * @string
      */
-    protected $responseMessage = 'メンテナンス中のためご利用できません';
+    protected $responseMessage = 'APIクエリが無効です';
 
     /**
      * APIレスポンス：reason
      *
      * @string
      */
-    protected $responseReason = 'backendError';
+    protected $responseReason = 'badRequest';
 
     /**
      * コンストラクタ
