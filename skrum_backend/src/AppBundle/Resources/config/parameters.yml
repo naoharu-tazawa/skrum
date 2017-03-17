@@ -1,0 +1,3 @@
+parameters:
+    sample_parmeter_controller: 'サンプルパラメータ in Controller'
+    sample_parmeter_service: 'サンプルパラメータ in Service'

@@ -5,7 +5,7 @@ namespace AppBundle\Exception;
 use AppBundle\Exception\ApplicationException;
 
 /**
- * 多重処理エラークラス
+ * 排他処理エラークラス
  *
  * @author naoharu.tazawa
  */

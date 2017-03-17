@@ -119,11 +119,15 @@ class ExceptionListener
     private function rollback()
     {
         try {
-            if ($this->entityManager->getConnection()->isTransactionActive())
-            {
-                $this->entityManager->rollback();
+            if ($this->entityManager->isOpen()) {
+                $this->entityManager->close();
+                if ($this->entityManager->getConnection()->isTransactionActive())
+                {
+                    $this->entityManager->rollback();
+                }
             }
         } catch (\Exception $e) {
+            LoggerManager::getInstance()->getLogger()->addError($e->getMessage());
         }
     }
 }
