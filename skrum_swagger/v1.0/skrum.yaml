@@ -20,15 +20,22 @@ paths:
       description: ログイン
       parameters:
         -
+          name: X-Session
+          in: header #sessionはない時があるのでheaderに入れて送ってほしいです
+          required: true
+          type: string
+          description: sessionがある場合は取得
+          default: login-session #適当です
+        -
           name: login_information
           in: body
-          required: true
+          required: true #必須
           schema:
             type: object
             properties:
-              session_key:
+              user_name:
                 type: string
-                example: aaaaaaaaaa #桁数など要確認
+                example: skrum.taro
               password:
                 type: string
                 example: password
