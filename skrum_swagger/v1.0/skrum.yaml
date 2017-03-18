@@ -22,23 +22,21 @@ paths:
         -
           name: X-Session
           in: header #sessionはない時があるのでheaderに入れて送ってほしいです
-          required: true
           type: string
           description: sessionがある場合は取得
           default: login-session #適当です
         -
-          name: login_information
+          name: user_name
           in: body
           required: true #必須
-          schema:
-            type: object
-            properties:
-              user_name:
-                type: string
-                example: skrum.taro
-              password:
-                type: string
-                example: password
+          type: string
+          example: skrum.taro
+        -
+          name: password
+          in: body
+          required: true #必須
+          type: string
+          example: password123
       responses:
         200:
           description: 成功
