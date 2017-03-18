@@ -56,4 +56,26 @@ docker-compose up -d
 ※次回以降は、docker-compose up -d のみでOK
 ```
 
+### Router
+* ファイル名は `XXXRouter.php` で作成する。
+* Controller呼び出しには DI を利用する。
+    * 参考: [ServiceControllerServiceProvider](http://silex-users-jp.phper.jp/doc/html/providers/service_controller.html)
+* Routerで共通的な処理を行いたい場合、ルートミドルウェアの機能を利用する。
+    * 参考: [ルートミドルウェア (Routes middlewares)](http://silex-users-jp.phper.jp/doc/html/middlewares.html#routes-middlewares)
+* URLの先頭にバージョンが付与されます。 `/v1`
+* XXXHtmlRouter でファイルを作成した場合、バージョンを付与しません。
+```
+$app->get('/hello/hoge', 'hello_controller:hoge');
+$app->get('/hello/fuga', 'hello_controller:fuga');
+
+// 参考
+$app->get('/hello/piyo', 'hello_controller:piyo')
+->before({認証処理等});
+```
+
+### middleware
+* 各Routerで共通的な処理を作成する。
+* StackPHP も検討しましたが、Silex本来の機能を使ったほうが良いと判断しました。
+    * StackPHP [https://github.com/stackphp/builder](https://github.com/stackphp/builder) 
+
 

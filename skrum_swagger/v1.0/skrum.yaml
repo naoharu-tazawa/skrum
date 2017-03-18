@@ -1,0 +1,67 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrumAPI
+host: # 保留
+schemes:
+  - https
+produces:
+  - application/json
+tags:
+  - name: skrum
+basePath: /v1
+
+paths:
+  /login:
+    post:
+      tags:
+        - skrum
+      description: ログイン
+      parameters:
+        -
+          name: login_information
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              session_key:
+                type: string
+                example: aaaaaaaaaa #桁数など要確認
+              password:
+                type: string
+                example: password
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              company_information:
+                type: object #返り値要相談
+            required:
+              - company_information
+        400:
+          description: パラメータ不正
+        401:
+          description: 認証エラー
+        404:
+          description: 認証エラー（該当なし）
+        500:
+          description: サーバーエラー
+          schema:
+            $ref: '#/definitions/500_error'
+
+
+definitions:
+  500_error:
+    type: object
+    properties:
+      errors:
+        type: object
+        properties:
+          errorMessage:
+            type: string
+            example: "サーバーへの接続に失敗しました。時間をおいて再度お試しください。"
+
