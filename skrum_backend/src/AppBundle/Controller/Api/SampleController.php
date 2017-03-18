@@ -10,6 +10,7 @@ use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\MaintenanceException;
 use AppBundle\Exception\AuthException;
+use JsonSchema\Validator;
 
 /**
  * サンプル用のコントローラ
@@ -57,16 +58,22 @@ class SampleController extends BaseController
         $form = $this->createForm(UserType::class, new UserData());
         $this->processForm($request, $form);
 
+//         $schema = file_get_contents(dirname(__FILE__) . '/../../Api/JsonSchema/SamplePdu.json');
+//         $validator = new Validator();
+//         //$validator->check(json_decode($request->getContent(), true), json_decode($schema, true));
+//         $validator->check(json_decode($request->getContent()), json_decode($schema));
+//         //$validator->isValid();
+//         return array('result' => $validator->getErrors());
         // 例外のサンプル
         // throw new ApplicationException("ApplicationExceptionのサンプル");
         // throw new InvalidParameterException("InvalidParameterExceptionのサンプル");
-        // throw new MaintenanceException("MaintenanceExceptionのサンプル");
+         throw new MaintenanceException("MaintenanceExceptionのサンプル");
         // throw new AuthException("AuthExceptionのサンプル");
 
-        if (!$form->isValid()) {
-            throw new InvalidParameterException("InvalidParameterExceptionのサンプル", $this->getValidationErrors($form));
-            // return array('result' => 'NG', 'errors' => $this->getValidationErrors($form));
-        }
+//         if (!$form->isValid()) {
+//             throw new InvalidParameterException("InvalidParameterExceptionのサンプル", $this->getValidationErrors($form));
+//             // return array('result' => 'NG', 'errors' => $this->getValidationErrors($form));
+//         }
 
         return array('result'=>'OK');
     }
