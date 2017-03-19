@@ -7,7 +7,7 @@ use AppBundle\Utils\LoggerManager;
 use Symfony\Component\HttpFoundation\Request;
 use JsonSchema\Validator;
 use Symfony\Component\Form\FormInterface;
-use AppBundle\Exception\ApiBadRequestException;
+use AppBundle\Exception\JsonSchemaException;
 
 /**
  * ベースコントローラ（被継承クラス）
@@ -109,12 +109,12 @@ class BaseController extends FOSRestController
     {
         $requestJson = $request->getContent();
         if (!$requestJson) {
-            throw new ApiBadRequestException("APIクエリが無効です");
+            throw new JsonSchemaException("リクエストデータが存在しません");
         }
 
         $schema = file_get_contents(dirname(__FILE__) . '/../../' . $schemaFilePath . '.json');
         $validator = new Validator();
-        $validator->validate(json_decode($request->getContent()), json_decode($schema));
+        $validator->validate(json_decode($requestJson), json_decode($schema));
 
         return $this->makeErrorResponse($validator->getErrors());
     }
@@ -150,7 +150,7 @@ class BaseController extends FOSRestController
     {
         $data = json_decode($request->getContent(), true);
         if ($data === null) {
-            throw new ApiBadRequestException("APIクエリが無効です");
+            throw new JsonSchemaException("リクエストデータが存在しません");
         }
         $form->submit($data);
     }

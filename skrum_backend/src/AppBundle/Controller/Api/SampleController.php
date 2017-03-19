@@ -42,7 +42,7 @@ class SampleController extends BaseController
         $sampleService = $this->getSampleService(); // 新しくサービスクラスを作成したらBaseControllerに定義しこのように取得してください
         $dto = $sampleService->getUser($slug);
 
-        // リストを渡せば自動的にJsonで返してくれるようにymlで設定してあります
+        // データオブジェクトまたは配列を渡せば自動的にJsonで返してくれるようにymlで設定してあります
         return $dto;
     }
 
@@ -122,7 +122,7 @@ class SampleController extends BaseController
     }
 
     /**
-     * フォームクラス利用のサンプル
+     * フォームクラス利用のサンプル（基本的には使いません）
      */
     public function postFormsampleAction(Request $request)
     {

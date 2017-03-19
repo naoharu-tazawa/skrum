@@ -102,7 +102,12 @@ class ExceptionListener
             $response->setStatusCode($exception->getResponseStatusCode());
             $data['code'] = $exception->getResponseStatusCode();
             $data['reason'] = $exception->getResponseReason();
-            $data['details'] = $exception->getResponseValidationErrors();
+            if ($exception->getResponseValidationErrors()) {
+                $data['details'] = $exception->getResponseValidationErrors();
+            } else {
+                $data['details'] = array(array('field' => '', 'message' => 'No payload'));
+            }
+
         } elseif ($exception instanceof ApplicationException || $exception instanceof SystemException) {
             $response->setStatusCode($exception->getResponseStatusCode());
             $data['code'] = $exception->getResponseStatusCode();
