@@ -9,28 +9,21 @@ use AppBundle\Exception\ApplicationException;
  *
  * @author naoharu.tazawa
  */
-class ApiBadRequestException extends ApplicationException
+class PermissionException extends ApplicationException
 {
     /**
      * HTTPステータスコード
      *
      * @integer
      */
-    protected $responseStatusCode = 400;
-
-    /**
-     * APIレスポンス：message
-     *
-     * @string
-     */
-    protected $responseMessage = 'APIクエリが無効です';
+    protected $responseStatusCode = 403;
 
     /**
      * APIレスポンス：reason
      *
      * @string
      */
-    protected $responseReason = 'badRequest';
+    protected $responseReason = 'insufficientPermissions';
 
     /**
      * コンストラクタ

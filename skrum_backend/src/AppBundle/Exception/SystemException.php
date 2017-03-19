@@ -24,13 +24,6 @@ class SystemException extends \Exception
     protected $responseStatusCode = 500;
 
     /**
-     * APIレスポンス：message
-     *
-     * @string
-     */
-    protected $responseMessage = 'システムエラーが発生しました';
-
-    /**
      * APIレスポンス：reason
      *
      * @string
@@ -69,16 +62,6 @@ class SystemException extends \Exception
     public function getResponseStatusCode()
     {
         return $this->responseStatusCode;
-    }
-
-    /**
-     * エラーメッセージを取得
-     *
-     * @return string
-     */
-    public function getResponseMessage()
-    {
-        return $this->responseMessage;
     }
 
     /**

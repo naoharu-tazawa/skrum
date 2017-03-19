@@ -9,7 +9,7 @@ use AppBundle\Exception\ApplicationException;
  *
  * @author naoharu.tazawa
  */
-class InvalidParameterException extends ApplicationException
+class JsonSchemaException extends ApplicationException
 {
     /**
      * HTTPステータスコード
@@ -23,7 +23,7 @@ class InvalidParameterException extends ApplicationException
      *
      * @string
      */
-    protected $responseReason = 'invalidParameter';
+    protected $responseReason = 'invalidJsonSchema';
 
     /**
      * APIレスポンス：reason

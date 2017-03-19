@@ -19,13 +19,6 @@ class NoDataException extends ApplicationException
     protected $responseStatusCode = 500;
 
     /**
-     * APIレスポンス：message
-     *
-     * @string
-     */
-    protected $responseMessage = 'データ不整合が発生しました';
-
-    /**
      * APIレスポンス：reason
      *
      * @string

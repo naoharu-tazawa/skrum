@@ -10,6 +10,7 @@ use AppBundle\Utils\LoggerManager;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Exception\InvalidParameterException;
+use AppBundle\Exception\JsonSchemaException;
 
 /**
  * 例外リスナークラス
@@ -65,47 +66,55 @@ class ExceptionListener
             } else {
                 LoggerManager::getInstance()->getLogger()->addError($exception->getMessage());
             }
+        } else {
+            LoggerManager::getInstance()->getLogger()->addError($exception->getMessage());
         }
+
+        // ロールバック
+        $this->rollback();
 
         $response = new Response();
 
-        // 例外詳細を設定
+        // エラーレスポンスを設定
         if ($exception instanceof HttpExceptionInterface) {
-            $response->setStatusCode($exception->getStatusCode());
-            $data['code'] = $exception->getStatusCode();
             if ($exception->getStatusCode() == Response::HTTP_NOT_FOUND) {
-                $data['message'] = 'URIが不正です';
+                $response->setStatusCode($exception->getStatusCode());
+                $data['code'] = $exception->getStatusCode();
                 $data['reason'] = 'noResource';
             } elseif ($exception->getStatusCode() == Response::HTTP_METHOD_NOT_ALLOWED) {
-                $data['message'] = 'HTTPメソッドが不正です';
-                $data['reason'] = 'invalidHttpMethod';
+                $response->setStatusCode($exception->getStatusCode());
+                $data['code'] = $exception->getStatusCode();
+                $data['reason'] = 'methodNotAllowed';
             } elseif ($exception->getStatusCode() == Response::HTTP_BAD_REQUEST) {
-                $data['message'] = 'APIクエリが無効です';
+                $response->setStatusCode($exception->getStatusCode());
+                $data['code'] = $exception->getStatusCode();
                 $data['reason'] = 'badRequest';
+            } elseif ($exception->getStatusCode() == Response::HTTP_HTTP_SERVICE_UNAVAILABLE) {
+                $response->setStatusCode($exception->getStatusCode());
+                $data['code'] = $exception->getStatusCode();
+                $data['reason'] = 'backendError';
+            } else {
+                $response->setStatusCode($exception->getStatusCode());
+                $data['code'] = $exception->getStatusCode();
+                $data['reason'] = 'someError';
             }
-        } elseif ($exception instanceof InvalidParameterException) {
+        } elseif ($exception instanceof InvalidParameterException || $exception instanceof JsonSchemaException) {
             $response->setStatusCode($exception->getResponseStatusCode());
             $data['code'] = $exception->getResponseStatusCode();
-            $data['message'] = $exception->getResponseMessage();
             $data['reason'] = $exception->getResponseReason();
-            $data['errors'] = $exception->getResponseValidationErrors();
+            $data['details'] = $exception->getResponseValidationErrors();
         } elseif ($exception instanceof ApplicationException || $exception instanceof SystemException) {
             $response->setStatusCode($exception->getResponseStatusCode());
             $data['code'] = $exception->getResponseStatusCode();
-            $data['message'] = $exception->getResponseMessage();
             $data['reason'] = $exception->getResponseReason();
         } else {
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             $data['code'] = Response::HTTP_INTERNAL_SERVER_ERROR;
-            $data['message'] = 'システムエラーが発生しました';
-            $data['reason'] = 'systemException';
+            $data['reason'] = 'systemError';
         }
 
         $response->setContent(json_encode($data));
         $response->headers->set('Content-Type', 'application/json');
-
-        // ロールバック
-        $this->rollback();
 
         // レスポンスオブジェクトを上書き
         $event->setResponse($response);

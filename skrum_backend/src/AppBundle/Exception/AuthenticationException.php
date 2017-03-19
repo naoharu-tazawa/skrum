@@ -9,28 +9,21 @@ use AppBundle\Exception\ApplicationException;
  *
  * @author naoharu.tazawa
  */
-class AuthException extends ApplicationException
+class AuthenticationException extends ApplicationException
 {
     /**
      * HTTPステータスコード
      *
      * @integer
      */
-    protected $responseStatusCode = 403;
-
-    /**
-     * APIレスポンス：message
-     *
-     * @string
-     */
-    protected $responseMessage = '権限がありません';
+    protected $responseStatusCode = 401;
 
     /**
      * APIレスポンス：reason
      *
      * @string
      */
-    protected $responseReason = 'insufficientPermissions';
+    protected $responseReason = 'invalidCredentials';
 
     /**
      * コンストラクタ

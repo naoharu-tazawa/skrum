@@ -5,6 +5,7 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\MCompany;
+use AppBundle\Api\ResponseDTO\SampleDTO;
 
 /**
  * サンプル用のサービスクラス
@@ -32,7 +33,15 @@ class SampleService extends BaseService
         $userRepos = $this->getMUserRepository();
         //$user = $this->getUserRepository()->findOneByUserId(2);
         $user = $userRepos->getUser($userId);
-        return $user;
+
+        // DTOに詰める
+        $dto = new SampleDTO();
+        $dto->setUserId($user['userId']);
+        $dto->setLastName($user['lastName']);
+        $dto->setFirstName($user['firstName']);
+        $dto->setEmailAddress($user['emailAddress']);
+
+        return $dto;
     }
 
     /**

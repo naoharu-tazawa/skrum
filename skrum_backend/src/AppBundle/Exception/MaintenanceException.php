@@ -19,18 +19,11 @@ class MaintenanceException extends ApplicationException
     protected $responseStatusCode = 503;
 
     /**
-     * APIレスポンス：message
-     *
-     * @string
-     */
-    protected $responseMessage = 'メンテナンス中のためご利用できません';
-
-    /**
      * APIレスポンス：reason
      *
      * @string
      */
-    protected $responseReason = 'backendError';
+    protected $responseReason = 'underMaintenance';
 
     /**
      * コンストラクタ

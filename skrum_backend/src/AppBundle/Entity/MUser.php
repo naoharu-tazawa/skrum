@@ -21,7 +21,7 @@ class MUser
      *
      * @ORM\Column(name="last_name", type="string", length=255, nullable=false)
      * @JSON\Expose()
--    * @JSON\Type("string")
+     * @JSON\Type("string")
      */
     private $lastName;
 
@@ -30,7 +30,7 @@ class MUser
      *
      * @ORM\Column(name="first_name", type="string", length=255, nullable=false)
      * @JSON\Expose()
--    * @JSON\Type("string")
+     * @JSON\Type("string")
      */
     private $firstName;
 
@@ -39,7 +39,7 @@ class MUser
      *
      * @ORM\Column(name="email_address", type="string", length=255, nullable=false)
      * @JSON\Expose()
--    * @JSON\Type("string")
+     * @JSON\Type("string")
      */
     private $emailAddress;
 
@@ -48,7 +48,7 @@ class MUser
      *
      * @ORM\Column(name="password", type="string", length=255, nullable=false)
      * @JSON\Expose()
--    * @JSON\Type("string")
+     * @JSON\Type("string")
      */
     private $password;
 
@@ -57,7 +57,7 @@ class MUser
      *
      * @ORM\Column(name="role_id", type="integer", nullable=false)
      * @JSON\Expose()
--    * @JSON\Type("integer")
+     * @JSON\Type("integer")
      */
     private $roleId;
 
@@ -66,7 +66,7 @@ class MUser
      *
      * @ORM\Column(name="position", type="string", length=255, nullable=true)
      * @JSON\Expose()
--    * @JSON\Type("string")
+     * @JSON\Type("string")
      */
     private $position;
 
@@ -75,7 +75,7 @@ class MUser
      *
      * @ORM\Column(name="phone_number", type="string", length=45, nullable=true)
      * @JSON\Expose()
--    * @JSON\Type("string")
+     * @JSON\Type("string")
      */
     private $phoneNumber;
 
@@ -84,7 +84,7 @@ class MUser
      *
      * @ORM\Column(name="last_access_datetime", type="datetime", nullable=true)
      * @JSON\Expose()
--    * @JSON\Type("DateTime<'Y-m-d'>")
+     * @JSON\Type("DateTime<'Y-m-d'>")
      */
     private $lastAccessDatetime;
 
@@ -93,7 +93,7 @@ class MUser
      *
      * @ORM\Column(name="image_path", type="string", length=45, nullable=true)
      * @JSON\Expose()
--    * @JSON\Type("string")
+     * @JSON\Type("string")
      */
     private $imagePath;
 
@@ -127,7 +127,7 @@ class MUser
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @JSON\Expose()
--    * @JSON\Type("integer")
+     * @JSON\Type("integer")
      */
     private $userId;
 

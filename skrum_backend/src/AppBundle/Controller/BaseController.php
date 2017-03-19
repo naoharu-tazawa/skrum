@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use FOS\RestBundle\Controller\FOSRestController;
 use AppBundle\Utils\LoggerManager;
 use Symfony\Component\HttpFoundation\Request;
+use JsonSchema\Validator;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Exception\ApiBadRequestException;
 
@@ -98,7 +99,48 @@ class BaseController extends FOSRestController
     }
 
     /**
-     * リクエストデータをバインド
+     * JsonSchemaバリデーション
+     *
+     * @param Request $request リクエストデータ
+     * @param string $schemaFilePath JsonSchemaファイルパス（例："AppBundle/Api/JsonSchema/SamplePdu"）
+     * @return array
+     */
+    protected function validateSchema(Request $request, $schemaFilePath)
+    {
+        $requestJson = $request->getContent();
+        if (!$requestJson) {
+            throw new ApiBadRequestException("APIクエリが無効です");
+        }
+
+        $schema = file_get_contents(dirname(__FILE__) . '/../../' . $schemaFilePath . '.json');
+        $validator = new Validator();
+        $validator->validate(json_decode($request->getContent()), json_decode($schema));
+
+        return $this->makeErrorResponse($validator->getErrors());
+    }
+
+    /**
+     * JsonSchemaバリデーションエラーのレスポンスを整形
+     *
+     * @param array $errors JsonScemaエラー配列
+     * @return array レスポンス用エラー配列
+     */
+    private function makeErrorResponse($errors)
+    {
+        if (!$errors) return $errors;
+
+        foreach ($errors as $error)
+        {
+            $requiredErrorItem['field'] = $error['property'];
+            $requiredErrorItem['message'] = $error['message'];
+            $errorResponse[] = $requiredErrorItem;
+        }
+
+        return $errorResponse;
+    }
+
+    /**
+     * リクエストデータをフォームにバインド
      *
      * @param Request $request リクエストデータ
      * @param FormInterface $form フォームインターフェース
@@ -114,7 +156,7 @@ class BaseController extends FOSRestController
     }
 
     /**
-     * バリデーションエラー時のレスポンス生成
+     * バリデーションエラー時のレスポンス生成（フォーム用）
      *
      * @param FormInterface $form フォームインターフェース
      * @return array バリデーションエラー情報

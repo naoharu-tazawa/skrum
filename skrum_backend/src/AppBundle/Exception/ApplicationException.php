@@ -24,13 +24,6 @@ class ApplicationException extends \Exception
     protected $responseStatusCode = 500;
 
     /**
-     * APIレスポンス：message
-     *
-     * @string
-     */
-    protected $responseMessage = 'アプリケーション例外が発生しました';
-
-    /**
      * APIレスポンス：reason
      *
      * @string
@@ -69,16 +62,6 @@ class ApplicationException extends \Exception
     public function getResponseStatusCode()
     {
         return $this->responseStatusCode;
-    }
-
-    /**
-     * エラーメッセージを取得
-     *
-     * @return string
-     */
-    public function getResponseMessage()
-    {
-        return $this->responseMessage;
     }
 
     /**

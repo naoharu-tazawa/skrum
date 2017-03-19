@@ -19,13 +19,6 @@ class DoubleOperationException extends ApplicationException
     protected $responseStatusCode = 409;
 
     /**
-     * APIレスポンス：message
-     *
-     * @string
-     */
-    protected $responseMessage = '他のユーザによって更新されたため処理できませんでした';
-
-    /**
      * APIレスポンス：reason
      *
      * @string
