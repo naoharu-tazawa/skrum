@@ -42,7 +42,7 @@ class DBConstant
     /**
      * OKR公開設定（管理者公開）
      */
-    const OKR_DISCLOSURE_TYPE_GROUP = '3';
+    const OKR_DISCLOSURE_TYPE_ADMIN = '3';
 
     /**
      * OKR公開設定（グループ管理者公開）
