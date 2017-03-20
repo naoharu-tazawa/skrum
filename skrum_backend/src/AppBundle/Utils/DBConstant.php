@@ -20,6 +20,16 @@ class DBConstant
     const GROUP_TYPE_TEAM = '2';
 
     /**
+     * OKR種別（目標）
+     */
+    const OKR_TYPE_OBJECTIVE = '1';
+
+    /**
+     * OKR種別（キーリザルト）
+     */
+    const OKR_TYPE_KEY_RESULT = '2';
+
+    /**
      * OKRステータス（オープン）
      */
     const OKR_STATUS_OPEN = '1';
