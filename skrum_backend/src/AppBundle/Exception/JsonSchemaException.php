@@ -26,7 +26,7 @@ class JsonSchemaException extends ApplicationException
     protected $responseReason = 'invalidJsonSchema';
 
     /**
-     * APIレスポンス：reason
+     * APIレスポンス：details
      *
      * @array
      */
@@ -35,13 +35,12 @@ class JsonSchemaException extends ApplicationException
     /**
      * コンストラクタ
      *
-	 * @param $message エラーメッセージ
-	 * @param $code エラーコード
+	 * @param $message ログ出力メッセージ
 	 * @param $validationErrors バリデーションエラー詳細
 	 */
-    public function __construct($message, $validationErrors, $code = 0)
+    public function __construct($message, $validationErrors)
     {
-        parent::__construct($message, $code, false, null);
+        parent::__construct($message, 0, false, null);
         $this->responseValidationErrors = $validationErrors;
     }
 

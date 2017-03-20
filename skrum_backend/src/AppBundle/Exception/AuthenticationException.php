@@ -28,11 +28,10 @@ class AuthenticationException extends ApplicationException
     /**
      * コンストラクタ
      *
-	 * @param $message エラーメッセージ
-	 * @param $code エラーコード
+	 * @param $message ログ出力メッセージ
 	 */
-    public function __construct($message, $code = 0)
+    public function __construct($message)
     {
-        parent::__construct($message, $code, false, null);
+        parent::__construct($message, 0, false, null);
     }
 }

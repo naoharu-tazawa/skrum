@@ -33,21 +33,19 @@ class SystemException extends \Exception
     /**
      * コンストラクタ
      *
-	 * @param $message
-	 * @param $code
-	 * @param $code
-	 * @param $previous
+	 * @param $message ログ出力メッセージ
+	 * @param $alert アラートログ出力フラグ
 	 */
-    public function __construct($message, $code = 0, $alert = false, \Exception $previous = null)
+    public function __construct($message, $alert = false)
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, 0, null);
         $this->alert = $alert;
     }
 
     /**
      * アラートログ出力フラグを取得
      *
-     * @return Boolean
+     * @return boolean
      */
     public function isAlert()
     {
