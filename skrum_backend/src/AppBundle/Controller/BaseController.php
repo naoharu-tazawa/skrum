@@ -179,6 +179,60 @@ class BaseController extends FOSRestController
         return $errors;
     }
 
+    /**
+     * バリデーション（数値型チェック）
+     *
+     * @param $item チェック対象
+     * @param $digit 桁数
+     * @return boolean バリデーションチェック結果
+     */
+    protected function checkNumber ($item, $digit)
+    {
+        if (is_null($item)) return false;
+        if (!is_numeric($item)) return false;
+        if (mb_strlen($item) > $digit) return false;
+
+        return true;
+    }
+
+    /**
+     * バリデーション（文字列型チェック）
+     *
+     * @param $item チェック対象
+     * @param $digit 桁数
+     * @return boolean バリデーションチェック結果
+     */
+    protected function checkString ($item, $digit)
+    {
+        if (is_null($item)) return false;
+        if (!is_string($item)) return false;
+        if (mb_strlen($item) > $digit) return false;
+
+        return true;
+    }
+
+    /**
+     * バリデーション（11桁のint型ID）
+     *
+     * @param $item チェック対象ID
+     * @return boolean バリデーションチェック結果
+     */
+    protected function checkIntID ($item)
+    {
+        return $this->checkNumber($item, 11);
+    }
+
+    /**
+     * バリデーション（20桁のBigint型ID）
+     *
+     * @param $item チェック対象ID
+     * @return boolean バリデーションチェック結果
+     */
+    protected function checkBigintID ($item)
+    {
+        return $this->checkNumber($item, 20);
+    }
+
     //----------------------------------------------
     //ここからサービスクラスの取得メソッド
     //----------------------------------------------

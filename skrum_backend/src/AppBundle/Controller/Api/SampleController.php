@@ -30,6 +30,12 @@ class SampleController extends BaseController
      */
     public function getSampleAction($slug)
     {
+        // パラメータ引数のバリデーションチェック
+        if(!$this->checkIntID($slug))
+        {
+            return array("validation" => "false");
+        }
+
         // ログを出力
         // ログ出力はBaseControllerに定義しているので継承元のメソッドを呼んでください
         $this->logDebug('サンプルdebugログ in Controller', ['cause' => 'in_hurry']);
