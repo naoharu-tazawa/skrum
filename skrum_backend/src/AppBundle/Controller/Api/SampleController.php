@@ -33,7 +33,7 @@ class SampleController extends BaseController
         // パラメータ引数のバリデーションチェック
         if(!$this->checkIntID($slug))
         {
-            return array("validation" => "false");
+            throw new InvalidParameterException("InvalidParameterExceptionのサンプル");
         }
 
         // ログを出力
