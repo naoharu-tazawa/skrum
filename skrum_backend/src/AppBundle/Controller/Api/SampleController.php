@@ -11,6 +11,7 @@ use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\MaintenanceException;
 use AppBundle\Exception\AuthException;
 use AppBundle\Exception\JsonSchemaException;
+use FOS\RestBundle\Controller\Annotations as Rest;
 
 /**
  * サンプル用のコントローラ
@@ -24,8 +25,8 @@ class SampleController extends BaseController
      * http://localhost:8000/app_dev.php/api/samples/{slug}.json
      *
      *　ユーザテーブルからユーザID={slug}のユーザを取得しjsonで返す
-     *　メソッド名の定義に注意してください。メソッド名から自動的にurlとHTTPメソッドが決定されます
-     *　アノテーションはいりません
+     *
+     * @Rest\Get("/api/samples/{slug}.{_format}")
      */
     public function getSampleAction($slug)
     {
@@ -52,6 +53,8 @@ class SampleController extends BaseController
      *
      *　Formクラス及びバリデーションのサンプルです。以下のjsonをpostデータに含めてapi投げてみてください
      * {"userId":"2","userName":"naoharu"}
+     *
+     * @Rest\Post("/api/samples.{_format}")
      */
     public function postSamplesAction(Request $request)
     {
@@ -59,7 +62,7 @@ class SampleController extends BaseController
         if ($errors) throw new JsonSchemaException("JsonSchemaExceptionのサンプル（このメッセージはログに出力されます）", $errors);
 
         // 例外のサンプル
-        // throw new ApplicationException("ApplicationExceptionのサンプル");
+        throw new ApplicationException("ApplicationExceptionのサンプル", true);
         // throw new InvalidParameterException("InvalidParameterExceptionのサンプル");
         // throw new MaintenanceException("MaintenanceExceptionのサンプル");
         // throw new AuthException("AuthExceptionのサンプル");
@@ -72,8 +75,8 @@ class SampleController extends BaseController
      * http://localhost:8000/app_dev.php/api/samples.json
      *
      *　ユーザテーブルから複数の（ここでは全ての）ユーザを取得しjsonで返す
-     *　メソッド名の定義に注意してください。メソッド名から自動的にurlとHTTPメソッドが決定されます
-     *　アノテーションはいりません
+     *
+     * @Rest\Get("/api/samples.{_format}")
      */
     public function getSamplesAction()
     {
@@ -90,8 +93,8 @@ class SampleController extends BaseController
      * http://localhost:8000/app_dev.php/api/samples/{slug}.json
      *
      *　ユーザ新規登録
-     *　メソッド名の定義に注意してください。メソッド名から自動的にurlとHTTPメソッドが決定されます
-     *　アノテーションはいりません
+     *
+     * @Rest\Put("/api/samples/{slug}.{_format}")
      */
     public function putSampleAction($slug)
     {
@@ -108,8 +111,8 @@ class SampleController extends BaseController
      * http://localhost:8000/app_dev.php/api/samples/{slug}.json
      *
      *　ユーザテーブルからユーザID={slug}のユーザを削除する
-     *　メソッド名の定義に注意してください。メソッド名から自動的にurlとHTTPメソッドが決定されます
-     *　アノテーションはいりません
+     *
+     * @Rest\Delete("/api/samples/{slug}.{_format}")
      */
     public function deleteSampleAction($slug)
     {
@@ -123,6 +126,8 @@ class SampleController extends BaseController
 
     /**
      * フォームクラス利用のサンプル（基本的には使いません）
+     *
+     * @Rest\Post("/api/formsample.{_format}")
      */
     public function postFormsampleAction(Request $request)
     {
