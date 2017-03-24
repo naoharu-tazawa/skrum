@@ -98,16 +98,7 @@ class ExceptionListener
                 $data['code'] = $exception->getStatusCode();
                 $data['reason'] = 'someError';
             }
-        } elseif ($exception instanceof InvalidParameterException) {
-            $response->setStatusCode($exception->getResponseStatusCode());
-            $data['code'] = $exception->getResponseStatusCode();
-            $data['reason'] = $exception->getResponseReason();
-            if ($exception->getResponseValidationErrors()) {
-                $data['details'] = $exception->getResponseValidationErrors();
-            } else {
-                $data['details'] = array(array('field' => '', 'message' => 'Parameter in URL is invalid'));
-            }
-        } elseif ($exception instanceof JsonSchemaException) {
+        } elseif ($exception instanceof JsonSchemaException || $exception instanceof InvalidParameterException) {
             $response->setStatusCode($exception->getResponseStatusCode());
             $data['code'] = $exception->getResponseStatusCode();
             $data['reason'] = $exception->getResponseReason();

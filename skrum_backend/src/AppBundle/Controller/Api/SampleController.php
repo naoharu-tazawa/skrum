@@ -31,9 +31,9 @@ class SampleController extends BaseController
     public function getSampleAction($slug)
     {
         // パラメータ引数のバリデーションチェック
-        if(!$this->checkIntID($slug))
+        if($errors = $this->checkIntID($slug))
         {
-            throw new InvalidParameterException("InvalidParameterExceptionのサンプル");
+            throw new InvalidParameterException("InvalidParameterExceptionのサンプル", $errors);
         }
 
         // ログを出力
@@ -141,7 +141,7 @@ class SampleController extends BaseController
         $this->processForm($request, $form);
 
         if (!$form->isValid()) {
-            throw new InvalidParameterException("InvalidParameterExceptionのサンプル", $this->getValidationErrors($form));
+            throw new InvalidParameterException("InvalidParameterExceptionのサンプル", $this->getFormErrors($form));
             // return array('result' => 'NG', 'errors' => $this->getValidationErrors($form));
         }
 

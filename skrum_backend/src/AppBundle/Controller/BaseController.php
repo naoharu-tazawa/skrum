@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 use JsonSchema\Validator;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Exception\JsonSchemaException;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * ベースコントローラ（被継承クラス）
@@ -161,7 +164,7 @@ class BaseController extends FOSRestController
      * @param FormInterface $form フォームインターフェース
      * @return array バリデーションエラー情報
      */
-    protected function getValidationErrors(FormInterface $form)
+    protected function getFormErrors(FormInterface $form)
     {
         foreach ($form->all() as $childForm)
         {
@@ -180,35 +183,63 @@ class BaseController extends FOSRestController
     }
 
     /**
-     * バリデーション（数値型チェック）
+     * URLパラメータバリデーション（数値型チェック）
      *
      * @param $item チェック対象
      * @param $digit 桁数
-     * @return boolean バリデーションチェック結果
+     * @return array バリデーションエラー情報
      */
-    protected function checkNumber ($item, $digit)
+    protected function validateNumeric ($item, $digit)
     {
-        if (is_null($item)) return false;
-        if (!is_numeric($item)) return false;
-        if (mb_strlen($item) > $digit) return false;
+        $validator = Validation::createValidator();
 
-        return true;
+        $errors = $validator->validate($item, array(
+            new Assert\NotNull(),
+            new Assert\Type("numeric"),
+            new Assert\Length(array('max' => $digit))
+        ));
+
+        return $this->getUrlParameterErrors($errors);
     }
 
     /**
-     * バリデーション（文字列型チェック）
+     * URLパラメータバリデーション（文字列型チェック）
      *
      * @param $item チェック対象
      * @param $digit 桁数
-     * @return boolean バリデーションチェック結果
+     * @return array バリデーションエラー情報
      */
-    protected function checkString ($item, $digit)
+    protected function validateString ($item, $digit)
     {
-        if (is_null($item)) return false;
-        if (!is_string($item)) return false;
-        if (mb_strlen($item) > $digit) return false;
+        $validator = Validation::createValidator();
 
-        return true;
+        $errors = $validator->validate($item, array(
+                new Assert\NotNull(),
+                new Assert\Type("string"),
+                new Assert\Length(array('max' => $digit))
+        ));
+
+        return $this->getUrlParameterErrors($errors);
+    }
+
+    /**
+     * バリデーションエラー時のレスポンス生成（URLパラメータ用）
+     *
+     * @param ConstraintViolationListInterface $errors
+     * @return array バリデーションエラー情報
+     */
+    private function getUrlParameterErrors(ConstraintViolationListInterface $errors)
+    {
+        if (!$errors) return $errors;
+
+        foreach ($errors as $error)
+        {
+            $requiredErrorItem['field'] = '';
+            $requiredErrorItem['message'] = $error->getMessage();
+            $errorResponse[] = $requiredErrorItem;
+        }
+
+        return $errorResponse;
     }
 
     /**
@@ -219,7 +250,7 @@ class BaseController extends FOSRestController
      */
     protected function checkIntID ($item)
     {
-        return $this->checkNumber($item, 11);
+        return $this->validateNumeric($item, 11);
     }
 
     /**
@@ -230,7 +261,7 @@ class BaseController extends FOSRestController
      */
     protected function checkBigintID ($item)
     {
-        return $this->checkNumber($item, 20);
+        return $this->validateNumeric($item, 20);
     }
 
     //----------------------------------------------
