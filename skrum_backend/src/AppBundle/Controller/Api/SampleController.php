@@ -26,15 +26,13 @@ class SampleController extends BaseController
      *
      *　ユーザテーブルからユーザID={slug}のユーザを取得しjsonで返す
      *
-     * @Rest\Get("/api/samples/{slug}.{_format}")
+     * @Rest\Get("/samples/{slug}.{_format}")
      */
     public function getSampleAction($slug)
     {
         // パラメータ引数のバリデーションチェック
-        if($errors = $this->checkIntID($slug))
-        {
-            throw new InvalidParameterException("InvalidParameterExceptionのサンプル", $errors);
-        }
+        $errors = $this->checkIntID($slug);
+        if($errors) throw new InvalidParameterException("InvalidParameterExceptionのサンプル", $errors);
 
         // ログを出力
         // ログ出力はBaseControllerに定義しているので継承元のメソッドを呼んでください
@@ -60,10 +58,11 @@ class SampleController extends BaseController
      *　Formクラス及びバリデーションのサンプルです。以下のjsonをpostデータに含めてapi投げてみてください
      * {"userId":"2","userName":"naoharu"}
      *
-     * @Rest\Post("/api/samples.{_format}")
+     * @Rest\Post("/samples.{_format}")
      */
     public function postSamplesAction(Request $request)
     {
+        // JsonSchemaのバリデーションチェク
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/SamplePdu');
         if ($errors) throw new JsonSchemaException("JsonSchemaExceptionのサンプル（このメッセージはログに出力されます）", $errors);
 
@@ -82,7 +81,7 @@ class SampleController extends BaseController
      *
      *　ユーザテーブルから複数の（ここでは全ての）ユーザを取得しjsonで返す
      *
-     * @Rest\Get("/api/samples.{_format}")
+     * @Rest\Get("/samples.{_format}")
      */
     public function getSamplesAction()
     {
@@ -100,7 +99,7 @@ class SampleController extends BaseController
      *
      *　ユーザ新規登録
      *
-     * @Rest\Put("/api/samples/{slug}.{_format}")
+     * @Rest\Put("/samples/{slug}.{_format}")
      */
     public function putSampleAction($slug)
     {
@@ -118,7 +117,7 @@ class SampleController extends BaseController
      *
      *　ユーザテーブルからユーザID={slug}のユーザを削除する
      *
-     * @Rest\Delete("/api/samples/{slug}.{_format}")
+     * @Rest\Delete("/samples/{slug}.{_format}")
      */
     public function deleteSampleAction($slug)
     {
@@ -133,7 +132,7 @@ class SampleController extends BaseController
     /**
      * フォームクラス利用のサンプル（基本的には使いません）
      *
-     * @Rest\Post("/api/formsample.{_format}")
+     * @Rest\Post("/formsample.{_format}")
      */
     public function postFormsampleAction(Request $request)
     {
@@ -142,7 +141,6 @@ class SampleController extends BaseController
 
         if (!$form->isValid()) {
             throw new InvalidParameterException("InvalidParameterExceptionのサンプル", $this->getFormErrors($form));
-            // return array('result' => 'NG', 'errors' => $this->getValidationErrors($form));
         }
 
         return array('result' => 'OK');

@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use JsonSchema\Validator;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Exception\JsonSchemaException;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -110,14 +109,13 @@ class BaseController extends FOSRestController
      */
     protected function validateSchema(Request $request, $schemaFilePath)
     {
-        $requestJson = $request->getContent();
-        if (!$requestJson) {
+        $data = json_decode($request->getContent());
+        if (!$data) {
             throw new JsonSchemaException("リクエストデータが存在しません");
         }
 
-        $schema = file_get_contents(dirname(__FILE__) . '/../../' . $schemaFilePath . '.json');
         $validator = new Validator();
-        $validator->validate(json_decode($requestJson), json_decode($schema));
+        $validator->validate($data, (object)['$ref' => 'file://' . realpath(dirname(__FILE__) . '/../../' . $schemaFilePath . '.json')]);
 
         return $this->makeErrorResponse($validator->getErrors());
     }
@@ -132,11 +130,12 @@ class BaseController extends FOSRestController
     {
         if (!$errors) return $errors;
 
+        $errorResponse = array();
         foreach ($errors as $error)
         {
             $requiredErrorItem['field'] = $error['property'];
             $requiredErrorItem['message'] = $error['message'];
-            $errorResponse[] = $requiredErrorItem;
+            $errorResponse = $requiredErrorItem;
         }
 
         return $errorResponse;
@@ -170,11 +169,12 @@ class BaseController extends FOSRestController
         {
             if ($childForm instanceof FormInterface)
             {
+                $errors = array();
                 foreach ($childForm->getErrors() as $childError)
                 {
                     $error['field'] = $childForm->getName();
                     $error['message'] = $childError->getMessage();
-                    $errors[] = $error;
+                    $errors = $error;
                 }
             }
         }
@@ -191,9 +191,7 @@ class BaseController extends FOSRestController
      */
     protected function validateNumeric ($item, $digit)
     {
-        $validator = Validation::createValidator();
-
-        $errors = $validator->validate($item, array(
+        $errors = $this->get('validator')->validate($item, array(
             new Assert\NotNull(),
             new Assert\Type("numeric"),
             new Assert\Length(array('max' => $digit))
@@ -211,9 +209,7 @@ class BaseController extends FOSRestController
      */
     protected function validateString ($item, $digit)
     {
-        $validator = Validation::createValidator();
-
-        $errors = $validator->validate($item, array(
+        $errors = $this->get('validator')->validate($item, array(
             new Assert\NotNull(),
             new Assert\Type("string"),
             new Assert\Length(array('max' => $digit))
@@ -232,11 +228,12 @@ class BaseController extends FOSRestController
     {
         if (!$errors) return $errors;
 
+        $errorResponse = array();
         foreach ($errors as $error)
         {
             $requiredErrorItem['field'] = '';
             $requiredErrorItem['message'] = $error->getMessage();
-            $errorResponse[] = $requiredErrorItem;
+            $errorResponse = $requiredErrorItem;
         }
 
         return $errorResponse;

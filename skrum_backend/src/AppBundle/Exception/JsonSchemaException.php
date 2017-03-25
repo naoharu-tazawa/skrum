@@ -30,7 +30,7 @@ class JsonSchemaException extends ApplicationException
      *
      * @array
      */
-    protected $responseValidationErrors = array();
+    protected $responseValidationErrors;
 
     /**
      * コンストラクタ
@@ -38,7 +38,7 @@ class JsonSchemaException extends ApplicationException
 	 * @param $message ログ出力メッセージ
 	 * @param $validationErrors バリデーションエラー詳細
 	 */
-    public function __construct($message, $validationErrors)
+    public function __construct($message, $validationErrors = array())
     {
         parent::__construct($message, 0, false, null);
         $this->responseValidationErrors = $validationErrors;
