@@ -214,9 +214,9 @@ class BaseController extends FOSRestController
         $validator = Validation::createValidator();
 
         $errors = $validator->validate($item, array(
-                new Assert\NotNull(),
-                new Assert\Type("string"),
-                new Assert\Length(array('max' => $digit))
+            new Assert\NotNull(),
+            new Assert\Type("string"),
+            new Assert\Length(array('max' => $digit))
         ));
 
         return $this->getUrlParameterErrors($errors);

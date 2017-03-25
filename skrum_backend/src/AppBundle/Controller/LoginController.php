@@ -1,14 +1,21 @@
 <?php
 
-namespace AppBundle\Controller\LoginController;
+namespace AppBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException as BadRequestHttpException;
+use FOS\RestBundle\Controller\Annotations as Rest;
 
 class LoginController extends Controller
 {
+    /**
+     *
+     * @Rest\Post("/login.{_format}")
+     * @param Request $request
+     * @throws BadRequestHttpException
+     * @return unknown
+     */
     public function login(Request $request)
     {
         # 認可は共通処理なのでmiddlewareで処理します
