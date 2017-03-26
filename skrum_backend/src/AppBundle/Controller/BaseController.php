@@ -3,13 +3,13 @@
 namespace AppBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use AppBundle\Utils\LoggerManager;
-use Symfony\Component\HttpFoundation\Request;
 use JsonSchema\Validator;
 use Symfony\Component\Form\FormInterface;
-use AppBundle\Exception\JsonSchemaException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
+use AppBundle\Utils\LoggerManager;
+use AppBundle\Exception\JsonSchemaException;
 
 /**
  * ベースコントローラ（被継承クラス）
@@ -110,9 +110,7 @@ class BaseController extends FOSRestController
     protected function validateSchema(Request $request, $schemaFilePath)
     {
         $data = json_decode($request->getContent());
-        if (!$data) {
-            throw new JsonSchemaException("リクエストデータが存在しません");
-        }
+        if (!$data) throw new JsonSchemaException("リクエストデータが存在しません");
 
         $validator = new Validator();
         $validator->validate($data, (object)['$ref' => 'file://' . realpath(dirname(__FILE__) . '/../../' . $schemaFilePath . '.json')]);
@@ -189,7 +187,7 @@ class BaseController extends FOSRestController
      * @param $digit 桁数
      * @return array バリデーションエラー情報
      */
-    protected function validateNumeric ($item, $digit)
+    protected function validateNumeric($item, $digit)
     {
         $errors = $this->get('validator')->validate($item, array(
             new Assert\NotNull(),
@@ -207,7 +205,7 @@ class BaseController extends FOSRestController
      * @param $digit 桁数
      * @return array バリデーションエラー情報
      */
-    protected function validateString ($item, $digit)
+    protected function validateString($item, $digit)
     {
         $errors = $this->get('validator')->validate($item, array(
             new Assert\NotNull(),
@@ -245,7 +243,7 @@ class BaseController extends FOSRestController
      * @param $item チェック対象ID
      * @return boolean バリデーションチェック結果
      */
-    protected function checkIntID ($item)
+    protected function checkIntID($item)
     {
         return $this->validateNumeric($item, 11);
     }
@@ -256,9 +254,25 @@ class BaseController extends FOSRestController
      * @param $item チェック対象ID
      * @return boolean バリデーションチェック結果
      */
-    protected function checkBigintID ($item)
+    protected function checkBigintID($item)
     {
         return $this->validateNumeric($item, 20);
+    }
+
+    /**
+     * RFC3339形式の日付文字列を生成
+     *
+     * @param $datetimeString 日付文字列(例："2017-03-26 22:09:15")
+     * @return string RFC3339形式の日付文字列（例："2017-03-26T13:09:15+09:00"）
+     */
+    protected function getRfc3339Date($datetimeString = null)
+    {
+        if ($datetimeString)
+        {
+            return date(DATE_RFC3339, strtotime($datetimeString));
+        } else {
+            return date(DATE_RFC3339);
+        }
     }
 
     //----------------------------------------------

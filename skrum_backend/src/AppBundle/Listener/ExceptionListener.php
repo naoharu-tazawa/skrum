@@ -60,8 +60,10 @@ class ExceptionListener
         $exception = $event->getException();
 
         // ログ出力
-        if (method_exists($exception, 'isAlert')) {
-            if ($exception->isAlert()) {
+        if (method_exists($exception, 'isAlert'))
+        {
+            if ($exception->isAlert())
+            {
                 LoggerManager::getInstance()->getLogger()->addAlert($exception->getMessage());
             } else {
                 LoggerManager::getInstance()->getLogger()->addError($exception->getMessage());
@@ -76,7 +78,8 @@ class ExceptionListener
         $response = new Response();
 
         // エラーレスポンスを設定
-        if ($exception instanceof HttpExceptionInterface) {
+        if ($exception instanceof HttpExceptionInterface)
+        {
             if ($exception->getStatusCode() == Response::HTTP_NOT_FOUND) {
                 $response->setStatusCode($exception->getStatusCode());
                 $data['code'] = $exception->getStatusCode();
@@ -132,7 +135,8 @@ class ExceptionListener
     private function rollback()
     {
         try {
-            if ($this->entityManager->isOpen()) {
+            if ($this->entityManager->isOpen())
+            {
                 $this->entityManager->close();
                 if ($this->entityManager->getConnection()->isTransactionActive())
                 {
