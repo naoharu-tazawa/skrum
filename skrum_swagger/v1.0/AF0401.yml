@@ -1,0 +1,75 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /api/okrs/{slug}/familyokrs:
+    get:
+      tags:
+        - skrum
+      description: 3世代OKR取得
+      parameters:
+        -
+          name: slug
+          in: path
+          type: string
+          description: 選択されたOKRID
+          required: true
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              selectedOkr:
+                $ref: '#/definitions/Okr'
+              parentOkr:
+                $ref: '#/definitions/Okr'
+              childrenOkrs:
+                type: array
+                items:
+                  $ref: '#/definitions/Okr'
+            required:
+              - selectedOkr
+              - parentOkr
+              - childrenOkrs
+        400:
+          description: パラメータ不正
+        401:
+          description: 認証エラー
+        500:
+          description: サーバーエラー
+
+definitions:
+  Okr:
+    type: object
+    properties:
+      okrId:
+        type: integer
+      type:
+        type: string
+      name:
+        type: string
+      detail:
+        type: string
+      targetValue:
+        type: integer
+      achievedValue:
+        type: integer
+      achievementRate:
+        type: number
+      unit:
+        type: string
+      status:
+        type: string
+      imagepath:
+        type: string
+      createdAt:
+        type: string
