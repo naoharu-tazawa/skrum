@@ -20,6 +20,11 @@ class DBConstant
     const GROUP_TYPE_TEAM = '2';
 
     /**
+     * グループ種別（会社）
+     */
+    const GROUP_TYPE_COMPANY = '3';
+
+    /**
      * OKR種別（目標）
      */
     const OKR_TYPE_OBJECTIVE = '1';

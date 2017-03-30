@@ -7,42 +7,42 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JSON;
 
 /**
- * MCompany
+ * TPreUser
  *
- * @ORM\Table(name="m_company")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\MCompanyRepository")
+ * @ORM\Table(name="t_pre_user")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TPreUserRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
  */
-class MCompany
+class TPreUser
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="company_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="urltoken", type="string", length=128, nullable=false)
      */
-    private $companyName;
+    private $urltoken;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="vision", type="string", length=255, nullable=true)
+     * @ORM\Column(name="email_address", type="string", length=255, nullable=false)
      */
-    private $vision;
+    private $emailAddress;
 
     /**
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(name="mission", type="string", length=255, nullable=true)
+     * @ORM\Column(name="initial_user_flg", type="boolean", nullable=false)
      */
-    private $mission;
+    private $initialUserFlg = '0';
 
     /**
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(name="image_path", type="string", length=45, nullable=true)
+     * @ORM\Column(name="invalid_flg", type="boolean", nullable=false)
      */
-    private $imagePath;
+    private $invalidFlg = '0';
 
     /**
      * @var \DateTime
@@ -70,108 +70,108 @@ class MCompany
     /**
      * @var integer
      *
-     * @ORM\Column(name="company_id", type="integer")
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $companyId;
+    private $id;
 
 
 
     /**
-     * Set companyName
+     * Set urltoken
      *
-     * @param string $companyName
+     * @param string $urltoken
      *
-     * @return MCompany
+     * @return TPreUser
      */
-    public function setCompanyName($companyName)
+    public function setUrltoken($urltoken)
     {
-        $this->companyName = $companyName;
+        $this->urltoken = $urltoken;
 
         return $this;
     }
 
     /**
-     * Get companyName
+     * Get urltoken
      *
      * @return string
      */
-    public function getCompanyName()
+    public function getUrltoken()
     {
-        return $this->companyName;
+        return $this->urltoken;
     }
 
     /**
-     * Set vision
+     * Set emailAddress
      *
-     * @param string $vision
+     * @param string $emailAddress
      *
-     * @return MCompany
+     * @return TPreUser
      */
-    public function setVision($vision)
+    public function setEmailAddress($emailAddress)
     {
-        $this->vision = $vision;
+        $this->emailAddress = $emailAddress;
 
         return $this;
     }
 
     /**
-     * Get vision
+     * Get emailAddress
      *
      * @return string
      */
-    public function getVision()
+    public function getEmailAddress()
     {
-        return $this->vision;
+        return $this->emailAddress;
     }
 
     /**
-     * Set mission
+     * Set initialUserFlg
      *
-     * @param string $mission
+     * @param boolean $initialUserFlg
      *
-     * @return MCompany
+     * @return TPreUser
      */
-    public function setMission($mission)
+    public function setInitialUserFlg($initialUserFlg)
     {
-        $this->mission = $mission;
+        $this->initialUserFlg = $initialUserFlg;
 
         return $this;
     }
 
     /**
-     * Get mission
+     * Get initialUserFlg
      *
-     * @return string
+     * @return boolean
      */
-    public function getMission()
+    public function getInitialUserFlg()
     {
-        return $this->mission;
+        return $this->initialUserFlg;
     }
 
     /**
-     * Set imagePath
+     * Set invalidFlg
      *
-     * @param string $imagePath
+     * @param boolean $invalidFlg
      *
-     * @return MCompany
+     * @return TPreUser
      */
-    public function setImagePath($imagePath)
+    public function setInvalidFlg($invalidFlg)
     {
-        $this->imagePath = $imagePath;
+        $this->invalidFlg = $invalidFlg;
 
         return $this;
     }
 
     /**
-     * Get imagePath
+     * Get invalidFlg
      *
-     * @return string
+     * @return boolean
      */
-    public function getImagePath()
+    public function getInvalidFlg()
     {
-        return $this->imagePath;
+        return $this->invalidFlg;
     }
 
     /**
@@ -179,7 +179,7 @@ class MCompany
      *
      * @param \DateTime $createdAt
      *
-     * @return MCompany
+     * @return TPreUser
      */
     public function setCreatedAt($createdAt)
     {
@@ -203,7 +203,7 @@ class MCompany
      *
      * @param \DateTime $updatedAt
      *
-     * @return MCompany
+     * @return TPreUser
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -227,7 +227,7 @@ class MCompany
      *
      * @param \DateTime $deletedAt
      *
-     * @return MCompany
+     * @return TPreUser
      */
     public function setDeletedAt($deletedAt)
     {
@@ -247,12 +247,12 @@ class MCompany
     }
 
     /**
-     * Get companyId
+     * Get id
      *
      * @return integer
      */
-    public function getCompanyId()
+    public function getId()
     {
-        return $this->companyId;
+        return $this->id;
     }
 }

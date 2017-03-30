@@ -1,0 +1,14 @@
+{
+  "title": "新規登録メール送信",
+  "type": "object",
+  "properties": {
+    "emailAddress": {
+      "title": "Eメールアドレス",
+      "type": "string",
+      "format": "email",
+      "maxLength": 255
+    }
+  },
+  "required": ["emailAddress"],
+  "additionalProperties": false
+}

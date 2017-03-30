@@ -42,6 +42,16 @@ class BaseService
     }
 
     /**
+     * サービスコンテナ取得
+     *
+     * @return ContainerInterface サービスコンテナ
+     */
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
      * YAML定義パラメータ取得
      *
      * @param string $name The parameter name
@@ -280,6 +290,11 @@ class BaseService
     protected function getTPostRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TPost');
+    }
+
+    protected function getTPreUserRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TPreUser');
     }
 
     protected function getTTimeframeRepository()

@@ -19,7 +19,7 @@ class MGroup
     /**
      * @var string
      *
-     * @ORM\Column(name="group_name", type="string", length=255, nullable=false)
+     * @ORM\Column(name="group_name", type="string", length=255, nullable=true)
      */
     private $groupName;
 
@@ -33,7 +33,7 @@ class MGroup
     /**
      * @var integer
      *
-     * @ORM\Column(name="leader_user_id", type="integer", nullable=false)
+     * @ORM\Column(name="leader_user_id", type="integer", nullable=true)
      */
     private $leaderUserId;
 

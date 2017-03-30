@@ -1,0 +1,44 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /signup.json:
+    get:
+      description: 初期ユーザ登録
+      parameters:
+        -
+          name: JsonRequest
+          in: body
+          description: メールアドレス
+          required: true
+          schema:
+            type: object
+            properties:
+              password:
+                type: string
+              urltoken:
+                type: string
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: パラメータ不正
+        401:
+          description: 認証エラー
+        500:
+          description: サーバーエラー

@@ -19,18 +19,14 @@ class MUser
     /**
      * @var string
      *
-     * @ORM\Column(name="last_name", type="string", length=255, nullable=false)
-     * @JSON\Expose()
-     * @JSON\Type("string")
+     * @ORM\Column(name="last_name", type="string", length=255, nullable=true)
      */
     private $lastName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="first_name", type="string", length=255, nullable=false)
-     * @JSON\Expose()
-     * @JSON\Type("string")
+     * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
      */
     private $firstName;
 
@@ -38,8 +34,6 @@ class MUser
      * @var string
      *
      * @ORM\Column(name="email_address", type="string", length=255, nullable=false)
-     * @JSON\Expose()
-     * @JSON\Type("string")
      */
     private $emailAddress;
 
@@ -47,17 +41,13 @@ class MUser
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255, nullable=false)
-     * @JSON\Expose()
-     * @JSON\Type("string")
      */
     private $password;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="role_id", type="integer", nullable=false)
-     * @JSON\Expose()
-     * @JSON\Type("integer")
+     * @ORM\Column(name="role_id", type="string", length=45, nullable=false)
      */
     private $roleId;
 
@@ -65,8 +55,6 @@ class MUser
      * @var string
      *
      * @ORM\Column(name="position", type="string", length=255, nullable=true)
-     * @JSON\Expose()
-     * @JSON\Type("string")
      */
     private $position;
 
@@ -74,8 +62,6 @@ class MUser
      * @var string
      *
      * @ORM\Column(name="phone_number", type="string", length=45, nullable=true)
-     * @JSON\Expose()
-     * @JSON\Type("string")
      */
     private $phoneNumber;
 
@@ -83,8 +69,6 @@ class MUser
      * @var \DateTime
      *
      * @ORM\Column(name="last_access_datetime", type="datetime", nullable=true)
-     * @JSON\Expose()
-     * @JSON\Type("DateTime<'Y-m-d'>")
      */
     private $lastAccessDatetime;
 
@@ -92,8 +76,6 @@ class MUser
      * @var string
      *
      * @ORM\Column(name="image_path", type="string", length=45, nullable=true)
-     * @JSON\Expose()
-     * @JSON\Type("string")
      */
     private $imagePath;
 
@@ -126,8 +108,6 @@ class MUser
      * @ORM\Column(name="user_id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @JSON\Expose()
-     * @JSON\Type("integer")
      */
     private $userId;
 
@@ -242,7 +222,7 @@ class MUser
     /**
      * Set roleId
      *
-     * @param integer $roleId
+     * @param string $roleId
      *
      * @return MUser
      */
@@ -256,7 +236,7 @@ class MUser
     /**
      * Get roleId
      *
-     * @return integer
+     * @return string
      */
     public function getRoleId()
     {

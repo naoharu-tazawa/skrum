@@ -101,6 +101,17 @@ class BaseController extends FOSRestController
     }
 
     /**
+     * リクエストJSONを配列で取得
+     *
+     * @param Request $request リクエストデータ
+     * @return array
+     */
+    protected function getRequestJsonAsArray(Request $request)
+    {
+        return json_decode($request->getContent(), true);
+    }
+
+    /**
      * JsonSchemaバリデーション
      *
      * @param Request $request リクエストデータ
@@ -129,8 +140,7 @@ class BaseController extends FOSRestController
         if (!$errors) return $errors;
 
         $errorResponse = array();
-        foreach ($errors as $error)
-        {
+        foreach ($errors as $error) {
             $requiredErrorItem['field'] = $error['property'];
             $requiredErrorItem['message'] = $error['message'];
             $errorResponse = $requiredErrorItem;
@@ -152,7 +162,12 @@ class BaseController extends FOSRestController
         if ($data === null) {
             throw new JsonSchemaException("リクエストデータが存在しません");
         }
+
         $form->submit($data);
+
+        if (!$form->isValid()) {
+            throw new InvalidParameterException("フォームデータが不正です", $this->getFormErrors($form));
+        }
     }
 
     /**
@@ -161,15 +176,12 @@ class BaseController extends FOSRestController
      * @param FormInterface $form フォームインターフェース
      * @return array バリデーションエラー情報
      */
-    protected function getFormErrors(FormInterface $form)
+    private function getFormErrors(FormInterface $form)
     {
-        foreach ($form->all() as $childForm)
-        {
-            if ($childForm instanceof FormInterface)
-            {
+        foreach ($form->all() as $childForm) {
+            if ($childForm instanceof FormInterface) {
                 $errors = array();
-                foreach ($childForm->getErrors() as $childError)
-                {
+                foreach ($childForm->getErrors() as $childError) {
                     $error['field'] = $childForm->getName();
                     $error['message'] = $childError->getMessage();
                     $errors = $error;
@@ -227,8 +239,7 @@ class BaseController extends FOSRestController
         if (!$errors) return $errors;
 
         $errorResponse = array();
-        foreach ($errors as $error)
-        {
+        foreach ($errors as $error) {
             $requiredErrorItem['field'] = '';
             $requiredErrorItem['message'] = $error->getMessage();
             $errorResponse = $requiredErrorItem;
@@ -282,5 +293,10 @@ class BaseController extends FOSRestController
     protected function getSampleService()
     {
         return $this->get('api.sample_service');
+    }
+
+    protected function getUserSettingService()
+    {
+        return $this->get('api.user_setting_service');
     }
 }

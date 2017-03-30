@@ -10,10 +10,8 @@ produces:
 basePath: /v1
 
 paths:
-  /api/okrs/{slug}/familyokrs:
+  /okrs/{slug}/familyokrs:
     get:
-      tags:
-        - skrum
       description: 3世代OKR取得
       parameters:
         -
