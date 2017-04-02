@@ -66,6 +66,9 @@ class SampleController extends BaseController
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/SamplePdu');
         if ($errors) throw new JsonSchemaException("JsonSchemaExceptionのサンプル（このメッセージはログに出力されます）", $errors);
 
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
         // 例外のサンプル
         throw new ApplicationException("ApplicationExceptionのサンプル", true);
         // throw new InvalidParameterException("InvalidParameterExceptionのサンプル");
@@ -138,9 +141,8 @@ class SampleController extends BaseController
     {
         $form = $this->createForm(UserType::class, new UserData());
         $this->processForm($request, $form);
-
         if (!$form->isValid()) {
-            throw new InvalidParameterException("InvalidParameterExceptionのサンプル", $this->getFormErrors($form));
+            throw new InvalidParameterException("フォームデータが不正です", $this->getFormErrors($form));
         }
 
         return array('result' => 'OK');

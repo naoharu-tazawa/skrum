@@ -164,10 +164,6 @@ class BaseController extends FOSRestController
         }
 
         $form->submit($data);
-
-        if (!$form->isValid()) {
-            throw new InvalidParameterException("フォームデータが不正です", $this->getFormErrors($form));
-        }
     }
 
     /**
@@ -176,7 +172,7 @@ class BaseController extends FOSRestController
      * @param FormInterface $form フォームインターフェース
      * @return array バリデーションエラー情報
      */
-    private function getFormErrors(FormInterface $form)
+    protected function getFormErrors(FormInterface $form)
     {
         foreach ($form->all() as $childForm) {
             if ($childForm instanceof FormInterface) {

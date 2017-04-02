@@ -31,6 +31,20 @@ class TPreUser
     private $emailAddress;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="company_id", type="integer", nullable=true)
+     */
+    private $companyId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="role_id", type="string", length=45, nullable=true)
+     */
+    private $roleId;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="initial_user_flg", type="boolean", nullable=false)
@@ -124,6 +138,54 @@ class TPreUser
     public function getEmailAddress()
     {
         return $this->emailAddress;
+    }
+
+    /**
+     * Set companyId
+     *
+     * @param integer $companyId
+     *
+     * @return TPreUser
+     */
+    public function setCompanyId($companyId)
+    {
+        $this->companyId = $companyId;
+
+        return $this;
+    }
+
+    /**
+     * Get companyId
+     *
+     * @return integer
+     */
+    public function getCompanyId()
+    {
+        return $this->companyId;
+    }
+
+    /**
+     * Set roleId
+     *
+     * @param string $roleId
+     *
+     * @return TPreUser
+     */
+    public function setRoleId($roleId)
+    {
+        $this->roleId = $roleId;
+
+        return $this;
+    }
+
+    /**
+     * Get roleId
+     *
+     * @return string
+     */
+    public function getRoleId()
+    {
+        return $this->roleId;
     }
 
     /**

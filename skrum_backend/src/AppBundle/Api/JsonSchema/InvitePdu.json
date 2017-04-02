@@ -1,0 +1,20 @@
+{
+  "title": "ユーザ招待メール送信",
+  "type": "object",
+  "properties": {
+    "emailAddress": {
+      "title": "Eメールアドレス",
+      "type": "string",
+      "format": "email",
+      "maxLength": 255
+    },
+    "roleId": {
+      "title": "ロールID",
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 5
+    }
+  },
+  "required": ["emailAddress", "roleId"],
+  "additionalProperties": false
+}
