@@ -35,8 +35,8 @@ paths:
             required:
               - result
         400:
-          description: パラメータ不正
-        401:
-          description: 認証エラー
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
         500:
           description: サーバーエラー

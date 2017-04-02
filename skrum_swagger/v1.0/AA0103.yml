@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /signup.json:
+  /join.json:
     get:
-      description: 初期ユーザ登録
+      description: 追加ユーザ登録
       parameters:
         -
           name: JsonRequest

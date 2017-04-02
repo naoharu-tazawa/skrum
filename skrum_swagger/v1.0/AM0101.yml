@@ -10,21 +10,21 @@ produces:
 basePath: /v1
 
 paths:
-  /signup.json:
+  /invite.json:
     get:
-      description: 初期ユーザ登録
+      description: ユーザ招待メール送信
       parameters:
         -
           name: JsonRequest
           in: body
-          description: メールアドレス、URLトークン
+          description: メールアドレス、ロールID
           required: true
           schema:
             type: object
             properties:
-              password:
+              emailAddress:
                 type: string
-              urltoken:
+              roleId:
                 type: string
       responses:
         200:
@@ -38,8 +38,6 @@ paths:
               - result
         400:
           description: JSONスキーマ不正
-        401:
-          description: 認証エラー
         409:
           description: 排他エラー
         500:
