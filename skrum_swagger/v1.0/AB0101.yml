@@ -1,0 +1,44 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /login.json:
+    get:
+      description: ログイン
+      parameters:
+        -
+          name: JsonRequest
+          in: body
+          description: メールアドレス、パスワード
+          required: true
+          schema:
+            type: object
+            properties:
+              emailAddress:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

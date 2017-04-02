@@ -16,3 +16,6 @@ services:
     api.user_setting_service:
         class: AppBundle\Service\Api\UserSettingService
         arguments: ['@service_container']
+    api.login_service:
+        class: AppBundle\Service\Api\LoginService
+        arguments: ['@service_container']

@@ -1,0 +1,19 @@
+{
+  "title": "ログイン",
+  "type": "object",
+  "properties": {
+    "emailAddress": {
+      "title": "Eメールアドレス",
+      "type": "string",
+      "format": "email",
+      "maxLength": 255
+    },
+    "password": {
+      "title": "パスワード",
+      "type": "string",
+      "pattern": "^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,100}$"
+    }
+  },
+  "required": ["emailAddress", "password"],
+  "additionalProperties": false
+}
