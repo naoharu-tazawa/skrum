@@ -18,11 +18,12 @@ class UserSettingService extends BaseService
      * ユーザ仮登録
      *
      * @param $emailAddress Eメールアドレス
+     * @param $subdomain サブドメイン
      * @param $companyId 会社ID（ユーザ招待の場合のみ）
      * @param $roleId ロールID（ユーザ招待の場合のみ）
      * @return boolean 登録結果
      */
-    public function preregisterUser($emailAddress, $companyId = null, $roleId = null)
+    public function preregisterUser($emailAddress, $subdomain, $companyId = null, $roleId = null)
     {
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
@@ -37,6 +38,7 @@ class UserSettingService extends BaseService
         // 仮登録ユーザテーブルに登録
         $tPreUser = new TPreUser();
         $tPreUser->setEmailAddress($emailAddress);
+        $tPreUser->setSubdomain($subdomain);
         $tPreUser->setUrltoken($urltoken);
         // 会社IDが存在する場合（ユーザ招待の場合）のみ、会社IDとロールIDをセット
         if ($companyId) {

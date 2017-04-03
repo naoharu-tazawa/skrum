@@ -31,6 +31,13 @@ class TPreUser
     private $emailAddress;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="subdomain", type="string", length=45, nullable=false)
+     */
+    private $subdomain;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="company_id", type="integer", nullable=true)
@@ -138,6 +145,30 @@ class TPreUser
     public function getEmailAddress()
     {
         return $this->emailAddress;
+    }
+
+    /**
+     * Set subdomain
+     *
+     * @param string $subdomain
+     *
+     * @return TPreUser
+     */
+    public function setSubdomain($subdomain)
+    {
+        $this->subdomain = $subdomain;
+
+        return $this;
+    }
+
+    /**
+     * Get subdomain
+     *
+     * @return string
+     */
+    public function getSubdomain()
+    {
+        return $this->subdomain;
     }
 
     /**

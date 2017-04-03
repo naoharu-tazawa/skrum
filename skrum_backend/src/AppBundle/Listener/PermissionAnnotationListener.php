@@ -43,19 +43,22 @@ class PermissionAnnotationListener
             return;
         }
 
-        $object = new \ReflectionObject($controller[0]);
-        $method = $object->getMethod($controller[1]);
+        // 権限チェック
+        if (!($controller[0] instanceof LoginController)) {
+            $object = new \ReflectionObject($controller[0]);
+            $method = $object->getMethod($controller[1]);
 
-        // リクエストコントローラのアノテーションを取得
-        $annotation = $this->reader->getMethodAnnotation($method, 'AppBundle\\Utils\\Permission');
-        if (empty($annotation)) return;
+            // リクエストコントローラのアノテーションを取得
+            $annotation = $this->reader->getMethodAnnotation($method, 'AppBundle\\Utils\\Permission');
+            if (empty($annotation)) return;
 
-        // 認証情報を取得
-        $auth = $event->getRequest()->get('auth_token');
+            // 認証情報を取得
+            $auth = $event->getRequest()->get('auth_token');
 
-        // リクエストユーザが権限を持っているかチェック
-        if (!in_array($annotation->getValue(), $auth->getPermissions())) {
-            throw new PermissionException('権限がありません');
+            // リクエストユーザが権限を持っているかチェック
+            if (!in_array($annotation->getValue(), $auth->getPermissions())) {
+                throw new PermissionException('権限がありません');
+            }
         }
     }
 }

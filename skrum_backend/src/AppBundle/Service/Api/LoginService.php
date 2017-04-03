@@ -11,6 +11,7 @@ use AppBundle\Entity\TGroupTree;
 use AppBundle\Entity\TPreUser;
 use AppBundle\Exception\AuthenticationException;
 use AppBundle\Exception\DoubleOperationException;
+use AppBundle\Exception\PermissionException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DBConstant;
 
@@ -22,13 +23,30 @@ use AppBundle\Utils\DBConstant;
 class LoginService extends BaseService
 {
     /**
+     * サブドメインチェック
+     *
+     * @param $subdomain サブドメイン
+     * @return void
+     */
+    public function checkSubdomain($subdomain)
+    {
+        // 会社マスタに対象サブドメインの登録が既にあるかチェック
+        $mCompanyRepos = $this->getMCompanyRepository();
+        $mCompany = $mCompanyRepos->findBy(array('subdomain' => $subdomain));
+        if (count($mCompany) !== 0) {
+            throw new DoubleOperationException('サブドメインは既に使用されています');
+        }
+    }
+
+    /**
      * ログイン
      *
      * @param $emailAddress Eメールアドレス
      * @param $password パスワード
+     * @param $subdomain サブドメイン
      * @return string JWT
      */
-    public function login($emailAddress, $password)
+    public function login($emailAddress, $password, $subdomain)
     {
         // 対象ユーザをユーザテーブルから取得
         $mUserRepos = $this->getMUserRepository();
@@ -42,8 +60,14 @@ class LoginService extends BaseService
             throw new AuthenticationException('パスワードが一致しません');
         }
 
+        // サブドメインチェック
+        $mCompany = $mUserArray[0]->getCompany();
+        if ($subdomain !== $mCompany->getSubdomain()) {
+            throw new PermissionException('サブドメインが不正です');
+        }
+
         // JWT発行
-        $jwt = $this->issueJwt($mUserArray[0]->getUserId(), $mUserArray[0]->getCompany()->getCompanyId(), $mUserArray[0]->getRoleId());
+        $jwt = $this->issueJwt($mCompany->getSubdomain(), $mUserArray[0]->getUserId(), $mCompany->getCompanyId(), $mUserArray[0]->getRoleId());
 
         return $jwt;
     }
@@ -53,9 +77,10 @@ class LoginService extends BaseService
      *
      * @param $password パスワード
      * @param $urltoken URLトークン
+     * @param $subdomain サブドメイン
      * @return string JWT
      */
-    public function signup($password, $urltoken)
+    public function signup($password, $urltoken, $subdomain)
     {
         // URLトークン
         $tPreUserRepos = $this->getTPreUserRepository();
@@ -65,6 +90,14 @@ class LoginService extends BaseService
         if (empty($tPreUser)) {
             throw new AuthenticationException('URLトークンが無効です');
         }
+
+        // サブドメインチェック
+        if ($subdomain !== $tPreUser->getSubdomain()) {
+            throw new PermissionException('サブドメインが不正です');
+        }
+
+        // 会社マスタに同一サブドメインの登録がないか確認
+        $this->checkSubdomain($tPreUser->getSubdomain());
 
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
@@ -82,6 +115,7 @@ class LoginService extends BaseService
         try{
             // 会社マスタにレコード追加
             $mCompany = new MCompany();
+            $mCompany->setSubdomain($tPreUser->getSubdomain());
             $this->persist($mCompany);
 
             // グループマスタにレコード追加
@@ -118,7 +152,7 @@ class LoginService extends BaseService
         }
 
         // JWT発行
-        $jwt = $this->issueJwt($mUser->getUserId(), $mCompany->getCompanyId(), $mUser->getRoleId());
+        $jwt = $this->issueJwt($mCompany->getSubdomain(), $mUser->getUserId(), $mCompany->getCompanyId(), $mUser->getRoleId());
 
         return $jwt;
     }
@@ -128,9 +162,10 @@ class LoginService extends BaseService
      *
      * @param $password パスワード
      * @param $urltoken URLトークン
+     * @param $subdomain サブドメイン
      * @return string JWT
      */
-    public function join($password, $urltoken)
+    public function join($password, $urltoken, $subdomain)
     {
         // URLトークン
         $tPreUserRepos = $this->getTPreUserRepository();
@@ -139,6 +174,11 @@ class LoginService extends BaseService
         $tPreUser = $tPreUserRepos->getAdditionalPreUserToken($urltoken);
         if (empty($tPreUser)) {
             throw new AuthenticationException('URLトークンが無効です');
+        }
+
+        // サブドメインチェック
+        if ($subdomain !== $tPreUser->getSubdomain()) {
+            throw new PermissionException('サブドメインが不正です');
         }
 
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
@@ -182,7 +222,7 @@ class LoginService extends BaseService
         }
 
         // JWT発行
-        $jwt = $this->issueJwt($mUser->getUserId(), $mCompany->getCompanyId(), $mUser->getRoleId());
+        $jwt = $this->issueJwt($mCompany->getSubdomain(), $mUser->getUserId(), $mCompany->getCompanyId(), $mUser->getRoleId());
 
         return $jwt;
     }
@@ -190,12 +230,13 @@ class LoginService extends BaseService
     /**
      * JWTを発行
      *
-     * @param $userId ユーザID
-     * @param $companyId 会社ID
-     * @param $companyId ロールID
+     * @param string $subdomain サブドメイン
+     * @param integer $userId ユーザID
+     * @param integer $companyId 会社ID
+     * @param string $companyId ロールID
      * @return string JWT
      */
-    private function issueJwt($userId, $companyId, $roleId)
+    private function issueJwt($subdomain, $userId, $companyId, $roleId)
     {
         // 権限取得
         $mRolePermissionRepos = $this->getMRolePermissionRepository();
@@ -220,6 +261,7 @@ class LoginService extends BaseService
                 "iss" => "accounts.skrum.jp",      // 発行者の識別子
                 "iat" => $now,                     // 発行日時
                 "exp" => $expireUnixTime,          // 有効期限
+                "sdm" => $subdomain,               // サブドメイン
                 "uid" => $userId,                  // ユーザID
                 "cid" => $companyId,               // 会社ID
                 "rid" => $roleId,                  // ロールID

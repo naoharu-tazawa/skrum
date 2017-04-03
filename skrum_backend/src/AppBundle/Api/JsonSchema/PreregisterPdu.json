@@ -7,8 +7,13 @@
       "type": "string",
       "format": "email",
       "maxLength": 255
+    },
+    "subdomain": {
+      "title": "サブドメイン",
+      "type": "string",
+      "maxLength": 45
     }
   },
-  "required": ["emailAddress"],
+  "required": ["emailAddress", "subdomain"],
   "additionalProperties": false
 }

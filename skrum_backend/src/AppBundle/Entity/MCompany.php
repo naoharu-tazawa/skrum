@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JSON;
 /**
  * MCompany
  *
- * @ORM\Table(name="m_company")
+ * @ORM\Table(name="m_company", uniqueConstraints={@ORM\UniqueConstraint(name="subdomain_UNIQUE", columns={"subdomain"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MCompanyRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
@@ -54,9 +54,9 @@ class MCompany
     /**
      * @var string
      *
-     * @ORM\Column(name="sub_domain", type="string", length=45, nullable=true)
+     * @ORM\Column(name="subdomain", type="string", length=45, nullable=false)
      */
-    private $subDomain;
+    private $subdomain;
 
     /**
      * @var \DateTime
@@ -213,27 +213,27 @@ class MCompany
     }
 
     /**
-     * Set subDomain
+     * Set subdomain
      *
-     * @param string $subDomain
+     * @param string $subdomain
      *
      * @return MCompany
      */
-    public function setSubDomain($subDomain)
+    public function setSubdomain($subdomain)
     {
-        $this->subDomain = $subDomain;
+        $this->subdomain = $subdomain;
 
         return $this;
     }
 
     /**
-     * Get subDomain
+     * Get subdomain
      *
      * @return string
      */
-    public function getSubDomain()
+    public function getSubdomain()
     {
-        return $this->subDomain;
+        return $this->subdomain;
     }
 
     /**

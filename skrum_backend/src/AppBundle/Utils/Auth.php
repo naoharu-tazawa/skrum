@@ -10,6 +10,13 @@ namespace AppBundle\Utils;
 class Auth
 {
     /**
+     * サブドメイン
+     *
+     * @var string
+     */
+    private $subdomain;
+
+    /**
      * ユーザID
      *
      * @var integer
@@ -47,19 +54,31 @@ class Auth
     /**
      * コンストラクタ
      *
+     * @param string $subdomain サブドメイン
      * @param integer $userId ユーザID
      * @param integer $companyId 会社ID
      * @param string $roleId ロールID
      * @param integer $roleLevel ロールレベル
      * @param array $permissions  権限情報
      */
-    public function __construct($userId, $companyId, $roleId, $roleLevel, $permissions)
+    public function __construct($subdomain, $userId, $companyId, $roleId, $roleLevel, $permissions)
     {
+        $this->subdomain = $subdomain;
         $this->userId = $userId;
         $this->companyId = $companyId;
         $this->roleId = $roleId;
         $this->roleLevel = $roleLevel;
         $this->permissions = $permissions;
+    }
+
+    /**
+     * Get subdomain
+     *
+     * @return string
+     */
+    public function getSubdomain()
+    {
+        return $this->subdomain;
     }
 
     /**

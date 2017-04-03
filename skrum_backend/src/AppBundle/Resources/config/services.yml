@@ -12,11 +12,16 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.controller, priority: 255 }
 
+    app.subdomain_listener:
+        class: AppBundle\Listener\SubdomainListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, priority: 0 }
+
     app.permission_annotation_listener:
         class: AppBundle\Listener\PermissionAnnotationListener
         arguments: [@annotation_reader]
         tags:
-            - { name: kernel.event_listener, event: kernel.controller, priority: 0 }
+            - { name: kernel.event_listener, event: kernel.controller, priority: -255 }
 
     gedmo.listener.softdeleteable:
         class: Gedmo\SoftDeleteable\SoftDeleteableListener

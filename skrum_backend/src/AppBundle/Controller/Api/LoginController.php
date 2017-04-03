@@ -16,8 +16,8 @@ class LoginController extends BaseController
 {
     /**
      * 新規登録メール送信
+     * （ルーティングアノテーション対象外）
      *
-     * @Rest\Post("/preregister.{_format}")
      * @param $request リクエストオブジェクト
      * @return array
      */
@@ -30,9 +30,13 @@ class LoginController extends BaseController
         // リクエストJSONを取得
         $data = $this->getRequestJsonAsArray($request);
 
+        // サブドメイン重複チェック
+        $loginService = $this->getLoginService();
+        $loginService->checkSubdomain($data['subdomain']);
+
         // 新規ユーザ登録メール送信処理
         $userSettingService = $this->getUserSettingService();
-        $result = $userSettingService->preregisterUser($data['emailAddress']);
+        $result = $userSettingService->preregisterUser($data['emailAddress'], $data['subdomain']);
 
         if ($result) {
             return array('result' => 'OK');
@@ -59,7 +63,7 @@ class LoginController extends BaseController
 
         // ログイン処理
         $loginService = $this->getLoginService();
-        $jwt = $loginService->login($data['emailAddress'], $data['password']);
+        $jwt = $loginService->login($data['emailAddress'], $data['password'], $this->getSubdomain($request));
 
         return array('jwt' => $jwt);
     }
@@ -82,7 +86,7 @@ class LoginController extends BaseController
 
         // 新規ユーザ登録処理
         $loginService = $this->getLoginService();
-        $jwt = $loginService->signup($data['password'], $data['urltoken']);
+        $jwt = $loginService->signup($data['password'], $data['urltoken'], $this->getSubdomain($request));
 
         return array('jwt' => $jwt);
     }
@@ -105,7 +109,7 @@ class LoginController extends BaseController
 
         // 追加ユーザ登録処理
         $loginService = $this->getLoginService();
-        $jwt = $loginService->join($data['password'], $data['urltoken']);
+        $jwt = $loginService->join($data['password'], $data['urltoken'], $this->getSubdomain($request));
 
         return array('jwt' => $jwt);
     }

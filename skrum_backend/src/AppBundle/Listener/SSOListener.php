@@ -58,6 +58,7 @@ class SSOListener
         // JWTをAuthクラスにマッピング
         $decoded_array = (array) $decoded;
         $auth = new Auth(
+                    $decoded_array['sdm'],
                     $decoded_array['uid'],
                     $decoded_array['cid'],
                     $decoded_array['rid'],

@@ -101,6 +101,17 @@ class BaseController extends FOSRestController
     }
 
     /**
+     * リクエストURLのサブドメインを取得
+     *
+     * @param Request $request リクエストデータ
+     * @return string サブドメイン
+     */
+    protected function getSubdomain(Request $request)
+    {
+        return strstr($request->getHost(), '.', true);
+    }
+
+    /**
      * リクエストJSONを配列で取得
      *
      * @param Request $request リクエストデータ
