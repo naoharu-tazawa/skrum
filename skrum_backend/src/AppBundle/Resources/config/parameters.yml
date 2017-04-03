@@ -1,3 +1,8 @@
 parameters:
+
+    #JWT有効期限（分）
+    jwt_exp_minutes: 10080
+
     sample_parmeter_controller: 'サンプルパラメータ in Controller'
+
     sample_parmeter_service: 'サンプルパラメータ in Service'

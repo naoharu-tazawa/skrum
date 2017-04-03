@@ -15,6 +15,33 @@ use AppBundle\Controller\BaseController;
 class LoginController extends BaseController
 {
     /**
+     * 新規登録メール送信
+     *
+     * @Rest\Post("/preregister.{_format}")
+     * @param $request リクエストオブジェクト
+     * @return array
+     */
+    public function preregisterAction(Request $request)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PreregisterPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 新規ユーザ登録メール送信処理
+        $userSettingService = $this->getUserSettingService();
+        $result = $userSettingService->preregisterUser($data['emailAddress']);
+
+        if ($result) {
+            return array('result' => 'OK');
+        } else {
+            return array('result' => 'NG');
+        }
+    }
+
+    /**
      * ログイン
      *
      * @Rest\Post("/login.{_format}")
@@ -32,12 +59,54 @@ class LoginController extends BaseController
 
         // ログイン処理
         $loginService = $this->getLoginService();
-        $result = $loginService->login($data['emailAddress'], $data['password']);
+        $jwt = $loginService->login($data['emailAddress'], $data['password']);
 
-        if ($result) {
-            return array('result' => 'OK');
-        } else {
-            return array('result' => 'NG');
-        }
+        return array('jwt' => $jwt);
+    }
+
+    /**
+     * 新規ユーザ登録
+     *
+     * @Rest\Post("/signup.{_format}")
+     * @param $request リクエストオブジェクト
+     * @return array
+     */
+    public function signupAction(Request $request)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/SignupPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 新規ユーザ登録処理
+        $loginService = $this->getLoginService();
+        $jwt = $loginService->signup($data['password'], $data['urltoken']);
+
+        return array('jwt' => $jwt);
+    }
+
+    /**
+     * 追加ユーザ登録
+     *
+     * @Rest\Post("/join.{_format}")
+     * @param $request リクエストオブジェクト
+     * @return array
+     */
+    public function joinAction(Request $request)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/SignupPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 追加ユーザ登録処理
+        $loginService = $this->getLoginService();
+        $jwt = $loginService->join($data['password'], $data['urltoken']);
+
+        return array('jwt' => $jwt);
     }
 }

@@ -9,13 +9,20 @@ use JMS\Serializer\Annotation as JSON;
 /**
  * MRolePermission
  *
- * @ORM\Table(name="m_role_permission", indexes={@ORM\Index(name="idx_role_permission_01", columns={"role_id"}), @ORM\Index(name="idx_role_permission_02", columns={"role_id", "permission_id"})})
+ * @ORM\Table(name="m_role_permission", indexes={@ORM\Index(name="idx_role_permission_02", columns={"role_id", "permission_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MRolePermissionRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
  */
 class MRolePermission
 {
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="role_id", type="string", length=45, nullable=false)
+     */
+    private $roleId;
+
     /**
      * @var string
      *
@@ -26,7 +33,7 @@ class MRolePermission
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=45, nullable=true)
+     * @ORM\Column(name="name", type="string", length=45, nullable=false)
      */
     private $name;
 
@@ -62,17 +69,31 @@ class MRolePermission
      */
     private $id;
 
+
+
     /**
-     * @var \AppBundle\Entity\MRole
+     * Set roleId
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MRole")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="role_id", referencedColumnName="role_id")
-     * })
+     * @param string $roleId
+     *
+     * @return MRolePermission
      */
-    private $role;
+    public function setRoleId($roleId)
+    {
+        $this->roleId = $roleId;
 
+        return $this;
+    }
 
+    /**
+     * Get roleId
+     *
+     * @return string
+     */
+    public function getRoleId()
+    {
+        return $this->roleId;
+    }
 
     /**
      * Set permissionId
@@ -202,29 +223,5 @@ class MRolePermission
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set role
-     *
-     * @param \AppBundle\Entity\MRole $role
-     *
-     * @return MRolePermission
-     */
-    public function setRole(\AppBundle\Entity\MRole $role = null)
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    /**
-     * Get role
-     *
-     * @return \AppBundle\Entity\MRole
-     */
-    public function getRole()
-    {
-        return $this->role;
     }
 }

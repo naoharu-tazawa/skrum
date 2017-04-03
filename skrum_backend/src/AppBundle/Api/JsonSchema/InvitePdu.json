@@ -11,8 +11,8 @@
     "roleId": {
       "title": "ロールID",
       "type": "string",
-      "minLength": 5,
-      "maxLength": 5
+      "minLength": 4,
+      "maxLength": 4
     }
   },
   "required": ["emailAddress", "roleId"],

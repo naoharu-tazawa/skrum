@@ -45,6 +45,20 @@ class MCompany
     private $imagePath;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="default_disclosure_type", type="string", length=2, nullable=true)
+     */
+    private $defaultDisclosureType;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="sub_domain", type="string", length=45, nullable=true)
+     */
+    private $subDomain;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -172,6 +186,54 @@ class MCompany
     public function getImagePath()
     {
         return $this->imagePath;
+    }
+
+    /**
+     * Set defaultDisclosureType
+     *
+     * @param string $defaultDisclosureType
+     *
+     * @return MCompany
+     */
+    public function setDefaultDisclosureType($defaultDisclosureType)
+    {
+        $this->defaultDisclosureType = $defaultDisclosureType;
+
+        return $this;
+    }
+
+    /**
+     * Get defaultDisclosureType
+     *
+     * @return string
+     */
+    public function getDefaultDisclosureType()
+    {
+        return $this->defaultDisclosureType;
+    }
+
+    /**
+     * Set subDomain
+     *
+     * @param string $subDomain
+     *
+     * @return MCompany
+     */
+    public function setSubDomain($subDomain)
+    {
+        $this->subDomain = $subDomain;
+
+        return $this;
+    }
+
+    /**
+     * Get subDomain
+     *
+     * @return string
+     */
+    public function getSubDomain()
+    {
+        return $this->subDomain;
     }
 
     /**

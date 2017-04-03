@@ -1,21 +1,38 @@
 services:
+
     app.exception_listener:
         class: AppBundle\Listener\ExceptionListener
         arguments: ['@service_container']
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+    app.sso_listener:
+        class: AppBundle\Listener\SSOListener
+        arguments: ['%secret%']
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, priority: 255 }
+
+    app.permission_annotation_listener:
+        class: AppBundle\Listener\PermissionAnnotationListener
+        arguments: [@annotation_reader]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, priority: 0 }
+
     gedmo.listener.softdeleteable:
         class: Gedmo\SoftDeleteable\SoftDeleteableListener
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
     api.sample_service:
         class: AppBundle\Service\Api\SampleService
         arguments: ['@service_container']
-    api.user_setting_service:
-        class: AppBundle\Service\Api\UserSettingService
-        arguments: ['@service_container']
+
     api.login_service:
         class: AppBundle\Service\Api\LoginService
+        arguments: ['@service_container']
+
+    api.user_setting_service:
+        class: AppBundle\Service\Api\UserSettingService
         arguments: ['@service_container']

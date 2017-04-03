@@ -31,6 +31,13 @@ class MRole
     private $name;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="level", type="smallint", nullable=false)
+     */
+    private $level;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255, nullable=false)
@@ -117,6 +124,30 @@ class MRole
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set level
+     *
+     * @param integer $level
+     *
+     * @return MRole
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * Get level
+     *
+     * @return integer
+     */
+    public function getLevel()
+    {
+        return $this->level;
     }
 
     /**
