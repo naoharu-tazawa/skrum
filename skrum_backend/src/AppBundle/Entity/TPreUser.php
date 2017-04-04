@@ -45,11 +45,11 @@ class TPreUser
     private $companyId;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="role_id", type="string", length=45, nullable=true)
+     * @ORM\Column(name="role_assignment_id", type="integer", nullable=true)
      */
-    private $roleId;
+    private $roleAssignmentId;
 
     /**
      * @var boolean
@@ -196,27 +196,27 @@ class TPreUser
     }
 
     /**
-     * Set roleId
+     * Set roleAssignmentId
      *
-     * @param string $roleId
+     * @param integer $roleAssignmentId
      *
      * @return TPreUser
      */
-    public function setRoleId($roleId)
+    public function setRoleAssignmentId($roleAssignmentId)
     {
-        $this->roleId = $roleId;
+        $this->roleAssignmentId = $roleAssignmentId;
 
         return $this;
     }
 
     /**
-     * Get roleId
+     * Get roleAssignmentId
      *
-     * @return string
+     * @return integer
      */
-    public function getRoleId()
+    public function getRoleAssignmentId()
     {
-        return $this->roleId;
+        return $this->roleAssignmentId;
     }
 
     /**

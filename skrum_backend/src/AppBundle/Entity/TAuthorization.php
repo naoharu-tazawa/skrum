@@ -54,9 +54,9 @@ class TAuthorization
     /**
      * @var boolean
      *
-     * @ORM\Column(name="authorization_stop_flg", type="boolean", nullable=true)
+     * @ORM\Column(name="authorization_stop_flg", type="boolean", nullable=false)
      */
-    private $authorizationStopFlg;
+    private $authorizationStopFlg = '0';
 
     /**
      * @var \DateTime

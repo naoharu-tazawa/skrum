@@ -1,7 +1,10 @@
 parameters:
 
-    #JWT有効期限（分）
+    #JWT有効期限（単位：分）
     jwt_exp_minutes: 10080
+
+    #お試しプラン期間（単位：日）
+    trial_plan_period: 14
 
     sample_parmeter_controller: 'サンプルパラメータ in Controller'
 

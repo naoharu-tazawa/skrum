@@ -7,14 +7,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JSON;
 
 /**
- * MRole
+ * MRoleAssignment
  *
- * @ORM\Table(name="m_role", uniqueConstraints={@ORM\UniqueConstraint(name="ui_role_01", columns={"role_id"})})
- * @ORM\Entity(repositoryClass="AppBundle\Repository\MRoleRepository")
+ * @ORM\Table(name="m_role_assignment")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\MRoleAssignmentRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
  */
-class MRole
+class MRoleAssignment
 {
     /**
      * @var string
@@ -24,32 +24,18 @@ class MRole
     private $roleId;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="plan_id", type="integer", nullable=false)
-     */
-    private $planId;
-
-    /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=45, nullable=false)
+     * @ORM\Column(name="role_level", type="string", length=45, nullable=false)
      */
-    private $name;
+    private $roleLevel;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="level", type="smallint", nullable=false)
+     * @ORM\Column(name="company_id", type="integer", nullable=false)
      */
-    private $level;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="string", length=255, nullable=false)
-     */
-    private $description;
+    private $companyId;
 
     /**
      * @var \DateTime
@@ -77,11 +63,11 @@ class MRole
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="role_assignment_id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private $roleAssignmentId;
 
 
 
@@ -90,7 +76,7 @@ class MRole
      *
      * @param string $roleId
      *
-     * @return MRole
+     * @return MRoleAssignment
      */
     public function setRoleId($roleId)
     {
@@ -110,99 +96,51 @@ class MRole
     }
 
     /**
-     * Set planId
+     * Set roleLevel
      *
-     * @param integer $planId
+     * @param string $roleLevel
      *
-     * @return MRole
+     * @return MRoleAssignment
      */
-    public function setPlanId($planId)
+    public function setRoleLevel($roleLevel)
     {
-        $this->planId = $planId;
+        $this->roleLevel = $roleLevel;
 
         return $this;
     }
 
     /**
-     * Get planId
-     *
-     * @return integer
-     */
-    public function getPlanId()
-    {
-        return $this->planId;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return MRole
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
+     * Get roleLevel
      *
      * @return string
      */
-    public function getName()
+    public function getRoleLevel()
     {
-        return $this->name;
+        return $this->roleLevel;
     }
 
     /**
-     * Set level
+     * Set companyId
      *
-     * @param integer $level
+     * @param integer $companyId
      *
-     * @return MRole
+     * @return MRoleAssignment
      */
-    public function setLevel($level)
+    public function setCompanyId($companyId)
     {
-        $this->level = $level;
+        $this->companyId = $companyId;
 
         return $this;
     }
 
     /**
-     * Get level
+     * Get companyId
      *
      * @return integer
      */
-    public function getLevel()
+    public function getCompanyId()
     {
-        return $this->level;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return MRole
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
+        return $this->companyId;
     }
 
     /**
@@ -210,7 +148,7 @@ class MRole
      *
      * @param \DateTime $createdAt
      *
-     * @return MRole
+     * @return MRoleAssignment
      */
     public function setCreatedAt($createdAt)
     {
@@ -234,7 +172,7 @@ class MRole
      *
      * @param \DateTime $updatedAt
      *
-     * @return MRole
+     * @return MRoleAssignment
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -258,7 +196,7 @@ class MRole
      *
      * @param \DateTime $deletedAt
      *
-     * @return MRole
+     * @return MRoleAssignment
      */
     public function setDeletedAt($deletedAt)
     {
@@ -278,12 +216,12 @@ class MRole
     }
 
     /**
-     * Get id
+     * Get roleAssignmentId
      *
      * @return integer
      */
-    public function getId()
+    public function getRoleAssignmentId()
     {
-        return $this->id;
+        return $this->roleAssignmentId;
     }
 }

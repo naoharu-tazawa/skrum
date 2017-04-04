@@ -12,10 +12,10 @@ class Constant
     /**
      * ログ出力ファイルパス（アプリケーション）
      */
-    const LOG_FILE_PATH_APPLICATION = "../app/logs/application.log";
+    const LOG_FILE_PATH_APPLICATION = '../app/logs/application.log';
 
     /**
      * ログ出力ファイルパス（アラート）
      */
-    const LOG_FILE_PATH_ALERT = "../app/logs/alert.log";
+    const LOG_FILE_PATH_ALERT = '../app/logs/alert.log';
 }

@@ -8,13 +8,12 @@
       "format": "email",
       "maxLength": 255
     },
-    "roleId": {
-      "title": "ロールID",
-      "type": "string",
-      "minLength": 4,
-      "maxLength": 4
+    "roleAssignmentId": {
+      "title": "ロール割当ID",
+      "type": "integer",
+      "maxLength": 11
     }
   },
-  "required": ["emailAddress", "roleId"],
+  "required": ["emailAddress", "roleAssignmentId"],
   "additionalProperties": false
 }

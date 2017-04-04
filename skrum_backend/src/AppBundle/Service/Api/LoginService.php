@@ -7,13 +7,16 @@ use AppBundle\Service\BaseService;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\MCompany;
 use AppBundle\Entity\MGroup;
+use AppBundle\Entity\MRoleAssignment;
 use AppBundle\Entity\TGroupTree;
 use AppBundle\Entity\TPreUser;
+use AppBundle\Entity\TAuthorization;
 use AppBundle\Exception\AuthenticationException;
 use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Utils\DateUtility;
 
 /**
  * ログインサービスクラス
@@ -66,8 +69,15 @@ class LoginService extends BaseService
             throw new PermissionException('サブドメインが不正です');
         }
 
+        // 認可レコードチェック
+        $this->checkAuthorization($mCompany->getCompanyId());
+
         // JWT発行
-        $jwt = $this->issueJwt($mCompany->getSubdomain(), $mUserArray[0]->getUserId(), $mCompany->getCompanyId(), $mUserArray[0]->getRoleId());
+        $jwt = $this->issueJwt($mCompany->getSubdomain(),
+                    $mUserArray[0]->getUserId(),
+                    $mCompany->getCompanyId(),
+                    $mUserArray[0]->getRoleAssignment()->getRoleId()
+                );
 
         return $jwt;
     }
@@ -78,9 +88,10 @@ class LoginService extends BaseService
      * @param $password パスワード
      * @param $urltoken URLトークン
      * @param $subdomain サブドメイン
+     * @param $planId プランID
      * @return string JWT
      */
-    public function signup($password, $urltoken, $subdomain)
+    public function signup($password, $urltoken, $subdomain, $planId = DBConstant::PLAN_ID_TRIAL_PLAN)
     {
         // URLトークン
         $tPreUserRepos = $this->getTPreUserRepository();
@@ -122,7 +133,7 @@ class LoginService extends BaseService
             $mGroup = new MGroup();
             $mGroup->setCompany($mCompany);
             $mGroup->setGroupType(DBConstant::GROUP_TYPE_COMPANY);
-            $mGroup->setCompanyFlg(1);
+            $mGroup->setCompanyFlg(DBConstant::FLG_TRUE);
             $this->persist($mGroup);
             $this->flush();
 
@@ -132,16 +143,42 @@ class LoginService extends BaseService
             $tGroupTree->setGroupTreePath($mGroup->getGroupId() . '/');
             $this->persist($tGroupTree);
 
+            // ロールマスタからロールを取得
+            $mRoleRepos = $this->getMRoleRepository();
+            $mRoleArray = $mRoleRepos->findBy(
+                            array('planId' => DBConstant::PLAN_ID_STANDARD_PLAN),
+                            array('level' => 'ASC')
+                        );
+
+            // ロール割当マスタにレコード追加
+            foreach ($mRoleArray as $mRole) {
+                $mRoleAssignment = new MRoleAssignment();
+                $mRoleAssignment->setRoleId($mRole->getRoleId());
+                $mRoleAssignment->setRoleLevel($mRole->getLevel());
+                $mRoleAssignment->setCompanyId($mCompany->getCompanyId());
+                $this->persist($mRoleAssignment);
+            }
+
             // ユーザマスタにレコード追加
             $mUser = new MUser();
             $mUser->setCompany($mCompany);
             $mUser->setEmailAddress($tPreUser->getEmailAddress());
             $mUser->setPassword($hashedPassword);
-            $mUser->setRoleId('A003');
+            $mUser->setRoleAssignment($mRoleAssignment);
+            //$mUser->setRoleId(DBConstant::ROLE_ID_SUPERADMIN_STANDARD);
             $this->persist($mUser);
 
             // 仮登録ユーザテーブルのURLトークンを無効にする
-            $tPreUser->setInvalidFlg(1);
+            $tPreUser->setInvalidFlg(DBConstant::FLG_TRUE);
+
+            if ($planId === DBConstant::PLAN_ID_TRIAL_PLAN) {
+                $tAuthorization = new TAuthorization();
+                $tAuthorization->setCompanyId($mCompany->getCompanyId());
+                $tAuthorization->setPlanId($planId);
+                $tAuthorization->setAuthorizationStartDatetime(DateUtility::getCurrentDatetime());
+                $tAuthorization->setAuthorizationEndDatetime(DateUtility::getXDaysAfter($this->getParameter('trial_plan_period')));
+                $this->persist($tAuthorization);
+            }
 
             $this->flush();
             $this->commit();
@@ -152,7 +189,7 @@ class LoginService extends BaseService
         }
 
         // JWT発行
-        $jwt = $this->issueJwt($mCompany->getSubdomain(), $mUser->getUserId(), $mCompany->getCompanyId(), $mUser->getRoleId());
+        $jwt = $this->issueJwt($mCompany->getSubdomain(), $mUser->getUserId(), $mCompany->getCompanyId(), $mRoleAssignment->getRoleId());
 
         return $jwt;
     }
@@ -202,12 +239,19 @@ class LoginService extends BaseService
                 throw new ApplicationException('所属会社が存在しません');
             }
 
+            // 認可レコードチェック
+            $this->checkAuthorization($mCompany->getCompanyId());
+
+            // ロール割当エンティティを取得
+            $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
+            $mRoleAssignment = $mRoleAssignmentRepos->findOneBy(array('roleAssignmentId' => $tPreUser->getRoleAssignmentId()));
+
             // ユーザマスタにレコード追加
             $mUser = new MUser();
             $mUser->setCompany($mCompany);
             $mUser->setEmailAddress($tPreUser->getEmailAddress());
             $mUser->setPassword($hashedPassword);
-            $mUser->setRoleId($tPreUser->getRoleId());
+            $mUser->setRoleAssignment($mRoleAssignment);
             $this->persist($mUser);
 
             // 仮登録ユーザテーブルのURLトークンを無効にする
@@ -222,7 +266,7 @@ class LoginService extends BaseService
         }
 
         // JWT発行
-        $jwt = $this->issueJwt($mCompany->getSubdomain(), $mUser->getUserId(), $mCompany->getCompanyId(), $mUser->getRoleId());
+        $jwt = $this->issueJwt($mCompany->getSubdomain(), $mUser->getUserId(), $mCompany->getCompanyId(), $mRoleAssignment->getRoleId());
 
         return $jwt;
     }
@@ -270,5 +314,20 @@ class LoginService extends BaseService
         );
 
         return JWT::encode($token, $key);
+    }
+
+    /**
+     * 認可レコードチェック
+     *
+     * @param integer $companyId 会社ID
+     * @return void
+     */
+    private function checkAuthorization($companyId)
+    {
+        $tAuthorizationRepos = $this->getTAuthorizationRepository();
+        $tAuthorizationArray = $tAuthorizationRepos->getValidAuthorization($companyId);
+        if (count($tAuthorizationArray) === 0) {
+            throw new PermissionException('有効な認可が存在しません');
+        }
     }
 }

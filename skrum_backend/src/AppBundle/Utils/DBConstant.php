@@ -10,6 +10,16 @@ namespace AppBundle\Utils;
 class DBConstant
 {
     /**
+     * フラグ（TRUE）
+     */
+    const FLG_TRUE = 1;
+
+    /**
+     * フラグ（FALSE）
+     */
+    const FLG_FALSE = 0;
+
+    /**
      * グループ種別（部門）
      */
     const GROUP_TYPE_DEPARTMENT = '1';
@@ -113,4 +123,39 @@ class DBConstant
      * OKR操作種別（オープン）
      */
     const OKR_OPERATION_TYPE_OPEN = '9';
+
+    /**
+     * ロールID（一般ユーザ（スタンダードプラン））
+     */
+    const ROLE_ID_NORMAL_STANDARD = 'A001';
+
+    /**
+     * ロールID（管理者ユーザ（スタンダードプラン））
+     */
+    const ROLE_ID_ADMIN_STANDARD = 'A002';
+
+    /**
+     * ロールID（スーパー管理者ユーザ（スタンダードプラン））
+     */
+    const ROLE_ID_SUPERADMIN_STANDARD = 'A003';
+
+    /**
+     * プランID（お試しプラン）
+     */
+    const PLAN_ID_TRIAL_PLAN = 1;
+
+    /**
+     * プランID（スタンダードプラン）
+     */
+    const PLAN_ID_STANDARD_PLAN = 2;
+
+    /**
+     * 価格種別（会社単位）
+     */
+    const PRICE_TYPE_COMPANY = '1';
+
+    /**
+     * 価格種別（人数単位）
+     */
+    const PRICE_TYPE_EMPLOYEES = '2';
 }

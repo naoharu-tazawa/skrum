@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JSON;
 /**
  * MUser
  *
- * @ORM\Table(name="m_user", indexes={@ORM\Index(name="idx_user_01", columns={"company_id"})})
+ * @ORM\Table(name="m_user", uniqueConstraints={@ORM\UniqueConstraint(name="email_address_UNIQUE", columns={"email_address"})}, indexes={@ORM\Index(name="idx_user_01", columns={"company_id"}), @ORM\Index(name="fk_user_role_assignment_id_idx", columns={"role_assignment_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MUserRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
@@ -43,13 +43,6 @@ class MUser
      * @ORM\Column(name="password", type="string", length=255, nullable=false)
      */
     private $password;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="role_id", type="string", length=45, nullable=false)
-     */
-    private $roleId;
 
     /**
      * @var string
@@ -120,6 +113,16 @@ class MUser
      * })
      */
     private $company;
+
+    /**
+     * @var \AppBundle\Entity\MRoleAssignment
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MRoleAssignment")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="role_assignment_id", referencedColumnName="role_assignment_id")
+     * })
+     */
+    private $roleAssignment;
 
 
 
@@ -217,30 +220,6 @@ class MUser
     public function getPassword()
     {
         return $this->password;
-    }
-
-    /**
-     * Set roleId
-     *
-     * @param string $roleId
-     *
-     * @return MUser
-     */
-    public function setRoleId($roleId)
-    {
-        $this->roleId = $roleId;
-
-        return $this;
-    }
-
-    /**
-     * Get roleId
-     *
-     * @return string
-     */
-    public function getRoleId()
-    {
-        return $this->roleId;
     }
 
     /**
@@ -443,5 +422,29 @@ class MUser
     public function getCompany()
     {
         return $this->company;
+    }
+
+    /**
+     * Set roleAssignment
+     *
+     * @param \AppBundle\Entity\MRoleAssignment $roleAssignment
+     *
+     * @return MUser
+     */
+    public function setRoleAssignment(\AppBundle\Entity\MRoleAssignment $roleAssignment = null)
+    {
+        $this->roleAssignment = $roleAssignment;
+
+        return $this;
+    }
+
+    /**
+     * Get roleAssignment
+     *
+     * @return \AppBundle\Entity\MRoleAssignment
+     */
+    public function getRoleAssignment()
+    {
+        return $this->roleAssignment;
     }
 }

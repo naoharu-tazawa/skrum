@@ -161,7 +161,7 @@ class BaseService
      */
     protected function beginTransaction()
     {
-        if ($this->entityManager->getConnection()->isTransactionActive())
+        if (!$this->entityManager->getConnection()->isTransactionActive())
         {
             $this->entityManager->beginTransaction();
         }
@@ -272,6 +272,11 @@ class BaseService
     protected function getMPlanRepository()
     {
         return $this->entityManager->getRepository('AppBundle:MPlan');
+    }
+
+    protected function getMRoleAssignmentRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:MRoleAssignment');
     }
 
     protected function getMRolePermissionRepository()

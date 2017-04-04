@@ -6,6 +6,8 @@ use AppBundle\Service\BaseService;
 use AppBundle\Entity\TPreUser;
 use AppBundle\Exception\SystemException;
 use AppBundle\Exception\DoubleOperationException;
+use AppBundle\Utils\DBConstant;
+use AppBundle\Exception\ApplicationException;
 
 /**
  * ユーザ設定サービスクラス
@@ -20,10 +22,10 @@ class UserSettingService extends BaseService
      * @param $emailAddress Eメールアドレス
      * @param $subdomain サブドメイン
      * @param $companyId 会社ID（ユーザ招待の場合のみ）
-     * @param $roleId ロールID（ユーザ招待の場合のみ）
+     * @param $roleAssignmentId ロール割当ID（ユーザ招待の場合のみ）
      * @return boolean 登録結果
      */
-    public function preregisterUser($emailAddress, $subdomain, $companyId = null, $roleId = null)
+    public function preregisterUser($emailAddress, $subdomain, $companyId = null, $roleAssignmentId = null)
     {
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
@@ -40,13 +42,23 @@ class UserSettingService extends BaseService
         $tPreUser->setEmailAddress($emailAddress);
         $tPreUser->setSubdomain($subdomain);
         $tPreUser->setUrltoken($urltoken);
-        // 会社IDが存在する場合（ユーザ招待の場合）のみ、会社IDとロールIDをセット
+        // 会社IDが存在する場合（ユーザ招待の場合）のみ、会社IDとロール割当IDをセット
         if ($companyId) {
-            $tPreUser->setInitialUserFlg(0);
             $tPreUser->setCompanyId($companyId);
-            $tPreUser->setRoleId($roleId);
+
+            // ロール割当ID存在チェック
+            $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
+            $mRoleAssignmentArray = $mRoleAssignmentRepos->findBy(array(
+                                        'roleAssignmentId' => $roleAssignmentId,
+                                        'companyId' => $companyId
+                                    ));
+            if (count($mRoleAssignmentArray) === 0) {
+                throw new ApplicationException('ロール割当IDが存在しません');
+            }
+
+            $tPreUser->setRoleAssignmentId($roleAssignmentId);
         } else {
-            $tPreUser->setInitialUserFlg(1);
+            $tPreUser->setInitialUserFlg(DBConstant::FLG_TRUE);
         }
 
         try {
