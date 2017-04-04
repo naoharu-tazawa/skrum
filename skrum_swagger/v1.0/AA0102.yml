@@ -12,12 +12,12 @@ basePath: /v1
 paths:
   /signup.json:
     get:
-      description: 初期ユーザ登録
+      description: 新規ユーザ登録
       parameters:
         -
           name: JsonRequest
           in: body
-          description: メールアドレス、URLトークン
+          description: パスワード、URLトークン
           required: true
           schema:
             type: object

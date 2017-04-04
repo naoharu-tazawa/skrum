@@ -255,7 +255,7 @@ class LoginService extends BaseService
             $this->persist($mUser);
 
             // 仮登録ユーザテーブルのURLトークンを無効にする
-            $tPreUser->setInvalidFlg(1);
+            $tPreUser->setInvalidFlg(DBConstant::FLG_TRUE);
 
             $this->flush();
             $this->commit();

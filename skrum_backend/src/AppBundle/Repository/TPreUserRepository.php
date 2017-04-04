@@ -28,7 +28,7 @@ class TPreUserRepository extends BaseRepository
             ->setParameter('urltoken', $urltoken)
             ->setParameter('initialUserFlg', 1)
             ->setParameter('invalidFlg', 0)
-            ->setParameter('createdAt', date(DateUtility::DATETIME_FORMAT ,strtotime("-1 hour")));
+            ->setParameter('createdAt', date(DateUtility::DATETIME_FORMAT, strtotime("-1 hour")));
 
         return $qb->getQuery()->getOneOrNullResult();
     }
@@ -50,7 +50,7 @@ class TPreUserRepository extends BaseRepository
         ->setParameter('urltoken', $urltoken)
         ->setParameter('initialUserFlg', 0)
         ->setParameter('invalidFlg', 0)
-        ->setParameter('createdAt', date("Y-m-d H:i:s",strtotime("-1 hour")));
+        ->setParameter('createdAt', date(DateUtility::DATETIME_FORMAT, strtotime("-1 hour")));
 
         return $qb->getQuery()->getOneOrNullResult();
     }

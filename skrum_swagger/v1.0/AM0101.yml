@@ -17,15 +17,15 @@ paths:
         -
           name: JsonRequest
           in: body
-          description: メールアドレス、ロールID
+          description: メールアドレス、ロール割当ID
           required: true
           schema:
             type: object
             properties:
               emailAddress:
                 type: string
-              roleId:
-                type: string
+              roleAssignmentId:
+                type: integer
       responses:
         200:
           description: 成功

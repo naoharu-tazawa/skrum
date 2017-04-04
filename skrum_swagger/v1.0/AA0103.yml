@@ -17,7 +17,7 @@ paths:
         -
           name: JsonRequest
           in: body
-          description: メールアドレス、URLトークン
+          description: パスワード、URLトークン
           required: true
           schema:
             type: object

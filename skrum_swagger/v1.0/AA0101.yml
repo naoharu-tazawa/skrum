@@ -17,12 +17,14 @@ paths:
         -
           name: JsonRequest
           in: body
-          description: メールアドレス
+          description: メールアドレス、サブドメイン
           required: true
           schema:
             type: object
             properties:
               emailAddress:
+                type: string
+              subdomain:
                 type: string
       responses:
         200:
