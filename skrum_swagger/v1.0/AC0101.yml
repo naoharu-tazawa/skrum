@@ -1,0 +1,113 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /companies/{companyId}/establish.json:
+    get:
+      description: 初期設定登録
+      parameters:
+        -
+          name: companyId
+          in: path
+          type: string
+          description: 会社ID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description: ユーザ情報、会社情報、タイムフレーム情報、招待Eメールアドレス
+          required: true
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                properties:
+                  lastName:
+                    type: string
+                  firstName:
+                    type: string
+                  position:
+                    type: string
+                  phoneNumber:
+                    type: string
+                required:
+                  - lastName
+                  - firstName
+                  - position
+                  - phoneNumber
+              company:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  vision:
+                    type: string
+                  mission:
+                    type: string
+                required:
+                  - name
+                  - vision
+                  - mission
+              timeframe:
+                type: object
+                properties:
+                  customFlg:
+                    type: boolean
+                  cycleType:
+                    type: string
+                  start:
+                    type: object
+                    properties:
+                      year:
+                        type: string
+                      month:
+                        type: string
+                      date:
+                        type: string
+                    required:
+                      - year
+                      - month
+                      - date
+                  end:
+                    type: object
+                    properties:
+                      year:
+                        type: string
+                      month:
+                        type: string
+                      date:
+                        type: string
+                  timeframeName:
+                    type: string
+                required:
+                  - customFlg
+                  - start
+            required:
+              - user
+              - company
+              - timeframe
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

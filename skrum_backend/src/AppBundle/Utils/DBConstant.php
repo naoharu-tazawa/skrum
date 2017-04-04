@@ -158,4 +158,24 @@ class DBConstant
      * 価格種別（人数単位）
      */
     const PRICE_TYPE_EMPLOYEES = '2';
+
+    /**
+     * タイムフレームサイクル種別（１ヶ月毎）
+     */
+    const TIMEFRAME_CYCLE_TYPE_MONTH = '1';
+
+    /**
+     * タイムフレームサイクル種別（４半期毎）
+     */
+    const TIMEFRAME_CYCLE_TYPE_QUARTER = '2';
+
+    /**
+     * タイムフレームサイクル種別（半年毎）
+     */
+    const TIMEFRAME_CYCLE_TYPE_HALF = '3';
+
+    /**
+     * タイムフレームサイクル種別（１年毎）
+     */
+    const TIMEFRAME_CYCLE_TYPE_YEAR = '4';
 }

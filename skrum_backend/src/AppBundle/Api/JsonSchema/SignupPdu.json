@@ -1,5 +1,5 @@
 {
-  "title": "初期ユーザ登録",
+  "title": "新規ユーザ登録",
   "type": "object",
   "properties": {
     "password": {

@@ -9,13 +9,20 @@ use JMS\Serializer\Annotation as JSON;
 /**
  * MNormalTimeframeDetail
  *
- * @ORM\Table(name="m_normal_timeframe_detail", indexes={@ORM\Index(name="idx_normal_timeframe_detail_02", columns={"start_date"}), @ORM\Index(name="idx_normal_timeframe_detail_03", columns={"end_date"}), @ORM\Index(name="fk_normal_timeframe_detail_normal_timeframe_id_idx", columns={"normal_timeframe_id"})})
+ * @ORM\Table(name="m_normal_timeframe_detail", indexes={@ORM\Index(name="idx_normal_timeframe_detail_02", columns={"start_date"}), @ORM\Index(name="idx_normal_timeframe_detail_03", columns={"end_date"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MNormalTimeframeDetailRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
  */
 class MNormalTimeframeDetail
 {
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="normal_timeframe_id", type="integer", nullable=false)
+     */
+    private $normalTimeframeId;
+
     /**
      * @var string
      *
@@ -24,16 +31,16 @@ class MNormalTimeframeDetail
     private $timeframeName;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="start_date", type="date", nullable=false)
+     * @ORM\Column(name="start_date", type="string", length=5, nullable=false)
      */
     private $startDate;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="end_date", type="date", nullable=false)
+     * @ORM\Column(name="end_date", type="string", length=5, nullable=false)
      */
     private $endDate;
 
@@ -76,17 +83,31 @@ class MNormalTimeframeDetail
      */
     private $id;
 
+
+
     /**
-     * @var \AppBundle\Entity\MNormalTimeframe
+     * Set normalTimeframeId
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MNormalTimeframe")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="normal_timeframe_id", referencedColumnName="id")
-     * })
+     * @param integer $normalTimeframeId
+     *
+     * @return MNormalTimeframeDetail
      */
-    private $normalTimeframe;
+    public function setNormalTimeframeId($normalTimeframeId)
+    {
+        $this->normalTimeframeId = $normalTimeframeId;
 
+        return $this;
+    }
 
+    /**
+     * Get normalTimeframeId
+     *
+     * @return integer
+     */
+    public function getNormalTimeframeId()
+    {
+        return $this->normalTimeframeId;
+    }
 
     /**
      * Set timeframeName
@@ -115,7 +136,7 @@ class MNormalTimeframeDetail
     /**
      * Set startDate
      *
-     * @param \DateTime $startDate
+     * @param string $startDate
      *
      * @return MNormalTimeframeDetail
      */
@@ -129,7 +150,7 @@ class MNormalTimeframeDetail
     /**
      * Get startDate
      *
-     * @return \DateTime
+     * @return string
      */
     public function getStartDate()
     {
@@ -139,7 +160,7 @@ class MNormalTimeframeDetail
     /**
      * Set endDate
      *
-     * @param \DateTime $endDate
+     * @param string $endDate
      *
      * @return MNormalTimeframeDetail
      */
@@ -153,7 +174,7 @@ class MNormalTimeframeDetail
     /**
      * Get endDate
      *
-     * @return \DateTime
+     * @return string
      */
     public function getEndDate()
     {
@@ -264,29 +285,5 @@ class MNormalTimeframeDetail
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set normalTimeframe
-     *
-     * @param \AppBundle\Entity\MNormalTimeframe $normalTimeframe
-     *
-     * @return MNormalTimeframeDetail
-     */
-    public function setNormalTimeframe(\AppBundle\Entity\MNormalTimeframe $normalTimeframe = null)
-    {
-        $this->normalTimeframe = $normalTimeframe;
-
-        return $this;
-    }
-
-    /**
-     * Get normalTimeframe
-     *
-     * @return \AppBundle\Entity\MNormalTimeframe
-     */
-    public function getNormalTimeframe()
-    {
-        return $this->normalTimeframe;
     }
 }

@@ -1,0 +1,124 @@
+{
+  "title": "初期設定登録",
+  "type": "object",
+  "properties": {
+    "user": {
+      "title": "ユーザ情報",
+      "type": "object",
+      "properties": {
+        "lastName": {
+          "title": "姓",
+          "type": "string",
+          "maxLength": 255
+        },
+        "firstName": {
+          "title": "名",
+          "type": "string",
+          "maxLength": 255
+        },
+        "position": {
+          "title": "役職",
+          "type": "string",
+          "maxLength": 255
+        },
+        "phoneNumber": {
+          "title": "電話番号",
+          "type": "string",
+          "maxLength": 45
+        }
+      },
+      "required": ["lastName", "firstName", "position", "phoneNumber"],
+      "additionalProperties": false
+    },
+    "company": {
+      "title": "会社情報",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "会社名",
+          "type": "string",
+          "maxLength": 255
+        },
+        "vision": {
+          "title": "ヴィジョン",
+          "type": "string",
+          "maxLength": 255
+        },
+        "mission": {
+          "title": "ミッション",
+          "type": "string",
+          "maxLength": 255
+        }
+      },
+      "required": ["name", "vision", "mission"],
+      "additionalProperties": false
+    },
+    "timeframe": {
+      "title": "タイムフレーム情報",
+      "type": "object",
+      "properties": {
+        "customFlg": {
+          "title": "カスタムフラグ",
+          "type": "boolean"
+        },
+        "cycleType": {
+          "title": "サイクル種別",
+          "type": "string",
+          "maxLength": 1
+        },
+        "start": {
+          "title": "開始日",
+          "type": "object",
+          "properties": {
+            "year": {
+              "title": "年",
+              "type": "string",
+              "maxLength": 4
+            },
+            "month": {
+              "title": "月",
+              "type": "string",
+              "maxLength": 2
+            },
+            "date": {
+              "title": "日",
+              "type": "string",
+              "maxLength": 2
+            }
+          },
+          "required": ["year", "month", "date"],
+          "additionalProperties": false
+        },
+        "end": {
+          "title": "終了日",
+          "type": "object",
+          "properties": {
+            "year": {
+              "title": "年",
+              "type": "string",
+              "maxLength": 4
+            },
+            "month": {
+              "title": "月",
+              "type": "string",
+              "maxLength": 2
+            },
+            "date": {
+              "title": "日",
+              "type": "string",
+              "maxLength": 2
+            }
+          }
+        },
+        "timeframeName": {
+          "title": "タイムフレーム名",
+          "type": "string"
+        }
+      },
+      "required": ["customFlg", "start"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["user", "company", "timeframe"],
+  "additionalProperties": false
+}

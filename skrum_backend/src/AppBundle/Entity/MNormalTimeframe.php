@@ -24,6 +24,13 @@ class MNormalTimeframe
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="cycle_type", type="string", length=2, nullable=false)
+     */
+    private $cycleType;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="display_order", type="boolean", nullable=false)
@@ -86,6 +93,30 @@ class MNormalTimeframe
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set cycleType
+     *
+     * @param string $cycleType
+     *
+     * @return MNormalTimeframe
+     */
+    public function setCycleType($cycleType)
+    {
+        $this->cycleType = $cycleType;
+
+        return $this;
+    }
+
+    /**
+     * Get cycleType
+     *
+     * @return string
+     */
+    public function getCycleType()
+    {
+        return $this->cycleType;
     }
 
     /**

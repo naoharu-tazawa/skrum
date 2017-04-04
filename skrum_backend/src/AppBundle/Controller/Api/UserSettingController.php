@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Controller\BaseController;
 use AppBundle\Utils\Permission;
+use AppBundle\Exception\ApplicationException;
 
 /**
  * ユーザ設定コントローラ
@@ -44,5 +45,37 @@ class UserSettingController extends BaseController
         } else {
             return array('result' => 'NG');
         }
+    }
+
+    /**
+     * 初期設定登録
+     *
+     * @Rest\Post("/companies/{companyId}/establish.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function establishCompanyAction(Request $request, $companyId)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/EstablishCompanyPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 会社IDの一致をチェック
+        if ($companyId != $auth->getCompanyId()) {
+            throw new ApplicationException('会社IDが存在しません');
+        }
+
+        // 初期設定登録処理
+        $userSettingService = $this->getUserSettingService();
+        $userSettingService->establishCompany($auth, $data['user'], $data['company'], $data['timeframe']);
+
+        return array('result' => 'OK');
     }
 }
