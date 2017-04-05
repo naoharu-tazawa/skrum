@@ -23,7 +23,7 @@ paths:
         -
           name: JsonRequest
           in: body
-          description: ユーザ情報、会社情報、タイムフレーム情報、招待Eメールアドレス
+          description: ユーザ情報、会社情報、タイムフレーム情報
           required: true
           schema:
             type: object

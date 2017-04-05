@@ -78,4 +78,36 @@ class UserSettingController extends BaseController
 
         return array('result' => 'OK');
     }
+
+    /**
+     * 追加ユーザ初期設定登録
+     *
+     * @Rest\Post("/users/{userId}/establish.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $userId ユーザID
+     * @return array
+     */
+    public function establishUserAction(Request $request, $userId)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/EstablishUserPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // ユーザIDの一致をチェック
+        if ($userId != $auth->getUserId()) {
+            throw new ApplicationException('ユーザIDが存在しません');
+        }
+
+        // 追加ユーザ初期設定登録処理
+        $userSettingService = $this->getUserSettingService();
+        $userSettingService->establishUser($auth, $data['user']);
+
+        return array('result' => 'OK');
+    }
 }

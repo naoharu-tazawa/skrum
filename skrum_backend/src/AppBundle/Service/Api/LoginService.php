@@ -17,6 +17,7 @@ use AppBundle\Exception\PermissionException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\DateUtility;
+use AppBundle\Exception\ApplicationException;
 
 /**
  * ログインサービスクラス
@@ -71,6 +72,14 @@ class LoginService extends BaseService
 
         // 認可レコードチェック
         $this->checkAuthorization($mCompany->getCompanyId());
+
+        // 最終ログイン日時を更新
+        $mUserArray[0]->setLastAccessDatetime(DateUtility::getCurrentDatetime());
+        try {
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException('DB登録に失敗しました');
+        }
 
         // JWT発行
         $jwt = $this->issueJwt($mCompany->getSubdomain(),
@@ -165,7 +174,7 @@ class LoginService extends BaseService
             $mUser->setEmailAddress($tPreUser->getEmailAddress());
             $mUser->setPassword($hashedPassword);
             $mUser->setRoleAssignment($mRoleAssignment);
-            //$mUser->setRoleId(DBConstant::ROLE_ID_SUPERADMIN_STANDARD);
+            $mUser->setLastAccessDatetime(DateUtility::getCurrentDatetime());
             $this->persist($mUser);
 
             // 仮登録ユーザテーブルのURLトークンを無効にする
@@ -252,6 +261,7 @@ class LoginService extends BaseService
             $mUser->setEmailAddress($tPreUser->getEmailAddress());
             $mUser->setPassword($hashedPassword);
             $mUser->setRoleAssignment($mRoleAssignment);
+            $mUser->setLastAccessDatetime(DateUtility::getCurrentDatetime());
             $this->persist($mUser);
 
             // 仮登録ユーザテーブルのURLトークンを無効にする
