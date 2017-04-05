@@ -1,0 +1,13 @@
+{
+  "title": "グループメンバー追加",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "title": "ユーザID",
+      "type": "integer",
+      "maxLength": 11
+    }
+  },
+  "required": ["userId"],
+  "additionalProperties": false
+}

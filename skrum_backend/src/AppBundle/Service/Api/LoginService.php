@@ -78,7 +78,7 @@ class LoginService extends BaseService
         try {
             $this->flush();
         } catch(\Exception $e) {
-            throw new SystemException('DB登録に失敗しました');
+            throw new SystemException($e->getMessage());
         }
 
         // JWT発行

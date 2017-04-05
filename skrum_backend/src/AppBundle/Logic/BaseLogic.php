@@ -1,16 +1,16 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Logic;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use AppBundle\Utils\LoggerManager;
 
 /**
- * ベースサービス（被継承クラス）
+ * ベースロジック（被継承クラス）
  *
  * @author naoharu.tazawa
  */
-class BaseService
+class BaseLogic
 {
     /**
      * サービスコンテナ

@@ -30,6 +30,14 @@ services:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
+    api.permission_logic:
+        class: AppBundle\Logic\PermissionLogic
+        arguments: ['@service_container']
+
+    api.db_existance_logic:
+        class: AppBundle\Logic\DBExistanceLogic
+        arguments: ['@service_container']
+
     api.sample_service:
         class: AppBundle\Service\Api\SampleService
         arguments: ['@service_container']
@@ -40,4 +48,12 @@ services:
 
     api.user_setting_service:
         class: AppBundle\Service\Api\UserSettingService
+        arguments: ['@service_container']
+
+    api.group_service:
+        class: AppBundle\Service\Api\GroupService
+        arguments: ['@service_container']
+
+    api.group_member_service:
+        class: AppBundle\Service\Api\GroupMemberService
         arguments: ['@service_container']

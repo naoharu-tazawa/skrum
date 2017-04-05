@@ -1,0 +1,22 @@
+{
+  "title": "グループ新規登録",
+  "type": "object",
+  "properties": {
+    "groupName": {
+      "title": "グループ名",
+      "type": "string",
+      "maxLength": 255
+    },
+    "groupType": {
+      "title": "グループ種別",
+      "enum": ["1", "2"]
+    },
+    "groupTreeId": {
+      "title": "所属先グループのグループツリーID",
+      "type": "integer",
+      "maxLength": 11
+    }
+  },
+  "required": ["groupName", "groupType"],
+  "additionalProperties": false
+}

@@ -294,8 +294,18 @@ class BaseController extends FOSRestController
     }
 
     //----------------------------------------------
-    //ここからサービスクラスの取得メソッド
+    //ここからロジック/サービスクラスの取得メソッド
     //----------------------------------------------
+
+    protected function getDBExistanceLogic()
+    {
+        return $this->get('api.db_existance_logic');
+    }
+
+    protected function getPermissionLogic()
+    {
+        return $this->get('api.permission_logic');
+    }
 
     protected function getSampleService()
     {
@@ -310,5 +320,15 @@ class BaseController extends FOSRestController
     protected function getLoginService()
     {
         return $this->get('api.login_service');
+    }
+
+    protected function getGroupService()
+    {
+        return $this->get('api.group_service');
+    }
+
+    protected function getGroupMemberService()
+    {
+        return $this->get('api.group_member_service');
     }
 }

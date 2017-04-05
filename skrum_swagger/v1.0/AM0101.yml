@@ -11,7 +11,7 @@ basePath: /v1
 
 paths:
   /invite.json:
-    get:
+    post:
       description: ユーザ招待メール送信
       parameters:
         -

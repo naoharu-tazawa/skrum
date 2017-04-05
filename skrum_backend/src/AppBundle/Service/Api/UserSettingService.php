@@ -215,7 +215,7 @@ class UserSettingService extends BaseService
             $this->flush();
             $this->commit();
         } catch (\Exception $e) {
-            throw new SystemException('DB登録に失敗しました');
+            throw new SystemException($e->getMessage());
             $this->rollback();
         }
     }
@@ -241,7 +241,7 @@ class UserSettingService extends BaseService
             $this->persist($mUser);
             $this->flush();
         } catch (\Exception $e) {
-            throw new SystemException('DB登録に失敗しました');
+            throw new SystemException($e->getMessage());
         }
     }
 }

@@ -140,6 +140,21 @@ class DBConstant
     const ROLE_ID_SUPERADMIN_STANDARD = 'A003';
 
     /**
+     * ロールレベル（一般ユーザ）
+     */
+    const ROLE_LEVEL_NORMAL = '1';
+
+    /**
+     * ロールレベル（管理者ユーザ）
+     */
+    const ROLE_LEVEL_ADMIN = '4';
+
+    /**
+     * ロールレベル（スーパー管理者ユーザ）
+     */
+    const ROLE_LEVEL_SUPERADMIN = '7';
+
+    /**
      * プランID（お試しプラン）
      */
     const PLAN_ID_TRIAL_PLAN = 1;

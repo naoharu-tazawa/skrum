@@ -11,7 +11,7 @@ basePath: /v1
 
 paths:
   /join.json:
-    get:
+    post:
       description: 追加ユーザ登録
       parameters:
         -

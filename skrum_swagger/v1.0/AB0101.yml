@@ -11,7 +11,7 @@ basePath: /v1
 
 paths:
   /login.json:
-    get:
+    post:
       description: ログイン
       parameters:
         -

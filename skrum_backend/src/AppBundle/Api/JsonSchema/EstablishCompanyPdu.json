@@ -63,8 +63,7 @@
         },
         "cycleType": {
           "title": "サイクル種別",
-          "type": "string",
-          "maxLength": 1
+          "enum": ["1", "2", "3", "4"]
         },
         "start": {
           "title": "開始日",

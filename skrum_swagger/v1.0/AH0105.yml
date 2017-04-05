@@ -10,22 +10,28 @@ produces:
 basePath: /v1
 
 paths:
-  /signup.json:
+  /groups/{groupId}/members.json:
     post:
-      description: 新規ユーザ登録
+      description: グループメンバー追加
       parameters:
+        -
+          name: groupId
+          in: path
+          type: string
+          description: グループID
+          required: true
         -
           name: JsonRequest
           in: body
-          description: パスワード、URLトークン
+          description: ユーザID
           required: true
           schema:
             type: object
             properties:
-              password:
-                type: string
-              urltoken:
-                type: string
+              userId:
+                type: integer
+            required:
+              - userId
       responses:
         200:
           description: 成功
@@ -38,8 +44,6 @@ paths:
               - result
         400:
           description: JSONスキーマ不正
-        401:
-          description: 認証エラー
         409:
           description: 排他エラー
         500:

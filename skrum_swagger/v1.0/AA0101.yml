@@ -11,7 +11,7 @@ basePath: /v1
 
 paths:
   /preregister.json:
-    get:
+    post:
       description: 新規登録メール送信
       parameters:
         -

@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JSON;
  * TGroupTree
  *
  * @ORM\Table(name="t_group_tree", uniqueConstraints={@ORM\UniqueConstraint(name="ui_group_tree_01", columns={"group_tree_path"})}, indexes={@ORM\Index(name="idx_group_tree_01", columns={"group_id"})})
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TGroupTreeRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TGroupTreeReservationRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
  */
@@ -22,6 +22,13 @@ class TGroupTree
      * @ORM\Column(name="group_tree_path", type="string", length=3072, nullable=false)
      */
     private $groupTreePath;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="group_tree_path_name", type="string", length=3072, nullable=true)
+     */
+    private $groupTreePathName;
 
     /**
      * @var \DateTime
@@ -89,6 +96,30 @@ class TGroupTree
     public function getGroupTreePath()
     {
         return $this->groupTreePath;
+    }
+
+    /**
+     * Set groupTreePathName
+     *
+     * @param string $groupTreePathName
+     *
+     * @return TGroupTree
+     */
+    public function setGroupTreePathName($groupTreePathName)
+    {
+        $this->groupTreePathName = $groupTreePathName;
+
+        return $this;
+    }
+
+    /**
+     * Get groupTreePathName
+     *
+     * @return string
+     */
+    public function getGroupTreePathName()
+    {
+        return $this->groupTreePathName;
     }
 
     /**

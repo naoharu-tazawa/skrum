@@ -11,7 +11,7 @@ basePath: /v1
 
 paths:
   /users/{userId}/establish.json:
-    get:
+    post:
       description: 追加ユーザ初期設定登録
       parameters:
         -
