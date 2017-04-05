@@ -87,4 +87,31 @@ class GroupMemberController extends BaseController
 
         return $groupMemberDTO;
     }
+
+    /**
+     * グループメンバー削除
+     *
+     * @Rest\Delete("/groups/{groupId}/members/{userId}.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $groupId グループID
+     * @param $userId ユーザID
+     * @return array
+     */
+    public function deleteGroupMemberAction(Request $request, $groupId, $userId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ存在チェック
+        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+
+        // ユーザ存在チェック
+        $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
+
+        // グループメンバー取得
+        $groupMemberService = $this->getGroupMemberService();
+        $groupMemberService->deleteMember($groupId, $userId);
+
+        return array('result' => 'OK');
+    }
 }

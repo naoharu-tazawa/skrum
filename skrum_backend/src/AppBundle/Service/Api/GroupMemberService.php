@@ -46,7 +46,7 @@ class GroupMemberService extends BaseService
     /**
      * グループメンバー取得
      *
-     * @param string $groupId グループID
+     * @param integer $groupId グループID
      * @return array
      */
     public function getMembers($groupId)
@@ -71,12 +71,31 @@ class GroupMemberService extends BaseService
     /**
      * グループメンバーエンティティ配列取得
      *
-     * @param string $groupId グループID
+     * @param integer $groupId グループID
      * @return array
      */
     public function getTGroupMemberArray($groupId)
     {
          $tGroupMemberRepos = $this->getTGroupMemberRepository();
          return $tGroupMemberRepos->getAllGroupMembers($groupId);
+    }
+
+    /**
+     * グループメンバー削除
+     *
+     * @param integer $groupId グループID
+     * @param integer $userId ユーザID
+     * @return void
+     */
+    public function deleteMember($groupId, $userId)
+    {
+        $tGroupMemberRepos = $this->getTGroupMemberRepository();
+        $tGroupMember = $tGroupMemberRepos->findOneBy(array('group' => $groupId, 'user' => $userId));
+        try {
+            $this->remove($tGroupMember);
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
     }
 }
