@@ -139,6 +139,16 @@ class UserSettingService extends BaseService
             $mCompany->setDefaultDisclosureType(DBConstant::OKR_DISCLOSURE_TYPE_OVERALL);
             $this->persist($mCompany);
 
+            // グループマスタに登録されている会社レコードの会社名を変更
+            $mGroupRepos = $this->getMGroupRepository();
+            $mGroup = $mGroupRepos->findOneBy(array('company' => $auth->getCompanyId(), 'companyFlg' => DBConstant::FLG_TRUE));
+            $mGroup->setGroupName($companyInfo['name']);
+
+            // グループツリーテーブルに登録されている会社レコードのグループパス名を変更
+            $tGroupTreeRepos = $this->getTGroupTreeRepository();
+            $tGroupTreeArray = $tGroupTreeRepos->findBy(array('group' => $mGroup->getGroupId()), array('id' => 'ASC'), 1);
+            $tGroupTreeArray[0]->setGroupTreePathName($companyInfo['name'] . '/');
+
             // タイムフレームを登録
             if ($timeframeInfo['customFlg']) {
                 /* カスタム設定の場合 */

@@ -8,6 +8,7 @@ use AppBundle\Exception\SystemException;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\TGroupTree;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
 
 /**
  * グループサービスクラス
@@ -50,6 +51,7 @@ class GroupService extends BaseService
                 $tGroupTree = new TGroupTree();
                 $tGroupTree->setGroup($mGroup);
                 $tGroupTree->setGroupTreePath($result['groupTreePath'] . $mGroup->getGroupId() . '/');
+                $tGroupTree->setGroupTreePathName($result['groupTreePathName'] . $mGroup->getGroupName() . '/');
                 $this->persist($tGroupTree);
             }
 
@@ -81,7 +83,10 @@ class GroupService extends BaseService
         $tGroupTreeArray = $tGroupTreeRepos->findBy(array('group' => $groupId));
         $groupPathArray = array();
         foreach ($tGroupTreeArray as $tGroupTree) {
-            $groupPathArray[] = $tGroupTree->getGroupTreePath();
+            $groupPathDTO = new GroupPathDTO();
+            $groupPathDTO->setGroupTreePath($tGroupTree->getGroupTreePath());
+            $groupPathDTO->setGroupTreePathName($tGroupTree->getGroupTreePathName());
+            $groupPathArray[] = $groupPathDTO;
         }
 
         $basicGroupInfoDTO = new BasicGroupInfoDTO();

@@ -21,7 +21,7 @@ class TGroupTreeRepository extends BaseRepository
     public function getGroupTreePath($groupTreeId, $companyId)
     {
         $qb = $this->createQueryBuilder('tgt');
-        $qb->select('tgt.groupTreePath')
+        $qb->select('tgt.groupTreePath', 'tgt.groupTreePathName')
             ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgt.group = mg.groupId')
             ->where('tgt.id = :id')
             ->andWhere('mg.company = :companyId')
