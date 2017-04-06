@@ -106,7 +106,7 @@ class GroupMemberController extends BaseController
         $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
 
         // ユーザ存在チェック
-        $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
+        $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
 
         // グループメンバー取得
         $groupMemberService = $this->getGroupMemberService();

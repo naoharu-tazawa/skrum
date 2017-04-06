@@ -66,7 +66,7 @@ class GroupPathDTO
     /**
      * Get groupTreePathName
      *
-     * @return array
+     * @return string
      */
     public function getGroupTreePathName()
     {

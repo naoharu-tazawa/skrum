@@ -5,7 +5,7 @@ namespace AppBundle\Api\ResponseDTO\NestedObject;
 use JMS\Serializer\Annotation as JSON;
 
 /**
- * グループ基本情報DTO
+ * グループメンバー情報DTO
 
  * @JSON\ExclusionPolicy("none")
  */
@@ -111,7 +111,7 @@ class MemberDTO
     /**
      * Get firstName
      *
-     * @return array
+     * @return string
      */
     public function getFirstName()
     {

@@ -7,6 +7,8 @@ use AppBundle\Exception\SystemException;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Service\BaseService;
 use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
+use AppBundle\Exception\DoubleOperationException;
+use AppBundle\Api\ResponseDTO\NestedObject\GroupDTO;
 
 /**
  * グループメンバーサービスクラス
@@ -51,7 +53,7 @@ class GroupMemberService extends BaseService
      */
     public function getMembers($groupId)
     {
-        $mUserArray = $this->getTGroupMemberArray($groupId);
+        $mUserArray = $this->getMUserArray($groupId);
 
         $members = array();
         foreach ($mUserArray as $mUser) {
@@ -69,12 +71,12 @@ class GroupMemberService extends BaseService
     }
 
     /**
-     * グループメンバーエンティティ配列取得
+     * ユーザ（グループメンバー）エンティティ配列取得
      *
      * @param integer $groupId グループID
      * @return array
      */
-    public function getTGroupMemberArray($groupId)
+    public function getMUserArray($groupId)
     {
          $tGroupMemberRepos = $this->getTGroupMemberRepository();
          return $tGroupMemberRepos->getAllGroupMembers($groupId);
@@ -91,11 +93,88 @@ class GroupMemberService extends BaseService
     {
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
         $tGroupMember = $tGroupMemberRepos->findOneBy(array('group' => $groupId, 'user' => $userId));
+        if ($tGroupMember === null) {
+            throw new DoubleOperationException('このユーザはグループから既に削除されています');
+        }
+
         try {
             $this->remove($tGroupMember);
             $this->flush();
         } catch(\Exception $e) {
             throw new SystemException($e->getMessage());
         }
+    }
+
+    /**
+     * ユーザ所属グループリスト取得
+     *
+     * @param integer $userId ユーザID
+     * @param integer $timeframeId タイムフレームID
+     * @return array
+     */
+    public function getGroups($userId, $timeframeId)
+    {
+        $groupInfoArray = $this->getGroupInfoArray($userId, $timeframeId);
+
+        // グループ情報配列を整形してDTOに詰め替える
+        $groups = array();
+        for ($i = 0; $i < count($groupInfoArray); $i++) {
+            if ($i == 0) {
+                // 初回ループ
+
+                $groupDTO = new GroupDTO();
+                $groupDTO->setGroupId($groupInfoArray[$i]['groupId']);
+                $groupDTO->setGroupName($groupInfoArray[$i]['groupName']);
+
+                $achievementRateArray = array();
+                $achievementRateArray[] = $groupInfoArray[$i]['achievementRate'];
+            } else {
+                // 初回と最終以外のループ
+
+                if ($groupInfoArray[$i]['groupId'] == $groupId) {
+                    // グループIDが前回ループ時と同じ場合
+
+                    $achievementRateArray[] = $groupInfoArray[$i]['achievementRate'];
+                } else {
+                    // グループIDが前回ループ時と異なる場合
+
+                    // 達成率には平均値を入れる
+                    $groupDTO->setAchievementRate(floor((array_sum($achievementRateArray) / count($achievementRateArray)) * 10) / 10);
+                    $groups[] = $groupDTO;
+
+                    $groupDTO = new GroupDTO();
+                    $groupDTO->setGroupId($groupInfoArray[$i]['groupId']);
+                    $groupDTO->setGroupName($groupInfoArray[$i]['groupName']);
+
+                    $achievementRateArray = array();
+                    $achievementRateArray[] = $groupInfoArray[$i]['achievementRate'];
+                }
+            }
+
+            // グループID保持
+            $groupId = $groupInfoArray[$i]['groupId'];
+
+            // 最終ループ
+            if ($i == (count($groupInfoArray) - 1)) {
+                // 達成率には平均値を入れる
+                $groupDTO->setAchievementRate(floor((array_sum($achievementRateArray) / count($achievementRateArray)) * 10) / 10);
+                $groups[] = $groupDTO;
+            }
+        }
+
+        return $groups;
+    }
+
+    /**
+     * グループ情報配列取得
+     *
+     * @param integer $userId ユーザID
+     * @param integer $timeframeId タイムフレームID
+     * @return array
+     */
+    public function getGroupInfoArray($userId, $timeframeId)
+    {
+        $tGroupMemberRepos = $this->getTGroupMemberRepository();
+        return $tGroupMemberRepos->getAllGroups($userId, $timeframeId);
     }
 }

@@ -1,0 +1,73 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /users/{userId}/groups.json?{tfid}:
+    get:
+      description: ユーザ所属グループ一覧取得
+      parameters:
+        -
+          name: userId
+          in: path
+          type: string
+          description: ユーザID
+          required: true
+        -
+          name: tfid
+          in: path
+          type: string
+          description: タイムフレームID
+          required: true
+      responses:
+        200:
+          description: ユーザ所属グループ一覧
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                  name:
+                    type: string
+                  departments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        groupId:
+                          type: string
+                        departmentName:
+                          type: string
+                  position:
+                    type: string
+                  phoneNumber:
+                    type: string
+                  emailAddress:
+                    type: string
+              groups:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    groupId:
+                      type: integer
+                    groupName:
+                      type: string
+                    achievementRate:
+                      type: number
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

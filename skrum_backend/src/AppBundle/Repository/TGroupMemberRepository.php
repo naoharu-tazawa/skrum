@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Utils\DBConstant;
+
 /**
  * TGroupMemberリポジトリクラス
  *
@@ -41,6 +43,54 @@ class TGroupMemberRepository extends BaseRepository
             ->innerJoin('AppBundle:MUser', 'mu', 'WITH', 'tgm.user = mu.userId')
             ->where('tgm.group = :groupId')
             ->setParameter('groupId', $groupId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 指定ユーザIDに紐付くグループ（部門のみ）レコードを取得
+     *
+     * @param $userId ユーザID
+     * @return array
+     */
+    public function getGroups($userId)
+    {
+        $qb = $this->createQueryBuilder('tgm');
+        $qb->select('mg')
+            ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgm.group = mg.groupId')
+            ->where('tgm.user = :userId')
+            ->andWhere('mg.groupType = :groupType')
+            ->setParameter('userId', $userId)
+            ->setParameter('groupType', DBConstant::GROUP_TYPE_DEPARTMENT)
+            ->orderBy('mg.groupId', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 指定ユーザIDに紐付くグループを全レコード取得
+     *
+     * @param $userId ユーザID
+     * @param $timeframeId タイムフレームID
+     * @return array
+     */
+    public function getAllGroups($userId, $timeframeId)
+    {
+        $qb = $this->createQueryBuilder('tgm');
+        $qb->select('mg.groupId', 'mg.groupName', 'to.achievementRate')
+            ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgm.group = mg.groupId')
+            ->leftJoin('AppBundle:TOkr', 'to', 'WITH', 'mg.groupId = to.ownerGroup')
+            ->where('tgm.user = :userId')
+            ->andWhere('mg.groupType <> :groupType')
+            ->andWhere('to.timeframe = :timeframeId')
+            ->andWhere('to.ownerType = :ownerType')
+            ->andWhere('to.type = :type')
+            ->setParameter('userId', $userId)
+            ->setParameter('groupType', DBConstant::GROUP_TYPE_COMPANY)
+            ->setParameter('timeframeId', $timeframeId)
+            ->setParameter('ownerType', DBConstant::OKR_OWNER_TYPE_GROUP)
+            ->setParameter('type', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->orderBy('mg.groupId', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

@@ -45,6 +45,21 @@ class DBConstant
     const OKR_TYPE_KEY_RESULT = '2';
 
     /**
+     * OKRオーナー種別（ユーザ）
+     */
+    const OKR_OWNER_TYPE_USER = '1';
+
+    /**
+     * OKRオーナー種別（グループ）
+     */
+    const OKR_OWNER_TYPE_GROUP = '2';
+
+    /**
+     * OKRオーナー種別（会社）
+     */
+    const OKR_OWNER_TYPE_COMPANY = '3';
+
+    /**
      * OKRステータス（オープン）
      */
     const OKR_STATUS_OPEN = '1';

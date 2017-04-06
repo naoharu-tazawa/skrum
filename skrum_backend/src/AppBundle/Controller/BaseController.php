@@ -322,6 +322,11 @@ class BaseController extends FOSRestController
         return $this->get('api.login_service');
     }
 
+    protected function getUserService()
+    {
+        return $this->get('api.user_service');
+    }
+
     protected function getGroupService()
     {
         return $this->get('api.group_service');
