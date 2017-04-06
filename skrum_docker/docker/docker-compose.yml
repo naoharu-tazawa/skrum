@@ -1,17 +1,5 @@
 version: '2'
 services:
-  php:
-    build: ../skrum_backend
-    container_name: skrum-php
-    image: php:5.6-fpm
-    ports:
-      - "8000:80"
-      - "3000:3000"
-    volumes:
-      - ./:/var/local/
-      - ./../:/var/local/
-    links:
-      - db
   db:
     image: mysql:5.7
     environment:
@@ -32,15 +20,20 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ../:/var/www
-      - ./nginx/:/etc/nginx/conf.d/
+      - ../../:/var/www/html
+      - ./nginx/server.conf:/etc/nginx/conf.d/default.conf
     links:
       - php
-    container_name: nginx
-
-##  swagger:
-##    container_name: swagger
-##    tty: true
-##    build: ./docker/swagger
-##    ports:
-##      - "8080:8080"
+    container_name: skrum-nginx
+  php:
+    build: ./php-fpm
+    container_name: skrum-php
+    image: php:5.6-fpm
+    ports:
+      - "8000:80"
+      - "3000:3000"
+    volumes:
+      - ./:/var/local/
+      - ./../:/var/www/html
+    links:
+      - db
