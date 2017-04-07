@@ -179,4 +179,26 @@ class OkrService extends BaseService
             return $tOkrRepos->getLeftRightOfRightestInsertionNode($parentOkrId, $timeframeId);
         }
     }
+
+    /**
+     * OKR更新
+     *
+     * @param array $data リクエストJSON連想配列
+     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @return void
+     */
+    public function changeOkrInfo($data, $tOkr)
+    {
+        // OKR更新
+        $tOkr->setName($data['okrName']);
+        $tOkr->setDetail($data['okrDetail']);
+        $tOkr->setStartDate(DateUtility::transIntoDatetime($data['startDate']));
+        $tOkr->setEndDate(DateUtility::transIntoDatetime($data['endDate']));
+
+        try {
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }

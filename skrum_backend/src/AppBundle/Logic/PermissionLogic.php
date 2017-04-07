@@ -13,15 +13,50 @@ use AppBundle\Utils\DBConstant;
 class PermissionLogic extends BaseLogic
 {
     /**
+     * ユーザ操作権限チェック
+     *
+     * @param integer $subjectUserId 操作主体ユーザ
+     * @param integer $targetUserId 操作対象ユーザ
+     * @return boolean チェック結果
+     */
+    public function checkUserOperation($subjectUserId, $targetUserId)
+    {
+        // 同一ユーザならチェックOK
+        if ($subjectUserId == $targetUserId) {
+            return true;
+        }
+
+        // 操作主体ユーザのロールレベルを取得
+        $subjectUserRoleLevel = $this->getRoleLevel($subjectUserId);
+
+        // 操作対象ユーザのロールレベルを取得
+        $targetUserRoleLevel = $this->getRoleLevel($targetUserId);
+
+        // 権限チェックを行う
+        switch ($subjectUserRoleLevel) {
+            case DBConstant::ROLE_LEVEL_NORMAL:
+                return false;
+            case DBConstant::ROLE_LEVEL_ADMIN:
+                if ($targetUserRoleLevel <= DBConstant::ROLE_LEVEL_ADMIN) {
+                    return true;
+                } else {
+                    return false;
+                }
+            case DBConstant::ROLE_LEVEL_SUPERADMIN:
+                return true;
+        }
+    }
+
+    /**
      * グループ操作権限チェック
      *
-     * @param integer $subjectUserId
-     * @param integer $targetGroupId
+     * @param integer $subjectUserId 操作主体ユーザー
+     * @param integer $targetGroupId 操作対象グループ
      * @return boolean チェック結果
      */
     public function checkGroupOperation($subjectUserId, $targetGroupId)
     {
-        // 主体ユーザのロールレベルを取得
+        // 操作主体ユーザのロールレベルを取得
         $roleLevel = $this->getRoleLevel($subjectUserId);
 
         //　グループエンティティを取得

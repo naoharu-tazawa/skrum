@@ -1,0 +1,28 @@
+{
+  "title": "OKR基本情報変更",
+  "type": "object",
+  "properties": {
+    "okrName": {
+      "title": "OKR名",
+      "type": "string",
+      "maxLength": 255
+    },
+    "okrDetail": {
+      "title": "OKR詳細",
+      "type": "string",
+      "maxLength": 255
+    },
+    "startDate": {
+      "title": "目標開始日",
+      "type": "string",
+      "format": "date-time"
+    },
+    "endDate": {
+      "title": "目標終了日",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["okrName", "okrDetail", "startDate", "endDate"],
+  "additionalProperties": false
+}
