@@ -72,8 +72,7 @@ class OkrService extends BaseService
             }
 
             // 入れ子区間モデルの左値と右値を取得
-            $tOkrRepos = $this->getTOkrRepository();
-            $treeValues = $tOkrRepos->getLeftRightOfInsertionNode($parentOkrEntity->getOkrId());
+            $treeValues = $this->getLeftRightValues($parentOkrEntity->getOkrId(), $tTimeframe->getTimeframeId());
         } else {
             // 会社のOBJECTIVEを登録する場合、ルートノードが存在するかチェック
             if ($ownerType == DBConstant::OKR_OWNER_TYPE_COMPANY && $data['okrType'] == DBConstant::OKR_TYPE_OBJECTIVE) {
@@ -105,8 +104,7 @@ class OkrService extends BaseService
                 $alignmentFlg = true;
 
                 // 入れ子区間モデルの左値と右値を取得
-                $tOkrRepos = $this->getTOkrRepository();
-                $treeValues = $tOkrRepos->getLeftRightOfInsertionNode($parentOkrEntity->getOkrId(), $tTimeframe->getTimeframeId());
+                $treeValues = $this->getLeftRightValues($parentOkrEntity->getOkrId(), $tTimeframe->getTimeframeId());
             }
         }
 
@@ -160,6 +158,25 @@ class OkrService extends BaseService
         } catch(\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * ノードの左値・右値を取得する際に最左ノードまたは最右ノードをランダムに取得
+     *
+     * @param integer $parentOkrId 親OKRID
+     * @return void
+     */
+    private function getLeftRightValues($parentOkrId, $timeframeId)
+    {
+        // 1または2をランダムに取得
+        $rand = mt_rand(1, 2);
+        $tOkrRepos = $this->getTOkrRepository();
+
+        if ($rand == 1) {
+            return $tOkrRepos->getLeftRightOfLeftestInsertionNode($parentOkrId, $timeframeId);
+        } else {
+            return $tOkrRepos->getLeftRightOfRightestInsertionNode($parentOkrId, $timeframeId);
         }
     }
 }

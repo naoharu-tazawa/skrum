@@ -33,13 +33,51 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
-     * 指定した親ノードの直下に挿入するノードの左値・右値を取得
+     * 指定した親ノードの直下に挿入するノードの左値・右値を取得（最左ノード）
      *
      * @param $parentOkrId 親ノードのOKRID
      * @param $timeframeId タイムフレームID
      * @return array
      */
-    public function getLeftRightOfInsertionNode($parentOkrId, $timeframeId)
+    public function getLeftRightOfLeftestInsertionNode($parentOkrId, $timeframeId)
+    {
+        $sql = <<<SQL
+        SELECT (t3_.left_value * 2 + t3_.right_value) / 3 AS tree_left, (t3_.left_value + t3_.right_value * 2) / 3 AS tree_right
+        FROM (
+            SELECT t0_.tree_left AS left_value, CASE WHEN t1_.tree_left IS NULL THEN t0_.tree_right ELSE MIN(t1_.tree_left) END AS right_value
+            FROM t_okr AS t0_ LEFT OUTER JOIN t_okr AS t1_
+            ON (t0_.tree_right = (
+                SELECT MIN(t2_.tree_right)
+                FROM t_okr AS t2_
+                WHERE (t1_.tree_left > t2_.tree_left AND t1_.tree_left < t2_.tree_right AND t2_.timeframe_id = :timeframeIdT2)
+                    AND (t2_.deleted_at IS NULL)
+                )
+                AND t1_.timeframe_id = :timeframeIdT1)
+            AND (t1_.deleted_at IS NULL)
+            WHERE (t0_.okr_id = :parentOkrId AND t0_.timeframe_id = :timeframeIdT0) AND (t0_.deleted_at IS NULL)
+        ) AS t3_;
+SQL;
+
+        $params['timeframeIdT0'] = $timeframeId;
+        $params['timeframeIdT1'] = $timeframeId;
+        $params['timeframeIdT2'] = $timeframeId;
+        $params['parentOkrId'] = $parentOkrId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+        $resultArray = $stmt->fetchAll();
+
+        return $resultArray[0];
+    }
+
+    /**
+     * 指定した親ノードの直下に挿入するノードの左値・右値を取得（最右ノード）
+     *
+     * @param $parentOkrId 親ノードのOKRID
+     * @param $timeframeId タイムフレームID
+     * @return array
+     */
+    public function getLeftRightOfRightestInsertionNode($parentOkrId, $timeframeId)
     {
         $sql = <<<SQL
         SELECT (t3_.left_value * 2 + t3_.right_value) / 3 AS tree_left, (t3_.left_value + t3_.right_value * 2) / 3 AS tree_right
@@ -57,22 +95,6 @@ class TOkrRepository extends BaseRepository
             WHERE (t0_.okr_id = :parentOkrId AND t0_.timeframe_id = :timeframeIdT0) AND (t0_.deleted_at IS NULL)
         ) AS t3_;
 SQL;
-//         $sql = <<<SQL
-//         SELECT (t3_.left_value * 2 + t3_.right_value) / 3 AS tree_left, (t3_.left_value + t3_.right_value * 2) / 3 AS tree_right
-//         FROM (
-//             SELECT CASE WHEN t1_.tree_right IS NULL THEN t0_.tree_left ELSE MAX(t1_.tree_right) END AS left_value, t0_.tree_right AS right_value
-//             FROM t_okr AS t0_ LEFT OUTER JOIN t_okr AS t1_
-//             ON (t0_.tree_left = (
-//                 SELECT MAX(t2_.tree_left)
-//                 FROM t_okr AS t2_
-//                 WHERE (t1_.tree_left > t2_.tree_left AND t1_.tree_left < t2_.tree_right)
-//                 AND (t2_.deleted_at IS NULL)
-//                 )
-//             )
-//             AND (t1_.deleted_at IS NULL)
-//             WHERE (t0_.okr_id = :parentOkrId) AND (t0_.deleted_at IS NULL)
-//         ) AS t3_;
-// SQL;
 
         $params['timeframeIdT0'] = $timeframeId;
         $params['timeframeIdT1'] = $timeframeId;
