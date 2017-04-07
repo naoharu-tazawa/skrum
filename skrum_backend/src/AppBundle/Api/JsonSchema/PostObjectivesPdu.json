@@ -1,0 +1,75 @@
+{
+  "title": "目標新規登録",
+  "type": "object",
+  "properties": {
+    "timeframeId": {
+      "title": "タイムフレームID",
+      "type": "integer",
+      "maxLength": 11
+    },
+    "okrType": {
+      "title": "OKR種別",
+      "enum": ["1", "2"]
+    },
+    "ownerType": {
+      "title": "OKRオーナー種別",
+      "enum": ["1", "2", "3"]
+    },
+    "ownerUserId": {
+      "title": "オーナーユーザID",
+      "type": "integer",
+      "maxLength": 11
+    },
+    "ownerGroupId": {
+      "title": "オーナーグループID",
+      "type": "integer",
+      "maxLength": 11
+    },
+    "ownerCompanyId": {
+      "title": "オーナー会社ID",
+      "type": "integer",
+      "maxLength": 11
+    },
+    "startDate": {
+      "title": "目標開始日",
+      "type": "string",
+      "format": "date-time"
+    },
+    "endDate": {
+      "title": "目標終了日",
+      "type": "string",
+      "format": "date-time"
+    },
+    "okrName": {
+      "title": "OKR名",
+      "type": "string",
+      "maxLength": 255
+    },
+    "okrDetail": {
+      "title": "OKR詳細",
+      "type": "string",
+      "maxLength": 255
+    },
+    "targetValue": {
+      "title": "目標値",
+      "type": "integer",
+      "maxLength": 20
+    },
+    "unit": {
+      "title": "単位",
+      "type": "string",
+      "maxLength": 45
+    },
+    "parentOkrId": {
+      "title": "紐付け先OKRID",
+      "type": "integer",
+      "maxLength": 255
+    },
+    "disclosureType": {
+      "title": "OKR公開種別",
+      "enum": ["1", "2", "3", "4", "5"]
+    }
+  },
+  "required": ["okrType", "ownerType", "startDate", "endDate", "okrName", "okrDetail", "targetValue", "unit", "disclosureType"],
+  "additionalProperties": false
+}

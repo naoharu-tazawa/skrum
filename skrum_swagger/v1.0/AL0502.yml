@@ -1,0 +1,76 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /objectives.json:
+    get:
+      description: 目標新規登録
+      parameters:
+        -
+          name: JsonRequest
+          in: body
+          description: オーナー種別、所有者ID、開始日、終了日、OKR名、OKR詳細、目標値、単位、紐付け先OKRID
+          required: true
+          schema:
+            type: object
+            properties:
+              timeframeId:
+                type: integer
+              okrType:
+                type: string
+              ownerType:
+                type: string
+              ownerUserId:
+                type: integer
+              ownerGroupId:
+                type: integer
+              ownerCompanyId:
+                type: integer
+              startDate:
+                type: string
+              endDate:
+                type: string
+              okrName:
+                type: string
+              okrDetail:
+                type: string
+              targetValue:
+                type: integer
+              unit:
+                type: string
+              parentOkrId:
+                type: integer
+              disclosureType:
+                type: string
+            required:
+              - ownerType
+              - startDate
+              - endDate
+              - okrName
+              - okrDetail
+              - targetValue
+              - unit
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

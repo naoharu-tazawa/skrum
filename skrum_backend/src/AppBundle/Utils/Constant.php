@@ -23,4 +23,14 @@ class Constant
      * 標準タイムフレーム名
      */
     const NORMAL_TIMEFRAME_NAME_FORMAT = '%s/%s - %s/%s';
+
+    /**
+     * 入れ子区間モデルのルートノードの左値
+     */
+    const ROOT_NODE_LEFT_VALUE = 0;
+
+    /**
+     * 入れ子区間モデルのルートノードの右値
+     */
+    const ROOT_NODE_RIGHT_VALUE = 1;
 }

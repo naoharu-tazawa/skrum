@@ -61,3 +61,7 @@ services:
     api.group_member_service:
         class: AppBundle\Service\Api\GroupMemberService
         arguments: ['@service_container']
+
+    api.okr_service:
+        class: AppBundle\Service\Api\OkrService
+        arguments: ['@service_container']

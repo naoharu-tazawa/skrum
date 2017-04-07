@@ -45,6 +45,11 @@ class DBConstant
     const OKR_TYPE_KEY_RESULT = '2';
 
     /**
+     * OKR種別（ルートノード）
+     */
+    const OKR_TYPE_ROOT_NODE = '3';
+
+    /**
      * OKRオーナー種別（ユーザ）
      */
     const OKR_OWNER_TYPE_USER = '1';
@@ -58,6 +63,11 @@ class DBConstant
      * OKRオーナー種別（会社）
      */
     const OKR_OWNER_TYPE_COMPANY = '3';
+
+    /**
+     * OKRオーナー種別（ルートノード）
+     */
+    const OKR_OWNER_TYPE_ROOT = '4';
 
     /**
      * OKRステータス（オープン）

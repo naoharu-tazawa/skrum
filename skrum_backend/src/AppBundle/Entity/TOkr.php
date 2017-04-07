@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JSON;
 /**
  * TOkr
  *
- * @ORM\Table(name="t_okr", indexes={@ORM\Index(name="idx_okr_01", columns={"timeframe_id"}), @ORM\Index(name="idx_okr_02", columns={"parent_okr_id"}), @ORM\Index(name="idx_okr_03", columns={"owner_company_id"}), @ORM\Index(name="idx_okr_04", columns={"owner_group_id"}), @ORM\Index(name="idx_okr_05", columns={"owner_user_id"}), @ORM\Index(name="idx_okr_06", columns={"tree_left", "tree_right"})})
+ * @ORM\Table(name="t_okr", indexes={@ORM\Index(name="idx_okr_01", columns={"timeframe_id"}), @ORM\Index(name="idx_okr_02", columns={"parent_okr_id"}), @ORM\Index(name="idx_okr_04", columns={"owner_group_id"}), @ORM\Index(name="idx_okr_05", columns={"owner_user_id"}), @ORM\Index(name="idx_okr_06", columns={"tree_left", "tree_right"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TOkrRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
@@ -61,30 +61,37 @@ class TOkr
     /**
      * @var float
      *
-     * @ORM\Column(name="tree_left", type="float", precision=10, scale=0, nullable=false)
+     * @ORM\Column(name="tree_left", type="float", precision=10, scale=0, nullable=true)
      */
     private $treeLeft;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="tree_right", type="float", precision=10, scale=0, nullable=false)
+     * @ORM\Column(name="tree_right", type="float", precision=10, scale=0, nullable=true)
      */
     private $treeRight;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="unit", type="string", length=45, nullable=false)
+     * @ORM\Column(name="unit", type="string", length=45, nullable=true)
      */
-    private $unit = 'ï¼…';
+    private $unit = '％';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="owner_type", type="string", length=2, nullable=true)
+     * @ORM\Column(name="owner_type", type="string", length=2, nullable=false)
      */
     private $ownerType;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="owner_company_id", type="integer", nullable=true)
+     */
+    private $ownerCompanyId;
 
     /**
      * @var \DateTime
@@ -159,16 +166,6 @@ class TOkr
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $okrId;
-
-    /**
-     * @var \AppBundle\Entity\MCompany
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MCompany")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="owner_company_id", referencedColumnName="company_id")
-     * })
-     */
-    private $ownerCompany;
 
     /**
      * @var \AppBundle\Entity\MGroup
@@ -453,6 +450,30 @@ class TOkr
     }
 
     /**
+     * Set ownerCompanyId
+     *
+     * @param integer $ownerCompanyId
+     *
+     * @return TOkr
+     */
+    public function setOwnerCompanyId($ownerCompanyId)
+    {
+        $this->ownerCompanyId = $ownerCompanyId;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerCompanyId
+     *
+     * @return integer
+     */
+    public function getOwnerCompanyId()
+    {
+        return $this->ownerCompanyId;
+    }
+
+    /**
      * Set startDate
      *
      * @param \DateTime $startDate
@@ -676,30 +697,6 @@ class TOkr
     public function getOkrId()
     {
         return $this->okrId;
-    }
-
-    /**
-     * Set ownerCompany
-     *
-     * @param \AppBundle\Entity\MCompany $ownerCompany
-     *
-     * @return TOkr
-     */
-    public function setOwnerCompany(\AppBundle\Entity\MCompany $ownerCompany = null)
-    {
-        $this->ownerCompany = $ownerCompany;
-
-        return $this;
-    }
-
-    /**
-     * Get ownerCompany
-     *
-     * @return \AppBundle\Entity\MCompany
-     */
-    public function getOwnerCompany()
-    {
-        return $this->ownerCompany;
     }
 
     /**

@@ -336,4 +336,9 @@ class BaseController extends FOSRestController
     {
         return $this->get('api.group_member_service');
     }
+
+    protected function getOkrService()
+    {
+        return $this->get('api.okr_service');
+    }
 }
