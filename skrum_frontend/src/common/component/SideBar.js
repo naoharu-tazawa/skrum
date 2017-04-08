@@ -6,17 +6,17 @@ import { imgSrc } from '../../util/ResourceUtil';
 const style = {
   sideNav: {
     height: '100vh',
-    width: '50px',
     background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`,
     overflow: 'hidden',
     color: '#fff',
   },
   isOpen: {
-    width: '200px',
+    //width: '100%',
+  },
+  sideNavMenu: {
   },
   sideNavTitle: {
     position: 'relative',
-    backgroundColor: '#263945',
     padding: '10px 13px',
     borderBottom: '1px solid #666',
   },
@@ -27,7 +27,6 @@ const style = {
     display: 'block',
   },
   sideNavAdviser: {
-    backgroundColor: '#263945',
     padding: '12px',
     borderBottom: '1px solid #fff',
     boxSizing: 'border-box',
@@ -37,8 +36,8 @@ const style = {
   },
   sideNavAdviserImage: {
     display: 'inline-block',
-    width: '36px',
-    height: '36px',
+    minWidth: '36px',
+    minHeight: '36px',
     marginRight: '5px',
     border: '2px solid #fff',
     borderRadius: '50%',
@@ -57,11 +56,22 @@ const style = {
     fontSize: '13px',
   },
   sideNavMenuItem: {
-    borderBottom: '1px solid #666',
+//    borderBottom: '1px solid #666',
+  },
+  sideNavMainItemLink: {
+    display: 'block',
+    padding: '10px 13px',
+    backgroundPosition: '13px center',
+    backgroundRepeat: 'no-repeat',
+    cursor: 'pointer',
+    color: '#fff',
+    textDecoration: 'none',
+    whiteSpace: 'nowrap',
+    marginLeft: '-40px',
   },
   sideNavMenuItemLink: {
     display: 'block',
-    padding: '12px 10px 12px 50px',
+    padding: '12px 10px 12px', // 50px
     backgroundPosition: '13px center',
     backgroundRepeat: 'no-repeat',
     cursor: 'pointer',
@@ -118,7 +128,7 @@ class SideBar extends Component {
   };
 
   static createNavItemStyle(isActive, category) {
-    const navItemStyle = Object.assign({}, style.sideNavMenuItemLink);
+    const navItemStyle = Object.assign({}, (category === 'main') ? style.sideNavMainItemLink : style.sideNavMenuItemLink);
 
     if (isActive) {
       Object.assign(navItemStyle, style.isActive);
@@ -166,37 +176,32 @@ class SideBar extends Component {
   }
 
   static renderBarItem(barItem, index, isFunc) {
+    let linkProps
     if (isFunc) {
-      return (
-        <li
-          style={style.sideNavMenuItem}
-          key={index}
-        >
-          <Link
-            style={SideBar.createNavItemStyle(barItem.isActive, barItem.category)}
-            className={cssClass(style.sideNavMenuItemLinkHover)}
-            onClick={barItem.urlOrFunc}
-          >
-            {barItem.title}
-            {SideBar.renderNotice(barItem.isNew)}
-          </Link>
-        </li>
-      );
+      linkProps = { to: barItem.urlOrFunc }
+    } else {
+      linkProps = { onClick: barItem.urlOrFunc }
     }
-
+    const link = (
+      <Link
+        key={index}
+        style={SideBar.createNavItemStyle(barItem.isActive, barItem.category)}
+        className={cssClass(style.sideNavMenuItemLinkHover)}
+        {...linkProps}
+      >
+        {barItem.title}
+        {SideBar.renderNotice(barItem.isNew)}
+      </Link>
+    )
+    if (barItem.category === 'main') {
+      return link
+    }
     return (
       <li
         style={style.sideNavMenuItem}
         key={index}
       >
-        <Link
-          style={SideBar.createNavItemStyle(barItem.isActive, barItem.category)}
-          className={cssClass(style.sideNavMenuItemLinkHover)}
-          to={barItem.urlOrFunc}
-        >
-          {barItem.title}
-          {SideBar.renderNotice(barItem.isNew)}
-        </Link>
+        {link}
       </li>
     );
   }
@@ -211,14 +216,6 @@ class SideBar extends Component {
   render() {
     return (
       <div style={SideBar.checkNaviOpen(this.props.isOpen)}>
-        <div style={style.sideNavTitle}>
-          {SideBar.renderSideNaviTitle(this.props.isOpen)}
-        </div>
-        <div style={SideBar.checkShowAdviser(this.props.isOpen)}>
-          <p style={style.sideNavAdviserName}>
-            <span style={style.sideNavAdviserTitle}>Hogehogeさん</span>
-          </p>
-        </div>
         <ul style={style.sideNavMenu}>
           {this.renderBarItems()}
         </ul>
