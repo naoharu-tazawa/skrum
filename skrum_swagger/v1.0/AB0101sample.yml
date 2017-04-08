@@ -1,0 +1,9 @@
+[Request URL]
+HTTP METHOD: POST
+http://company1.localhost:8000/app_dev.php/api/login.json
+
+[Request Json Schema]
+{
+  "emailAddress": "sampleuser1@skrum.jp",
+  "password": "sampleuser1"
+}

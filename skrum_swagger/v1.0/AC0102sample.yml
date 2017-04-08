@@ -1,0 +1,15 @@
+[Request URL]
+LOGIN USER: sampleuser1
+
+HTTP METHOD: POST
+http://company1.localhost:8000/app_dev.php/api/users/6/establish.json
+
+[Request Json Schema]
+{
+  "user": {
+    "lastName": "田澤",
+    "firstName": "尚治",
+    "position": "社長",
+    "phoneNumber": "090-2323-2323"
+  }
+}

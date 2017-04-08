@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JSON;
  * TGroupTree
  *
  * @ORM\Table(name="t_group_tree", uniqueConstraints={@ORM\UniqueConstraint(name="ui_group_tree_01", columns={"group_tree_path"})}, indexes={@ORM\Index(name="idx_group_tree_01", columns={"group_id"})})
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TGroupTreeReservationRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TGroupTreeRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @JSON\ExclusionPolicy("all")
  */

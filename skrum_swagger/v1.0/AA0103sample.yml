@@ -1,0 +1,9 @@
+[Request URL]
+HTTP METHOD: POST
+http://company1.localhost:8000/app_dev.php/api/join.json
+
+[Request Json Schema]
+{
+  "password": "sampleuser16",
+  "urltoken": "06a623431f9eac672c9d7ff5b047e17d6d525f040acb42622d8a763028d73b41"
+}

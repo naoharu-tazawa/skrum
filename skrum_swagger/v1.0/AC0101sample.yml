@@ -1,0 +1,59 @@
+[Request URL]
+LOGIN USER: sampleuser1
+
+HTTP METHOD: POST
+http://company1.localhost:8000/app_dev.php/api/companies/1/establish.json
+
+[Request Json Schema]
+customFlgがfalseの場合：
+{
+  "user": {
+    "lastName": "田澤",
+    "firstName": "尚治",
+    "position": "社長",
+    "phoneNumber": "090-2323-2323"
+  },
+  "company": {
+    "name": "会社名",
+    "vision":"ヴィジョンヴィジョンヴィジョンヴィジョンヴィジョン",
+    "mission":"ミッションミッションミッションミッションミッション"
+  },
+  "timeframe": {
+    "customFlg":false,
+    "cycleType":"2",
+    "start": {
+      "year": "2017",
+      "month":"04",
+      "date":"01"
+    }
+  }
+}
+
+customFlgがtrueの場合：
+{
+  "user": {
+    "lastName": "田澤",
+    "firstName": "尚治",
+    "position": "社長",
+    "phoneNumber": "090-2323-2323"
+  },
+  "company": {
+    "name": "会社名",
+    "vision":"ヴィジョンヴィジョンヴィジョンヴィジョンヴィジョン",
+    "mission":"ミッションミッションミッションミッションミッション"
+  },
+  "timeframe": {
+    "customFlg":true,
+    "start": {
+      "year": "2017",
+      "month":"04",
+      "date":"01"
+    },
+    "end": {
+      "year": "2017",
+      "month":"06",
+      "date":"30"
+    },
+    "timeframeName":"タイムフレーム名"
+  }
+}

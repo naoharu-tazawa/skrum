@@ -1,0 +1,8 @@
+[Request URL]
+HTTP METHOD: POST
+http://company1.localhost:8000/app_dev.php/api/groups/6/members.json
+
+[Request Json Schema]
+{
+  "userId": 3
+}
