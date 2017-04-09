@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Controller\BaseController;
@@ -59,6 +60,9 @@ class OkrController extends BaseController
         $alignmentFlg = false;
         if (array_key_exists('parentOkrId', $data)) {
             $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($data['parentOkrId'], $auth->getCompanyId());
+            if ($tOkr->getTimeframe()->getTimeframeId != $data['timeframeId']) {
+                throw new ApplicationException('登録OKRと紐付け先OKRのタイムフレームIDが一致しません');
+            }
             $alignmentFlg = true;
         }
 
@@ -103,6 +107,37 @@ class OkrController extends BaseController
         // OKR更新処理
         $okrService = $this->getOkrService();
         $okrService->changeOkrInfo($data, $tOkr);
+
+        return array('result' => 'OK');
+    }
+
+    /**
+     * OKR削除
+     *
+     * @Rest\Delete("/okrs/{okrId}.{_format}")
+     * @param $request リクエストオブジェクト
+     * @return array
+     */
+    public function deleteOkrAction(Request $request, $okrId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // OKR存在チェック
+        $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            $permissionLogic = $this->getPermissionLogic();
+            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
+        }
+
+        // OKR削除処理
+        $okrService = $this->getOkrService();
+        $okrService->deleteOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId());
 
         return array('result' => 'OK');
     }

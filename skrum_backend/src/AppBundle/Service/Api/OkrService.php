@@ -201,4 +201,24 @@ class OkrService extends BaseService
             throw new SystemException($e->getMessage());
         }
     }
+
+    /**
+     * OKR削除
+     *
+     * @param double $treeLeft 入れ子集合モデルの左値
+     * @param double $treeRight 入れ子集合モデルの右値
+     * @param integer $timeframeId タイムフレームID
+     * @return void
+     */
+    public function deleteOkrs($treeLeft, $treeRight, $timeframeId)
+    {
+        $tOkrRepos = $this->getTOkrRepository();
+
+        try {
+            // 削除対象OKRとそれに紐づくOKRを全て削除する
+            $tOkrRepos->deleteOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId);
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }

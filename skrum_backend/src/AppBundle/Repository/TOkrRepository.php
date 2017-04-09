@@ -127,4 +127,32 @@ SQL;
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    /**
+     * 指定OKRとそれに紐づくOKRを全て削除
+     *
+     * @param $treeLeft 入れ子区間モデルの左値
+     * @param $treeRight 入れ子区間モデルの右値
+     * @param $timeframeId タイムフレームID
+     * @return array
+     */
+    public function deleteOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId)
+    {
+        $sql = <<<SQL
+        UPDATE t_okr AS t0_
+        LEFT OUTER JOIN t_okr_activity AS t1_ ON (t0_.okr_id = t1_.okr_id) AND (t1_.deleted_at IS NULL)
+        SET t0_.deleted_at = NOW(), t1_.deleted_at = NOW()
+        WHERE (t0_.tree_left >= :treeLeft
+                AND t0_.tree_left <= :treeRight
+                AND t0_.timeframe_id = :timeframeId)
+                AND (t0_.deleted_at IS NULL);
+SQL;
+
+        $params['treeLeft'] = $treeLeft;
+        $params['treeRight'] = $treeRight;
+        $params['timeframeId'] = $timeframeId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+    }
 }
