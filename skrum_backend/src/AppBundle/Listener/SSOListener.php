@@ -53,20 +53,20 @@ class SSOListener
             } catch(\Exception $e) {
                 throw new AuthenticationException($e->getMessage());
             }
+
+            // JWTをAuthクラスにマッピング
+            $decoded_array = (array) $decoded;
+            $auth = new Auth(
+                        $decoded_array['sdm'],
+                        $decoded_array['uid'],
+                        $decoded_array['cid'],
+                        $decoded_array['rid'],
+                        $decoded_array['rlv'],
+                        $decoded_array['permissions']
+                    );
+
+            // Authをリクエストオブジェクトにセット
+            $event->getRequest()->attributes->set('auth_token', $auth);
         }
-
-        // JWTをAuthクラスにマッピング
-        $decoded_array = (array) $decoded;
-        $auth = new Auth(
-                    $decoded_array['sdm'],
-                    $decoded_array['uid'],
-                    $decoded_array['cid'],
-                    $decoded_array['rid'],
-                    $decoded_array['rlv'],
-                    $decoded_array['permissions']
-                );
-
-        // Authをリクエストオブジェクトにセット
-        $event->getRequest()->attributes->set('auth_token', $auth);
     }
 }

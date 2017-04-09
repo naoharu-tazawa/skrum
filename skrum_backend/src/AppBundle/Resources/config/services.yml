@@ -19,14 +19,14 @@ services:
 
     app.permission_annotation_listener:
         class: AppBundle\Listener\PermissionAnnotationListener
-        arguments: [@annotation_reader]
+        arguments: ['@annotation_reader']
         tags:
             - { name: kernel.event_listener, event: kernel.controller, priority: -255 }
 
     gedmo.listener.softdeleteable:
         class: Gedmo\SoftDeleteable\SoftDeleteableListener
         calls:
-            - [ setAnnotationReader, [ "@annotation_reader" ] ]
+            - [ setAnnotationReader, ['@annotation_reader'] ]
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
