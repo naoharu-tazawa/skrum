@@ -65,3 +65,7 @@ services:
     api.okr_service:
         class: AppBundle\Service\Api\OkrService
         arguments: ['@service_container']
+
+    api.timeframe_service:
+        class: AppBundle\Service\Api\TimeframeService
+        arguments: ['@service_container']
