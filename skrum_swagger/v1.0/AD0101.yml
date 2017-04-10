@@ -1,0 +1,163 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /users/{userId}/top.json:
+    get:
+      description: ログイン後初期表示情報取得
+      parameters:
+        -
+          name: userId
+          in: path
+          type: string
+          description: ユーザID
+          required: true
+      responses:
+        200:
+          description: タイムフレーム一覧
+          schema:
+            type: object
+            properties:
+              timeframes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    timeframeId:
+                      type: integer
+                    timeframeName:
+                      type: string
+                    defaultFlg:
+                      type: integer
+                  required:
+                    - timeframeId
+                    - timeframeName
+                    - defaultFlg
+              teams:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    groupId:
+                      type: integer
+                    groupName:
+                      type: string
+              departments:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    groupId:
+                      type: integer
+                    groupName:
+                      type: string
+              user:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                  name:
+                    type: string
+                  departments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        groupId:
+                          type: string
+                        departmentName:
+                          type: string
+                  position:
+                    type: string
+                  phoneNumber:
+                    type: string
+                  emailAddress:
+                    type: string
+              okrs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    okrId:
+                      type: integer
+                    okrName:
+                      type: string
+                    ownerUserId:
+                      type: integer
+                    targetValue:
+                      type: integer
+                    achievedValue:
+                      type: integer
+                    unit:
+                      type: string
+                    achievementRate:
+                      type: number
+                    status:
+                      type: string
+                    keyResults:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          okrId:
+                            type: integer
+                          okrName:
+                            type: string
+                          targetValue:
+                            type: integer
+                          achievedValue:
+                            type: integer
+                          unit:
+                            type: string
+                          achievementRate:
+                            type: number
+                          ownerType:
+                            type: string
+                          ownerUserId:
+                            type: integer
+                          ownerGroupId:
+                            type: integer
+                          ownerCompanyId:
+                            type: integer
+                          status:
+                            type: string
+                          weightedAverageRatio:
+                            type: number
+                          ratioLockedFlg:
+                            type: integer
+                        required:
+                          - okrId
+                          - okrName
+                          - targetValue
+                          - achievedValue
+                          - unit
+                          - achievementRate
+                          - ownerType
+                          - status
+                          - ratioLockedFlg
+                  required:
+                    - okrId
+                    - okrName
+                    - ownerUserId
+                    - targetValue
+                    - achievedValue
+                    - unit
+                    - achievementRate
+                    - status
+            required:
+              - timeframes
+              - user
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

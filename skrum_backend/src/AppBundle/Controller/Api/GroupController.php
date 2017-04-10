@@ -73,7 +73,7 @@ class GroupController extends BaseController
 
         // 所属グループリスト取得
         $groupMemberService = $this->getGroupMemberService();
-        $groupDTOArray = $groupMemberService->getGroups($userId, $timeframeId);
+        $groupDTOArray = $groupMemberService->getGroupsWithAchievementRate($userId, $timeframeId);
 
         // 返却DTOをセット
         $userGroupDTO = new UserGroupDTO();

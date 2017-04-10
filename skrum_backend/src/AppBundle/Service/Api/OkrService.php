@@ -11,6 +11,7 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\Constant;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Entity\TOkrActivity;
+use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 
 /**
  * OKRサービスクラス
@@ -19,6 +20,89 @@ use AppBundle\Entity\TOkrActivity;
  */
 class OkrService extends BaseService
 {
+    /**
+     * 目標とキーリザルトの一覧を取得
+     *
+     * @param integer $userId ユーザID
+     * @param integer $roleLevel ロールレベル
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
+     * @return void
+     */
+    public function getObjectivesAndKeyResults($userId, $roleLevel, $timeframeId, $companyId)
+    {
+        // 目標とキーリザルトを取得
+        $tOkrRepos = $this->getTOkrRepository();
+        $tOkrArray = $tOkrRepos->getObjectivesAndKeyResults($userId, $timeframeId, $companyId);
+
+        $okrDisclosureLogic = $this->getOkrDisclosureLogic();
+        $returnArray = array();
+        $flg = false;
+        for ($i = 0; $i < count($tOkrArray); $i++) {
+            if (array_key_exists('objective', $tOkrArray[$i])) {
+                if ($flg == true) {
+                    $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
+                    $returnArray[] = $basicOkrDTOObjective;
+                } else {
+                    $returnArray[] = $basicOkrDTOObjective;
+                }
+
+                // 閲覧権限をチェック
+                if (!$okrDisclosureLogic->checkDisclosure($userId, $roleLevel, $tOkrArray[$i]['objective'])) {
+                    continue;
+                }
+
+                $basicOkrDTOObjective = new BasicOkrDTO();
+                $basicOkrDTOObjective->setOkrId($tOkrArray[$i]['objective']->getOkrId());
+                $basicOkrDTOObjective->setOkrName($tOkrArray[$i]['objective']->getName());
+                $basicOkrDTOObjective->setOwnerUserId($tOkrArray[$i]['objective']->getOwnerUser()->getUserId());
+                $basicOkrDTOObjective->setTargetValue($tOkrArray[$i]['objective']->getTargetValue());
+                $basicOkrDTOObjective->setAchievedValue($tOkrArray[$i]['objective']->getAchievedValue());
+                $basicOkrDTOObjective->setUnit($tOkrArray[$i]['objective']->getUnit());
+                $basicOkrDTOObjective->setAchievementRate($tOkrArray[$i]['objective']->getAchievementRate());
+                $basicOkrDTOObjective->setStatus($tOkrArray[$i]['objective']->getStatus());
+
+                $basicOkrDTOKeyResultArray = array();
+                $flg = false;
+            } else {
+                // 閲覧権限をチェック
+                if (!$okrDisclosureLogic->checkDisclosure($userId, $roleLevel, $tOkrArray[$i]['keyResult'])) {
+                    continue;
+                }
+
+                $basicOkrDTOKeyResult = new BasicOkrDTO();
+                $basicOkrDTOKeyResult->setOkrId($tOkrArray[$i]['keyResult']->getOkrId());
+                $basicOkrDTOKeyResult->setOkrName($tOkrArray[$i]['keyResult']->getName());
+                $basicOkrDTOKeyResult->setTargetValue($tOkrArray[$i]['keyResult']->getTargetValue());
+                $basicOkrDTOKeyResult->setAchievedValue($tOkrArray[$i]['keyResult']->getAchievedValue());
+                $basicOkrDTOKeyResult->setUnit($tOkrArray[$i]['keyResult']->getUnit());
+                $basicOkrDTOKeyResult->setAchievementRate($tOkrArray[$i]['keyResult']->getAchievementRate());
+                $basicOkrDTOKeyResult->setOwnerType($tOkrArray[$i]['keyResult']->getOwnerType());
+                if ($tOkrArray[$i]['keyResult']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+                    $basicOkrDTOKeyResult->setOwnerUserId($tOkrArray[$i]['keyResult']->getOwnerUser()->getUserId());
+                } elseif ($tOkrArray[$i]['keyResult']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                    $basicOkrDTOKeyResult->setOwnerGroupId($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupId());
+                } else {
+                    $basicOkrDTOKeyResult->setOwnerCompanyId($tOkrArray[$i]['keyResult']->getOwnerCompanyId());
+                }
+                $basicOkrDTOKeyResult->setStatus($tOkrArray[$i]['keyResult']->getStatus());
+                $basicOkrDTOKeyResult->setWeightedAverageRatio($tOkrArray[$i]['keyResult']->getWeightedAverageRatio());
+                $basicOkrDTOKeyResult->setRatioLockedFlg($tOkrArray[$i]['keyResult']->getRatioLockedFlg());
+
+                $basicOkrDTOKeyResultArray[] = $basicOkrDTOKeyResult;
+                $flg = true;
+            }
+
+            // 最終ループ
+            if ($i == (count($tOkrArray) - 1)) {
+                $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
+                $returnArray[] = $basicOkrDTOObjective;
+            }
+        }
+
+        return $returnArray;
+    }
+
     /**
      * OKR新規登録
      *

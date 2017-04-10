@@ -60,7 +60,7 @@ class OkrController extends BaseController
         $alignmentFlg = false;
         if (array_key_exists('parentOkrId', $data)) {
             $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($data['parentOkrId'], $auth->getCompanyId());
-            if ($tOkr->getTimeframe()->getTimeframeId != $data['timeframeId']) {
+            if ($tOkr->getTimeframe()->getTimeframeId() != $data['timeframeId']) {
                 throw new ApplicationException('登録OKRと紐付け先OKRのタイムフレームIDが一致しません');
             }
             $alignmentFlg = true;

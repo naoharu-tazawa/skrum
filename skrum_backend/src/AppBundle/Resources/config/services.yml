@@ -38,6 +38,10 @@ services:
         class: AppBundle\Logic\DBExistanceLogic
         arguments: ['@service_container']
 
+    api.okr_disclosure_logic:
+        class: AppBundle\Logic\OkrDisclosureLogic
+        arguments: ['@service_container']
+
     api.sample_service:
         class: AppBundle\Service\Api\SampleService
         arguments: ['@service_container']

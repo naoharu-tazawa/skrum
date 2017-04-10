@@ -71,10 +71,30 @@ class TGroupMemberRepository extends BaseRepository
      * 指定ユーザIDに紐付くグループを全レコード取得
      *
      * @param $userId ユーザID
+     * @return array
+     */
+    public function getAllGroups($userId)
+    {
+        $qb = $this->createQueryBuilder('tgm');
+        $qb->select('mg.groupId', 'mg.groupName', 'mg.groupType')
+        ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgm.group = mg.groupId')
+        ->where('tgm.user = :userId')
+        ->andWhere('mg.groupType <> :groupType')
+        ->setParameter('userId', $userId)
+        ->setParameter('groupType', DBConstant::GROUP_TYPE_COMPANY)
+        ->orderBy('mg.groupId', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 指定ユーザIDに紐付くグループをそれに紐づくOKR達成率と共に全レコード取得
+     *
+     * @param $userId ユーザID
      * @param $timeframeId タイムフレームID
      * @return array
      */
-    public function getAllGroups($userId, $timeframeId)
+    public function getAllGroupsWithAchievementRate($userId, $timeframeId)
     {
         $qb = $this->createQueryBuilder('tgm');
         $qb->select('mg.groupId', 'mg.groupName', 'to.achievementRate')
@@ -93,5 +113,34 @@ class TGroupMemberRepository extends BaseRepository
             ->orderBy('mg.groupId', 'ASC');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 2ユーザが所属している同一グループを取得
+     *
+     * @param integer $userId1 チェック対象ユーザID（１人目）
+     * @param integer $userId2 チェック対象ユーザID（２人目）
+     * @return array
+     */
+    public function getTheSameGroups($userId1, $userId2)
+    {
+        $sql = <<<SQL
+        SELECT t0_.id
+        FROM t_group_member AS t0_
+        WHERE (t0_.user_id = :userIdT0) AND (t0_.deleted_at IS NULL)
+        INTERSECT
+        SELECT t1_.id
+        FROM t_group_member AS t1_
+        WHERE (t1_.user_id = :userIdT1) AND (t1_.deleted_at IS NULL);
+SQL;
+
+        $params['userIdT0'] = $userId1;
+        $params['userIdT1'] = $userId2;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+        $resultArray = $stmt->fetchAll();
+
+        return $resultArray[0];
     }
 }

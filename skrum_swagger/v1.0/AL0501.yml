@@ -37,6 +37,7 @@ paths:
               required:
                 - timeframeId
                 - timeframeName
+                - defaultFlg
         400:
           description: JSONスキーマ不正
         409:

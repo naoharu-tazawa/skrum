@@ -242,6 +242,25 @@ class BaseService
     }
 
     //----------------------------------------------
+    //ここからロジッククラスの取得メソッド
+    //----------------------------------------------
+
+    protected function getDBExistanceLogic()
+    {
+        return $this->getContainer()->get('api.db_existance_logic');
+    }
+
+    protected function getPermissionLogic()
+    {
+        return $this->getContainer()->get('api.permission_logic');
+    }
+
+    protected function getOkrDisclosureLogic()
+    {
+        return $this->getContainer()->get('api.okr_disclosure_logic');
+    }
+
+    //----------------------------------------------
     //ここからリポジトリクラスの取得メソッド
     //----------------------------------------------
 

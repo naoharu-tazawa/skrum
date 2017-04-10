@@ -307,6 +307,11 @@ class BaseController extends FOSRestController
         return $this->get('api.permission_logic');
     }
 
+    protected function getOkrDisclosureLogic()
+    {
+        return $this->get('api.okr_disclosure_logic');
+    }
+
     protected function getSampleService()
     {
         return $this->get('api.sample_service');

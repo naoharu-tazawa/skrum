@@ -9,6 +9,7 @@ use AppBundle\Service\BaseService;
 use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
 use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupDTO;
+use AppBundle\Utils\DBConstant;
 
 /**
  * グループメンバーサービスクラス
@@ -112,7 +113,7 @@ class GroupMemberService extends BaseService
      * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function getGroups($userId, $timeframeId)
+    public function getGroupsWithAchievementRate($userId, $timeframeId)
     {
         $groupInfoArray = $this->getGroupInfoArray($userId, $timeframeId);
 
@@ -175,6 +176,34 @@ class GroupMemberService extends BaseService
     public function getGroupInfoArray($userId, $timeframeId)
     {
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
-        return $tGroupMemberRepos->getAllGroups($userId, $timeframeId);
+        return $tGroupMemberRepos->getAllGroupsWithAchievementRate($userId, $timeframeId);
+    }
+
+    /**
+     * ユーザ所属チーム/部門リスト取得
+     *
+     * @param integer $userId ユーザID
+     * @return array
+     */
+    public function getTeamsAndDepartments($userId)
+    {
+        $tGroupMemberRepos = $this->getTGroupMemberRepository();
+        $groupInfoArray = $tGroupMemberRepos->getAllGroups($userId);
+
+        // グループ情報配列を整形してDTOに詰め替える
+        $teams = array();
+        $departments = array();
+        foreach ($groupInfoArray as $groupInfo) {
+            $groupDTO = new GroupDTO();
+            $groupDTO->setGroupId($groupInfo['groupId']);
+            $groupDTO->setGroupName($groupInfo['groupName']);
+            if ($groupInfo['groupType'] == DBConstant::GROUP_TYPE_TEAM) {
+                $teams[] = $groupDTO;
+            } elseif ($groupInfo['groupType'] == DBConstant::GROUP_TYPE_DEPARTMENT) {
+                $departments[] = $groupDTO;
+            }
+        }
+
+        return array('teams' => $teams, 'departments' => $departments);
     }
 }
