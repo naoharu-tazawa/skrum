@@ -1,0 +1,125 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /companies/{companyId}/basics.json?{tfid}:
+    get:
+      description: 会社目標管理情報取得
+      parameters:
+        -
+          name: companyId
+          in: path
+          type: string
+          description: 会社ID
+          required: true
+        -
+          name: tfid
+          in: path
+          type: string
+          description: タイムフレームID
+          required: true
+      responses:
+        200:
+          description: 会社目標管理情報
+          schema:
+            type: object
+            properties:
+              company:
+                type: object
+                properties:
+                  companyId:
+                    type: integer
+                  name:
+                    type: string
+                  vision:
+                    type: string
+                  mission:
+                    type: string
+              okrs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    okrId:
+                      type: integer
+                    okrName:
+                      type: string
+                    ownerUserId:
+                      type: integer
+                    targetValue:
+                      type: integer
+                    achievedValue:
+                      type: integer
+                    unit:
+                      type: string
+                    achievementRate:
+                      type: number
+                    status:
+                      type: string
+                    keyResults:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          okrId:
+                            type: integer
+                          okrName:
+                            type: string
+                          targetValue:
+                            type: integer
+                          achievedValue:
+                            type: integer
+                          unit:
+                            type: string
+                          achievementRate:
+                            type: number
+                          ownerType:
+                            type: string
+                          ownerUserId:
+                            type: integer
+                          ownerGroupId:
+                            type: integer
+                          ownerCompanyId:
+                            type: integer
+                          status:
+                            type: string
+                          weightedAverageRatio:
+                            type: number
+                          ratioLockedFlg:
+                            type: integer
+                        required:
+                          - okrId
+                          - okrName
+                          - targetValue
+                          - achievedValue
+                          - unit
+                          - achievementRate
+                          - ownerType
+                          - status
+                          - ratioLockedFlg
+                  required:
+                    - okrId
+                    - okrName
+                    - ownerUserId
+                    - targetValue
+                    - achievedValue
+                    - unit
+                    - achievementRate
+                    - status
+            required:
+              - company
+              - okrs
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

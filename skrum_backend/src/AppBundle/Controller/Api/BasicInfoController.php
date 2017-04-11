@@ -12,6 +12,7 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Api\ResponseDTO\UserBasicsDTO;
 use AppBundle\Api\ResponseDTO\GroupBasicsDTO;
 use AppBundle\Utils\Constant;
+use AppBundle\Api\ResponseDTO\CompanyBasicsDTO;
 
 /**
  * 基本情報コントローラ
@@ -160,5 +161,46 @@ class BasicInfoController extends BaseController
         $groupBasicsDTO->setAlignmentsInfo($alignmentsInfoDTOArray);
 
         return $groupBasicsDTO;
+    }
+
+    /**
+     * 会社目標管理情報取得
+     *
+     * @Rest\Get("/companies/{companyId}/basics.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getCompanyBasicsAction(Request $request, $companyId)
+    {
+        // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkIntID($timeframeId);
+        if($errors) throw new InvalidParameterException("タイムフレームIDが不正です", $errors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 会社IDの一致をチェック
+        if ($companyId != $auth->getCompanyId()) {
+            throw new ApplicationException('会社IDが存在しません');
+        }
+
+        // 会社基本情報取得
+        $companyService = $this->getCompanyService();
+        $basicCompanyInfoDTO = $companyService->getBasicCompanyInfo($companyId);
+
+        // OKR一覧取得
+        $okrService = $this->getOkrService();
+        $okrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_COMPANY, $auth, null, null, $timeframeId, $auth->getCompanyId());
+
+        // 返却DTOをセット
+        $companyBasicsDTO = new CompanyBasicsDTO();
+        $companyBasicsDTO->setCompany($basicCompanyInfoDTO);
+        $companyBasicsDTO->setOkrs($okrsArray);
+
+        return $companyBasicsDTO;
     }
 }

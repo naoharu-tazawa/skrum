@@ -62,6 +62,10 @@ services:
         class: AppBundle\Service\Api\GroupService
         arguments: ['@service_container']
 
+    api.company_service:
+        class: AppBundle\Service\Api\CompanyService
+        arguments: ['@service_container']
+
     api.group_member_service:
         class: AppBundle\Service\Api\GroupMemberService
         arguments: ['@service_container']

@@ -74,7 +74,7 @@ class GroupService extends BaseService
     {
         $mGroupRepos = $this->getMGroupRepository();
         $mGroupArray = $mGroupRepos->getGroupWithLeaderUser($groupId, $companyId);
-        if (count($mGroupArray) === 0) {
+        if (count($mGroupArray) == 0) {
             throw new ApplicationException('グループが存在しません');
         }
 

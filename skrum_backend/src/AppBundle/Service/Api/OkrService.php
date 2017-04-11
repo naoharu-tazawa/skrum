@@ -44,7 +44,7 @@ class OkrService extends BaseService
         } elseif ($subjectType == Constant::SUBJECT_TYPE_GROUP) {
             $tOkrArray = $tOkrRepos->getGroupObjectivesAndKeyResults($groupId, $timeframeId, $companyId);
         } else {
-            $tOkrArray = $tOkrRepos->getObjectivesAndKeyResults($userId, $timeframeId, $companyId);
+            $tOkrArray = $tOkrRepos->getCompanyObjectivesAndKeyResults($companyId, $timeframeId);
         }
 
         $okrDisclosureLogic = $this->getOkrDisclosureLogic();
