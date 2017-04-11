@@ -124,23 +124,14 @@ class TGroupMemberRepository extends BaseRepository
      */
     public function getTheSameGroups($userId1, $userId2)
     {
-        $sql = <<<SQL
-        SELECT t0_.id
-        FROM t_group_member AS t0_
-        WHERE (t0_.user_id = :userIdT0) AND (t0_.deleted_at IS NULL)
-        INTERSECT
-        SELECT t1_.id
-        FROM t_group_member AS t1_
-        WHERE (t1_.user_id = :userIdT1) AND (t1_.deleted_at IS NULL);
-SQL;
+        $qb = $this->createQueryBuilder('tgm1');
+        $qb->select('IDENTITY(tgm1.group)')
+            ->innerJoin('AppBundle:TGroupMember', 'tgm2', 'WITH', 'tgm1.group = tgm2.group')
+            ->where('tgm1.user = :userId1')
+            ->andWhere('tgm2.user = :userId2')
+            ->setParameter('userId1', $userId1)
+            ->setParameter('userId2', $userId2);
 
-        $params['userIdT0'] = $userId1;
-        $params['userIdT1'] = $userId2;
-
-        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
-        $stmt->execute($params);
-        $resultArray = $stmt->fetchAll();
-
-        return $resultArray[0];
+        return $qb->getQuery()->getResult();
     }
 }

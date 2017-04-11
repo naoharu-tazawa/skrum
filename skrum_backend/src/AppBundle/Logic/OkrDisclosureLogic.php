@@ -33,7 +33,11 @@ class OkrDisclosureLogic extends BaseLogic
 
             // 本人のみ公開の場合
             if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_SELF) {
-                return false;
+                if ($subjectUserId == $tOkr->getOwnerUser()->getUserId()) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
 
             // 操作主体ユーザがスーパー管理者ユーザの場合

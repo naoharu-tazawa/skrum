@@ -47,22 +47,109 @@ class TOkrRepository extends BaseRepository
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
-            ->innerJoin('AppBundle:TTimeframe', 'tt2', 'WITH', 'to2.timeframe = tt2.timeframeId')
-            ->innerJoin('AppBundle:MCompany', 'mc2', 'WITH', 'tt2.company = mc2.companyId')
             ->where('to1.timeframe = :timeframeId1')
             ->andWhere('to1.type = :type1')
             ->andWhere('to1.ownerType = :ownerType1')
             ->andWhere('to1.ownerUser = :ownerUserId1')
             ->andWhere('tt1.company = :companyId1')
-            ->andWhere('to2.timeframe = :timeframeId2')
-            ->andWhere('tt2.company = :companyId2')
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_USER)
+            ->setParameter('ownerUserId1', $userId)
+            ->setParameter('companyId1', $companyId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 目標紐付け先（ユーザ）情報を取得
+     *
+     * @param $userId ユーザID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getUserAlignmentsInfo($userId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('IDENTITY(to2.ownerUser) AS userId', 'mu1.lastName', 'mu1.firstName', 'COUNT(to2.ownerUser) AS numberOfOkrs')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
+            ->innerJoin('AppBundle:MUser', 'mu1', 'WITH', 'to2.ownerUser = mu1.userId')
+            ->where('to1.timeframe = :timeframeId1')
+            ->andWhere('to1.type = :type1')
+            ->andWhere('to1.ownerType = :ownerType1')
+            ->andWhere('to1.ownerUser = :ownerUserId1')
+            ->andWhere('tt1.company = :companyId1')
             ->setParameter('timeframeId1', $timeframeId)
             ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
             ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_USER)
             ->setParameter('ownerUserId1', $userId)
             ->setParameter('companyId1', $companyId)
-            ->setParameter('timeframeId2', $timeframeId)
-            ->setParameter('companyId2', $companyId);
+            ->groupBy('to2.ownerUser');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 目標紐付け先（グループ）情報を取得
+     *
+     * @param $userId ユーザID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getGroupAlignmentsInfo($userId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('IDENTITY(to2.ownerGroup) AS groupId', 'mg1.groupName', 'COUNT(to2.ownerGroup) AS numberOfOkrs')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
+            ->innerJoin('AppBundle:MGroup', 'mg1', 'WITH', 'to2.ownerGroup = mg1.groupId')
+            ->where('to1.timeframe = :timeframeId1')
+            ->andWhere('to1.type = :type1')
+            ->andWhere('to1.ownerType = :ownerType1')
+            ->andWhere('to1.ownerUser = :ownerUserId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_USER)
+            ->setParameter('ownerUserId1', $userId)
+            ->setParameter('companyId1', $companyId)
+            ->groupBy('to2.ownerGroup');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 目標紐付け先（会社）情報を取得
+     *
+     * @param $userId ユーザID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getCompanyAlignmentsInfo($userId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to2.ownerCompanyId AS companyId', 'mc2.companyName', 'COUNT(to2.ownerCompanyId) AS numberOfOkrs')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
+            ->innerJoin('AppBundle:MCompany', 'mc2', 'WITH', 'to2.ownerCompanyId = mc2.companyId')
+            ->where('to1.timeframe = :timeframeId1')
+            ->andWhere('to1.type = :type1')
+            ->andWhere('to1.ownerType = :ownerType1')
+            ->andWhere('to1.ownerUser = :ownerUserId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_USER)
+            ->setParameter('ownerUserId1', $userId)
+            ->setParameter('companyId1', $companyId)
+            ->groupBy('to2.ownerCompanyId');
 
         return $qb->getQuery()->getResult();
     }

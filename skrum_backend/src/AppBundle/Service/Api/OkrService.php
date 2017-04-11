@@ -12,6 +12,10 @@ use AppBundle\Utils\Constant;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Entity\TOkrActivity;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\GroupAlignmentsDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\AlignmentsInfoDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\UserAlignmentsDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\CompanyAlignmentsDTO;
 
 /**
  * OKRサービスクラス
@@ -49,6 +53,12 @@ class OkrService extends BaseService
 
                 // 閲覧権限をチェック
                 if (!$okrDisclosureLogic->checkDisclosure($userId, $roleLevel, $tOkrArray[$i]['objective'])) {
+                    // 最終ループ
+                    if ($i == (count($tOkrArray) - 1)) {
+                        $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
+                        $returnArray[] = $basicOkrDTOObjective;
+                    }
+                    $flg = false;
                     continue;
                 }
 
@@ -65,8 +75,23 @@ class OkrService extends BaseService
                 $basicOkrDTOKeyResultArray = array();
                 $flg = false;
             } else {
+                // キーリザルトがnullの場合、スキップ
+                if ($tOkrArray[$i]['keyResult'] == null) {
+                    // 最終ループ
+                    if ($i == (count($tOkrArray) - 1)) {
+                        $returnArray[] = $basicOkrDTOObjective;
+                    }
+                    continue;
+                }
+
                 // 閲覧権限をチェック
                 if (!$okrDisclosureLogic->checkDisclosure($userId, $roleLevel, $tOkrArray[$i]['keyResult'])) {
+                    // 最終ループ
+                    if ($i == (count($tOkrArray) - 1)) {
+                        $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
+                        $returnArray[] = $basicOkrDTOObjective;
+                    }
+                    $flg = true;
                     continue;
                 }
 
@@ -95,12 +120,75 @@ class OkrService extends BaseService
 
             // 最終ループ
             if ($i == (count($tOkrArray) - 1)) {
-                $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
+                if ($flg) {
+                    $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
+                }
                 $returnArray[] = $basicOkrDTOObjective;
             }
         }
 
         return $returnArray;
+    }
+
+    /**
+     * 目標紐付け先情報取得
+     *
+     * @param integer $userId ユーザID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
+     * @return void
+     */
+    public function getAlignmentsInfo($userId, $timeframeId, $companyId)
+    {
+        $alignmentsInfoDTOArray = array();
+        $tOkrRepos = $this->getTOkrRepository();
+
+        // 目標紐付け先（ユーザ）情報を取得
+        $userAlignmentsInfoArray = $tOkrRepos->getUserAlignmentsInfo($userId, $timeframeId, $companyId);
+        foreach ($userAlignmentsInfoArray as $userAlignmentsInfo) {
+            $userAlignmentsDTO = new UserAlignmentsDTO();
+            $userAlignmentsDTO->setUserId($userAlignmentsInfo['userId']);
+            $userAlignmentsDTO->setName($userAlignmentsInfo['lastName'] . ' ' . $userAlignmentsInfo['firstName']);
+            $userAlignmentsDTO->setNumberOfOkrs($userAlignmentsInfo['numberOfOkrs']);
+
+            $alignmentsInfoDTO = new AlignmentsInfoDTO();
+            $alignmentsInfoDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
+            $alignmentsInfoDTO->setUser($userAlignmentsDTO);
+
+            $alignmentsInfoDTOArray[] = $alignmentsInfoDTO;
+        }
+
+        // 目標紐付け先（グループ）情報を取得
+        $groupAlignmentsInfoArray = $tOkrRepos->getGroupAlignmentsInfo($userId, $timeframeId, $companyId);
+        foreach ($groupAlignmentsInfoArray as $groupAlignmentsInfo) {
+            $groupAlignmentsDTO = new GroupAlignmentsDTO();
+            $groupAlignmentsDTO->setGroupId($groupAlignmentsInfo['groupId']);
+            $groupAlignmentsDTO->setName($groupAlignmentsInfo['groupName']);
+            $groupAlignmentsDTO->setNumberOfOkrs($groupAlignmentsInfo['numberOfOkrs']);
+
+            $alignmentsInfoDTO = new AlignmentsInfoDTO();
+            $alignmentsInfoDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
+            $alignmentsInfoDTO->setGroup($groupAlignmentsDTO);
+
+            $alignmentsInfoDTOArray[] = $alignmentsInfoDTO;
+        }
+
+        // 目標紐付け先（会社）情報を取得
+        $companyAlignmentsInfoArray = $tOkrRepos->getCompanyAlignmentsInfo($userId, $timeframeId, $companyId);
+        foreach ($companyAlignmentsInfoArray as $companyAlignmentsInfo) {
+            $companyAlignmentsDTO = new CompanyAlignmentsDTO();
+            $companyAlignmentsDTO->setCompanyId($companyAlignmentsInfo['companyId']);
+            $companyAlignmentsDTO->setName($companyAlignmentsInfo['companyName']);
+            $companyAlignmentsDTO->setNumberOfOkrs($companyAlignmentsInfo['numberOfOkrs']);
+
+            $alignmentsInfoDTO = new AlignmentsInfoDTO();
+            $alignmentsInfoDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
+            $alignmentsInfoDTO->setCompany($companyAlignmentsDTO);
+
+            $alignmentsInfoDTOArray[] = $alignmentsInfoDTO;
+        }
+
+        return $alignmentsInfoDTOArray;
     }
 
     /**

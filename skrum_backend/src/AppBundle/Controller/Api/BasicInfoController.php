@@ -57,6 +57,9 @@ class BasicInfoController extends BaseController
         $okrService = $this->getOkrService();
         $okrsArray = $okrService->getObjectivesAndKeyResults($userId, $auth->getRoleLevel(), $timeframeId, $auth->getCompanyId());
 
+        // 紐付け先情報取得
+        $alignmentsInfoDTOArray = $okrService->getAlignmentsInfo($userId, $timeframeId, $auth->getCompanyId());
+
         // 返却DTOをセット
         $topDTO = new TopDTO();
         $topDTO->setTimeframes($timeframeDTOArray);
@@ -64,6 +67,7 @@ class BasicInfoController extends BaseController
         $topDTO->setDepartments($groups['departments']);
         $topDTO->setUser($basicUserInfoDTO);
         $topDTO->setOkrs($okrsArray);
+        $topDTO->setAlignmentsInfo($alignmentsInfoDTOArray);
 
         return $topDTO;
     }

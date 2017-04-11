@@ -152,9 +152,47 @@ paths:
                     - unit
                     - achievementRate
                     - status
+              alignmentsInfo:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    ownerType:
+                      type: string
+                    user:
+                      type: object
+                      properties:
+                        userId:
+                          type: integer
+                        name:
+                          type: string
+                        numberOfOkrs:
+                          type: integer
+                    group:
+                      type: object
+                      properties:
+                        groupId:
+                          type: integer
+                        name:
+                          type: string
+                        numberOfOkrs:
+                          type: integer
+                    company:
+                      type: object
+                      properties:
+                        companyId:
+                          type: integer
+                        name:
+                          type: string
+                        numberOfOkrs:
+                          type: integer
+                  required:
+                    - ownerType
             required:
               - timeframes
               - user
+              - okrs
+              - alignmentsInfo
         400:
           description: JSONスキーマ不正
         409:

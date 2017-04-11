@@ -47,6 +47,13 @@ class TopDTO
     private $okrs;
 
     /**
+     * @var array
+     *
+     * @JSON\Type("array")
+     */
+    private $alignmentsInfo;
+
+    /**
      * Set timeframes
      *
      * @param array $timeframes
@@ -164,5 +171,29 @@ class TopDTO
     public function getOkrs()
     {
         return $this->okrs;
+    }
+
+    /**
+     * Set alignmentsInfo
+     *
+     * @param array $alignmentsInfo
+     *
+     * @return TopDTO
+     */
+    public function setAlignmentsInfo($alignmentsInfo)
+    {
+        $this->alignmentsInfo = $alignmentsInfo;
+
+        return $this;
+    }
+
+    /**
+     * Get alignmentsInfo
+     *
+     * @return array
+     */
+    public function getAlignmentsInfo()
+    {
+        return $this->alignmentsInfo;
     }
 }
