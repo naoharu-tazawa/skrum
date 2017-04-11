@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JSON;
 
 /**
  * MPermissionSettings
@@ -12,7 +11,6 @@ use JMS\Serializer\Annotation as JSON;
  * @ORM\Table(name="m_permission_settings", indexes={@ORM\Index(name="idx_permission_settings_01", columns={"permission_id", "operation_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MPermissionSettingsRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- * @JSON\ExclusionPolicy("all")
  */
 class MPermissionSettings
 {

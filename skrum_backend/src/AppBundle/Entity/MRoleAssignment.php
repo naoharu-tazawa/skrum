@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JSON;
 
 /**
  * MRoleAssignment
@@ -12,7 +11,6 @@ use JMS\Serializer\Annotation as JSON;
  * @ORM\Table(name="m_role_assignment")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MRoleAssignmentRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- * @JSON\ExclusionPolicy("all")
  */
 class MRoleAssignment
 {

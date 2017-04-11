@@ -27,17 +27,25 @@ class OkrService extends BaseService
     /**
      * 目標とキーリザルトの一覧を取得
      *
+     * @param string $subjectType 主体種別
      * @param \AppBundle\Utils\Auth $auth 認証情報
      * @param integer $userId 取得対象ユーザID
+     * @param integer $groupId 取得対象グループID
      * @param integer $timeframeId タイムフレームID
      * @param integer $companyId 会社ID
      * @return void
      */
-    public function getObjectivesAndKeyResults($auth, $userId, $timeframeId, $companyId)
+    public function getObjectivesAndKeyResults($subjectType, $auth, $userId, $groupId, $timeframeId, $companyId)
     {
         // 目標とキーリザルトを取得
         $tOkrRepos = $this->getTOkrRepository();
-        $tOkrArray = $tOkrRepos->getObjectivesAndKeyResults($userId, $timeframeId, $companyId);
+        if ($subjectType == Constant::SUBJECT_TYPE_USER) {
+            $tOkrArray = $tOkrRepos->getUserObjectivesAndKeyResults($userId, $timeframeId, $companyId);
+        } elseif ($subjectType == Constant::SUBJECT_TYPE_GROUP) {
+            $tOkrArray = $tOkrRepos->getGroupObjectivesAndKeyResults($groupId, $timeframeId, $companyId);
+        } else {
+            $tOkrArray = $tOkrRepos->getObjectivesAndKeyResults($userId, $timeframeId, $companyId);
+        }
 
         $okrDisclosureLogic = $this->getOkrDisclosureLogic();
         $returnArray = array();
@@ -65,7 +73,13 @@ class OkrService extends BaseService
                 $basicOkrDTOObjective = new BasicOkrDTO();
                 $basicOkrDTOObjective->setOkrId($tOkrArray[$i]['objective']->getOkrId());
                 $basicOkrDTOObjective->setOkrName($tOkrArray[$i]['objective']->getName());
-                $basicOkrDTOObjective->setOwnerUserId($tOkrArray[$i]['objective']->getOwnerUser()->getUserId());
+                if ($tOkrArray[$i]['objective']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+                    $basicOkrDTOObjective->setOwnerUserId($tOkrArray[$i]['objective']->getOwnerUser()->getUserId());
+                } elseif ($tOkrArray[$i]['objective']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                    $basicOkrDTOObjective->setOwnerGroupId($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupId());
+                } else {
+                    $basicOkrDTOObjective->setOwnerCompanyId($tOkrArray[$i]['objective']->getOwnerCompanyId());
+                }
                 $basicOkrDTOObjective->setTargetValue($tOkrArray[$i]['objective']->getTargetValue());
                 $basicOkrDTOObjective->setAchievedValue($tOkrArray[$i]['objective']->getAchievedValue());
                 $basicOkrDTOObjective->setUnit($tOkrArray[$i]['objective']->getUnit());
@@ -133,18 +147,32 @@ class OkrService extends BaseService
     /**
      * 目標紐付け先情報取得
      *
+     * @param string $subjectType 主体種別
      * @param integer $userId ユーザID
+     * @param integer $groupId グループID
      * @param integer $timeframeId タイムフレームID
      * @param integer $companyId 会社ID
      * @return void
      */
-    public function getAlignmentsInfo($userId, $timeframeId, $companyId)
+    public function getAlignmentsInfo($subjectType, $userId, $groupId, $timeframeId, $companyId)
     {
         $alignmentsInfoDTOArray = array();
         $tOkrRepos = $this->getTOkrRepository();
 
-        // 目標紐付け先（ユーザ）情報を取得
-        $userAlignmentsInfoArray = $tOkrRepos->getUserAlignmentsInfo($userId, $timeframeId, $companyId);
+        // 目標紐付け先情報を取得
+        if ($subjectType == Constant::SUBJECT_TYPE_USER) {
+            /* ユーザの場合 */
+            $userAlignmentsInfoArray = $tOkrRepos->getUserAlignmentsInfoForUser($userId, $timeframeId, $companyId);
+            $groupAlignmentsInfoArray = $tOkrRepos->getGroupAlignmentsInfoForUser($userId, $timeframeId, $companyId);
+            $companyAlignmentsInfoArray = $tOkrRepos->getCompanyAlignmentsInfoForUser($userId, $timeframeId, $companyId);
+        } else {
+            /* グループの場合 */
+            $userAlignmentsInfoArray = $tOkrRepos->getUserAlignmentsInfoForGroup($groupId, $timeframeId, $companyId);
+            $groupAlignmentsInfoArray = $tOkrRepos->getGroupAlignmentsInfoForGroup($groupId, $timeframeId, $companyId);
+            $companyAlignmentsInfoArray = $tOkrRepos->getCompanyAlignmentsInfoForGroup($groupId, $timeframeId, $companyId);
+        }
+
+        // 目標紐付け先（ユーザ）情報をDTOに詰め替える
         foreach ($userAlignmentsInfoArray as $userAlignmentsInfo) {
             $userAlignmentsDTO = new UserAlignmentsDTO();
             $userAlignmentsDTO->setUserId($userAlignmentsInfo['userId']);
@@ -158,8 +186,7 @@ class OkrService extends BaseService
             $alignmentsInfoDTOArray[] = $alignmentsInfoDTO;
         }
 
-        // 目標紐付け先（グループ）情報を取得
-        $groupAlignmentsInfoArray = $tOkrRepos->getGroupAlignmentsInfo($userId, $timeframeId, $companyId);
+        // 目標紐付け先（グループ）情報をDTOに詰め替える
         foreach ($groupAlignmentsInfoArray as $groupAlignmentsInfo) {
             $groupAlignmentsDTO = new GroupAlignmentsDTO();
             $groupAlignmentsDTO->setGroupId($groupAlignmentsInfo['groupId']);
@@ -173,8 +200,7 @@ class OkrService extends BaseService
             $alignmentsInfoDTOArray[] = $alignmentsInfoDTO;
         }
 
-        // 目標紐付け先（会社）情報を取得
-        $companyAlignmentsInfoArray = $tOkrRepos->getCompanyAlignmentsInfo($userId, $timeframeId, $companyId);
+        // 目標紐付け先（会社）情報をDTOに詰め替える
         foreach ($companyAlignmentsInfoArray as $companyAlignmentsInfo) {
             $companyAlignmentsDTO = new CompanyAlignmentsDTO();
             $companyAlignmentsDTO->setCompanyId($companyAlignmentsInfo['companyId']);

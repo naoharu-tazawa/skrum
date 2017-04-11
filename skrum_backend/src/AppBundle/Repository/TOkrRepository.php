@@ -33,14 +33,14 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
-     * 目標とキーリザルトの一覧を取得
+     * ユーザの目標とキーリザルトの一覧を取得
      *
      * @param $userId ユーザID
      * @param $timeframeId タイムフレームID
      * @param $companyId 会社ID
      * @return array
      */
-    public function getObjectivesAndKeyResults($userId, $timeframeId, $companyId)
+    public function getUserObjectivesAndKeyResults($userId, $timeframeId, $companyId)
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to1 as objective', 'to2 as keyResult')
@@ -62,14 +62,43 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
-     * 目標紐付け先（ユーザ）情報を取得
+     * グループの目標とキーリザルトの一覧を取得
+     *
+     * @param $groupId グループID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getGroupObjectivesAndKeyResults($groupId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to1 as objective', 'to2 as keyResult')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
+            ->where('to1.timeframe = :timeframeId1')
+            ->andWhere('to1.type = :type1')
+            ->andWhere('to1.ownerType = :ownerType1')
+            ->andWhere('to1.ownerGroup = :ownerGroupId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_GROUP)
+            ->setParameter('ownerGroupId1', $groupId)
+            ->setParameter('companyId1', $companyId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * ユーザの目標紐付け先（ユーザ）情報を取得
      *
      * @param $userId ユーザID
      * @param $timeframeId タイムフレームID
      * @param $companyId 会社ID
      * @return array
      */
-    public function getUserAlignmentsInfo($userId, $timeframeId, $companyId)
+    public function getUserAlignmentsInfoForUser($userId, $timeframeId, $companyId)
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('IDENTITY(to2.ownerUser) AS userId', 'mu1.lastName', 'mu1.firstName', 'COUNT(to2.ownerUser) AS numberOfOkrs')
@@ -93,14 +122,14 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
-     * 目標紐付け先（グループ）情報を取得
+     * ユーザの目標紐付け先（グループ）情報を取得
      *
      * @param $userId ユーザID
      * @param $timeframeId タイムフレームID
      * @param $companyId 会社ID
      * @return array
      */
-    public function getGroupAlignmentsInfo($userId, $timeframeId, $companyId)
+    public function getGroupAlignmentsInfoForUser($userId, $timeframeId, $companyId)
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('IDENTITY(to2.ownerGroup) AS groupId', 'mg1.groupName', 'COUNT(to2.ownerGroup) AS numberOfOkrs')
@@ -124,14 +153,14 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
-     * 目標紐付け先（会社）情報を取得
+     * ユーザの目標紐付け先（会社）情報を取得
      *
      * @param $userId ユーザID
      * @param $timeframeId タイムフレームID
      * @param $companyId 会社ID
      * @return array
      */
-    public function getCompanyAlignmentsInfo($userId, $timeframeId, $companyId)
+    public function getCompanyAlignmentsInfoForUser($userId, $timeframeId, $companyId)
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to2.ownerCompanyId AS companyId', 'mc2.companyName', 'COUNT(to2.ownerCompanyId) AS numberOfOkrs')
@@ -148,6 +177,99 @@ class TOkrRepository extends BaseRepository
             ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
             ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_USER)
             ->setParameter('ownerUserId1', $userId)
+            ->setParameter('companyId1', $companyId)
+            ->groupBy('to2.ownerCompanyId');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * グループの目標紐付け先（ユーザ）情報を取得
+     *
+     * @param $groupId グループID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getUserAlignmentsInfoForGroup($groupId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('IDENTITY(to2.ownerUser) AS userId', 'mu1.lastName', 'mu1.firstName', 'COUNT(to2.ownerUser) AS numberOfOkrs')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
+            ->innerJoin('AppBundle:MUser', 'mu1', 'WITH', 'to2.ownerUser = mu1.userId')
+            ->where('to1.timeframe = :timeframeId1')
+            ->andWhere('to1.type = :type1')
+            ->andWhere('to1.ownerType = :ownerType1')
+            ->andWhere('to1.ownerGroup = :ownerGroupId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_GROUP)
+            ->setParameter('ownerGroupId1', $groupId)
+            ->setParameter('companyId1', $companyId)
+            ->groupBy('to2.ownerUser');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * グループの目標紐付け先（グループ）情報を取得
+     *
+     * @param $groupId グループID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getGroupAlignmentsInfoForGroup($groupId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('IDENTITY(to2.ownerGroup) AS groupId', 'mg1.groupName', 'COUNT(to2.ownerGroup) AS numberOfOkrs')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
+            ->innerJoin('AppBundle:MGroup', 'mg1', 'WITH', 'to2.ownerGroup = mg1.groupId')
+            ->where('to1.timeframe = :timeframeId1')
+            ->andWhere('to1.type = :type1')
+            ->andWhere('to1.ownerType = :ownerType1')
+            ->andWhere('to1.ownerGroup = :ownerGroupId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_GROUP)
+            ->setParameter('ownerGroupId1', $groupId)
+            ->setParameter('companyId1', $companyId)
+            ->groupBy('to2.ownerGroup');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * グループの目標紐付け先（会社）情報を取得
+     *
+     * @param $groupId グループID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getCompanyAlignmentsInfoForGroup($groupId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to2.ownerCompanyId AS companyId', 'mc2.companyName', 'COUNT(to2.ownerCompanyId) AS numberOfOkrs')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
+            ->innerJoin('AppBundle:MCompany', 'mc2', 'WITH', 'to2.ownerCompanyId = mc2.companyId')
+            ->where('to1.timeframe = :timeframeId1')
+            ->andWhere('to1.type = :type1')
+            ->andWhere('to1.ownerType = :ownerType1')
+            ->andWhere('to1.ownerGroup = :ownerGroupId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_GROUP)
+            ->setParameter('ownerGroupId1', $groupId)
             ->setParameter('companyId1', $companyId)
             ->groupBy('to2.ownerCompanyId');
 

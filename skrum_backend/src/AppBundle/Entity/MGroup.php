@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JSON;
 
 /**
  * MGroup
@@ -12,7 +11,6 @@ use JMS\Serializer\Annotation as JSON;
  * @ORM\Table(name="m_group", indexes={@ORM\Index(name="idx_group_01", columns={"company_id"}), @ORM\Index(name="idx_group_02", columns={"leader_user_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MGroupRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- * @JSON\ExclusionPolicy("all")
  */
 class MGroup
 {
@@ -49,7 +47,7 @@ class MGroup
      *
      * @ORM\Column(name="company_flg", type="boolean", nullable=true)
      */
-    private $companyFlg;
+    private $companyFlg = '0';
 
     /**
      * @var string

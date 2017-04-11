@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JSON;
 
 /**
  * TGroupMember
@@ -12,7 +11,6 @@ use JMS\Serializer\Annotation as JSON;
  * @ORM\Table(name="t_group_member", indexes={@ORM\Index(name="idx_group_member_01", columns={"group_id"}), @ORM\Index(name="idx_group_member_02", columns={"user_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TGroupMemberRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- * @JSON\ExclusionPolicy("all")
  */
 class TGroupMember
 {

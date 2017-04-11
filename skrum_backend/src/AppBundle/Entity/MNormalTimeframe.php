@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JSON;
 
 /**
  * MNormalTimeframe
@@ -12,7 +11,6 @@ use JMS\Serializer\Annotation as JSON;
  * @ORM\Table(name="m_normal_timeframe", indexes={@ORM\Index(name="idx_normal_timeframe_01", columns={"display_order"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MNormalTimeframeRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- * @JSON\ExclusionPolicy("all")
  */
 class MNormalTimeframe
 {

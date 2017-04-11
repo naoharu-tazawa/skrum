@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JSON;
 
 /**
  * TOkr
@@ -12,7 +11,6 @@ use JMS\Serializer\Annotation as JSON;
  * @ORM\Table(name="t_okr", indexes={@ORM\Index(name="idx_okr_01", columns={"timeframe_id"}), @ORM\Index(name="idx_okr_02", columns={"parent_okr_id"}), @ORM\Index(name="idx_okr_04", columns={"owner_group_id"}), @ORM\Index(name="idx_okr_05", columns={"owner_user_id"}), @ORM\Index(name="idx_okr_06", columns={"tree_left", "tree_right"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TOkrRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- * @JSON\ExclusionPolicy("all")
  */
 class TOkr
 {

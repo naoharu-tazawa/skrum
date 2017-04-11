@@ -5,18 +5,18 @@ namespace AppBundle\Api\ResponseDTO;
 use JMS\Serializer\Annotation as JSON;
 
 /**
- * ユーザ目標管理情報DTO
+ * グループ目標管理情報DTO
 
  * @JSON\ExclusionPolicy("none")
  */
-class UserBasicsDTO
+class GroupBasicsDTO
 {
     /**
-     * @var \AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO
+     * @var \AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO
      *
-     * @JSON\Type("AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO")
+     * @JSON\Type("AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO")
      */
-    private $user;
+    private $group;
 
     /**
      * @var array
@@ -33,27 +33,27 @@ class UserBasicsDTO
     private $alignmentsInfo;
 
     /**
-     * Set user
+     * Set group
      *
-     * @param \AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO $user
+     * @param \AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO $group
      *
-     * @return UserBasicsDTO
+     * @return GroupBasicsDTO
      */
-    public function setUser($user)
+    public function setGroup($group)
     {
-        $this->user = $user;
+        $this->group = $group;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Get group
      *
-     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO
+     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO
      */
-    public function getUser()
+    public function getGroup()
     {
-        return $this->user;
+        return $this->group;
     }
 
     /**
@@ -61,7 +61,7 @@ class UserBasicsDTO
      *
      * @param array $okrs
      *
-     * @return UserBasicsDTO
+     * @return GroupBasicsDTO
      */
     public function setOkrs($okrs)
     {
@@ -85,7 +85,7 @@ class UserBasicsDTO
      *
      * @param array $alignmentsInfo
      *
-     * @return UserBasicsDTO
+     * @return GroupBasicsDTO
      */
     public function setAlignmentsInfo($alignmentsInfo)
     {

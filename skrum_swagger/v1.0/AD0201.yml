@@ -1,0 +1,173 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /groups/{groupId}/basics.json?{tfid}:
+    get:
+      description: グループ目標管理情報取得
+      parameters:
+        -
+          name: groupId
+          in: path
+          type: string
+          description: グループID
+          required: true
+        -
+          name: tfid
+          in: path
+          type: string
+          description: タイムフレームID
+          required: true
+      responses:
+        200:
+          description: グループ目標管理情報
+          schema:
+            type: object
+            properties:
+              group:
+                type: object
+                properties:
+                  groupId:
+                    type: integer
+                  name:
+                    type: string
+                  groupPaths:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        groupPath:
+                          type: string
+                        groupPathName:
+                          type: string
+                  mission:
+                    type: string
+                  leaderName:
+                    type: string
+                  leaderUserId:
+                    type: integer
+              okrs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    okrId:
+                      type: integer
+                    okrName:
+                      type: string
+                    ownerUserId:
+                      type: integer
+                    targetValue:
+                      type: integer
+                    achievedValue:
+                      type: integer
+                    unit:
+                      type: string
+                    achievementRate:
+                      type: number
+                    status:
+                      type: string
+                    keyResults:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          okrId:
+                            type: integer
+                          okrName:
+                            type: string
+                          targetValue:
+                            type: integer
+                          achievedValue:
+                            type: integer
+                          unit:
+                            type: string
+                          achievementRate:
+                            type: number
+                          ownerType:
+                            type: string
+                          ownerUserId:
+                            type: integer
+                          ownerGroupId:
+                            type: integer
+                          ownerCompanyId:
+                            type: integer
+                          status:
+                            type: string
+                          weightedAverageRatio:
+                            type: number
+                          ratioLockedFlg:
+                            type: integer
+                        required:
+                          - okrId
+                          - okrName
+                          - targetValue
+                          - achievedValue
+                          - unit
+                          - achievementRate
+                          - ownerType
+                          - status
+                          - ratioLockedFlg
+                  required:
+                    - okrId
+                    - okrName
+                    - ownerUserId
+                    - targetValue
+                    - achievedValue
+                    - unit
+                    - achievementRate
+                    - status
+              alignmentsInfo:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    ownerType:
+                      type: string
+                    user:
+                      type: object
+                      properties:
+                        userId:
+                          type: integer
+                        name:
+                          type: string
+                        numberOfOkrs:
+                          type: integer
+                    group:
+                      type: object
+                      properties:
+                        groupId:
+                          type: integer
+                        name:
+                          type: string
+                        numberOfOkrs:
+                          type: integer
+                    company:
+                      type: object
+                      properties:
+                        companyId:
+                          type: integer
+                        name:
+                          type: string
+                        numberOfOkrs:
+                          type: integer
+                  required:
+                    - ownerType
+            required:
+              - group
+              - okrs
+              - alignmentsInfo
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

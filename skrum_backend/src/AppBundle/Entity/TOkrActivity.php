@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JSON;
 
 /**
  * TOkrActivity
@@ -12,7 +11,6 @@ use JMS\Serializer\Annotation as JSON;
  * @ORM\Table(name="t_okr_activity", indexes={@ORM\Index(name="idx_okr_activity_01", columns={"okr_id"}), @ORM\Index(name="idx_okr_activity_02", columns={"activity_datetime"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TOkrActivityRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- * @JSON\ExclusionPolicy("all")
  */
 class TOkrActivity
 {

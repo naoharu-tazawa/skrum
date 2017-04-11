@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Utils\DBConstant;
+
 /**
  * MGroupリポジトリクラス
  *
@@ -22,8 +24,10 @@ class MGroupRepository extends BaseRepository
         $qb->select('mg')
             ->innerJoin('AppBundle:MCompany', 'mc', 'WITH', 'mg.company = mc.companyId')
             ->where('mg.groupId = :groupId')
+            ->andWhere('mg.companyFlg = :companyFlg')
             ->andWhere('mg.company = :companyId')
             ->setParameter('groupId', $groupId)
+            ->setParameter('companyFlg', DBConstant::FLG_FALSE)
             ->setParameter('companyId', $companyId);
 
         return $qb->getQuery()->getResult();

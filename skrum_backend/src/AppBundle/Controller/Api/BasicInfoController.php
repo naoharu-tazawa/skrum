@@ -10,6 +10,8 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Api\ResponseDTO\TopDTO;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Api\ResponseDTO\UserBasicsDTO;
+use AppBundle\Api\ResponseDTO\GroupBasicsDTO;
+use AppBundle\Utils\Constant;
 
 /**
  * 基本情報コントローラ
@@ -57,10 +59,10 @@ class BasicInfoController extends BaseController
 
         // OKR一覧取得
         $okrService = $this->getOkrService();
-        $okrsArray = $okrService->getObjectivesAndKeyResults($auth, $userId, $timeframeId, $auth->getCompanyId());
+        $okrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_USER, $auth, $userId, null, $timeframeId, $auth->getCompanyId());
 
         // 紐付け先情報取得
-        $alignmentsInfoDTOArray = $okrService->getAlignmentsInfo($userId, $timeframeId, $auth->getCompanyId());
+        $alignmentsInfoDTOArray = $okrService->getAlignmentsInfo(Constant::SUBJECT_TYPE_USER, $userId, null, $timeframeId, $auth->getCompanyId());
 
         // 返却DTOをセット
         $topDTO = new TopDTO();
@@ -95,7 +97,7 @@ class BasicInfoController extends BaseController
         $auth = $request->get('auth_token');
 
         // ユーザ存在チェック
-        $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
+        $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
 
         // ユーザ基本情報取得
         $userService = $this->getUserService();
@@ -103,10 +105,10 @@ class BasicInfoController extends BaseController
 
         // OKR一覧取得
         $okrService = $this->getOkrService();
-        $okrsArray = $okrService->getObjectivesAndKeyResults($auth, $userId, $timeframeId, $auth->getCompanyId());
+        $okrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_USER, $auth, $userId, null, $timeframeId, $auth->getCompanyId());
 
         // 紐付け先情報取得
-        $alignmentsInfoDTOArray = $okrService->getAlignmentsInfo($userId, $timeframeId, $auth->getCompanyId());
+        $alignmentsInfoDTOArray = $okrService->getAlignmentsInfo(Constant::SUBJECT_TYPE_USER, $userId, null, $timeframeId, $auth->getCompanyId());
 
         // 返却DTOをセット
         $userBasicsDTO = new UserBasicsDTO();
@@ -115,5 +117,48 @@ class BasicInfoController extends BaseController
         $userBasicsDTO->setAlignmentsInfo($alignmentsInfoDTOArray);
 
         return $userBasicsDTO;
+    }
+
+    /**
+     * グループ目標管理情報取得
+     *
+     * @Rest\Get("/groups/{groupId}/basics.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $groupId グループID
+     * @return array
+     */
+    public function getGroupBasicsAction(Request $request, $groupId)
+    {
+        // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkIntID($timeframeId);
+        if($errors) throw new InvalidParameterException("タイムフレームIDが不正です", $errors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ存在チェック
+        $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+
+        // グループ基本情報取得
+        $groupService = $this->getGroupService();
+        $basicGroupInfoDTO = $groupService->getBasicGroupInfo($groupId, $auth->getCompanyId());
+
+        // OKR一覧取得
+        $okrService = $this->getOkrService();
+        $okrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_GROUP, $auth, null, $groupId, $timeframeId, $auth->getCompanyId());
+
+        // 紐付け先情報取得
+        $alignmentsInfoDTOArray = $okrService->getAlignmentsInfo(Constant::SUBJECT_TYPE_GROUP, null, $groupId, $timeframeId, $auth->getCompanyId());
+
+        // 返却DTOをセット
+        $groupBasicsDTO = new GroupBasicsDTO();
+        $groupBasicsDTO->setGroup($basicGroupInfoDTO);
+        $groupBasicsDTO->setOkrs($okrsArray);
+        $groupBasicsDTO->setAlignmentsInfo($alignmentsInfoDTOArray);
+
+        return $groupBasicsDTO;
     }
 }
