@@ -63,7 +63,9 @@ paths:
                       type: integer
                     okrName:
                       type: string
-                    ownerUserId:
+                    ownerGroupId:
+                      type: integer
+                    ownerGroupName:
                       type: integer
                     targetValue:
                       type: integer
@@ -96,10 +98,16 @@ paths:
                             type: string
                           ownerUserId:
                             type: integer
+                          ownerUserName:
+                            type: string
                           ownerGroupId:
                             type: integer
+                          ownerGroupName:
+                            type: string
                           ownerCompanyId:
                             type: integer
+                          ownerCompanyName:
+                            type: string
                           status:
                             type: string
                           weightedAverageRatio:

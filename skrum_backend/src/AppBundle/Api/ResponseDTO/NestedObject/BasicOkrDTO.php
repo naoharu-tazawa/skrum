@@ -68,6 +68,13 @@ class BasicOkrDTO
     private $ownerUserId;
 
     /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $ownerUserName;
+
+    /**
      * @var integer
      *
      * @JSON\Type("integer")
@@ -75,11 +82,25 @@ class BasicOkrDTO
     private $ownerGroupId;
 
     /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $ownerGroupName;
+
+    /**
      * @var integer
      *
      * @JSON\Type("integer")
      */
     private $ownerCompanyId;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $ownerCompanyName;
 
     /**
      * @var string
@@ -302,6 +323,30 @@ class BasicOkrDTO
     }
 
     /**
+     * Set ownerUserName
+     *
+     * @param string $ownerUserName
+     *
+     * @return BasicOkrDTO
+     */
+    public function setOwnerUserName($ownerUserName)
+    {
+        $this->ownerUserName = $ownerUserName;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerUserName
+     *
+     * @return string
+     */
+    public function getOwnerUserName()
+    {
+        return $this->ownerUserName;
+    }
+
+    /**
      * Set ownerGroupId
      *
      * @param integer $ownerGroupId
@@ -326,6 +371,30 @@ class BasicOkrDTO
     }
 
     /**
+     * Set ownerGroupName
+     *
+     * @param string $ownerGroupName
+     *
+     * @return BasicOkrDTO
+     */
+    public function setOwnerGroupName($ownerGroupName)
+    {
+        $this->ownerGroupName = $ownerGroupName;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerGroupName
+     *
+     * @return string
+     */
+    public function getOwnerGroupName()
+    {
+        return $this->ownerGroupName;
+    }
+
+    /**
      * Set ownerCompanyId
      *
      * @param integer $ownerCompanyId
@@ -347,6 +416,30 @@ class BasicOkrDTO
     public function getOwnerCompanyId()
     {
         return $this->ownerCompanyId;
+    }
+
+    /**
+     * Set ownerCompanyName
+     *
+     * @param string $ownerCompanyName
+     *
+     * @return BasicOkrDTO
+     */
+    public function setOwnerCompanyName($ownerCompanyName)
+    {
+        $this->ownerCompanyName = $ownerCompanyName;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerCompanyName
+     *
+     * @return string
+     */
+    public function getOwnerCompanyName()
+    {
+        return $this->ownerCompanyName;
     }
 
     /**

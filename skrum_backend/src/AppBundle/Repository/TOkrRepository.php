@@ -43,7 +43,7 @@ class TOkrRepository extends BaseRepository
     public function getUserObjectivesAndKeyResults($userId, $timeframeId, $companyId)
     {
         $qb = $this->createQueryBuilder('to1');
-        $qb->select('to1 as objective', 'to2 as keyResult')
+        $qb->select('to1 as objective', 'to2 as keyResult', 'mc1.companyName')
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
@@ -72,7 +72,7 @@ class TOkrRepository extends BaseRepository
     public function getGroupObjectivesAndKeyResults($groupId, $timeframeId, $companyId)
     {
         $qb = $this->createQueryBuilder('to1');
-        $qb->select('to1 as objective', 'to2 as keyResult')
+        $qb->select('to1 as objective', 'to2 as keyResult', 'mc1.companyName')
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
@@ -100,7 +100,7 @@ class TOkrRepository extends BaseRepository
     public function getCompanyObjectivesAndKeyResults($companyId, $timeframeId)
     {
         $qb = $this->createQueryBuilder('to1');
-        $qb->select('to1 as objective', 'to2 as keyResult')
+        $qb->select('to1 as objective', 'to2 as keyResult', 'mc1.companyName')
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
@@ -113,6 +113,34 @@ class TOkrRepository extends BaseRepository
             ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
             ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_COMPANY)
             ->setParameter('ownerCompanyId1', $companyId)
+            ->setParameter('companyId1', $companyId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * ユーザの目標一覧を取得
+     *
+     * @param $userId ユーザID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getUserObjectives($userId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to1')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->where('to1.timeframe = :timeframeId1')
+            ->andWhere('to1.type = :type1')
+            ->andWhere('to1.ownerType = :ownerType1')
+            ->andWhere('to1.ownerUser = :ownerUserId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_USER)
+            ->setParameter('ownerUserId1', $userId)
             ->setParameter('companyId1', $companyId);
 
         return $qb->getQuery()->getResult();

@@ -92,6 +92,8 @@ paths:
                       type: string
                     ownerUserId:
                       type: integer
+                    ownerUserName:
+                      type: integer
                     targetValue:
                       type: integer
                     achievedValue:
@@ -123,10 +125,16 @@ paths:
                             type: string
                           ownerUserId:
                             type: integer
+                          ownerUserName:
+                            type: string
                           ownerGroupId:
                             type: integer
+                          ownerGroupName:
+                            type: string
                           ownerCompanyId:
                             type: integer
+                          ownerUserCompany:
+                            type: string
                           status:
                             type: string
                           weightedAverageRatio:

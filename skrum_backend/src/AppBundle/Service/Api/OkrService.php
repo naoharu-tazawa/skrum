@@ -33,7 +33,7 @@ class OkrService extends BaseService
      * @param integer $groupId 取得対象グループID
      * @param integer $timeframeId タイムフレームID
      * @param integer $companyId 会社ID
-     * @return void
+     * @return array
      */
     public function getObjectivesAndKeyResults($subjectType, $auth, $userId, $groupId, $timeframeId, $companyId)
     {
@@ -45,6 +45,10 @@ class OkrService extends BaseService
             $tOkrArray = $tOkrRepos->getGroupObjectivesAndKeyResults($groupId, $timeframeId, $companyId);
         } else {
             $tOkrArray = $tOkrRepos->getCompanyObjectivesAndKeyResults($companyId, $timeframeId);
+
+            // 会社エンティティを取得
+            $mCompanyRepos = $this->getMCompanyRepository();
+            $mCompany = $mCompanyRepos->find($companyId);
         }
 
         $okrDisclosureLogic = $this->getOkrDisclosureLogic();
@@ -75,10 +79,13 @@ class OkrService extends BaseService
                 $basicOkrDTOObjective->setOkrName($tOkrArray[$i]['objective']->getName());
                 if ($tOkrArray[$i]['objective']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
                     $basicOkrDTOObjective->setOwnerUserId($tOkrArray[$i]['objective']->getOwnerUser()->getUserId());
+                    $basicOkrDTOObjective->setOwnerUserName($tOkrArray[$i]['objective']->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['objective']->getOwnerUser()->getFirstName());
                 } elseif ($tOkrArray[$i]['objective']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $basicOkrDTOObjective->setOwnerGroupId($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupId());
+                    $basicOkrDTOObjective->setOwnerGroupName($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupName());
                 } else {
                     $basicOkrDTOObjective->setOwnerCompanyId($tOkrArray[$i]['objective']->getOwnerCompanyId());
+                    $basicOkrDTOObjective->setOwnerCompanyName($mCompany->getCompanyName());
                 }
                 $basicOkrDTOObjective->setTargetValue($tOkrArray[$i]['objective']->getTargetValue());
                 $basicOkrDTOObjective->setAchievedValue($tOkrArray[$i]['objective']->getAchievedValue());
@@ -119,10 +126,13 @@ class OkrService extends BaseService
                 $basicOkrDTOKeyResult->setOwnerType($tOkrArray[$i]['keyResult']->getOwnerType());
                 if ($tOkrArray[$i]['keyResult']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
                     $basicOkrDTOKeyResult->setOwnerUserId($tOkrArray[$i]['keyResult']->getOwnerUser()->getUserId());
+                    $basicOkrDTOKeyResult->setOwnerUserName($tOkrArray[$i]['keyResult']->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['keyResult']->getOwnerUser()->getFirstName());
                 } elseif ($tOkrArray[$i]['keyResult']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $basicOkrDTOKeyResult->setOwnerGroupId($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupId());
+                    $basicOkrDTOKeyResult->setOwnerGroupName($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupName());
                 } else {
                     $basicOkrDTOKeyResult->setOwnerCompanyId($tOkrArray[$i]['keyResult']->getOwnerCompanyId());
+                    $basicOkrDTOKeyResult->setOwnerCompanyName($tOkrArray[$i]['companyName']);
                 }
                 $basicOkrDTOKeyResult->setStatus($tOkrArray[$i]['keyResult']->getStatus());
                 $basicOkrDTOKeyResult->setWeightedAverageRatio($tOkrArray[$i]['keyResult']->getWeightedAverageRatio());
@@ -152,7 +162,7 @@ class OkrService extends BaseService
      * @param integer $groupId グループID
      * @param integer $timeframeId タイムフレームID
      * @param integer $companyId 会社ID
-     * @return void
+     * @return array
      */
     public function getAlignmentsInfo($subjectType, $userId, $groupId, $timeframeId, $companyId)
     {
