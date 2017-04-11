@@ -141,7 +141,7 @@ class BasicInfoController extends BaseController
         $auth = $request->get('auth_token');
 
         // グループ存在チェック
-        $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
 
         // グループ基本情報取得
         $groupService = $this->getGroupService();

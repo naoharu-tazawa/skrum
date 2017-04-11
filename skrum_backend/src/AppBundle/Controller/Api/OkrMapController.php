@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Controller\BaseController;
+use AppBundle\Utils\Constant;
 
 /**
  * OKRマップコントローラ
@@ -20,6 +21,7 @@ class OkrMapController extends BaseController
      *
      * @Rest\Get("/users/{userId}/objectives.{_format}")
      * @param $request リクエストオブジェクト
+     * @param $userId ユーザID
      * @return array
      */
     public function getUserObjectivesAction(Request $request, $userId)
@@ -41,7 +43,69 @@ class OkrMapController extends BaseController
 
         // ユーザ目標取得処理
         $okrMapService = $this->getOkrMapService();
-        $basicOkrDTOArray = $okrMapService->getUserObjectives($auth, $userId, $timeframeId, $auth->getCompanyId());
+        $basicOkrDTOArray = $okrMapService->getObjectives(Constant::SUBJECT_TYPE_USER, $auth, $userId, null, $timeframeId, $auth->getCompanyId());
+
+        return $basicOkrDTOArray;
+    }
+
+    /**
+     * グループ目標取得
+     *
+     * @Rest\Get("/groups/{groupId}/objectives.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $groupId グループID
+     * @return array
+     */
+    public function getGroupObjectivesAction(Request $request, $groupId)
+    {
+        // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkIntID($timeframeId);
+        if($errors) throw new InvalidParameterException("タイムフレームIDが不正です", $errors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ存在チェック
+        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+
+        // グループ目標取得処理
+        $okrMapService = $this->getOkrMapService();
+        $basicOkrDTOArray = $okrMapService->getObjectives(Constant::SUBJECT_TYPE_GROUP, $auth, null, $groupId, $timeframeId, $auth->getCompanyId());
+
+        return $basicOkrDTOArray;
+    }
+
+    /**
+     * 会社目標取得
+     *
+     * @Rest\Get("/companies/{companyId}/objectives.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getCompanyObjectivesAction(Request $request, $companyId)
+    {
+        // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkIntID($timeframeId);
+        if($errors) throw new InvalidParameterException("タイムフレームIDが不正です", $errors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 会社IDの一致をチェック
+        if ($companyId != $auth->getCompanyId()) {
+            throw new ApplicationException('会社IDが存在しません');
+        }
+
+        // 会社目標取得処理
+        $okrMapService = $this->getOkrMapService();
+        $basicOkrDTOArray = $okrMapService->getObjectives(Constant::SUBJECT_TYPE_COMPANY, $auth, null, null, $timeframeId, $auth->getCompanyId());
 
         return $basicOkrDTOArray;
     }

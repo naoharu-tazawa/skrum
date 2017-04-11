@@ -27,17 +27,29 @@ class OkrMapService extends BaseService
     /**
      * 目標一覧を取得
      *
+     * @param string $subjectType 主体種別
      * @param \AppBundle\Utils\Auth $auth 認証情報
      * @param integer $userId 取得対象ユーザID
+     * @param integer $groupId 取得対象グループID
      * @param integer $timeframeId タイムフレームID
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function getUserObjectives($auth, $userId, $timeframeId, $companyId)
+    public function getObjectives($subjectType, $auth, $userId, $groupId, $timeframeId, $companyId)
     {
-        // ユーザ目標を取得
+        // 目標を取得
         $tOkrRepos = $this->getTOkrRepository();
-        $tOkrArray = $tOkrRepos->getUserObjectives($userId, $timeframeId, $companyId);
+        if ($subjectType == Constant::SUBJECT_TYPE_USER) {
+            $tOkrArray = $tOkrRepos->getUserObjectives($userId, $timeframeId, $companyId);
+        } elseif ($subjectType == Constant::SUBJECT_TYPE_GROUP) {
+            $tOkrArray = $tOkrRepos->getGroupObjectives($groupId, $timeframeId, $companyId);
+        } else {
+            $tOkrArray = $tOkrRepos->getCompanyObjectives($companyId, $timeframeId);
+
+            // 会社エンティティを取得
+            $mCompanyRepos = $this->getMCompanyRepository();
+            $mCompany = $mCompanyRepos->find($companyId);
+        }
 
         // ユーザ目標をDTOに詰め替える
         $okrDisclosureLogic = $this->getOkrDisclosureLogic();
@@ -56,8 +68,16 @@ class OkrMapService extends BaseService
             $basicOkrDTO->setAchievementRate($tOkr->getAchievementRate());
             $basicOkrDTO->setUnit($tOkr->getUnit());
             $basicOkrDTO->setOwnerType($tOkr->getOwnerType());
-            $basicOkrDTO->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
-            $basicOkrDTO->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+            if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+                $basicOkrDTO->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
+                $basicOkrDTO->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+            } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                $basicOkrDTO->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+                $basicOkrDTO->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+            } else {
+                $basicOkrDTO->setOwnerCompanyId($tOkr->getOwnerCompanyId());
+                $basicOkrDTO->setOwnerCompanyName($mCompany->getCompanyName());
+            }
             $basicOkrDTO->setStatus($tOkr->getStatus());
 
             $basicOkrDTOArray[] = $basicOkrDTO;

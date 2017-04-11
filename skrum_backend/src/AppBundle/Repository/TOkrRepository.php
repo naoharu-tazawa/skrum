@@ -147,6 +147,61 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
+     * グループの目標一覧を取得
+     *
+     * @param $groupId グループID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getGroupObjectives($groupId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to1')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->where('to1.timeframe = :timeframeId1')
+            ->andWhere('to1.type = :type1')
+            ->andWhere('to1.ownerType = :ownerType1')
+            ->andWhere('to1.ownerGroup = :ownerGroupId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_GROUP)
+            ->setParameter('ownerGroupId1', $groupId)
+            ->setParameter('companyId1', $companyId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 会社の目標一覧を取得
+     *
+     * @param $companyId 会社ID
+     * @param $timeframeId タイムフレームID
+     * @return array
+     */
+    public function getCompanyObjectives($companyId, $timeframeId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to1')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->where('to1.timeframe = :timeframeId1')
+            ->andWhere('to1.type = :type1')
+            ->andWhere('to1.ownerType = :ownerType1')
+            ->andWhere('to1.ownerCompanyId = :ownerCompanyId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_COMPANY)
+            ->setParameter('ownerCompanyId1', $companyId)
+            ->setParameter('companyId1', $companyId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * ユーザの目標紐付け先（ユーザ）情報を取得
      *
      * @param $userId ユーザID

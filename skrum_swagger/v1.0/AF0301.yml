@@ -1,0 +1,73 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /companies/{companyId}/objectives?{tfid}:
+    get:
+      description: 会社目標取得
+      parameters:
+        -
+          name: companyId
+          in: path
+          type: string
+          description: 会社ID
+          required: true
+        -
+          name: tfid
+          in: path
+          type: string
+          description: タイムフレームID
+          required: true
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                okrId:
+                  type: integer
+                okrName:
+                  type: string
+                targetValue:
+                  type: integer
+                achievedValue:
+                  type: integer
+                achievementRate:
+                  type: number
+                unit:
+                  type: string
+                ownerType:
+                  type: string
+                ownerCompanyId:
+                  type: integer
+                ownerCompanyName:
+                  type: string
+                status:
+                  type: string
+              required:
+                - okrId
+                - okrName
+                - targetValue
+                - achievedValue
+                - achievementRate
+                - unit
+                - ownerType
+                - ownerCompanyId
+                - ownerCompanyName
+                - status
+        400:
+          description: パラメータ不正
+        401:
+          description: 認証エラー
+        500:
+          description: サーバーエラー
