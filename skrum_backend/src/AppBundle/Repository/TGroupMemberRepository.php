@@ -53,7 +53,7 @@ class TGroupMemberRepository extends BaseRepository
      * @param $userId ユーザID
      * @return array
      */
-    public function getGroups($userId)
+    public function getDepartments($userId)
     {
         $qb = $this->createQueryBuilder('tgm');
         $qb->select('mg')

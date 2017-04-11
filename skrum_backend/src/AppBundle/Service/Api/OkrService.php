@@ -27,13 +27,13 @@ class OkrService extends BaseService
     /**
      * 目標とキーリザルトの一覧を取得
      *
-     * @param integer $userId ユーザID
-     * @param integer $roleLevel ロールレベル
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param integer $userId 取得対象ユーザID
      * @param integer $timeframeId タイムフレームID
      * @param integer $companyId 会社ID
      * @return void
      */
-    public function getObjectivesAndKeyResults($userId, $roleLevel, $timeframeId, $companyId)
+    public function getObjectivesAndKeyResults($auth, $userId, $timeframeId, $companyId)
     {
         // 目標とキーリザルトを取得
         $tOkrRepos = $this->getTOkrRepository();
@@ -52,7 +52,7 @@ class OkrService extends BaseService
                 }
 
                 // 閲覧権限をチェック
-                if (!$okrDisclosureLogic->checkDisclosure($userId, $roleLevel, $tOkrArray[$i]['objective'])) {
+                if (!$okrDisclosureLogic->checkDisclosure($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[$i]['objective'])) {
                     // 最終ループ
                     if ($i == (count($tOkrArray) - 1)) {
                         $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
@@ -85,7 +85,7 @@ class OkrService extends BaseService
                 }
 
                 // 閲覧権限をチェック
-                if (!$okrDisclosureLogic->checkDisclosure($userId, $roleLevel, $tOkrArray[$i]['keyResult'])) {
+                if (!$okrDisclosureLogic->checkDisclosure($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[$i]['keyResult'])) {
                     // 最終ループ
                     if ($i == (count($tOkrArray) - 1)) {
                         $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);

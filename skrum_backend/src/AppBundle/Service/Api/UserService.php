@@ -34,9 +34,9 @@ class UserService extends BaseService
             throw new ApplicationException('ユーザが存在しません');
         }
 
-        // 所属グループを取得
+        // 所属部門を取得
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
-        $mGroupArray = $tGroupMemberRepos->getGroups($userId);
+        $mGroupArray = $tGroupMemberRepos->getDepartments($userId);
         $departmentArray = array();
         foreach ($mGroupArray as $mGroup) {
             $departmentDTO = new DepartmentDTO();

@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /users/{userId}/top.json:
+  /users/{userId}/basics.json?{tfid}:
     get:
-      description: ログイン後初期表示情報取得
+      description: ユーザ目標管理情報取得
       parameters:
         -
           name: userId
@@ -20,45 +20,18 @@ paths:
           type: string
           description: ユーザID
           required: true
+        -
+          name: tfid
+          in: path
+          type: string
+          description: タイムフレームID
+          required: true
       responses:
         200:
-          description: ログイン後初期表示情報
+          description: ユーザ目標管理情報
           schema:
             type: object
             properties:
-              timeframes:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    timeframeId:
-                      type: integer
-                    timeframeName:
-                      type: string
-                    defaultFlg:
-                      type: integer
-                  required:
-                    - timeframeId
-                    - timeframeName
-                    - defaultFlg
-              teams:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    groupId:
-                      type: integer
-                    groupName:
-                      type: string
-              departments:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    groupId:
-                      type: integer
-                    groupName:
-                      type: string
               user:
                 type: object
                 properties:
@@ -189,7 +162,6 @@ paths:
                   required:
                     - ownerType
             required:
-              - timeframes
               - user
               - okrs
               - alignmentsInfo
