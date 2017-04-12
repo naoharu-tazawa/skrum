@@ -16,9 +16,10 @@ class OkrAchievementRateLogic extends BaseLogic
      *
      * @param \AppBundle\Entity\TOkr $tOkr チェック対象OKRエンティティ
      * @parame integer $companyId 会社ID
+     * @parame boolean $weightedAverageRatioFlg 加重平均比率再設定フラグ
      * @return void
      */
-    public function recalculate($tOkr, $companyId)
+    public function recalculate($tOkr, $companyId, $weightedAverageRatioFlg = false)
     {
         while (!empty($tOkr)) {
             // 親OKR存在チェック
@@ -53,8 +54,10 @@ class OkrAchievementRateLogic extends BaseLogic
             // 子OKRの加重平均比率を再設定
             $weightedAverageAchievementRate = array();
             for ($i = 1; $i < count($tOkrArray); $i++) {
-                if ($tOkrArray[$i]['childOkr']->getRatioLockedFlg() == DBConstant::FLG_FALSE) {
-                    $tOkrArray[$i]['childOkr']->setWeightedAverageRatio($averageRatio);
+                if ($weightedAverageRatioFlg) {
+                    if ($tOkrArray[$i]['childOkr']->getRatioLockedFlg() == DBConstant::FLG_FALSE) {
+                        $tOkrArray[$i]['childOkr']->setWeightedAverageRatio($averageRatio);
+                    }
                 }
 
                 $weightedAverageAchievementRate[] = $tOkrArray[$i]['childOkr']->getAchievementRate() * $tOkrArray[$i]['childOkr']->getWeightedAverageRatio() / 100;
@@ -62,6 +65,11 @@ class OkrAchievementRateLogic extends BaseLogic
 
             // 親OKRの達成率を再設定
             $tOkrArray[0]['parentOkr']->setAchievementRate(array_sum($weightedAverageAchievementRate));
+
+            // 達成値、目標値、単位をリセット
+            $tOkrArray[0]['parentOkr']->setAchievedValue(0);
+            $tOkrArray[0]['parentOkr']->setTargetValue(0);
+            $tOkrArray[0]['parentOkr']->setUnit('％');
 
             $this->flush();
 

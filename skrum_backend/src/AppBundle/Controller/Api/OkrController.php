@@ -177,7 +177,7 @@ class OkrController extends BaseController
 
         // OKR削除処理
         $okrService = $this->getOkrService();
-        $okrService->deleteOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId());
+        $okrService->deleteOkrs($auth, $tOkr);
 
         return array('result' => 'OK');
     }

@@ -59,14 +59,14 @@ class TOkr
     /**
      * @var float
      *
-     * @ORM\Column(name="tree_left", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="tree_left", type="float", precision=15, scale=14, nullable=true)
      */
     private $treeLeft;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="tree_right", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="tree_right", type="float", precision=15, scale=14, nullable=true)
      */
     private $treeRight;
 

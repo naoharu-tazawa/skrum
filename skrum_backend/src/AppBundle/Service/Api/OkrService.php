@@ -365,7 +365,7 @@ class OkrService extends BaseService
 
             // 達成率を再計算
             $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
-            $okrAchievementRateLogic->recalculate($tOkr, $companyId);
+            $okrAchievementRateLogic->recalculate($tOkr, $companyId, true);
 
             $this->flush();
             $this->commit();
@@ -499,7 +499,7 @@ class OkrService extends BaseService
 
             // 達成率を再計算
             $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
-            $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId());
+            $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), false);
 
             $this->flush();
             $this->commit();
@@ -512,18 +512,24 @@ class OkrService extends BaseService
     /**
      * OKR削除
      *
-     * @param double $treeLeft 入れ子集合モデルの左値
-     * @param double $treeRight 入れ子集合モデルの右値
-     * @param integer $timeframeId タイムフレームID
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param \AppBundle\Entity\TOkr $tOkr 削除対象OKRエンティティ
      * @return void
      */
-    public function deleteOkrs($treeLeft, $treeRight, $timeframeId)
+    public function deleteOkrs($auth, $tOkr)
     {
+        // 達成率を再計算
+        $tOkr->setWeightedAverageRatio(0);
+        $tOkr->setRatioLockedFlg(DBConstant::FLG_TRUE);
+        $this->flush();
+        $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
+        $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), true);
+
         $tOkrRepos = $this->getTOkrRepository();
 
         try {
             // 削除対象OKRとそれに紐づくOKRを全て削除する
-            $tOkrRepos->deleteOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId);
+            $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId());
         } catch(\Exception $e) {
             throw new SystemException($e->getMessage());
         }
