@@ -10,15 +10,21 @@ produces:
 basePath: /v1
 
 paths:
-  /okrs/{slug}/familyokrs:
+  /okrs/{okrId}/familyokrs?{tfid}:
     get:
       description: 3世代OKR取得
       parameters:
         -
-          name: slug
+          name: okrId
           in: path
           type: string
-          description: 選択されたOKRID
+          description: OKRID
+          required: true
+        -
+          name: tfid
+          in: path
+          type: string
+          description: タイムフレームID
           required: true
       responses:
         200:
@@ -51,11 +57,7 @@ definitions:
     properties:
       okrId:
         type: integer
-      type:
-        type: string
-      name:
-        type: string
-      detail:
+      okrName:
         type: string
       targetValue:
         type: integer
@@ -65,9 +67,28 @@ definitions:
         type: number
       unit:
         type: string
+      ownerType:
+        type: string
+      ownerUserId:
+        type: integer
+      ownerUserName:
+        type: string
+      ownerGroupId:
+        type: integer
+      ownerGroupName:
+        type: string
+      ownerCompanyId:
+        type: integer
+      ownerCompanyName:
+        type: string
       status:
         type: string
-      imagepath:
-        type: string
-      createdAt:
-        type: string
+    required:
+      - okrId
+      - okrName
+      - targetValue
+      - achievedValue
+      - achievementRate
+      - unit
+      - ownerType
+      - status

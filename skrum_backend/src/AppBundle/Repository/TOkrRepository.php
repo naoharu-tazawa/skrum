@@ -33,6 +33,33 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
+     * 3世代OKRを取得
+     *
+     * @param $okrId OKRID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getThreeGensOkrs($okrId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to1 as selectedOkr', 'to2 as parentOkr', 'to3 as childrenOkr')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId AND to2.type <> :type2')
+            ->leftJoin('AppBundle:TOkr', 'to3', 'WITH', 'to1.okrId = to3.parentOkr')
+            ->where('to1.okrId = :okrId1')
+            ->andWhere('to1.timeframe = :timeframeId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('okrId1', $okrId)
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('companyId1', $companyId)
+            ->setParameter('type2', DBConstant::OKR_TYPE_ROOT_NODE);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * ユーザの目標とキーリザルトの一覧を取得
      *
      * @param $userId ユーザID

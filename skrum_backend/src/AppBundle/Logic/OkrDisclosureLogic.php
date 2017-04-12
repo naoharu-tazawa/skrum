@@ -105,6 +105,8 @@ class OkrDisclosureLogic extends BaseLogic
             }
         } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_COMPANY) {
             return true;
+        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_ROOT) {
+            return false;
         }
     }
 }

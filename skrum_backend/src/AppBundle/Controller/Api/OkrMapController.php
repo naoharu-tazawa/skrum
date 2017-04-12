@@ -109,4 +109,31 @@ class OkrMapController extends BaseController
 
         return $basicOkrDTOArray;
     }
+
+    /**
+     * 3世代OKR取得
+     *
+     * @Rest\Get("/okrs/{okrId}/familyokrs.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $okrId OKRID
+     * @return array
+     */
+    public function getOkrFamilyokrsAction(Request $request, $okrId)
+    {
+        // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkIntID($timeframeId);
+        if($errors) throw new InvalidParameterException("タイムフレームIDが不正です", $errors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 3世代OKR取得処理
+        $okrMapService = $this->getOkrMapService();
+        $threeGensOkrMapDTO = $okrMapService->getThreeGensOkrMap($auth, $okrId, $timeframeId);
+
+        return $threeGensOkrMapDTO;
+    }
 }
