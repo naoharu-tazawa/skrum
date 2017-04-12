@@ -361,6 +361,11 @@ class OkrService extends BaseService
             $tOkrActivity->setAchievementRate(0);
             $tOkrActivity->setChangedPercentage(0);
             $this->persist($tOkrActivity);
+            $this->flush();
+
+            // 達成率を再計算
+            $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
+            $okrAchievementRateLogic->recalculate($tOkr, $companyId);
 
             $this->flush();
             $this->commit();
