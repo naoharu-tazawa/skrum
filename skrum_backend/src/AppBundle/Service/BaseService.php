@@ -260,6 +260,11 @@ class BaseService
         return $this->getContainer()->get('api.okr_disclosure_logic');
     }
 
+    protected function getOkrAchievementRateLogic()
+    {
+        return $this->getContainer()->get('api.okr_achievement_rate_logic');
+    }
+
     //----------------------------------------------
     //ここからリポジトリクラスの取得メソッド
     //----------------------------------------------

@@ -1,0 +1,23 @@
+{
+  "title": "OKR進捗登録",
+  "type": "object",
+  "properties": {
+    "achievedValue": {
+      "title": "達成値",
+      "type": "integer",
+      "maxLength": 20
+    },
+    "targetValue": {
+      "title": "目標値",
+      "type": "integer",
+      "maxLength": 20
+    },
+    "post": {
+      "title": "投稿",
+      "type": "string",
+      "maxLength": 3072
+    }
+  },
+  "required": ["achievedValue", "targetValue"],
+  "additionalProperties": false
+}

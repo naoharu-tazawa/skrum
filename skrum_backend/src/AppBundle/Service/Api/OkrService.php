@@ -16,6 +16,7 @@ use AppBundle\Api\ResponseDTO\NestedObject\GroupAlignmentsDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\AlignmentsInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\UserAlignmentsDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\CompanyAlignmentsDTO;
+use AppBundle\Entity\TPost;
 
 /**
  * OKRサービスクラス
@@ -406,6 +407,99 @@ class OkrService extends BaseService
         try {
             $this->flush();
         } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * OKR進捗登録
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param array $data リクエストJSON連想配列
+     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @return void
+     */
+    public function registerAchievement($auth, $data, $tOkr)
+    {
+        // 投稿ありの場合、投稿先グループを取得
+        $groupIdArray = array();
+        if (!empty($data['post'])) {
+            // 進捗登録対象OKRのオーナーがグループの場合、投稿先グループに入れる
+            if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                $groupIdArray[] = $tOkr->getOwnerGroup()->getGroupId();
+            }
+
+            // 親OKRまたは祖父母OKRのオーナーがグループの場合、そのグループを投稿先グループに入れる
+            $tOkrRepos = $this->getTOkrRepository();
+            $parentAndGrandParentOkr = $tOkrRepos->getParentOkr($tOkr->getParentOkr()->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
+            if ($tOkr->getType() == DBConstant::OKR_TYPE_OBJECTIVE) {
+                if (!empty($parentAndGrandParentOkr[0]['childOkr'])) {
+                    if ($parentAndGrandParentOkr[0]['childOkr']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                        $groupIdArray[] = $parentAndGrandParentOkr[0]['childOkr']->getOwnerGroup()->getGroupId();
+                    }
+                }
+            } else {
+                if (!empty($parentAndGrandParentOkr[1]['parentOkr'])) {
+                    if ($parentAndGrandParentOkr[1]['parentOkr']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                        $groupIdArray[] = $parentAndGrandParentOkr[1]['parentOkr']->getOwnerGroup()->getGroupId();
+                    }
+                }
+            }
+
+            // 二重投稿を防ぐ
+            if (count($groupIdArray) == 2) {
+                if ($groupIdArray[0] == $groupIdArray[1]) {
+                    unset($groupIdArray[1]);
+                }
+            }
+        }
+
+        // 前回進捗登録時の達成率を取得
+        $previousAchievementRate = $tOkr->getAchievementRate();
+
+        // 今回の達成率を計算
+        $achievementRate = floor(($data['achievedValue'] / $data['targetValue']) * 1000) / 10;
+
+        // トランザクション開始
+        $this->beginTransaction();
+
+        try {
+            // OKR進捗登録
+            $tOkr->setAchievedValue($data['achievedValue']);
+            $tOkr->setTargetValue($data['targetValue']);
+            $tOkr->setAchievementRate($achievementRate);
+
+            // OKRアクティビティ登録
+            $tOkrActivity = new TOkrActivity();
+            $tOkrActivity->setOkr($tOkr);
+            $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ACHIEVEMENT);
+            $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
+            $tOkrActivity->setTargetValue($data['targetValue']);
+            $tOkrActivity->setAchievedValue($data['achievedValue']);
+            $tOkrActivity->setAchievementRate($achievementRate);
+            $tOkrActivity->setChangedPercentage($achievementRate - $previousAchievementRate);
+            $this->persist($tOkrActivity);
+
+            // 投稿登録
+            foreach ($groupIdArray as $groupId) {
+                $tPost = new TPost();
+                $tPost->setTimelineOwnerGroupId($groupId);
+                $tPost->setPosterId($auth->getUserId());
+                $tPost->setPost($data['post']);
+                $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
+                $tPost->setOkrActivity($tOkrActivity);
+                $tPost->setDisclosureType($tOkr->getDisclosureType());
+                $this->persist($tPost);
+            }
+
+            // 達成率を再計算
+            $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
+            $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId());
+
+            $this->flush();
+            $this->commit();
+        } catch(\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
     }

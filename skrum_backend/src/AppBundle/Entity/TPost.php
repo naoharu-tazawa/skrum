@@ -38,14 +38,14 @@ class TPost
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="posted_datetime", type="datetime", nullable=true)
+     * @ORM\Column(name="posted_datetime", type="datetime", nullable=false)
      */
     private $postedDatetime;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="disclosure_type", type="string", length=2, nullable=true)
+     * @ORM\Column(name="disclosure_type", type="string", length=2, nullable=false)
      */
     private $disclosureType;
 

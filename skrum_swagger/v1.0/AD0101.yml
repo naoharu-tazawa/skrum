@@ -133,7 +133,7 @@ paths:
                             type: string
                           ownerCompanyId:
                             type: integer
-                          ownerUserCompany:
+                          ownerCompanyName:
                             type: string
                           status:
                             type: string

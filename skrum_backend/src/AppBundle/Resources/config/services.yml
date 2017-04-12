@@ -42,6 +42,10 @@ services:
         class: AppBundle\Logic\OkrDisclosureLogic
         arguments: ['@service_container']
 
+    api.okr_achievement_rate_logic:
+        class: AppBundle\Logic\OkrAchievementRateLogic
+        arguments: ['@service_container']
+
     api.sample_service:
         class: AppBundle\Service\Api\SampleService
         arguments: ['@service_container']

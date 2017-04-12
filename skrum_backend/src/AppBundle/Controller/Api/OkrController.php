@@ -78,6 +78,7 @@ class OkrController extends BaseController
      *
      * @Rest\Put("/okrs/{okrId}.{_format}")
      * @param $request リクエストオブジェクト
+     * @param $okrId OKRID
      * @return array
      */
     public function putOkrAction(Request $request, $okrId)
@@ -107,6 +108,45 @@ class OkrController extends BaseController
         // OKR更新処理
         $okrService = $this->getOkrService();
         $okrService->changeOkrInfo($data, $tOkr);
+
+        return array('result' => 'OK');
+    }
+
+    /**
+     * OKR進捗登録
+     *
+     * @Rest\Post("/okrs/{okrId}/achievements.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $okrId OKRID
+     * @return array
+     */
+    public function postOkrAchievementsAction(Request $request, $okrId)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostOkrAchievementsPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // OKR存在チェック
+        $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            $permissionLogic = $this->getPermissionLogic();
+            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
+        }
+
+        // OKR進捗登録処理
+        $okrService = $this->getOkrService();
+        $okrService->registerAchievement($auth, $data, $tOkr);
 
         return array('result' => 'OK');
     }

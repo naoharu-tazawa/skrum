@@ -60,6 +60,84 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
+     * 親子OKRを取得（子OKRを指定）
+     *
+     * @param $okrId OKRID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getParentOkr($okrId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to1 as childOkr', 'to2 as parentOkr')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId AND to2.type <> :type2')
+            ->where('to1.okrId = :okrId1')
+            ->andWhere('to1.timeframe = :timeframeId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('okrId1', $okrId)
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('companyId1', $companyId)
+            ->setParameter('type2', DBConstant::OKR_TYPE_ROOT_NODE);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 親子OKRを取得（親OKRを指定）（達成率再計算ロジック用）
+     *
+     * @param $okrId OKRID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getChildrenOkrsForRecalc($okrId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to1 as parentOkr', 'to2 as childOkr')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
+            ->where('to1.okrId = :okrId1')
+            ->andWhere('to1.timeframe = :timeframeId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->setParameter('okrId1', $okrId)
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('companyId1', $companyId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 子OKRの加重平均比率の合計値と持分比率ロックフラグが立っている数を取得（達成率再計算ロジック用）
+     *
+     * @param $okrId OKRID
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getRecalcItems($okrId, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('SUM(to2.weightedAverageRatio) as summedWeightedAverageRatio', 'SUM(to2.ratioLockedFlg) as lockedRatioCount')
+            ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
+            ->where('to1.okrId = :okrId1')
+            ->andWhere('to1.timeframe = :timeframeId1')
+            ->andWhere('tt1.company = :companyId1')
+            ->andWhere('to2.ratioLockedFlg = :ratioLockedFlg')
+            ->setParameter('okrId1', $okrId)
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('companyId1', $companyId)
+            ->setParameter('ratioLockedFlg', DBConstant::FLG_TRUE);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * ユーザの目標とキーリザルトの一覧を取得
      *
      * @param $userId ユーザID
