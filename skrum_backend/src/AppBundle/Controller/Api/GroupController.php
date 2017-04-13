@@ -82,4 +82,34 @@ class GroupController extends BaseController
 
         return $userGroupDTO;
     }
+
+    /**
+     * グループ基本情報変更
+     *
+     * @Rest\Put("/groups/{groupId}.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $groupId グループID
+     * @return array
+     */
+    public function putGroupAction(Request $request, $groupId)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PutGroupPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ存在チェック
+        $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+
+        // グループ情報更新処理
+        $groupService = $this->getGroupService();
+        $groupService->updateGroup($data, $mGroup);
+
+        return array('result' => 'OK');
+    }
 }

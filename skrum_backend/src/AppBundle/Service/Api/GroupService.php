@@ -99,4 +99,24 @@ class GroupService extends BaseService
 
         return $basicGroupInfoDTO;
     }
+
+    /**
+     * グループ情報更新
+     *
+     * @param array $data リクエストJSON連想配列
+     * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
+     * @return void
+     */
+    public function updateGroup($data, $mGroup)
+    {
+        // グループ情報更新
+        $mGroup->setGroupName($data['groupName']);
+        $mGroup->setMission($data['mission']);
+
+        try {
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }
