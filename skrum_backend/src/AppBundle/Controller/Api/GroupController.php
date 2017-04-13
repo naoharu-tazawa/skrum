@@ -114,6 +114,40 @@ class GroupController extends BaseController
     }
 
     /**
+     * グループリーダー変更
+     *
+     * @Rest\Put("/groups/{groupId}/leaders/{userId}.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $groupId グループID
+     * @param $userId ユーザID
+     * @return array
+     */
+    public function putGroupLeaderAction(Request $request, $groupId, $userId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // ユーザ存在チェック
+        $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
+
+        // グループ存在チェック
+        $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkGroupOperation($auth->getUserId(), $groupId);
+        if (!$checkResult) {
+            throw new PermissionException('グループ操作権限がありません');
+        }
+
+        // グループリーダー変更処理
+        $groupService = $this->getGroupService();
+        $groupService->changeGroupLeader($mGroup, $userId);
+
+        return array('result' => 'OK');
+    }
+
+    /**
      * グループ削除
      *
      * @Rest\Delete("/groups/{groupId}.{_format}")

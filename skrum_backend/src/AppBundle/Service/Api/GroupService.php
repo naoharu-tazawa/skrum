@@ -121,6 +121,37 @@ class GroupService extends BaseService
     }
 
     /**
+     * グループリーダー更新
+     *
+     * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
+     * @param integer $userId ユーザID
+     * @return void
+     */
+    public function changeGroupLeader($mGroup, $userId)
+    {
+        // 現在のグループリーダーが変更対象ユーザと同一の場合、更新処理を行わない
+        if ($mGroup->getLeaderUserId() == $userId) {
+            return;
+        }
+
+        // グループにユーザが所属しているかチェック
+        $tGroupMemberRepos = $this->getTGroupMemberRepository();
+        $tGroupMemberArray = $tGroupMemberRepos->getGroupMember($mGroup->getGroupId(), $userId);
+        if (count($tGroupMemberArray) == 0) {
+            throw new ApplicationException('このユーザはグループメンバーではありません');
+        }
+
+        // グループリーダー更新
+        $mGroup->setLeaderUserId($userId);
+
+        try {
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
      * グループ削除
      *
      * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
