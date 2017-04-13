@@ -52,25 +52,21 @@ class OkrService extends BaseService
             $mCompany = $mCompanyRepos->find($companyId);
         }
 
-        $okrDisclosureLogic = $this->getOkrDisclosureLogic();
+        $disclosureLogic = $this->getDisclosureLogic();
         $returnArray = array();
         $flg = false;
         for ($i = 0; $i < count($tOkrArray); $i++) {
             if (array_key_exists('objective', $tOkrArray[$i])) {
-                if ($flg == true) {
-                    $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
-                    $returnArray[] = $basicOkrDTOObjective;
-                } else {
+                // 2回目のループ以降、前回ループ分のDTOを配列に入れる
+                if ($i != 0) {
+                    if ($flg) {
+                        $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
+                    }
                     $returnArray[] = $basicOkrDTOObjective;
                 }
 
                 // 閲覧権限をチェック
-                if (!$okrDisclosureLogic->checkDisclosure($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[$i]['objective'])) {
-                    // 最終ループ
-                    if ($i == (count($tOkrArray) - 1)) {
-                        $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
-                        $returnArray[] = $basicOkrDTOObjective;
-                    }
+                if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[$i]['objective'])) {
                     $flg = false;
                     continue;
                 }
@@ -107,10 +103,12 @@ class OkrService extends BaseService
                 }
 
                 // 閲覧権限をチェック
-                if (!$okrDisclosureLogic->checkDisclosure($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[$i]['keyResult'])) {
+                if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[$i]['keyResult'])) {
                     // 最終ループ
                     if ($i == (count($tOkrArray) - 1)) {
-                        $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
+                        if ($flg) {
+                            $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
+                        }
                         $returnArray[] = $basicOkrDTOObjective;
                     }
                     $flg = true;

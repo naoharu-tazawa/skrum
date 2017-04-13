@@ -1,0 +1,13 @@
+{
+  "title": "リプライ投稿",
+  "type": "object",
+  "properties": {
+    "post": {
+      "title": "投稿内容",
+      "type": "string",
+      "maxLength": 3072
+    }
+  },
+  "required": ["post"],
+  "additionalProperties": false
+}

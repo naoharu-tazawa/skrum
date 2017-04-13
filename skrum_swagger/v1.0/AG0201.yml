@@ -1,0 +1,69 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /groups/{groupId}/posts:
+    get:
+      description: タイムライン取得
+      parameters:
+        -
+          name: groupId
+          in: path
+          type: integer
+          description: グループID
+          required: true
+      responses:
+        200:
+          description: タイムライン
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                postId:
+                  type: integer
+                posterId:
+                  type: integer
+                post:
+                  type: string
+                postedDatetime:
+                  type: string
+                okrId:
+                  type: integer
+                replies:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      postId:
+                        type: integer
+                      posterId:
+                        type: integer
+                      post:
+                        type: string
+                      postedDatetime:
+                        type: string
+                    required:
+                      - postId
+                      - posterId
+                      - post
+                      - postedDatetime
+              required:
+                - postId
+                - posterId
+                - post
+                - postedDatetime
+        400:
+          description: パラメータ不正
+        401:
+          description: 認証エラー
+        500:
+          description: サーバーエラー

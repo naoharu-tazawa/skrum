@@ -307,9 +307,9 @@ class BaseController extends FOSRestController
         return $this->get('api.permission_logic');
     }
 
-    protected function getOkrDisclosureLogic()
+    protected function getDisclosureLogic()
     {
-        return $this->get('api.okr_disclosure_logic');
+        return $this->get('api.disclosure_logic');
     }
 
     protected function getOkrAchievementRateLogic()
@@ -365,5 +365,10 @@ class BaseController extends FOSRestController
     protected function getTimeframeService()
     {
         return $this->get('api.timeframe_service');
+    }
+
+    protected function getTimelineService()
+    {
+        return $this->get('api.timeline_service');
     }
 }

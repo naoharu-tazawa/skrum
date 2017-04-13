@@ -22,7 +22,7 @@ class DBExistanceLogic extends BaseLogic
     {
         $mUserRepos = $this->getMUserRepository();
         $mUserArray = $mUserRepos->getUser($targetUserId, $companyId);
-        if (count($mUserArray) === 0) {
+        if (count($mUserArray) == 0) {
             throw new ApplicationException('ユーザが存在しません');
         }
 
@@ -40,7 +40,7 @@ class DBExistanceLogic extends BaseLogic
     {
         $mGroupRepos = $this->getMGroupRepository();
         $mGroupArray = $mGroupRepos->getGroup($targetGroupId, $companyId);
-        if (count($mGroupArray) === 0) {
+        if (count($mGroupArray) == 0) {
             throw new ApplicationException('グループが存在しません');
         }
 
@@ -58,7 +58,7 @@ class DBExistanceLogic extends BaseLogic
     {
         $tOkrRepos = $this->getTOkrRepository();
         $tOkrArray = $tOkrRepos->getOkr($targetOkrId, $companyId);
-        if (count($tOkrArray) === 0) {
+        if (count($tOkrArray) == 0) {
             throw new ApplicationException('OKRが存在しません');
         }
 
@@ -76,10 +76,28 @@ class DBExistanceLogic extends BaseLogic
     {
         $tTimeframeRepos = $this->getTTimeframeRepository();
         $tTimeframeArray = $tTimeframeRepos->getTimeframe($targetTimeframeId, $companyId);
-        if (count($tTimeframeArray) === 0) {
+        if (count($tTimeframeArray) == 0) {
             throw new ApplicationException('タイムフレームが存在しません');
         }
 
         return $tTimeframeArray[0];
+    }
+
+    /**
+     * 投稿存在チェック
+     *
+     * @param integer $targetPostId チェック対象投稿ID
+     * @param integer $companyId 会社ID
+     * @return \AppBundle\Entity\TPost 投稿エンティティ
+     */
+    public function checkPostExistance($targetPostId, $companyId)
+    {
+        $tPostRepos = $this->getTPostRepository();
+        $tPostArray = $tPostRepos->getPost($targetPostId, $companyId);
+        if (count($tPostArray) == 0) {
+            throw new ApplicationException('投稿が存在しません');
+        }
+
+        return $tPostArray[0];
     }
 }

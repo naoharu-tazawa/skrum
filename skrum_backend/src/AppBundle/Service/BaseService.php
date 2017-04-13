@@ -255,9 +255,9 @@ class BaseService
         return $this->getContainer()->get('api.permission_logic');
     }
 
-    protected function getOkrDisclosureLogic()
+    protected function getDisclosureLogic()
     {
-        return $this->getContainer()->get('api.okr_disclosure_logic');
+        return $this->getContainer()->get('api.disclosure_logic');
     }
 
     protected function getOkrAchievementRateLogic()

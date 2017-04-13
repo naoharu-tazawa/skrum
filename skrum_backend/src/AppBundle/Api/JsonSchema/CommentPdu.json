@@ -1,0 +1,17 @@
+{
+  "title": "コメント投稿",
+  "type": "object",
+  "properties": {
+    "post": {
+      "title": "投稿内容",
+      "type": "string",
+      "maxLength": 3072
+    },
+    "disclosureType": {
+      "title": "公開種別",
+      "enum": ["1", "2", "3", "4", "5"]
+    }
+  },
+  "required": ["post", "disclosureType"],
+  "additionalProperties": false
+}

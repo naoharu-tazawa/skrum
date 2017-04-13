@@ -54,11 +54,11 @@ class OkrMapService extends BaseService
         }
 
         // ユーザ目標をDTOに詰め替える
-        $okrDisclosureLogic = $this->getOkrDisclosureLogic();
+        $disclosureLogic = $this->getDisclosureLogic();
         $basicOkrDTOArray = array();
         foreach ($tOkrArray as $tOkr) {
             // 閲覧権限をチェック
-            if (!$okrDisclosureLogic->checkDisclosure($auth->getUserId(), $auth->getRoleLevel(), $tOkr)) {
+            if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkr)) {
                 continue;
             }
 
@@ -90,14 +90,14 @@ class OkrMapService extends BaseService
         $companyName = $mCompany->getCompanyName();
 
         // DTOに詰め替える
-        $okrDisclosureLogic = $this->getOkrDisclosureLogic();
+        $disclosureLogic = $this->getDisclosureLogic();
         $threeGensOkrMapDTO = new ThreeGensOkrMapDTO();
         $childrenOkrs = array();
         foreach ($tOkrArray as $tOkr) {
             if (array_key_exists('childrenOkr', $tOkr)) {
                 if (!empty($tOkr['childrenOkr'])) {
                     // 閲覧権限をチェック
-                    if (!$okrDisclosureLogic->checkDisclosure($auth->getUserId(), $auth->getRoleLevel(), $tOkr['childrenOkr'])) {
+                    if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkr['childrenOkr'])) {
                         continue;
                     }
                     $basicOkrDTO = $this->repackDTOWithOkrEntity($tOkr['childrenOkr'], $companyName);
@@ -106,7 +106,7 @@ class OkrMapService extends BaseService
             } elseif (array_key_exists('parentOkr', $tOkr)) {
                 if (!empty($tOkr['parentOkr'])) {
                     // 閲覧権限をチェック
-                    if (!$okrDisclosureLogic->checkDisclosure($auth->getUserId(), $auth->getRoleLevel(), $tOkr['parentOkr'])) {
+                    if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkr['parentOkr'])) {
                         continue;
                     }
                     $basicOkrDTO = $this->repackDTOWithOkrEntity($tOkr['parentOkr'], $companyName);
@@ -115,7 +115,7 @@ class OkrMapService extends BaseService
             } else {
                 if (!empty($tOkr['selectedOkr'])) {
                     // 閲覧権限をチェック
-                    if (!$okrDisclosureLogic->checkDisclosure($auth->getUserId(), $auth->getRoleLevel(), $tOkr['selectedOkr'])) {
+                    if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkr['selectedOkr'])) {
                         continue;
                     }
                     $basicOkrDTO = $this->repackDTOWithOkrEntity($tOkr['selectedOkr'], $companyName);

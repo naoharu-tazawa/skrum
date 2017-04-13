@@ -38,8 +38,8 @@ services:
         class: AppBundle\Logic\DBExistanceLogic
         arguments: ['@service_container']
 
-    api.okr_disclosure_logic:
-        class: AppBundle\Logic\OkrDisclosureLogic
+    api.disclosure_logic:
+        class: AppBundle\Logic\DisclosureLogic
         arguments: ['@service_container']
 
     api.okr_achievement_rate_logic:
@@ -84,4 +84,8 @@ services:
 
     api.timeframe_service:
         class: AppBundle\Service\Api\TimeframeService
+        arguments: ['@service_container']
+
+    api.timeline_service:
+        class: AppBundle\Service\Api\TimelineService
         arguments: ['@service_container']
