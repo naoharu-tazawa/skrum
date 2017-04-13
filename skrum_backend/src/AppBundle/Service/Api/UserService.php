@@ -77,4 +77,21 @@ class UserService extends BaseService
             throw new SystemException($e->getMessage());
         }
     }
+
+    /**
+     * ユーザ削除
+     *
+     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @return void
+     */
+    public function deleteUser($mUser)
+    {
+        // ユーザ削除
+        try {
+            $this->remove($mUser);
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }
