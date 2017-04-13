@@ -40,4 +40,29 @@ class CompanyService extends BaseService
 
         return $basicCompanyInfoDTO;
     }
+
+    /**
+     * 会社情報更新
+     *
+     * @param array $data リクエストJSON連想配列
+     * @param integer $companyId 会社ID
+     * @return void
+     */
+    public function updateCompany($data, $companyId)
+    {
+        // 会社エンティティ取得
+        $mCompanyRepos = $this->getMCompanyRepository();
+        $mCompany = $mCompanyRepos->find($companyId);
+
+        // 会社情報更新
+        $mCompany->setCompanyName($data['companyName']);
+        $mCompany->setVision($data['vision']);
+        $mCompany->setMission($data['mission']);
+
+        try {
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }
