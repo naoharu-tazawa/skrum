@@ -38,4 +38,53 @@ class TimeframeController extends BaseController
 
         return $timeframeDTOArray;
     }
+
+    /**
+     * デフォルトタイムフレーム変更
+     *
+     * @Rest\Put("/timeframes/{timeframeId}/setdefault.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $timeframeId タイムフレームID
+     * @return array
+     */
+    public function setDefaultTimeframeAction(Request $request, $timeframeId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // タイムフレーム存在チェック
+        $tTimeframe = $this->getDBExistanceLogic()->checkTimeframeExistance($timeframeId, $auth->getCompanyId());
+
+        // デフォルトタイムフレーム変更処理
+        $timeframeService = $this->getTimeframeService();
+        $timeframeService->changeDefault($auth, $tTimeframe);
+
+        return array('result' => 'OK');
+    }
+
+    /**
+     * タイムフレーム追加
+     *
+     * @Rest\Post("/timeframes.{_format}")
+     * @param $request リクエストオブジェクト
+     * @return array
+     */
+    public function postTimeframesAction(Request $request)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostTimeframesPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // タイムフレーム登録処理
+        $timeframeService = $this->getTimeframeService();
+        $timeframeService->registerTimeframe($auth, $data);
+
+        return array('result' => 'OK');
+    }
 }

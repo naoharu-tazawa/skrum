@@ -1,0 +1,59 @@
+{
+  "title": "目標新規登録",
+  "type": "object",
+  "properties": {
+    "timeframeName": {
+      "title": "タイムフレーム名",
+      "type": "string",
+      "maxLength": 255
+    },
+    "start": {
+      "title": "開始日",
+      "type": "object",
+      "properties": {
+        "year": {
+          "title": "年",
+          "type": "string",
+          "maxLength": 4
+        },
+        "month": {
+          "title": "月",
+          "type": "string",
+          "maxLength": 2
+        },
+        "date": {
+          "title": "日",
+          "type": "string",
+          "maxLength": 2
+        }
+      },
+      "required": ["year", "month", "date"],
+      "additionalProperties": false
+    },
+    "end": {
+      "title": "終了日",
+      "type": "object",
+      "properties": {
+        "year": {
+          "title": "年",
+          "type": "string",
+          "maxLength": 4
+        },
+        "month": {
+          "title": "月",
+          "type": "string",
+          "maxLength": 2
+        },
+        "date": {
+          "title": "日",
+          "type": "string",
+          "maxLength": 2
+        }
+      },
+      "required": ["year", "month", "date"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["timeframeName", "start", "end"],
+  "additionalProperties": false
+}

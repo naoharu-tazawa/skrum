@@ -111,7 +111,8 @@
         },
         "timeframeName": {
           "title": "タイムフレーム名",
-          "type": "string"
+          "type": "string",
+          "maxLength": 255
         }
       },
       "required": ["customFlg", "start"],
