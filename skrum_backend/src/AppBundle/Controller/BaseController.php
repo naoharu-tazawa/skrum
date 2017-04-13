@@ -342,6 +342,11 @@ class BaseController extends FOSRestController
         return $this->get('api.group_service');
     }
 
+    protected function getGroupTreeService()
+    {
+        return $this->get('api.group_tree_service');
+    }
+
     protected function getCompanyService()
     {
         return $this->get('api.company_service');

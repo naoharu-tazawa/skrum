@@ -48,6 +48,24 @@ class DBExistanceLogic extends BaseLogic
     }
 
     /**
+     * グループパス存在チェック
+     *
+     * @param integer $targetGroupPathId チェック対象グループパスID
+     * @param integer $companyId 会社ID
+     * @return \AppBundle\Entity\TGroupTree グループツリーエンティティ
+     */
+    public function checkGroupPathExistance($targetGroupPathId, $companyId)
+    {
+        $tGroupTreeRepos = $this->getTGroupTreeRepository();
+        $tGroupTreeArray = $tGroupTreeRepos->getGroupPath($targetGroupPathId, $companyId);
+        if (count($tGroupTreeArray) == 0) {
+            throw new ApplicationException('グループパスが存在しません');
+        }
+
+        return $tGroupTreeArray[0];
+    }
+
+    /**
      * OKR存在チェック
      *
      * @param integer $targetOkrId チェック対象OKRID

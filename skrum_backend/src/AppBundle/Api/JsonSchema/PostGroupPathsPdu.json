@@ -1,0 +1,13 @@
+{
+  "title": "所属先グループ追加",
+  "type": "object",
+  "properties": {
+    "groupPathId": {
+      "title": "グループパスID",
+      "type": "integer",
+      "maxLength": 11
+    }
+  },
+  "required": ["groupPathId"],
+  "additionalProperties": false
+}

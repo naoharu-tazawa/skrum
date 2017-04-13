@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Utils\DBConstant;
+
 /**
  * TGroupTreeリポジトリクラス
  *
@@ -9,6 +11,26 @@ namespace AppBundle\Repository;
  */
 class TGroupTreeRepository extends BaseRepository
 {
+    /**
+     * 指定グループツリーIDのレコードを取得
+     *
+     * @param $groupTreeId グループツリーID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getGroupPath($groupTreeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('tgt');
+        $qb->select('tgt')
+            ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgt.group = mg.groupId')
+            ->where('tgt.id = :id')
+            ->andWhere('mg.company = :companyId')
+            ->setParameter('id', $groupTreeId)
+            ->setParameter('companyId', $companyId);
+
+        return $qb->getQuery()->getResult();
+    }
+
     /**
      * グループパスを取得
      *
@@ -29,6 +51,22 @@ class TGroupTreeRepository extends BaseRepository
             ->setParameter('companyId', $companyId);
 
         return $qb->getQuery()->getSingleResult();
+    }
+
+    /**
+     * グループツリーパスを指定しレコードを取得
+     *
+     * @param $groupTreePath グループツリーパス
+     * @return array
+     */
+    public function getByGroupTreePath($groupTreePath)
+    {
+        $qb = $this->createQueryBuilder('tgt');
+        $qb->select('tgt')
+            ->where('tgt.groupTreePath = :groupTreePath')
+            ->setParameter('groupTreePath', $groupTreePath);
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
