@@ -134,4 +134,24 @@ class TGroupMemberRepository extends BaseRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * 指定グループIDの全レコードを削除
+     *
+     * @param $groupId グループID
+     * @return array
+     */
+    public function deleteAllGroupMembers($groupId)
+    {
+        $sql = <<<SQL
+        UPDATE t_group_member AS t0_
+        SET t0_.deleted_at = NOW()
+        WHERE (t0_.group_id = :groupId) AND (t0_.deleted_at IS NULL);
+SQL;
+
+        $params['groupId'] = $groupId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+    }
 }

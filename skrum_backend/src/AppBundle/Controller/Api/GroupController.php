@@ -112,4 +112,34 @@ class GroupController extends BaseController
 
         return array('result' => 'OK');
     }
+
+    /**
+     * グループ削除
+     *
+     * @Rest\Delete("/groups/{groupId}.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $groupId グループID
+     * @return array
+     */
+    public function deleteGroupAction(Request $request, $groupId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ存在チェック
+        $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkGroupOperation($auth->getUserId(), $groupId);
+        if (!$checkResult) {
+            throw new PermissionException('グループ操作権限がありません');
+        }
+
+        // グループ削除処理
+        $groupService = $this->getGroupService();
+        $groupService->deleteGroup($mGroup);
+
+        return array('result' => 'OK');
+    }
 }

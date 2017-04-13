@@ -119,4 +119,40 @@ class GroupService extends BaseService
             throw new SystemException($e->getMessage());
         }
     }
+
+    /**
+     * グループ削除
+     *
+     * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
+     * @return void
+     */
+    public function deleteGroup($mGroup)
+    {
+        // トランザクション開始
+        $this->beginTransaction();
+
+        try {
+            // グループメンバー削除
+            $tGroupMemberRepos = $this->getTGroupMemberRepository();
+            $tGroupMemberRepos->deleteAllGroupMembers($mGroup->getGroupId());
+
+            // グループパス削除
+            $tGroupTreeRepos = $this->getTGroupTreeRepository();
+            $tGroupTreeRepos->deleteAllPaths($mGroup->getGroupId());
+
+            // ToDo:要検討
+            // グループが所有する全てのOKR、及びそれに紐づく全てのOKR、OKRアクティビティを削除
+            // $tOkrRepos = $this->getTOkrRepository();
+            // $tOkrArray = $tOkrRepos->getGroupObjectivesAndKeyResults($groupId, $timeframeId, $companyId);
+
+            // グループ削除
+            $this->remove($mGroup);
+
+            $this->flush();
+            $this->commit();
+        } catch(\Exception $e) {
+            $this->rollback();
+            throw new SystemException($e->getMessage());
+        }
+    }
 }

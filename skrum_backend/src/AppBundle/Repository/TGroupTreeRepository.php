@@ -30,4 +30,24 @@ class TGroupTreeRepository extends BaseRepository
 
         return $qb->getQuery()->getSingleResult();
     }
+
+    /**
+     * 指定グループIDの全レコードを削除
+     *
+     * @param $groupId グループID
+     * @return array
+     */
+    public function deleteAllPaths($groupId)
+    {
+        $sql = <<<SQL
+        UPDATE t_group_tree AS t0_
+        SET t0_.deleted_at = NOW()
+        WHERE (t0_.group_id = :groupId) AND (t0_.deleted_at IS NULL);
+SQL;
+
+        $params['groupId'] = $groupId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+    }
 }
