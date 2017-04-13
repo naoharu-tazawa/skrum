@@ -132,6 +132,50 @@ class TimeframeService extends BaseService
     }
 
     /**
+     * タイムフレーム更新
+     *
+     * @param array $data リクエストJSON連想配列
+     * @param \AppBundle\Entity\TTimeframe $tTimeframe タイムフレームエンティティ
+     * @return void
+     */
+    public function updateTimeframe($data, $tTimeframe)
+    {
+        // 開始日妥当性チェック
+        if (!checkdate($data['start']['month'], $data['start']['date'], $data['start']['year'])) {
+            throw new ApplicationException('開始日が不正です');
+        }
+
+        // 終了日妥当性チェック
+        if (!checkdate($data['end']['month'], $data['end']['date'], $data['end']['year'])) {
+            throw new ApplicationException('終了日が不正です');
+        }
+
+        // 月日をゼロ埋め
+        $data['start']['month'] = sprintf("%02d", $data['start']['month']);
+        $data['start']['date'] = sprintf("%02d", $data['start']['date']);
+        $data['end']['month'] = sprintf("%02d", $data['end']['month']);
+        $data['end']['date'] = sprintf("%02d", $data['end']['date']);
+
+        // 開始日と終了日を大小比較
+        $startDate = DateUtility::transIntoDatetime($data['start']['year'] . $data['start']['month'] . $data['start']['date']);
+        $endDate = DateUtility::transIntoDatetime($data['end']['year'] . $data['end']['month'] . $data['end']['date']);
+        if ($startDate > $endDate) {
+            throw new ApplicationException('終了日は開始日以降に設定してください');
+        }
+
+        // タイムフレーム更新
+        $tTimeframe->setTimeframeName($data['timeframeName']);
+        $tTimeframe->setStartDate($startDate);
+        $tTimeframe->setEndDate($endDate);
+
+        try {
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
      * タイムフレーム削除
      *
      * @param \AppBundle\Entity\TTimeframe $tTimeframe タイムフレームエンティティ

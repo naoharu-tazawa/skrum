@@ -55,4 +55,26 @@ class UserService extends BaseService
 
         return $basicUserInfoDTO;
     }
+
+    /**
+     * ユーザ情報更新
+     *
+     * @param array $data リクエストJSON連想配列
+     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @return void
+     */
+    public function updateUser($data, $mUser)
+    {
+        // ユーザ情報更新
+        $mUser->setLastName($data['lastName']);
+        $mUser->setFirstName($data['firstName']);
+        $mUser->setPosition($data['position']);
+        $mUser->setPhoneNumber($data['phoneNumber']);
+
+        try {
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }

@@ -1,0 +1,59 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /users/{userId}.json:
+    put:
+      description: ユーザ基本情報変更
+      parameters:
+        -
+          name: userId
+          in: path
+          type: string
+          description: ユーザID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description: ユーザ情報
+          required: true
+          schema:
+            type: object
+            properties:
+              lastName:
+                type: string
+              firstName:
+                type: string
+              position:
+                type: string
+              phoneNumber:
+                type: string
+            required:
+              - lastName
+              - firstName
+              - position
+              - phoneNumber
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

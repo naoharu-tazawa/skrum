@@ -89,6 +89,36 @@ class TimeframeController extends BaseController
     }
 
     /**
+     * タイムフレーム編集
+     *
+     * @Rest\Put("/timeframes/{timeframeId}.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $timeframeId タイムフレームID
+     * @return array
+     */
+    public function putTimeframeAction(Request $request, $timeframeId)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostTimeframesPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // タイムフレーム存在チェック
+        $tTimeframe = $this->getDBExistanceLogic()->checkTimeframeExistance($timeframeId, $auth->getCompanyId());
+
+        // タイムフレーム更新処理
+        $timeframeService = $this->getTimeframeService();
+        $timeframeService->updateTimeframe($data, $tTimeframe);
+
+        return array('result' => 'OK');
+    }
+
+    /**
      * タイムフレーム削除
      *
      * @Rest\Delete("/timeframes/{timeframeId}.{_format}")
