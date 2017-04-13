@@ -130,4 +130,20 @@ class TimeframeService extends BaseService
             throw new SystemException($e->getMessage());
         }
     }
+
+    /**
+     * タイムフレーム削除
+     *
+     * @param \AppBundle\Entity\TTimeframe $tTimeframe タイムフレームエンティティ
+     * @return void
+     */
+    public function deleteTimeframe($tTimeframe)
+    {
+        try {
+            $this->remove($tTimeframe);
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }

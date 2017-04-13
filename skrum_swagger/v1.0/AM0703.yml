@@ -1,0 +1,38 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /timeframes/{timeframeId}.json:
+    delete:
+      description: タイムフレーム削除
+      parameters:
+        -
+          name: timeframeId
+          in: path
+          type: string
+          description: タイムフレームID
+          required: true
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー
