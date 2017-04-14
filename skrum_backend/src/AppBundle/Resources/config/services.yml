@@ -86,6 +86,10 @@ services:
         class: AppBundle\Service\Api\OkrMapService
         arguments: ['@service_container']
 
+    api.okr_setting_service:
+        class: AppBundle\Service\Api\OkrSettingService
+        arguments: ['@service_container']
+
     api.timeframe_service:
         class: AppBundle\Service\Api\TimeframeService
         arguments: ['@service_container']

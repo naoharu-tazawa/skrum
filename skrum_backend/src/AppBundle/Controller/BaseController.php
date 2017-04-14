@@ -367,6 +367,11 @@ class BaseController extends FOSRestController
         return $this->get('api.okr_map_service');
     }
 
+    protected function getOkrSettingService()
+    {
+        return $this->get('api.okr_setting_service');
+    }
+
     protected function getTimeframeService()
     {
         return $this->get('api.timeframe_service');
