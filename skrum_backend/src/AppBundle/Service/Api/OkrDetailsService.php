@@ -18,6 +18,7 @@ use AppBundle\Api\ResponseDTO\NestedObject\UserAlignmentsDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\CompanyAlignmentsDTO;
 use AppBundle\Entity\TPost;
 use AppBundle\Api\ResponseDTO\OkrDetailsDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\AchievementRateChartDTO;
 
 /**
  * OKR詳細サービスクラス
@@ -80,6 +81,20 @@ class OkrDetailsService extends BaseService
             }
         }
         $okrDetailsDTO->setKeyResults($childrenOkrs);
+
+        // 達成率チャートを取得
+        $tOkrActivityRepos = $this->getTOkrActivityRepository();
+        $tOkrActivityArray = $tOkrActivityRepos->getAchievementRateChart($okrId);
+        $chart = array();
+        foreach ($tOkrActivityArray as $tOkrActivity) {
+            $achievementRateChartDTO = new AchievementRateChartDTO();
+            $achievementRateChartDTO->setDatetime($tOkrActivity['datetime']);
+            $achievementRateChartDTO->setAchievementRate($tOkrActivity['achievementRate']);
+
+            $chart[] = $achievementRateChartDTO;
+        }
+
+        $okrDetailsDTO->setChart($chart);
 
         return $okrDetailsDTO;
     }

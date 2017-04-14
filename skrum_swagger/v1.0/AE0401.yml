@@ -34,6 +34,15 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Okr'
+              chart:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    datetime:
+                      type: string
+                    achievementRate:
+                      type: number
         400:
           description: JSONスキーマ不正
         409:

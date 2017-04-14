@@ -33,6 +33,13 @@ class OkrDetailsDTO
     private $keyResults;
 
     /**
+     * @var array
+     *
+     * @JSON\Type("array")
+     */
+    private $chart;
+
+    /**
      * Set objective
      *
      * @param \AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO $objective
@@ -102,5 +109,29 @@ class OkrDetailsDTO
     public function getKeyResults()
     {
         return $this->keyResults;
+    }
+
+    /**
+     * Set chart
+     *
+     * @param array $chart
+     *
+     * @return OkrDetailsDTO
+     */
+    public function setChart($chart)
+    {
+        $this->chart = $chart;
+
+        return $this;
+    }
+
+    /**
+     * Get chart
+     *
+     * @return array
+     */
+    public function getChart()
+    {
+        return $this->chart;
     }
 }
