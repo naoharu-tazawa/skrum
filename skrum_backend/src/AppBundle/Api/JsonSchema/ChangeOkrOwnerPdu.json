@@ -1,0 +1,27 @@
+{
+  "title": "OKR所有者変更",
+  "type": "object",
+  "properties": {
+    "ownerType": {
+      "title": "オーナー種別",
+      "enum": ["1", "2", "3"]
+    },
+    "ownerUserId": {
+      "title": "オーナーユーザID",
+      "type": "integer",
+      "maxLength": 11
+    },
+    "ownerGroupId": {
+      "title": "オーナーグループID",
+      "type": "integer",
+      "maxLength": 11
+    },
+    "ownerCompanyId": {
+      "title": "オーナー会社ID",
+      "type": "integer",
+      "maxLength": 11
+    }
+  },
+  "required": ["ownerType"],
+  "additionalProperties": false
+}

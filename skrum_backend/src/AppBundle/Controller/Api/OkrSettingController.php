@@ -119,4 +119,57 @@ class OkrSettingController extends BaseController
 
         return array('result' => 'OK');
     }
+
+    /**
+     * OKRオーナー変更
+     *
+     * @Rest\Put("/okrs/{okrId}/changeowner.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param integer $okrId OKRID
+     * @return array
+     */
+    public function changeOkrOwnerAction(Request $request, $okrId)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/ChangeOkrOwnerPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // オーナー種別に応じて存在チェック
+        if ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_USER) {
+            // ユーザ存在チェック
+            $mUser = $this->getDBExistanceLogic()->checkUserExistance($data['ownerUserId'], $auth->getCompanyId());
+        } elseif ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            // グループ存在チェック
+            $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($data['ownerGroupId'], $auth->getCompanyId());
+        } else {
+            // 会社IDの一致をチェック
+            if ($data['ownerCompanyId'] != $auth->getCompanyId()) {
+                throw new ApplicationException('会社IDが存在しません');
+            }
+        }
+
+        // OKR存在チェック
+        $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            $permissionLogic = $this->getPermissionLogic();
+            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
+        }
+
+        // OKR公開種別変更処理
+        $okrSettingService = $this->getOkrSettingService();
+        $okrSettingService->changeOwner($tOkr, $data['ownerType'], $mUser, $mGroup, $auth->getCompanyId());
+
+        return array('result' => 'OK');
+    }
 }
