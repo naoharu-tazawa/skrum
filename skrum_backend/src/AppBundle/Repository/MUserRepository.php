@@ -46,4 +46,32 @@ class MUserRepository extends BaseRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * ユーザ検索
+     *
+     * @param string $keyword 検索ワード
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function searchUser($keyword, $companyId)
+    {
+        $sql = <<<SQL
+        SELECT m1_.userId, m1_.lastName, m1_.firstName
+        FROM (
+            SELECT m0_.user_id AS userId, m0_.last_name AS lastName, m0_.first_name AS firstName, CONCAT(m0_.last_name, m0_.first_name) AS name
+            FROM m_user m0_
+            WHERE (m0_.company_id = :companyId) AND (m0_.deleted_at IS NULL)
+            ) AS m1_
+        WHERE m1_.name LIKE :keyword;
+SQL;
+
+        $params['companyId'] = $companyId;
+        $params['keyword'] = $keyword . '%';
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
 }

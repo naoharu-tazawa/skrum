@@ -1,0 +1,38 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /users/search.json?{q}:
+    get:
+      description: ユーザ検索
+      parameters:
+        -
+          name: q
+          in: path
+          type: string
+          description: 検索ワード
+          required: true
+      responses:
+        200:
+          description: 検索結果
+          schema:
+            type: object
+            properties:
+              userId:
+                type: integer
+              userName:
+                type: string
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

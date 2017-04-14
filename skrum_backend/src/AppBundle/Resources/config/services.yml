@@ -101,3 +101,7 @@ services:
     api.timeline_service:
         class: AppBundle\Service\Api\TimelineService
         arguments: ['@service_container']
+
+    api.search_service:
+        class: AppBundle\Service\Api\SearchService
+        arguments: ['@service_container']

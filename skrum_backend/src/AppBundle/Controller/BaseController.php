@@ -386,4 +386,9 @@ class BaseController extends FOSRestController
     {
         return $this->get('api.timeline_service');
     }
+
+    protected function getSearchService()
+    {
+        return $this->get('api.search_service');
+    }
 }
