@@ -52,4 +52,27 @@ class GroupTreeService extends BaseService
             throw new SystemException($e->getMessage());
         }
     }
+
+    /**
+     * グループツリー削除
+     *
+     * @param \AppBundle\Entity\TGroupTree $tGroupTree グループツリーエンティティ
+     * @param integer $groupId グループID
+     * @return void
+     */
+    public function deleteGroupPath($tGroupTree, $groupId)
+    {
+        // 削除するグループツリーとグループの整合性をチェック
+        if ($tGroupTree->getGroup()->getGroupId() != $groupId) {
+            throw new ApplicationException('グループパスが不正です');
+        }
+
+        // グループパス削除
+        try {
+            $this->remove($tGroupTree);
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }

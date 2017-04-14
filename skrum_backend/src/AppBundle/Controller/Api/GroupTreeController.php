@@ -48,4 +48,38 @@ class GroupTreeController extends BaseController
 
         return array('result' => 'OK');
     }
+
+    /**
+     * 所属先グループ削除
+     *
+     * @Rest\Delete("/groups/{groupId}/paths/{groupTreeId}.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $groupId グループID
+     * @param $groupTreeId グループツリーID
+     * @return array
+     */
+    public function deleteGroupPathAction(Request $request, $groupId, $groupTreeId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ存在チェック
+        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+
+        // グループパス存在チェック
+        $tGroupTree = $this->getDBExistanceLogic()->checkGroupPathExistance($groupTreeId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkGroupOperation($auth->getUserId(), $groupId);
+        if (!$checkResult) {
+            throw new PermissionException('グループ操作権限がありません');
+        }
+
+        // グループパス削除処理
+        $groupTreeService = $this->getGroupTreeService();
+        $groupTreeService->deleteGroupPath($tGroupTree, $groupId);
+
+        return array('result' => 'OK');
+    }
 }
