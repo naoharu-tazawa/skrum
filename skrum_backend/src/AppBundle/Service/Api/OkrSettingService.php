@@ -59,4 +59,28 @@ class OkrSettingService extends BaseService
             throw new SystemException($e->getMessage());
         }
     }
+
+    /**
+     * OKR公開設定変更
+     *
+     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param string $disclosureType 公開種別
+     * @return void
+     */
+    public function changeDisclosure($tOkr, $disclosureType)
+    {
+        // 更新対象OKRの公開種別とリクエストJSONで指定された公開種別が一致する場合、更新処理を行わない
+        if ($tOkr->getDisclosureType() == $disclosureType) {
+            return;
+        }
+
+        // OKR更新
+        $tOkr->setDisclosureType($disclosureType);
+
+        try {
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }

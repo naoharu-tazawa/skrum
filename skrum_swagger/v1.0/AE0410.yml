@@ -1,0 +1,50 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /okrs/{okrId}/changedisclosure.json:
+    put:
+      description: OKR公開設定変更
+      parameters:
+        -
+          name: okrId
+          in: path
+          type: string
+          description: OKRID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description: 変更後公開種別
+          required: true
+          schema:
+            type: object
+            properties:
+              disclosureType:
+                type: string
+            required:
+              - disclosureType
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

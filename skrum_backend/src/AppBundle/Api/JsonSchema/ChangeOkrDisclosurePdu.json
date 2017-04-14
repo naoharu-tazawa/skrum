@@ -1,0 +1,12 @@
+{
+  "title": "OKR公開設定変更",
+  "type": "object",
+  "properties": {
+    "disclosureType": {
+      "title": "公開種別",
+      "enum": ["1", "2", "3", "4", "5"]
+    }
+  },
+  "required": ["disclosureType"],
+  "additionalProperties": false
+}
