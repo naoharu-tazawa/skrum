@@ -23,7 +23,21 @@ class BasicOkrDTO
      *
      * @JSON\Type("string")
      */
+    private $okrType;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
     private $okrName;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $okrDetail;
 
     /**
      * @var integer
@@ -103,6 +117,20 @@ class BasicOkrDTO
     private $ownerCompanyName;
 
     /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d'>")
+     */
+    private $startDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d'>")
+     */
+    private $endDate;
+
+    /**
      * @var string
      *
      * @JSON\Type("string")
@@ -155,6 +183,30 @@ class BasicOkrDTO
     }
 
     /**
+     * Set okrType
+     *
+     * @param string $okrType
+     *
+     * @return BasicOkrDTO
+     */
+    public function setOkrType($okrType)
+    {
+        $this->okrType = $okrType;
+
+        return $this;
+    }
+
+    /**
+     * Get okrType
+     *
+     * @return string
+     */
+    public function getOkrType()
+    {
+        return $this->okrType;
+    }
+
+    /**
      * Set okrName
      *
      * @param string $okrName
@@ -176,6 +228,30 @@ class BasicOkrDTO
     public function getOkrName()
     {
         return $this->okrName;
+    }
+
+    /**
+     * Set okrDetail
+     *
+     * @param string $okrDetail
+     *
+     * @return BasicOkrDTO
+     */
+    public function setOkrDetail($okrDetail)
+    {
+        $this->okrDetail = $okrDetail;
+
+        return $this;
+    }
+
+    /**
+     * Get okrDetail
+     *
+     * @return string
+     */
+    public function getOkrDetail()
+    {
+        return $this->okrDetail;
     }
 
     /**
@@ -440,6 +516,54 @@ class BasicOkrDTO
     public function getOwnerCompanyName()
     {
         return $this->ownerCompanyName;
+    }
+
+    /**
+     * Set startDate
+     *
+     * @param \DateTime $startDate
+     *
+     * @return BasicOkrDTO
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * Get startDate
+     *
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * Set endDate
+     *
+     * @param \DateTime $endDate
+     *
+     * @return BasicOkrDTO
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * Get endDate
+     *
+     * @return \DateTime
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
     }
 
     /**

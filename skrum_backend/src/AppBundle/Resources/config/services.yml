@@ -82,6 +82,10 @@ services:
         class: AppBundle\Service\Api\OkrService
         arguments: ['@service_container']
 
+    api.okr_details_service:
+        class: AppBundle\Service\Api\OkrDetailsService
+        arguments: ['@service_container']
+
     api.okr_map_service:
         class: AppBundle\Service\Api\OkrMapService
         arguments: ['@service_container']
