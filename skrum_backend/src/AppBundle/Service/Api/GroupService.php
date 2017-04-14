@@ -9,6 +9,7 @@ use AppBundle\Entity\MGroup;
 use AppBundle\Entity\TGroupTree;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
+use AppBundle\Utils\DBConstant;
 
 /**
  * グループサービスクラス
@@ -154,10 +155,11 @@ class GroupService extends BaseService
     /**
      * グループ削除
      *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
      * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
      * @return void
      */
-    public function deleteGroup($mGroup)
+    public function deleteGroup($auth, $mGroup)
     {
         // トランザクション開始
         $this->beginTransaction();
@@ -171,10 +173,32 @@ class GroupService extends BaseService
             $tGroupTreeRepos = $this->getTGroupTreeRepository();
             $tGroupTreeRepos->deleteAllPaths($mGroup->getGroupId());
 
-            // ToDo:要検討
             // グループが所有する全てのOKR、及びそれに紐づく全てのOKR、OKRアクティビティを削除
-            // $tOkrRepos = $this->getTOkrRepository();
-            // $tOkrArray = $tOkrRepos->getGroupObjectivesAndKeyResults($groupId, $timeframeId, $companyId);
+            $tTimeframeRepos = $this->getTTimeframeRepository();
+            $tTimeframeArray = $tTimeframeRepos->findBy(array('company' => $auth->getCompanyId()), array('timeframeId' => 'DESC'));
+            $tOkrRepos = $this->getTOkrRepository();
+            $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
+            foreach ($tTimeframeArray as $tTimeframe) {
+                $tOkrArray = $tOkrRepos->getGroupObjectivesAndKeyResults($mGroup->getGroupId(), $tTimeframe->getTimeframeId(), $auth->getCompanyId());
+
+                // キーリザルトから削除
+                foreach ($tOkrArray as $tOkrKeyResult) {
+                    if (array_key_exists('keyResult', $tOkrKeyResult)) {
+                        if ($tOkrKeyResult['keyResult'] != null) {
+                            $this->deleteOkrs($auth, $tOkrKeyResult['keyResult'], $tOkrRepos, $okrAchievementRateLogic);
+                        }
+                    }
+                }
+
+                // キーリザルト削除後に目標を削除
+                foreach ($tOkrArray as $tOkrObjective) {
+                    if (array_key_exists('objective', $tOkrObjective)) {
+                        if ($tOkrObjective['objective'] != null) {
+                            $this->deleteOkrs($auth, $tOkrObjective['objective'], $tOkrRepos, $okrAchievementRateLogic);
+                        }
+                    }
+                }
+            }
 
             // グループ削除
             $this->remove($mGroup);
@@ -185,5 +209,27 @@ class GroupService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+    }
+
+    /**
+     * OKR削除
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param \AppBundle\Entity\TOkr $tOkr 削除対象OKRエンティティ
+     * @param \AppBundle\Repository\TOkrRepository $tOkrRepos OKRリポジトリ
+     * @param \AppBundle\Logic\OkrAchievementRateLogic $okrAchievementRateLogic OKR達成率ロジック
+     * @return void
+     */
+    private function deleteOkrs($auth, $tOkr, $tOkrRepos, $okrAchievementRateLogic)
+    {
+        // 達成率を再計算
+        $tOkr->setWeightedAverageRatio(0);
+        $tOkr->setRatioLockedFlg(DBConstant::FLG_TRUE);
+        $this->flush();
+        $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), true);
+
+        // 削除対象OKRとそれに紐づくOKRを全て削除する
+        $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId());
+        $this->flush();
     }
 }

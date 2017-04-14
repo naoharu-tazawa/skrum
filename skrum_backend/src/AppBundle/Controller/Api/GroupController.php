@@ -172,7 +172,7 @@ class GroupController extends BaseController
 
         // グループ削除処理
         $groupService = $this->getGroupService();
-        $groupService->deleteGroup($mGroup);
+        $groupService->deleteGroup($auth, $mGroup);
 
         return array('result' => 'OK');
     }
