@@ -2,7 +2,22 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import SideBar from '../../common/sidebar/SideBar';
+import SideBarContainer from '../../navigation/sidebar/SideBarContainer';
+import HeaderContainer from '../../navigation/header/HeaderContainer';
+
+const style = {
+  layoutBase: {
+    display: 'flex',
+    width: '100%',
+    height: '100vh',
+  },
+  layoutSide: {
+    width: '200px',
+  },
+  layoutMain: {
+    width: '100%',
+  },
+};
 
 class UserOnly extends Component {
   static propTypes = {
@@ -24,10 +39,16 @@ class UserOnly extends Component {
   }
 
   render() {
-    return (<div>
-      <SideBar />
-      {this.props.children}
-    </div>);
+    return (
+      <div style={style.layoutBase}>
+        <div style={style.layoutSide}>
+          <SideBarContainer />
+        </div>
+        <main style={style.layoutMain}>
+          <HeaderContainer />
+          {this.props.children}
+        </main>
+      </div>);
   }
 }
 
