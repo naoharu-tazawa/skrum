@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import SideBar from '../../common/component/SideBar';
+import SideBar from '../../common/sidebar/SideBar';
 import { logout } from '../../auth/action';
 
 const defaultWrapperStyle = {
@@ -43,6 +43,7 @@ class App extends Component {
     { title: 'menu2', urlOrFunc: '/hoge', category: 'some' },
     { title: 'menu3', urlOrFunc: this.props.handleLogout },
   ];
+
   renderAuthButton() {
     if (!this.props.auth.isLoggedIn) {
       return (<Link className="mdl-navigation__link" to="/login">ログイン</Link>);

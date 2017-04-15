@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
@@ -10,11 +11,6 @@ const style = {
     overflow: 'hidden',
     color: '#fff',
   },
-  isOpen: {
-    //width: '100%',
-  },
-  sideNavMenu: {
-  },
   sideNavTitle: {
     position: 'relative',
     padding: '10px 13px',
@@ -25,11 +21,6 @@ const style = {
     top: '14px',
     left: '42px',
     display: 'block',
-  },
-  sideNavAdviser: {
-    padding: '12px',
-    borderBottom: '1px solid #fff',
-    boxSizing: 'border-box',
   },
   isHide: {
     display: 'none',
@@ -111,16 +102,16 @@ const style = {
 class SideBar extends Component {
 
   static propTypes = {
-    isOpen: PropTypes.bool,
-    barItems: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string,
-        urlOrFunc: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-        category: PropTypes.string,
-        isActive: PropTypes.bool,
-        isNew: PropTypes.bool,
-      }),
-    ),
+    isOpen: PropTypes.bool.isRequired,
+    userName: PropTypes.string.isRequired,
+    companyName: PropTypes.string.isRequired,
+    sections: PropTypes.arrayOf(PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      items: PropTypes.arrayOf(PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        imgSrc: PropTypes.string.isRequired,
+      })).isRequired,
+    })).isRequired,
   };
 
   static defaultProps = {
@@ -149,8 +140,8 @@ class SideBar extends Component {
     return navItemStyle;
   }
 
-  static checkNaviOpen(isOpen) {
-    if (isOpen) {
+  static getBaseStyle() {
+    if (this.props.isOpen) {
       return (Object.assign({}, style.sideNav, style.isOpen));
     }
     return style.sideNav;
@@ -176,11 +167,11 @@ class SideBar extends Component {
   }
 
   static renderBarItem(barItem, index, isFunc) {
-    let linkProps
+    let linkProps;
     if (isFunc) {
-      linkProps = { to: barItem.urlOrFunc }
+      linkProps = { to: barItem.urlOrFunc };
     } else {
-      linkProps = { onClick: barItem.urlOrFunc }
+      linkProps = { onClick: barItem.urlOrFunc };
     }
     const link = (
       <Link
@@ -192,9 +183,9 @@ class SideBar extends Component {
         {barItem.title}
         {SideBar.renderNotice(barItem.isNew)}
       </Link>
-    )
+    );
     if (barItem.category === 'main') {
-      return link
+      return link;
     }
     return (
       <li
@@ -215,7 +206,7 @@ class SideBar extends Component {
 
   render() {
     return (
-      <div style={SideBar.checkNaviOpen(this.props.isOpen)}>
+      <div style={SideBar.getBaseStyle()}>
         <ul style={style.sideNavMenu}>
           {this.renderBarItems()}
         </ul>

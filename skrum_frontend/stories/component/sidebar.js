@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf, action } from '@kadira/storybook';
-import SideBar from '../../src/common/component/SideBar';
+import SideBar from '../../src/common/sidebar/SideBar';
 
 const style = {
   padding: '20px',

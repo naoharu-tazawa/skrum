@@ -1,6 +1,8 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import SideBar from '../../common/sidebar/SideBar';
 
 class UserOnly extends Component {
   static propTypes = {
@@ -14,15 +16,18 @@ class UserOnly extends Component {
   }
 
   componentWillMount() {
-    UserOnly.transfer(this.props);
+    // UserOnly.transfer(this.props);
   }
 
-  componentWillUpdate(nextProps) {
-    UserOnly.transfer(nextProps);
+  componentWillUpdate() {
+    // UserOnly.transfer(nextProps);
   }
 
   render() {
-    return <div>{this.props.children}</div>;
+    return (<div>
+      <SideBar />
+      {this.props.children}
+    </div>);
   }
 }
 
