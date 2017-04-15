@@ -1,9 +1,11 @@
 import { configure } from '@kadira/storybook';
+import '../public/css/reset.css';
+import '../public/css/base.css';
 
 function loadStories() {
   require('../stories/auth');
+  require('../stories/navigation/index');
   require('../stories/component/menubar');
-  require('../stories/component/sidebar');
   require('../stories/component/okr-bar');
   require('../stories/component/kr-bar');
   require('../stories/component/kr-weighting-bar');

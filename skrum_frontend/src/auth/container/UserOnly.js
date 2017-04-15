@@ -1,6 +1,23 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import SideBarContainer from '../../navigation/sidebar/SideBarContainer';
+import HeaderContainer from '../../navigation/header/HeaderContainer';
+
+const style = {
+  layoutBase: {
+    display: 'flex',
+    width: '100%',
+    height: '100vh',
+  },
+  layoutSide: {
+    width: '200px',
+  },
+  layoutMain: {
+    width: '100%',
+  },
+};
 
 class UserOnly extends Component {
   static propTypes = {
@@ -14,15 +31,24 @@ class UserOnly extends Component {
   }
 
   componentWillMount() {
-    UserOnly.transfer(this.props);
+    // UserOnly.transfer(this.props);
   }
 
-  componentWillUpdate(nextProps) {
-    UserOnly.transfer(nextProps);
+  componentWillUpdate() {
+    // UserOnly.transfer(nextProps);
   }
 
   render() {
-    return <div>{this.props.children}</div>;
+    return (
+      <div style={style.layoutBase}>
+        <div style={style.layoutSide}>
+          <SideBarContainer />
+        </div>
+        <main style={style.layoutMain}>
+          <HeaderContainer />
+          {this.props.children}
+        </main>
+      </div>);
   }
 }
 

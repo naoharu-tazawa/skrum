@@ -1,10 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
-import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
 import GroupBar from '../component/GroupBar';
 
-const gap = '1em';
 const headerHeight = '2em';
 
 const style = {
