@@ -37,4 +37,26 @@ class SearchController extends BaseController
 
         return $userSearchDTOArray;
     }
+
+    /**
+     * グループ検索
+     *
+     * @Rest\Get("/groups/search.{_format}")
+     * @param $request リクエストオブジェクト
+     * @return array
+     */
+    public function searchGroupAction(Request $request)
+    {
+        // リクエストパラメータを取得
+        $keyword = $request->get('q');
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ検索処理
+        $searchService = $this->getSearchService();
+        $groupSearchDTOArray = $searchService->searchGroup($auth, $keyword);
+
+        return $groupSearchDTOArray;
+    }
 }

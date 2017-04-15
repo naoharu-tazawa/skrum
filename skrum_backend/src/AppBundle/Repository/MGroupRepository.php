@@ -58,4 +58,25 @@ class MGroupRepository extends BaseRepository
 
         return array('mGroup' => $resultArray[0], 'mUser' => $resultArray[1]);
     }
+
+    /**
+     * グループ検索
+     *
+     * @param string $keyword 検索ワード
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function searchGroup($keyword, $companyId)
+    {
+        $qb = $this->createQueryBuilder('mg');
+        $qb->select('mg.groupId', 'mg.groupName')
+            ->where('mg.company = :companyId')
+            ->andWhere('mg.companyFlg = :companyFlg')
+            ->andWhere('mg.groupName LIKE :groupName')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('companyFlg', DBConstant::FLG_FALSE)
+            ->setParameter('groupName', $keyword . '%');
+
+        return $qb->getQuery()->getResult();
+    }
 }

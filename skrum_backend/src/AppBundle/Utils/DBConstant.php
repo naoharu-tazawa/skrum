@@ -80,27 +80,27 @@ class DBConstant
     const OKR_STATUS_CLOSED = '2';
 
     /**
-     * OKR公開設定（全体公開）
+     * OKR公開種別（全体公開）
      */
     const OKR_DISCLOSURE_TYPE_OVERALL = '1';
 
     /**
-     * OKR公開設定（グループ公開）
+     * OKR公開種別（グループ公開）
      */
     const OKR_DISCLOSURE_TYPE_GROUP = '2';
 
     /**
-     * OKR公開設定（管理者公開）
+     * OKR公開種別（管理者公開）
      */
     const OKR_DISCLOSURE_TYPE_ADMIN = '3';
 
     /**
-     * OKR公開設定（グループ管理者公開）
+     * OKR公開種別（グループ管理者公開）
      */
     const OKR_DISCLOSURE_TYPE_GROUP_ADMIN = '4';
 
     /**
-     * OKR公開設定（本人のみ公開）
+     * OKR公開種別（本人のみ公開）
      */
     const OKR_DISCLOSURE_TYPE_SELF = '5';
 
