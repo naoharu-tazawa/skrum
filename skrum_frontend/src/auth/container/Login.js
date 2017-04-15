@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import LoginForm from '../component/LoginForm';
 import { postLogin } from '../action';
 import { errorType } from '../../util/PropUtil';
-import { shadow } from '../../common/style/guide';
 import { imgSrc } from '../../util/ResourceUtil';
 
 const defaultStyle = {
@@ -12,7 +11,7 @@ const defaultStyle = {
   backgroundSize: 'cover',
 };
 
-const shadowStyle = Object.assign({ height: '100%' }, shadow);
+const shadowStyle = Object.assign({ height: '100%' }, {});
 
 const containerStyle = {
   width: '300px',
