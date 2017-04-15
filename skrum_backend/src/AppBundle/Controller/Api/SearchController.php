@@ -81,4 +81,27 @@ class SearchController extends BaseController
 
         return $groupTreeSearchDTOArray;
     }
+
+    /**
+     * OKR検索
+     *
+     * @Rest\Get("/okrs/search.{_format}")
+     * @param $request リクエストオブジェクト
+     * @return array
+     */
+    public function searchOkrsAction(Request $request)
+    {
+        // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
+        $keyword = $request->get('q');
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ検索処理
+        $searchService = $this->getSearchService();
+        $okrSearchDTOArray = $searchService->searchOkr($auth, $keyword, $timeframeId);
+
+        return $okrSearchDTOArray;
+    }
 }

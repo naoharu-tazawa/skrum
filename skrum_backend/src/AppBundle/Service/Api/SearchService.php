@@ -6,6 +6,7 @@ use AppBundle\Service\BaseService;
 use AppBundle\Api\ResponseDTO\UserSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupTreeSearchDTO;
+use AppBundle\Api\ResponseDTO\OkrSearchDTO;
 
 /**
  * 検索サービスクラス
@@ -99,5 +100,34 @@ class SearchService extends BaseService
         }
 
         return $groupTreeSearchDTOArray;
+    }
+
+    /**
+     * OKR検索
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param string $keyword 検索ワード
+     * @return array
+     */
+    public function searchOkr($auth, $keyword, $timeframeId)
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // OKR検索
+        $tOkrRepos = $this->getTOkrRepository();
+        $tOkrArray = $tOkrRepos->searchOkr($escapedKeyword, $timeframeId, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        $okrSearchDTOArray = array();
+        foreach ($tOkrArray as $tOkr) {
+            $okrSearchDTO = new OkrSearchDTO();
+            $okrSearchDTO->setOkrId($tOkr['okrId']);
+            $okrSearchDTO->setOkrName($tOkr['name']);
+
+            $okrSearchDTOArray[] = $okrSearchDTO;
+        }
+
+        return $okrSearchDTOArray;
     }
 }

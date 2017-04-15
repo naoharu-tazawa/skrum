@@ -1,0 +1,44 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /okrs/search.json?{tfid}&{q}:
+    get:
+      description: OKR検索
+      parameters:
+        -
+          name: tfid
+          in: path
+          type: string
+          description: タイムフレームID
+          required: true
+        -
+          name: q
+          in: path
+          type: string
+          description: 検索ワード
+          required: true
+      responses:
+        200:
+          description: 検索結果
+          schema:
+            type: object
+            properties:
+              okrId:
+                type: integer
+              okrName:
+                type: string
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

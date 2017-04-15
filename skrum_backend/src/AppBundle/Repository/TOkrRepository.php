@@ -33,6 +33,30 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
+     * OKR検索
+     *
+     * @param string $keyword 検索ワード
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function searchOkr($keyword, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to');
+        $qb->select('to.okrId', 'to.name')
+            ->innerJoin('AppBundle:TTimeframe', 'tt', 'WITH', 'to.timeframe = tt.timeframeId')
+            ->where('to.timeframe = :timeframeId')
+            ->andWhere('tt.company = :companyId')
+            ->andWhere('to.type <> :type')
+            ->andWhere('to.name LIKE :name')
+            ->setParameter('timeframeId', $timeframeId)
+            ->setParameter('companyId', $companyId)
+            ->setParameter('type', DBConstant::OKR_TYPE_ROOT_NODE)
+            ->setParameter('name', $keyword . '%');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * 3世代OKRを取得
      *
      * @param $okrId OKRID
