@@ -5,6 +5,7 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Api\ResponseDTO\UserSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupSearchDTO;
+use AppBundle\Api\ResponseDTO\GroupTreeSearchDTO;
 
 /**
  * 検索サービスクラス
@@ -69,5 +70,34 @@ class SearchService extends BaseService
         }
 
         return $groupSearchDTOArray;
+    }
+
+    /**
+     * グループツリーパス検索
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param string $keyword 検索ワード
+     * @return array
+     */
+    public function searchGroupTree($auth, $keyword)
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // グループ検索
+        $mGroupRepos = $this->getMGroupRepository();
+        $tGroupTreeArray = $mGroupRepos->searchGroupTree($escapedKeyword, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        $groupTreeSearchDTOArray = array();
+        foreach ($tGroupTreeArray as $tGroupTree) {
+            $groupTreeSearchDTO = new GroupTreeSearchDTO();
+            $groupTreeSearchDTO->setGroupPathId($tGroupTree['id']);
+            $groupTreeSearchDTO->setGroupPathName($tGroupTree['groupTreePathName']);
+
+            $groupTreeSearchDTOArray[] = $groupTreeSearchDTO;
+        }
+
+        return $groupTreeSearchDTOArray;
     }
 }

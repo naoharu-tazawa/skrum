@@ -79,4 +79,26 @@ class MGroupRepository extends BaseRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * グループツリーパス検索
+     *
+     * @param string $keyword 検索ワード
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function searchGroupTree($keyword, $companyId)
+    {
+        $qb = $this->createQueryBuilder('mg');
+        $qb->select('tgt.id', 'tgt.groupTreePathName')
+            ->innerJoin('AppBundle:TGroupTree', 'tgt', 'WITH', 'mg.groupId = tgt.group')
+            ->where('mg.company = :companyId')
+            ->andWhere('mg.companyFlg = :companyFlg')
+            ->andWhere('mg.groupName LIKE :groupName')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('companyFlg', DBConstant::FLG_FALSE)
+            ->setParameter('groupName', $keyword . '%');
+
+        return $qb->getQuery()->getResult();
+    }
 }
