@@ -61,6 +61,28 @@ class SearchController extends BaseController
     }
 
     /**
+     * オーナー検索
+     *
+     * @Rest\Get("/v1/owners/search.{_format}")
+     * @param $request リクエストオブジェクト
+     * @return array
+     */
+    public function searchOwnerAction(Request $request)
+    {
+        // リクエストパラメータを取得
+        $keyword = $request->get('q');
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ検索処理
+        $searchService = $this->getSearchService();
+        $ownerSearchDTOArray = $searchService->searchOwner($auth, $keyword);
+
+        return $ownerSearchDTOArray;
+    }
+
+    /**
      * 所属先グループ検索
      *
      * @Rest\Get("/v1/paths/search.{_format}")

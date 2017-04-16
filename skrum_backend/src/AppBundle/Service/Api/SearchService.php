@@ -7,6 +7,8 @@ use AppBundle\Api\ResponseDTO\UserSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupTreeSearchDTO;
 use AppBundle\Api\ResponseDTO\OkrSearchDTO;
+use AppBundle\Api\ResponseDTO\OwnerSearchDTO;
+use AppBundle\Utils\DBConstant;
 
 /**
  * 検索サービスクラス
@@ -71,6 +73,65 @@ class SearchService extends BaseService
         }
 
         return $groupSearchDTOArray;
+    }
+
+    /**
+     * オーナー検索
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param string $keyword 検索ワード
+     * @return array
+     */
+    public function searchOwner($auth, $keyword)
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        $ownerSearchDTOArray = array();
+
+        // ユーザ検索
+        $mUserRepos = $this->getMUserRepository();
+        $mUserArray = $mUserRepos->searchUser($escapedKeyword, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        foreach ($mUserArray as $mUser) {
+            $ownerSearchDTO = new OwnerSearchDTO();
+            $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
+            $ownerSearchDTO->setUserId($mUser['userId']);
+            $ownerSearchDTO->setUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
+
+            $ownerSearchDTOArray[] = $ownerSearchDTO;
+        }
+
+        // グループ検索
+        $mGroupRepos = $this->getMGroupRepository();
+        $mGroupArray = $mGroupRepos->searchGroup($escapedKeyword, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        foreach ($mGroupArray as $mGroup) {
+            $ownerSearchDTO = new OwnerSearchDTO();
+            $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
+            $ownerSearchDTO->setGroupId($mGroup['groupId']);
+            $ownerSearchDTO->setGroupName($mGroup['groupName']);
+
+            $ownerSearchDTOArray[] = $ownerSearchDTO;
+        }
+
+        // 会社検索
+        $mCompanyRepos = $this->getMCompanyRepository();
+        $mCompanyArray = $mCompanyRepos->searchCompany($escapedKeyword, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        foreach ($mCompanyArray as $mCompany) {
+            $ownerSearchDTO = new OwnerSearchDTO();
+            $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
+            $ownerSearchDTO->setCompanyId($mCompany['companyId']);
+            $ownerSearchDTO->setCompanyName($mCompany['companyName']);
+
+            $ownerSearchDTOArray[] = $ownerSearchDTO;
+        }
+
+        return $ownerSearchDTOArray;
     }
 
     /**
