@@ -2,22 +2,22 @@
 
 namespace AppBundle\Service\Api;
 
-use \Firebase\JWT\JWT;
 use AppBundle\Service\BaseService;
-use AppBundle\Entity\MUser;
-use AppBundle\Entity\MCompany;
-use AppBundle\Entity\MGroup;
-use AppBundle\Entity\MRoleAssignment;
-use AppBundle\Entity\TGroupTree;
-use AppBundle\Entity\TPreUser;
-use AppBundle\Entity\TAuthorization;
+use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\AuthenticationException;
 use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Exception\SystemException;
-use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\DateUtility;
-use AppBundle\Exception\ApplicationException;
+use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\MCompany;
+use AppBundle\Entity\MGroup;
+use AppBundle\Entity\MRoleAssignment;
+use AppBundle\Entity\MUser;
+use AppBundle\Entity\TAuthorization;
+use AppBundle\Entity\TGroupTree;
+use AppBundle\Entity\TPreUser;
+use \Firebase\JWT\JWT;
 
 /**
  * ログインサービスクラス

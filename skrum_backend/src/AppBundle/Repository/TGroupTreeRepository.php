@@ -2,8 +2,6 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Utils\DBConstant;
-
 /**
  * TGroupTreeリポジトリクラス
  *

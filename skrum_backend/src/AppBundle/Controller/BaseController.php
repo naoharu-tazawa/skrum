@@ -3,13 +3,13 @@
 namespace AppBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use JsonSchema\Validator;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
-use AppBundle\Utils\LoggerManager;
+use Symfony\Component\Form\FormInterface;
 use AppBundle\Exception\JsonSchemaException;
+use AppBundle\Utils\LoggerManager;
+use JsonSchema\Validator;
 
 /**
  * ベースコントローラ（被継承クラス）

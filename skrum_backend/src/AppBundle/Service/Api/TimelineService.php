@@ -3,10 +3,10 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Api\ResponseDTO\PostDTO;
-use AppBundle\Entity\TPost;
-use AppBundle\Utils\DateUtility;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\DateUtility;
+use AppBundle\Entity\TPost;
+use AppBundle\Api\ResponseDTO\PostDTO;
 
 /**
  * タイムラインサービスクラス

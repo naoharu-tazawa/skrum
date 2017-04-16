@@ -5,11 +5,11 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\TGroupTree;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
-use AppBundle\Utils\DBConstant;
 
 /**
  * グループサービスクラス

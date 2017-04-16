@@ -4,14 +4,14 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\InvalidParameterException;
-use AppBundle\Controller\BaseController;
-use AppBundle\Api\ResponseDTO\TopDTO;
+use AppBundle\Utils\Constant;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\TopDTO;
 use AppBundle\Api\ResponseDTO\UserBasicsDTO;
 use AppBundle\Api\ResponseDTO\GroupBasicsDTO;
-use AppBundle\Utils\Constant;
 use AppBundle\Api\ResponseDTO\CompanyBasicsDTO;
 
 /**

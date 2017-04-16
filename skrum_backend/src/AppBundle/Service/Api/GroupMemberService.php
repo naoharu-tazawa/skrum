@@ -2,14 +2,14 @@
 
 namespace AppBundle\Service\Api;
 
-use AppBundle\Entity\TGroupMember;
-use AppBundle\Exception\SystemException;
-use AppBundle\Exception\ApplicationException;
 use AppBundle\Service\BaseService;
-use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
+use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\DoubleOperationException;
-use AppBundle\Api\ResponseDTO\NestedObject\GroupDTO;
+use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TGroupMember;
+use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\GroupDTO;
 
 /**
  * グループメンバーサービスクラス

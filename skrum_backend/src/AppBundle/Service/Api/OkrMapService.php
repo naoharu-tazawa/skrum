@@ -3,20 +3,11 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Exception\ApplicationException;
-use AppBundle\Exception\SystemException;
-use AppBundle\Entity\MGroup;
-use AppBundle\Entity\TOkr;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\Constant;
-use AppBundle\Utils\DateUtility;
-use AppBundle\Entity\TOkrActivity;
-use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\GroupAlignmentsDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\AlignmentsInfoDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\UserAlignmentsDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\CompanyAlignmentsDTO;
+use AppBundle\Entity\TOkr;
 use AppBundle\Api\ResponseDTO\ThreeGensOkrMapDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 
 /**
  * OKRマップサービスクラス

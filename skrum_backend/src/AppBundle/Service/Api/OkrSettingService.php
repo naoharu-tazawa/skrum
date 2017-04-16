@@ -4,8 +4,8 @@ namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\SystemException;
-use AppBundle\Entity\TOkr;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TOkr;
 
 /**
  * OKR設定サービスクラス

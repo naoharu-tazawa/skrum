@@ -2,13 +2,13 @@
 
 namespace AppBundle\Utils;
 
+use AppBundle\Utils\Constant;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use AppBundle\Utils\Constant;
 
 /**
  * ロガーインスタンス管理クラス
- * （シングルトン実装）
+ * （シングルトンパターン実装）
  *
  * @author naoharu.tazawa
  */

@@ -3,8 +3,8 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Entity\MUser;
 use AppBundle\Entity\MCompany;
+use AppBundle\Entity\MUser;
 use AppBundle\Api\ResponseDTO\SampleDTO;
 
 /**

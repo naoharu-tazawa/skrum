@@ -3,14 +3,14 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Entity\TPreUser;
 use AppBundle\Exception\ApplicationException;
-use AppBundle\Exception\SystemException;
 use AppBundle\Exception\DoubleOperationException;
-use AppBundle\Utils\DBConstant;
-use AppBundle\Entity\TTimeframe;
-use AppBundle\Utils\DateUtility;
+use AppBundle\Exception\SystemException;
 use AppBundle\Utils\Constant;
+use AppBundle\Utils\DateUtility;
+use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TPreUser;
+use AppBundle\Entity\TTimeframe;
 
 /**
  * ユーザ設定サービスクラス

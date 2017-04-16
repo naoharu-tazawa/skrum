@@ -3,12 +3,12 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Api\ResponseDTO\UserSearchDTO;
+use AppBundle\Utils\DBConstant;
 use AppBundle\Api\ResponseDTO\GroupSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupTreeSearchDTO;
 use AppBundle\Api\ResponseDTO\OkrSearchDTO;
 use AppBundle\Api\ResponseDTO\OwnerSearchDTO;
-use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\UserSearchDTO;
 
 /**
  * 検索サービスクラス
