@@ -19,7 +19,7 @@ class UserSettingController extends BaseController
     /**
      * ユーザ招待メール送信
      *
-     * @Rest\Post("/invite.{_format}")
+     * @Rest\Post("/v1/invite.{_format}")
      * @Permission(value="user_add")
      * @param $request リクエストオブジェクト
      * @return array
@@ -50,7 +50,7 @@ class UserSettingController extends BaseController
     /**
      * 初期設定登録
      *
-     * @Rest\Post("/companies/{companyId}/establish.{_format}")
+     * @Rest\Post("/v1/companies/{companyId}/establish.{_format}")
      * @param $request リクエストオブジェクト
      * @param $companyId 会社ID
      * @return array
@@ -82,7 +82,7 @@ class UserSettingController extends BaseController
     /**
      * 追加ユーザ初期設定登録
      *
-     * @Rest\Post("/users/{userId}/establish.{_format}")
+     * @Rest\Post("/v1/users/{userId}/establish.{_format}")
      * @param $request リクエストオブジェクト
      * @param $userId ユーザID
      * @return array

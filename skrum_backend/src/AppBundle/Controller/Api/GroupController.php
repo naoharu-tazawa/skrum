@@ -19,7 +19,7 @@ class GroupController extends BaseController
     /**
      * グループ新規登録
      *
-     * @Rest\Post("/groups.{_format}")
+     * @Rest\Post("/v1/groups.{_format}")
      * @param $request リクエストオブジェクト
      * @return array
      */
@@ -45,7 +45,7 @@ class GroupController extends BaseController
     /**
      * ユーザ所属グループ一覧取得
      *
-     * @Rest\Get("/users/{userId}/groups.{_format}")
+     * @Rest\Get("/v1/users/{userId}/groups.{_format}")
      * @param $request リクエストオブジェクト
      * @param $userId ユーザID
      * @return array
@@ -86,7 +86,7 @@ class GroupController extends BaseController
     /**
      * グループ基本情報変更
      *
-     * @Rest\Put("/groups/{groupId}.{_format}")
+     * @Rest\Put("/v1/groups/{groupId}.{_format}")
      * @param $request リクエストオブジェクト
      * @param $groupId グループID
      * @return array
@@ -116,7 +116,7 @@ class GroupController extends BaseController
     /**
      * グループリーダー変更
      *
-     * @Rest\Put("/groups/{groupId}/leaders/{userId}.{_format}")
+     * @Rest\Put("/v1/groups/{groupId}/leaders/{userId}.{_format}")
      * @param $request リクエストオブジェクト
      * @param $groupId グループID
      * @param $userId ユーザID
@@ -150,7 +150,7 @@ class GroupController extends BaseController
     /**
      * グループ削除
      *
-     * @Rest\Delete("/groups/{groupId}.{_format}")
+     * @Rest\Delete("/v1/groups/{groupId}.{_format}")
      * @param $request リクエストオブジェクト
      * @param $groupId グループID
      * @return array

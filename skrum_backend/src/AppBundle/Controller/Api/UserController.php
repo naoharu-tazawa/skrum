@@ -19,7 +19,7 @@ class UserController extends BaseController
     /**
      * ユーザ基本情報変更
      *
-     * @Rest\Put("/users/{userId}.{_format}")
+     * @Rest\Put("/v1/users/{userId}.{_format}")
      * @param $request リクエストオブジェクト
      * @param $userId ユーザID
      * @return array
@@ -49,7 +49,7 @@ class UserController extends BaseController
     /**
      * ユーザ削除
      *
-     * @Rest\Delete("/users/{userId}.{_format}")
+     * @Rest\Delete("/v1/users/{userId}.{_format}")
      * @param $request リクエストオブジェクト
      * @param $userId ユーザID
      * @return array

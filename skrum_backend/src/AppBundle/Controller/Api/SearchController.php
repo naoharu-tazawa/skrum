@@ -19,7 +19,7 @@ class SearchController extends BaseController
     /**
      * ユーザ検索
      *
-     * @Rest\Get("/users/search.{_format}")
+     * @Rest\Get("/v1/users/search.{_format}")
      * @param $request リクエストオブジェクト
      * @return array
      */
@@ -41,7 +41,7 @@ class SearchController extends BaseController
     /**
      * グループ検索
      *
-     * @Rest\Get("/groups/search.{_format}")
+     * @Rest\Get("/v1/groups/search.{_format}")
      * @param $request リクエストオブジェクト
      * @return array
      */
@@ -63,7 +63,7 @@ class SearchController extends BaseController
     /**
      * 所属先グループ検索
      *
-     * @Rest\Get("/paths/search.{_format}")
+     * @Rest\Get("/v1/paths/search.{_format}")
      * @param $request リクエストオブジェクト
      * @return array
      */
@@ -85,7 +85,7 @@ class SearchController extends BaseController
     /**
      * OKR検索
      *
-     * @Rest\Get("/okrs/search.{_format}")
+     * @Rest\Get("/v1/okrs/search.{_format}")
      * @param $request リクエストオブジェクト
      * @return array
      */

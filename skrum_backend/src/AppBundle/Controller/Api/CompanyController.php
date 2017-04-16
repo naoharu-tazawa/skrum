@@ -19,7 +19,7 @@ class CompanyController extends BaseController
     /**
      * 会社基本情報変更
      *
-     * @Rest\Put("/companies/{companyId}.{_format}")
+     * @Rest\Put("/v1/companies/{companyId}.{_format}")
      * @param $request リクエストオブジェクト
      * @param $companyId 会社ID
      * @return array

@@ -79,12 +79,11 @@ class UserSettingService extends BaseService
             ->setSubject('新規ユーザ登録メール送信APIテスト件名')
             ->setBody('メールをお送りしました。24時間以内にメールに記載されたURLからご登録下さい。' . $url);
 
-        $mailer = $this->getContainer()->get('mailer');
-        $result = $mailer->send($message);
+        $result = $this->getContainer()->get('mailer')->send($message);
 
-        $transport = $mailer->getTransport();
-        $spool = $transport->getSpool();
-        $spool->flushQueue($this->getContainer()->get('swiftmailer.transport.real'));
+//         $transport = $mailer->getTransport();
+//         $spool = $transport->getSpool();
+//         $spool->flushQueue($this->getContainer()->get('swiftmailer.transport.real'));
 
         // メールを送信
         if ($result) {

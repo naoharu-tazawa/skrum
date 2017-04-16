@@ -20,7 +20,7 @@ class OkrSettingController extends BaseController
     /**
      * OKRクローズ
      *
-     * @Rest\Put("/okrs/{okrId}/close.{_format}")
+     * @Rest\Put("/v1/okrs/{okrId}/close.{_format}")
      * @param $request リクエストオブジェクト
      * @param integer $okrId OKRID
      * @return array
@@ -52,7 +52,7 @@ class OkrSettingController extends BaseController
     /**
      * OKRオープン
      *
-     * @Rest\Put("/okrs/{okrId}/open.{_format}")
+     * @Rest\Put("/v1/okrs/{okrId}/open.{_format}")
      * @param $request リクエストオブジェクト
      * @param integer $okrId OKRID
      * @return array
@@ -84,7 +84,7 @@ class OkrSettingController extends BaseController
     /**
      * OKR公開設定変更
      *
-     * @Rest\Put("/okrs/{okrId}/changedisclosure.{_format}")
+     * @Rest\Put("/v1/okrs/{okrId}/changedisclosure.{_format}")
      * @param $request リクエストオブジェクト
      * @param integer $okrId OKRID
      * @return array
@@ -123,7 +123,7 @@ class OkrSettingController extends BaseController
     /**
      * OKRオーナー変更
      *
-     * @Rest\Put("/okrs/{okrId}/changeowner.{_format}")
+     * @Rest\Put("/v1/okrs/{okrId}/changeowner.{_format}")
      * @param $request リクエストオブジェクト
      * @param integer $okrId OKRID
      * @return array

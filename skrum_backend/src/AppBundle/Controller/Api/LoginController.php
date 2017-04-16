@@ -48,7 +48,7 @@ class LoginController extends BaseController
     /**
      * ログイン
      *
-     * @Rest\Post("/login.{_format}")
+     * @Rest\Post("/v1/login.{_format}")
      * @param $request リクエストオブジェクト
      * @return array
      */
@@ -71,7 +71,7 @@ class LoginController extends BaseController
     /**
      * 新規ユーザ登録
      *
-     * @Rest\Post("/signup.{_format}")
+     * @Rest\Post("/v1/signup.{_format}")
      * @param $request リクエストオブジェクト
      * @return array
      */
@@ -94,7 +94,7 @@ class LoginController extends BaseController
     /**
      * 追加ユーザ登録
      *
-     * @Rest\Post("/join.{_format}")
+     * @Rest\Post("/v1/join.{_format}")
      * @param $request リクエストオブジェクト
      * @return array
      */

@@ -17,7 +17,7 @@ class TimeframeController extends BaseController
     /**
      * タイムフレーム一覧取得
      *
-     * @Rest\Get("/companies/{companyId}/timeframes.{_format}")
+     * @Rest\Get("/v1/companies/{companyId}/timeframes.{_format}")
      * @param $request リクエストオブジェクト
      * @param $companyId 会社ID
      * @return array
@@ -42,7 +42,7 @@ class TimeframeController extends BaseController
     /**
      * デフォルトタイムフレーム変更
      *
-     * @Rest\Put("/timeframes/{timeframeId}/setdefault.{_format}")
+     * @Rest\Put("/v1/timeframes/{timeframeId}/setdefault.{_format}")
      * @param $request リクエストオブジェクト
      * @param $timeframeId タイムフレームID
      * @return array
@@ -65,7 +65,7 @@ class TimeframeController extends BaseController
     /**
      * タイムフレーム追加
      *
-     * @Rest\Post("/timeframes.{_format}")
+     * @Rest\Post("/v1/timeframes.{_format}")
      * @param $request リクエストオブジェクト
      * @return array
      */
@@ -91,7 +91,7 @@ class TimeframeController extends BaseController
     /**
      * タイムフレーム編集
      *
-     * @Rest\Put("/timeframes/{timeframeId}.{_format}")
+     * @Rest\Put("/v1/timeframes/{timeframeId}.{_format}")
      * @param $request リクエストオブジェクト
      * @param $timeframeId タイムフレームID
      * @return array
@@ -121,7 +121,7 @@ class TimeframeController extends BaseController
     /**
      * タイムフレーム削除
      *
-     * @Rest\Delete("/timeframes/{timeframeId}.{_format}")
+     * @Rest\Delete("/v1/timeframes/{timeframeId}.{_format}")
      * @param $request リクエストオブジェクト
      * @param $timeframeId タイムフレームID
      * @return array

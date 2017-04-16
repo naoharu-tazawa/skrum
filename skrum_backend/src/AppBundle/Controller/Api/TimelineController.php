@@ -18,7 +18,7 @@ class TimelineController extends BaseController
     /**
      * タイムライン取得
      *
-     * @Rest\Get("/groups/{groupId}/posts.{_format}")
+     * @Rest\Get("/v1/groups/{groupId}/posts.{_format}")
      * @param $request リクエストオブジェクト
      * @param $groupId グループID
      * @return array
@@ -41,7 +41,7 @@ class TimelineController extends BaseController
     /**
      * コメント投稿
      *
-     * @Rest\Post("/groups/{groupId}/posts.{_format}")
+     * @Rest\Post("/v1/groups/{groupId}/posts.{_format}")
      * @param $request リクエストオブジェクト
      * @param $groupId グループID
      * @return array
@@ -71,7 +71,7 @@ class TimelineController extends BaseController
     /**
      * リプライ投稿
      *
-     * @Rest\Post("/posts/{postId}/replies.{_format}")
+     * @Rest\Post("/v1/posts/{postId}/replies.{_format}")
      * @param $request リクエストオブジェクト
      * @param postId 投稿ID
      * @return array

@@ -9,5 +9,3 @@ npm-debug.log
 yarn.lock
 .yarnclean
 
-/skrum_database/initdb/*
-!.gitkeep

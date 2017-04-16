@@ -19,7 +19,7 @@ class OkrMapController extends BaseController
     /**
      * ユーザ目標取得
      *
-     * @Rest\Get("/users/{userId}/objectives.{_format}")
+     * @Rest\Get("/v1/users/{userId}/objectives.{_format}")
      * @param $request リクエストオブジェクト
      * @param $userId ユーザID
      * @return array
@@ -51,7 +51,7 @@ class OkrMapController extends BaseController
     /**
      * グループ目標取得
      *
-     * @Rest\Get("/groups/{groupId}/objectives.{_format}")
+     * @Rest\Get("/v1/groups/{groupId}/objectives.{_format}")
      * @param $request リクエストオブジェクト
      * @param $groupId グループID
      * @return array
@@ -81,7 +81,7 @@ class OkrMapController extends BaseController
     /**
      * 会社目標取得
      *
-     * @Rest\Get("/companies/{companyId}/objectives.{_format}")
+     * @Rest\Get("/v1/companies/{companyId}/objectives.{_format}")
      * @param $request リクエストオブジェクト
      * @param $companyId 会社ID
      * @return array
@@ -113,7 +113,7 @@ class OkrMapController extends BaseController
     /**
      * 3世代OKR取得
      *
-     * @Rest\Get("/okrs/{okrId}/familyokrs.{_format}")
+     * @Rest\Get("/v1/okrs/{okrId}/familyokrs.{_format}")
      * @param $request リクエストオブジェクト
      * @param $okrId OKRID
      * @return array
