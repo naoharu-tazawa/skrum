@@ -36,13 +36,9 @@ class LoginController extends BaseController
 
         // 新規ユーザ登録メール送信処理
         $userSettingService = $this->getUserSettingService();
-        $result = $userSettingService->preregisterUser($data['emailAddress'], $data['subdomain']);
+        $userSettingService->preregisterUser($data['emailAddress'], $data['subdomain']);
 
-        if ($result) {
-            return array('result' => 'OK');
-        } else {
-            return array('result' => 'NG');
-        }
+        return array('result' => 'OK');
     }
 
     /**

@@ -38,13 +38,9 @@ class UserSettingController extends BaseController
 
         // ユーザ招待メール送信処理
         $userSettingService = $this->getUserSettingService();
-        $result = $userSettingService->preregisterUser($data['emailAddress'], $auth->getSubdomain(), $auth->getCompanyId(), $data['roleAssignmentId']);
+        $userSettingService->inviteUser($data['emailAddress'], $auth->getSubdomain(), $auth->getCompanyId(), $data['roleAssignmentId']);
 
-        if ($result) {
-            return array('result' => 'OK');
-        } else {
-            return array('result' => 'NG');
-        }
+        return array('result' => 'OK');
     }
 
     /**

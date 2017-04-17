@@ -24,11 +24,9 @@ class UserSettingService extends BaseService
      *
      * @param $emailAddress Eメールアドレス
      * @param $subdomain サブドメイン
-     * @param $companyId 会社ID（ユーザ招待の場合のみ）
-     * @param $roleAssignmentId ロール割当ID（ユーザ招待の場合のみ）
-     * @return boolean 登録結果
+     * @return void
      */
-    public function preregisterUser($emailAddress, $subdomain, $companyId = null, $roleAssignmentId = null)
+    public function preregisterUser($emailAddress, $subdomain)
     {
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
@@ -45,24 +43,7 @@ class UserSettingService extends BaseService
         $tPreUser->setEmailAddress($emailAddress);
         $tPreUser->setSubdomain($subdomain);
         $tPreUser->setUrltoken($urltoken);
-        // 会社IDが存在する場合（ユーザ招待の場合）のみ、会社IDとロール割当IDをセット
-        if ($companyId) {
-            $tPreUser->setCompanyId($companyId);
-
-            // ロール割当ID存在チェック
-            $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
-            $mRoleAssignmentArray = $mRoleAssignmentRepos->findBy(array(
-                                        'roleAssignmentId' => $roleAssignmentId,
-                                        'companyId' => $companyId
-                                    ));
-            if (count($mRoleAssignmentArray) === 0) {
-                throw new ApplicationException('ロール割当IDが存在しません');
-            }
-
-            $tPreUser->setRoleAssignmentId($roleAssignmentId);
-        } else {
-            $tPreUser->setInitialUserFlg(DBConstant::FLG_TRUE);
-        }
+        $tPreUser->setInitialUserFlg(DBConstant::FLG_TRUE);
 
         try {
             $this->persist($tPreUser);
@@ -71,27 +52,112 @@ class UserSettingService extends BaseService
             throw new SystemException($e->getMessage());
         }
 
-        $url = "https://skrum.jp/signup" . "?tkn=" . $urltoken;
+        // Eメール本文テンプレート埋め込み変数配列の設定
+        $data = array();
+        $data['subdomain'] = $subdomain;
+        $data['urltoken'] = $urltoken;
+        $data['supportAddress'] = $this->getParameter('support_address');
 
+        // Eメール送信
+        $this->sendEmail(
+                $this->getParameter('from_address'),
+                $emailAddress,
+                $this->getParameter('email_subject_new_user_registration'),
+                'mail/new_user_registration.txt.twig',
+                $data
+            );
+    }
+
+    /**
+     * ユーザ招待
+     *
+     * @param $emailAddress Eメールアドレス
+     * @param $subdomain サブドメイン
+     * @param $companyId 会社ID
+     * @param $roleAssignmentId ロール割当ID
+     * @return void
+     */
+    public function inviteUser($emailAddress, $subdomain, $companyId, $roleAssignmentId)
+    {
+        // ユーザテーブルに同一Eメールアドレスの登録がないか確認
+        $mUserRepos = $this->getMUserRepository();
+        $result = $mUserRepos->findBy(array('emailAddress' => $emailAddress));
+        if (count($result) > 0) {
+            throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
+        }
+
+        // ロール割当ID存在チェック
+        $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
+        $mRoleAssignmentArray = $mRoleAssignmentRepos->findBy(array(
+                'roleAssignmentId' => $roleAssignmentId,
+                'companyId' => $companyId
+        ));
+        if (count($mRoleAssignmentArray) === 0) {
+            throw new ApplicationException('ロール割当IDが存在しません');
+        }
+
+        // URLトークンを生成
+        $urltoken = $this->getToken();
+
+        // 仮登録ユーザテーブルに登録
+        $tPreUser = new TPreUser();
+        $tPreUser->setEmailAddress($emailAddress);
+        $tPreUser->setSubdomain($subdomain);
+        $tPreUser->setUrltoken($urltoken);
+        $tPreUser->setCompanyId($companyId);
+        $tPreUser->setRoleAssignmentId($roleAssignmentId);
+
+        try {
+            $this->persist($tPreUser);
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+
+        // Eメール本文テンプレート埋め込み変数配列の設定
+        $data = array();
+        $data['subdomain'] = $subdomain;
+        $data['urltoken'] = $urltoken;
+        $data['supportAddress'] = $this->getParameter('support_address');
+
+        // Eメール送信
+        $this->sendEmail(
+                $this->getParameter('from_address'),
+                $emailAddress,
+                $this->getParameter('email_subject_additional_user_registration'),
+                'mail/additional_user_registration.txt.twig',
+                $data
+            );
+    }
+
+    /**
+     * Eメール送信
+     *
+     * @param string $fromAddress Fromアドレス
+     * @param string $toAddress Toアドレス
+     * @param string $subject 件名
+     * @param string $bodyTemplatePath 本文テンプレートパス
+     * @param array $data テンプレート埋め込み変数配列
+     * @return void
+     */
+    private function sendEmail($fromAddress, $toAddress, $subject, $bodyTemplatePath, $data)
+    {
         $message = \Swift_Message::newInstance()
-            ->setFrom('skrum@skrum.jp')
-            ->setTo($emailAddress)
-            ->setSubject('新規ユーザ登録メール送信APIテスト件名')
-            ->setBody('メールをお送りしました。24時間以内にメールに記載されたURLからご登録下さい。' . $url);
+        ->setFrom($fromAddress)
+        ->setTo($toAddress)
+        ->setSubject($subject)
+        ->setBody(
+                $this->renderView(
+                        $bodyTemplatePath,
+                        ['data' => $data]
+                        )
+                );
 
         $result = $this->getContainer()->get('mailer')->send($message);
 
-//         $transport = $mailer->getTransport();
-//         $spool = $transport->getSpool();
-//         $spool->flushQueue($this->getContainer()->get('swiftmailer.transport.real'));
-
-        // メールを送信
-        if ($result) {
-            return true;
-        } else {
-            $this->logError("メールの送信に失敗しました");
-
-            return false;
+        // メール送信結果判定
+        if (!$result) {
+            throw new SystemException('メールの送信に失敗しました');
         }
     }
 

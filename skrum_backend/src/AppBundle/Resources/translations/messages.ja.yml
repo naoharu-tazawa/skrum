@@ -1,1 +1,5 @@
 parameters:
+
+    email_subject_new_user_registration: '【Skrum】仮登録完了のお知らせ'
+
+    email_subject_additional_user_registration: '【Skrum】ユーザ招待のお知らせ'
