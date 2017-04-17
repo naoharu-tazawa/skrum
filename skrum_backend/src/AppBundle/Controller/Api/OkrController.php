@@ -37,11 +37,13 @@ class OkrController extends BaseController
         $auth = $request->get('auth_token');
 
         // オーナーユーザ存在チェック
+        $mUser = null;
         if ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_USER) {
             $mUser = $this->getDBExistanceLogic()->checkUserExistance($data['ownerUserId'], $auth->getCompanyId());
         }
 
         // オーナーグループ存在チェック
+        $mGroup = null;
         if ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
             $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($data['ownerGroupId'], $auth->getCompanyId());
         }
@@ -58,6 +60,7 @@ class OkrController extends BaseController
 
         // 紐付け先OKR存在チェック
         $alignmentFlg = false;
+        $tOkr = null;
         if (array_key_exists('parentOkrId', $data)) {
             $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($data['parentOkrId'], $auth->getCompanyId());
             if ($tOkr->getTimeframe()->getTimeframeId() != $data['timeframeId']) {

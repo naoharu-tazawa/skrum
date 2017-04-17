@@ -349,7 +349,7 @@ class OkrService extends BaseService
             if ($data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT) $tOkr->setRatioLockedFlg(DBConstant::FLG_FALSE);
             $this->persist($tOkr);
 
-            // OKRアクティビティ登録
+            // OKRアクティビティ登録（作成）
             $tOkrActivity = new TOkrActivity();
             $tOkrActivity->setOkr($tOkr);
             $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_GENERATE);
@@ -359,6 +359,19 @@ class OkrService extends BaseService
             $tOkrActivity->setAchievementRate(0);
             $tOkrActivity->setChangedPercentage(0);
             $this->persist($tOkrActivity);
+
+            // OKRアクティビティ登録（紐付け）
+            if ($alignmentFlg) {
+                if (!($ownerType == DBConstant::OKR_OWNER_TYPE_COMPANY && $data['okrType'] == DBConstant::OKR_TYPE_OBJECTIVE)) {
+                    $tOkrActivity = new TOkrActivity();
+                    $tOkrActivity->setOkr($tOkr);
+                    $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ALIGN);
+                    $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
+                    $tOkrActivity->setNewParentOkrId($parentOkrEntity->getOkrId());
+                    $this->persist($tOkrActivity);
+                }
+            }
+
             $this->flush();
 
             // 達成率を再計算
