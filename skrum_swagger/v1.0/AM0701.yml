@@ -10,26 +10,40 @@ produces:
 basePath: /v1
 
 paths:
-  /timeframes/{timeframeId}/setdefault.json:
-    put:
-      description: デフォルトタイムフレーム変更
+  /companies/{companyId}/timeframedetails.json:
+    get:
+      description: タイムフレーム詳細一覧取得
       parameters:
         -
-          name: timeframeId
+          name: companyId
           in: path
           type: string
-          description: デフォルトに設定するタイムフレームID
+          description: 会社ID
           required: true
       responses:
         200:
-          description: 成功
+          description: タイムフレーム一覧
           schema:
-            type: object
-            properties:
-              result:
-                type: string
-            required:
-              - result
+            type: array
+            items:
+              type: object
+              properties:
+                timeframeId:
+                  type: integer
+                timeframeName:
+                  type: string
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+                defaultFlg:
+                  type: integer
+              required:
+                - timeframeId
+                - timeframeName
+                - startDate
+                - endDate
+                - defaultFlg
         400:
           description: JSONスキーマ不正
         409:

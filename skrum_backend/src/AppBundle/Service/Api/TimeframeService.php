@@ -9,6 +9,7 @@ use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TTimeframe;
 use AppBundle\Api\ResponseDTO\NestedObject\TimeframeDTO;
+use AppBundle\Api\ResponseDTO\TimeframeDetailDTO;
 
 /**
  * タイムフレームサービスクラス
@@ -44,6 +45,37 @@ class TimeframeService extends BaseService
         }
 
         return $timeframeDTOArray;
+    }
+
+    /**
+     * タイムフレーム詳細取得
+     *
+     * @param string $companyId 会社ID
+     * @return array
+     */
+    public function getTimeframeDetails($companyId)
+    {
+        // タイムフレーム取得
+        $tTimeframeRepos = $this->getTTimeframeRepository();
+        $tTimeframeArray = $tTimeframeRepos->findBy(array('company' => $companyId), array('timeframeId' => 'DESC'));
+
+        // DTOに詰め替える
+        $timeframeDetailDTOArray = array();
+        foreach ($tTimeframeArray as $tTimeframe) {
+            $timeframeDetailDTO = new TimeframeDetailDTO();
+            $timeframeDetailDTO->setTimeframeId($tTimeframe->getTimeframeId());
+            $timeframeDetailDTO->setTimeframeName($tTimeframe->getTimeframeName());
+            $timeframeDetailDTO->setStartDate($tTimeframe->getStartDate());
+            $timeframeDetailDTO->setEndDate($tTimeframe->getEndDate());
+            if ($tTimeframe->getDefaultFlg() === null) {
+                $timeframeDetailDTO->setDefaultFlg(DBConstant::FLG_FALSE);
+            } else {
+                $timeframeDetailDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
+            }
+            $timeframeDetailDTOArray[] = $timeframeDetailDTO;
+        }
+
+        return $timeframeDetailDTOArray;
     }
 
     /**

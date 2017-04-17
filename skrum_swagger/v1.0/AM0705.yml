@@ -10,10 +10,16 @@ produces:
 basePath: /v1
 
 paths:
-  /timeframes.json:
-    post:
-      description: タイムフレーム追加
+  /timeframes/{timeframeId}.json:
+    put:
+      description: タイムフレーム編集
       parameters:
+        -
+          name: timeframeId
+          in: path
+          type: string
+          description: タイムフレームID
+          required: true
         -
           name: JsonRequest
           in: body

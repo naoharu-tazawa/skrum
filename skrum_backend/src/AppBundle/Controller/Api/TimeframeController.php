@@ -40,6 +40,31 @@ class TimeframeController extends BaseController
     }
 
     /**
+     * タイムフレーム詳細一覧取得
+     *
+     * @Rest\Get("/v1/companies/{companyId}/timeframedetails.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getCompanyTimeframedetailsAction(Request $request, $companyId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 会社IDの一致をチェック
+        if ($companyId != $auth->getCompanyId()) {
+            throw new ApplicationException('会社IDが存在しません');
+        }
+
+        // タイムフレーム取得処理
+        $timeframeService = $this->getTimeframeService();
+        $timeframeDetailDTOArray = $timeframeService->getTimeframeDetails($companyId);
+
+        return $timeframeDetailDTOArray;
+    }
+
+    /**
      * デフォルトタイムフレーム変更
      *
      * @Rest\Put("/v1/timeframes/{timeframeId}/setdefault.{_format}")
