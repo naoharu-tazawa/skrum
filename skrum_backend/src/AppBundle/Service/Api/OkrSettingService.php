@@ -27,12 +27,24 @@ class OkrSettingService extends BaseService
             return;
         }
 
-        // OKR更新
-        $tOkr->setStatus(DBConstant::OKR_STATUS_CLOSED);
+        // トランザクション開始
+        $this->beginTransaction();
 
         try {
+            // OKR更新
+            $tOkr->setStatus(DBConstant::OKR_STATUS_CLOSED);
+
+            // OKRアクティビティ登録（クローズ）
+            $tOkrActivity = new TOkrActivity();
+            $tOkrActivity->setOkr($tOkr);
+            $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_CLOSE);
+            $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
+            $this->persist($tOkrActivity);
+
             $this->flush();
+            $this->commit();
         } catch(\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
     }
@@ -50,12 +62,24 @@ class OkrSettingService extends BaseService
             return;
         }
 
-        // OKR更新
-        $tOkr->setStatus(DBConstant::OKR_STATUS_OPEN);
+        // トランザクション開始
+        $this->beginTransaction();
 
         try {
+            // OKR更新
+            $tOkr->setStatus(DBConstant::OKR_STATUS_OPEN);
+
+            // OKRアクティビティ登録（オープン）
+            $tOkrActivity = new TOkrActivity();
+            $tOkrActivity->setOkr($tOkr);
+            $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_OPEN);
+            $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
+            $this->persist($tOkrActivity);
+
             $this->flush();
+            $this->commit();
         } catch(\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
     }
@@ -96,6 +120,12 @@ class OkrSettingService extends BaseService
      */
     public function changeOwner($tOkr, $ownerType, $mUser, $mGroup, $companyId)
     {
+        // OKRアクティビティ登録（オーナー変更）
+        $tOkrActivity = new TOkrActivity();
+        $tOkrActivity->setOkr($tOkr);
+        $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_OWNER_CHANGE);
+        $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
+
         // 変更前のオーナー種別によって処理を分岐
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             // 「変更前オーナー種別＝1:ユーザ」の場合
@@ -108,11 +138,19 @@ class OkrSettingService extends BaseService
                     return;
                 }
 
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerUserId($tOkr->getOwnerUser()->getUserId());
+                $tOkrActivity->setNewOwnerUserId($mUser->getUserId());
+
                 // オーナー変更
                 $tOkr->setOwnerUser($mUser);
 
             } elseif ($ownerType == DBConstant::OKR_OWNER_TYPE_GROUP) {
                 // 「変更前オーナー種別＝1:ユーザ」かつ「変更後オーナー種別＝2:グループ」の場合
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerUserId($tOkr->getOwnerUser()->getUserId());
+                $tOkrActivity->setNewOwnerGroupId($mGroup->getGroupId());
 
                 // オーナー変更
                 $tOkr->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
@@ -121,6 +159,10 @@ class OkrSettingService extends BaseService
 
             } else {
                 // 「変更前オーナー種別＝1:ユーザ」かつ「変更後オーナー種別＝3:会社」の場合
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerUserId($tOkr->getOwnerUser()->getUserId());
+                $tOkrActivity->setNewOwnerCompanyId($companyId);
 
                 // オーナー変更
                 $tOkr->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
@@ -135,6 +177,10 @@ class OkrSettingService extends BaseService
             if ($ownerType == DBConstant::OKR_OWNER_TYPE_USER) {
                 // 「変更前オーナー種別＝2:グループ」かつ「変更後オーナー種別＝1:ユーザ」の場合
 
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+                $tOkrActivity->setNewOwnerUserId($mUser->getUserId());
+
                 // オーナー変更
                 $tOkr->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
                 $tOkr->setOwnerGroup(null);
@@ -148,11 +194,19 @@ class OkrSettingService extends BaseService
                     return;
                 }
 
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+                $tOkrActivity->setNewOwnerGroupId($mGroup->getGroupId());
+
                 // オーナー変更
                 $tOkr->setOwnerGroup($mGroup);
 
             } else {
                 // 「変更前オーナー種別＝2:グループ」かつ「変更後オーナー種別＝3:会社」の場合
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+                $tOkrActivity->setNewOwnerCompanyId($companyId);
 
                 // オーナー変更
                 $tOkr->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
@@ -167,6 +221,10 @@ class OkrSettingService extends BaseService
             if ($ownerType == DBConstant::OKR_OWNER_TYPE_USER) {
                 // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝1:ユーザ」の場合
 
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerCompanyId($tOkr->getOwnerCompanyId());
+                $tOkrActivity->setNewOwnerUserId($mUser->getUserId());
+
                 // オーナー変更
                 $tOkr->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
                 $tOkr->setOwnerCompanyId(null);
@@ -174,6 +232,10 @@ class OkrSettingService extends BaseService
 
             } elseif ($ownerType == DBConstant::OKR_OWNER_TYPE_GROUP) {
                 // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝2:グループ」の場合
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+                $tOkrActivity->setNewOwnerGroupId($mGroup->getGroupId());
 
                 // オーナー変更
                 $tOkr->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
@@ -189,9 +251,14 @@ class OkrSettingService extends BaseService
 
         }
 
+        // トランザクション開始
+        $this->beginTransaction();
+
         try {
             $this->flush();
+            $this->commit();
         } catch(\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
     }
