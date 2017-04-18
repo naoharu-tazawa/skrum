@@ -102,7 +102,7 @@ class OkrAchievementRateLogic extends BaseLogic
                 );
 
         // 子OKRが存在しない場合、OKRの達成率、達成値、目標値、単位をリセット
-        if (empty($tOkrArray[1])) {
+        if (count($tOkrArray) <= 1) {
             $tOkr->setAchievementRate(0);
             $tOkr->setAchievedValue(0);
             $tOkr->setTargetValue(100);
