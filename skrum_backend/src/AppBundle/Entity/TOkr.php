@@ -131,7 +131,7 @@ class TOkr
      *
      * @ORM\Column(name="ratio_locked_flg", type="boolean", nullable=true)
      */
-    private $ratioLockedFlg;
+    private $ratioLockedFlg = '0';
 
     /**
      * @var \DateTime

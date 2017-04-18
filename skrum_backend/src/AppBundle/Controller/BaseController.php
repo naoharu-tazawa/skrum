@@ -317,6 +317,11 @@ class BaseController extends FOSRestController
         return $this->get('api.okr_achievement_rate_logic');
     }
 
+    protected function getOkrNestedIntervalsLogic()
+    {
+        return $this->get('api.okr_nested_intervals_logic');
+    }
+
     protected function getSampleService()
     {
         return $this->get('api.sample_service');
@@ -375,6 +380,11 @@ class BaseController extends FOSRestController
     protected function getOkrSettingService()
     {
         return $this->get('api.okr_setting_service');
+    }
+
+    protected function getOkrOperationService()
+    {
+        return $this->get('api.okr_operation_service');
     }
 
     protected function getTimeframeService()

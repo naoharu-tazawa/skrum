@@ -46,6 +46,10 @@ services:
         class: AppBundle\Logic\OkrAchievementRateLogic
         arguments: ['@service_container']
 
+    api.okr_nested_intervals_logic:
+        class: AppBundle\Logic\OkrNestedIntervalsLogic
+        arguments: ['@service_container']
+
     api.sample_service:
         class: AppBundle\Service\Api\SampleService
         arguments: ['@service_container']
@@ -92,6 +96,10 @@ services:
 
     api.okr_setting_service:
         class: AppBundle\Service\Api\OkrSettingService
+        arguments: ['@service_container']
+
+    api.okr_operation_service:
+        class: AppBundle\Service\Api\OkrOperationService
         arguments: ['@service_container']
 
     api.timeframe_service:

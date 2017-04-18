@@ -529,19 +529,26 @@ class OkrService extends BaseService
      */
     public function deleteOkrs($auth, $tOkr)
     {
-        // 達成率を再計算
-        $tOkr->setWeightedAverageRatio(0);
-        $tOkr->setRatioLockedFlg(DBConstant::FLG_TRUE);
-        $this->flush();
-        $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
-        $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), true);
+        // 親OKRを取得
+        $parentOkr = $tOkr->getParentOkr();
 
-        $tOkrRepos = $this->getTOkrRepository();
+        // トランザクション開始
+        $this->beginTransaction();
 
         try {
             // 削除対象OKRとそれに紐づくOKRを全て削除する
-            $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId());
+            $tOkrRepos = $this->getTOkrRepository();
+            $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
+
+            // 達成率を再計算
+            if ($parentOkr != null) {
+                $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
+                $okrAchievementRateLogic->recalculateFromParent($parentOkr, $auth->getCompanyId(), true);
+            }
+
+            $this->commit();
         } catch(\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
     }

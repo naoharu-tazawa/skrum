@@ -286,6 +286,11 @@ class BaseService
         return $this->getContainer()->get('api.okr_achievement_rate_logic');
     }
 
+    protected function getOkrNestedIntervalsLogic()
+    {
+        return $this->getContainer()->get('api.okr_nested_intervals_logic');
+    }
+
     //----------------------------------------------
     //ここからリポジトリクラスの取得メソッド
     //----------------------------------------------

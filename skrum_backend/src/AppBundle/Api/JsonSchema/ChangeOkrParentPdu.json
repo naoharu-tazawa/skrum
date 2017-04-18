@@ -1,0 +1,13 @@
+{
+  "title": "紐付け先OKR変更",
+  "type": "object",
+  "properties": {
+    "newParentOkrId": {
+      "title": "新紐付け先OKRID",
+      "type": "integer",
+      "maxLength": 11
+    }
+  },
+  "required": ["newParentOkrId"],
+  "additionalProperties": false
+}

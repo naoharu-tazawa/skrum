@@ -517,6 +517,33 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
+     * 指定OKRとそれに紐づくOKRを全て取得
+     *
+     * @param $treeLeft 入れ子区間モデルの左値
+     * @param $treeRight 入れ子区間モデルの右値
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to');
+        $qb->select('to')
+            ->innerJoin('AppBundle:TTimeframe', 'tt', 'WITH', 'to.timeframe = tt.timeframeId')
+            ->where('tt.company = :companyId')
+            ->andWhere('to.timeframe = :timeframeId')
+            ->andWhere('to.treeLeft >= :treeLeft')
+            ->andWhere('to.treeLeft <= :treeRight')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('timeframeId', $timeframeId)
+            ->setParameter('treeLeft', $treeLeft)
+            ->setParameter('treeRight', $treeRight)
+            ->orderBy('to.treeLeft', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * 指定した親ノードの直下に挿入するノードの左値・右値を取得（最左ノード）
      *
      * @param $parentOkrId 親ノードのOKRID
@@ -618,23 +645,27 @@ SQL;
      * @param $treeLeft 入れ子区間モデルの左値
      * @param $treeRight 入れ子区間モデルの右値
      * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
      * @return array
      */
-    public function deleteOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId)
+    public function deleteOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId, $companyId)
     {
         $sql = <<<SQL
         UPDATE t_okr AS t0_
-        LEFT OUTER JOIN t_okr_activity AS t1_ ON (t0_.okr_id = t1_.okr_id) AND (t1_.deleted_at IS NULL)
-        SET t0_.deleted_at = NOW(), t1_.deleted_at = NOW()
-        WHERE (t0_.tree_left >= :treeLeft
-                AND t0_.tree_left <= :treeRight
-                AND t0_.timeframe_id = :timeframeId)
+        INNER JOIN t_timeframe AS t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        LEFT OUTER JOIN t_okr_activity AS t2_ ON (t0_.okr_id = t2_.okr_id) AND (t2_.deleted_at IS NULL)
+        SET t0_.deleted_at = NOW(), t2_.deleted_at = NOW()
+        WHERE (t1_.company_id = :companyId
+                AND t0_.timeframe_id = :timeframeId
+                AND t0_.tree_left >= :treeLeft
+                AND t0_.tree_left <= :treeRight)
                 AND (t0_.deleted_at IS NULL);
 SQL;
 
+        $params['companyId'] = $companyId;
+        $params['timeframeId'] = $timeframeId;
         $params['treeLeft'] = $treeLeft;
         $params['treeRight'] = $treeRight;
-        $params['timeframeId'] = $timeframeId;
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->execute($params);

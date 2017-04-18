@@ -229,7 +229,7 @@ class GroupService extends BaseService
         $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), true);
 
         // 削除対象OKRとそれに紐づくOKRを全て削除する
-        $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId());
+        $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
         $this->flush();
     }
 }
