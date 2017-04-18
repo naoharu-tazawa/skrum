@@ -111,15 +111,18 @@ class SearchController extends BaseController
     public function searchOkrsAction(Request $request)
     {
         // リクエストパラメータを取得
-        $timeframeId = $request->get('tfid');
+        $okrId = $request->get('oid');
         $keyword = $request->get('q');
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
+        // OKR存在チェック
+        $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+
         // グループ検索処理
         $searchService = $this->getSearchService();
-        $okrSearchDTOArray = $searchService->searchOkr($auth, $keyword, $timeframeId);
+        $okrSearchDTOArray = $searchService->searchOkr($auth, $keyword, $tOkr);
 
         return $okrSearchDTOArray;
     }

@@ -36,10 +36,11 @@ class TOkrRepository extends BaseRepository
      * OKR検索
      *
      * @param string $keyword 検索ワード
+     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function searchOkr($keyword, $timeframeId, $companyId)
+    public function searchOkr($keyword, $tOkr, $companyId)
     {
         $qb = $this->createQueryBuilder('to');
         $qb->select('to.okrId', 'to.name')
@@ -48,10 +49,21 @@ class TOkrRepository extends BaseRepository
             ->andWhere('tt.company = :companyId')
             ->andWhere('to.type <> :type')
             ->andWhere('to.name LIKE :name')
-            ->setParameter('timeframeId', $timeframeId)
+            ->setParameter('timeframeId', $tOkr->getTimeframe()->getTimeframeId())
             ->setParameter('companyId', $companyId)
             ->setParameter('type', DBConstant::OKR_TYPE_ROOT_NODE)
             ->setParameter('name', $keyword . '%');
+
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            $qb->andWhere('to.ownerUser <> :ownerUserId OR to.ownerUser IS NULL')
+                ->setParameter('ownerUserId', $tOkr->getOwnerUser()->getUserId());
+        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            $qb->andWhere('to.ownerGroup <> :ownerGroupId OR to.ownerGroup IS NULL')
+                ->setParameter('ownerGroupId', $tOkr->getOwnerGroup()->getGroupId());
+        } else {
+            $qb->andWhere('to.ownerCompanyId <> :ownerCompanyId OR to.ownerCompanyId IS NULL')
+                ->setParameter('ownerCompanyId', $tOkr->getOwnerCompanyId());
+        }
 
         return $qb->getQuery()->getResult();
     }

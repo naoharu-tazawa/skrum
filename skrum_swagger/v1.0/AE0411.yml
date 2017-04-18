@@ -10,15 +10,15 @@ produces:
 basePath: /v1
 
 paths:
-  /okrs/search.json?{tfid}&{q}:
+  /okrs/search.json?{okrid}&{q}:
     get:
       description: OKR検索
       parameters:
         -
-          name: tfid
+          name: oid
           in: path
           type: string
-          description: タイムフレームID
+          description: 紐付け先変更対象のOKRID
           required: true
         -
           name: q
