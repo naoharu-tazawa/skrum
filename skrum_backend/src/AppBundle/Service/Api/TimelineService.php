@@ -9,6 +9,7 @@ use AppBundle\Utils\DateUtility;
 use AppBundle\Entity\TLike;
 use AppBundle\Entity\TPost;
 use AppBundle\Api\ResponseDTO\PostDTO;
+use AppBundle\Utils\DBConstant;
 
 /**
  * タイムラインサービスクラス
@@ -55,11 +56,24 @@ class TimelineService extends BaseService
                     continue;
                 }
 
+                // いいね数を取得
+                $tLikeRepos = $this->getTLikeRepository();
+                $likesCount = $tLikeRepos->getLikesCount($tPostArray[$i]['post']->getId());
+
+                // いいねが押されているかチェック
+                $tLike = $tLikeRepos->findOneBy(array('userId' => $auth->getUserId(), 'postId' => $tPostArray[$i]['post']->getId()));
+
                 $postDTOPost = new PostDTO();
                 $postDTOPost->setPostId($tPostArray[$i]['post']->getId());
                 $postDTOPost->setPosterId($tPostArray[$i]['post']->getPosterId());
                 $postDTOPost->setPost($tPostArray[$i]['post']->getPost());
                 $postDTOPost->setPostedDatetime($tPostArray[$i]['post']->getPostedDatetime());
+                $postDTOPost->setLikesCount($likesCount);
+                if (empty($tLike)) {
+                    $postDTOPost->setLikedFlg(DBConstant::FLG_FALSE);
+                } else {
+                    $postDTOPost->setLikedFlg(DBConstant::FLG_TRUE);
+                }
 
                 $postDTOReplyArray = array();
                 $flg = false;

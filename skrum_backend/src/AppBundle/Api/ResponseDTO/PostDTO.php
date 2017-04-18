@@ -47,6 +47,20 @@ class PostDTO
     private $okrId;
 
     /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $likesCount;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $likedFlg;
+
+    /**
      * @var array
      *
      * @JSON\Type("array")
@@ -171,6 +185,54 @@ class PostDTO
     public function getOkrId()
     {
         return $this->okrId;
+    }
+
+    /**
+     * Set likesCount
+     *
+     * @param integer $likesCount
+     *
+     * @return PostDTO
+     */
+    public function setLikesCount($likesCount)
+    {
+        $this->likesCount = $likesCount;
+
+        return $this;
+    }
+
+    /**
+     * Get likesCount
+     *
+     * @return integer
+     */
+    public function getLikesCount()
+    {
+        return $this->likesCount;
+    }
+
+    /**
+     * Set likedFlg
+     *
+     * @param integer $likedFlg
+     *
+     * @return PostDTO
+     */
+    public function setLikedFlg($likedFlg)
+    {
+        $this->likedFlg = $likedFlg;
+
+        return $this;
+    }
+
+    /**
+     * Get likedFlg
+     *
+     * @return integer
+     */
+    public function getLikedFlg()
+    {
+        return $this->likedFlg;
     }
 
     /**
