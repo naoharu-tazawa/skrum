@@ -31,7 +31,7 @@ class OkrDetailsController extends BaseController
 
         // OKR詳細取得処理
         $okrDetailsService = $this->getOkrDetailsService();
-        $okrDetailsDTO = $okrDetailsService->getOkrDetails($auth, $tOkr->getOkrId(), $tOkr->getTimeframe()->getTimeframeId());
+        $okrDetailsDTO = $okrDetailsService->getOkrDetails($auth, $tOkr);
 
         return $okrDetailsDTO;
     }

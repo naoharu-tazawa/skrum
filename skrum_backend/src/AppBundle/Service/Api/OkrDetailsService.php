@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
+use AppBundle\Exception\ApplicationException;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
 use AppBundle\Entity\TOkrActivity;
@@ -21,15 +22,27 @@ class OkrDetailsService extends BaseService
      * OKR詳細情報を取得
      *
      * @param \AppBundle\Utils\Auth $auth 認証情報
-     * @param integer $okrId OKRID
-     * @param integer $timeframeId タイムフレームID
+     * @param \AppBundle\Entity\TOkr $okrEntity OKRエンティティ
      * @return \AppBundle\Api\ResponseDTO\OkrDetailsDTO
      */
-    public function getOkrDetails($auth, $okrId, $timeframeId)
+    public function getOkrDetails($auth, $okrEntity)
     {
+        // OKRIDを取得
+        $okrId = $okrEntity->getOkrId();
+
+        // 指定OKRがキーリザルトだった場合、目標を指定する
+        if ($okrEntity->getType() == DBConstant::OKR_TYPE_KEY_RESULT) {
+            $parentOkr = $okrEntity->getParentOkr();
+            if (empty($parentOkr)) {
+                throw new ApplicationException('キーリザルトは表示できません');
+            }
+
+            $okrId = $parentOkr->getOkrId();
+        }
+
         // 親OKRとキーリザルトを取得
         $tOkrRepos = $this->getTOkrRepository();
-        $tOkrArray = $tOkrRepos->getThreeGensOkrs($okrId, $timeframeId, $auth->getCompanyId());
+        $tOkrArray = $tOkrRepos->getThreeGensOkrs($okrId, $okrEntity->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
 
         // 会社名を取得
         $mCompanyRepos = $this->getMCompanyRepository();
