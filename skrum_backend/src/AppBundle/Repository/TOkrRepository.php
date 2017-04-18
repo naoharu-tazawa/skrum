@@ -707,6 +707,35 @@ SQL;
     /**
      * 指定OKRとそれに紐づくOKRを全て削除
      *
+     * @param integer $okrId OKRID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function resetRatioLockedFlg($okrId, $timeframeId, $companyId)
+    {
+        $sql = <<<SQL
+        UPDATE t_okr AS t0_
+        INNER JOIN t_timeframe AS t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        SET t0_.ratio_locked_flg = :ratioLockedFlg
+        WHERE (t1_.company_id = :companyId
+                AND t0_.timeframe_id = :timeframeId
+                AND t0_.parent_okr_id = :parentOkrId)
+                AND (t0_.deleted_at IS NULL);
+SQL;
+
+        $params['ratioLockedFlg'] = DBConstant::FLG_FALSE;
+        $params['companyId'] = $companyId;
+        $params['timeframeId'] = $timeframeId;
+        $params['parentOkrId'] = $okrId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+    }
+
+    /**
+     * 指定OKRとそれに紐づくOKRを全て削除
+     *
      * @param $treeLeft 入れ子区間モデルの左値
      * @param $treeRight 入れ子区間モデルの右値
      * @param $timeframeId タイムフレームID

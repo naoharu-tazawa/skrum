@@ -172,4 +172,43 @@ class OkrSettingController extends BaseController
 
         return array('result' => 'OK');
     }
+
+    /**
+     * KR加重平均割合設定
+     *
+     * @Rest\Put("/v1/okrs/{okrId}/setratio.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param integer $okrId OKRID
+     * @return array
+     */
+    public function setOkrRatioAction(Request $request, $okrId)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/SetOkrRatioPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // OKR存在チェック
+        $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            $permissionLogic = $this->getPermissionLogic();
+            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
+        }
+
+        // KR加重平均割合更新処理
+        $okrSettingService = $this->getOkrSettingService();
+        $okrSettingService->updateRatio($auth, $data, $tOkr);
+
+        return array('result' => 'OK');
+    }
 }

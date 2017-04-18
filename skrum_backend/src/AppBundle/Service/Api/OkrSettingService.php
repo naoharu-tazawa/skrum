@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
+use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
@@ -255,6 +256,56 @@ class OkrSettingService extends BaseService
         $this->beginTransaction();
 
         try {
+            $this->flush();
+            $this->commit();
+        } catch(\Exception $e) {
+            $this->rollback();
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * KR加重平均割合更新
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param array $data リクエストJSON連想配列
+     * @param \AppBundle\Entity\TOkr $okrEntity OKRエンティティ
+     * @return void
+     */
+    public function updateRatio($auth, $data, $okrEntity)
+    {
+        // 親OKRIDを取得
+        $parentOkrId = $okrEntity->getOkrId();
+
+        // トランザクション開始
+        $this->beginTransaction();
+
+        try {
+            // 持分比率ロックフラグをリセットする
+            $tOkrRepos = $this->getTOkrRepository();
+            $tOkrRepos->resetRatioLockedFlg($okrEntity->getOkrId(), $okrEntity->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
+
+            // KR加重平均割合更新
+            foreach ($data as $item) {
+                $tOkr = $tOkrRepos->getOkr($item['keyResultId'], $auth->getCompanyId());
+                if (count($tOkr) != 1) {
+                    throw new ApplicationException('指定されたキーリザルトは存在しません');
+                }
+
+                // 親OKRIDが一致しない場合、エラー
+                if ($tOkr[0]->getParentOkr()->getOkrId() != $parentOkrId) {
+                    throw new ApplicationException('指定されたキーリザルトが不正です');
+                }
+
+                $tOkr[0]->setWeightedAverageRatio($item['weightedAverageRatio']);
+                $tOkr[0]->setRatioLockedFlg(DBConstant::FLG_TRUE);
+                $this->flush();
+            }
+
+            // 達成率を再計算
+            $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
+            $okrAchievementRateLogic->recalculateFromParent($okrEntity, $auth->getCompanyId(), true);
+
             $this->flush();
             $this->commit();
         } catch(\Exception $e) {

@@ -1,0 +1,55 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /okrs/{okrId}/setratio.json:
+    put:
+      description: KR加重平均割合設定
+      parameters:
+        -
+          name: okrId
+          in: path
+          type: string
+          description: 親OKRID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description: 変更後公開種別
+          required: true
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                keyResultId:
+                  type: integer
+                weightedAverageRatio:
+                  type: number
+              required:
+                - keyResultId
+                - weightedAverageRatio
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー
