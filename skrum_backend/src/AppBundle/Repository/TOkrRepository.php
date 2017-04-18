@@ -42,30 +42,83 @@ class TOkrRepository extends BaseRepository
      */
     public function searchOkr($keyword, $tOkr, $companyId)
     {
-        $qb = $this->createQueryBuilder('to');
-        $qb->select('to.okrId', 'to.name')
-            ->innerJoin('AppBundle:TTimeframe', 'tt', 'WITH', 'to.timeframe = tt.timeframeId')
-            ->where('to.timeframe = :timeframeId')
-            ->andWhere('tt.company = :companyId')
-            ->andWhere('to.type <> :type')
-            ->andWhere('to.name LIKE :name')
-            ->setParameter('timeframeId', $tOkr->getTimeframe()->getTimeframeId())
-            ->setParameter('companyId', $companyId)
-            ->setParameter('type', DBConstant::OKR_TYPE_ROOT_NODE)
-            ->setParameter('name', $keyword . '%');
+        $sql = <<<SQL
+        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+        FROM t_okr t0_
+        INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        LEFT OUTER JOIN (
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+            FROM m_user m0_
+            WHERE (m0_.deleted_at IS NULL)
+            ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
+        LEFT OUTER JOIN m_group m2_ ON (t0_.owner_group_id = m2_.group_id) AND (m2_.deleted_at IS NULL)
+        LEFT OUTER JOIN m_company m3_ ON (t0_.owner_company_id = m3_.company_id) AND (m3_.deleted_at IS NULL)
+        WHERE (
+                t0_.timeframe_id = :timeframeId1
+                AND t1_.company_id = :companyId1
+                AND t0_.type <> :type1
+                AND (
+                     t0_.name LIKE :okrName
+                     OR m1_.userName LIKE :userName
+                    )
+              )
+              AND (t0_.deleted_at IS NULL)
+        UNION
+        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+        FROM t_okr t0_
+        INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        LEFT OUTER JOIN (
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+            FROM m_user m0_
+            WHERE (m0_.deleted_at IS NULL)
+            ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
+        LEFT OUTER JOIN m_group m2_ ON (t0_.owner_group_id = m2_.group_id) AND (m2_.deleted_at IS NULL)
+        LEFT OUTER JOIN m_company m3_ ON (t0_.owner_company_id = m3_.company_id) AND (m3_.deleted_at IS NULL)
+        WHERE (
+                t0_.timeframe_id = :timeframeId2
+                AND t1_.company_id = :companyId2
+                AND t0_.type <> :type2
+                AND m2_.group_name LIKE :groupName
+              )
+              AND (t0_.deleted_at IS NULL)
+        UNION
+        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+        FROM t_okr t0_
+        INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        LEFT OUTER JOIN (
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+            FROM m_user m0_
+            WHERE (m0_.deleted_at IS NULL)
+            ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
+        LEFT OUTER JOIN m_group m2_ ON (t0_.owner_group_id = m2_.group_id) AND (m2_.deleted_at IS NULL)
+        LEFT OUTER JOIN m_company m3_ ON (t0_.owner_company_id = m3_.company_id) AND (m3_.deleted_at IS NULL)
+        WHERE (
+                t0_.timeframe_id = :timeframeId3
+                AND t1_.company_id = :companyId3
+                AND t0_.type <> :type3
+                AND m3_.company_name LIKE :companyName
+              )
+              AND (t0_.deleted_at IS NULL);
+SQL;
 
-        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
-            $qb->andWhere('to.ownerUser <> :ownerUserId OR to.ownerUser IS NULL')
-                ->setParameter('ownerUserId', $tOkr->getOwnerUser()->getUserId());
-        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
-            $qb->andWhere('to.ownerGroup <> :ownerGroupId OR to.ownerGroup IS NULL')
-                ->setParameter('ownerGroupId', $tOkr->getOwnerGroup()->getGroupId());
-        } else {
-            $qb->andWhere('to.ownerCompanyId <> :ownerCompanyId OR to.ownerCompanyId IS NULL')
-                ->setParameter('ownerCompanyId', $tOkr->getOwnerCompanyId());
-        }
+        $params['timeframeId1'] = $tOkr->getTimeframe()->getTimeframeId();
+        $params['timeframeId2'] = $tOkr->getTimeframe()->getTimeframeId();
+        $params['timeframeId3'] = $tOkr->getTimeframe()->getTimeframeId();
+        $params['companyId1'] = $companyId;
+        $params['companyId2'] = $companyId;
+        $params['companyId3'] = $companyId;
+        $params['type1'] = DBConstant::OKR_TYPE_ROOT_NODE;
+        $params['type2'] = DBConstant::OKR_TYPE_ROOT_NODE;
+        $params['type3'] = DBConstant::OKR_TYPE_ROOT_NODE;
+        $params['okrName'] = $keyword . '%';
+        $params['userName'] = $keyword . '%';
+        $params['groupName'] = $keyword . '%';
+        $params['companyName'] = $keyword . '%';
 
-        return $qb->getQuery()->getResult();
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
     }
 
     /**

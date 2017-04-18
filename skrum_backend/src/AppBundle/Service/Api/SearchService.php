@@ -168,24 +168,35 @@ class SearchService extends BaseService
      *
      * @param \AppBundle\Utils\Auth $auth 認証情報
      * @param string $keyword 検索ワード
-     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param \AppBundle\Entity\TOkr $okrEntity OKRエンティティ
      * @return array
      */
-    public function searchOkr($auth, $keyword, $tOkr)
+    public function searchOkr($auth, $keyword, $okrEntity)
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
 
         // OKR検索
         $tOkrRepos = $this->getTOkrRepository();
-        $tOkrArray = $tOkrRepos->searchOkr($escapedKeyword, $tOkr, $auth->getCompanyId());
+        $tOkrArray = $tOkrRepos->searchOkr($escapedKeyword, $okrEntity, $auth->getCompanyId());
 
         // DTOに詰め替える
         $okrSearchDTOArray = array();
         foreach ($tOkrArray as $tOkr) {
             $okrSearchDTO = new OkrSearchDTO();
-            $okrSearchDTO->setOkrId($tOkr['okrId']);
+            $okrSearchDTO->setOkrId($tOkr['okr_id']);
             $okrSearchDTO->setOkrName($tOkr['name']);
+            $okrSearchDTO->setOwnerType($tOkr['owner_type']);
+            if ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_USER) {
+                $okrSearchDTO->setUserId($tOkr['user_id']);
+                $okrSearchDTO->setUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
+            } elseif ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                $okrSearchDTO->setGroupId($tOkr['group_id']);
+                $okrSearchDTO->setGroupName($tOkr['group_name']);
+            } else {
+                $okrSearchDTO->setCompanyId($tOkr['company_id']);
+                $okrSearchDTO->setCompanyName($tOkr['company_name']);
+            }
 
             $okrSearchDTOArray[] = $okrSearchDTO;
         }

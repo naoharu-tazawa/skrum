@@ -36,6 +36,20 @@ paths:
                 type: integer
               okrName:
                 type: string
+              ownerType:
+                type: string
+              userId:
+                type: integer
+              userName:
+                type: string
+              groupId:
+                type: integer
+              groupName:
+                type: string
+              companyId:
+                type: integer
+              companyName:
+                type: string
         400:
           description: JSONスキーマ不正
         409:
