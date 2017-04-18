@@ -102,4 +102,50 @@ class TimelineController extends BaseController
 
         return array('result' => 'OK');
     }
+
+    /**
+     * いいね
+     *
+     * @Rest\Post("/v1/posts/{postId}/likes.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param postId 投稿ID
+     * @return array
+     */
+    public function postPostLikesAction(Request $request, $postId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 投稿存在チェック
+        $tPost = $this->getDBExistanceLogic()->checkPostExistance($postId, $auth->getCompanyId());
+
+        // いいね登録処理
+        $timelineService = $this->getTimelineService();
+        $timelineService->like($auth->getUserId(), $tPost->getId());
+
+        return array('result' => 'OK');
+    }
+
+    /**
+     * いいね解除
+     *
+     * @Rest\Delete("/v1/posts/{postId}/like.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param postId 投稿ID
+     * @return array
+     */
+    public function deletePostLikeAction(Request $request, $postId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 投稿存在チェック
+        $tPost = $this->getDBExistanceLogic()->checkPostExistance($postId, $auth->getCompanyId());
+
+        // いいね削除処理
+        $timelineService = $this->getTimelineService();
+        $timelineService->detachLike($auth->getUserId(), $tPost->getId());
+
+        return array('result' => 'OK');
+    }
 }

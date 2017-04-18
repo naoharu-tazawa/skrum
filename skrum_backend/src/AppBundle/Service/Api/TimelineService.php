@@ -3,8 +3,10 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
+use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DateUtility;
+use AppBundle\Entity\TLike;
 use AppBundle\Entity\TPost;
 use AppBundle\Api\ResponseDTO\PostDTO;
 
@@ -160,6 +162,60 @@ class TimelineService extends BaseService
 
         try {
             $this->persist($tPostReply);
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * いいね
+     *
+     * @param integer $userId ユーザID
+     * @param integer $postId 投稿ID
+     * @return void
+     */
+    public function like($userId, $postId)
+    {
+        // いいねが既に押されていないかチェック
+        $tLikeRepos = $this->getTLikeRepository();
+        $likeEntity = $tLikeRepos->findOneBy(array('userId' => $userId, 'postId' => $postId));
+        if (!empty($likeEntity)) {
+            throw new ApplicationException('既にいいねが押されています');
+        }
+
+        // いいね登録
+        $tLike = new TLike();
+        $tLike->setUserId($userId);
+        $tLike->setPostId($postId);
+
+        try {
+            $this->persist($tLike);
+            $this->flush();
+        } catch(\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * いいね解除
+     *
+     * @param integer $userId ユーザID
+     * @param integer $postId 投稿ID
+     * @return void
+     */
+    public function detachLike($userId, $postId)
+    {
+        // いいねが既に解除されている場合、更新処理を行わない
+        $tLikeRepos = $this->getTLikeRepository();
+        $tLike = $tLikeRepos->findOneBy(array('userId' => $userId, 'postId' => $postId));
+        if (empty($tLike)) {
+            return;
+        }
+
+        // いいね削除
+        try {
+            $this->remove($tLike);
             $this->flush();
         } catch(\Exception $e) {
             throw new SystemException($e->getMessage());

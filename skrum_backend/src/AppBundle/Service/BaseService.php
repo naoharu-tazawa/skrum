@@ -404,4 +404,9 @@ class BaseService
     {
         return $this->entityManager->getRepository('AppBundle:TTimeframe');
     }
+
+    protected function getTLikeRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TLike');
+    }
 }

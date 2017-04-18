@@ -10,33 +10,16 @@ produces:
 basePath: /v1
 
 paths:
-  /okrs/{okrId}/setratio.json:
-    put:
-      description: KR加重平均割合設定
+  /posts/{postId}/likes.json:
+    post:
+      description: いいね
       parameters:
         -
-          name: okrId
+          name: postId
           in: path
           type: string
-          description: 親OKRID
+          description: 投稿ID
           required: true
-        -
-          name: JsonRequest
-          in: body
-          description: KR加重平均割合
-          required: true
-          schema:
-            type: array
-            items:
-              type: object
-              properties:
-                keyResultId:
-                  type: integer
-                weightedAverageRatio:
-                  type: number
-              required:
-                - keyResultId
-                - weightedAverageRatio
       responses:
         200:
           description: 成功
