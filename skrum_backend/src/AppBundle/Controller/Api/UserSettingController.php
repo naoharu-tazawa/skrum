@@ -108,6 +108,29 @@ class UserSettingController extends BaseController
     }
 
     /**
+     * パスワードリセット
+     *
+     * @Rest\Post("/v1/users/{userId}/resetpassword.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $userId ユーザID
+     * @return array
+     */
+    public function resetUserPasswordAction(Request $request, $userId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // ユーザ存在チェック
+        $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
+
+        // パスワード変更処理
+        $userSettingService = $this->getUserSettingService();
+        $userSettingService->resetPassword($auth, $mUser);
+
+        return array('result' => 'OK');
+    }
+
+    /**
      * パスワード変更
      *
      * @Rest\Post("/v1/users/{userId}/changepassword.{_format}")

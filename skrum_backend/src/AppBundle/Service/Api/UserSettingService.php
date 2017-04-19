@@ -323,11 +323,81 @@ class UserSettingService extends BaseService
     }
 
     /**
+     * パスワードリセット
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @return void
+     */
+    public function resetPassword($auth, $mUser)
+    {
+        // 自ユーザのパスワードリセットは不可
+        if ($mUser->getUserId() == $auth->getUserId()) {
+            throw new ApplicationException('自ユーザのパスワードリセットはできません');
+        }
+
+        // ランダムパスワード生成
+        $ramdomPassword =  null;
+        while (!preg_match('/^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,100}$/', $ramdomPassword)) {
+            $ramdomPassword = $this->generateRamdomPassword();
+        }
+
+        // パスワードをハッシュ化
+        $hashedPassword = password_hash($ramdomPassword, PASSWORD_DEFAULT, array('cost' => 12));
+
+        // トランザクション開始
+        $this->beginTransaction();
+
+        try {
+            // パスワード更新
+            $mUser->setPassword($hashedPassword);
+
+            // Eメール本文テンプレート埋め込み変数配列の設定
+            $data = array();
+            $data['password'] = $ramdomPassword;
+            $data['subdomain'] = $auth->getSubdomain();
+            $data['supportAddress'] = $this->getParameter('support_address');
+
+            // Eメール送信
+            $this->sendEmail(
+                    $this->getParameter('from_address'),
+                    $mUser->getEmailAddress(),
+                    $this->getParameter('password_reset'),
+                    'mail/password_reset.txt.twig',
+                    $data
+                    );
+
+            $this->flush();
+            $this->commit();
+        } catch (\Exception $e) {
+            $this->rollback();
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * ランダムパスワード生成
+     *
+     * @return string ランダムパスワード
+     */
+    private function generateRamdomPassword()
+    {
+        $data = 'abcdefghkmnprstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ234567823456782345678234567823456782345678';
+        $length = strlen($data);
+        $ret = '';
+        for ($i = 0; $i < 15; $i++) {
+            $ret .= $data[mt_rand(0, $length - 1)];
+        }
+
+        return $ret;
+    }
+
+    /**
      * パスワード変更
      *
      * @param \AppBundle\Utils\Auth $auth 認証情報
-     * @param strint $currentPassword 現在パスワード
-     * @param strint $newPassword 新パスワード
+     * @param string $currentPassword 現在パスワード
+     * @param string $newPassword 新パスワード
      * @return void
      */
     public function changePassword($auth, $currentPassword, $newPassword)
