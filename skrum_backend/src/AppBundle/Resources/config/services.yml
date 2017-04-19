@@ -113,3 +113,7 @@ services:
     api.search_service:
         class: AppBundle\Service\Api\SearchService
         arguments: ['@service_container']
+
+    api.contract_service:
+        class: AppBundle\Service\Api\ContractService
+        arguments: ['@service_container']

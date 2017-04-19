@@ -74,4 +74,20 @@ SQL;
 
         return $stmt->fetchAll();
     }
+
+    /**
+     * 指定会社IDのユーザ数を取得
+     *
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getUserCount($companyId)
+    {
+        $qb = $this->createQueryBuilder('mu');
+        $qb->select('COUNT(mu.userId)')
+            ->where('mu.company = :companyId')
+            ->setParameter('companyId', $companyId);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

@@ -10,21 +10,15 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/paths/{groupPathId}.json:
+  /groups/{groupId}.json:
     delete:
-      description: 所属先グループ削除
+      description: グループ削除
       parameters:
         -
           name: groupId
           in: path
           type: string
           description: グループID
-          required: true
-        -
-          name: groupPathId
-          in: path
-          type: string
-          description: 削除対象グループパスID
           required: true
       responses:
         200:

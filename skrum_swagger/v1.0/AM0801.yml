@@ -10,32 +10,38 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/members/{userId}.json:
-    delete:
-      description: グループメンバー削除
+  /companies/{companyId}/contracts.json:
+    get:
+      description: プラン情報取得
       parameters:
         -
-          name: groupId
+          name: companyId
           in: path
           type: string
-          description: グループID
-          required: true
-        -
-          name: userId
-          in: path
-          type: string
-          description: ユーザID
+          description: 会社ID
           required: true
       responses:
         200:
-          description: 成功
+          description: 契約情報
           schema:
             type: object
             properties:
-              result:
+              planId:
+                type: integer
+              planName:
                 type: string
+              userCount:
+                type: integer
+              priceType:
+                type: string
+              price:
+                type: integer
             required:
-              - result
+              - planId
+              - planName
+              - userCount
+              - priceType
+              - price
         400:
           description: JSONスキーマ不正
         409:

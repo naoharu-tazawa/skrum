@@ -401,4 +401,9 @@ class BaseController extends FOSRestController
     {
         return $this->get('api.search_service');
     }
+
+    protected function getContractService()
+    {
+        return $this->get('api.contract_service');
+    }
 }
