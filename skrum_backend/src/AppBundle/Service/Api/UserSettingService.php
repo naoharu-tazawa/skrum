@@ -4,7 +4,9 @@ namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\AuthenticationException;
 use AppBundle\Exception\DoubleOperationException;
+use AppBundle\Exception\NoDataException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\Constant;
 use AppBundle\Utils\DateUtility;
@@ -314,6 +316,45 @@ class UserSettingService extends BaseService
 
         try {
             $this->persist($mUser);
+            $this->flush();
+        } catch (\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * パスワード変更
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param strint $currentPassword 現在パスワード
+     * @param strint $newPassword 新パスワード
+     * @return void
+     */
+    public function changePassword($auth, $currentPassword, $newPassword)
+    {
+        // 現在パスワードと新パスワードが同一の場合、更新処理を行わない
+        if ($currentPassword == $newPassword) {
+            return;
+        }
+        // 対象ユーザをユーザテーブルから取得
+        $mUserRepos = $this->getMUserRepository();
+        $mUserArray = $mUserRepos->findBy(array('userId' => $auth->getUserId()));
+        if (count($mUserArray) === 0) {
+            throw new NoDataException('対象ユーザは存在しません');
+        }
+
+        // パスワード検証
+        if (!password_verify($currentPassword, $mUserArray[0]->getPassword())) {
+            throw new AuthenticationException('パスワードが一致しません');
+        }
+
+        // 新パスワードをハッシュ化
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT, array('cost' => 12));
+
+        // パスワード更新
+        $mUserArray[0]->setPassword($hashedPassword);
+
+        try {
             $this->flush();
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());

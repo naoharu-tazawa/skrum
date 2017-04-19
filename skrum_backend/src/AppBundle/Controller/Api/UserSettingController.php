@@ -106,4 +106,36 @@ class UserSettingController extends BaseController
 
         return array('result' => 'OK');
     }
+
+    /**
+     * パスワード変更
+     *
+     * @Rest\Post("/v1/users/{userId}/changepassword.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $userId ユーザID
+     * @return array
+     */
+    public function changeUserPasswordAction(Request $request, $userId)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/ChangeUserPasswordPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // ユーザIDの一致をチェック
+        if ($userId != $auth->getUserId()) {
+            throw new ApplicationException('ユーザIDが存在しません');
+        }
+
+        // パスワード変更処理
+        $userSettingService = $this->getUserSettingService();
+        $userSettingService->changePassword($auth, $data['currentPassword'], $data['newPassword']);
+
+        return array('result' => 'OK');
+    }
 }
