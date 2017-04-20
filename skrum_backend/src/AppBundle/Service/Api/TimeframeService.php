@@ -92,7 +92,7 @@ class TimeframeService extends BaseService
         $defaultTimeframe = $tTimeframeRepos->findOneBy(array('company' => $auth->getCompanyId(), 'defaultFlg' => DBConstant::FLG_TRUE));
 
         // 選択されたタイムフレームが既にデフォルトに設定されている場合、更新処理をしない
-        if ($tTimeframe->getTimeframeId() == $defaultTimeframe->getTimeframeId()) {
+        if ($tTimeframe->getTimeframeId() === $defaultTimeframe->getTimeframeId()) {
             return;
         }
 
@@ -106,7 +106,7 @@ class TimeframeService extends BaseService
         try {
             $this->flush();
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
@@ -158,7 +158,7 @@ class TimeframeService extends BaseService
         try {
             $this->persist($tTimeframe);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -202,7 +202,7 @@ class TimeframeService extends BaseService
 
         try {
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -218,7 +218,7 @@ class TimeframeService extends BaseService
         try {
             $this->remove($tTimeframe);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }

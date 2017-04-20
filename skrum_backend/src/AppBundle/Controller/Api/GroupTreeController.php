@@ -18,8 +18,8 @@ class GroupTreeController extends BaseController
      * 所属先グループ追加
      *
      * @Rest\Post("/v1/groups/{groupId}/paths.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $groupId グループID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function postGroupPathsAction(Request $request, $groupId)
@@ -51,9 +51,9 @@ class GroupTreeController extends BaseController
      * 所属先グループ削除
      *
      * @Rest\Delete("/v1/groups/{groupId}/paths/{groupTreeId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
-     * @param $groupTreeId グループツリーID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
+     * @param string $groupTreeId グループツリーID
      * @return array
      */
     public function deleteGroupPathAction(Request $request, $groupId, $groupTreeId)

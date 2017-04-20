@@ -3,7 +3,6 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DBConstant;
@@ -31,7 +30,7 @@ class GroupMemberService extends BaseService
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
         $tGroupMemberArray = $tGroupMemberRepos->getGroupMember($mGroup->getGroupId(), $mUser->getUserId());
         if (count($tGroupMemberArray) > 0) {
-            throw new ApplicationException('このユーザはグループに既に登録済みです');
+            throw new DoubleOperationException('このユーザはグループに既に登録済みです');
         }
 
         // グループメンバー登録
@@ -80,6 +79,7 @@ class GroupMemberService extends BaseService
     public function getMUserArray($groupId)
     {
          $tGroupMemberRepos = $this->getTGroupMemberRepository();
+
          return $tGroupMemberRepos->getAllGroupMembers($groupId);
     }
 
@@ -101,7 +101,7 @@ class GroupMemberService extends BaseService
         try {
             $this->remove($tGroupMember);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -119,8 +119,9 @@ class GroupMemberService extends BaseService
 
         // グループ情報配列を整形してDTOに詰め替える
         $groups = array();
-        for ($i = 0; $i < count($groupInfoArray); $i++) {
-            if ($i == 0) {
+        $groupInfoArrayCount = count($groupInfoArray);;
+        for ($i = 0; $i < $groupInfoArrayCount; ++$i) {
+            if ($i === 0) {
                 // 初回ループ
 
                 $groupDTO = new GroupDTO();
@@ -156,7 +157,7 @@ class GroupMemberService extends BaseService
             $groupId = $groupInfoArray[$i]['groupId'];
 
             // 最終ループ
-            if ($i == (count($groupInfoArray) - 1)) {
+            if ($i === ($groupInfoArrayCount - 1)) {
                 // 達成率には平均値を入れる
                 $groupDTO->setAchievementRate(floor((array_sum($achievementRateArray) / count($achievementRateArray)) * 10) / 10);
                 $groups[] = $groupDTO;
@@ -176,6 +177,7 @@ class GroupMemberService extends BaseService
     public function getGroupInfoArray($userId, $timeframeId)
     {
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
+
         return $tGroupMemberRepos->getAllGroupsWithAchievementRate($userId, $timeframeId);
     }
 

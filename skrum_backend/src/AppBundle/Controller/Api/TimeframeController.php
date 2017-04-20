@@ -18,8 +18,8 @@ class TimeframeController extends BaseController
      * タイムフレーム一覧取得
      *
      * @Rest\Get("/v1/companies/{companyId}/timeframes.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $companyId 会社ID
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
      * @return array
      */
     public function getCompanyTimeframesAction(Request $request, $companyId)
@@ -43,8 +43,9 @@ class TimeframeController extends BaseController
      * タイムフレーム詳細一覧取得
      *
      * @Rest\Get("/v1/companies/{companyId}/timeframedetails.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $companyId 会社ID
+     * @Permission(value="timeframe_edit")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
      * @return array
      */
     public function getCompanyTimeframedetailsAction(Request $request, $companyId)
@@ -68,8 +69,9 @@ class TimeframeController extends BaseController
      * デフォルトタイムフレーム変更
      *
      * @Rest\Put("/v1/timeframes/{timeframeId}/setdefault.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $timeframeId タイムフレームID
+     * @Permission(value="timeframe_edit")
+     * @param Request $request リクエストオブジェクト
+     * @param string $timeframeId タイムフレームID
      * @return array
      */
     public function setDefaultTimeframeAction(Request $request, $timeframeId)
@@ -91,7 +93,8 @@ class TimeframeController extends BaseController
      * タイムフレーム追加
      *
      * @Rest\Post("/v1/timeframes.{_format}")
-     * @param $request リクエストオブジェクト
+     * @Permission(value="timeframe_edit")
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function postTimeframesAction(Request $request)
@@ -117,8 +120,9 @@ class TimeframeController extends BaseController
      * タイムフレーム編集
      *
      * @Rest\Put("/v1/timeframes/{timeframeId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $timeframeId タイムフレームID
+     * @Permission(value="timeframe_edit")
+     * @param Request $request リクエストオブジェクト
+     * @param string $timeframeId タイムフレームID
      * @return array
      */
     public function putTimeframeAction(Request $request, $timeframeId)
@@ -147,8 +151,9 @@ class TimeframeController extends BaseController
      * タイムフレーム削除
      *
      * @Rest\Delete("/v1/timeframes/{timeframeId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $timeframeId タイムフレームID
+     * @Permission(value="timeframe_edit")
+     * @param Request $request リクエストオブジェクト
+     * @param string $timeframeId タイムフレームID
      * @return array
      */
     public function deleteTimeframeAction(Request $request, $timeframeId)

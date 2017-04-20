@@ -53,12 +53,13 @@ class OkrService extends BaseService
         }
 
         $disclosureLogic = $this->getDisclosureLogic();
+        $tOkrArrayCount = count($tOkrArray);
         $returnArray = array();
         $flg = false;
-        for ($i = 0; $i < count($tOkrArray); $i++) {
+        for ($i = 0; $i < $tOkrArrayCount; ++$i) {
             if (array_key_exists('objective', $tOkrArray[$i])) {
                 // 2回目のループ以降、前回ループ分のDTOを配列に入れる
-                if ($i != 0) {
+                if ($i !== 0) {
                     if ($flg) {
                         $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
                     }
@@ -74,10 +75,10 @@ class OkrService extends BaseService
                 $basicOkrDTOObjective = new BasicOkrDTO();
                 $basicOkrDTOObjective->setOkrId($tOkrArray[$i]['objective']->getOkrId());
                 $basicOkrDTOObjective->setOkrName($tOkrArray[$i]['objective']->getName());
-                if ($tOkrArray[$i]['objective']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+                if ($tOkrArray[$i]['objective']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                     $basicOkrDTOObjective->setOwnerUserId($tOkrArray[$i]['objective']->getOwnerUser()->getUserId());
                     $basicOkrDTOObjective->setOwnerUserName($tOkrArray[$i]['objective']->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['objective']->getOwnerUser()->getFirstName());
-                } elseif ($tOkrArray[$i]['objective']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                } elseif ($tOkrArray[$i]['objective']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $basicOkrDTOObjective->setOwnerGroupId($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupId());
                     $basicOkrDTOObjective->setOwnerGroupName($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupName());
                 } else {
@@ -96,7 +97,7 @@ class OkrService extends BaseService
                 // キーリザルトがnullの場合、スキップ
                 if ($tOkrArray[$i]['keyResult'] == null) {
                     // 最終ループ
-                    if ($i == (count($tOkrArray) - 1)) {
+                    if ($i === ($tOkrArrayCount - 1)) {
                         $returnArray[] = $basicOkrDTOObjective;
                     }
                     continue;
@@ -105,7 +106,7 @@ class OkrService extends BaseService
                 // 閲覧権限をチェック
                 if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[$i]['keyResult'])) {
                     // 最終ループ
-                    if ($i == (count($tOkrArray) - 1)) {
+                    if ($i === ($tOkrArrayCount - 1)) {
                         if ($flg) {
                             $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
                         }
@@ -123,10 +124,10 @@ class OkrService extends BaseService
                 $basicOkrDTOKeyResult->setUnit($tOkrArray[$i]['keyResult']->getUnit());
                 $basicOkrDTOKeyResult->setAchievementRate($tOkrArray[$i]['keyResult']->getAchievementRate());
                 $basicOkrDTOKeyResult->setOwnerType($tOkrArray[$i]['keyResult']->getOwnerType());
-                if ($tOkrArray[$i]['keyResult']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+                if ($tOkrArray[$i]['keyResult']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                     $basicOkrDTOKeyResult->setOwnerUserId($tOkrArray[$i]['keyResult']->getOwnerUser()->getUserId());
                     $basicOkrDTOKeyResult->setOwnerUserName($tOkrArray[$i]['keyResult']->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['keyResult']->getOwnerUser()->getFirstName());
-                } elseif ($tOkrArray[$i]['keyResult']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                } elseif ($tOkrArray[$i]['keyResult']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $basicOkrDTOKeyResult->setOwnerGroupId($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupId());
                     $basicOkrDTOKeyResult->setOwnerGroupName($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupName());
                 } else {
@@ -142,7 +143,7 @@ class OkrService extends BaseService
             }
 
             // 最終ループ
-            if ($i == (count($tOkrArray) - 1)) {
+            if ($i === ($tOkrArrayCount - 1)) {
                 if ($flg) {
                     $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
                 }
@@ -169,7 +170,7 @@ class OkrService extends BaseService
         $tOkrRepos = $this->getTOkrRepository();
 
         // 目標紐付け先情報を取得
-        if ($subjectType == Constant::SUBJECT_TYPE_USER) {
+        if ($subjectType === Constant::SUBJECT_TYPE_USER) {
             /* ユーザの場合 */
             $userAlignmentsInfoArray = $tOkrRepos->getUserAlignmentsInfoForUser($userId, $timeframeId, $companyId);
             $groupAlignmentsInfoArray = $tOkrRepos->getGroupAlignmentsInfoForUser($userId, $timeframeId, $companyId);
@@ -248,32 +249,32 @@ class OkrService extends BaseService
             }
 
             // 同一オーナーのOKRに紐付ける場合、OKR種別を比較し紐付け可能かチェック
-            if ($ownerType == DBConstant::OKR_OWNER_TYPE_USER && $parentOkrEntity->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER && $parentOkrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                 if ($mUser->getUserId() == $parentOkrEntity->getOwnerUser()->getUserId()) {
-                    if (!($parentOkrEntity->getType() == DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT)) {
+                    if (!($parentOkrEntity->getType() === DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT)) {
                         throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
                     }
                 } else {
-                    if ($data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT) {
+                    if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
                         throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
                     }
                 }
-            } elseif ($ownerType == DBConstant::OKR_OWNER_TYPE_GROUP && $parentOkrEntity->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
-                if ($mGroup->getGroupId() == $parentOkrEntity->getOwnerGroup()->getGroupId()) {
-                    if (!($parentOkrEntity->getType() == DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT)) {
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $parentOkrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                if ($mGroup->getGroupId() === $parentOkrEntity->getOwnerGroup()->getGroupId()) {
+                    if (!($parentOkrEntity->getType() === DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT)) {
                         throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
                     }
                 } else {
-                    if ($data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT) {
+                    if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
                         throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
                     }
                 }
-            } elseif ($ownerType == DBConstant::OKR_OWNER_TYPE_COMPANY && $parentOkrEntity->getOwnerType() == DBConstant::OKR_OWNER_TYPE_COMPANY) {
-                if (!($parentOkrEntity->getType() == DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT)) {
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY && $parentOkrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
+                if (!($parentOkrEntity->getType() === DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT)) {
                     throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
                 }
             } else {
-                if ($data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT) {
+                if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
                     throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
                 }
             }
@@ -282,7 +283,7 @@ class OkrService extends BaseService
             $treeValues = $this->getLeftRightValues($parentOkrEntity->getOkrId(), $tTimeframe->getTimeframeId());
         } else {
             // 会社のOBJECTIVEを登録する場合、ルートノードが存在するかチェック
-            if ($ownerType == DBConstant::OKR_OWNER_TYPE_COMPANY && $data['okrType'] == DBConstant::OKR_TYPE_OBJECTIVE) {
+            if ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY && $data['okrType'] === DBConstant::OKR_TYPE_OBJECTIVE) {
                 // ルートノードが存在するかチェック
                 $tOkrRepos = $this->getTOkrRepository();
                 $parentOkrEntity = $tOkrRepos->getRootNode($tTimeframe->getTimeframeId());
@@ -335,18 +336,18 @@ class OkrService extends BaseService
             $tOkr->setAchievementRate(0);
             $tOkr->setUnit($data['unit']);
             $tOkr->setOwnerType($ownerType);
-            if ($ownerType == DBConstant::OKR_OWNER_TYPE_USER) {
+            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
                 $tOkr->setOwnerUser($mUser);
-            } elseif ($ownerType == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
                 $tOkr->setOwnerGroup($mGroup);
-            } elseif ($ownerType == DBConstant::OKR_OWNER_TYPE_COMPANY) {
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY) {
                 $tOkr->setOwnerCompanyId($companyId);
             }
             $tOkr->setStartDate(DateUtility::transIntoDatetime($data['startDate']));
             $tOkr->setEndDate(DateUtility::transIntoDatetime($data['endDate']));
             $tOkr->setStatus(DBConstant::OKR_STATUS_OPEN);
             $tOkr->setDisclosureType($data['disclosureType']);
-            if ($data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT) $tOkr->setRatioLockedFlg(DBConstant::FLG_FALSE);
+            if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) $tOkr->setRatioLockedFlg(DBConstant::FLG_FALSE);
             $this->persist($tOkr);
 
             // OKRアクティビティ登録（作成）
@@ -362,7 +363,7 @@ class OkrService extends BaseService
 
             // OKRアクティビティ登録（紐付け）
             if ($alignmentFlg) {
-                if (!($ownerType == DBConstant::OKR_OWNER_TYPE_COMPANY && $data['okrType'] == DBConstant::OKR_TYPE_OBJECTIVE)) {
+                if (!($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY && $data['okrType'] === DBConstant::OKR_TYPE_OBJECTIVE)) {
                     $tOkrActivity = new TOkrActivity();
                     $tOkrActivity->setOkr($tOkr);
                     $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ALIGN);
@@ -380,7 +381,7 @@ class OkrService extends BaseService
 
             $this->flush();
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
@@ -398,7 +399,7 @@ class OkrService extends BaseService
         $rand = mt_rand(1, 2);
         $tOkrRepos = $this->getTOkrRepository();
 
-        if ($rand == 1) {
+        if ($rand === 1) {
             return $tOkrRepos->getLeftRightOfLeftestInsertionNode($parentOkrId, $timeframeId);
         } else {
             return $tOkrRepos->getLeftRightOfRightestInsertionNode($parentOkrId, $timeframeId);
@@ -422,7 +423,7 @@ class OkrService extends BaseService
 
         try {
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -441,14 +442,14 @@ class OkrService extends BaseService
         $groupIdArray = array();
         if (!empty($data['post'])) {
             // 進捗登録対象OKRのオーナーがグループの場合、投稿先グループに入れる
-            if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                 $groupIdArray[] = $tOkr->getOwnerGroup()->getGroupId();
             }
 
             // 親OKRまたは祖父母OKRのオーナーがグループの場合、そのグループを投稿先グループに入れる
             $tOkrRepos = $this->getTOkrRepository();
             $parentAndGrandParentOkr = $tOkrRepos->getParentOkr($tOkr->getParentOkr()->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
-            if ($tOkr->getType() == DBConstant::OKR_TYPE_OBJECTIVE) {
+            if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
                 if (!empty($parentAndGrandParentOkr[0]['childOkr'])) {
                     if ($parentAndGrandParentOkr[0]['childOkr']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
                         $groupIdArray[] = $parentAndGrandParentOkr[0]['childOkr']->getOwnerGroup()->getGroupId();
@@ -463,7 +464,7 @@ class OkrService extends BaseService
             }
 
             // 二重投稿を防ぐ
-            if (count($groupIdArray) == 2) {
+            if (count($groupIdArray) === 2) {
                 if ($groupIdArray[0] == $groupIdArray[1]) {
                     unset($groupIdArray[1]);
                 }
@@ -514,7 +515,7 @@ class OkrService extends BaseService
 
             $this->flush();
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
@@ -547,7 +548,7 @@ class OkrService extends BaseService
             }
 
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }

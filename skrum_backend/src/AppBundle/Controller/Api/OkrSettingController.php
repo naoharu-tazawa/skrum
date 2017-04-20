@@ -21,8 +21,8 @@ class OkrSettingController extends BaseController
      * OKRクローズ
      *
      * @Rest\Put("/v1/okrs/{okrId}/close.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $okrId OKRID
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function putOkrCloseAction(Request $request, $okrId)
@@ -53,8 +53,8 @@ class OkrSettingController extends BaseController
      * OKRオープン
      *
      * @Rest\Put("/v1/okrs/{okrId}/open.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $okrId OKRID
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function putOkrOpenAction(Request $request, $okrId)
@@ -85,8 +85,8 @@ class OkrSettingController extends BaseController
      * OKR公開設定変更
      *
      * @Rest\Put("/v1/okrs/{okrId}/changedisclosure.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $okrId OKRID
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function changeOkrDisclosureAction(Request $request, $okrId)
@@ -124,8 +124,8 @@ class OkrSettingController extends BaseController
      * OKRオーナー変更
      *
      * @Rest\Put("/v1/okrs/{okrId}/changeowner.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $okrId OKRID
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function changeOkrOwnerAction(Request $request, $okrId)
@@ -177,8 +177,8 @@ class OkrSettingController extends BaseController
      * KR加重平均割合設定
      *
      * @Rest\Put("/v1/okrs/{okrId}/setratio.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $okrId OKRID
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function setOkrRatioAction(Request $request, $okrId)

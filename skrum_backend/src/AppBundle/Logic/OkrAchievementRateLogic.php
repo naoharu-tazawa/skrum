@@ -28,7 +28,7 @@ class OkrAchievementRateLogic extends BaseLogic
             }
 
             // 親OKRが「OKR種別 ！＝ 1:目標」の場合、再計算対象外
-            if ($tOkr->getParentOkr()->getType() != DBConstant::OKR_TYPE_OBJECTIVE) {
+            if ($tOkr->getParentOkr()->getType() !== DBConstant::OKR_TYPE_OBJECTIVE) {
                 return;
             }
 
@@ -53,7 +53,8 @@ class OkrAchievementRateLogic extends BaseLogic
 
             // 子OKRの加重平均比率を再設定（ $i=0 は 'parentOkr' なので $i=1 から始める）
             $weightedAverageAchievementRate = array();
-            for ($i = 1; $i < count($tOkrArray); $i++) {
+            $tOkrArrayCount = count($tOkrArray);
+            for ($i = 1; $i < $tOkrArrayCount; ++$i) {
                 if ($weightedAverageRatioFlg) {
                     if ($tOkrArray[$i]['childOkr']->getRatioLockedFlg() == DBConstant::FLG_FALSE) {
                         $tOkrArray[$i]['childOkr']->setWeightedAverageRatio($averageRatio);
@@ -89,7 +90,7 @@ class OkrAchievementRateLogic extends BaseLogic
     public function recalculateFromParent($tOkr, $companyId, $weightedAverageRatioFlg = false)
     {
         // OKRが「OKR種別 ！＝ 1:目標」の場合、再計算対象外
-        if ($tOkr->getType() != DBConstant::OKR_TYPE_OBJECTIVE) {
+        if ($tOkr->getType() !== DBConstant::OKR_TYPE_OBJECTIVE) {
             return;
         }
 
@@ -123,8 +124,9 @@ class OkrAchievementRateLogic extends BaseLogic
         $averageRatio = floor(((100 - $summedWeightedAverageRatio) / ($childrenOkrsCount - $lockedRatioCount)) * 10 ) / 10; // ロックフラグが立っていないOKRに設定するの加重平均比率
 
         // 子OKRの加重平均比率を再設定（ $i=0 は 'parentOkr' なので $i=1 から始める）
+        $tOkrArrayCount = count($tOkrArray);
         $weightedAverageAchievementRate = array();
-        for ($i = 1; $i < count($tOkrArray); $i++) {
+        for ($i = 1; $i < $tOkrArrayCount; ++$i) {
             if ($weightedAverageRatioFlg) {
                 if ($tOkrArray[$i]['childOkr']->getRatioLockedFlg() == DBConstant::FLG_FALSE) {
                     $tOkrArray[$i]['childOkr']->setWeightedAverageRatio($averageRatio);

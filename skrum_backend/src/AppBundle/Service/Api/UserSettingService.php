@@ -51,7 +51,7 @@ class UserSettingService extends BaseService
         try {
             $this->persist($tPreUser);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
 
@@ -96,7 +96,7 @@ class UserSettingService extends BaseService
                 'companyId' => $companyId
         ));
         if (count($mRoleAssignmentArray) === 0) {
-            throw new ApplicationException('ロール割当IDが存在しません');
+            throw new NoDataException('ロール割当IDが存在しません');
         }
 
         // URLトークンを生成
@@ -113,7 +113,7 @@ class UserSettingService extends BaseService
         try {
             $this->persist($tPreUser);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
 
@@ -252,9 +252,9 @@ class UserSettingService extends BaseService
                 }
 
                 // サイクル種別に応じた回数ループ
-                for ($i = 0; $i < $cycleType['i']; $i++) {
+                for ($i = 0; $i < $cycleType['i']; ++$i) {
                     // 開始日
-                    if ($i == 0) {
+                    if ($i === 0) {
                         $startYearMonthDate = $timeframeInfo['start']['year'] . '-' . $timeframeInfo['start']['month'] . '-' . $timeframeInfo['start']['date'];
                     } else {
                         $startYearMonthDate = DateUtility::get1stOfXMonthDateString($startDateArray[0], $startDateArray[1], $cycleType['months']);
@@ -283,7 +283,7 @@ class UserSettingService extends BaseService
                     $tTimeframe->setTimeframeName($timeframeName);
                     $tTimeframe->setStartDate(DateUtility::transIntoDatetime($startYearMonthDate));
                     $tTimeframe->setEndDate(DateUtility::transIntoDatetime($endYearMonthDate));
-                    if ($i == 0) {
+                    if ($i === 0) {
                         $tTimeframe->setDefaultFlg(DBConstant::FLG_TRUE);
                     }
                     $this->persist($tTimeframe);
@@ -333,7 +333,7 @@ class UserSettingService extends BaseService
     public function resetPassword($auth, $mUser)
     {
         // 自ユーザのパスワードリセットは不可
-        if ($mUser->getUserId() == $auth->getUserId()) {
+        if ($mUser->getUserId() === $auth->getUserId()) {
             throw new ApplicationException('自ユーザのパスワードリセットはできません');
         }
 
@@ -386,7 +386,7 @@ class UserSettingService extends BaseService
         $data = 'abcdefghkmnprstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ234567823456782345678234567823456782345678';
         $length = strlen($data);
         $ret = '';
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 15; ++$i) {
             $ret .= $data[mt_rand(0, $length - 1)];
         }
 
@@ -404,7 +404,7 @@ class UserSettingService extends BaseService
     public function changePassword($auth, $currentPassword, $newPassword)
     {
         // 現在パスワードと新パスワードが同一の場合、更新処理を行わない
-        if ($currentPassword == $newPassword) {
+        if ($currentPassword === $newPassword) {
             return;
         }
         // 対象ユーザをユーザテーブルから取得
@@ -484,12 +484,12 @@ class UserSettingService extends BaseService
     public function changeRole($auth, $mUser, $mRoleAssignment)
     {
         // 自ユーザの権限変更は不可
-        if ($mUser->getUserId() == $auth->getUserId()) {
+        if ($mUser->getUserId() === $auth->getUserId()) {
             throw new ApplicationException('自ユーザの権限変更はできません');
         }
 
         // 現在のロール割当IDと変更後のロール割当IDが同一の場合、更新処理を行わない
-        if ($mUser->getRoleAssignment()->getRoleAssignmentId() == $mRoleAssignment->getRoleAssignmentId()) {
+        if ($mUser->getRoleAssignment()->getRoleAssignmentId() === $mRoleAssignment->getRoleAssignmentId()) {
             return;
         }
 

@@ -119,7 +119,7 @@ class OkrOperationService extends BaseService
 
             $this->flush();
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }

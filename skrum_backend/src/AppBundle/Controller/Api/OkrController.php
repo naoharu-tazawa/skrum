@@ -21,7 +21,7 @@ class OkrController extends BaseController
      * 目標新規登録
      *
      * @Rest\Post("/v1/objectives.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function postObjectivesAction(Request $request)
@@ -80,8 +80,8 @@ class OkrController extends BaseController
      * OKR基本情報変更
      *
      * @Rest\Put("/v1/okrs/{okrId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $okrId OKRID
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function putOkrAction(Request $request, $okrId)
@@ -119,8 +119,8 @@ class OkrController extends BaseController
      * OKR進捗登録
      *
      * @Rest\Post("/v1/okrs/{okrId}/achievements.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $okrId OKRID
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function postOkrAchievementsAction(Request $request, $okrId)
@@ -158,7 +158,7 @@ class OkrController extends BaseController
      * OKR削除
      *
      * @Rest\Delete("/v1/okrs/{okrId}.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function deleteOkrAction(Request $request, $okrId)

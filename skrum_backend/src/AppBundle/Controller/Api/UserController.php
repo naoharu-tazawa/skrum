@@ -20,8 +20,8 @@ class UserController extends BaseController
      * ユーザ基本情報変更
      *
      * @Rest\Put("/v1/users/{userId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function putUserAction(Request $request, $userId)
@@ -50,8 +50,9 @@ class UserController extends BaseController
      * ユーザ削除
      *
      * @Rest\Delete("/v1/users/{userId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @Permission(value="user_delete")
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function deleteUserAction(Request $request, $userId)

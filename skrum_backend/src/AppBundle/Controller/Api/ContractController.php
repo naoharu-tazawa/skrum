@@ -18,8 +18,8 @@ class ContractController extends BaseController
      * 契約プラン情報取得
      *
      * @Rest\Get("/v1/companies/{companyId}/contracts.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $companyId 会社ID
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
      * @return array
      */
     public function getCompanyContractsAction(Request $request, $companyId)

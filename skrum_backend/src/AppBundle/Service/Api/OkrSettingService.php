@@ -24,7 +24,7 @@ class OkrSettingService extends BaseService
     public function closeOkr($tOkr)
     {
         // クローズ対象OKRが既にクローズド状態の場合、更新処理を行わない
-        if ($tOkr->getStatus() == DBConstant::OKR_STATUS_CLOSED) {
+        if ($tOkr->getStatus() === DBConstant::OKR_STATUS_CLOSED) {
             return;
         }
 
@@ -44,7 +44,7 @@ class OkrSettingService extends BaseService
 
             $this->flush();
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
@@ -59,7 +59,7 @@ class OkrSettingService extends BaseService
     public function openOkr($tOkr)
     {
         // オープン対象OKRが既にオープン状態の場合、更新処理を行わない
-        if ($tOkr->getStatus() == DBConstant::OKR_STATUS_OPEN) {
+        if ($tOkr->getStatus() === DBConstant::OKR_STATUS_OPEN) {
             return;
         }
 
@@ -79,7 +79,7 @@ class OkrSettingService extends BaseService
 
             $this->flush();
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
@@ -95,7 +95,7 @@ class OkrSettingService extends BaseService
     public function changeDisclosure($tOkr, $disclosureType)
     {
         // 更新対象OKRの公開種別とリクエストJSONで指定された公開種別が一致する場合、更新処理を行わない
-        if ($tOkr->getDisclosureType() == $disclosureType) {
+        if ($tOkr->getDisclosureType() === $disclosureType) {
             return;
         }
 
@@ -104,7 +104,7 @@ class OkrSettingService extends BaseService
 
         try {
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -128,14 +128,14 @@ class OkrSettingService extends BaseService
         $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
 
         // 変更前のオーナー種別によって処理を分岐
-        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+        if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
             // 「変更前オーナー種別＝1:ユーザ」の場合
 
-            if ($ownerType == DBConstant::OKR_OWNER_TYPE_USER) {
+            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
                 // 「変更前オーナー種別＝1:ユーザ」かつ「変更後オーナー種別＝1:ユーザ」の場合
 
                 // オーナー変更がない場合は更新処理を行わない
-                if ($tOkr->getOwnerUser()->getUserId() == $mUser->getUserId()) {
+                if ($tOkr->getOwnerUser()->getUserId() === $mUser->getUserId()) {
                     return;
                 }
 
@@ -146,7 +146,7 @@ class OkrSettingService extends BaseService
                 // オーナー変更
                 $tOkr->setOwnerUser($mUser);
 
-            } elseif ($ownerType == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
                 // 「変更前オーナー種別＝1:ユーザ」かつ「変更後オーナー種別＝2:グループ」の場合
 
                 // 変更前/変更後オーナー登録
@@ -172,10 +172,10 @@ class OkrSettingService extends BaseService
 
             }
 
-        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+        } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
             // 「変更前オーナー種別＝2:グループ」の場合
 
-            if ($ownerType == DBConstant::OKR_OWNER_TYPE_USER) {
+            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
                 // 「変更前オーナー種別＝2:グループ」かつ「変更後オーナー種別＝1:ユーザ」の場合
 
                 // 変更前/変更後オーナー登録
@@ -187,11 +187,11 @@ class OkrSettingService extends BaseService
                 $tOkr->setOwnerGroup(null);
                 $tOkr->setOwnerUser($mUser);
 
-            } elseif ($ownerType == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
                 // 「変更前オーナー種別＝2:グループ」かつ「変更後オーナー種別＝2:グループ」の場合
 
                 // オーナー変更がない場合は更新処理を行わない
-                if ($tOkr->getOwnerGroup()->getGroupId() == $mGroup->getGroupId()) {
+                if ($tOkr->getOwnerGroup()->getGroupId() === $mGroup->getGroupId()) {
                     return;
                 }
 
@@ -219,7 +219,7 @@ class OkrSettingService extends BaseService
         } else {
             // 「変更前オーナー種別＝3:会社」の場合
 
-            if ($ownerType == DBConstant::OKR_OWNER_TYPE_USER) {
+            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
                 // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝1:ユーザ」の場合
 
                 // 変更前/変更後オーナー登録
@@ -231,7 +231,7 @@ class OkrSettingService extends BaseService
                 $tOkr->setOwnerCompanyId(null);
                 $tOkr->setOwnerUser($mUser);
 
-            } elseif ($ownerType == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
                 // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝2:グループ」の場合
 
                 // 変更前/変更後オーナー登録
@@ -258,7 +258,7 @@ class OkrSettingService extends BaseService
         try {
             $this->flush();
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
@@ -286,9 +286,10 @@ class OkrSettingService extends BaseService
             $tOkrRepos->resetRatioLockedFlg($okrEntity->getOkrId(), $okrEntity->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
 
             // KR加重平均割合更新
+            $tOkrCount = count($tOkr);
             foreach ($data as $item) {
                 $tOkr = $tOkrRepos->getOkr($item['keyResultId'], $auth->getCompanyId());
-                if (count($tOkr) != 1) {
+                if ($tOkrCount !== 1) {
                     throw new ApplicationException('指定されたキーリザルトは存在しません');
                 }
 
@@ -308,7 +309,7 @@ class OkrSettingService extends BaseService
 
             $this->flush();
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }

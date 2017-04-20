@@ -77,7 +77,7 @@ class LoginService extends BaseService
         $mUserArray[0]->setLastAccessDatetime(DateUtility::getCurrentDatetime());
         try {
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
 
@@ -192,7 +192,7 @@ class LoginService extends BaseService
             $this->flush();
             $this->commit();
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
@@ -270,7 +270,7 @@ class LoginService extends BaseService
             $this->flush();
             $this->commit();
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }

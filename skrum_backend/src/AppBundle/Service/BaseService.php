@@ -161,8 +161,7 @@ class BaseService
      */
     protected function beginTransaction()
     {
-        if (!$this->entityManager->getConnection()->isTransactionActive())
-        {
+        if (!$this->entityManager->getConnection()->isTransactionActive()) {
             $this->entityManager->beginTransaction();
         }
     }
@@ -174,8 +173,7 @@ class BaseService
      */
     protected function commit()
     {
-        if ($this->entityManager->getConnection()->isTransactionActive())
-        {
+        if ($this->entityManager->getConnection()->isTransactionActive()) {
             $this->entityManager->commit();
         }
     }
@@ -187,8 +185,7 @@ class BaseService
      */
     protected function rollback()
     {
-        if ($this->entityManager->getConnection()->isTransactionActive())
-        {
+        if ($this->entityManager->getConnection()->isTransactionActive()) {
             $this->entityManager->rollback();
         }
     }

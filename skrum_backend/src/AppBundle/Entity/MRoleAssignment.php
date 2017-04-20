@@ -22,9 +22,9 @@ class MRoleAssignment
     private $roleId;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="role_level", type="string", length=45, nullable=false)
+     * @ORM\Column(name="role_level", type="smallint", nullable=false)
      */
     private $roleLevel;
 
@@ -96,7 +96,7 @@ class MRoleAssignment
     /**
      * Set roleLevel
      *
-     * @param string $roleLevel
+     * @param integer $roleLevel
      *
      * @return MRoleAssignment
      */
@@ -110,7 +110,7 @@ class MRoleAssignment
     /**
      * Get roleLevel
      *
-     * @return string
+     * @return integer
      */
     public function getRoleLevel()
     {

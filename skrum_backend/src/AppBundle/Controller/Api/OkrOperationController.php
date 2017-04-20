@@ -20,8 +20,8 @@ class OkrOperationController extends BaseController
      * 紐付け先OKR変更
      *
      * @Rest\Put("/v1/okrs/{okrId}/changeparent.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $okrId OKRID
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function changeOkrParentAction(Request $request, $okrId)

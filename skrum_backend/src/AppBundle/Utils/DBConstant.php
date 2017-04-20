@@ -167,17 +167,17 @@ class DBConstant
     /**
      * ロールレベル（一般ユーザ）
      */
-    const ROLE_LEVEL_NORMAL = '1';
+    const ROLE_LEVEL_NORMAL = 1;
 
     /**
      * ロールレベル（管理者ユーザ）
      */
-    const ROLE_LEVEL_ADMIN = '4';
+    const ROLE_LEVEL_ADMIN = 4;
 
     /**
      * ロールレベル（スーパー管理者ユーザ）
      */
-    const ROLE_LEVEL_SUPERADMIN = '7';
+    const ROLE_LEVEL_SUPERADMIN = 7;
 
     /**
      * ロール表示名（一般ユーザ）

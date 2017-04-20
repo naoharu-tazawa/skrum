@@ -19,8 +19,8 @@ class TimelineController extends BaseController
      * タイムライン取得
      *
      * @Rest\Get("/v1/groups/{groupId}/posts.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function getGroupPostsAction(Request $request, $groupId)
@@ -42,8 +42,8 @@ class TimelineController extends BaseController
      * コメント投稿
      *
      * @Rest\Post("/v1/groups/{groupId}/posts.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function postGroupPostsAction(Request $request, $groupId)
@@ -72,8 +72,8 @@ class TimelineController extends BaseController
      * リプライ投稿
      *
      * @Rest\Post("/v1/posts/{postId}/replies.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param postId 投稿ID
+     * @param Request $request リクエストオブジェクト
+     * @param string postId 投稿ID
      * @return array
      */
     public function postPostRepliesAction(Request $request, $postId)
@@ -107,8 +107,8 @@ class TimelineController extends BaseController
      * いいね
      *
      * @Rest\Post("/v1/posts/{postId}/likes.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param postId 投稿ID
+     * @param Request $request リクエストオブジェクト
+     * @param string postId 投稿ID
      * @return array
      */
     public function postPostLikesAction(Request $request, $postId)
@@ -130,8 +130,8 @@ class TimelineController extends BaseController
      * いいね解除
      *
      * @Rest\Delete("/v1/posts/{postId}/like.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param postId 投稿ID
+     * @param Request $request リクエストオブジェクト
+     * @param string postId 投稿ID
      * @return array
      */
     public function deletePostLikeAction(Request $request, $postId)

@@ -17,7 +17,7 @@ class SearchController extends BaseController
      * ユーザ検索
      *
      * @Rest\Get("/v1/users/search.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function searchUsersAction(Request $request)
@@ -39,7 +39,7 @@ class SearchController extends BaseController
      * グループ検索
      *
      * @Rest\Get("/v1/groups/search.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function searchGroupAction(Request $request)
@@ -61,7 +61,7 @@ class SearchController extends BaseController
      * オーナー検索
      *
      * @Rest\Get("/v1/owners/search.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function searchOwnerAction(Request $request)
@@ -83,7 +83,7 @@ class SearchController extends BaseController
      * 所属先グループ検索
      *
      * @Rest\Get("/v1/paths/search.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function searchPathsAction(Request $request)
@@ -105,7 +105,7 @@ class SearchController extends BaseController
      * OKR検索
      *
      * @Rest\Get("/v1/okrs/search.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function searchOkrsAction(Request $request)

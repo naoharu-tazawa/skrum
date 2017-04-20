@@ -3,7 +3,7 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Entity\TLike;
@@ -32,12 +32,13 @@ class TimelineService extends BaseService
 
         // DTOに詰め替える
         $disclosureLogic = $this->getDisclosureLogic();
+        $tPostArrayCount = count($tPostArray);
         $postDTOArray = array();
         $flg = false;
-        for ($i = 0; $i < count($tPostArray); $i++) {
+        for ($i = 0; $i < $tPostArrayCount; ++$i) {
             if (array_key_exists('post', $tPostArray[$i])) {
                 // 2回目のループ以降、前回ループ分のDTOを配列に入れる
-                if ($i != 0) {
+                if ($i !== 0) {
                     if (!$outOfDisclosureFlg) {
                         if ($flg) {
                             $postDTOPost->setReplies($postDTOReplyArray);
@@ -84,7 +85,7 @@ class TimelineService extends BaseService
                 // OKRアクティビティがnullの場合、スキップ
                 if ($tPostArray[$i]['okrActivity'] == null) {
                     // 最終ループ
-                    if ($i == (count($tPostArray) - 1)) {
+                    if ($i === ($tPostArrayCount - 1)) {
                         $postDTOArray[] = $postDTOPost;
                     }
                     continue;
@@ -99,7 +100,7 @@ class TimelineService extends BaseService
                 // リプライがnullの場合、スキップ
                 if ($tPostArray[$i]['reply'] == null) {
                     // 最終ループ
-                    if ($i == (count($tPostArray) - 1)) {
+                    if ($i === ($tPostArrayCount - 1)) {
                         $postDTOArray[] = $postDTOPost;
                     }
                     continue;
@@ -116,7 +117,7 @@ class TimelineService extends BaseService
             }
 
             // 最終ループ
-            if ($i == (count($tPostArray) - 1)) {
+            if ($i === ($tPostArrayCount - 1)) {
                 if (!$outOfDisclosureFlg) {
                     if ($flg) {
                         $postDTOPost->setReplies($postDTOReplyArray);
@@ -150,7 +151,7 @@ class TimelineService extends BaseService
         try {
             $this->persist($tPost);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -177,7 +178,7 @@ class TimelineService extends BaseService
         try {
             $this->persist($tPostReply);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -195,7 +196,7 @@ class TimelineService extends BaseService
         $tLikeRepos = $this->getTLikeRepository();
         $likeEntity = $tLikeRepos->findOneBy(array('userId' => $userId, 'postId' => $postId));
         if (!empty($likeEntity)) {
-            throw new ApplicationException('既にいいねが押されています');
+            throw new DoubleOperationException('既にいいねが押されています');
         }
 
         // いいね登録
@@ -206,7 +207,7 @@ class TimelineService extends BaseService
         try {
             $this->persist($tLike);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -231,7 +232,7 @@ class TimelineService extends BaseService
         try {
             $this->remove($tLike);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }

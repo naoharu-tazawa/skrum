@@ -18,7 +18,7 @@ class LoginController extends BaseController
      * 新規登録メール送信
      * （ルーティングアノテーション対象外）
      *
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function preregisterAction(Request $request)
@@ -45,7 +45,7 @@ class LoginController extends BaseController
      * ログイン
      *
      * @Rest\Post("/v1/login.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function loginAction(Request $request)
@@ -68,7 +68,7 @@ class LoginController extends BaseController
      * 新規ユーザ登録
      *
      * @Rest\Post("/v1/signup.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function signupAction(Request $request)
@@ -91,7 +91,7 @@ class LoginController extends BaseController
      * 追加ユーザ登録
      *
      * @Rest\Post("/v1/join.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function joinAction(Request $request)

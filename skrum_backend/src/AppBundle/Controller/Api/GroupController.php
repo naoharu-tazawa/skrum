@@ -20,7 +20,7 @@ class GroupController extends BaseController
      * グループ新規登録
      *
      * @Rest\Post("/v1/groups.{_format}")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function postGroupsAction(Request $request)
@@ -46,8 +46,8 @@ class GroupController extends BaseController
      * ユーザ所属グループ一覧取得
      *
      * @Rest\Get("/v1/users/{userId}/groups.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function getUserGroupsAction(Request $request, $userId)
@@ -87,8 +87,8 @@ class GroupController extends BaseController
      * グループ基本情報変更
      *
      * @Rest\Put("/v1/groups/{groupId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function putGroupAction(Request $request, $groupId)
@@ -117,9 +117,9 @@ class GroupController extends BaseController
      * グループリーダー変更
      *
      * @Rest\Put("/v1/groups/{groupId}/leaders/{userId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
-     * @param $userId ユーザID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
+     * @param string $userId ユーザID
      * @return array
      */
     public function putGroupLeaderAction(Request $request, $groupId, $userId)
@@ -151,8 +151,8 @@ class GroupController extends BaseController
      * グループ削除
      *
      * @Rest\Delete("/v1/groups/{groupId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function deleteGroupAction(Request $request, $groupId)

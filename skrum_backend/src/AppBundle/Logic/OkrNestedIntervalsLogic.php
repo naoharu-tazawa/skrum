@@ -31,7 +31,8 @@ class OkrNestedIntervalsLogic extends BaseLogic
         $tOkrArray = $tOkrRepos->getOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $timeframeId, $companyId);
 
         // OKRの左値・右値を再設定
-        for ($i = 0; $i < count($tOkrArray); $i++) {
+        $tOkrArrayCount = count($tOkrArray);
+        for ($i = 0; $i < $tOkrArrayCount; ++$i) {
             // 入れ子区間モデルの左値と右値を更新
             $treeValues = $this->getLeftRightValues($tOkrArray[$i]->getParentOkr()->getOkrId(), $timeframeId);
             $tOkrArray[$i]->setTreeLeft($treeValues['tree_left']);
@@ -53,7 +54,7 @@ class OkrNestedIntervalsLogic extends BaseLogic
         $rand = mt_rand(1, 2);
         $tOkrRepos = $this->getTOkrRepository();
 
-        if ($rand == 1) {
+        if ($rand === 1) {
             return $tOkrRepos->getLeftRightOfLeftestInsertionNode($parentOkrId, $timeframeId);
         } else {
             return $tOkrRepos->getLeftRightOfRightestInsertionNode($parentOkrId, $timeframeId);

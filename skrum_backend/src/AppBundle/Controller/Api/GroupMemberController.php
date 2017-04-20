@@ -20,8 +20,8 @@ class GroupMemberController extends BaseController
      * グループメンバー追加
      *
      * @Rest\Post("/v1/groups/{groupId}/members.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function postGroupMembersAction(Request $request, $groupId)
@@ -60,8 +60,8 @@ class GroupMemberController extends BaseController
      * グループメンバー取得
      *
      * @Rest\Get("/v1/groups/{groupId}/members.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function getGroupMembersAction(Request $request, $groupId)
@@ -92,9 +92,9 @@ class GroupMemberController extends BaseController
      * グループメンバー削除
      *
      * @Rest\Delete("/v1/groups/{groupId}/members/{userId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
-     * @param $userId ユーザID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
+     * @param string $userId ユーザID
      * @return array
      */
     public function deleteGroupMemberAction(Request $request, $groupId, $userId)

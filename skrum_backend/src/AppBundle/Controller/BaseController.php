@@ -285,8 +285,7 @@ class BaseController extends FOSRestController
      */
     protected function getRfc3339Date($datetimeString = null)
     {
-        if ($datetimeString)
-        {
+        if ($datetimeString) {
             return date(DATE_RFC3339, strtotime($datetimeString));
         } else {
             return date(DATE_RFC3339);

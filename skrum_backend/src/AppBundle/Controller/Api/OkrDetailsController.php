@@ -17,8 +17,8 @@ class OkrDetailsController extends BaseController
      * OKR詳細取得
      *
      * @Rest\Get("/v1/okrs/{okrId}/details.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $okrId OKRID
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function getOkrDetailsAction(Request $request, $okrId)

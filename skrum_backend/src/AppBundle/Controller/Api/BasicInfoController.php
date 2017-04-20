@@ -25,8 +25,8 @@ class BasicInfoController extends BaseController
      * ログイン後初期表示情報取得
      *
      * @Rest\Get("/v1/users/{userId}/top.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function getUserTopAction(Request $request, $userId)
@@ -81,8 +81,8 @@ class BasicInfoController extends BaseController
      * ユーザ目標管理情報取得
      *
      * @Rest\Get("/v1/users/{userId}/basics.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function getUserBasicsAction(Request $request, $userId)
@@ -124,8 +124,8 @@ class BasicInfoController extends BaseController
      * グループ目標管理情報取得
      *
      * @Rest\Get("/v1/groups/{groupId}/basics.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function getGroupBasicsAction(Request $request, $groupId)
@@ -167,8 +167,8 @@ class BasicInfoController extends BaseController
      * 会社目標管理情報取得
      *
      * @Rest\Get("/v1/companies/{companyId}/basics.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $companyId 会社ID
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
      * @return array
      */
     public function getCompanyBasicsAction(Request $request, $companyId)

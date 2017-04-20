@@ -22,7 +22,7 @@ class UserSettingController extends BaseController
      *
      * @Rest\Post("/v1/invite.{_format}")
      * @Permission(value="user_add")
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function inviteAction(Request $request)
@@ -48,8 +48,8 @@ class UserSettingController extends BaseController
      * 初期設定登録
      *
      * @Rest\Post("/v1/companies/{companyId}/establish.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $companyId 会社ID
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
      * @return array
      */
     public function establishCompanyAction(Request $request, $companyId)
@@ -80,8 +80,8 @@ class UserSettingController extends BaseController
      * 追加ユーザ初期設定登録
      *
      * @Rest\Post("/v1/users/{userId}/establish.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function establishUserAction(Request $request, $userId)
@@ -112,8 +112,9 @@ class UserSettingController extends BaseController
      * パスワードリセット
      *
      * @Rest\Post("/v1/users/{userId}/resetpassword.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @Permission(value="password_reset")
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function resetUserPasswordAction(Request $request, $userId)
@@ -142,8 +143,8 @@ class UserSettingController extends BaseController
      * パスワード変更
      *
      * @Rest\Post("/v1/users/{userId}/changepassword.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function changeUserPasswordAction(Request $request, $userId)
@@ -174,8 +175,9 @@ class UserSettingController extends BaseController
      * ロール一覧取得
      *
      * @Rest\Get("/v1/companies/{companyId}/roles.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $companyId 会社ID
+     * @Permission(value="user_permission_change")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
      * @return array
      */
     public function getCompanyRolesAction(Request $request, $companyId)
@@ -199,9 +201,10 @@ class UserSettingController extends BaseController
      * ユーザ権限変更
      *
      * @Rest\Put("/v1/users/{userId}/roles/{roleAssignmentId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
-     * @param $roleAssignmentId ロール割当ID
+     * @Permission(value="user_permission_change")
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
+     * @param string $roleAssignmentId ロール割当ID
      * @return array
      */
     public function putUserRoleAction(Request $request, $userId, $roleAssignmentId)

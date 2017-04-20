@@ -46,7 +46,7 @@ class GroupTreeService extends BaseService
         try {
             $this->persist($tGroupTree);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -69,7 +69,7 @@ class GroupTreeService extends BaseService
         try {
             $this->remove($tGroupTree);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }

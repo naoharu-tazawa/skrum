@@ -2,7 +2,7 @@
 
 namespace AppBundle\Logic;
 
-use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\NoDataException;
 use AppBundle\Utils\DBConstant;
 
 /**
@@ -63,7 +63,7 @@ class PermissionLogic extends BaseLogic
         $mGroupRepos = $this->getMGroupRepository();
         $mGroup = $mGroupRepos->find($targetGroupId);
         if ($mGroup === null) {
-            throw new ApplicationException('グループが存在しません');
+            throw new NoDataException('グループが存在しません');
         }
 
         // 権限チェックを行う
@@ -96,7 +96,7 @@ class PermissionLogic extends BaseLogic
         $mUserRepos = $this->getMUserRepository();
         $mUser = $mUserRepos->find($userId);
         if ($mUser === null) {
-            throw new ApplicationException('ユーザが存在しません');
+            throw new NoDataException('ユーザが存在しません');
         }
 
         return $mUser->getRoleAssignment()->getRoleLevel();

@@ -19,8 +19,9 @@ class CompanyController extends BaseController
      * 会社基本情報変更
      *
      * @Rest\Put("/v1/companies/{companyId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $companyId 会社ID
+     * @Permission(value="company_profile_edit")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
      * @return array
      */
     public function putCompanyAction(Request $request, $companyId)
