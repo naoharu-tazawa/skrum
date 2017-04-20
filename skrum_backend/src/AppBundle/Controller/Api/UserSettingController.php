@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
+use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\Permission;
 
 /**
@@ -123,6 +124,13 @@ class UserSettingController extends BaseController
         // ユーザ存在チェック
         $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
 
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $userId);
+        if (!$checkResult) {
+            throw new PermissionException('ユーザ操作権限がありません');
+        }
+
         // パスワード変更処理
         $userSettingService = $this->getUserSettingService();
         $userSettingService->resetPassword($auth, $mUser);
@@ -160,5 +168,30 @@ class UserSettingController extends BaseController
         $userSettingService->changePassword($auth, $data['currentPassword'], $data['newPassword']);
 
         return array('result' => 'OK');
+    }
+
+    /**
+     * ロール一覧取得
+     *
+     * @Rest\Get("/v1/companies/{companyId}/roles.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getCompanyRolesAction(Request $request, $companyId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 会社IDの一致をチェック
+        if ($companyId != $auth->getCompanyId()) {
+            throw new ApplicationException('会社IDが存在しません');
+        }
+
+        // ロール一覧取得処理
+        $userSettingService = $this->getUserSettingService();
+        $roleDTOArray = $userSettingService->getRoles($companyId);
+
+        return $roleDTOArray;
     }
 }

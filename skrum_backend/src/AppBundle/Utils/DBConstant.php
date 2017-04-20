@@ -180,6 +180,21 @@ class DBConstant
     const ROLE_LEVEL_SUPERADMIN = '7';
 
     /**
+     * ロール表示名（一般ユーザ）
+     */
+    const ROLE_DISPLAY_NAME_NORMAL = '一般ユーザ';
+
+    /**
+     * ロール表示名（管理者ユーザ）
+     */
+    const ROLE_DISPLAY_NAME_ADMIN = '管理者ユーザ';
+
+    /**
+     * ロール表示名（スーパー管理者ユーザ）
+     */
+    const ROLE_DISPLAY_NAME_SUPERADMIN = 'スーパー管理者ユーザ';
+
+    /**
      * プランID（お試しプラン）
      */
     const PLAN_ID_TRIAL_PLAN = 1;

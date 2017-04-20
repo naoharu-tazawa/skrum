@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/leaders/{userId}.json:
-    put:
-      description: グループリーダー変更
+  /groups/{groupId}/paths.json:
+    post:
+      description: 所属先グループ追加
       parameters:
         -
           name: groupId
@@ -21,11 +21,17 @@ paths:
           description: グループID
           required: true
         -
-          name: userId
-          in: path
-          type: string
-          description: ユーザID
+          name: JsonRequest
+          in: body
+          description: 追加所属先グループパス
           required: true
+          schema:
+            type: object
+            properties:
+              groupPathId:
+                type: integer
+            required:
+              - groupPathId
       responses:
         200:
           description: 成功

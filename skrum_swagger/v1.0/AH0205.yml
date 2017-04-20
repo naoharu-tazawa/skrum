@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/paths.json:
-    post:
-      description: 所属先グループ追加
+  /groups/{groupId}/paths/{groupPathId}.json:
+    delete:
+      description: 所属先グループ削除
       parameters:
         -
           name: groupId
@@ -21,17 +21,11 @@ paths:
           description: グループID
           required: true
         -
-          name: JsonRequest
-          in: body
-          description: 追加所属先グループパス
+          name: groupPathId
+          in: path
+          type: string
+          description: 削除対象グループパスID
           required: true
-          schema:
-            type: object
-            properties:
-              groupPathId:
-                type: integer
-            required:
-              - groupPathId
       responses:
         200:
           description: 成功

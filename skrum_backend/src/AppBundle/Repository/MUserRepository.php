@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Utils\DBConstant;
+
 /**
  * MUserリポジトリクラス
  *
@@ -87,6 +89,25 @@ SQL;
         $qb->select('COUNT(mu.userId)')
             ->where('mu.company = :companyId')
             ->setParameter('companyId', $companyId);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * スーパー管理者ユーザ数を取得
+     *
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getSuperAdminUserCount($companyId)
+    {
+        $qb = $this->createQueryBuilder('mu');
+        $qb->select('COUNT(mu.userId)')
+            ->innerJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
+            ->where('mu.company = :companyId')
+            ->andWhere('mra.roleLevel = :roleLevel')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('roleLevel', DBConstant::ROLE_LEVEL_SUPERADMIN);
 
         return $qb->getQuery()->getSingleScalarResult();
     }

@@ -13,6 +13,7 @@ use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TPreUser;
 use AppBundle\Entity\TTimeframe;
+use AppBundle\Api\ResponseDTO\RoleDTO;
 
 /**
  * ユーザ設定サービスクラス
@@ -429,5 +430,46 @@ class UserSettingService extends BaseService
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
+    }
+
+    /**
+     * ロール一覧取得
+     *
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function getRoles($companyId)
+    {
+        // スーパー管理者ユーザ数を取得
+        $mUserRepos = $this->getMUserRepository();
+        $superAdminUserCount = $mUserRepos->getSuperAdminUserCount($companyId);
+
+        // ロール一覧取得
+        $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
+        if ($superAdminUserCount < 2) {
+            // スーパー管理者ユーザ登録数が1人の場合
+            $mRoleAssignmentArray = $mRoleAssignmentRepos->getRoles($companyId, true);
+        } else {
+            // スーパー管理者ユーザが既に2人登録済みの場合
+            $mRoleAssignmentArray = $mRoleAssignmentRepos->getRoles($companyId, false);
+        }
+
+        // DTOに詰め替える
+        $roleDTOArray = array();
+        foreach ($mRoleAssignmentArray as $mRoleAssignment) {
+            $roleDTO = new RoleDTO();
+            $roleDTO->setRoleAssignmentId($mRoleAssignment->getRoleAssignmentId());
+            if ($mRoleAssignment->getRoleLevel() == DBConstant::ROLE_LEVEL_NORMAL) {
+                $roleDTO->setRoleName(DBConstant::ROLE_DISPLAY_NAME_NORMAL);
+            } elseif ($mRoleAssignment->getRoleLevel() == DBConstant::ROLE_LEVEL_ADMIN) {
+                $roleDTO->setRoleName(DBConstant::ROLE_DISPLAY_NAME_ADMIN);
+            } else {
+                $roleDTO->setRoleName(DBConstant::ROLE_DISPLAY_NAME_SUPERADMIN);
+            }
+
+            $roleDTOArray[] = $roleDTO;
+        }
+
+        return $roleDTOArray;
     }
 }

@@ -10,26 +10,28 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}.json:
-    delete:
-      description: グループ削除
+  /companies/{companyId}/roles.json:
+    get:
+      description: ロール一覧取得
       parameters:
         -
-          name: groupId
+          name: companyId
           in: path
           type: string
-          description: グループID
+          description: 会社ID
           required: true
       responses:
         200:
-          description: 成功
+          description: ロール一覧
           schema:
-            type: object
-            properties:
-              result:
-                type: string
-            required:
-              - result
+            type: array
+            items:
+              type: object
+              properties:
+                roleAssignmentId:
+                  type: integer
+                roleName:
+                  type: string
         400:
           description: JSONスキーマ不正
         409:
