@@ -76,23 +76,16 @@ class UserSettingService extends BaseService
      *
      * @param \AppBundle\Utils\Auth $auth 認証情報
      * @param string $emailAddress Eメールアドレス
-     * @param \AppBundle\Entity\MRoleAssignment $mRoleAssignment ロール割当エンティティ
+     * @param integer $roleAssignmentId ロール割当ID
      * @return void
      */
-    public function inviteUser($auth, $emailAddress, $mRoleAssignment)
+    public function inviteUser($auth, $emailAddress, $roleAssignmentId)
     {
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
         $result = $mUserRepos->findBy(array('emailAddress' => $emailAddress));
         if (count($result) > 0) {
             throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
-        }
-
-        // 権限チェック
-        if ($auth->getRoleLevel() <= DBConstant::ROLE_LEVEL_ADMIN) {
-            if ($mRoleAssignment->getRoleLevel() > DBConstant::ROLE_LEVEL_ADMIN) {
-                throw new ApplicationException('管理者ユーザはスーパー管理者ユーザを招待できません');
-            }
         }
 
         // URLトークンを生成
@@ -104,7 +97,7 @@ class UserSettingService extends BaseService
         $tPreUser->setSubdomain($auth->getSubdomain());
         $tPreUser->setUrltoken($urltoken);
         $tPreUser->setCompanyId($auth->getCompanyId());
-        $tPreUser->setRoleAssignmentId($mRoleAssignment->getRoleAssignmentId());
+        $tPreUser->setRoleAssignmentId($roleAssignmentId);
 
         try {
             $this->persist($tPreUser);
@@ -181,6 +174,13 @@ class UserSettingService extends BaseService
      */
     public function establishCompany($auth, $userInfo, $companyInfo, $timeframeInfo)
     {
+        // 二重登録回避
+        $mCompanyRepos = $this->getMCompanyRepository();
+        $mCompany = $mCompanyRepos->find($auth->getCompanyId());
+        if ($mCompany->getCompanyName() !== null) {
+            throw new DoubleOperationException('既に初期設定登録されています');
+        }
+
         // トランザクション開始
         $this->beginTransaction();
 
@@ -303,9 +303,14 @@ class UserSettingService extends BaseService
      */
     public function establishUser($auth, $userInfo)
     {
-        // ユーザ情報を登録
+        // 二重登録回避
         $mUserRepos = $this->getMUserRepository();
         $mUser = $mUserRepos->findOneBy(array('userId' => $auth->getUserId()));
+        if ($mUser->getLastName() !== null) {
+            throw new DoubleOperationException('既に初期設定登録されています');
+        }
+
+        // ユーザ情報を登録
         $mUser->setLastName($userInfo['lastName']);
         $mUser->setFirstName($userInfo['firstName']);
         $mUser->setPosition($userInfo['position']);
@@ -479,11 +484,6 @@ class UserSettingService extends BaseService
      */
     public function changeRole($auth, $mUser, $mRoleAssignment)
     {
-        // 自ユーザの権限変更は不可
-        if ($mUser->getUserId() === $auth->getUserId()) {
-            throw new ApplicationException('自ユーザの権限変更はできません');
-        }
-
         // 現在のロール割当IDと変更後のロール割当IDが同一の場合、更新処理を行わない
         if ($mUser->getRoleAssignment()->getRoleAssignmentId() === $mRoleAssignment->getRoleAssignmentId()) {
             return;

@@ -8,6 +8,8 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Api\ResponseDTO\UserGroupDTO;
+use AppBundle\Utils\DBConstant;
+use AppBundle\Exception\PermissionException;
 
 /**
  * グループコントローラ
@@ -34,6 +36,11 @@ class GroupController extends BaseController
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
+
+        // 権限チェック
+        if ($auth->getRoleLevel() <= DBConstant::ROLE_LEVEL_NORMAL && $data['groupType'] === DBConstant::GROUP_TYPE_DEPARTMENT) {
+            throw new PermissionException('一般ユーザは部門の作成はできません');
+        }
 
         // グループ新規登録処理
         $groupService = $this->getGroupService();
@@ -105,6 +112,13 @@ class GroupController extends BaseController
 
         // グループ存在チェック
         $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkGroupOperation($auth, $groupId);
+        if (!$checkResult) {
+            throw new PermissionException('グループ操作権限がありません');
+        }
 
         // グループ情報更新処理
         $groupService = $this->getGroupService();

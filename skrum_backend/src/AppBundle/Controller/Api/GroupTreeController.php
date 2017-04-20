@@ -40,6 +40,13 @@ class GroupTreeController extends BaseController
         // グループパス存在チェック
         $tGroupTree = $this->getDBExistanceLogic()->checkGroupPathExistance($data['groupPathId'], $auth->getCompanyId());
 
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkGroupOperation($auth, $groupId);
+        if (!$checkResult) {
+            throw new PermissionException('グループ操作権限がありません');
+        }
+
         // グループ新規登録処理
         $groupTreeService = $this->getGroupTreeService();
         $groupTreeService->createGroupPath($mGroup, $tGroupTree->getGroupTreePath(), $tGroupTree->getGroupTreePathName());

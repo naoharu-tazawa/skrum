@@ -108,6 +108,13 @@ class GroupMemberController extends BaseController
         // ユーザ存在チェック
         $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
 
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkGroupOperation($auth, $groupId);
+        if (!$checkResult) {
+            throw new PermissionException('グループ操作権限がありません');
+        }
+
         // グループメンバー取得
         $groupMemberService = $this->getGroupMemberService();
         $groupMemberService->deleteMember($groupId, $userId);

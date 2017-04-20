@@ -40,6 +40,13 @@ class UserController extends BaseController
         // ユーザ存在チェック
         $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
 
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $userId);
+        if (!$checkResult) {
+            throw new PermissionException('ユーザ操作権限がありません');
+        }
+
         // ユーザ情報更新処理
         $userService = $this->getUserService();
         $userService->updateUser($data, $mUser);
@@ -74,7 +81,7 @@ class UserController extends BaseController
         } else {
             // 権限ロジックでチェック
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth, $userId);
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $userId);
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }

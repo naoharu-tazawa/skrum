@@ -102,7 +102,7 @@ class OkrController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth, $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }
@@ -141,7 +141,7 @@ class OkrController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth, $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }
@@ -172,7 +172,7 @@ class OkrController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth, $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }

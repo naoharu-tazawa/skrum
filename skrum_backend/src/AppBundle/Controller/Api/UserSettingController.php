@@ -8,6 +8,7 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
+use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\Permission;
 
 /**
@@ -40,9 +41,16 @@ class UserSettingController extends BaseController
         // ロール割当存在チェック
         $mRoleAssignment = $this->getDBExistanceLogic()->checkRoleAssignmentExistance($data['roleAssignmentId'], $auth->getCompanyId());
 
+        // 権限チェック
+        if ($auth->getRoleLevel() <= DBConstant::ROLE_LEVEL_ADMIN) {
+            if ($mRoleAssignment->getRoleLevel() > DBConstant::ROLE_LEVEL_ADMIN) {
+                throw new PermissionException('管理者ユーザはスーパー管理者ユーザを招待できません');
+            }
+        }
+
         // ユーザ招待メール送信処理
         $userSettingService = $this->getUserSettingService();
-        $userSettingService->inviteUser($auth, $data['emailAddress'], $mRoleAssignment);
+        $userSettingService->inviteUser($auth, $data['emailAddress'], $mRoleAssignment->getRoleAssignmentId());
 
         return array('result' => 'OK');
     }
@@ -130,7 +138,7 @@ class UserSettingController extends BaseController
 
         // 操作権限チェック
         $permissionLogic = $this->getPermissionLogic();
-        $checkResult = $permissionLogic->checkUserOperation($auth, $userId);
+        $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $userId);
         if (!$checkResult) {
             throw new PermissionException('ユーザ操作権限がありません');
         }
@@ -220,6 +228,13 @@ class UserSettingController extends BaseController
 
         // ロール割当存在チェック
         $mRoleAssignment = $this->getDBExistanceLogic()->checkRoleAssignmentExistance($roleAssignmentId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkUserOperationSelfNG($auth, $userId);
+        if (!$checkResult) {
+            throw new PermissionException('ユーザ操作権限がありません');
+        }
 
         // ユーザ権限更新処理
         $userSettingService = $this->getUserSettingService();

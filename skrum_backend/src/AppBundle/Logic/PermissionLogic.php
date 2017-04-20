@@ -13,24 +13,56 @@ use AppBundle\Utils\DBConstant;
 class PermissionLogic extends BaseLogic
 {
     /**
-     * ユーザ操作権限チェック
+     * ユーザ操作権限チェック（自ユーザ可）
      *
      * @param \AppBundle\Utils\Auth $auth 認証情報
      * @param integer $targetUserId 操作対象ユーザ
      * @return boolean チェック結果
      */
-    public function checkUserOperation($auth, $targetUserId)
+    public function checkUserOperationSelfOK($auth, $targetUserId)
     {
         // 同一ユーザならチェックOK
         if ($auth->getUserId() == $targetUserId) {
             return true;
         }
 
+        // 権限チェック
+        return $this->checkUserOperation($auth->getRoleLevel(), $targetUserId);
+
+    }
+
+    /**
+     * ユーザ操作権限チェック（自ユーザ不可）
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param integer $targetUserId 操作対象ユーザ
+     * @return boolean チェック結果
+     */
+    public function checkUserOperationSelfNG($auth, $targetUserId)
+    {
+        // 同一ユーザはチェックNG
+        if ($auth->getUserId() == $targetUserId) {
+            return true;
+        }
+
+        // 権限チェック
+        return $this->checkUserOperation($auth->getRoleLevel(), $targetUserId);
+    }
+
+    /**
+     * ユーザ操作権限チェック
+     *
+     * @param integer $subjectUserRoleLevel 主体ユーザのロールレベル
+     * @param integer $targetUserId 操作対象ユーザ
+     * @return boolean チェック結果
+     */
+    private function checkUserOperation($subjectUserRoleLevel, $targetUserId)
+    {
         // 操作対象ユーザのロールレベルを取得
         $targetUserRoleLevel = $this->getRoleLevel($targetUserId);
 
         // 権限チェックを行う
-        switch ($auth->getRoleLevel()) {
+        switch ($subjectUserRoleLevel) {
             case DBConstant::ROLE_LEVEL_NORMAL:
                 return false;
             case DBConstant::ROLE_LEVEL_ADMIN:
