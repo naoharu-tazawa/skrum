@@ -118,4 +118,22 @@ class DBExistanceLogic extends BaseLogic
 
         return $tPostArray[0];
     }
+
+    /**
+     * ロール割当存在チェック
+     *
+     * @param integer $targetRoleAssignmentId チェック対象ロール割当ID
+     * @param integer $companyId 会社ID
+     * @return \AppBundle\Entity\MRoleAssignment ロール割当エンティティ
+     */
+    public function checkRoleAssignmentExistance($targetRoleAssignmentId, $companyId)
+    {
+        $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
+        $mRoleAssignmentArray = $mRoleAssignmentRepos->getRoleAssignment($targetRoleAssignmentId, $companyId);
+        if (count($mRoleAssignmentArray) == 0) {
+            throw new ApplicationException('ロール割当が存在しません');
+        }
+
+        return $mRoleAssignmentArray[0];
+    }
 }

@@ -194,4 +194,31 @@ class UserSettingController extends BaseController
 
         return $roleDTOArray;
     }
+
+    /**
+     * ユーザ権限変更
+     *
+     * @Rest\Put("/v1/users/{userId}/roles/{roleAssignmentId}.{_format}")
+     * @param $request リクエストオブジェクト
+     * @param $userId ユーザID
+     * @param $roleAssignmentId ロール割当ID
+     * @return array
+     */
+    public function putUserRoleAction(Request $request, $userId, $roleAssignmentId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // ユーザ存在チェック
+        $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
+
+        // ロール割当存在チェック
+        $mRoleAssignment = $this->getDBExistanceLogic()->checkRoleAssignmentExistance($roleAssignmentId, $auth->getCompanyId());
+
+        // ユーザ権限更新処理
+        $userSettingService = $this->getUserSettingService();
+        $userSettingService->changeRole($auth, $mUser, $mRoleAssignment);
+
+        return array('result' => 'OK');
+    }
 }

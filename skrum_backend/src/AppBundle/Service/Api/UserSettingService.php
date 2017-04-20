@@ -472,4 +472,45 @@ class UserSettingService extends BaseService
 
         return $roleDTOArray;
     }
+
+    /**
+     * ユーザ権限更新
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @param \AppBundle\Entity\MRoleAssignment $mRoleAssignment ロール割当エンティティ
+     * @return void
+     */
+    public function changeRole($auth, $mUser, $mRoleAssignment)
+    {
+        // 自ユーザの権限変更は不可
+        if ($mUser->getUserId() == $auth->getUserId()) {
+            throw new ApplicationException('自ユーザの権限変更はできません');
+        }
+
+        // 現在のロール割当IDと変更後のロール割当IDが同一の場合、更新処理を行わない
+        if ($mUser->getRoleAssignment()->getRoleAssignmentId() == $mRoleAssignment->getRoleAssignmentId()) {
+            return;
+        }
+
+        // 変更後ロールがスーパー管理者ユーザの場合、スーパー管理者ユーザ数を取得
+        if ($mRoleAssignment->getRoleLevel() >= DBConstant::ROLE_LEVEL_SUPERADMIN) {
+            $mUserRepos = $this->getMUserRepository();
+            $superAdminUserCount = $mUserRepos->getSuperAdminUserCount($auth->getCompanyId());
+
+            // スーパー管理者ユーザが既に2人登録済みの場合、更新不可
+            if ($superAdminUserCount >= 2) {
+                throw new ApplicationException('スーパー管理者ユーザは2人までしか登録できません');
+            }
+        }
+
+        // ユーザ権限更新
+        $mUser->setRoleAssignment($mRoleAssignment);
+
+        try {
+            $this->flush();
+        } catch (\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }

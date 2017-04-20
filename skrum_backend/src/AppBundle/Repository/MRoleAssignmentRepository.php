@@ -12,6 +12,25 @@ use AppBundle\Utils\DBConstant;
 class MRoleAssignmentRepository extends BaseRepository
 {
     /**
+     * 指定ロール割当ID、会社IDのレコードを取得
+     *
+     * @param integer $roleAssignmentId ロール割当ID
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function getRoleAssignment($roleAssignmentId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('mra');
+        $qb->select('mra')
+            ->where('mra.companyId = :companyId')
+            ->andWhere('mra.roleAssignmentId = :roleAssignmentId')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('roleAssignmentId', $roleAssignmentId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * ロール一覧を取得
      *
      * @param integer $companyId 会社ID
