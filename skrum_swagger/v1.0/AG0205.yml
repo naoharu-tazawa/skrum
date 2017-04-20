@@ -11,8 +11,8 @@ basePath: /v1
 
 paths:
   /posts/{postId}/like.json:
-    post:
-      description: いいね
+    delete:
+      description: いいね解除
       parameters:
         -
           name: postId

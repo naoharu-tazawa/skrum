@@ -135,7 +135,7 @@ class GroupController extends BaseController
 
         // 操作権限チェック
         $permissionLogic = $this->getPermissionLogic();
-        $checkResult = $permissionLogic->checkGroupOperation($auth->getUserId(), $groupId);
+        $checkResult = $permissionLogic->checkGroupOperation($auth, $groupId);
         if (!$checkResult) {
             throw new PermissionException('グループ操作権限がありません');
         }
@@ -165,7 +165,7 @@ class GroupController extends BaseController
 
         // 操作権限チェック
         $permissionLogic = $this->getPermissionLogic();
-        $checkResult = $permissionLogic->checkGroupOperation($auth->getUserId(), $groupId);
+        $checkResult = $permissionLogic->checkGroupOperation($auth, $groupId);
         if (!$checkResult) {
             throw new PermissionException('グループ操作権限がありません');
         }

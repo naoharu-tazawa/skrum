@@ -11,7 +11,7 @@
     "subdomain": {
       "title": "サブドメイン",
       "type": "string",
-      "maxLength": 45
+      "pattern": "^[a-z0-9-]{3,28}$"
     }
   },
   "required": ["emailAddress", "subdomain"],

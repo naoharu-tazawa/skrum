@@ -37,9 +37,12 @@ class UserSettingController extends BaseController
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
+        // ロール割当存在チェック
+        $mRoleAssignment = $this->getDBExistanceLogic()->checkRoleAssignmentExistance($data['roleAssignmentId'], $auth->getCompanyId());
+
         // ユーザ招待メール送信処理
         $userSettingService = $this->getUserSettingService();
-        $userSettingService->inviteUser($data['emailAddress'], $auth->getSubdomain(), $auth->getCompanyId(), $data['roleAssignmentId']);
+        $userSettingService->inviteUser($auth, $data['emailAddress'], $mRoleAssignment);
 
         return array('result' => 'OK');
     }
@@ -127,7 +130,7 @@ class UserSettingController extends BaseController
 
         // 操作権限チェック
         $permissionLogic = $this->getPermissionLogic();
-        $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $userId);
+        $checkResult = $permissionLogic->checkUserOperation($auth, $userId);
         if (!$checkResult) {
             throw new PermissionException('ユーザ操作権限がありません');
         }

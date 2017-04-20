@@ -8,6 +8,7 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Utils\Permission;
 
 /**
  * ユーザコントローラ
@@ -73,7 +74,7 @@ class UserController extends BaseController
         } else {
             // 権限ロジックでチェック
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $userId);
+            $checkResult = $permissionLogic->checkUserOperation($auth, $userId);
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }

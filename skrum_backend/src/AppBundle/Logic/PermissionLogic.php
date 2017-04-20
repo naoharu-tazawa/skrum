@@ -15,25 +15,22 @@ class PermissionLogic extends BaseLogic
     /**
      * ユーザ操作権限チェック
      *
-     * @param integer $subjectUserId 操作主体ユーザ
+     * @param \AppBundle\Utils\Auth $auth 認証情報
      * @param integer $targetUserId 操作対象ユーザ
      * @return boolean チェック結果
      */
-    public function checkUserOperation($subjectUserId, $targetUserId)
+    public function checkUserOperation($auth, $targetUserId)
     {
         // 同一ユーザならチェックOK
-        if ($subjectUserId == $targetUserId) {
+        if ($auth->getUserId() == $targetUserId) {
             return true;
         }
-
-        // 操作主体ユーザのロールレベルを取得
-        $subjectUserRoleLevel = $this->getRoleLevel($subjectUserId);
 
         // 操作対象ユーザのロールレベルを取得
         $targetUserRoleLevel = $this->getRoleLevel($targetUserId);
 
         // 権限チェックを行う
-        switch ($subjectUserRoleLevel) {
+        switch ($auth->getRoleLevel()) {
             case DBConstant::ROLE_LEVEL_NORMAL:
                 return false;
             case DBConstant::ROLE_LEVEL_ADMIN:
@@ -50,15 +47,12 @@ class PermissionLogic extends BaseLogic
     /**
      * グループ操作権限チェック
      *
-     * @param integer $subjectUserId 操作主体ユーザー
+     * @param \AppBundle\Utils\Auth $auth 認証情報
      * @param integer $targetGroupId 操作対象グループ
      * @return boolean チェック結果
      */
-    public function checkGroupOperation($subjectUserId, $targetGroupId)
+    public function checkGroupOperation($auth, $targetGroupId)
     {
-        // 操作主体ユーザのロールレベルを取得
-        $roleLevel = $this->getRoleLevel($subjectUserId);
-
         //　グループエンティティを取得
         $mGroupRepos = $this->getMGroupRepository();
         $mGroup = $mGroupRepos->find($targetGroupId);
@@ -69,7 +63,7 @@ class PermissionLogic extends BaseLogic
         // 権限チェックを行う
         if ($mGroup->getGroupType() === DBConstant::GROUP_TYPE_DEPARTMENT) {
             // 「グループ種別＝1:部門」の場合
-            switch ($roleLevel) {
+            switch ($auth->getRoleLevel()) {
                 case DBConstant::ROLE_LEVEL_NORMAL:
                     return false;
                 case DBConstant::ROLE_LEVEL_ADMIN:

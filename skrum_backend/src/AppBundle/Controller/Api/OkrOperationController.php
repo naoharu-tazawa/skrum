@@ -43,7 +43,7 @@ class OkrOperationController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperation($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }

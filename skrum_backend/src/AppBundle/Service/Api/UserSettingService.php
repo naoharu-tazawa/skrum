@@ -74,13 +74,12 @@ class UserSettingService extends BaseService
     /**
      * ユーザ招待
      *
-     * @param $emailAddress Eメールアドレス
-     * @param $subdomain サブドメイン
-     * @param $companyId 会社ID
-     * @param $roleAssignmentId ロール割当ID
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param string $emailAddress Eメールアドレス
+     * @param \AppBundle\Entity\MRoleAssignment $mRoleAssignment ロール割当エンティティ
      * @return void
      */
-    public function inviteUser($emailAddress, $subdomain, $companyId, $roleAssignmentId)
+    public function inviteUser($auth, $emailAddress, $mRoleAssignment)
     {
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
@@ -89,14 +88,11 @@ class UserSettingService extends BaseService
             throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
         }
 
-        // ロール割当ID存在チェック
-        $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
-        $mRoleAssignmentArray = $mRoleAssignmentRepos->findBy(array(
-                'roleAssignmentId' => $roleAssignmentId,
-                'companyId' => $companyId
-        ));
-        if (count($mRoleAssignmentArray) === 0) {
-            throw new NoDataException('ロール割当IDが存在しません');
+        // 権限チェック
+        if ($auth->getRoleLevel() <= DBConstant::ROLE_LEVEL_ADMIN) {
+            if ($mRoleAssignment->getRoleLevel() > DBConstant::ROLE_LEVEL_ADMIN) {
+                throw new ApplicationException('管理者ユーザはスーパー管理者ユーザを招待できません');
+            }
         }
 
         // URLトークンを生成
@@ -105,10 +101,10 @@ class UserSettingService extends BaseService
         // 仮登録ユーザテーブルに登録
         $tPreUser = new TPreUser();
         $tPreUser->setEmailAddress($emailAddress);
-        $tPreUser->setSubdomain($subdomain);
+        $tPreUser->setSubdomain($auth->getSubdomain());
         $tPreUser->setUrltoken($urltoken);
-        $tPreUser->setCompanyId($companyId);
-        $tPreUser->setRoleAssignmentId($roleAssignmentId);
+        $tPreUser->setCompanyId($auth->getCompanyId());
+        $tPreUser->setRoleAssignmentId($mRoleAssignment->getRoleAssignmentId());
 
         try {
             $this->persist($tPreUser);
@@ -119,7 +115,7 @@ class UserSettingService extends BaseService
 
         // Eメール本文テンプレート埋め込み変数配列の設定
         $data = array();
-        $data['subdomain'] = $subdomain;
+        $data['subdomain'] = $auth->getSubdomain();
         $data['urltoken'] = $urltoken;
         $data['supportAddress'] = $this->getParameter('support_address');
 
@@ -339,7 +335,7 @@ class UserSettingService extends BaseService
 
         // ランダムパスワード生成
         $ramdomPassword =  null;
-        while (!preg_match('/^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,100}$/', $ramdomPassword)) {
+        while (!preg_match('/^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,20}$/', $ramdomPassword)) {
             $ramdomPassword = $this->generateRamdomPassword();
         }
 

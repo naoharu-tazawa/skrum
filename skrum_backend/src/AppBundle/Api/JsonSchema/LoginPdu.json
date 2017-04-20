@@ -11,7 +11,7 @@
     "password": {
       "title": "パスワード",
       "type": "string",
-      "pattern": "^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,100}$"
+      "pattern": "^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,20}$"
     }
   },
   "required": ["emailAddress", "password"],
