@@ -29,7 +29,7 @@ class LoginService extends BaseService
     /**
      * サブドメインチェック
      *
-     * @param $subdomain サブドメイン
+     * @param string $subdomain サブドメイン
      * @return void
      */
     public function checkSubdomain($subdomain)
@@ -45,9 +45,9 @@ class LoginService extends BaseService
     /**
      * ログイン
      *
-     * @param $emailAddress Eメールアドレス
-     * @param $password パスワード
-     * @param $subdomain サブドメイン
+     * @param string $emailAddress Eメールアドレス
+     * @param string $password パスワード
+     * @param string $subdomain サブドメイン
      * @return string JWT
      */
     public function login($emailAddress, $password, $subdomain)
@@ -94,10 +94,10 @@ class LoginService extends BaseService
     /**
      * 新規ユーザ登録
      *
-     * @param $password パスワード
-     * @param $urltoken URLトークン
-     * @param $subdomain サブドメイン
-     * @param $planId プランID
+     * @param string $password パスワード
+     * @param string $urltoken URLトークン
+     * @param string $subdomain サブドメイン
+     * @param integer $planId プランID
      * @return string JWT
      */
     public function signup($password, $urltoken, $subdomain, $planId = DBConstant::PLAN_ID_TRIAL_PLAN)
@@ -206,9 +206,9 @@ class LoginService extends BaseService
     /**
      * 追加ユーザ登録
      *
-     * @param $password パスワード
-     * @param $urltoken URLトークン
-     * @param $subdomain サブドメイン
+     * @param string $password パスワード
+     * @param string $urltoken URLトークン
+     * @param string $subdomain サブドメイン
      * @return string JWT
      */
     public function join($password, $urltoken, $subdomain)

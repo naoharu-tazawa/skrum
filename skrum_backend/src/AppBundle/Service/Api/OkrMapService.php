@@ -31,6 +31,7 @@ class OkrMapService extends BaseService
     {
         // 目標を取得
         $tOkrRepos = $this->getTOkrRepository();
+        $companyName = null;
         if ($subjectType == Constant::SUBJECT_TYPE_USER) {
             $tOkrArray = $tOkrRepos->getUserObjectives($userId, $timeframeId, $companyId);
         } elseif ($subjectType == Constant::SUBJECT_TYPE_GROUP) {
