@@ -135,10 +135,10 @@ class UserSettingService extends BaseService
     private function sendEmail($fromAddress, $toAddress, $subject, $bodyTemplatePath, $data)
     {
         $message = \Swift_Message::newInstance()
-        ->setFrom($fromAddress)
-        ->setTo($toAddress)
-        ->setSubject($subject)
-        ->setBody(
+            ->setFrom($fromAddress)
+            ->setTo($toAddress)
+            ->setSubject($subject)
+            ->setBody(
                 $this->renderView(
                         $bodyTemplatePath,
                         ['data' => $data]
