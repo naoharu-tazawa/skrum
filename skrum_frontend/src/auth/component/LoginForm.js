@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { errorType } from '../../util/PropUtil';
 import { imgSrc } from '../../util/ResourceUtil';
 
@@ -52,16 +53,17 @@ class LoginForm extends Component {
   handleSubmit(e) {
     const target = e.target;
     e.preventDefault();
-    this.props.handleLoginSubmit({
-      username: target.name.value.trim(),
-      password: target.password.value.trim(),
-    });
+    this.props.handleLoginSubmit(
+      target.email.value.trim(),
+      target.password.value.trim(),
+    );
   }
 
   renderError() {
     if (this.props.error) {
       return (<pre>
-        <i className="material-icons">report_problem</i>
+        <p>エラーが発生しました</p>
+        <br />
         {this.props.error.message}
       </pre>);
     }
@@ -77,7 +79,7 @@ class LoginForm extends Component {
         <p style={defaultPStyle}>Skrum Login</p>
         <br />
         <form onSubmit={e => this.handleSubmit(e)}>
-          <input type="text" id="name" placeholder="Email" style={defaultInputStyle} />
+          <input type="text" id="email" placeholder="Email" style={defaultInputStyle} />
           <br />
           <input type="password" id="password" placeholder="Password" style={defaultInputStyle} />
           {this.renderError()}

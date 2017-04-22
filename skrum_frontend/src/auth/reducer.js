@@ -2,7 +2,7 @@ import { Action } from './action';
 
 export default (state = {
   isFetching: false,
-  isLoggedIn: false,
+  isAuthorized: false,
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_LOGIN:
@@ -14,7 +14,7 @@ export default (state = {
       if (error) {
         return Object.assign({}, state, {
           isFetching: false,
-          isLoggedIn: false,
+          isAuthorized: false,
           token: null,
           error: {
             message: payload.message,
@@ -22,22 +22,18 @@ export default (state = {
         });
       }
 
-      const token = payload.data;
+      const { jwt } = payload.data;
       return Object.assign({}, state, {
         isFetching: false,
-        isLoggedIn: true,
-        token: {
-          accessToken: token.access_token,
-          tokenType: token.token_type,
-        },
+        isAuthorized: true,
+        token: jwt,
         error: null,
       });
     }
 
     case Action.REQUEST_LOGOUT:
-    case Action.FORCE_LOGOUT:
       return Object.assign({}, state, {
-        isLoggedIn: false,
+        isAuthorized: false,
         token: null,
         error: action.error,
       });
