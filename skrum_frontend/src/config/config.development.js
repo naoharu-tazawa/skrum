@@ -1,9 +1,7 @@
-const host = 'http://localhost:7003';
-const mock = 'http://localhost:7004';
+const host = sub => `http://${sub}.localhost:8000`;
 export default function (env = 'development') {
-  const isMock = env.endsWith('mock');
   return {
-    host: isMock ? mock : host,
-    env: isMock ? 'mock' : 'development',
+    host,
+    env,
   };
 }

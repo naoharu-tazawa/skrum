@@ -1,14 +1,11 @@
 export const keyValueIdentity = (key, value) => ({ [key]: value });
 
 export const extractToken = (status) => {
-  const { accessToken, tokenType } = status.auth.token;
-  return {
-    token: accessToken,
-    tokenType,
-  };
+  const { token } = status.auth;
+  return token;
 };
 
-export default {
-  keyValueIdentity,
-  extractToken,
+export const extractDomain = (status) => {
+  const { company = 'company1' } = status.user;
+  return company;
 };

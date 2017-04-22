@@ -1,9 +1,11 @@
+import { extractToken, extractDomain } from './ActionUtil';
 import config from '../config/config';
 
-const { host } = config;
-const baseUrl = `${host}/api/v1`;
 
-const createUrlParam = (param) => {
+const { host } = config;
+const getBaseUrl = sub => `${host(sub)}/api`;
+const getUrlParam = (param) => {
+  if (!param) return '';
   const toQuery = (k, v) => `${k}=${v}`;
   const params = [];
   Object.keys(param)
@@ -20,16 +22,21 @@ const createUrlParam = (param) => {
   return `?${params.join('&')}`;
 };
 
-const createOption = (method, authToken, body) => {
-  const { tokenType, token } = authToken;
-  const headers = {};
-  if (authToken) {
-    headers.Authorization = `${tokenType} ${token}`;
-  }
+const createUrl = (path, param, status) => {
+  const domain = extractDomain(status);
+  console.log(domain);
+  const url = getBaseUrl(domain);
+  const urlParam = getUrlParam(param);
+  return url + urlParam;
+};
 
-  if (method !== 'GET') {
-    headers['Content-Type'] = 'application/json;';
+const createOption = (method, status, body) => {
+  const headers = {};
+  const authToken = extractToken(status);
+  if (authToken) {
+    headers.Authorization = authToken;
   }
+  headers['Content-Type'] = 'application/json;';
 
   return {
     method,
@@ -40,34 +47,10 @@ const createOption = (method, authToken, body) => {
   };
 };
 
-const pageHandler = (json) => {
-  if (!json) {
-    return {};
-  }
-
-  const { page } = json;
-  if (!page) {
-    return json;
-  }
-
-  const total = page.total;
-  const current = page.current + 1;
-
-  return Object.assign({}, json, {
-    page: {
-      total,
-      current,
-      hasNext: current < total,
-      hasPrev: current > 1,
-    },
-  });
-};
-
 export const handleResponse = (data) => {
   const status = data.status;
   if (status === 200) {
-    return data.json()
-      .then(pageHandler);
+    return data.json();
   }
 
   return data.json()
@@ -89,38 +72,34 @@ export const handleError = (error) => {
   throw exception;
 };
 
-const getJson = (path, authToken = { tokenType: null, token: null }, param) => {
-  const op = createOption('GET', authToken);
-  const urlParam = param ? createUrlParam(param) : '';
-  return fetch(baseUrl + path + urlParam, op)
+export const getJson = (path, status) => (param) => {
+  const url = createUrl(path, param, status);
+  const op = createOption('GET', status);
+  return fetch(url, op)
     .catch(handleError)
     .then(handleResponse);
 };
 
-const postJson = (
-  path,
-  authToken = { tokenType: null, token: null },
-  body,
-) => {
-  const op = createOption('POST', authToken, body);
-  return fetch(baseUrl + path, op)
+export const postJson = (path, status) => (param, body) => {
+  const url = createUrl(path, param, status);
+  const op = createOption('POST', status, body);
+  return fetch(url, op)
     .catch(handleError)
     .then(handleResponse);
 };
 
-const putJson = (
-  path,
-  authToken = { tokenType: null, token: null },
-  body,
-) => {
-  const op = createOption('PUT', authToken, body);
-  return fetch(baseUrl + path, op)
+export const putJson = (path, status) => (param, body) => {
+  const url = createUrl(path, param, status);
+  const op = createOption('PUT', status, body);
+  return fetch(url, op)
     .catch(handleError)
     .then(handleResponse);
 };
 
-export default {
-  getJson,
-  postJson,
-  putJson,
+export const deleteJson = (path, status) => (param, body) => {
+  const url = createUrl(path, param, status);
+  const op = createOption('DELETE', status, body);
+  return fetch(url, op)
+    .catch(handleError)
+    .then(handleResponse);
 };

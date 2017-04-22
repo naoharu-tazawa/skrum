@@ -1,25 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import SideBarContainer from '../../navigation/sidebar/SideBarContainer';
-import HeaderContainer from '../../navigation/header/HeaderContainer';
+import NavigationContainer from '../../navigation/NavigationContainer';
 
-const style = {
-  layoutBase: {
-    display: 'flex',
-    width: '100%',
-    height: '100vh',
-  },
-  layoutSide: {
-    width: '200px',
-  },
-  layoutMain: {
-    width: '100%',
-  },
-};
-
-class UserOnly extends Component {
+export default class UserOnly extends Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
   };
@@ -40,17 +24,8 @@ class UserOnly extends Component {
 
   render() {
     return (
-      <div style={style.layoutBase}>
-        <div style={style.layoutSide}>
-          <SideBarContainer />
-        </div>
-        <main style={style.layoutMain}>
-          <HeaderContainer />
-          {this.props.children}
-        </main>
-      </div>);
+      <NavigationContainer>
+        {this.props.children}
+      </NavigationContainer>);
   }
 }
-
-const mapStateToProps = state => state;
-export default connect(mapStateToProps)(UserOnly);
