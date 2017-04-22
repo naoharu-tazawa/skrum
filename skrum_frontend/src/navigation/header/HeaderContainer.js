@@ -24,8 +24,8 @@ const menus = [
 export default class HeaderContainer extends Component {
 
   getActiveMenu() {
-    const href = window.location.href;
-    const { key } = menus.find(menu => href.endsWith(menu.path));
+    const path = window.location.pathname;
+    const { key = 'okr' } = menus.find(menu => path.endsWith(menu.path)) || {};
     return key;
   }
 

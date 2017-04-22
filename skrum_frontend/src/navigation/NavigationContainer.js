@@ -26,7 +26,7 @@ class NavigationContainer extends Component {
       PropTypes.element,
       PropTypes.arrayOf([PropTypes.element]),
     ]),
-    dispatchFetchUserInfo: PropTypes.func.isRequired,
+    dispatchFetchUserInfo: PropTypes.func,
   };
 
   static defaultProps = {
