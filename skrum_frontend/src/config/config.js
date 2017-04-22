@@ -5,5 +5,5 @@ if (env === 'production') {
 } else if (env === 'staging') {
   module.exports = require('./config.staging');
 } else {
-  module.exports = require('./config.development').default(env);
+  module.exports = require('./config.development');
 }

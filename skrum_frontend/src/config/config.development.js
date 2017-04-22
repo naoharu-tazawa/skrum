@@ -1,7 +1,6 @@
 const host = sub => `http://${sub}.localhost:8000`;
-export default function (env = 'development') {
-  return {
-    host,
-    env,
-  };
-}
+const env = 'development';
+export default {
+  host,
+  env,
+};

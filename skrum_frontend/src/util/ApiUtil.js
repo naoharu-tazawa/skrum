@@ -1,9 +1,8 @@
 import { extractToken, extractDomain } from './ActionUtil';
 import config from '../config/config';
 
-
 const { host } = config;
-const getBaseUrl = sub => `${host(sub)}/api`;
+const getBaseUrl = sub => `${host(sub)}/v1`;
 const getUrlParam = (param) => {
   if (!param) return '';
   const toQuery = (k, v) => `${k}=${v}`;
@@ -24,10 +23,9 @@ const getUrlParam = (param) => {
 
 const createUrl = (path, param, status) => {
   const domain = extractDomain(status);
-  console.log(domain);
   const url = getBaseUrl(domain);
   const urlParam = getUrlParam(param);
-  return url + urlParam;
+  return url + path + urlParam;
 };
 
 const createOption = (method, status, body) => {
@@ -75,6 +73,7 @@ export const handleError = (error) => {
 export const getJson = (path, status) => (param) => {
   const url = createUrl(path, param, status);
   const op = createOption('GET', status);
+  console.log(url);
   return fetch(url, op)
     .catch(handleError)
     .then(handleResponse);

@@ -22,7 +22,7 @@ const style = {
 class NavigationContainer extends Component {
 
   static propTypes = {
-    children: PropTypes.oneOf([
+    children: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.arrayOf([PropTypes.element]),
     ]),
