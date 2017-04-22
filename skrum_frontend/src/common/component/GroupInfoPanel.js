@@ -8,9 +8,10 @@ const gap = '1em';
 const style = {
   okrNav: {
     display: 'flex',
-    background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`,
+    backgroundColor: '#fff',
+    //background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`,
     overflow: 'hidden',
-    color: '#fff',
+    color: '#626A7F',
   },
   isOpen: {
     position: 'relative',

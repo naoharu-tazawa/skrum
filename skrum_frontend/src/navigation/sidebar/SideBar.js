@@ -10,7 +10,7 @@ const style = {
     overflow: 'hidden',
     color: '#fff',
     boxShadow: '0px 0px 10px 0px #000',
-    backgroundColor: '#626A7E',
+    backgroundColor: '#626A7F',
   },
   sideNavTitle: {
     position: 'relative',
@@ -51,7 +51,7 @@ const style = {
    *  Header
    *  ----------------------------------- */
   header: {
-    backgroundColor: '#325C8A',
+    backgroundColor: '#27588F',
     padding: '20px',
   },
   /* -----------------------------------

@@ -7,7 +7,7 @@ const style = {
    *  ----------------------------------- */
   container: {
     display: 'flex',
-    backgroundColor: '#094C92',
+    backgroundColor: '#004D99',
     padding: '0 60px',
     boxShadow: '2px 1px 6px 0px #000',
   },

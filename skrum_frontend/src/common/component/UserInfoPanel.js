@@ -3,14 +3,18 @@ import moment from 'moment';
 import { Link } from 'react-router';
 import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
+//import style from './UserInfoPanel.css';
+
 
 const gap = '1em';
 const style = {
   okrNav: {
     display: 'flex',
-    background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`,
+    backgroundColor: '#fff',
+    //background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`,
     overflow: 'hidden',
-    color: '#fff',
+    color: '#626A7F',
+    padding: '40px 40px 20px',
   },
   isOpen: {
     position: 'relative',
@@ -24,15 +28,16 @@ const style = {
   },
   userBox: {
     margin: 'auto 0',
-    minWidth: '160px',
+    //minWidth: '160px',
+    width: '70px',
   },
   userImage: {
     display: 'block',
     margin: 'auto',
-    width: '80px',
-    minHeight: '80px',
+    width: '70px',//80px
+    minHeight: '70px',//80px
     margin: 'auto',
-    border: '2px solid #fff',
+    border: '2px solid #95989A',//#fff
     borderRadius: '50%',
     overflow: 'hidden',
     boxSizing: 'border-box',
@@ -73,8 +78,12 @@ const style = {
     alignSelf: 'flex-end',
     right: 0,
     padding: `0 ${gap} ${gap} 0`,
+    border: 'solid 1px #D8DFE5',
+    backgroundColor: '#F0F4F5',
+    color: '#8E9AA6',
   },
 };
+
 
 class UserInfoPanel extends Component {
 
