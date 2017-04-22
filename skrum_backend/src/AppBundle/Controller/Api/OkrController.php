@@ -4,10 +4,10 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
-use AppBundle\Controller\BaseController;
 use AppBundle\Utils\DBConstant;
 
 /**
@@ -20,8 +20,8 @@ class OkrController extends BaseController
     /**
      * 目標新規登録
      *
-     * @Rest\Post("/objectives.{_format}")
-     * @param $request リクエストオブジェクト
+     * @Rest\Post("/v1/objectives.{_format}")
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function postObjectivesAction(Request $request)
@@ -37,11 +37,13 @@ class OkrController extends BaseController
         $auth = $request->get('auth_token');
 
         // オーナーユーザ存在チェック
+        $mUser = null;
         if ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_USER) {
             $mUser = $this->getDBExistanceLogic()->checkUserExistance($data['ownerUserId'], $auth->getCompanyId());
         }
 
         // オーナーグループ存在チェック
+        $mGroup = null;
         if ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
             $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($data['ownerGroupId'], $auth->getCompanyId());
         }
@@ -58,6 +60,7 @@ class OkrController extends BaseController
 
         // 紐付け先OKR存在チェック
         $alignmentFlg = false;
+        $tOkr = null;
         if (array_key_exists('parentOkrId', $data)) {
             $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($data['parentOkrId'], $auth->getCompanyId());
             if ($tOkr->getTimeframe()->getTimeframeId() != $data['timeframeId']) {
@@ -76,9 +79,9 @@ class OkrController extends BaseController
     /**
      * OKR基本情報変更
      *
-     * @Rest\Put("/okrs/{okrId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $okrId OKRID
+     * @Rest\Put("/v1/okrs/{okrId}.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function putOkrAction(Request $request, $okrId)
@@ -99,7 +102,7 @@ class OkrController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }
@@ -115,9 +118,9 @@ class OkrController extends BaseController
     /**
      * OKR進捗登録
      *
-     * @Rest\Post("/okrs/{okrId}/achievements.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $okrId OKRID
+     * @Rest\Post("/v1/okrs/{okrId}/achievements.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function postOkrAchievementsAction(Request $request, $okrId)
@@ -138,7 +141,7 @@ class OkrController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }
@@ -154,8 +157,8 @@ class OkrController extends BaseController
     /**
      * OKR削除
      *
-     * @Rest\Delete("/okrs/{okrId}.{_format}")
-     * @param $request リクエストオブジェクト
+     * @Rest\Delete("/v1/okrs/{okrId}.{_format}")
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function deleteOkrAction(Request $request, $okrId)
@@ -169,7 +172,7 @@ class OkrController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }

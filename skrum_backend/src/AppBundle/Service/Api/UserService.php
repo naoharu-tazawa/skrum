@@ -3,14 +3,11 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\NoDataException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Entity\MGroup;
-use AppBundle\Entity\TGroupTree;
-use AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\DepartmentDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\DepartmentDTO;
 
 /**
  * ユーザサービスクラス
@@ -31,7 +28,7 @@ class UserService extends BaseService
         $mUserRepos = $this->getMUserRepository();
         $mUserArray = $mUserRepos->findBy(array('userId' => $userId, 'company' => $companyId));
         if (count($mUserArray) === 0) {
-            throw new ApplicationException('ユーザが存在しません');
+            throw new NoDataException('ユーザが存在しません');
         }
 
         // 所属部門を取得
@@ -73,7 +70,7 @@ class UserService extends BaseService
 
         try {
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -90,7 +87,7 @@ class UserService extends BaseService
         try {
             $this->remove($mUser);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }

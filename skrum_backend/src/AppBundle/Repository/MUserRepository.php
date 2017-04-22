@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Utils\DBConstant;
+
 /**
  * MUserリポジトリクラス
  *
@@ -9,24 +11,6 @@ namespace AppBundle\Repository;
  */
 class MUserRepository extends BaseRepository
 {
-    /**
-     * 引数で指定されたユーザIDのユーザ情報を取得
-     *
-     * @return mixed
-     * @throws NonUniqueResultException If the query result is not unique.
-     * @throws NoResultException        If the query returned no result.
-     */
-//     public function getUser($userId)
-//     {
-//         $qb = $this->createQueryBuilder('u'); // 'u'はエイリアス。エイリアスは何でも良い
-//         $qb->select('u.userId, u.lastName, u.firstName, u.emailAddress') // 全てのカラムを取得する場合はselectメソッドは不要
-//             ->where('u.userId = :userId')
-//             ->orderBy('u.lastName', 'ASC')
-//             ->setParameter('userId', $userId);
-
-//         return $qb->getQuery()->getSingleResult(); // 取得レコードが複数ある場合はgetResultメソッドを使用
-//     }
-
     /**
      * 指定ユーザIDのレコードを取得
      *
@@ -73,5 +57,40 @@ SQL;
         $stmt->execute($params);
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * 指定会社IDのユーザ数を取得
+     *
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getUserCount($companyId)
+    {
+        $qb = $this->createQueryBuilder('mu');
+        $qb->select('COUNT(mu.userId)')
+            ->where('mu.company = :companyId')
+            ->setParameter('companyId', $companyId);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * スーパー管理者ユーザ数を取得
+     *
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getSuperAdminUserCount($companyId)
+    {
+        $qb = $this->createQueryBuilder('mu');
+        $qb->select('COUNT(mu.userId)')
+            ->innerJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
+            ->where('mu.company = :companyId')
+            ->andWhere('mra.roleLevel = :roleLevel')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('roleLevel', DBConstant::ROLE_LEVEL_SUPERADMIN);
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 }

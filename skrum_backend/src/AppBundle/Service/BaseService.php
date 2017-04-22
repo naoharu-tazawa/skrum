@@ -161,8 +161,7 @@ class BaseService
      */
     protected function beginTransaction()
     {
-        if (!$this->entityManager->getConnection()->isTransactionActive())
-        {
+        if (!$this->entityManager->getConnection()->isTransactionActive()) {
             $this->entityManager->beginTransaction();
         }
     }
@@ -174,8 +173,7 @@ class BaseService
      */
     protected function commit()
     {
-        if ($this->entityManager->getConnection()->isTransactionActive())
-        {
+        if ($this->entityManager->getConnection()->isTransactionActive()) {
             $this->entityManager->commit();
         }
     }
@@ -187,8 +185,7 @@ class BaseService
      */
     protected function rollback()
     {
-        if ($this->entityManager->getConnection()->isTransactionActive())
-        {
+        if ($this->entityManager->getConnection()->isTransactionActive()) {
             $this->entityManager->rollback();
         }
     }
@@ -241,6 +238,27 @@ class BaseService
         $this->entityManager->flush($entity);
     }
 
+    /**
+     * Returns a rendered view.
+     *
+     * @param string $view       The view name
+     * @param array  $parameters An array of parameters to pass to the view
+     *
+     * @return string The rendered view
+     */
+    public function renderView($view, array $parameters = array())
+    {
+        if ($this->container->has('templating')) {
+            return $this->container->get('templating')->render($view, $parameters);
+        }
+
+        if (!$this->container->has('twig')) {
+            throw new \LogicException('You can not use the "renderView" method if the Templating Component or the Twig Bundle are not available.');
+        }
+
+        return $this->container->get('twig')->render($view, $parameters);
+    }
+
     //----------------------------------------------
     //ここからロジッククラスの取得メソッド
     //----------------------------------------------
@@ -263,6 +281,11 @@ class BaseService
     protected function getOkrAchievementRateLogic()
     {
         return $this->getContainer()->get('api.okr_achievement_rate_logic');
+    }
+
+    protected function getOkrNestedIntervalsLogic()
+    {
+        return $this->getContainer()->get('api.okr_nested_intervals_logic');
     }
 
     //----------------------------------------------
@@ -377,5 +400,10 @@ class BaseService
     protected function getTTimeframeRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TTimeframe');
+    }
+
+    protected function getTLikeRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TLike');
     }
 }

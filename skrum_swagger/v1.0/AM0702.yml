@@ -10,50 +10,16 @@ produces:
 basePath: /v1
 
 paths:
-  /timeframes.json:
-    post:
-      description: タイムフレーム追加
+  /timeframes/{timeframeId}/setdefault.json:
+    put:
+      description: デフォルトタイムフレーム変更
       parameters:
         -
-          name: JsonRequest
-          in: body
-          description: タイムフレーム名、開始日、終了日
+          name: timeframeId
+          in: path
+          type: string
+          description: デフォルトに設定するタイムフレームID
           required: true
-          schema:
-            type: object
-            properties:
-              timeframeName:
-                type: string
-              start:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
-              end:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
-            required:
-              - timeframeName
-              - start
-              - end
       responses:
         200:
           description: 成功

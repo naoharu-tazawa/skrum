@@ -33,6 +33,95 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
+     * OKR検索
+     *
+     * @param string $keyword 検索ワード
+     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function searchOkr($keyword, $tOkr, $companyId)
+    {
+        $sql = <<<SQL
+        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+        FROM t_okr t0_
+        INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        LEFT OUTER JOIN (
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+            FROM m_user m0_
+            WHERE (m0_.deleted_at IS NULL)
+            ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
+        LEFT OUTER JOIN m_group m2_ ON (t0_.owner_group_id = m2_.group_id) AND (m2_.deleted_at IS NULL)
+        LEFT OUTER JOIN m_company m3_ ON (t0_.owner_company_id = m3_.company_id) AND (m3_.deleted_at IS NULL)
+        WHERE (
+                t0_.timeframe_id = :timeframeId1
+                AND t1_.company_id = :companyId1
+                AND t0_.type <> :type1
+                AND (
+                     t0_.name LIKE :okrName
+                     OR m1_.userName LIKE :userName
+                    )
+              )
+              AND (t0_.deleted_at IS NULL)
+        UNION
+        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+        FROM t_okr t0_
+        INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        LEFT OUTER JOIN (
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+            FROM m_user m0_
+            WHERE (m0_.deleted_at IS NULL)
+            ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
+        LEFT OUTER JOIN m_group m2_ ON (t0_.owner_group_id = m2_.group_id) AND (m2_.deleted_at IS NULL)
+        LEFT OUTER JOIN m_company m3_ ON (t0_.owner_company_id = m3_.company_id) AND (m3_.deleted_at IS NULL)
+        WHERE (
+                t0_.timeframe_id = :timeframeId2
+                AND t1_.company_id = :companyId2
+                AND t0_.type <> :type2
+                AND m2_.group_name LIKE :groupName
+              )
+              AND (t0_.deleted_at IS NULL)
+        UNION
+        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+        FROM t_okr t0_
+        INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        LEFT OUTER JOIN (
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+            FROM m_user m0_
+            WHERE (m0_.deleted_at IS NULL)
+            ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
+        LEFT OUTER JOIN m_group m2_ ON (t0_.owner_group_id = m2_.group_id) AND (m2_.deleted_at IS NULL)
+        LEFT OUTER JOIN m_company m3_ ON (t0_.owner_company_id = m3_.company_id) AND (m3_.deleted_at IS NULL)
+        WHERE (
+                t0_.timeframe_id = :timeframeId3
+                AND t1_.company_id = :companyId3
+                AND t0_.type <> :type3
+                AND m3_.company_name LIKE :companyName
+              )
+              AND (t0_.deleted_at IS NULL);
+SQL;
+
+        $params['timeframeId1'] = $tOkr->getTimeframe()->getTimeframeId();
+        $params['timeframeId2'] = $tOkr->getTimeframe()->getTimeframeId();
+        $params['timeframeId3'] = $tOkr->getTimeframe()->getTimeframeId();
+        $params['companyId1'] = $companyId;
+        $params['companyId2'] = $companyId;
+        $params['companyId3'] = $companyId;
+        $params['type1'] = DBConstant::OKR_TYPE_ROOT_NODE;
+        $params['type2'] = DBConstant::OKR_TYPE_ROOT_NODE;
+        $params['type3'] = DBConstant::OKR_TYPE_ROOT_NODE;
+        $params['okrName'] = $keyword . '%';
+        $params['userName'] = $keyword . '%';
+        $params['groupName'] = $keyword . '%';
+        $params['companyName'] = $keyword . '%';
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * 3世代OKRを取得
      *
      * @param $okrId OKRID
@@ -493,6 +582,33 @@ class TOkrRepository extends BaseRepository
     }
 
     /**
+     * 指定OKRとそれに紐づくOKRを全て取得
+     *
+     * @param $treeLeft 入れ子区間モデルの左値
+     * @param $treeRight 入れ子区間モデルの右値
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function getOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId, $companyId)
+    {
+        $qb = $this->createQueryBuilder('to');
+        $qb->select('to')
+            ->innerJoin('AppBundle:TTimeframe', 'tt', 'WITH', 'to.timeframe = tt.timeframeId')
+            ->where('tt.company = :companyId')
+            ->andWhere('to.timeframe = :timeframeId')
+            ->andWhere('to.treeLeft >= :treeLeft')
+            ->andWhere('to.treeLeft <= :treeRight')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('timeframeId', $timeframeId)
+            ->setParameter('treeLeft', $treeLeft)
+            ->setParameter('treeRight', $treeRight)
+            ->orderBy('to.treeLeft', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * 指定した親ノードの直下に挿入するノードの左値・右値を取得（最左ノード）
      *
      * @param $parentOkrId 親ノードのOKRID
@@ -591,26 +707,59 @@ SQL;
     /**
      * 指定OKRとそれに紐づくOKRを全て削除
      *
-     * @param $treeLeft 入れ子区間モデルの左値
-     * @param $treeRight 入れ子区間モデルの右値
-     * @param $timeframeId タイムフレームID
+     * @param integer $okrId OKRID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function deleteOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId)
+    public function resetRatioLockedFlg($okrId, $timeframeId, $companyId)
     {
         $sql = <<<SQL
         UPDATE t_okr AS t0_
-        LEFT OUTER JOIN t_okr_activity AS t1_ ON (t0_.okr_id = t1_.okr_id) AND (t1_.deleted_at IS NULL)
-        SET t0_.deleted_at = NOW(), t1_.deleted_at = NOW()
-        WHERE (t0_.tree_left >= :treeLeft
-                AND t0_.tree_left <= :treeRight
-                AND t0_.timeframe_id = :timeframeId)
+        INNER JOIN t_timeframe AS t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        SET t0_.ratio_locked_flg = :ratioLockedFlg
+        WHERE (t1_.company_id = :companyId
+                AND t0_.timeframe_id = :timeframeId
+                AND t0_.parent_okr_id = :parentOkrId)
                 AND (t0_.deleted_at IS NULL);
 SQL;
 
+        $params['ratioLockedFlg'] = DBConstant::FLG_FALSE;
+        $params['companyId'] = $companyId;
+        $params['timeframeId'] = $timeframeId;
+        $params['parentOkrId'] = $okrId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+    }
+
+    /**
+     * 指定OKRとそれに紐づくOKRを全て削除
+     *
+     * @param $treeLeft 入れ子区間モデルの左値
+     * @param $treeRight 入れ子区間モデルの右値
+     * @param $timeframeId タイムフレームID
+     * @param $companyId 会社ID
+     * @return array
+     */
+    public function deleteOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId, $companyId)
+    {
+        $sql = <<<SQL
+        UPDATE t_okr AS t0_
+        INNER JOIN t_timeframe AS t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        LEFT OUTER JOIN t_okr_activity AS t2_ ON (t0_.okr_id = t2_.okr_id) AND (t2_.deleted_at IS NULL)
+        SET t0_.deleted_at = NOW(), t2_.deleted_at = NOW()
+        WHERE (t1_.company_id = :companyId
+                AND t0_.timeframe_id = :timeframeId
+                AND t0_.tree_left >= :treeLeft
+                AND t0_.tree_left <= :treeRight)
+                AND (t0_.deleted_at IS NULL);
+SQL;
+
+        $params['companyId'] = $companyId;
+        $params['timeframeId'] = $timeframeId;
         $params['treeLeft'] = $treeLeft;
         $params['treeRight'] = $treeRight;
-        $params['timeframeId'] = $timeframeId;
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->execute($params);

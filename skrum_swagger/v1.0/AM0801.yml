@@ -1,0 +1,50 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /companies/{companyId}/contracts.json:
+    get:
+      description: プラン情報取得
+      parameters:
+        -
+          name: companyId
+          in: path
+          type: string
+          description: 会社ID
+          required: true
+      responses:
+        200:
+          description: 契約情報
+          schema:
+            type: object
+            properties:
+              planId:
+                type: integer
+              planName:
+                type: string
+              userCount:
+                type: integer
+              priceType:
+                type: string
+              price:
+                type: integer
+            required:
+              - planId
+              - planName
+              - userCount
+              - priceType
+              - price
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

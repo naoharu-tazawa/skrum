@@ -4,10 +4,11 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Controller\BaseController;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
-use AppBundle\Controller\BaseController;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Utils\Permission;
 
 /**
  * ユーザコントローラ
@@ -19,9 +20,9 @@ class UserController extends BaseController
     /**
      * ユーザ基本情報変更
      *
-     * @Rest\Put("/users/{userId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @Rest\Put("/v1/users/{userId}.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function putUserAction(Request $request, $userId)
@@ -39,6 +40,13 @@ class UserController extends BaseController
         // ユーザ存在チェック
         $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
 
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $userId);
+        if (!$checkResult) {
+            throw new PermissionException('ユーザ操作権限がありません');
+        }
+
         // ユーザ情報更新処理
         $userService = $this->getUserService();
         $userService->updateUser($data, $mUser);
@@ -49,9 +57,10 @@ class UserController extends BaseController
     /**
      * ユーザ削除
      *
-     * @Rest\Delete("/users/{userId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @Rest\Delete("/v1/users/{userId}.{_format}")
+     * @Permission(value="user_delete")
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function deleteUserAction(Request $request, $userId)
@@ -72,7 +81,7 @@ class UserController extends BaseController
         } else {
             // 権限ロジックでチェック
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $userId);
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $userId);
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }

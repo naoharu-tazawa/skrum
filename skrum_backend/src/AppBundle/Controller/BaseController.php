@@ -3,13 +3,13 @@
 namespace AppBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use JsonSchema\Validator;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
-use AppBundle\Utils\LoggerManager;
+use Symfony\Component\Form\FormInterface;
 use AppBundle\Exception\JsonSchemaException;
+use AppBundle\Utils\LoggerManager;
+use JsonSchema\Validator;
 
 /**
  * ベースコントローラ（被継承クラス）
@@ -285,8 +285,7 @@ class BaseController extends FOSRestController
      */
     protected function getRfc3339Date($datetimeString = null)
     {
-        if ($datetimeString)
-        {
+        if ($datetimeString) {
             return date(DATE_RFC3339, strtotime($datetimeString));
         } else {
             return date(DATE_RFC3339);
@@ -315,6 +314,11 @@ class BaseController extends FOSRestController
     protected function getOkrAchievementRateLogic()
     {
         return $this->get('api.okr_achievement_rate_logic');
+    }
+
+    protected function getOkrNestedIntervalsLogic()
+    {
+        return $this->get('api.okr_nested_intervals_logic');
     }
 
     protected function getSampleService()
@@ -377,6 +381,11 @@ class BaseController extends FOSRestController
         return $this->get('api.okr_setting_service');
     }
 
+    protected function getOkrOperationService()
+    {
+        return $this->get('api.okr_operation_service');
+    }
+
     protected function getTimeframeService()
     {
         return $this->get('api.timeframe_service');
@@ -390,5 +399,10 @@ class BaseController extends FOSRestController
     protected function getSearchService()
     {
         return $this->get('api.search_service');
+    }
+
+    protected function getContractService()
+    {
+        return $this->get('api.contract_service');
     }
 }

@@ -10,32 +10,26 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/paths/{groupPathId}.json:
-    delete:
-      description: 所属先グループ削除
+  /users/search.json?{q}:
+    get:
+      description: ユーザ検索
       parameters:
         -
-          name: groupId
+          name: q
           in: path
           type: string
-          description: グループID
-          required: true
-        -
-          name: groupPathId
-          in: path
-          type: string
-          description: 削除対象グループパスID
+          description: 検索ワード
           required: true
       responses:
         200:
-          description: 成功
+          description: 検索結果
           schema:
             type: object
             properties:
-              result:
+              userId:
+                type: integer
+              userName:
                 type: string
-            required:
-              - result
         400:
           description: JSONスキーマ不正
         409:

@@ -3,10 +3,13 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Api\ResponseDTO\PostDTO;
-use AppBundle\Entity\TPost;
-use AppBundle\Utils\DateUtility;
+use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\DateUtility;
+use AppBundle\Entity\TLike;
+use AppBundle\Entity\TPost;
+use AppBundle\Api\ResponseDTO\PostDTO;
+use AppBundle\Utils\DBConstant;
 
 /**
  * タイムラインサービスクラス
@@ -29,12 +32,13 @@ class TimelineService extends BaseService
 
         // DTOに詰め替える
         $disclosureLogic = $this->getDisclosureLogic();
+        $tPostArrayCount = count($tPostArray);
         $postDTOArray = array();
         $flg = false;
-        for ($i = 0; $i < count($tPostArray); $i++) {
+        for ($i = 0; $i < $tPostArrayCount; ++$i) {
             if (array_key_exists('post', $tPostArray[$i])) {
                 // 2回目のループ以降、前回ループ分のDTOを配列に入れる
-                if ($i != 0) {
+                if ($i !== 0) {
                     if (!$outOfDisclosureFlg) {
                         if ($flg) {
                             $postDTOPost->setReplies($postDTOReplyArray);
@@ -53,11 +57,24 @@ class TimelineService extends BaseService
                     continue;
                 }
 
+                // いいね数を取得
+                $tLikeRepos = $this->getTLikeRepository();
+                $likesCount = $tLikeRepos->getLikesCount($tPostArray[$i]['post']->getId());
+
+                // いいねが押されているかチェック
+                $tLike = $tLikeRepos->findOneBy(array('userId' => $auth->getUserId(), 'postId' => $tPostArray[$i]['post']->getId()));
+
                 $postDTOPost = new PostDTO();
                 $postDTOPost->setPostId($tPostArray[$i]['post']->getId());
                 $postDTOPost->setPosterId($tPostArray[$i]['post']->getPosterId());
                 $postDTOPost->setPost($tPostArray[$i]['post']->getPost());
                 $postDTOPost->setPostedDatetime($tPostArray[$i]['post']->getPostedDatetime());
+                $postDTOPost->setLikesCount($likesCount);
+                if (empty($tLike)) {
+                    $postDTOPost->setLikedFlg(DBConstant::FLG_FALSE);
+                } else {
+                    $postDTOPost->setLikedFlg(DBConstant::FLG_TRUE);
+                }
 
                 $postDTOReplyArray = array();
                 $flg = false;
@@ -68,7 +85,7 @@ class TimelineService extends BaseService
                 // OKRアクティビティがnullの場合、スキップ
                 if ($tPostArray[$i]['okrActivity'] == null) {
                     // 最終ループ
-                    if ($i == (count($tPostArray) - 1)) {
+                    if ($i === ($tPostArrayCount - 1)) {
                         $postDTOArray[] = $postDTOPost;
                     }
                     continue;
@@ -83,7 +100,7 @@ class TimelineService extends BaseService
                 // リプライがnullの場合、スキップ
                 if ($tPostArray[$i]['reply'] == null) {
                     // 最終ループ
-                    if ($i == (count($tPostArray) - 1)) {
+                    if ($i === ($tPostArrayCount - 1)) {
                         $postDTOArray[] = $postDTOPost;
                     }
                     continue;
@@ -100,7 +117,7 @@ class TimelineService extends BaseService
             }
 
             // 最終ループ
-            if ($i == (count($tPostArray) - 1)) {
+            if ($i === ($tPostArrayCount - 1)) {
                 if (!$outOfDisclosureFlg) {
                     if ($flg) {
                         $postDTOPost->setReplies($postDTOReplyArray);
@@ -134,7 +151,7 @@ class TimelineService extends BaseService
         try {
             $this->persist($tPost);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -161,7 +178,61 @@ class TimelineService extends BaseService
         try {
             $this->persist($tPostReply);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * いいね
+     *
+     * @param integer $userId ユーザID
+     * @param integer $postId 投稿ID
+     * @return void
+     */
+    public function like($userId, $postId)
+    {
+        // いいねが既に押されていないかチェック
+        $tLikeRepos = $this->getTLikeRepository();
+        $likeEntity = $tLikeRepos->findOneBy(array('userId' => $userId, 'postId' => $postId));
+        if (!empty($likeEntity)) {
+            throw new DoubleOperationException('既にいいねが押されています');
+        }
+
+        // いいね登録
+        $tLike = new TLike();
+        $tLike->setUserId($userId);
+        $tLike->setPostId($postId);
+
+        try {
+            $this->persist($tLike);
+            $this->flush();
+        } catch (\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * いいね解除
+     *
+     * @param integer $userId ユーザID
+     * @param integer $postId 投稿ID
+     * @return void
+     */
+    public function detachLike($userId, $postId)
+    {
+        // いいねが既に解除されている場合、更新処理を行わない
+        $tLikeRepos = $this->getTLikeRepository();
+        $tLike = $tLikeRepos->findOneBy(array('userId' => $userId, 'postId' => $postId));
+        if (empty($tLike)) {
+            return;
+        }
+
+        // いいね削除
+        try {
+            $this->remove($tLike);
+            $this->flush();
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }

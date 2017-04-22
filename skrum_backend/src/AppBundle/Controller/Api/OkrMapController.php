@@ -4,9 +4,9 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\InvalidParameterException;
-use AppBundle\Controller\BaseController;
 use AppBundle\Utils\Constant;
 
 /**
@@ -19,9 +19,9 @@ class OkrMapController extends BaseController
     /**
      * ユーザ目標取得
      *
-     * @Rest\Get("/users/{userId}/objectives.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $userId ユーザID
+     * @Rest\Get("/v1/users/{userId}/objectives.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
      * @return array
      */
     public function getUserObjectivesAction(Request $request, $userId)
@@ -51,9 +51,9 @@ class OkrMapController extends BaseController
     /**
      * グループ目標取得
      *
-     * @Rest\Get("/groups/{groupId}/objectives.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @Rest\Get("/v1/groups/{groupId}/objectives.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function getGroupObjectivesAction(Request $request, $groupId)
@@ -81,9 +81,9 @@ class OkrMapController extends BaseController
     /**
      * 会社目標取得
      *
-     * @Rest\Get("/companies/{companyId}/objectives.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $companyId 会社ID
+     * @Rest\Get("/v1/companies/{companyId}/objectives.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
      * @return array
      */
     public function getCompanyObjectivesAction(Request $request, $companyId)
@@ -113,9 +113,9 @@ class OkrMapController extends BaseController
     /**
      * 3世代OKR取得
      *
-     * @Rest\Get("/okrs/{okrId}/familyokrs.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $okrId OKRID
+     * @Rest\Get("/v1/okrs/{okrId}/familyokrs.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function getOkrFamilyokrsAction(Request $request, $okrId)

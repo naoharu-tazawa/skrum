@@ -3,14 +3,17 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Entity\TPreUser;
 use AppBundle\Exception\ApplicationException;
-use AppBundle\Exception\SystemException;
+use AppBundle\Exception\AuthenticationException;
 use AppBundle\Exception\DoubleOperationException;
-use AppBundle\Utils\DBConstant;
-use AppBundle\Entity\TTimeframe;
-use AppBundle\Utils\DateUtility;
+use AppBundle\Exception\NoDataException;
+use AppBundle\Exception\SystemException;
 use AppBundle\Utils\Constant;
+use AppBundle\Utils\DateUtility;
+use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TPreUser;
+use AppBundle\Entity\TTimeframe;
+use AppBundle\Api\ResponseDTO\RoleDTO;
 
 /**
  * ユーザ設定サービスクラス
@@ -24,11 +27,9 @@ class UserSettingService extends BaseService
      *
      * @param $emailAddress Eメールアドレス
      * @param $subdomain サブドメイン
-     * @param $companyId 会社ID（ユーザ招待の場合のみ）
-     * @param $roleAssignmentId ロール割当ID（ユーザ招待の場合のみ）
-     * @return boolean 登録結果
+     * @return void
      */
-    public function preregisterUser($emailAddress, $subdomain, $companyId = null, $roleAssignmentId = null)
+    public function preregisterUser($emailAddress, $subdomain)
     {
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
@@ -45,54 +46,110 @@ class UserSettingService extends BaseService
         $tPreUser->setEmailAddress($emailAddress);
         $tPreUser->setSubdomain($subdomain);
         $tPreUser->setUrltoken($urltoken);
-        // 会社IDが存在する場合（ユーザ招待の場合）のみ、会社IDとロール割当IDをセット
-        if ($companyId) {
-            $tPreUser->setCompanyId($companyId);
-
-            // ロール割当ID存在チェック
-            $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
-            $mRoleAssignmentArray = $mRoleAssignmentRepos->findBy(array(
-                                        'roleAssignmentId' => $roleAssignmentId,
-                                        'companyId' => $companyId
-                                    ));
-            if (count($mRoleAssignmentArray) === 0) {
-                throw new ApplicationException('ロール割当IDが存在しません');
-            }
-
-            $tPreUser->setRoleAssignmentId($roleAssignmentId);
-        } else {
-            $tPreUser->setInitialUserFlg(DBConstant::FLG_TRUE);
-        }
+        $tPreUser->setInitialUserFlg(DBConstant::FLG_TRUE);
 
         try {
             $this->persist($tPreUser);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
 
-        $url = "https://skrum.jp/signup" . "?tkn=" . $urltoken;
+        // Eメール本文テンプレート埋め込み変数配列の設定
+        $data = array();
+        $data['subdomain'] = $subdomain;
+        $data['urltoken'] = $urltoken;
+        $data['supportAddress'] = $this->getParameter('support_address');
 
+        // Eメール送信
+        $this->sendEmail(
+                $this->getParameter('from_address'),
+                $emailAddress,
+                $this->getParameter('email_subject_new_user_registration'),
+                'mail/new_user_registration.txt.twig',
+                $data
+            );
+    }
+
+    /**
+     * ユーザ招待
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param string $emailAddress Eメールアドレス
+     * @param integer $roleAssignmentId ロール割当ID
+     * @return void
+     */
+    public function inviteUser($auth, $emailAddress, $roleAssignmentId)
+    {
+        // ユーザテーブルに同一Eメールアドレスの登録がないか確認
+        $mUserRepos = $this->getMUserRepository();
+        $result = $mUserRepos->findBy(array('emailAddress' => $emailAddress));
+        if (count($result) > 0) {
+            throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
+        }
+
+        // URLトークンを生成
+        $urltoken = $this->getToken();
+
+        // 仮登録ユーザテーブルに登録
+        $tPreUser = new TPreUser();
+        $tPreUser->setEmailAddress($emailAddress);
+        $tPreUser->setSubdomain($auth->getSubdomain());
+        $tPreUser->setUrltoken($urltoken);
+        $tPreUser->setCompanyId($auth->getCompanyId());
+        $tPreUser->setRoleAssignmentId($roleAssignmentId);
+
+        try {
+            $this->persist($tPreUser);
+            $this->flush();
+        } catch (\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+
+        // Eメール本文テンプレート埋め込み変数配列の設定
+        $data = array();
+        $data['subdomain'] = $auth->getSubdomain();
+        $data['urltoken'] = $urltoken;
+        $data['supportAddress'] = $this->getParameter('support_address');
+
+        // Eメール送信
+        $this->sendEmail(
+                $this->getParameter('from_address'),
+                $emailAddress,
+                $this->getParameter('email_subject_additional_user_registration'),
+                'mail/additional_user_registration.txt.twig',
+                $data
+            );
+    }
+
+    /**
+     * Eメール送信
+     *
+     * @param string $fromAddress Fromアドレス
+     * @param string $toAddress Toアドレス
+     * @param string $subject 件名
+     * @param string $bodyTemplatePath 本文テンプレートパス
+     * @param array $data テンプレート埋め込み変数配列
+     * @return void
+     */
+    private function sendEmail($fromAddress, $toAddress, $subject, $bodyTemplatePath, $data)
+    {
         $message = \Swift_Message::newInstance()
-            ->setFrom('skrum@skrum.jp')
-            ->setTo($emailAddress)
-            ->setSubject('新規ユーザ登録メール送信APIテスト件名')
-            ->setBody('メールをお送りしました。24時間以内にメールに記載されたURLからご登録下さい。' . $url);
+        ->setFrom($fromAddress)
+        ->setTo($toAddress)
+        ->setSubject($subject)
+        ->setBody(
+                $this->renderView(
+                        $bodyTemplatePath,
+                        ['data' => $data]
+                        )
+                );
 
-        $mailer = $this->getContainer()->get('mailer');
-        $result = $mailer->send($message);
+        $result = $this->getContainer()->get('mailer')->send($message);
 
-        $transport = $mailer->getTransport();
-        $spool = $transport->getSpool();
-        $spool->flushQueue($this->getContainer()->get('swiftmailer.transport.real'));
-
-        // メールを送信
-        if ($result) {
-            return true;
-        } else {
-            $this->logError("メールの送信に失敗しました");
-
-            return false;
+        // メール送信結果判定
+        if (!$result) {
+            throw new SystemException('メールの送信に失敗しました');
         }
     }
 
@@ -117,6 +174,13 @@ class UserSettingService extends BaseService
      */
     public function establishCompany($auth, $userInfo, $companyInfo, $timeframeInfo)
     {
+        // 二重登録回避
+        $mCompanyRepos = $this->getMCompanyRepository();
+        $mCompany = $mCompanyRepos->find($auth->getCompanyId());
+        if ($mCompany->getCompanyName() !== null) {
+            throw new DoubleOperationException('既に初期設定登録されています');
+        }
+
         // トランザクション開始
         $this->beginTransaction();
 
@@ -184,9 +248,9 @@ class UserSettingService extends BaseService
                 }
 
                 // サイクル種別に応じた回数ループ
-                for ($i = 0; $i < $cycleType['i']; $i++) {
+                for ($i = 0; $i < $cycleType['i']; ++$i) {
                     // 開始日
-                    if ($i == 0) {
+                    if ($i === 0) {
                         $startYearMonthDate = $timeframeInfo['start']['year'] . '-' . $timeframeInfo['start']['month'] . '-' . $timeframeInfo['start']['date'];
                     } else {
                         $startYearMonthDate = DateUtility::get1stOfXMonthDateString($startDateArray[0], $startDateArray[1], $cycleType['months']);
@@ -215,7 +279,7 @@ class UserSettingService extends BaseService
                     $tTimeframe->setTimeframeName($timeframeName);
                     $tTimeframe->setStartDate(DateUtility::transIntoDatetime($startYearMonthDate));
                     $tTimeframe->setEndDate(DateUtility::transIntoDatetime($endYearMonthDate));
-                    if ($i == 0) {
+                    if ($i === 0) {
                         $tTimeframe->setDefaultFlg(DBConstant::FLG_TRUE);
                     }
                     $this->persist($tTimeframe);
@@ -239,9 +303,14 @@ class UserSettingService extends BaseService
      */
     public function establishUser($auth, $userInfo)
     {
-        // ユーザ情報を登録
+        // 二重登録回避
         $mUserRepos = $this->getMUserRepository();
         $mUser = $mUserRepos->findOneBy(array('userId' => $auth->getUserId()));
+        if ($mUser->getLastName() !== null) {
+            throw new DoubleOperationException('既に初期設定登録されています');
+        }
+
+        // ユーザ情報を登録
         $mUser->setLastName($userInfo['lastName']);
         $mUser->setFirstName($userInfo['firstName']);
         $mUser->setPosition($userInfo['position']);
@@ -249,6 +318,192 @@ class UserSettingService extends BaseService
 
         try {
             $this->persist($mUser);
+            $this->flush();
+        } catch (\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * パスワードリセット
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @return void
+     */
+    public function resetPassword($auth, $mUser)
+    {
+        // 自ユーザのパスワードリセットは不可
+        if ($mUser->getUserId() === $auth->getUserId()) {
+            throw new ApplicationException('自ユーザのパスワードリセットはできません');
+        }
+
+        // ランダムパスワード生成
+        $ramdomPassword =  null;
+        while (!preg_match('/^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,20}$/', $ramdomPassword)) {
+            $ramdomPassword = $this->generateRamdomPassword();
+        }
+
+        // パスワードをハッシュ化
+        $hashedPassword = password_hash($ramdomPassword, PASSWORD_DEFAULT, array('cost' => 12));
+
+        // トランザクション開始
+        $this->beginTransaction();
+
+        try {
+            // パスワード更新
+            $mUser->setPassword($hashedPassword);
+
+            // Eメール本文テンプレート埋め込み変数配列の設定
+            $data = array();
+            $data['password'] = $ramdomPassword;
+            $data['subdomain'] = $auth->getSubdomain();
+            $data['supportAddress'] = $this->getParameter('support_address');
+
+            // Eメール送信
+            $this->sendEmail(
+                    $this->getParameter('from_address'),
+                    $mUser->getEmailAddress(),
+                    $this->getParameter('password_reset'),
+                    'mail/password_reset.txt.twig',
+                    $data
+                    );
+
+            $this->flush();
+            $this->commit();
+        } catch (\Exception $e) {
+            $this->rollback();
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * ランダムパスワード生成
+     *
+     * @return string ランダムパスワード
+     */
+    private function generateRamdomPassword()
+    {
+        $data = 'abcdefghkmnprstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ234567823456782345678234567823456782345678';
+        $length = strlen($data);
+        $ret = '';
+        for ($i = 0; $i < 15; ++$i) {
+            $ret .= $data[mt_rand(0, $length - 1)];
+        }
+
+        return $ret;
+    }
+
+    /**
+     * パスワード変更
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param string $currentPassword 現在パスワード
+     * @param string $newPassword 新パスワード
+     * @return void
+     */
+    public function changePassword($auth, $currentPassword, $newPassword)
+    {
+        // 現在パスワードと新パスワードが同一の場合、更新処理を行わない
+        if ($currentPassword === $newPassword) {
+            return;
+        }
+        // 対象ユーザをユーザテーブルから取得
+        $mUserRepos = $this->getMUserRepository();
+        $mUserArray = $mUserRepos->findBy(array('userId' => $auth->getUserId()));
+        if (count($mUserArray) === 0) {
+            throw new NoDataException('対象ユーザは存在しません');
+        }
+
+        // パスワード検証
+        if (!password_verify($currentPassword, $mUserArray[0]->getPassword())) {
+            throw new AuthenticationException('パスワードが一致しません');
+        }
+
+        // 新パスワードをハッシュ化
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT, array('cost' => 12));
+
+        // パスワード更新
+        $mUserArray[0]->setPassword($hashedPassword);
+
+        try {
+            $this->flush();
+        } catch (\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * ロール一覧取得
+     *
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function getRoles($companyId)
+    {
+        // スーパー管理者ユーザ数を取得
+        $mUserRepos = $this->getMUserRepository();
+        $superAdminUserCount = $mUserRepos->getSuperAdminUserCount($companyId);
+
+        // ロール一覧取得
+        $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
+        if ($superAdminUserCount < 2) {
+            // スーパー管理者ユーザ登録数が1人の場合
+            $mRoleAssignmentArray = $mRoleAssignmentRepos->getRoles($companyId, true);
+        } else {
+            // スーパー管理者ユーザが既に2人登録済みの場合
+            $mRoleAssignmentArray = $mRoleAssignmentRepos->getRoles($companyId, false);
+        }
+
+        // DTOに詰め替える
+        $roleDTOArray = array();
+        foreach ($mRoleAssignmentArray as $mRoleAssignment) {
+            $roleDTO = new RoleDTO();
+            $roleDTO->setRoleAssignmentId($mRoleAssignment->getRoleAssignmentId());
+            if ($mRoleAssignment->getRoleLevel() == DBConstant::ROLE_LEVEL_NORMAL) {
+                $roleDTO->setRoleName(DBConstant::ROLE_DISPLAY_NAME_NORMAL);
+            } elseif ($mRoleAssignment->getRoleLevel() == DBConstant::ROLE_LEVEL_ADMIN) {
+                $roleDTO->setRoleName(DBConstant::ROLE_DISPLAY_NAME_ADMIN);
+            } else {
+                $roleDTO->setRoleName(DBConstant::ROLE_DISPLAY_NAME_SUPERADMIN);
+            }
+
+            $roleDTOArray[] = $roleDTO;
+        }
+
+        return $roleDTOArray;
+    }
+
+    /**
+     * ユーザ権限更新
+     *
+     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @param \AppBundle\Entity\MRoleAssignment $mRoleAssignment ロール割当エンティティ
+     * @return void
+     */
+    public function changeRole($auth, $mUser, $mRoleAssignment)
+    {
+        // 現在のロール割当IDと変更後のロール割当IDが同一の場合、更新処理を行わない
+        if ($mUser->getRoleAssignment()->getRoleAssignmentId() === $mRoleAssignment->getRoleAssignmentId()) {
+            return;
+        }
+
+        // 変更後ロールがスーパー管理者ユーザの場合、スーパー管理者ユーザ数を取得
+        if ($mRoleAssignment->getRoleLevel() >= DBConstant::ROLE_LEVEL_SUPERADMIN) {
+            $mUserRepos = $this->getMUserRepository();
+            $superAdminUserCount = $mUserRepos->getSuperAdminUserCount($auth->getCompanyId());
+
+            // スーパー管理者ユーザが既に2人登録済みの場合、更新不可
+            if ($superAdminUserCount >= 2) {
+                throw new ApplicationException('スーパー管理者ユーザは2人までしか登録できません');
+            }
+        }
+
+        // ユーザ権限更新
+        $mUser->setRoleAssignment($mRoleAssignment);
+
+        try {
             $this->flush();
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());

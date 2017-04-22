@@ -1,0 +1,50 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /okrs/{okrId}/changeparent.json:
+    put:
+      description: 紐付け先OKR変更
+      parameters:
+        -
+          name: okrId
+          in: path
+          type: string
+          description: 紐付け先変更対象のOKRID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description: 新紐付け先OKRID
+          required: true
+          schema:
+            type: object
+            properties:
+              newParentOkrId:
+                type: integer
+            required:
+              - newParentOkrId
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

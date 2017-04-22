@@ -2,7 +2,7 @@
 
 namespace AppBundle\Logic;
 
-use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\NoDataException;
 
 /**
  * DB存在チェックロジッククラス
@@ -22,8 +22,8 @@ class DBExistanceLogic extends BaseLogic
     {
         $mUserRepos = $this->getMUserRepository();
         $mUserArray = $mUserRepos->getUser($targetUserId, $companyId);
-        if (count($mUserArray) == 0) {
-            throw new ApplicationException('ユーザが存在しません');
+        if (count($mUserArray) === 0) {
+            throw new NoDataException('ユーザが存在しません');
         }
 
         return $mUserArray[0];
@@ -40,8 +40,8 @@ class DBExistanceLogic extends BaseLogic
     {
         $mGroupRepos = $this->getMGroupRepository();
         $mGroupArray = $mGroupRepos->getGroup($targetGroupId, $companyId);
-        if (count($mGroupArray) == 0) {
-            throw new ApplicationException('グループが存在しません');
+        if (count($mGroupArray) === 0) {
+            throw new NoDataException('グループが存在しません');
         }
 
         return $mGroupArray[0];
@@ -58,8 +58,8 @@ class DBExistanceLogic extends BaseLogic
     {
         $tGroupTreeRepos = $this->getTGroupTreeRepository();
         $tGroupTreeArray = $tGroupTreeRepos->getGroupPath($targetGroupPathId, $companyId);
-        if (count($tGroupTreeArray) == 0) {
-            throw new ApplicationException('グループパスが存在しません');
+        if (count($tGroupTreeArray) === 0) {
+            throw new NoDataException('グループパスが存在しません');
         }
 
         return $tGroupTreeArray[0];
@@ -76,8 +76,8 @@ class DBExistanceLogic extends BaseLogic
     {
         $tOkrRepos = $this->getTOkrRepository();
         $tOkrArray = $tOkrRepos->getOkr($targetOkrId, $companyId);
-        if (count($tOkrArray) == 0) {
-            throw new ApplicationException('OKRが存在しません');
+        if (count($tOkrArray) === 0) {
+            throw new NoDataException('OKRが存在しません');
         }
 
         return $tOkrArray[0];
@@ -94,8 +94,8 @@ class DBExistanceLogic extends BaseLogic
     {
         $tTimeframeRepos = $this->getTTimeframeRepository();
         $tTimeframeArray = $tTimeframeRepos->getTimeframe($targetTimeframeId, $companyId);
-        if (count($tTimeframeArray) == 0) {
-            throw new ApplicationException('タイムフレームが存在しません');
+        if (count($tTimeframeArray) === 0) {
+            throw new NoDataException('タイムフレームが存在しません');
         }
 
         return $tTimeframeArray[0];
@@ -112,10 +112,28 @@ class DBExistanceLogic extends BaseLogic
     {
         $tPostRepos = $this->getTPostRepository();
         $tPostArray = $tPostRepos->getPost($targetPostId, $companyId);
-        if (count($tPostArray) == 0) {
-            throw new ApplicationException('投稿が存在しません');
+        if (count($tPostArray) === 0) {
+            throw new NoDataException('投稿が存在しません');
         }
 
         return $tPostArray[0];
+    }
+
+    /**
+     * ロール割当存在チェック
+     *
+     * @param integer $targetRoleAssignmentId チェック対象ロール割当ID
+     * @param integer $companyId 会社ID
+     * @return \AppBundle\Entity\MRoleAssignment ロール割当エンティティ
+     */
+    public function checkRoleAssignmentExistance($targetRoleAssignmentId, $companyId)
+    {
+        $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
+        $mRoleAssignmentArray = $mRoleAssignmentRepos->getRoleAssignment($targetRoleAssignmentId, $companyId);
+        if (count($mRoleAssignmentArray) === 0) {
+            throw new NoDataException('ロール割当が存在しません');
+        }
+
+        return $mRoleAssignmentArray[0];
     }
 }

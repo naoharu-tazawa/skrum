@@ -50,7 +50,7 @@ class TPreUserRepository extends BaseRepository
         ->setParameter('urltoken', $urltoken)
         ->setParameter('initialUserFlg', 0)
         ->setParameter('invalidFlg', 0)
-        ->setParameter('createdAt', date(DateUtility::DATETIME_FORMAT, strtotime("-1 hour")));
+        ->setParameter('createdAt', date(DateUtility::DATETIME_FORMAT, strtotime("-72 hour")));
 
         return $qb->getQuery()->getOneOrNullResult();
     }

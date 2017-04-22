@@ -4,8 +4,8 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Controller\BaseController;
+use AppBundle\Exception\JsonSchemaException;
 
 /**
  * ログインコントローラ
@@ -18,7 +18,7 @@ class LoginController extends BaseController
      * 新規登録メール送信
      * （ルーティングアノテーション対象外）
      *
-     * @param $request リクエストオブジェクト
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function preregisterAction(Request $request)
@@ -36,20 +36,16 @@ class LoginController extends BaseController
 
         // 新規ユーザ登録メール送信処理
         $userSettingService = $this->getUserSettingService();
-        $result = $userSettingService->preregisterUser($data['emailAddress'], $data['subdomain']);
+        $userSettingService->preregisterUser($data['emailAddress'], $data['subdomain']);
 
-        if ($result) {
-            return array('result' => 'OK');
-        } else {
-            return array('result' => 'NG');
-        }
+        return array('result' => 'OK');
     }
 
     /**
      * ログイン
      *
-     * @Rest\Post("/login.{_format}")
-     * @param $request リクエストオブジェクト
+     * @Rest\Post("/v1/login.{_format}")
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function loginAction(Request $request)
@@ -71,8 +67,8 @@ class LoginController extends BaseController
     /**
      * 新規ユーザ登録
      *
-     * @Rest\Post("/signup.{_format}")
-     * @param $request リクエストオブジェクト
+     * @Rest\Post("/v1/signup.{_format}")
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function signupAction(Request $request)
@@ -94,8 +90,8 @@ class LoginController extends BaseController
     /**
      * 追加ユーザ登録
      *
-     * @Rest\Post("/join.{_format}")
-     * @param $request リクエストオブジェクト
+     * @Rest\Post("/v1/join.{_format}")
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function joinAction(Request $request)

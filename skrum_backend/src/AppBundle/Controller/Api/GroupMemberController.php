@@ -4,8 +4,8 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Controller\BaseController;
+use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Api\ResponseDTO\GroupMemberDTO;
 
@@ -19,9 +19,9 @@ class GroupMemberController extends BaseController
     /**
      * グループメンバー追加
      *
-     * @Rest\Post("/groups/{groupId}/members.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @Rest\Post("/v1/groups/{groupId}/members.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function postGroupMembersAction(Request $request, $groupId)
@@ -44,7 +44,7 @@ class GroupMemberController extends BaseController
 
         // 操作権限チェック
         $permissionLogic = $this->getPermissionLogic();
-        $checkResult = $permissionLogic->checkGroupOperation($auth->getUserId(), $groupId);
+        $checkResult = $permissionLogic->checkGroupOperation($auth, $groupId);
         if (!$checkResult) {
             throw new PermissionException('グループ操作権限がありません');
         }
@@ -59,9 +59,9 @@ class GroupMemberController extends BaseController
     /**
      * グループメンバー取得
      *
-     * @Rest\Get("/groups/{groupId}/members.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @Rest\Get("/v1/groups/{groupId}/members.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function getGroupMembersAction(Request $request, $groupId)
@@ -91,10 +91,10 @@ class GroupMemberController extends BaseController
     /**
      * グループメンバー削除
      *
-     * @Rest\Delete("/groups/{groupId}/members/{userId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
-     * @param $userId ユーザID
+     * @Rest\Delete("/v1/groups/{groupId}/members/{userId}.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
+     * @param string $userId ユーザID
      * @return array
      */
     public function deleteGroupMemberAction(Request $request, $groupId, $userId)
@@ -107,6 +107,13 @@ class GroupMemberController extends BaseController
 
         // ユーザ存在チェック
         $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkGroupOperation($auth, $groupId);
+        if (!$checkResult) {
+            throw new PermissionException('グループ操作権限がありません');
+        }
 
         // グループメンバー取得
         $groupMemberService = $this->getGroupMemberService();

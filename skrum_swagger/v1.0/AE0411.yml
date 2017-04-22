@@ -1,0 +1,58 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /okrs/search.json?{okrid}&{q}:
+    get:
+      description: OKR検索
+      parameters:
+        -
+          name: oid
+          in: path
+          type: string
+          description: 紐付け先変更対象のOKRID
+          required: true
+        -
+          name: q
+          in: path
+          type: string
+          description: 検索ワード
+          required: true
+      responses:
+        200:
+          description: 検索結果
+          schema:
+            type: object
+            properties:
+              okrId:
+                type: integer
+              okrName:
+                type: string
+              ownerType:
+                type: string
+              userId:
+                type: integer
+              userName:
+                type: string
+              groupId:
+                type: integer
+              groupName:
+                type: string
+              companyId:
+                type: integer
+              companyName:
+                type: string
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

@@ -11,8 +11,8 @@ basePath: /v1
 
 paths:
   /timeframes/{timeframeId}.json:
-    put:
-      description: タイムフレーム編集
+    delete:
+      description: タイムフレーム削除
       parameters:
         -
           name: timeframeId
@@ -20,46 +20,6 @@ paths:
           type: string
           description: タイムフレームID
           required: true
-        -
-          name: JsonRequest
-          in: body
-          description: タイムフレーム名、開始日、終了日
-          required: true
-          schema:
-            type: object
-            properties:
-              timeframeName:
-                type: string
-              start:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
-              end:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
-            required:
-              - timeframeName
-              - start
-              - end
       responses:
         200:
           description: 成功

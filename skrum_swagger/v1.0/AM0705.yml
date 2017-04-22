@@ -1,0 +1,78 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /timeframes/{timeframeId}.json:
+    put:
+      description: タイムフレーム編集
+      parameters:
+        -
+          name: timeframeId
+          in: path
+          type: string
+          description: タイムフレームID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description: タイムフレーム名、開始日、終了日
+          required: true
+          schema:
+            type: object
+            properties:
+              timeframeName:
+                type: string
+              start:
+                type: object
+                properties:
+                  year:
+                    type: string
+                  month:
+                    type: string
+                  date:
+                    type: string
+                required:
+                  - year
+                  - month
+                  - date
+              end:
+                type: object
+                properties:
+                  year:
+                    type: string
+                  month:
+                    type: string
+                  date:
+                    type: string
+                required:
+                  - year
+                  - month
+                  - date
+            required:
+              - timeframeName
+              - start
+              - end
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

@@ -4,10 +4,7 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exception\JsonSchemaException;
-use AppBundle\Exception\PermissionException;
 use AppBundle\Controller\BaseController;
-use AppBundle\Utils\DBConstant;
 
 /**
  * 検索コントローラ
@@ -19,8 +16,8 @@ class SearchController extends BaseController
     /**
      * ユーザ検索
      *
-     * @Rest\Get("/users/search.{_format}")
-     * @param $request リクエストオブジェクト
+     * @Rest\Get("/v1/users/search.{_format}")
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function searchUsersAction(Request $request)
@@ -41,8 +38,8 @@ class SearchController extends BaseController
     /**
      * グループ検索
      *
-     * @Rest\Get("/groups/search.{_format}")
-     * @param $request リクエストオブジェクト
+     * @Rest\Get("/v1/groups/search.{_format}")
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function searchGroupAction(Request $request)
@@ -61,10 +58,32 @@ class SearchController extends BaseController
     }
 
     /**
+     * オーナー検索
+     *
+     * @Rest\Get("/v1/owners/search.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @return array
+     */
+    public function searchOwnerAction(Request $request)
+    {
+        // リクエストパラメータを取得
+        $keyword = $request->get('q');
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // オーナー検索処理
+        $searchService = $this->getSearchService();
+        $ownerSearchDTOArray = $searchService->searchOwner($auth, $keyword);
+
+        return $ownerSearchDTOArray;
+    }
+
+    /**
      * 所属先グループ検索
      *
-     * @Rest\Get("/paths/search.{_format}")
-     * @param $request リクエストオブジェクト
+     * @Rest\Get("/v1/paths/search.{_format}")
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function searchPathsAction(Request $request)
@@ -80,5 +99,31 @@ class SearchController extends BaseController
         $groupTreeSearchDTOArray = $searchService->searchGroupTree($auth, $keyword);
 
         return $groupTreeSearchDTOArray;
+    }
+
+    /**
+     * OKR検索
+     *
+     * @Rest\Get("/v1/okrs/search.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @return array
+     */
+    public function searchOkrsAction(Request $request)
+    {
+        // リクエストパラメータを取得
+        $okrId = $request->get('oid');
+        $keyword = $request->get('q');
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // OKR存在チェック
+        $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+
+        // グループ検索処理
+        $searchService = $this->getSearchService();
+        $okrSearchDTOArray = $searchService->searchOkr($auth, $keyword, $tOkr);
+
+        return $okrSearchDTOArray;
     }
 }

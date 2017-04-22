@@ -32,5 +32,5 @@ monolog:
             type: console
             channels: [!event, !doctrine, !php]
 
-#swiftmailer:
-#    delivery_addresses: ['me@example.com']
+swiftmailer:
+    delivery_addresses: ['skrum.development@gmail.com']

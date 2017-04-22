@@ -1,0 +1,40 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /companies/{companyId}/roles.json:
+    get:
+      description: ロール一覧取得
+      parameters:
+        -
+          name: companyId
+          in: path
+          type: string
+          description: 会社ID
+          required: true
+      responses:
+        200:
+          description: ロール一覧
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                roleAssignmentId:
+                  type: integer
+                roleName:
+                  type: string
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

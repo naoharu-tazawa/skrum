@@ -4,10 +4,10 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
-use AppBundle\Controller\BaseController;
 use AppBundle\Utils\DBConstant;
 
 /**
@@ -20,9 +20,9 @@ class OkrSettingController extends BaseController
     /**
      * OKRクローズ
      *
-     * @Rest\Put("/okrs/{okrId}/close.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $okrId OKRID
+     * @Rest\Put("/v1/okrs/{okrId}/close.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function putOkrCloseAction(Request $request, $okrId)
@@ -36,7 +36,7 @@ class OkrSettingController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }
@@ -52,9 +52,9 @@ class OkrSettingController extends BaseController
     /**
      * OKRオープン
      *
-     * @Rest\Put("/okrs/{okrId}/open.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $okrId OKRID
+     * @Rest\Put("/v1/okrs/{okrId}/open.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function putOkrOpenAction(Request $request, $okrId)
@@ -68,7 +68,7 @@ class OkrSettingController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }
@@ -84,9 +84,9 @@ class OkrSettingController extends BaseController
     /**
      * OKR公開設定変更
      *
-     * @Rest\Put("/okrs/{okrId}/changedisclosure.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $okrId OKRID
+     * @Rest\Put("/v1/okrs/{okrId}/changedisclosure.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function changeOkrDisclosureAction(Request $request, $okrId)
@@ -107,7 +107,7 @@ class OkrSettingController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }
@@ -123,9 +123,9 @@ class OkrSettingController extends BaseController
     /**
      * OKRオーナー変更
      *
-     * @Rest\Put("/okrs/{okrId}/changeowner.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $okrId OKRID
+     * @Rest\Put("/v1/okrs/{okrId}/changeowner.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function changeOkrOwnerAction(Request $request, $okrId)
@@ -160,7 +160,7 @@ class OkrSettingController extends BaseController
         // 操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperation($auth->getUserId(), $tOkr->getOwnerUser()->getUserId());
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
             if (!$checkResult) {
                 throw new PermissionException('ユーザ操作権限がありません');
             }
@@ -169,6 +169,45 @@ class OkrSettingController extends BaseController
         // OKR公開種別変更処理
         $okrSettingService = $this->getOkrSettingService();
         $okrSettingService->changeOwner($tOkr, $data['ownerType'], $mUser, $mGroup, $auth->getCompanyId());
+
+        return array('result' => 'OK');
+    }
+
+    /**
+     * KR加重平均割合設定
+     *
+     * @Rest\Put("/v1/okrs/{okrId}/setratio.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
+     * @return array
+     */
+    public function setOkrRatioAction(Request $request, $okrId)
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/SetOkrRatioPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // OKR存在チェック
+        $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            $permissionLogic = $this->getPermissionLogic();
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
+        }
+
+        // KR加重平均割合更新処理
+        $okrSettingService = $this->getOkrSettingService();
+        $okrSettingService->updateRatio($auth, $data, $tOkr);
 
         return array('result' => 'OK');
     }

@@ -4,9 +4,9 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\JsonSchemaException;
 
 /**
  * タイムラインコントローラ
@@ -18,9 +18,9 @@ class TimelineController extends BaseController
     /**
      * タイムライン取得
      *
-     * @Rest\Get("/groups/{groupId}/posts.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @Rest\Get("/v1/groups/{groupId}/posts.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function getGroupPostsAction(Request $request, $groupId)
@@ -41,9 +41,9 @@ class TimelineController extends BaseController
     /**
      * コメント投稿
      *
-     * @Rest\Post("/groups/{groupId}/posts.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
+     * @Rest\Post("/v1/groups/{groupId}/posts.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function postGroupPostsAction(Request $request, $groupId)
@@ -71,9 +71,9 @@ class TimelineController extends BaseController
     /**
      * リプライ投稿
      *
-     * @Rest\Post("/posts/{postId}/replies.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param postId 投稿ID
+     * @Rest\Post("/v1/posts/{postId}/replies.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string postId 投稿ID
      * @return array
      */
     public function postPostRepliesAction(Request $request, $postId)
@@ -99,6 +99,52 @@ class TimelineController extends BaseController
         // リプライ登録処理
         $timelineService = $this->getTimelineService();
         $timelineService->postReply($auth, $data, $tPost);
+
+        return array('result' => 'OK');
+    }
+
+    /**
+     * いいね
+     *
+     * @Rest\Post("/v1/posts/{postId}/likes.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string postId 投稿ID
+     * @return array
+     */
+    public function postPostLikesAction(Request $request, $postId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 投稿存在チェック
+        $tPost = $this->getDBExistanceLogic()->checkPostExistance($postId, $auth->getCompanyId());
+
+        // いいね登録処理
+        $timelineService = $this->getTimelineService();
+        $timelineService->like($auth->getUserId(), $tPost->getId());
+
+        return array('result' => 'OK');
+    }
+
+    /**
+     * いいね解除
+     *
+     * @Rest\Delete("/v1/posts/{postId}/like.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string postId 投稿ID
+     * @return array
+     */
+    public function deletePostLikeAction(Request $request, $postId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 投稿存在チェック
+        $tPost = $this->getDBExistanceLogic()->checkPostExistance($postId, $auth->getCompanyId());
+
+        // いいね削除処理
+        $timelineService = $this->getTimelineService();
+        $timelineService->detachLike($auth->getUserId(), $tPost->getId());
 
         return array('result' => 'OK');
     }

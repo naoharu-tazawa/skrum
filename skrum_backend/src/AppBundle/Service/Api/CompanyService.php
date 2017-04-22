@@ -5,10 +5,6 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
-use AppBundle\Entity\MGroup;
-use AppBundle\Entity\TGroupTree;
-use AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicCompanyInfoDTO;
 
 /**
@@ -61,7 +57,7 @@ class CompanyService extends BaseService
 
         try {
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }

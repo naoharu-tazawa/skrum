@@ -16,9 +16,9 @@ class OkrDetailsController extends BaseController
     /**
      * OKR詳細取得
      *
-     * @Rest\Get("/okrs/{okrId}/details.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $okrId OKRID
+     * @Rest\Get("/v1/okrs/{okrId}/details.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
     public function getOkrDetailsAction(Request $request, $okrId)
@@ -31,7 +31,7 @@ class OkrDetailsController extends BaseController
 
         // OKR詳細取得処理
         $okrDetailsService = $this->getOkrDetailsService();
-        $okrDetailsDTO = $okrDetailsService->getOkrDetails($auth, $tOkr->getOkrId(), $tOkr->getTimeframe()->getTimeframeId());
+        $okrDetailsDTO = $okrDetailsService->getOkrDetails($auth, $tOkr);
 
         return $okrDetailsDTO;
     }

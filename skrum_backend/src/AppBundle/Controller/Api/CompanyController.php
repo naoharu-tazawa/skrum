@@ -4,10 +4,10 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Controller\BaseController;
-use AppBundle\Exception\InvalidParameterException;
-use AppBundle\Api\ResponseDTO\UserGroupDTO;
+use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\JsonSchemaException;
+use AppBundle\Utils\Permission;
 
 /**
  * 会社コントローラ
@@ -19,9 +19,10 @@ class CompanyController extends BaseController
     /**
      * 会社基本情報変更
      *
-     * @Rest\Put("/companies/{companyId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $companyId 会社ID
+     * @Rest\Put("/v1/companies/{companyId}.{_format}")
+     * @Permission(value="company_profile_edit")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
      * @return array
      */
     public function putCompanyAction(Request $request, $companyId)

@@ -4,8 +4,9 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exception\ApplicationException;
 use AppBundle\Controller\BaseController;
+use AppBundle\Exception\ApplicationException;
+use AppBundle\Utils\Permission;
 
 /**
  * タイムフレームコントローラ
@@ -17,9 +18,9 @@ class TimeframeController extends BaseController
     /**
      * タイムフレーム一覧取得
      *
-     * @Rest\Get("/companies/{companyId}/timeframes.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $companyId 会社ID
+     * @Rest\Get("/v1/companies/{companyId}/timeframes.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
      * @return array
      */
     public function getCompanyTimeframesAction(Request $request, $companyId)
@@ -40,11 +41,38 @@ class TimeframeController extends BaseController
     }
 
     /**
+     * タイムフレーム詳細一覧取得
+     *
+     * @Rest\Get("/v1/companies/{companyId}/timeframedetails.{_format}")
+     * @Permission(value="timeframe_edit")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
+     * @return array
+     */
+    public function getCompanyTimeframedetailsAction(Request $request, $companyId)
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 会社IDの一致をチェック
+        if ($companyId != $auth->getCompanyId()) {
+            throw new ApplicationException('会社IDが存在しません');
+        }
+
+        // タイムフレーム取得処理
+        $timeframeService = $this->getTimeframeService();
+        $timeframeDetailDTOArray = $timeframeService->getTimeframeDetails($companyId);
+
+        return $timeframeDetailDTOArray;
+    }
+
+    /**
      * デフォルトタイムフレーム変更
      *
-     * @Rest\Put("/timeframes/{timeframeId}/setdefault.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $timeframeId タイムフレームID
+     * @Rest\Put("/v1/timeframes/{timeframeId}/setdefault.{_format}")
+     * @Permission(value="timeframe_edit")
+     * @param Request $request リクエストオブジェクト
+     * @param string $timeframeId タイムフレームID
      * @return array
      */
     public function setDefaultTimeframeAction(Request $request, $timeframeId)
@@ -65,8 +93,9 @@ class TimeframeController extends BaseController
     /**
      * タイムフレーム追加
      *
-     * @Rest\Post("/timeframes.{_format}")
-     * @param $request リクエストオブジェクト
+     * @Rest\Post("/v1/timeframes.{_format}")
+     * @Permission(value="timeframe_edit")
+     * @param Request $request リクエストオブジェクト
      * @return array
      */
     public function postTimeframesAction(Request $request)
@@ -91,9 +120,10 @@ class TimeframeController extends BaseController
     /**
      * タイムフレーム編集
      *
-     * @Rest\Put("/timeframes/{timeframeId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $timeframeId タイムフレームID
+     * @Rest\Put("/v1/timeframes/{timeframeId}.{_format}")
+     * @Permission(value="timeframe_edit")
+     * @param Request $request リクエストオブジェクト
+     * @param string $timeframeId タイムフレームID
      * @return array
      */
     public function putTimeframeAction(Request $request, $timeframeId)
@@ -121,9 +151,10 @@ class TimeframeController extends BaseController
     /**
      * タイムフレーム削除
      *
-     * @Rest\Delete("/timeframes/{timeframeId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $timeframeId タイムフレームID
+     * @Rest\Delete("/v1/timeframes/{timeframeId}.{_format}")
+     * @Permission(value="timeframe_edit")
+     * @param Request $request リクエストオブジェクト
+     * @param string $timeframeId タイムフレームID
      * @return array
      */
     public function deleteTimeframeAction(Request $request, $timeframeId)

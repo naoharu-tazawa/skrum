@@ -3,12 +3,13 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Api\ResponseDTO\NestedObject\TimeframeDTO;
-use AppBundle\Utils\DBConstant;
-use AppBundle\Exception\SystemException;
-use AppBundle\Entity\TTimeframe;
 use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DateUtility;
+use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TTimeframe;
+use AppBundle\Api\ResponseDTO\NestedObject\TimeframeDTO;
+use AppBundle\Api\ResponseDTO\TimeframeDetailDTO;
 
 /**
  * タイムフレームサービスクラス
@@ -47,6 +48,37 @@ class TimeframeService extends BaseService
     }
 
     /**
+     * タイムフレーム詳細取得
+     *
+     * @param string $companyId 会社ID
+     * @return array
+     */
+    public function getTimeframeDetails($companyId)
+    {
+        // タイムフレーム取得
+        $tTimeframeRepos = $this->getTTimeframeRepository();
+        $tTimeframeArray = $tTimeframeRepos->findBy(array('company' => $companyId), array('timeframeId' => 'DESC'));
+
+        // DTOに詰め替える
+        $timeframeDetailDTOArray = array();
+        foreach ($tTimeframeArray as $tTimeframe) {
+            $timeframeDetailDTO = new TimeframeDetailDTO();
+            $timeframeDetailDTO->setTimeframeId($tTimeframe->getTimeframeId());
+            $timeframeDetailDTO->setTimeframeName($tTimeframe->getTimeframeName());
+            $timeframeDetailDTO->setStartDate($tTimeframe->getStartDate());
+            $timeframeDetailDTO->setEndDate($tTimeframe->getEndDate());
+            if ($tTimeframe->getDefaultFlg() === null) {
+                $timeframeDetailDTO->setDefaultFlg(DBConstant::FLG_FALSE);
+            } else {
+                $timeframeDetailDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
+            }
+            $timeframeDetailDTOArray[] = $timeframeDetailDTO;
+        }
+
+        return $timeframeDetailDTOArray;
+    }
+
+    /**
      * デフォルトタイムフレーム変更
      *
      * @param \AppBundle\Utils\Auth $auth 認証情報
@@ -60,7 +92,7 @@ class TimeframeService extends BaseService
         $defaultTimeframe = $tTimeframeRepos->findOneBy(array('company' => $auth->getCompanyId(), 'defaultFlg' => DBConstant::FLG_TRUE));
 
         // 選択されたタイムフレームが既にデフォルトに設定されている場合、更新処理をしない
-        if ($tTimeframe->getTimeframeId() == $defaultTimeframe->getTimeframeId()) {
+        if ($tTimeframe->getTimeframeId() === $defaultTimeframe->getTimeframeId()) {
             return;
         }
 
@@ -74,7 +106,7 @@ class TimeframeService extends BaseService
         try {
             $this->flush();
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
@@ -126,7 +158,7 @@ class TimeframeService extends BaseService
         try {
             $this->persist($tTimeframe);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -170,7 +202,7 @@ class TimeframeService extends BaseService
 
         try {
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -186,7 +218,7 @@ class TimeframeService extends BaseService
         try {
             $this->remove($tTimeframe);
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }

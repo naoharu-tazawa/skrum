@@ -4,10 +4,8 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Controller\BaseController;
-use AppBundle\Exception\InvalidParameterException;
-use AppBundle\Api\ResponseDTO\UserGroupDTO;
+use AppBundle\Exception\JsonSchemaException;
 
 /**
  * グループツリーコントローラ
@@ -19,9 +17,9 @@ class GroupTreeController extends BaseController
     /**
      * 所属先グループ追加
      *
-     * @Rest\Post("/groups/{groupId}/paths.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param integer $groupId グループID
+     * @Rest\Post("/v1/groups/{groupId}/paths.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
      * @return array
      */
     public function postGroupPathsAction(Request $request, $groupId)
@@ -42,6 +40,13 @@ class GroupTreeController extends BaseController
         // グループパス存在チェック
         $tGroupTree = $this->getDBExistanceLogic()->checkGroupPathExistance($data['groupPathId'], $auth->getCompanyId());
 
+        // 操作権限チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkGroupOperation($auth, $groupId);
+        if (!$checkResult) {
+            throw new PermissionException('グループ操作権限がありません');
+        }
+
         // グループ新規登録処理
         $groupTreeService = $this->getGroupTreeService();
         $groupTreeService->createGroupPath($mGroup, $tGroupTree->getGroupTreePath(), $tGroupTree->getGroupTreePathName());
@@ -52,10 +57,10 @@ class GroupTreeController extends BaseController
     /**
      * 所属先グループ削除
      *
-     * @Rest\Delete("/groups/{groupId}/paths/{groupTreeId}.{_format}")
-     * @param $request リクエストオブジェクト
-     * @param $groupId グループID
-     * @param $groupTreeId グループツリーID
+     * @Rest\Delete("/v1/groups/{groupId}/paths/{groupTreeId}.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
+     * @param string $groupTreeId グループツリーID
      * @return array
      */
     public function deleteGroupPathAction(Request $request, $groupId, $groupTreeId)
@@ -71,7 +76,7 @@ class GroupTreeController extends BaseController
 
         // 操作権限チェック
         $permissionLogic = $this->getPermissionLogic();
-        $checkResult = $permissionLogic->checkGroupOperation($auth->getUserId(), $groupId);
+        $checkResult = $permissionLogic->checkGroupOperation($auth, $groupId);
         if (!$checkResult) {
             throw new PermissionException('グループ操作権限がありません');
         }

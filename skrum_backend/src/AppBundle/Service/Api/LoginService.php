@@ -2,22 +2,22 @@
 
 namespace AppBundle\Service\Api;
 
-use \Firebase\JWT\JWT;
 use AppBundle\Service\BaseService;
-use AppBundle\Entity\MUser;
-use AppBundle\Entity\MCompany;
-use AppBundle\Entity\MGroup;
-use AppBundle\Entity\MRoleAssignment;
-use AppBundle\Entity\TGroupTree;
-use AppBundle\Entity\TPreUser;
-use AppBundle\Entity\TAuthorization;
+use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\AuthenticationException;
 use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Exception\SystemException;
-use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\DateUtility;
-use AppBundle\Exception\ApplicationException;
+use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\MCompany;
+use AppBundle\Entity\MGroup;
+use AppBundle\Entity\MRoleAssignment;
+use AppBundle\Entity\MUser;
+use AppBundle\Entity\TAuthorization;
+use AppBundle\Entity\TGroupTree;
+use AppBundle\Entity\TPreUser;
+use \Firebase\JWT\JWT;
 
 /**
  * ログインサービスクラス
@@ -29,7 +29,7 @@ class LoginService extends BaseService
     /**
      * サブドメインチェック
      *
-     * @param $subdomain サブドメイン
+     * @param string $subdomain サブドメイン
      * @return void
      */
     public function checkSubdomain($subdomain)
@@ -45,9 +45,9 @@ class LoginService extends BaseService
     /**
      * ログイン
      *
-     * @param $emailAddress Eメールアドレス
-     * @param $password パスワード
-     * @param $subdomain サブドメイン
+     * @param string $emailAddress Eメールアドレス
+     * @param string $password パスワード
+     * @param string $subdomain サブドメイン
      * @return string JWT
      */
     public function login($emailAddress, $password, $subdomain)
@@ -77,7 +77,7 @@ class LoginService extends BaseService
         $mUserArray[0]->setLastAccessDatetime(DateUtility::getCurrentDatetime());
         try {
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
 
@@ -94,10 +94,10 @@ class LoginService extends BaseService
     /**
      * 新規ユーザ登録
      *
-     * @param $password パスワード
-     * @param $urltoken URLトークン
-     * @param $subdomain サブドメイン
-     * @param $planId プランID
+     * @param string $password パスワード
+     * @param string $urltoken URLトークン
+     * @param string $subdomain サブドメイン
+     * @param integer $planId プランID
      * @return string JWT
      */
     public function signup($password, $urltoken, $subdomain, $planId = DBConstant::PLAN_ID_TRIAL_PLAN)
@@ -192,7 +192,7 @@ class LoginService extends BaseService
             $this->flush();
             $this->commit();
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
@@ -206,9 +206,9 @@ class LoginService extends BaseService
     /**
      * 追加ユーザ登録
      *
-     * @param $password パスワード
-     * @param $urltoken URLトークン
-     * @param $subdomain サブドメイン
+     * @param string $password パスワード
+     * @param string $urltoken URLトークン
+     * @param string $subdomain サブドメイン
      * @return string JWT
      */
     public function join($password, $urltoken, $subdomain)
@@ -270,7 +270,7 @@ class LoginService extends BaseService
             $this->flush();
             $this->commit();
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }

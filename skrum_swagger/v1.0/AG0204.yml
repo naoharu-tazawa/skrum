@@ -10,21 +10,15 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/members/{userId}.json:
-    delete:
-      description: グループメンバー削除
+  /posts/{postId}/likes.json:
+    post:
+      description: いいね
       parameters:
         -
-          name: groupId
+          name: postId
           in: path
           type: string
-          description: グループID
-          required: true
-        -
-          name: userId
-          in: path
-          type: string
-          description: ユーザID
+          description: 投稿ID
           required: true
       responses:
         200:

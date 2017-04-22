@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /users/search.json?{q}:
+  /owners/search.json?{q}:
     get:
-      description: ユーザ検索
+      description: オーナー検索
       parameters:
         -
           name: q
@@ -26,10 +26,22 @@ paths:
           schema:
             type: object
             properties:
+              ownerType:
+                type: string
               userId:
                 type: integer
               userName:
                 type: string
+              groupId:
+                type: integer
+              groupName:
+                type: string
+              companyId:
+                type: integer
+              companyName:
+                type: string
+            required:
+              - ownerType
         400:
           description: JSONスキーマ不正
         409:

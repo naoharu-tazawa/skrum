@@ -44,12 +44,12 @@ class MGroupRepository extends BaseRepository
     {
         $qb = $this->createQueryBuilder('mg');
         $qb->select('mg', 'mu')
-        ->innerJoin('AppBundle:MCompany', 'mc', 'WITH', 'mg.company = mc.companyId')
-        ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'mg.leaderUserId = mu.userId')
-        ->where('mg.groupId = :groupId')
-        ->andWhere('mg.company = :companyId')
-        ->setParameter('groupId', $groupId)
-        ->setParameter('companyId', $companyId);
+            ->innerJoin('AppBundle:MCompany', 'mc', 'WITH', 'mg.company = mc.companyId')
+            ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'mg.leaderUserId = mu.userId')
+            ->where('mg.groupId = :groupId')
+            ->andWhere('mg.company = :companyId')
+            ->setParameter('groupId', $groupId)
+            ->setParameter('companyId', $companyId);
 
         $resultArray = $qb->getQuery()->getResult();
         if (count($resultArray) === 0) {

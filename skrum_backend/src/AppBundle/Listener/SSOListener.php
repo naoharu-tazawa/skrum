@@ -50,7 +50,7 @@ class SSOListener
             $jwt = $event->getRequest()->headers->get('Authorization');
             try {
                 $decoded = JWT::decode($jwt, $this->secretKey, array('HS256'));
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 throw new AuthenticationException($e->getMessage());
             }
 

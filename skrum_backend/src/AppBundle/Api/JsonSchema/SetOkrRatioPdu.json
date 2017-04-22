@@ -1,0 +1,20 @@
+{
+  "title": "KR加重平均割合設定",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "keyResultId": {
+        "title": "キーリザルトID",
+        "type": "integer",
+        "maxLength": 11
+      },
+      "weightedAverageRatio": {
+        "title": "加重平均比率",
+        "type": "number"
+      }
+    },
+    "required": ["keyResultId", "weightedAverageRatio"],
+    "additionalProperties": false
+  }
+}

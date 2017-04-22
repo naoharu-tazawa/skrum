@@ -10,26 +10,38 @@ produces:
 basePath: /v1
 
 paths:
-  /paths/search.json?{q}:
-    get:
-      description: 所属先グループ検索
+  /groups/{groupId}/paths.json:
+    post:
+      description: 所属先グループ追加
       parameters:
         -
-          name: q
+          name: groupId
           in: path
           type: string
-          description: 検索ワード
+          description: グループID
           required: true
-      responses:
-        200:
-          description: 検索結果
+        -
+          name: JsonRequest
+          in: body
+          description: 追加所属先グループパス
+          required: true
           schema:
             type: object
             properties:
               groupPathId:
                 type: integer
-              groupPathName:
+            required:
+              - groupPathId
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
                 type: string
+            required:
+              - result
         400:
           description: JSONスキーマ不正
         409:

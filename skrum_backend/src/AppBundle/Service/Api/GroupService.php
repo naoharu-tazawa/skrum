@@ -3,13 +3,13 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\NoDataException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\TGroupTree;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
-use AppBundle\Utils\DBConstant;
 
 /**
  * グループサービスクラス
@@ -76,7 +76,7 @@ class GroupService extends BaseService
         $mGroupRepos = $this->getMGroupRepository();
         $mGroupArray = $mGroupRepos->getGroupWithLeaderUser($groupId, $companyId);
         if (count($mGroupArray) == 0) {
-            throw new ApplicationException('グループが存在しません');
+            throw new NoDataException('グループが存在しません');
         }
 
         // グループパスを取得
@@ -116,7 +116,7 @@ class GroupService extends BaseService
 
         try {
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -139,7 +139,7 @@ class GroupService extends BaseService
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
         $tGroupMemberArray = $tGroupMemberRepos->getGroupMember($mGroup->getGroupId(), $userId);
         if (count($tGroupMemberArray) == 0) {
-            throw new ApplicationException('このユーザはグループメンバーではありません');
+            throw new NoDataException('このユーザはグループメンバーではありません');
         }
 
         // グループリーダー更新
@@ -147,7 +147,7 @@ class GroupService extends BaseService
 
         try {
             $this->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
     }
@@ -205,7 +205,7 @@ class GroupService extends BaseService
 
             $this->flush();
             $this->commit();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
@@ -222,14 +222,24 @@ class GroupService extends BaseService
      */
     private function deleteOkrs($auth, $tOkr, $tOkrRepos, $okrAchievementRateLogic)
     {
-        // 達成率を再計算
-        $tOkr->setWeightedAverageRatio(0);
-        $tOkr->setRatioLockedFlg(DBConstant::FLG_TRUE);
-        $this->flush();
-        $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), true);
+        // トランザクション開始
+        $this->beginTransaction();
 
-        // 削除対象OKRとそれに紐づくOKRを全て削除する
-        $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId());
-        $this->flush();
+        try {
+            // 達成率を再計算
+            $tOkr->setWeightedAverageRatio(0);
+            $tOkr->setRatioLockedFlg(DBConstant::FLG_TRUE);
+            $this->flush();
+            $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), true);
+
+            // 削除対象OKRとそれに紐づくOKRを全て削除する
+            $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
+            $this->flush();
+
+            $this->commit();
+        } catch (\Exception $e) {
+            $this->rollback();
+            throw new SystemException($e->getMessage());
+        }
     }
 }

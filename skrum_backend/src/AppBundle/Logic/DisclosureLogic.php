@@ -25,14 +25,14 @@ class DisclosureLogic extends BaseLogic
         $disclosureType = $tOkr->getDisclosureType();
 
         // 閲覧権限チェック
-        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+        if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
             // 全体公開の場合
-            if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
                 return true;
             }
 
             // 本人のみ公開の場合
-            if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_SELF) {
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_SELF) {
                 if ($subjectUserId == $tOkr->getOwnerUser()->getUserId()) {
                     return true;
                 } else {
@@ -46,7 +46,7 @@ class DisclosureLogic extends BaseLogic
             }
 
             // 管理者公開の場合
-            if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_ADMIN) {
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_ADMIN) {
                 if ($subjectUserRoleLevel >= DBConstant::ROLE_LEVEL_ADMIN) {
                     return true;
                 } else {
@@ -55,7 +55,7 @@ class DisclosureLogic extends BaseLogic
             }
 
             // グループ公開の場合
-            if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_GROUP) {
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_GROUP) {
                 // 操作主体ユーザとOKRオーナーが所属している同一グループが存在するかチェック
                 $tGroupMemberRepos = $this->getTGroupMemberRepository();
                 $sameGroups = $tGroupMemberRepos->getTheSameGroups($subjectUserId, $tOkr->getOwnerUser()->getUserId());
@@ -67,7 +67,7 @@ class DisclosureLogic extends BaseLogic
             }
 
             // グループ管理者公開の場合
-            if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_GROUP_ADMIN) {
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_GROUP_ADMIN) {
                 if ($subjectUserRoleLevel < DBConstant::ROLE_LEVEL_ADMIN) {
                     return false;
                 }
@@ -81,9 +81,9 @@ class DisclosureLogic extends BaseLogic
                     return false;
                 }
             }
-        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+        } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
             // 全体公開の場合
-            if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
                 return true;
             }
 
@@ -93,19 +93,19 @@ class DisclosureLogic extends BaseLogic
             }
 
             // グループ公開の場合
-            if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
                 // オーナーグループに操作主体ユーザが所属しているかチェック
                 $tGroupMemberRepos = $this->getTGroupMemberRepository();
                 $groupMemberArray = $tGroupMemberRepos->getGroupMember($tOkr->getOwnerGroup()->getGroupId(), $subjectUserId);
-                if ($groupMemberArray == 1) {
+                if (count($groupMemberArray) === 1) {
                     return true;
                 } else {
                     return false;
                 }
             }
-        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_COMPANY) {
+        } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
             return true;
-        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_ROOT) {
+        } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_ROOT) {
             return false;
         }
     }
@@ -125,13 +125,13 @@ class DisclosureLogic extends BaseLogic
 
         // 閲覧権限チェック
         // 全体公開の場合
-        if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
+        if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
             return true;
         }
 
         // 本人のみ公開の場合
-        if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_SELF) {
-            if ($subjectUserId == $tPost->getPosterId()) {
+        if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_SELF) {
+            if ($subjectUserId === $tPost->getPosterId()) {
                 return true;
             } else {
                 return false;
@@ -144,7 +144,7 @@ class DisclosureLogic extends BaseLogic
         }
 
         // 管理者公開の場合
-        if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_ADMIN) {
+        if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_ADMIN) {
             if ($subjectUserRoleLevel >= DBConstant::ROLE_LEVEL_ADMIN) {
                 return true;
             } else {
@@ -153,11 +153,11 @@ class DisclosureLogic extends BaseLogic
         }
 
         // グループ公開の場合
-        if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_GROUP) {
+        if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_GROUP) {
             // 操作主体ユーザがタイムラインオーナーグループに所属しているかチェック
             $tGroupMemberRepos = $this->getTGroupMemberRepository();
             $tGroupMemberArray = $tGroupMemberRepos->getGroupMember($tPost->getTimelineOwnerGroupId(), $subjectUserId);
-            if (count($tGroupMemberArray) == 1) {
+            if (count($tGroupMemberArray) === 1) {
                 return true;
             } else {
                 return false;
@@ -165,7 +165,7 @@ class DisclosureLogic extends BaseLogic
         }
 
         // グループ管理者公開の場合
-        if ($disclosureType == DBConstant::OKR_DISCLOSURE_TYPE_GROUP_ADMIN) {
+        if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_GROUP_ADMIN) {
             if ($subjectUserRoleLevel < DBConstant::ROLE_LEVEL_ADMIN) {
                 return false;
             }
@@ -173,7 +173,7 @@ class DisclosureLogic extends BaseLogic
             // 操作主体ユーザがタイムラインオーナーグループに所属しているかチェック
             $tGroupMemberRepos = $this->getTGroupMemberRepository();
             $tGroupMemberArray = $tGroupMemberRepos->getGroupMember($tPost->getTimelineOwnerGroupId(), $subjectUserId);
-            if (count($tGroupMemberArray) == 1) {
+            if (count($tGroupMemberArray) === 1) {
                 return true;
             } else {
                 return false;

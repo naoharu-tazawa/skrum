@@ -38,6 +38,10 @@ paths:
                   type: string
                 okrId:
                   type: integer
+                likesCount:
+                  type: integer
+                likedFlg:
+                  type: integer
                 replies:
                   type: array
                   items:
@@ -61,6 +65,8 @@ paths:
                 - posterId
                 - post
                 - postedDatetime
+                - likesCount
+                - likedFlg
         400:
           description: パラメータ不正
         401:

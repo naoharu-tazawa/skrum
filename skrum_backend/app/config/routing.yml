@@ -2,10 +2,10 @@ app:
     resource: '@AppBundle/Controller/'
     type: annotation
     host: "{subdomain}.localhost"
-    prefix: /api
+    prefix: /
 
 login:
-    path: /api/preregister.{_format}
+    path: /v1/preregister.{_format}
     defaults: { _controller: AppBundle:Api\Login:preregister }
     methods: [POST]
     host: localhost
