@@ -73,7 +73,6 @@ export const handleError = (error) => {
 export const getJson = (path, status) => (param) => {
   const url = createUrl(path, param, status);
   const op = createOption('GET', status);
-  console.log(url);
   return fetch(url, op)
     .catch(handleError)
     .then(handleResponse);

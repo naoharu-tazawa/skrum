@@ -1,10 +1,11 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class TeamRouter extends Component {
   static propTypes = {
     params: PropTypes.shape({
-      projectName: PropTypes.string.isRequired,
-      subMenu: PropTypes.string.isRequired,
+      teamId: PropTypes.string,
+      action: PropTypes.string,
     }),
   };
 

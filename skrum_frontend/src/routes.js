@@ -1,20 +1,47 @@
-import React from 'react';
-import { Route, IndexRedirect } from 'react-router';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Route, IndexRoute } from 'react-router';
 import App from './base/container/App';
-import UserOnly from './auth/container/UserOnly';
+import Authenticated from './auth/container/Authenticated';
 import Anonymous from './auth/container/Anonymous';
-import Login from './auth/container/Login';
+import RootRedirect from './auth/container/RootRedirect';
 import TeamRouter from './project/TeamRouter';
-import { NotFoundContainer } from './error/index';
+
+const topPage = '/team';
+const loginPage = '/login';
+
+const children = { children: PropTypes.oneOfType([
+  PropTypes.element.isRequired,
+  PropTypes.arrayOf(PropTypes.element.isRequired).isRequired,
+])};
+
+// inject config
+class AuthenticatedRegion extends Component {
+  propTypes = { children };
+  render() {
+    return (<Authenticated login={loginPage}>
+      {this.props.children}
+    </Authenticated>);
+  }
+}
+
+class AnonymousRegion extends Component {
+  propTypes = { children };
+  render() {
+    return (<Anonymous top={topPage}>
+      {this.props.children}
+    </Anonymous>);
+  }
+}
+
+const RedirectRoute = () => (<RootRedirect top={topPage} login={loginPage} />);
 
 export default <Route path="/" component={App} >
-  <IndexRedirect to="/team/piyo/okr" />
-  <Route path="/" component={UserOnly}>
-    <Route path="/team/:teamName/:subMenu" component={TeamRouter} />
+  <Route path="" component={AuthenticatedRegion}>
+    <Route path="/team" component={TeamRouter} />
+    <Route path="/team/:teamId/:action" component={TeamRouter} />
   </Route>
-  <Route path="" component={Anonymous}>
-    <Route path="" component={Login} />
-    <Route path="/login" component={Login} />
-  </Route>
-  <Route path="*" component={NotFoundContainer} />
+  <Route path="/login" component={AnonymousRegion} />
+  <IndexRoute component={RedirectRoute} />
+  <Route path="*" component={RedirectRoute} />
 </Route>;
