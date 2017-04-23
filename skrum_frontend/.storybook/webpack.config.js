@@ -7,9 +7,13 @@ module.exports = {
     loaders: [
       // add your custom loaders.
       {
-        test: /\.css?$/,
+        test: /(base|reset)\.css?$/,
         loaders: [ 'style', 'raw' ],
         include: path.resolve(__dirname, '../public/css')
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css?modules'
       }
     ],
   },
