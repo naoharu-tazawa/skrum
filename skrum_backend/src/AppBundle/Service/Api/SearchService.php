@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Api\ResponseDTO\GroupSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupTreeSearchDTO;
@@ -20,11 +21,11 @@ class SearchService extends BaseService
     /**
      * ユーザ検索
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param string $keyword 検索ワード
      * @return array
      */
-    public function searchUser($auth, $keyword)
+    public function searchUser(Auth $auth, $keyword)
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -49,11 +50,11 @@ class SearchService extends BaseService
     /**
      * グループ検索
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param string $keyword 検索ワード
      * @return array
      */
-    public function searchGroup($auth, $keyword)
+    public function searchGroup(Auth $auth, $keyword)
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -76,13 +77,44 @@ class SearchService extends BaseService
     }
 
     /**
+     * グループ検索（ページング）
+     *
+     * @param Auth $auth 認証情報
+     * @param string $keyword 検索ワード
+     * @param string $page 要求ページ
+     * @return array
+     */
+    public function pagesearchGroup(Auth $auth, string $keyword, int $page): array
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // グループ検索
+        $mGroupRepos = $this->getMGroupRepository();
+        $mGroupArray = $mGroupRepos->pagesearchGroup($escapedKeyword, $page, $this->getParameter('paging_data_number'), $auth->getCompanyId());
+
+        // DTOに詰め替える
+        $groupSearchDTOArray = array();
+        foreach ($mGroupArray as $mGroup) {
+            $groupSearchDTO = new GroupSearchDTO();
+            $groupSearchDTO->setGroupId($mGroup['groupId']);
+            $groupSearchDTO->setGroupType($mGroup['groupType']);
+            $groupSearchDTO->setGroupName($mGroup['groupName']);
+
+            $groupSearchDTOArray[] = $groupSearchDTO;
+        }
+
+        return $groupSearchDTOArray;
+    }
+
+    /**
      * オーナー検索
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param string $keyword 検索ワード
      * @return array
      */
-    public function searchOwner($auth, $keyword)
+    public function searchOwner(Auth $auth, $keyword)
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -137,11 +169,11 @@ class SearchService extends BaseService
     /**
      * グループツリーパス検索
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param string $keyword 検索ワード
      * @return array
      */
-    public function searchGroupTree($auth, $keyword)
+    public function searchGroupTree(Auth $auth, $keyword)
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -166,12 +198,12 @@ class SearchService extends BaseService
     /**
      * OKR検索
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param string $keyword 検索ワード
      * @param \AppBundle\Entity\TOkr $okrEntity OKRエンティティ
      * @return array
      */
-    public function searchOkr($auth, $keyword, $okrEntity)
+    public function searchOkr(Auth $auth, $keyword, $okrEntity)
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);

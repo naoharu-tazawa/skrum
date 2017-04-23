@@ -1,0 +1,52 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /groups/pagesearch.json?{q}&{p}:
+    get:
+      description: グループ検索（ページング）
+      parameters:
+        -
+          name: q
+          in: path
+          type: string
+          description: 検索ワード
+          required: true
+        -
+          name: p
+          in: path
+          type: string
+          description: 要求ページ
+          required: true
+      responses:
+        200:
+          description: グループ検索結果
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                groupId:
+                  type: integer
+                groupType:
+                  type: string
+                groupName:
+                  type: string
+              required:
+                - groupId
+                - groupType
+                - groupName
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

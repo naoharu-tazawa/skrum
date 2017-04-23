@@ -81,6 +81,31 @@ class MGroupRepository extends BaseRepository
     }
 
     /**
+     * グループ検索（ページング）
+     *
+     * @param string $keyword 検索ワード
+     * @param integer $page 要求ページ
+     * @param integer $perPage １ページあたり表示数
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function pagesearchGroup(string $keyword, int $page, int $perPage, int $companyId): array
+    {
+        $qb = $this->createQueryBuilder('mg');
+        $qb->select('mg.groupId', 'mg.groupType', 'mg.groupName')
+            ->where('mg.company = :companyId')
+            ->andWhere('mg.companyFlg = :companyFlg')
+            ->andWhere('mg.groupName LIKE :groupName')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('companyFlg', DBConstant::FLG_FALSE)
+            ->setParameter('groupName', $keyword . '%')
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * グループツリーパス検索
      *
      * @param string $keyword 検索ワード

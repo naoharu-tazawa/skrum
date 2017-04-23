@@ -206,7 +206,7 @@ class BaseController extends FOSRestController
      * @param $digit 桁数
      * @return array バリデーションエラー情報
      */
-    protected function validateNumeric($item, $digit)
+    protected function validateNumeric($item, $digit): array
     {
         $errors = $this->get('validator')->validate($item, array(
             new Assert\NotNull(),
@@ -224,7 +224,7 @@ class BaseController extends FOSRestController
      * @param $digit 桁数
      * @return array バリデーションエラー情報
      */
-    protected function validateString($item, $digit)
+    protected function validateString($item, $digit): array
     {
         $errors = $this->get('validator')->validate($item, array(
             new Assert\NotNull(),
@@ -241,7 +241,7 @@ class BaseController extends FOSRestController
      * @param ConstraintViolationListInterface $errors
      * @return array バリデーションエラー情報
      */
-    private function getUrlParameterErrors(ConstraintViolationListInterface $errors)
+    private function getUrlParameterErrors(ConstraintViolationListInterface $errors): array
     {
         if (!$errors) return $errors;
 
@@ -261,7 +261,7 @@ class BaseController extends FOSRestController
      * @param $item チェック対象ID
      * @return boolean バリデーションチェック結果
      */
-    protected function checkIntID($item)
+    protected function checkIntID($item): array
     {
         return $this->validateNumeric($item, 11);
     }
@@ -272,9 +272,20 @@ class BaseController extends FOSRestController
      * @param $item チェック対象ID
      * @return boolean バリデーションチェック結果
      */
-    protected function checkBigintID($item)
+    protected function checkBigintID($item): array
     {
         return $this->validateNumeric($item, 20);
+    }
+
+    /**
+     * バリデーション（11桁のstring型の数字）
+     *
+     * @param string $item チェック対象ID
+     * @return boolean バリデーションチェック結果
+     */
+    protected function checkNumeric(string $item): array
+    {
+        return $this->validateNumeric($item, 11);
     }
 
     /**
