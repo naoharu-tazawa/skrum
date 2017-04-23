@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /companies/{companyId}/roles/{roleAssignmentId}.json:
-    put:
-      description: ユーザ権限変更
+  /companies/{companyId}/roles.json:
+    get:
+      description: ロール一覧取得
       parameters:
         -
           name: companyId
@@ -20,22 +20,18 @@ paths:
           type: string
           description: 会社ID
           required: true
-        -
-          name: roleAssignmentId
-          in: path
-          type: string
-          description: ロール割当ID
-          required: true
       responses:
         200:
-          description: 成功
+          description: ロール一覧
           schema:
-            type: object
-            properties:
-              result:
-                type: string
-            required:
-              - result
+            type: array
+            items:
+              type: object
+              properties:
+                roleAssignmentId:
+                  type: integer
+                roleName:
+                  type: string
         400:
           description: JSONスキーマ不正
         409:

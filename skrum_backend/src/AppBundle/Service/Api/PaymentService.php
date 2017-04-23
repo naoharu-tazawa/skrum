@@ -18,7 +18,7 @@ class PaymentService extends BaseService
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function getPaymentInfo($companyId)
+    public function getPaymentInfo($companyId): array
     {
         // 請求プラン情報を取得
         $tPaymentRepos = $this->getTPaymentRepository();
