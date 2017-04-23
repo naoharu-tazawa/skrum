@@ -15,6 +15,20 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TPayment
 {
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="payment_date", type="date", nullable=false)
+     */
+    private $paymentDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=2, nullable=false)
+     */
+    private $status;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="charge_amount", type="decimal", precision=15, scale=0, nullable=false)
@@ -24,37 +38,9 @@ class TPayment
     /**
      * @var string
      *
-     * @ORM\Column(name="bank_code", type="string", length=8, nullable=true)
+     * @ORM\Column(name="settlement_amount", type="decimal", precision=15, scale=0, nullable=true)
      */
-    private $bankCode;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="branch_code", type="string", length=4, nullable=true)
-     */
-    private $branchCode;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="account_type", type="string", length=2, nullable=true)
-     */
-    private $accountType;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="account_number", type="string", length=8, nullable=true)
-     */
-    private $accountNumber;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="account_holder", type="string", length=255, nullable=true)
-     */
-    private $accountHolder;
+    private $settlementAmount;
 
     /**
      * @var \DateTime
@@ -101,6 +87,54 @@ class TPayment
 
 
     /**
+     * Set paymentDate
+     *
+     * @param \DateTime $paymentDate
+     *
+     * @return TPayment
+     */
+    public function setPaymentDate($paymentDate)
+    {
+        $this->paymentDate = $paymentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get paymentDate
+     *
+     * @return \DateTime
+     */
+    public function getPaymentDate()
+    {
+        return $this->paymentDate;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     *
+     * @return TPayment
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * Set chargeAmount
      *
      * @param string $chargeAmount
@@ -125,123 +159,27 @@ class TPayment
     }
 
     /**
-     * Set bankCode
+     * Set settlementAmount
      *
-     * @param string $bankCode
+     * @param string $settlementAmount
      *
      * @return TPayment
      */
-    public function setBankCode($bankCode)
+    public function setSettlementAmount($settlementAmount)
     {
-        $this->bankCode = $bankCode;
+        $this->settlementAmount = $settlementAmount;
 
         return $this;
     }
 
     /**
-     * Get bankCode
+     * Get settlementAmount
      *
      * @return string
      */
-    public function getBankCode()
+    public function getSettlementAmount()
     {
-        return $this->bankCode;
-    }
-
-    /**
-     * Set branchCode
-     *
-     * @param string $branchCode
-     *
-     * @return TPayment
-     */
-    public function setBranchCode($branchCode)
-    {
-        $this->branchCode = $branchCode;
-
-        return $this;
-    }
-
-    /**
-     * Get branchCode
-     *
-     * @return string
-     */
-    public function getBranchCode()
-    {
-        return $this->branchCode;
-    }
-
-    /**
-     * Set accountType
-     *
-     * @param string $accountType
-     *
-     * @return TPayment
-     */
-    public function setAccountType($accountType)
-    {
-        $this->accountType = $accountType;
-
-        return $this;
-    }
-
-    /**
-     * Get accountType
-     *
-     * @return string
-     */
-    public function getAccountType()
-    {
-        return $this->accountType;
-    }
-
-    /**
-     * Set accountNumber
-     *
-     * @param string $accountNumber
-     *
-     * @return TPayment
-     */
-    public function setAccountNumber($accountNumber)
-    {
-        $this->accountNumber = $accountNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get accountNumber
-     *
-     * @return string
-     */
-    public function getAccountNumber()
-    {
-        return $this->accountNumber;
-    }
-
-    /**
-     * Set accountHolder
-     *
-     * @param string $accountHolder
-     *
-     * @return TPayment
-     */
-    public function setAccountHolder($accountHolder)
-    {
-        $this->accountHolder = $accountHolder;
-
-        return $this;
-    }
-
-    /**
-     * Get accountHolder
-     *
-     * @return string
-     */
-    public function getAccountHolder()
-    {
-        return $this->accountHolder;
+        return $this->settlementAmount;
     }
 
     /**

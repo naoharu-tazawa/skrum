@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /companies/{companyId}/contracts.json:
+  /companies/{companyId}/payments.json:
     get:
-      description: 契約プラン情報取得
+      description: 請求情報取得
       parameters:
         -
           name: companyId
@@ -22,26 +22,23 @@ paths:
           required: true
       responses:
         200:
-          description: 契約情報
+          description: 請求情報
           schema:
             type: object
             properties:
-              planId:
+              paymentId:
                 type: integer
-              planName:
+              paymentDate:
                 type: string
-              userCount:
-                type: integer
-              priceType:
+              status:
                 type: string
-              price:
-                type: integer
+              chargeAmount:
+                type: number
             required:
-              - planId
-              - planName
-              - userCount
-              - priceType
-              - price
+              - paymentId
+              - paymentDate
+              - status
+              - chargeAmount
         400:
           description: JSONスキーマ不正
         409:

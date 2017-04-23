@@ -293,17 +293,12 @@ class BaseController extends FOSRestController
     }
 
     //----------------------------------------------
-    //ここからロジック/サービスクラスの取得メソッド
+    //ここからロジッククラスの取得メソッド
     //----------------------------------------------
 
     protected function getDBExistanceLogic()
     {
         return $this->get('api.db_existance_logic');
-    }
-
-    protected function getPermissionLogic()
-    {
-        return $this->get('api.permission_logic');
     }
 
     protected function getDisclosureLogic()
@@ -321,24 +316,28 @@ class BaseController extends FOSRestController
         return $this->get('api.okr_nested_intervals_logic');
     }
 
-    protected function getSampleService()
+    protected function getPermissionLogic()
     {
-        return $this->get('api.sample_service');
+        return $this->get('api.permission_logic');
     }
 
-    protected function getUserSettingService()
+    //----------------------------------------------
+    //ここからサービスクラスの取得メソッド
+    //----------------------------------------------
+
+    protected function getCompanyService()
     {
-        return $this->get('api.user_setting_service');
+        return $this->get('api.company_service');
     }
 
-    protected function getLoginService()
+    protected function getContractService()
     {
-        return $this->get('api.login_service');
+        return $this->get('api.contract_service');
     }
 
-    protected function getUserService()
+    protected function getGroupMemberService()
     {
-        return $this->get('api.user_service');
+        return $this->get('api.group_member_service');
     }
 
     protected function getGroupService()
@@ -351,19 +350,9 @@ class BaseController extends FOSRestController
         return $this->get('api.group_tree_service');
     }
 
-    protected function getCompanyService()
+    protected function getLoginService()
     {
-        return $this->get('api.company_service');
-    }
-
-    protected function getGroupMemberService()
-    {
-        return $this->get('api.group_member_service');
-    }
-
-    protected function getOkrService()
-    {
-        return $this->get('api.okr_service');
+        return $this->get('api.login_service');
     }
 
     protected function getOkrDetailsService()
@@ -376,14 +365,29 @@ class BaseController extends FOSRestController
         return $this->get('api.okr_map_service');
     }
 
+    protected function getOkrOperationService()
+    {
+        return $this->get('api.okr_operation_service');
+    }
+
+    protected function getOkrService()
+    {
+        return $this->get('api.okr_service');
+    }
+
     protected function getOkrSettingService()
     {
         return $this->get('api.okr_setting_service');
     }
 
-    protected function getOkrOperationService()
+    protected function getPaymentService()
     {
-        return $this->get('api.okr_operation_service');
+        return $this->get('api.payment_service');
+    }
+
+    protected function getSearchService()
+    {
+        return $this->get('api.search_service');
     }
 
     protected function getTimeframeService()
@@ -396,13 +400,13 @@ class BaseController extends FOSRestController
         return $this->get('api.timeline_service');
     }
 
-    protected function getSearchService()
+    protected function getUserService()
     {
-        return $this->get('api.search_service');
+        return $this->get('api.user_service');
     }
 
-    protected function getContractService()
+    protected function getUserSettingService()
     {
-        return $this->get('api.contract_service');
+        return $this->get('api.user_setting_service');
     }
 }

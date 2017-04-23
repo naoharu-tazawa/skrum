@@ -11,7 +11,3 @@ parameters:
 
     #お試しプラン期間（単位：日）
     trial_plan_period: 14
-
-    sample_parmeter_controller: 'サンプルパラメータ in Controller'
-
-    sample_parmeter_service: 'サンプルパラメータ in Service'
