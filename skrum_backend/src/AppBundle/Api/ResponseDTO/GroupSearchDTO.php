@@ -23,6 +23,13 @@ class GroupSearchDTO
      *
      * @JSON\Type("string")
      */
+    private $groupType;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
     private $groupName;
 
     /**
@@ -47,6 +54,30 @@ class GroupSearchDTO
     public function getGroupId()
     {
         return $this->groupId;
+    }
+
+    /**
+     * Set groupType
+     *
+     * @param string $groupType
+     *
+     * @return GroupSearchDTO
+     */
+    public function setGroupType($groupType)
+    {
+        $this->groupType = $groupType;
+
+        return $this;
+    }
+
+    /**
+     * Get groupType
+     *
+     * @return string
+     */
+    public function getGroupType()
+    {
+        return $this->groupType;
     }
 
     /**

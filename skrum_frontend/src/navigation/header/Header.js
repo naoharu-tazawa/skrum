@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 
 const style = {
   /* -----------------------------------
@@ -54,6 +55,7 @@ class Tab extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     isActive: PropTypes.bool,
+    to: PropTypes.string.isRequired,
   };
 
   static defaultProp = {
@@ -65,11 +67,22 @@ class Tab extends Component {
     return Object.assign({}, style.tab, isActive ? style.tabActive : style.tabNormal);
   }
 
+  getTo() {
+    const path = window.location.pathname;
+    const { to } = this.props;
+    if (path.startsWith('/team')) {
+      const bases = path.split('/');
+      return `/${bases[1]}/${bases[2]}${to}`;
+    }
+  }
+
   render() {
     return (
-      <div style={this.getStyle()}>
-        {this.props.title}
-      </div>);
+      <Link to={this.getTo()}>
+        <div style={this.getStyle()}>
+          {this.props.title}
+        </div>
+      </Link>);
   }
 }
 
@@ -105,10 +118,10 @@ export default class Header extends Component {
   render() {
     return (
       <div style={style.container}>
-        <Tab title="目標管理" isActive={this.isActive('okr')} />
-        <Tab title="マップ" isActive={this.isActive('map')} />
-        <Tab title="タイムライン" isActive={this.isActive('tl')} />
-        <Tab title="グループ管理" isActive={this.isActive('gr')} />
+        <Tab title="目標管理" isActive={this.isActive('okr')} to="/okr" />
+        <Tab title="マップ" isActive={this.isActive('map')} to="/map" />
+        <Tab title="タイムライン" isActive={this.isActive('tl')} to="/timeline" />
+        <Tab title="グループ管理" isActive={this.isActive('gr')} to="/group" />
 
         <div style={style.rightArea}>
           <SubMenu />

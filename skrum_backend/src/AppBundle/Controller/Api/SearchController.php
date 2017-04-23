@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Api;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
+use AppBundle\Exception\InvalidParameterException;
 
 /**
  * 検索コントローラ
@@ -53,6 +54,34 @@ class SearchController extends BaseController
         // グループ検索処理
         $searchService = $this->getSearchService();
         $groupSearchDTOArray = $searchService->searchGroup($auth, $keyword);
+
+        return $groupSearchDTOArray;
+    }
+
+    /**
+     * グループ検索（ページング）
+     *
+     * @Rest\Get("/v1/groups/pagesearch.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @return array
+     */
+    public function pagesearchGroupAction(Request $request): array
+    {
+        // リクエストパラメータを取得
+        $keyword = $request->get('q');
+        $page = $request->get('p');
+
+        // ページの型チェック
+        if ($this->checkNumeric($page)) {
+            throw new InvalidParameterException('要求ページの値が不正です');
+        }
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ検索処理
+        $searchService = $this->getSearchService();
+        $groupSearchDTOArray = $searchService->pagesearchGroup($auth, $keyword, (int) $page);
 
         return $groupSearchDTOArray;
     }

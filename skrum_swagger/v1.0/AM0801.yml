@@ -12,7 +12,7 @@ basePath: /v1
 paths:
   /companies/{companyId}/contracts.json:
     get:
-      description: プラン情報取得
+      description: 契約プラン情報取得
       parameters:
         -
           name: companyId

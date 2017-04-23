@@ -10,28 +10,40 @@ produces:
 basePath: /v1
 
 paths:
-  /companies/{companyId}/roles.json:
+  /groups/pagesearch.json?{q}&{p}:
     get:
-      description: ロール一覧取得
+      description: グループ検索（ページング）
       parameters:
         -
-          name: companyId
+          name: q
           in: path
           type: string
-          description: 会社ID
+          description: 検索ワード
+          required: true
+        -
+          name: p
+          in: path
+          type: string
+          description: 要求ページ
           required: true
       responses:
         200:
-          description: ロール一覧
+          description: グループ検索結果
           schema:
             type: array
             items:
               type: object
               properties:
-                roleAssignmentId:
+                groupId:
                   type: integer
-                roleName:
+                groupType:
                   type: string
+                groupName:
+                  type: string
+              required:
+                - groupId
+                - groupType
+                - groupName
         400:
           description: JSONスキーマ不正
         409:

@@ -155,8 +155,8 @@ class Section extends Component {
 
   renderItem() {
     return this.props.items.map((item) => {
-      const { title, imgSrc } = item;
-      return (<SectionItem title={title} imgSrc={imgSrc} />);
+      const { title, imgSrc, id } = item;
+      return (<SectionItem key={id} title={title} imgSrc={imgSrc} />);
     });
   }
 
@@ -175,13 +175,13 @@ export default class SideBar extends Component {
   static propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClickToggle: PropTypes.func.isRequired,
-    userName: PropTypes.string.isRequired,
-    companyName: PropTypes.string.isRequired,
+    userName: PropTypes.string,
+    companyName: PropTypes.string,
     sections: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
       items: PropTypes.arrayOf(PropTypes.shape({
         title: PropTypes.string.isRequired,
-        imgSrc: PropTypes.string.isRequired,
+        imgSrc: PropTypes.string,
       })).isRequired,
     })).isRequired,
   };
@@ -201,6 +201,7 @@ export default class SideBar extends Component {
     return this.props.sections.map((section) => {
       const { title, items } = section;
       return (<Section
+        key={title}
         title={title}
         items={items}
       />);

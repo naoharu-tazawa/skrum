@@ -10,26 +10,35 @@ produces:
 basePath: /v1
 
 paths:
-  /users/{userId}.json:
-    post:
-      description: ユーザ削除
+  /companies/{companyId}/payments.json:
+    get:
+      description: 請求情報取得
       parameters:
         -
-          name: userId
+          name: companyId
           in: path
           type: string
-          description: ユーザID
+          description: 会社ID
           required: true
       responses:
         200:
-          description: 成功
+          description: 請求情報
           schema:
             type: object
             properties:
-              result:
+              paymentId:
+                type: integer
+              paymentDate:
                 type: string
+              status:
+                type: string
+              chargeAmount:
+                type: number
             required:
-              - result
+              - paymentId
+              - paymentDate
+              - status
+              - chargeAmount
         400:
           description: JSONスキーマ不正
         409:

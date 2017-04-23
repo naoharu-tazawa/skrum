@@ -10,15 +10,21 @@ produces:
 basePath: /v1
 
 paths:
-  /users/{userId}/changepassword.json:
-    post:
-      description: パスワードリセット
+  /companies/{companyId}/roles/{roleAssignmentId}.json:
+    put:
+      description: ユーザ権限変更
       parameters:
         -
-          name: userId
+          name: companyId
           in: path
           type: string
-          description: ユーザID
+          description: 会社ID
+          required: true
+        -
+          name: roleAssignmentId
+          in: path
+          type: string
+          description: ロール割当ID
           required: true
       responses:
         200:

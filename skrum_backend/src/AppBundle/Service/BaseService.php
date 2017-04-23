@@ -268,11 +268,6 @@ class BaseService
         return $this->getContainer()->get('api.db_existance_logic');
     }
 
-    protected function getPermissionLogic()
-    {
-        return $this->getContainer()->get('api.permission_logic');
-    }
-
     protected function getDisclosureLogic()
     {
         return $this->getContainer()->get('api.disclosure_logic');
@@ -286,6 +281,11 @@ class BaseService
     protected function getOkrNestedIntervalsLogic()
     {
         return $this->getContainer()->get('api.okr_nested_intervals_logic');
+    }
+
+    protected function getPermissionLogic()
+    {
+        return $this->getContainer()->get('api.permission_logic');
     }
 
     //----------------------------------------------
@@ -305,11 +305,6 @@ class BaseService
     protected function getMNormalTimeframeRepository()
     {
         return $this->entityManager->getRepository('AppBundle:MNormalTimeframe');
-    }
-
-    protected function getMNormalTimeframeDetailRepository()
-    {
-        return $this->entityManager->getRepository('AppBundle:MNormalTimeframeDetail');
     }
 
     protected function getMPermissionSettingsRepository()
@@ -342,11 +337,6 @@ class BaseService
         return $this->entityManager->getRepository('AppBundle:MUser');
     }
 
-    protected function getSGroupTreePathIdRepository()
-    {
-        return $this->entityManager->getRepository('AppBundle:SGroupTreePathId');
-    }
-
     protected function getTAuthorizationRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TAuthorization');
@@ -365,6 +355,11 @@ class BaseService
     protected function getTGroupTreeRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TGroupTree');
+    }
+
+    protected function getTLikeRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TLike');
     }
 
     protected function getTMailReservationRepository()
@@ -400,10 +395,5 @@ class BaseService
     protected function getTTimeframeRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TTimeframe');
-    }
-
-    protected function getTLikeRepository()
-    {
-        return $this->entityManager->getRepository('AppBundle:TLike');
     }
 }

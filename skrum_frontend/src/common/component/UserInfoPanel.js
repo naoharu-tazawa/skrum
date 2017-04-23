@@ -3,9 +3,9 @@ import moment from 'moment';
 import { Link } from 'react-router';
 import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
-//import style from './UserInfoPanel.css';
+import style from './UserInfoPanel.css';
 
-
+/*
 const gap = '1em';
 const style = {
   okrNav: {
@@ -83,7 +83,7 @@ const style = {
     color: '#8E9AA6',
   },
 };
-
+*/
 
 class UserInfoPanel extends Component {
 

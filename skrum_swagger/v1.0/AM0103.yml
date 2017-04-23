@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /users/{userId}/changepassword.json:
+  /users/{userId}.json:
     post:
-      description: パスワードリセット
+      description: ユーザ削除
       parameters:
         -
           name: userId

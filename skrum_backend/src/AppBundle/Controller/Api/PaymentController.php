@@ -9,22 +9,22 @@ use AppBundle\Exception\ApplicationException;
 use AppBundle\Utils\Permission;
 
 /**
- * 契約コントローラ
+ * 請求コントローラ
  *
  * @author naoharu.tazawa
  */
-class ContractController extends BaseController
+class PaymentController extends BaseController
 {
     /**
-     * 契約プラン情報取得
+     * 請求情報取得
      *
-     * @Rest\Get("/v1/companies/{companyId}/contracts.{_format}")
-     * @Permission(value="plan_edit")
+     * @Rest\Get("/v1/companies/{companyId}/payments.{_format}")
+     * @Permission(value="payment_view")
      * @param Request $request リクエストオブジェクト
      * @param string $companyId 会社ID
      * @return array
      */
-    public function getCompanyContractsAction(Request $request, $companyId)
+    public function getCompanyPaymentsAction(Request $request, $companyId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -34,10 +34,10 @@ class ContractController extends BaseController
             throw new ApplicationException('会社IDが存在しません');
         }
 
-        // 契約プラン情報取得処理
-        $contractService = $this->getContractService();
-        $contractDTO = $contractService->getContractInfo($companyId);
+        // 請求情報取得処理
+        $paymentService = $this->getPaymentService();
+        $paymentDTOArray = $paymentService->getPaymentInfo($companyId);
 
-        return $contractDTO;
+        return $paymentDTOArray;
     }
 }

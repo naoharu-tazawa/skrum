@@ -1,38 +1,39 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import LoginContainer from './LoginContainer';
 
 class Anonymous extends Component {
   static propTypes = {
-    children: PropTypes.element.isRequired,
-    auth: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    top: PropTypes.string.isRequired,
+    isAuthorized: PropTypes.bool,
   };
 
-  static transfer(auth) {
-    if (auth && auth.isLoggedIn) {
-      browserHistory.push('/piyo');
+  componentWillMount() {
+    this.transfer();
+  }
+
+  componentWillReceiveProps() {
+    this.transfer();
+  }
+
+  transfer() {
+    console.log(this.props);
+    const { top, isAuthorized } = this.props;
+    if (isAuthorized) {
+      browserHistory.push(top);
     }
   }
 
-  componentWillMount() {
-    Anonymous.transfer(this.props.auth);
-  }
-
-  componentWillUpdate(nextProps) {
-    Anonymous.transfer(nextProps.auth);
-  }
-
   render() {
-    return (
-      <div>
-        {this.props.children}
-      </div>);
+    return (<LoginContainer />);
   }
 }
 
 const mapStateToProps = (state) => {
-  const { auth } = state;
-  return { auth };
+  const { isAuthorized } = state.auth;
+  return { isAuthorized };
 };
 
 export default connect(mapStateToProps)(Anonymous);
