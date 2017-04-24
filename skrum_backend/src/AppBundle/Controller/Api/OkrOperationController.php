@@ -24,7 +24,7 @@ class OkrOperationController extends BaseController
      * @param string $okrId OKRID
      * @return array
      */
-    public function changeOkrParentAction(Request $request, $okrId)
+    public function changeOkrParentAction(Request $request, string $okrId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/ChangeOkrParentPdu');

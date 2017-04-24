@@ -18,9 +18,9 @@ class CompanyService extends BaseService
      * 会社基本情報取得
      *
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicCompanyInfoDTO
+     * @return BasicCompanyInfoDTO
      */
-    public function getBasicCompanyInfo($companyId)
+    public function getBasicCompanyInfo(int $companyId): BasicCompanyInfoDTO
     {
         $mCompanyRepos = $this->getMCompanyRepository();
         $mCompany = $mCompanyRepos->find($companyId);
@@ -44,7 +44,7 @@ class CompanyService extends BaseService
      * @param integer $companyId 会社ID
      * @return void
      */
-    public function updateCompany($data, $companyId)
+    public function updateCompany(array $data, int $companyId)
     {
         // 会社エンティティ取得
         $mCompanyRepos = $this->getMCompanyRepository();

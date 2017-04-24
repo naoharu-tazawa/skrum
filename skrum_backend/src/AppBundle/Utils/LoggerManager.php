@@ -43,7 +43,7 @@ class LoggerManager
      *
      * @return LoggerManager 自インスタンス
      */
-    public static function getInstance()
+    public static function getInstance(): LoggerManager
     {
         if (!self::$instance) self::$instance = new LoggerManager();
         return self::$instance;
@@ -54,7 +54,7 @@ class LoggerManager
      *
      * @return Logger monologロガーインスタンス
      */
-    public function getLogger()
+    public function getLogger(): Logger
     {
         return $this->logger;
     }

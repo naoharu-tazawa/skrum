@@ -19,12 +19,12 @@ class GroupTreeService extends BaseService
     /**
      * グループツリー新規登録
      *
-     * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
+     * @param MGroup $mGroup グループエンティティ
      * @param string $groupTreePath グループツリーパス
      * @param string $groupTreePathName グループツリーパス名
      * @return void
      */
-    public function createGroupPath($mGroup, $groupTreePath, $groupTreePathName)
+    public function createGroupPath(MGroup $mGroup, string $groupTreePath, string $groupTreePathName)
     {
         // 登録グループツリーパス
         $newGroupTreePath = $groupTreePath . $mGroup->getGroupId() . '/';
@@ -54,11 +54,11 @@ class GroupTreeService extends BaseService
     /**
      * グループツリー削除
      *
-     * @param \AppBundle\Entity\TGroupTree $tGroupTree グループツリーエンティティ
+     * @param TGroupTree $tGroupTree グループツリーエンティティ
      * @param integer $groupId グループID
      * @return void
      */
-    public function deleteGroupPath($tGroupTree, $groupId)
+    public function deleteGroupPath(TGroupTree $tGroupTree, int $groupId)
     {
         // 削除するグループツリーとグループの整合性をチェック
         if ($tGroupTree->getGroup()->getGroupId() != $groupId) {

@@ -5,9 +5,13 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\NoDataException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Repository\TOkrRepository;
+use AppBundle\Logic\OkrAchievementRateLogic;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\TGroupTree;
+use AppBundle\Entity\TOkr;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
 
@@ -21,11 +25,11 @@ class GroupService extends BaseService
     /**
      * グループ新規登録
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @return void
      */
-    public function createGroup($auth, $data)
+    public function createGroup(Auth $auth, array $data)
     {
         // トランザクション開始
         $this->beginTransaction();
@@ -69,9 +73,9 @@ class GroupService extends BaseService
      *
      * @param integer $groupId グループID
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO
+     * @return BasicGroupInfoDTO
      */
-    public function getBasicGroupInfo($groupId, $companyId)
+    public function getBasicGroupInfo(int $groupId, int $companyId): BasicGroupInfoDTO
     {
         $mGroupRepos = $this->getMGroupRepository();
         $mGroupArray = $mGroupRepos->getGroupWithLeaderUser($groupId, $companyId);
@@ -105,10 +109,10 @@ class GroupService extends BaseService
      * グループ情報更新
      *
      * @param array $data リクエストJSON連想配列
-     * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
+     * @param MGroup $mGroup グループエンティティ
      * @return void
      */
-    public function updateGroup($data, $mGroup)
+    public function updateGroup(array $data, MGroup $mGroup)
     {
         // グループ情報更新
         $mGroup->setGroupName($data['groupName']);
@@ -124,11 +128,11 @@ class GroupService extends BaseService
     /**
      * グループリーダー更新
      *
-     * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
+     * @param MGroup $mGroup グループエンティティ
      * @param integer $userId ユーザID
      * @return void
      */
-    public function changeGroupLeader($mGroup, $userId)
+    public function changeGroupLeader(MGroup $mGroup, int $userId)
     {
         // 現在のグループリーダーが変更対象ユーザと同一の場合、更新処理を行わない
         if ($mGroup->getLeaderUserId() == $userId) {
@@ -155,11 +159,11 @@ class GroupService extends BaseService
     /**
      * グループ削除
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
-     * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
+     * @param Auth $auth 認証情報
+     * @param MGroup $mGroup グループエンティティ
      * @return void
      */
-    public function deleteGroup($auth, $mGroup)
+    public function deleteGroup(Auth $auth, MGroup $mGroup)
     {
         // トランザクション開始
         $this->beginTransaction();
@@ -214,13 +218,13 @@ class GroupService extends BaseService
     /**
      * OKR削除
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
-     * @param \AppBundle\Entity\TOkr $tOkr 削除対象OKRエンティティ
-     * @param \AppBundle\Repository\TOkrRepository $tOkrRepos OKRリポジトリ
-     * @param \AppBundle\Logic\OkrAchievementRateLogic $okrAchievementRateLogic OKR達成率ロジック
+     * @param Auth $auth 認証情報
+     * @param TOkr $tOkr 削除対象OKRエンティティ
+     * @param TOkrRepository $tOkrRepos OKRリポジトリ
+     * @param OkrAchievementRateLogic $okrAchievementRateLogic OKR達成率ロジック
      * @return void
      */
-    private function deleteOkrs($auth, $tOkr, $tOkrRepos, $okrAchievementRateLogic)
+    private function deleteOkrs(Auth $auth, TOkr $tOkr, TOkrRepository $tOkrRepos, OkrAchievementRateLogic $okrAchievementRateLogic)
     {
         // トランザクション開始
         $this->beginTransaction();

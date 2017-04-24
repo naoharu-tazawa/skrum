@@ -8,6 +8,7 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Utils\Constant;
+use AppBundle\Api\ResponseDTO\ThreeGensOkrMapDTO;
 
 /**
  * OKRマップコントローラ
@@ -24,7 +25,7 @@ class OkrMapController extends BaseController
      * @param string $userId ユーザID
      * @return array
      */
-    public function getUserObjectivesAction(Request $request, $userId)
+    public function getUserObjectivesAction(Request $request, string $userId): array
     {
         // リクエストパラメータを取得
         $timeframeId = $request->get('tfid');
@@ -56,7 +57,7 @@ class OkrMapController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function getGroupObjectivesAction(Request $request, $groupId)
+    public function getGroupObjectivesAction(Request $request, string $groupId): array
     {
         // リクエストパラメータを取得
         $timeframeId = $request->get('tfid');
@@ -86,7 +87,7 @@ class OkrMapController extends BaseController
      * @param string $companyId 会社ID
      * @return array
      */
-    public function getCompanyObjectivesAction(Request $request, $companyId)
+    public function getCompanyObjectivesAction(Request $request, string $companyId): array
     {
         // リクエストパラメータを取得
         $timeframeId = $request->get('tfid');
@@ -118,7 +119,7 @@ class OkrMapController extends BaseController
      * @param string $okrId OKRID
      * @return array
      */
-    public function getOkrFamilyokrsAction(Request $request, $okrId)
+    public function getOkrFamilyokrsAction(Request $request, string $okrId): ThreeGensOkrMapDTO
     {
         // リクエストパラメータを取得
         $timeframeId = $request->get('tfid');

@@ -3,6 +3,13 @@
 namespace AppBundle\Logic;
 
 use AppBundle\Exception\NoDataException;
+use AppBundle\Entity\MGroup;
+use AppBundle\Entity\MRoleAssignment;
+use AppBundle\Entity\MUser;
+use AppBundle\Entity\TGroupTree;
+use AppBundle\Entity\TOkr;
+use AppBundle\Entity\TPost;
+use AppBundle\Entity\TTimeframe;
 
 /**
  * DB存在チェックロジッククラス
@@ -16,9 +23,9 @@ class DBExistanceLogic extends BaseLogic
      *
      * @param integer $targetUserId チェック対象ユーザID
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Entity\MUser ユーザエンティティ
+     * @return MUser ユーザエンティティ
      */
-    public function checkUserExistance($targetUserId, $companyId)
+    public function checkUserExistance(int $targetUserId, int $companyId): MUser
     {
         $mUserRepos = $this->getMUserRepository();
         $mUserArray = $mUserRepos->getUser($targetUserId, $companyId);
@@ -34,9 +41,9 @@ class DBExistanceLogic extends BaseLogic
      *
      * @param integer $targetGroupId チェック対象グループID
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Entity\MGroup グループエンティティ
+     * @return MGroup グループエンティティ
      */
-    public function checkGroupExistance($targetGroupId, $companyId)
+    public function checkGroupExistance(int $targetGroupId, int $companyId): MGroup
     {
         $mGroupRepos = $this->getMGroupRepository();
         $mGroupArray = $mGroupRepos->getGroup($targetGroupId, $companyId);
@@ -52,9 +59,9 @@ class DBExistanceLogic extends BaseLogic
      *
      * @param integer $targetGroupPathId チェック対象グループパスID
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Entity\TGroupTree グループツリーエンティティ
+     * @return TGroupTree グループツリーエンティティ
      */
-    public function checkGroupPathExistance($targetGroupPathId, $companyId)
+    public function checkGroupPathExistance(int $targetGroupPathId, int $companyId): TGroupTree
     {
         $tGroupTreeRepos = $this->getTGroupTreeRepository();
         $tGroupTreeArray = $tGroupTreeRepos->getGroupPath($targetGroupPathId, $companyId);
@@ -70,9 +77,9 @@ class DBExistanceLogic extends BaseLogic
      *
      * @param integer $targetOkrId チェック対象OKRID
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Entity\TOkr OKRエンティティ
+     * @return TOkr OKRエンティティ
      */
-    public function checkOkrExistance($targetOkrId, $companyId)
+    public function checkOkrExistance(int $targetOkrId, int $companyId): TOkr
     {
         $tOkrRepos = $this->getTOkrRepository();
         $tOkrArray = $tOkrRepos->getOkr($targetOkrId, $companyId);
@@ -88,9 +95,9 @@ class DBExistanceLogic extends BaseLogic
      *
      * @param integer $targetTimeframeId チェック対象タイムフレームID
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Entity\TTimeframe タイムフレームエンティティ
+     * @return TTimeframe タイムフレームエンティティ
      */
-    public function checkTimeframeExistance($targetTimeframeId, $companyId)
+    public function checkTimeframeExistance(int $targetTimeframeId, int $companyId): TTimeframe
     {
         $tTimeframeRepos = $this->getTTimeframeRepository();
         $tTimeframeArray = $tTimeframeRepos->getTimeframe($targetTimeframeId, $companyId);
@@ -106,9 +113,9 @@ class DBExistanceLogic extends BaseLogic
      *
      * @param integer $targetPostId チェック対象投稿ID
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Entity\TPost 投稿エンティティ
+     * @return TPost 投稿エンティティ
      */
-    public function checkPostExistance($targetPostId, $companyId)
+    public function checkPostExistance(int $targetPostId, int $companyId): TPost
     {
         $tPostRepos = $this->getTPostRepository();
         $tPostArray = $tPostRepos->getPost($targetPostId, $companyId);
@@ -124,9 +131,9 @@ class DBExistanceLogic extends BaseLogic
      *
      * @param integer $targetRoleAssignmentId チェック対象ロール割当ID
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Entity\MRoleAssignment ロール割当エンティティ
+     * @return MRoleAssignment ロール割当エンティティ
      */
-    public function checkRoleAssignmentExistance($targetRoleAssignmentId, $companyId)
+    public function checkRoleAssignmentExistance(int $targetRoleAssignmentId, int $companyId): MRoleAssignment
     {
         $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
         $mRoleAssignmentArray = $mRoleAssignmentRepos->getRoleAssignment($targetRoleAssignmentId, $companyId);

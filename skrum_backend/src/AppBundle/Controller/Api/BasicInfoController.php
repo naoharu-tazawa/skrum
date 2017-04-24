@@ -9,10 +9,10 @@ use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Utils\Constant;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\CompanyBasicsDTO;
+use AppBundle\Api\ResponseDTO\GroupBasicsDTO;
 use AppBundle\Api\ResponseDTO\TopDTO;
 use AppBundle\Api\ResponseDTO\UserBasicsDTO;
-use AppBundle\Api\ResponseDTO\GroupBasicsDTO;
-use AppBundle\Api\ResponseDTO\CompanyBasicsDTO;
 
 /**
  * 基本情報コントローラ
@@ -27,9 +27,9 @@ class BasicInfoController extends BaseController
      * @Rest\Get("/v1/users/{userId}/top.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $userId ユーザID
-     * @return array
+     * @return TopDTO
      */
-    public function getUserTopAction(Request $request, $userId)
+    public function getUserTopAction(Request $request, string $userId): TopDTO
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -37,7 +37,7 @@ class BasicInfoController extends BaseController
         // ユーザIDの一致をチェック
         if ($userId != $auth->getUserId()) {
             throw new ApplicationException('ユーザIDが存在しません');
-        }
+        }$this->logDebug('debug');
 
         // タイムフレーム一覧取得
         $timeframeService = $this->getTimeframeService();
@@ -45,7 +45,7 @@ class BasicInfoController extends BaseController
 
         // デフォルトタイムフレームのタイムフレームIDを取得
         foreach ($timeframeDTOArray as $timeframeDTO) {
-            if ($timeframeDTO->getDefaultFlg() == DBConstant::FLG_TRUE) {
+            if ($timeframeDTO->getDefaultFlg() === DBConstant::FLG_TRUE) {
                 $timeframeId = $timeframeDTO->getTimeframeId();
             }
         }
@@ -83,9 +83,9 @@ class BasicInfoController extends BaseController
      * @Rest\Get("/v1/users/{userId}/basics.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $userId ユーザID
-     * @return array
+     * @return UserBasicsDTO
      */
-    public function getUserBasicsAction(Request $request, $userId)
+    public function getUserBasicsAction(Request $request, string $userId): UserBasicsDTO
     {
         // リクエストパラメータを取得
         $timeframeId = $request->get('tfid');
@@ -126,9 +126,9 @@ class BasicInfoController extends BaseController
      * @Rest\Get("/v1/groups/{groupId}/basics.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $groupId グループID
-     * @return array
+     * @return GroupBasicsDTO
      */
-    public function getGroupBasicsAction(Request $request, $groupId)
+    public function getGroupBasicsAction(Request $request, string $groupId): GroupBasicsDTO
     {
         // リクエストパラメータを取得
         $timeframeId = $request->get('tfid');
@@ -169,9 +169,9 @@ class BasicInfoController extends BaseController
      * @Rest\Get("/v1/companies/{companyId}/basics.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $companyId 会社ID
-     * @return array
+     * @return CompanyBasicsDTO
      */
-    public function getCompanyBasicsAction(Request $request, $companyId)
+    public function getCompanyBasicsAction(Request $request, string $companyId): CompanyBasicsDTO
     {
         // リクエストパラメータを取得
         $timeframeId = $request->get('tfid');

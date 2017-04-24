@@ -32,7 +32,7 @@ class LoginService extends BaseService
      * @param string $subdomain サブドメイン
      * @return void
      */
-    public function checkSubdomain($subdomain)
+    public function checkSubdomain(string $subdomain)
     {
         // 会社マスタに対象サブドメインの登録が既にあるかチェック
         $mCompanyRepos = $this->getMCompanyRepository();
@@ -50,7 +50,7 @@ class LoginService extends BaseService
      * @param string $subdomain サブドメイン
      * @return string JWT
      */
-    public function login($emailAddress, $password, $subdomain)
+    public function login(string $emailAddress, string $password, string $subdomain): string
     {
         // 対象ユーザをユーザテーブルから取得
         $mUserRepos = $this->getMUserRepository();
@@ -100,7 +100,7 @@ class LoginService extends BaseService
      * @param integer $planId プランID
      * @return string JWT
      */
-    public function signup($password, $urltoken, $subdomain, $planId = DBConstant::PLAN_ID_TRIAL_PLAN)
+    public function signup(string $password, string $urltoken, string $subdomain, int $planId = DBConstant::PLAN_ID_TRIAL_PLAN): string
     {
         // URLトークン
         $tPreUserRepos = $this->getTPreUserRepository();
@@ -211,7 +211,7 @@ class LoginService extends BaseService
      * @param string $subdomain サブドメイン
      * @return string JWT
      */
-    public function join($password, $urltoken, $subdomain)
+    public function join(string $password, string $urltoken, string $subdomain): string
     {
         // URLトークン
         $tPreUserRepos = $this->getTPreUserRepository();
@@ -287,10 +287,10 @@ class LoginService extends BaseService
      * @param string $subdomain サブドメイン
      * @param integer $userId ユーザID
      * @param integer $companyId 会社ID
-     * @param string $companyId ロールID
+     * @param integer $roleId ロールID
      * @return string JWT
      */
-    private function issueJwt($subdomain, $userId, $companyId, $roleId)
+    private function issueJwt(string $subdomain, int $userId, int $companyId, int $roleId): string
     {
         // 権限取得
         $mRolePermissionRepos = $this->getMRolePermissionRepository();
@@ -332,7 +332,7 @@ class LoginService extends BaseService
      * @param integer $companyId 会社ID
      * @return void
      */
-    private function checkAuthorization($companyId)
+    private function checkAuthorization(int $companyId)
     {
         $tAuthorizationRepos = $this->getTAuthorizationRepository();
         $tAuthorizationArray = $tAuthorizationRepos->getValidAuthorization($companyId);

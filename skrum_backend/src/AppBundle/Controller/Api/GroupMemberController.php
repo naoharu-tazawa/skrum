@@ -24,7 +24,7 @@ class GroupMemberController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function postGroupMembersAction(Request $request, $groupId)
+    public function postGroupMembersAction(Request $request, string $groupId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostGroupMembersPdu');
@@ -62,9 +62,9 @@ class GroupMemberController extends BaseController
      * @Rest\Get("/v1/groups/{groupId}/members.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $groupId グループID
-     * @return array
+     * @return GroupMemberDTO
      */
-    public function getGroupMembersAction(Request $request, $groupId)
+    public function getGroupMembersAction(Request $request, string $groupId): GroupMemberDTO
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -97,7 +97,7 @@ class GroupMemberController extends BaseController
      * @param string $userId ユーザID
      * @return array
      */
-    public function deleteGroupMemberAction(Request $request, $groupId, $userId)
+    public function deleteGroupMemberAction(Request $request, string $groupId, string $userId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

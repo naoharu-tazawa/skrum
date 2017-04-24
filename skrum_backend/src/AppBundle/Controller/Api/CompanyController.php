@@ -25,7 +25,7 @@ class CompanyController extends BaseController
      * @param string $companyId 会社ID
      * @return array
      */
-    public function putCompanyAction(Request $request, $companyId)
+    public function putCompanyAction(Request $request, string $companyId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PutCompanyPdu');

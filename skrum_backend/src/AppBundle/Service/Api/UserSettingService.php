@@ -8,9 +8,12 @@ use AppBundle\Exception\AuthenticationException;
 use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\NoDataException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\Constant;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\MRoleAssignment;
+use AppBundle\Entity\MUser;
 use AppBundle\Entity\TPreUser;
 use AppBundle\Entity\TTimeframe;
 use AppBundle\Api\ResponseDTO\RoleDTO;
@@ -25,11 +28,11 @@ class UserSettingService extends BaseService
     /**
      * ユーザ仮登録
      *
-     * @param $emailAddress Eメールアドレス
-     * @param $subdomain サブドメイン
+     * @param string $emailAddress Eメールアドレス
+     * @param string $subdomain サブドメイン
      * @return void
      */
-    public function preregisterUser($emailAddress, $subdomain)
+    public function preregisterUser(string $emailAddress, string $subdomain)
     {
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
@@ -74,12 +77,12 @@ class UserSettingService extends BaseService
     /**
      * ユーザ招待
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param string $emailAddress Eメールアドレス
      * @param integer $roleAssignmentId ロール割当ID
      * @return void
      */
-    public function inviteUser($auth, $emailAddress, $roleAssignmentId)
+    public function inviteUser(Auth $auth, string $emailAddress, int $roleAssignmentId)
     {
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
@@ -132,7 +135,7 @@ class UserSettingService extends BaseService
      * @param array $data テンプレート埋め込み変数配列
      * @return void
      */
-    private function sendEmail($fromAddress, $toAddress, $subject, $bodyTemplatePath, $data)
+    private function sendEmail(string $fromAddress, string $toAddress, string $subject, string $bodyTemplatePath, array $data)
     {
         $message = \Swift_Message::newInstance()
             ->setFrom($fromAddress)
@@ -158,7 +161,7 @@ class UserSettingService extends BaseService
      *
      * @return string トークン
      */
-    private function getToken()
+    private function getToken(): string
     {
         return hash('sha256',uniqid(rand(),1));
     }
@@ -166,13 +169,13 @@ class UserSettingService extends BaseService
     /**
      * 初期設定登録
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param array $userInfo ユーザ情報連想配列
      * @param array $companyInfo 会社情報連想配列
      * @param array $timeframeInfo タイムフレーム情報連想配列
      * @return void
      */
-    public function establishCompany($auth, $userInfo, $companyInfo, $timeframeInfo)
+    public function establishCompany(Auth $auth, array $userInfo, array $companyInfo, array $timeframeInfo)
     {
         // 二重登録回避
         $mCompanyRepos = $this->getMCompanyRepository();
@@ -297,11 +300,11 @@ class UserSettingService extends BaseService
     /**
      * 追加ユーザ初期設定登録
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param array $userInfo ユーザ情報連想配列
      * @return void
      */
-    public function establishUser($auth, $userInfo)
+    public function establishUser(Auth $auth, array $userInfo)
     {
         // 二重登録回避
         $mUserRepos = $this->getMUserRepository();
@@ -327,11 +330,11 @@ class UserSettingService extends BaseService
     /**
      * パスワードリセット
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
-     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @param Auth $auth 認証情報
+     * @param MUser $mUser ユーザエンティティ
      * @return void
      */
-    public function resetPassword($auth, $mUser)
+    public function resetPassword(Auth $auth, MUser $mUser)
     {
         // 自ユーザのパスワードリセットは不可
         if ($mUser->getUserId() === $auth->getUserId()) {
@@ -382,7 +385,7 @@ class UserSettingService extends BaseService
      *
      * @return string ランダムパスワード
      */
-    private function generateRamdomPassword()
+    private function generateRamdomPassword(): string
     {
         $data = 'abcdefghkmnprstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ234567823456782345678234567823456782345678';
         $length = strlen($data);
@@ -397,12 +400,12 @@ class UserSettingService extends BaseService
     /**
      * パスワード変更
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param string $currentPassword 現在パスワード
      * @param string $newPassword 新パスワード
      * @return void
      */
-    public function changePassword($auth, $currentPassword, $newPassword)
+    public function changePassword(Auth $auth, string $currentPassword, string $newPassword)
     {
         // 現在パスワードと新パスワードが同一の場合、更新処理を行わない
         if ($currentPassword === $newPassword) {
@@ -439,7 +442,7 @@ class UserSettingService extends BaseService
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function getRoles($companyId)
+    public function getRoles(int $companyId): array
     {
         // スーパー管理者ユーザ数を取得
         $mUserRepos = $this->getMUserRepository();
@@ -477,12 +480,12 @@ class UserSettingService extends BaseService
     /**
      * ユーザ権限更新
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
-     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
-     * @param \AppBundle\Entity\MRoleAssignment $mRoleAssignment ロール割当エンティティ
+     * @param Auth $auth 認証情報
+     * @param MUser $mUser ユーザエンティティ
+     * @param MRoleAssignment $mRoleAssignment ロール割当エンティティ
      * @return void
      */
-    public function changeRole($auth, $mUser, $mRoleAssignment)
+    public function changeRole(Auth $auth, MUser $mUser, MRoleAssignment $mRoleAssignment)
     {
         // 現在のロール割当IDと変更後のロール割当IDが同一の場合、更新処理を行わない
         if ($mUser->getRoleAssignment()->getRoleAssignmentId() === $mRoleAssignment->getRoleAssignmentId()) {

@@ -14,11 +14,11 @@ class MGroupRepository extends BaseRepository
     /**
      * 指定グループIDのレコードを取得
      *
-     * @param $groupId グループID
-     * @param $companyId 会社ID
+     * @param integer $groupId グループID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getGroup($groupId, $companyId)
+    public function getGroup(int $groupId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mg');
         $qb->select('mg')
@@ -36,11 +36,11 @@ class MGroupRepository extends BaseRepository
     /**
      * 指定グループIDのレコードとそれに紐付くリーダーユーザのレコードを取得
      *
-     * @param $groupId グループID
-     * @param $companyId 会社ID
+     * @param integer $groupId グループID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getGroupWithLeaderUser($groupId, $companyId)
+    public function getGroupWithLeaderUser(int $groupId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mg');
         $qb->select('mg', 'mu')
@@ -66,7 +66,7 @@ class MGroupRepository extends BaseRepository
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function searchGroup($keyword, $companyId)
+    public function searchGroup(string $keyword, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mg');
         $qb->select('mg.groupId', 'mg.groupName')
@@ -85,9 +85,11 @@ class MGroupRepository extends BaseRepository
      *
      * @param string $keyword 検索ワード
      * @param integer $companyId 会社ID
-     * @return integer
+     * @return mixed
+     * @throws NonUniqueResultException If the query result is not unique.
+     * @throws NoResultException        If the query returned no result.
      */
-    public function getPagesearchCount(string $keyword, int $companyId): int
+    public function getPagesearchCount(string $keyword, int $companyId)
     {
         $qb = $this->createQueryBuilder('mg');
         $qb->select('COUNT(mg.groupId)')
@@ -133,7 +135,7 @@ class MGroupRepository extends BaseRepository
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function searchGroupTree($keyword, $companyId)
+    public function searchGroupTree(string $keyword, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mg');
         $qb->select('tgt.id', 'tgt.groupTreePathName')

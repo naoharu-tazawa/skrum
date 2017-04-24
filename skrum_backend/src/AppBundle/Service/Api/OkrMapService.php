@@ -3,8 +3,9 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Utils\DBConstant;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\Constant;
+use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
 use AppBundle\Api\ResponseDTO\ThreeGensOkrMapDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
@@ -20,14 +21,14 @@ class OkrMapService extends BaseService
      * 目標一覧を取得
      *
      * @param string $subjectType 主体種別
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param integer $userId 取得対象ユーザID
      * @param integer $groupId 取得対象グループID
      * @param integer $timeframeId タイムフレームID
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function getObjectives($subjectType, $auth, $userId, $groupId, $timeframeId, $companyId)
+    public function getObjectives(string $subjectType, Auth $auth, int $userId = null, int $groupId = null, int $timeframeId, int $companyId): array
     {
         // 目標を取得
         $tOkrRepos = $this->getTOkrRepository();
@@ -65,12 +66,12 @@ class OkrMapService extends BaseService
     /**
      * 3世代OKRを取得
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param integer $okrId 取得対象OKRID
      * @param integer $timeframeId タイムフレームID
-     * @return \AppBundle\Api\ResponseDTO\ThreeGensOkrMapDTO
+     * @return ThreeGensOkrMapDTO
      */
-    public function getThreeGensOkrMap($auth, $okrId, $timeframeId)
+    public function getThreeGensOkrMap(Auth $auth, int $okrId, int $timeframeId): ThreeGensOkrMapDTO
     {
         // 3世代OKRを取得
         $tOkrRepos = $this->getTOkrRepository();
@@ -123,11 +124,11 @@ class OkrMapService extends BaseService
     /**
      * OKRエンティティをDTOに詰め替える
      *
-     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param TOkr $tOkr OKRエンティティ
      * @param string $companyName 会社名
-     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO
+     * @return BasicOkrDTO
      */
-    private function repackDTOWithOkrEntity($tOkr, $companyName = null)
+    private function repackDTOWithOkrEntity(TOkr $tOkr, string $companyName = null): BasicOkrDTO
     {
         $basicOkrDTO = new BasicOkrDTO();
         $basicOkrDTO->setOkrId($tOkr->getOkrId());

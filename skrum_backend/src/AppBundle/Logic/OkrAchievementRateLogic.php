@@ -3,6 +3,7 @@
 namespace AppBundle\Logic;
 
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TOkr;
 
 /**
  * OKR達成率ロジッククラス
@@ -14,12 +15,12 @@ class OkrAchievementRateLogic extends BaseLogic
     /**
      * OKR達成率再計算
      *
-     * @param \AppBundle\Entity\TOkr $tOkr チェック対象OKRエンティティ
-     * @parame integer $companyId 会社ID
-     * @parame boolean $weightedAverageRatioFlg 加重平均比率再設定フラグ
+     * @param TOkr $tOkr チェック対象OKRエンティティ
+     * @param integer $companyId 会社ID
+     * @param boolean $weightedAverageRatioFlg 加重平均比率再設定フラグ
      * @return void
      */
-    public function recalculate($tOkr, $companyId, $weightedAverageRatioFlg = false)
+    public function recalculate(TOkr $tOkr, int $companyId, bool $weightedAverageRatioFlg = false)
     {
         while (!empty($tOkr)) {
             // 親OKR存在チェック
@@ -82,12 +83,12 @@ class OkrAchievementRateLogic extends BaseLogic
     /**
      * OKR達成率再計算（再計算対象OKRの親OKRを指定）
      *
-     * @param \AppBundle\Entity\TOkr $tOkr チェック対象親OKRエンティティ
-     * @parame integer $companyId 会社ID
-     * @parame boolean $weightedAverageRatioFlg 加重平均比率再設定フラグ
+     * @param TOkr $tOkr チェック対象親OKRエンティティ
+     * @param integer $companyId 会社ID
+     * @param boolean $weightedAverageRatioFlg 加重平均比率再設定フラグ
      * @return void
      */
-    public function recalculateFromParent($tOkr, $companyId, $weightedAverageRatioFlg = false)
+    public function recalculateFromParent(TOkr $tOkr, int $companyId, bool $weightedAverageRatioFlg = false)
     {
         // OKRが「OKR種別 ！＝ 1:目標」の場合、再計算対象外
         if ($tOkr->getType() !== DBConstant::OKR_TYPE_OBJECTIVE) {

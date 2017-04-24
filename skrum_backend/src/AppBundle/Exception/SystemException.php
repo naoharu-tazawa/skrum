@@ -33,10 +33,10 @@ class SystemException extends \Exception
     /**
      * コンストラクタ
      *
-	 * @param $message ログ出力メッセージ
-	 * @param $alert アラートログ出力フラグ
+	 * @param string $message ログ出力メッセージ
+	 * @param boolean $alert アラートログ出力フラグ
 	 */
-    public function __construct($message, $alert = false)
+    public function __construct(string $message, bool $alert = false)
     {
         parent::__construct($message, 0, null);
         $this->alert = $alert;
@@ -47,7 +47,7 @@ class SystemException extends \Exception
      *
      * @return boolean
      */
-    public function isAlert()
+    public function isAlert(): bool
     {
         return $this->alert;
     }
@@ -57,7 +57,7 @@ class SystemException extends \Exception
      *
      * @return integer
      */
-    public function getResponseStatusCode()
+    public function getResponseStatusCode(): int
     {
         return $this->responseStatusCode;
     }
@@ -67,7 +67,7 @@ class SystemException extends \Exception
      *
      * @return string
      */
-    public function getResponseReason()
+    public function getResponseReason(): string
     {
         return $this->responseReason;
     }

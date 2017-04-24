@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TOkr;
 
 /**
  * TOkrリポジトリクラス
@@ -14,11 +15,11 @@ class TOkrRepository extends BaseRepository
     /**
      * 指定OKRIDのレコードを取得
      *
-     * @param $okrId OKRID
-     * @param $companyId 会社ID
+     * @param integer $okrId OKRID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getOkr($okrId, $companyId)
+    public function getOkr(int $okrId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to');
         $qb->select('to')
@@ -36,11 +37,11 @@ class TOkrRepository extends BaseRepository
      * OKR検索
      *
      * @param string $keyword 検索ワード
-     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param TOkr $tOkr OKRエンティティ
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function searchOkr($keyword, $tOkr, $companyId)
+    public function searchOkr(string $keyword, TOkr $tOkr, int $companyId): array
     {
         $sql = <<<SQL
         SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
@@ -124,12 +125,12 @@ SQL;
     /**
      * 3世代OKRを取得
      *
-     * @param $okrId OKRID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $okrId OKRID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getThreeGensOkrs($okrId, $timeframeId, $companyId)
+    public function getThreeGensOkrs(int $okrId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to1 as selectedOkr', 'to2 as parentOkr', 'to3 as childrenOkr')
@@ -151,12 +152,12 @@ SQL;
     /**
      * 親子OKRを取得（子OKRを指定）
      *
-     * @param $okrId OKRID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $okrId OKRID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getParentOkr($okrId, $timeframeId, $companyId)
+    public function getParentOkr(int $okrId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to1 as childOkr', 'to2 as parentOkr')
@@ -177,12 +178,12 @@ SQL;
     /**
      * 親子OKRを取得（親OKRを指定）（達成率再計算ロジック用）
      *
-     * @param $okrId OKRID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $okrId OKRID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getChildrenOkrsForRecalc($okrId, $timeframeId, $companyId)
+    public function getChildrenOkrsForRecalc(int $okrId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to1 as parentOkr', 'to2 as childOkr')
@@ -202,12 +203,12 @@ SQL;
     /**
      * 子OKRの加重平均比率の合計値と持分比率ロックフラグが立っている数を取得（達成率再計算ロジック用）
      *
-     * @param $okrId OKRID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $okrId OKRID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getRecalcItems($okrId, $timeframeId, $companyId)
+    public function getRecalcItems(int $okrId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('SUM(to2.weightedAverageRatio) as summedWeightedAverageRatio', 'SUM(to2.ratioLockedFlg) as lockedRatioCount')
@@ -229,12 +230,12 @@ SQL;
     /**
      * ユーザの目標とキーリザルトの一覧を取得
      *
-     * @param $userId ユーザID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $userId ユーザID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getUserObjectivesAndKeyResults($userId, $timeframeId, $companyId)
+    public function getUserObjectivesAndKeyResults(int $userId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to1 as objective', 'to2 as keyResult', 'mc1.companyName')
@@ -258,12 +259,12 @@ SQL;
     /**
      * グループの目標とキーリザルトの一覧を取得
      *
-     * @param $groupId グループID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $groupId グループID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getGroupObjectivesAndKeyResults($groupId, $timeframeId, $companyId)
+    public function getGroupObjectivesAndKeyResults(int $groupId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to1 as objective', 'to2 as keyResult', 'mc1.companyName')
@@ -287,11 +288,11 @@ SQL;
     /**
      * 会社の目標とキーリザルトの一覧を取得
      *
-     * @param $companyId 会社ID
-     * @param $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
+     * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function getCompanyObjectivesAndKeyResults($companyId, $timeframeId)
+    public function getCompanyObjectivesAndKeyResults(int $companyId, int $timeframeId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to1 as objective', 'to2 as keyResult', 'mc1.companyName')
@@ -315,12 +316,12 @@ SQL;
     /**
      * ユーザの目標一覧を取得
      *
-     * @param $userId ユーザID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $userId ユーザID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getUserObjectives($userId, $timeframeId, $companyId)
+    public function getUserObjectives(int $userId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to1')
@@ -343,12 +344,12 @@ SQL;
     /**
      * グループの目標一覧を取得
      *
-     * @param $groupId グループID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $groupId グループID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getGroupObjectives($groupId, $timeframeId, $companyId)
+    public function getGroupObjectives(int $groupId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to1')
@@ -371,11 +372,11 @@ SQL;
     /**
      * 会社の目標一覧を取得
      *
-     * @param $companyId 会社ID
-     * @param $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
+     * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function getCompanyObjectives($companyId, $timeframeId)
+    public function getCompanyObjectives(int $companyId, int $timeframeId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to1')
@@ -398,12 +399,12 @@ SQL;
     /**
      * ユーザの目標紐付け先（ユーザ）情報を取得
      *
-     * @param $userId ユーザID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $userId ユーザID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getUserAlignmentsInfoForUser($userId, $timeframeId, $companyId)
+    public function getUserAlignmentsInfoForUser(int $userId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('IDENTITY(to2.ownerUser) AS userId', 'mu1.lastName', 'mu1.firstName', 'COUNT(to2.ownerUser) AS numberOfOkrs')
@@ -429,12 +430,12 @@ SQL;
     /**
      * ユーザの目標紐付け先（グループ）情報を取得
      *
-     * @param $userId ユーザID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $userId ユーザID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getGroupAlignmentsInfoForUser($userId, $timeframeId, $companyId)
+    public function getGroupAlignmentsInfoForUser(int $userId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('IDENTITY(to2.ownerGroup) AS groupId', 'mg1.groupName', 'COUNT(to2.ownerGroup) AS numberOfOkrs')
@@ -460,12 +461,12 @@ SQL;
     /**
      * ユーザの目標紐付け先（会社）情報を取得
      *
-     * @param $userId ユーザID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $userId ユーザID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getCompanyAlignmentsInfoForUser($userId, $timeframeId, $companyId)
+    public function getCompanyAlignmentsInfoForUser(int $userId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to2.ownerCompanyId AS companyId', 'mc2.companyName', 'COUNT(to2.ownerCompanyId) AS numberOfOkrs')
@@ -491,12 +492,12 @@ SQL;
     /**
      * グループの目標紐付け先（ユーザ）情報を取得
      *
-     * @param $groupId グループID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $groupId グループID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getUserAlignmentsInfoForGroup($groupId, $timeframeId, $companyId)
+    public function getUserAlignmentsInfoForGroup(int $groupId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('IDENTITY(to2.ownerUser) AS userId', 'mu1.lastName', 'mu1.firstName', 'COUNT(to2.ownerUser) AS numberOfOkrs')
@@ -522,12 +523,12 @@ SQL;
     /**
      * グループの目標紐付け先（グループ）情報を取得
      *
-     * @param $groupId グループID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $groupId グループID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getGroupAlignmentsInfoForGroup($groupId, $timeframeId, $companyId)
+    public function getGroupAlignmentsInfoForGroup(int $groupId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('IDENTITY(to2.ownerGroup) AS groupId', 'mg1.groupName', 'COUNT(to2.ownerGroup) AS numberOfOkrs')
@@ -553,12 +554,12 @@ SQL;
     /**
      * グループの目標紐付け先（会社）情報を取得
      *
-     * @param $groupId グループID
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $groupId グループID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getCompanyAlignmentsInfoForGroup($groupId, $timeframeId, $companyId)
+    public function getCompanyAlignmentsInfoForGroup(int $groupId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
         $qb->select('to2.ownerCompanyId AS companyId', 'mc2.companyName', 'COUNT(to2.ownerCompanyId) AS numberOfOkrs')
@@ -586,11 +587,11 @@ SQL;
      *
      * @param $treeLeft 入れ子区間モデルの左値
      * @param $treeRight 入れ子区間モデルの右値
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId, $companyId)
+    public function getOkrAndAllAlignmentOkrs($treeLeft, $treeRight, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to');
         $qb->select('to')
@@ -611,11 +612,11 @@ SQL;
     /**
      * 指定した親ノードの直下に挿入するノードの左値・右値を取得（最左ノード）
      *
-     * @param $parentOkrId 親ノードのOKRID
-     * @param $timeframeId タイムフレームID
+     * @param integer $parentOkrId 親ノードのOKRID
+     * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function getLeftRightOfLeftestInsertionNode($parentOkrId, $timeframeId)
+    public function getLeftRightOfLeftestInsertionNode(int $parentOkrId, int $timeframeId)
     {
         $sql = <<<SQL
         SELECT (t3_.left_value * 2 + t3_.right_value) / 3 AS tree_left, (t3_.left_value + t3_.right_value * 2) / 3 AS tree_right
@@ -649,11 +650,11 @@ SQL;
     /**
      * 指定した親ノードの直下に挿入するノードの左値・右値を取得（最右ノード）
      *
-     * @param $parentOkrId 親ノードのOKRID
-     * @param $timeframeId タイムフレームID
+     * @param integer $parentOkrId 親ノードのOKRID
+     * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function getLeftRightOfRightestInsertionNode($parentOkrId, $timeframeId)
+    public function getLeftRightOfRightestInsertionNode(int $parentOkrId, int $timeframeId)
     {
         $sql = <<<SQL
         SELECT (t3_.left_value * 2 + t3_.right_value) / 3 AS tree_left, (t3_.left_value + t3_.right_value * 2) / 3 AS tree_right
@@ -687,10 +688,11 @@ SQL;
     /**
      * ルートノードを取得
      *
-     * @param $timeframeId タイムフレームID
-     * @return array
+     * @param integer $timeframeId タイムフレームID
+     * @return mixed
+     * @throws NonUniqueResultException
      */
-    public function getRootNode($timeframeId)
+    public function getRootNode(int $timeframeId)
     {
         $qb = $this->createQueryBuilder('to');
         $qb->select('to')
@@ -710,9 +712,9 @@ SQL;
      * @param integer $okrId OKRID
      * @param integer $timeframeId タイムフレームID
      * @param integer $companyId 会社ID
-     * @return array
+     * @return void
      */
-    public function resetRatioLockedFlg($okrId, $timeframeId, $companyId)
+    public function resetRatioLockedFlg(int $okrId, int $timeframeId, int $companyId)
     {
         $sql = <<<SQL
         UPDATE t_okr AS t0_
@@ -738,11 +740,11 @@ SQL;
      *
      * @param $treeLeft 入れ子区間モデルの左値
      * @param $treeRight 入れ子区間モデルの右値
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
-     * @return array
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
+     * @return void
      */
-    public function deleteOkrAndAllAlignmentOkrs($treeLeft, $treeRight, $timeframeId, $companyId)
+    public function deleteOkrAndAllAlignmentOkrs($treeLeft, $treeRight, int $timeframeId, int $companyId)
     {
         $sql = <<<SQL
         UPDATE t_okr AS t0_

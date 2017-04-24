@@ -5,11 +5,12 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\DateUtility;
+use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TLike;
 use AppBundle\Entity\TPost;
 use AppBundle\Api\ResponseDTO\PostDTO;
-use AppBundle\Utils\DBConstant;
 
 /**
  * タイムラインサービスクラス
@@ -21,11 +22,11 @@ class TimelineService extends BaseService
     /**
      * タイムライン取得
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param integer $groupId グループID
      * @return array
      */
-    public function getTimeline($auth, $groupId)
+    public function getTimeline(Auth $auth, int $groupId): array
     {
         $tPostRepos = $this->getTPostRepository();
         $tPostArray = $tPostRepos->getTimeline($groupId);
@@ -133,12 +134,12 @@ class TimelineService extends BaseService
     /**
      * コメント投稿
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param integer $groupId グループID
      * @return array
      */
-    public function postComment($auth, $data, $groupId)
+    public function postComment(Auth $auth, array $data, int $groupId): array
     {
         // コメント登録
         $tPost = new TPost();
@@ -159,12 +160,12 @@ class TimelineService extends BaseService
     /**
      * リプライ投稿
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
-     * @param \AppBundle\Entity\TPost $tPost 投稿エンティティ
-     * @return array
+     * @param TPost $tPost 投稿エンティティ
+     * @return void
      */
-    public function postReply($auth, $data, $tPost)
+    public function postReply(Auth $auth, array $data, TPost $tPost)
     {
         // リプライ登録
         $tPostReply = new TPost();
@@ -190,7 +191,7 @@ class TimelineService extends BaseService
      * @param integer $postId 投稿ID
      * @return void
      */
-    public function like($userId, $postId)
+    public function like(int $userId, int $postId)
     {
         // いいねが既に押されていないかチェック
         $tLikeRepos = $this->getTLikeRepository();
@@ -219,7 +220,7 @@ class TimelineService extends BaseService
      * @param integer $postId 投稿ID
      * @return void
      */
-    public function detachLike($userId, $postId)
+    public function detachLike(int $userId, int $postId)
     {
         // いいねが既に解除されている場合、更新処理を行わない
         $tLikeRepos = $this->getTLikeRepository();

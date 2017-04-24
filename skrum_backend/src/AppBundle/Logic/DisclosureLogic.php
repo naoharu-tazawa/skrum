@@ -3,6 +3,8 @@
 namespace AppBundle\Logic;
 
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TOkr;
+use AppBundle\Entity\TPost;
 
 /**
  * 公開ロジッククラス
@@ -16,10 +18,10 @@ class DisclosureLogic extends BaseLogic
      *
      * @param integer $subjectUserId 操作主体ユーザ
      * @param integer $subjectUserRoleLevel 操作主体ユーザのロールレベル
-     * @param \AppBundle\Entity\TOkr $tOkr チェック対象OKRエンティティ
+     * @param TOkr $tOkr チェック対象OKRエンティティ
      * @return boolean チェック結果
      */
-    public function checkOkr($subjectUserId, $subjectUserRoleLevel, $tOkr)
+    public function checkOkr(int $subjectUserId, int $subjectUserRoleLevel, TOkr $tOkr): bool
     {
         // 公開種別を取得
         $disclosureType = $tOkr->getDisclosureType();
@@ -115,10 +117,10 @@ class DisclosureLogic extends BaseLogic
      *
      * @param integer $subjectUserId 操作主体ユーザ
      * @param integer $subjectUserRoleLevel 操作主体ユーザのロールレベル
-     * @param \AppBundle\Entity\TPost $tPost チェック対象投稿エンティティ
+     * @param TPost $tPost チェック対象投稿エンティティ
      * @return boolean チェック結果
      */
-    public function checkPost($subjectUserId, $subjectUserRoleLevel, $tPost)
+    public function checkPost(int $subjectUserId, int $subjectUserRoleLevel, TPost $tPost): bool
     {
         // 公開種別を取得
         $disclosureType = $tPost->getDisclosureType();

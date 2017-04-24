@@ -21,7 +21,7 @@ class LoginController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function preregisterAction(Request $request)
+    public function preregisterAction(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PreregisterPdu');
@@ -48,7 +48,7 @@ class LoginController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function loginAction(Request $request)
+    public function loginAction(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/LoginPdu');
@@ -71,7 +71,7 @@ class LoginController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function signupAction(Request $request)
+    public function signupAction(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/SignupPdu');
@@ -94,7 +94,7 @@ class LoginController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function joinAction(Request $request)
+    public function joinAction(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/SignupPdu');

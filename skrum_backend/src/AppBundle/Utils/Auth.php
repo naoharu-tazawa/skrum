@@ -61,7 +61,7 @@ class Auth
      * @param integer $roleLevel ロールレベル
      * @param array $permissions  権限情報
      */
-    public function __construct($subdomain, $userId, $companyId, $roleId, $roleLevel, $permissions)
+    public function __construct(string $subdomain, int $userId, int $companyId, string $roleId, int $roleLevel, array $permissions)
     {
         $this->subdomain = $subdomain;
         $this->userId = $userId;
@@ -76,7 +76,7 @@ class Auth
      *
      * @return string
      */
-    public function getSubdomain()
+    public function getSubdomain(): string
     {
         return $this->subdomain;
     }
@@ -86,7 +86,7 @@ class Auth
      *
      * @return integer
      */
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->userId;
     }
@@ -96,7 +96,7 @@ class Auth
      *
      * @return integer
      */
-    public function getCompanyId()
+    public function getCompanyId(): int
     {
         return $this->companyId;
     }
@@ -106,7 +106,7 @@ class Auth
      *
      * @return string
      */
-    public function getRoleId()
+    public function getRoleId(): string
     {
         return $this->roleId;
     }
@@ -116,7 +116,7 @@ class Auth
      *
      * @return integer
      */
-    public function getRoleLevel()
+    public function getRoleLevel(): int
     {
         return $this->roleLevel;
     }
@@ -126,7 +126,7 @@ class Auth
      *
      * @return array
      */
-    public function getPermissions()
+    public function getPermissions(): array
     {
         return $this->permissions;
     }

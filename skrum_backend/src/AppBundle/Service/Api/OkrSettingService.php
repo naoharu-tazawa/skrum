@@ -5,8 +5,11 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
+use AppBundle\Entity\MUser;
+use AppBundle\Entity\MGroup;
 
 /**
  * OKR設定サービスクラス
@@ -18,10 +21,10 @@ class OkrSettingService extends BaseService
     /**
      * OKRクローズ
      *
-     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param TOkr $tOkr OKRエンティティ
      * @return void
      */
-    public function closeOkr($tOkr)
+    public function closeOkr(TOkr $tOkr)
     {
         // クローズ対象OKRが既にクローズド状態の場合、更新処理を行わない
         if ($tOkr->getStatus() === DBConstant::OKR_STATUS_CLOSED) {
@@ -53,10 +56,10 @@ class OkrSettingService extends BaseService
     /**
      * OKRオープン
      *
-     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param TOkr $tOkr OKRエンティティ
      * @return void
      */
-    public function openOkr($tOkr)
+    public function openOkr(TOkr $tOkr)
     {
         // オープン対象OKRが既にオープン状態の場合、更新処理を行わない
         if ($tOkr->getStatus() === DBConstant::OKR_STATUS_OPEN) {
@@ -88,11 +91,11 @@ class OkrSettingService extends BaseService
     /**
      * OKR公開設定変更
      *
-     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param TOkr $tOkr OKRエンティティ
      * @param string $disclosureType 公開種別
      * @return void
      */
-    public function changeDisclosure($tOkr, $disclosureType)
+    public function changeDisclosure(TOkr $tOkr, string $disclosureType)
     {
         // 更新対象OKRの公開種別とリクエストJSONで指定された公開種別が一致する場合、更新処理を行わない
         if ($tOkr->getDisclosureType() === $disclosureType) {
@@ -112,14 +115,14 @@ class OkrSettingService extends BaseService
     /**
      * OKR所有者変更
      *
-     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param TOkr $tOkr OKRエンティティ
      * @param string $ownerType オーナー種別
-     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
-     * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
+     * @param MUser $mUser ユーザエンティティ
+     * @param MGroup $mGroup グループエンティティ
      * @param integer $companyId 会社ID
      * @return void
      */
-    public function changeOwner($tOkr, $ownerType, $mUser, $mGroup, $companyId)
+    public function changeOwner(TOkr $tOkr, string $ownerType, MUser $mUser, MGroup $mGroup, int $companyId)
     {
         // OKRアクティビティ登録（オーナー変更）
         $tOkrActivity = new TOkrActivity();
@@ -267,12 +270,12 @@ class OkrSettingService extends BaseService
     /**
      * KR加重平均割合更新
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
-     * @param \AppBundle\Entity\TOkr $okrEntity OKRエンティティ
+     * @param TOkr $okrEntity OKRエンティティ
      * @return void
      */
-    public function updateRatio($auth, $data, $okrEntity)
+    public function updateRatio(Auth $auth, array $data, TOkr $okrEntity)
     {
         // 親OKRIDを取得
         $parentOkrId = $okrEntity->getOkrId();

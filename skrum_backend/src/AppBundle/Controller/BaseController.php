@@ -9,6 +9,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Utils\LoggerManager;
+use Monolog\Logger;
 use JsonSchema\Validator;
 
 /**
@@ -21,9 +22,9 @@ class BaseController extends FOSRestController
     /**
      * ロガー取得
      *
-     * @return \Monolog\Logger monologロガーインスタンス
+     * @return Logger monologロガーインスタンス
      */
-    private function getLogger()
+    private function getLogger(): Logger
     {
         return LoggerManager::getInstance()->getLogger();
     }
@@ -33,9 +34,9 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logDebug($message, array $context = array())
+    protected function logDebug(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addDebug($message, $context);
     }
@@ -45,9 +46,9 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logInfo($message, array $context = array())
+    protected function logInfo(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addInfo($message, $context);
     }
@@ -57,9 +58,9 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logWarning($message, array $context = array())
+    protected function logWarning(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addWarning($message, $context);
     }
@@ -69,9 +70,9 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logError($message, array $context = array())
+    protected function logError(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addError($message, $context);
     }
@@ -81,9 +82,9 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logCritical($message, array $context = array())
+    protected function logCritical(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addCritical($message, $context);
     }
@@ -93,9 +94,9 @@ class BaseController extends FOSRestController
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logAlert($message, array $context = array())
+    protected function logAlert(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addAlert($message, $context);
     }
@@ -106,7 +107,7 @@ class BaseController extends FOSRestController
      * @param Request $request リクエストデータ
      * @return string サブドメイン
      */
-    protected function getSubdomain(Request $request)
+    protected function getSubdomain(Request $request): string
     {
         return strstr($request->getHost(), '.', true);
     }
@@ -117,7 +118,7 @@ class BaseController extends FOSRestController
      * @param Request $request リクエストデータ
      * @return array
      */
-    protected function getRequestJsonAsArray(Request $request)
+    protected function getRequestJsonAsArray(Request $request): array
     {
         return json_decode($request->getContent(), true);
     }
@@ -129,7 +130,7 @@ class BaseController extends FOSRestController
      * @param string $schemaFilePath JsonSchemaファイルパス（例："AppBundle/Api/JsonSchema/SamplePdu"）
      * @return array
      */
-    protected function validateSchema(Request $request, $schemaFilePath)
+    protected function validateSchema(Request $request, string $schemaFilePath): array
     {
         $data = json_decode($request->getContent());
         if (!$data) throw new JsonSchemaException("リクエストデータが存在しません");
@@ -146,7 +147,7 @@ class BaseController extends FOSRestController
      * @param array $errors JsonScemaエラー配列
      * @return array レスポンス用エラー配列
      */
-    private function makeErrorResponse($errors)
+    private function makeErrorResponse(array $errors): array
     {
         if (!$errors) return $errors;
 
@@ -183,7 +184,7 @@ class BaseController extends FOSRestController
      * @param FormInterface $form フォームインターフェース
      * @return array バリデーションエラー情報
      */
-    protected function getFormErrors(FormInterface $form)
+    protected function getFormErrors(FormInterface $form): array
     {
         foreach ($form->all() as $childForm) {
             if ($childForm instanceof FormInterface) {
@@ -202,11 +203,11 @@ class BaseController extends FOSRestController
     /**
      * URLパラメータバリデーション（数値型チェック）
      *
-     * @param $item チェック対象
-     * @param $digit 桁数
+     * @param string $item チェック対象
+     * @param integer $digit 桁数
      * @return array バリデーションエラー情報
      */
-    protected function validateNumeric($item, $digit): array
+    protected function validateNumeric(string $item = null, int $digit): array
     {
         $errors = $this->get('validator')->validate($item, array(
             new Assert\NotNull(),
@@ -220,11 +221,11 @@ class BaseController extends FOSRestController
     /**
      * URLパラメータバリデーション（文字列型チェック）
      *
-     * @param $item チェック対象
-     * @param $digit 桁数
+     * @param string $item チェック対象
+     * @param integer $digit 桁数
      * @return array バリデーションエラー情報
      */
-    protected function validateString($item, $digit): array
+    protected function validateString(string $item = null, int $digit): array
     {
         $errors = $this->get('validator')->validate($item, array(
             new Assert\NotNull(),
@@ -258,10 +259,10 @@ class BaseController extends FOSRestController
     /**
      * バリデーション（11桁のint型ID）
      *
-     * @param $item チェック対象ID
+     * @param string $item チェック対象ID
      * @return boolean バリデーションチェック結果
      */
-    protected function checkIntID($item): array
+    protected function checkIntID(string $item = null): array
     {
         return $this->validateNumeric($item, 11);
     }
@@ -269,10 +270,10 @@ class BaseController extends FOSRestController
     /**
      * バリデーション（20桁のBigint型ID）
      *
-     * @param $item チェック対象ID
+     * @param string $item チェック対象ID
      * @return boolean バリデーションチェック結果
      */
-    protected function checkBigintID($item): array
+    protected function checkBigintID(string $item = null): array
     {
         return $this->validateNumeric($item, 20);
     }
@@ -283,7 +284,7 @@ class BaseController extends FOSRestController
      * @param string $item チェック対象ID
      * @return boolean バリデーションチェック結果
      */
-    protected function checkNumeric(string $item): array
+    protected function checkNumeric(string $item = null): array
     {
         return $this->validateNumeric($item, 11);
     }
@@ -291,10 +292,10 @@ class BaseController extends FOSRestController
     /**
      * RFC3339形式の日付文字列を生成
      *
-     * @param $datetimeString 日付文字列(例："2017-03-26 22:09:15")
+     * @param string $datetimeString 日付文字列(例："2017-03-26 22:09:15")
      * @return string RFC3339形式の日付文字列（例："2017-03-26T13:09:15+09:00"）
      */
-    protected function getRfc3339Date($datetimeString = null)
+    protected function getRfc3339Date(string $datetimeString = null): string
     {
         if ($datetimeString) {
             return date(DATE_RFC3339, strtotime($datetimeString));

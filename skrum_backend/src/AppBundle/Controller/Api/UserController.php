@@ -25,7 +25,7 @@ class UserController extends BaseController
      * @param string $userId ユーザID
      * @return array
      */
-    public function putUserAction(Request $request, $userId)
+    public function putUserAction(Request $request, string $userId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PutUserPdu');
@@ -63,7 +63,7 @@ class UserController extends BaseController
      * @param string $userId ユーザID
      * @return array
      */
-    public function deleteUserAction(Request $request, $userId)
+    public function deleteUserAction(Request $request, string $userId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

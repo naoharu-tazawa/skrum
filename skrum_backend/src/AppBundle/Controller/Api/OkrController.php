@@ -24,7 +24,7 @@ class OkrController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function postObjectivesAction(Request $request)
+    public function postObjectivesAction(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostObjectivesPdu');
@@ -84,7 +84,7 @@ class OkrController extends BaseController
      * @param string $okrId OKRID
      * @return array
      */
-    public function putOkrAction(Request $request, $okrId)
+    public function putOkrAction(Request $request, string $okrId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PutOkrPdu');
@@ -123,7 +123,7 @@ class OkrController extends BaseController
      * @param string $okrId OKRID
      * @return array
      */
-    public function postOkrAchievementsAction(Request $request, $okrId)
+    public function postOkrAchievementsAction(Request $request, string $okrId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostOkrAchievementsPdu');
@@ -159,9 +159,10 @@ class OkrController extends BaseController
      *
      * @Rest\Delete("/v1/okrs/{okrId}.{_format}")
      * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
      * @return array
      */
-    public function deleteOkrAction(Request $request, $okrId)
+    public function deleteOkrAction(Request $request, string $okrId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

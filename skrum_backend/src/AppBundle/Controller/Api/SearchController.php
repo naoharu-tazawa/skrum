@@ -23,7 +23,7 @@ class SearchController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function searchUsersAction(Request $request)
+    public function searchUsersAction(Request $request): array
     {
         // リクエストパラメータを取得
         $keyword = $request->get('q');
@@ -51,10 +51,9 @@ class SearchController extends BaseController
         $keyword = $request->get('q');
         $page = $request->get('p');
 
-        // ページの型チェック
-        if ($this->checkNumeric($page)) {
-            throw new InvalidParameterException('要求ページの値が不正です');
-        }
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkNumeric($page);
+        if($errors) throw new InvalidParameterException('要求ページの値が不正です', $errors);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -73,7 +72,7 @@ class SearchController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function searchGroupAction(Request $request)
+    public function searchGroupAction(Request $request): array
     {
         // リクエストパラメータを取得
         $keyword = $request->get('q');
@@ -101,10 +100,9 @@ class SearchController extends BaseController
         $keyword = $request->get('q');
         $page = $request->get('p');
 
-        // ページの型チェック
-        if ($this->checkNumeric($page)) {
-            throw new InvalidParameterException('要求ページの値が不正です');
-        }
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkNumeric($page);
+        if($errors) throw new InvalidParameterException('要求ページの値が不正です', $errors);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -123,7 +121,7 @@ class SearchController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function searchOwnerAction(Request $request)
+    public function searchOwnerAction(Request $request): array
     {
         // リクエストパラメータを取得
         $keyword = $request->get('q');
@@ -145,7 +143,7 @@ class SearchController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function searchPathsAction(Request $request)
+    public function searchPathsAction(Request $request): array
     {
         // リクエストパラメータを取得
         $keyword = $request->get('q');
@@ -167,7 +165,7 @@ class SearchController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function searchOkrsAction(Request $request)
+    public function searchOkrsAction(Request $request): array
     {
         // リクエストパラメータを取得
         $okrId = $request->get('oid');

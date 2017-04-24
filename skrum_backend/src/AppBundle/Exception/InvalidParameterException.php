@@ -35,10 +35,10 @@ class InvalidParameterException extends ApplicationException
     /**
      * コンストラクタ
      *
-	 * @param $message ログ出力メッセージ
-	 * @param $validationErrors バリデーションエラー詳細
+	 * @param string $message ログ出力メッセージ
+	 * @param array $validationErrors バリデーションエラー詳細
 	 */
-    public function __construct($message, $validationErrors = array())
+    public function __construct(string $message, array $validationErrors = array())
     {
         parent::__construct($message, 0, false, null);
         $this->responseValidationErrors = $validationErrors;
@@ -49,7 +49,7 @@ class InvalidParameterException extends ApplicationException
      *
      * @return array
      */
-    public function getResponseValidationErrors()
+    public function getResponseValidationErrors(): array
     {
         return $this->responseValidationErrors;
     }

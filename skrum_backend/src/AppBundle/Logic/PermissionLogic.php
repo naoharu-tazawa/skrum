@@ -3,6 +3,7 @@
 namespace AppBundle\Logic;
 
 use AppBundle\Exception\NoDataException;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\DBConstant;
 
 /**
@@ -15,11 +16,11 @@ class PermissionLogic extends BaseLogic
     /**
      * ユーザ操作権限チェック（自ユーザ可）
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param integer $targetUserId 操作対象ユーザ
      * @return boolean チェック結果
      */
-    public function checkUserOperationSelfOK($auth, $targetUserId)
+    public function checkUserOperationSelfOK(Auth $auth, int $targetUserId): bool
     {
         // 同一ユーザならチェックOK
         if ($auth->getUserId() == $targetUserId) {
@@ -34,11 +35,11 @@ class PermissionLogic extends BaseLogic
     /**
      * ユーザ操作権限チェック（自ユーザ不可）
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param integer $targetUserId 操作対象ユーザ
      * @return boolean チェック結果
      */
-    public function checkUserOperationSelfNG($auth, $targetUserId)
+    public function checkUserOperationSelfNG(Auth $auth, int $targetUserId): bool
     {
         // 同一ユーザはチェックNG
         if ($auth->getUserId() == $targetUserId) {
@@ -56,7 +57,7 @@ class PermissionLogic extends BaseLogic
      * @param integer $targetUserId 操作対象ユーザ
      * @return boolean チェック結果
      */
-    private function checkUserOperation($subjectUserRoleLevel, $targetUserId)
+    private function checkUserOperation(int $subjectUserRoleLevel, int $targetUserId): bool
     {
         // 操作対象ユーザのロールレベルを取得
         $targetUserRoleLevel = $this->getRoleLevel($targetUserId);
@@ -79,11 +80,11 @@ class PermissionLogic extends BaseLogic
     /**
      * グループ操作権限チェック
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param integer $targetGroupId 操作対象グループ
      * @return boolean チェック結果
      */
-    public function checkGroupOperation($auth, $targetGroupId)
+    public function checkGroupOperation(Auth $auth, int $targetGroupId): bool
     {
         //　グループエンティティを取得
         $mGroupRepos = $this->getMGroupRepository();
@@ -115,9 +116,9 @@ class PermissionLogic extends BaseLogic
      * ユーザのロールレベルを取得
      *
      * @param integer $userId
-     * @return string ロールレベル
+     * @return integer ロールレベル
      */
-    private function getRoleLevel($userId)
+    private function getRoleLevel(int $userId): int
     {
         $mUserRepos = $this->getMUserRepository();
         $mUser = $mUserRepos->find($userId);

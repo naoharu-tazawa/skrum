@@ -15,11 +15,11 @@ class MUserRepository extends BaseRepository
     /**
      * 指定ユーザIDのレコードを取得
      *
-     * @param $userId ユーザID
-     * @param $companyId 会社ID
+     * @param integer $userId ユーザID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getUser($userId, $companyId)
+    public function getUser(int $userId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mu');
         $qb->select('mu')
@@ -39,7 +39,7 @@ class MUserRepository extends BaseRepository
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function searchUser($keyword, $companyId)
+    public function searchUser(string $keyword, int $companyId): array
     {
         $sql = <<<SQL
         SELECT m1_.userId, m1_.lastName, m1_.firstName
@@ -127,10 +127,12 @@ SQL;
     /**
      * 指定会社IDのユーザ数を取得
      *
-     * @param $companyId 会社ID
-     * @return array
+     * @param integer $companyId 会社ID
+     * @return mixed
+     * @throws NonUniqueResultException If the query result is not unique.
+     * @throws NoResultException        If the query returned no result.
      */
-    public function getUserCount($companyId)
+    public function getUserCount(int $companyId)
     {
         $qb = $this->createQueryBuilder('mu');
         $qb->select('COUNT(mu.userId)')
@@ -143,10 +145,12 @@ SQL;
     /**
      * スーパー管理者ユーザ数を取得
      *
-     * @param $companyId 会社ID
-     * @return array
+     * @param integer $companyId 会社ID
+     * @return mixed
+     * @throws NonUniqueResultException If the query result is not unique.
+     * @throws NoResultException        If the query returned no result.
      */
-    public function getSuperAdminUserCount($companyId)
+    public function getSuperAdminUserCount(int $companyId)
     {
         $qb = $this->createQueryBuilder('mu');
         $qb->select('COUNT(mu.userId)')

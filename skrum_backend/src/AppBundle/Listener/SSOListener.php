@@ -27,7 +27,7 @@ class SSOListener
      *
      * @param string $secretKey シークレットキー
      */
-    public function __construct($secretKey)
+    public function __construct(string $secretKey)
     {
         $this->secretKey = $secretKey;
     }

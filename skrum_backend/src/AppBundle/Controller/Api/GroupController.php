@@ -25,7 +25,7 @@ class GroupController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function postGroupsAction(Request $request)
+    public function postGroupsAction(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostGroupsPdu');
@@ -55,9 +55,9 @@ class GroupController extends BaseController
      * @Rest\Get("/v1/users/{userId}/groups.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $userId ユーザID
-     * @return array
+     * @return UserGroupDTO
      */
-    public function getUserGroupsAction(Request $request, $userId)
+    public function getUserGroupsAction(Request $request, string $userId): UserGroupDTO
     {
         // リクエストパラメータを取得
         $timeframeId = $request->get('tfid');
@@ -98,7 +98,7 @@ class GroupController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function putGroupAction(Request $request, $groupId)
+    public function putGroupAction(Request $request, string $groupId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PutGroupPdu');
@@ -136,7 +136,7 @@ class GroupController extends BaseController
      * @param string $userId ユーザID
      * @return array
      */
-    public function putGroupLeaderAction(Request $request, $groupId, $userId)
+    public function putGroupLeaderAction(Request $request, string $groupId, string $userId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -169,7 +169,7 @@ class GroupController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function deleteGroupAction(Request $request, $groupId)
+    public function deleteGroupAction(Request $request, string $groupId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

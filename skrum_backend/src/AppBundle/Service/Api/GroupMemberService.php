@@ -6,6 +6,8 @@ use AppBundle\Service\BaseService;
 use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\MGroup;
+use AppBundle\Entity\MUser;
 use AppBundle\Entity\TGroupMember;
 use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupDTO;
@@ -20,11 +22,11 @@ class GroupMemberService extends BaseService
     /**
      * グループメンバー追加
      *
-     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
-     * @param \AppBundle\Entity\MGroup $mGroup グループエンティティ
+     * @param MUser $mUser ユーザエンティティ
+     * @param MGroup $mGroup グループエンティティ
      * @return void
      */
-    public function addMember($mUser, $mGroup)
+    public function addMember(MUser $mUser, MGroup $mGroup)
     {
         // グループメンバー排他チェック
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
@@ -51,7 +53,7 @@ class GroupMemberService extends BaseService
      * @param integer $groupId グループID
      * @return array
      */
-    public function getMembers($groupId)
+    public function getMembers(int $groupId): array
     {
         $mUserArray = $this->getMUserArray($groupId);
 
@@ -76,7 +78,7 @@ class GroupMemberService extends BaseService
      * @param integer $groupId グループID
      * @return array
      */
-    public function getMUserArray($groupId)
+    public function getMUserArray(int $groupId): array
     {
          $tGroupMemberRepos = $this->getTGroupMemberRepository();
 
@@ -90,7 +92,7 @@ class GroupMemberService extends BaseService
      * @param integer $userId ユーザID
      * @return void
      */
-    public function deleteMember($groupId, $userId)
+    public function deleteMember(int $groupId, int $userId)
     {
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
         $tGroupMember = $tGroupMemberRepos->findOneBy(array('group' => $groupId, 'user' => $userId));
@@ -113,7 +115,7 @@ class GroupMemberService extends BaseService
      * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function getGroupsWithAchievementRate($userId, $timeframeId)
+    public function getGroupsWithAchievementRate(int $userId, int $timeframeId): array
     {
         $groupInfoArray = $this->getGroupInfoArray($userId, $timeframeId);
 
@@ -174,7 +176,7 @@ class GroupMemberService extends BaseService
      * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function getGroupInfoArray($userId, $timeframeId)
+    public function getGroupInfoArray(int $userId, int $timeframeId): array
     {
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
 
@@ -187,7 +189,7 @@ class GroupMemberService extends BaseService
      * @param integer $userId ユーザID
      * @return array
      */
-    public function getTeamsAndDepartments($userId)
+    public function getTeamsAndDepartments(int $userId): array
     {
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
         $groupInfoArray = $tGroupMemberRepos->getAllGroups($userId);

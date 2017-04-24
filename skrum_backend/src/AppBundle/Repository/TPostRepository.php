@@ -12,11 +12,11 @@ class TPostRepository extends BaseRepository
     /**
      * 指定投稿IDのレコードを取得
      *
-     * @param $postId 投稿ID
-     * @param $companyId 会社ID
+     * @param integer $postId 投稿ID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getPost($postId, $companyId)
+    public function getPost(int $postId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('tp');
         $qb->select('tp')
@@ -32,10 +32,10 @@ class TPostRepository extends BaseRepository
     /**
      * 指定グループIDのタイムラインを取得
      *
-     * @param $groupId グループID
+     * @param integer $groupId グループID
      * @return array
      */
-    public function getTimeline($groupId)
+    public function getTimeline(int $groupId): array
     {
         $qb = $this->createQueryBuilder('tp1');
         $qb->select('tp1 AS post', 'toa AS okrActivity', 'tp2 AS reply')

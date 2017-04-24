@@ -14,10 +14,10 @@ class TOkrActivityRepository extends BaseRepository
     /**
      * 指定OKRIDの達成率チャート情報を取得
      *
-     * @param $okrId OKRID
+     * @param integer $okrId OKRID
      * @return array
      */
-    public function getAchievementRateChart($okrId)
+    public function getAchievementRateChart(int $okrId): array
     {
         $qb = $this->createQueryBuilder('toa');
         $qb->select('toa.activityDatetime AS datetime', 'toa.achievementRate AS achievementRate')

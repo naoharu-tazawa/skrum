@@ -33,7 +33,7 @@ class Permission
      *
      * @return string アノテーションパラメータ
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }

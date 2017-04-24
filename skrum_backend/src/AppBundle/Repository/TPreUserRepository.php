@@ -14,10 +14,11 @@ class TPreUserRepository extends BaseRepository
     /**
      * 新規登録ユーザの有効なURLトークンの存在チェック
      *
+     * @param string $urltoken URLトークン
      * @return mixed
      * @throws NonUniqueResultException
      */
-    public function getSignupPreUserToken($urltoken)
+    public function getSignupPreUserToken(string $urltoken)
     {
         $qb = $this->createQueryBuilder('p');
         $qb->select('p')
@@ -36,21 +37,22 @@ class TPreUserRepository extends BaseRepository
     /**
      * 追加登録ユーザの有効なURLトークンの存在チェック
      *
+     * @param string $urltoken URLトークン
      * @return mixed
      * @throws NonUniqueResultException
      */
-    public function getAdditionalPreUserToken($urltoken)
+    public function getAdditionalPreUserToken(string $urltoken)
     {
         $qb = $this->createQueryBuilder('p');
         $qb->select('p')
-        ->where('p.urltoken = :urltoken')
-        ->andWhere('p.initialUserFlg = :initialUserFlg')
-        ->andWhere('p.invalidFlg = :invalidFlg')
-        ->andWhere('p.createdAt > :createdAt')
-        ->setParameter('urltoken', $urltoken)
-        ->setParameter('initialUserFlg', 0)
-        ->setParameter('invalidFlg', 0)
-        ->setParameter('createdAt', date(DateUtility::DATETIME_FORMAT, strtotime("-72 hour")));
+            ->where('p.urltoken = :urltoken')
+            ->andWhere('p.initialUserFlg = :initialUserFlg')
+            ->andWhere('p.invalidFlg = :invalidFlg')
+            ->andWhere('p.createdAt > :createdAt')
+            ->setParameter('urltoken', $urltoken)
+            ->setParameter('initialUserFlg', 0)
+            ->setParameter('invalidFlg', 0)
+            ->setParameter('createdAt', date(DateUtility::DATETIME_FORMAT, strtotime("-72 hour")));
 
         return $qb->getQuery()->getOneOrNullResult();
     }

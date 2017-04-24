@@ -5,9 +5,11 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkrActivity;
+use AppBundle\Entity\TOkr;
 
 /**
  * OKR操作サービスクラス
@@ -19,12 +21,12 @@ class OkrOperationService extends BaseService
     /**
      * 紐付け先OKR変更
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
-     * @param \AppBundle\Entity\TOkr $tOkr 紐付け先変更対象OKRエンティティ
-     * @param \AppBundle\Entity\TOkr $newParentOkr 紐付け先OKRエンティティ
+     * @param Auth $auth 認証情報
+     * @param TOkr $tOkr 紐付け先変更対象OKRエンティティ
+     * @param TOkr $newParentOkr 紐付け先OKRエンティティ
      * @return void
      */
-    public function changeParent($auth, $tOkr, $newParentOkr)
+    public function changeParent(Auth $auth, TOkr $tOkr, TOkr $newParentOkr)
     {
         // タイムフレームIDの一致チェック
         if ($tOkr->getTimeframe()->getTimeframeId() != $newParentOkr->getTimeframe()->getTimeframeId()) {

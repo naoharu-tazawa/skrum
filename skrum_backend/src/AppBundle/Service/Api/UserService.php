@@ -6,6 +6,7 @@ use AppBundle\Service\BaseService;
 use AppBundle\Exception\NoDataException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Entity\MGroup;
+use AppBundle\Entity\MUser;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\DepartmentDTO;
 
@@ -21,9 +22,9 @@ class UserService extends BaseService
      *
      * @param integer $userId グループID
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO
+     * @return BasicUserInfoDTO
      */
-    public function getBasicUserInfo($userId, $companyId)
+    public function getBasicUserInfo(int $userId, int $companyId): BasicUserInfoDTO
     {
         $mUserRepos = $this->getMUserRepository();
         $mUserArray = $mUserRepos->findBy(array('userId' => $userId, 'company' => $companyId));
@@ -57,10 +58,10 @@ class UserService extends BaseService
      * ユーザ情報更新
      *
      * @param array $data リクエストJSON連想配列
-     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @param MUser $mUser ユーザエンティティ
      * @return void
      */
-    public function updateUser($data, $mUser)
+    public function updateUser(array $data, MUser $mUser)
     {
         // ユーザ情報更新
         $mUser->setLastName($data['lastName']);
@@ -78,10 +79,10 @@ class UserService extends BaseService
     /**
      * ユーザ削除
      *
-     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @param MUser $mUser ユーザエンティティ
      * @return void
      */
-    public function deleteUser($mUser)
+    public function deleteUser(MUser $mUser)
     {
         // ユーザ削除
         try {
