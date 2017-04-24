@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/pagesearch.json?{q}&{p}:
+  /users/pagesearch.json?{q}&{p}:
     get:
-      description: グループ検索（ページング）
+      description: ユーザ検索（ページング）
       parameters:
         -
           name: q
@@ -39,16 +39,22 @@ paths:
                 items:
                   type: object
                   properties:
-                    groupId:
+                    userId:
                       type: integer
-                    groupType:
+                    userName:
                       type: string
-                    groupName:
+                    roleAssignmentId:
+                      type: integer
+                    roleLevel:
+                      type: integer
+                    lastLogin:
                       type: string
                   required:
-                    - groupId
-                    - groupType
-                    - groupName
+                    - userId
+                    - userName
+                    - roleAssignmentId
+                    - roleLevel
+                    - lastLogin
         400:
           description: JSONスキーマ不正
         409:

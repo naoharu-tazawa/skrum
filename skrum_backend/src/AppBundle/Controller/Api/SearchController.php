@@ -6,6 +6,8 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\InvalidParameterException;
+use AppBundle\Api\ResponseDTO\GroupPageSearchDTO;
+use AppBundle\Api\ResponseDTO\UserPageSearchDTO;
 
 /**
  * 検索コントローラ
@@ -37,6 +39,34 @@ class SearchController extends BaseController
     }
 
     /**
+     * ユーザ検索（ページング）
+     *
+     * @Rest\Get("/v1/users/pagesearch.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @return array
+     */
+    public function pagesearchUsersAction(Request $request): UserPageSearchDTO
+    {
+        // リクエストパラメータを取得
+        $keyword = $request->get('q');
+        $page = $request->get('p');
+
+        // ページの型チェック
+        if ($this->checkNumeric($page)) {
+            throw new InvalidParameterException('要求ページの値が不正です');
+        }
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // ユーザ検索処理
+        $searchService = $this->getSearchService();
+        $userPageSearchDTO = $searchService->pagesearchUser($auth, $keyword, (int) $page);
+
+        return $userPageSearchDTO;
+    }
+
+    /**
      * グループ検索
      *
      * @Rest\Get("/v1/groups/search.{_format}")
@@ -65,7 +95,7 @@ class SearchController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function pagesearchGroupAction(Request $request): array
+    public function pagesearchGroupAction(Request $request): GroupPageSearchDTO
     {
         // リクエストパラメータを取得
         $keyword = $request->get('q');
@@ -81,9 +111,9 @@ class SearchController extends BaseController
 
         // グループ検索処理
         $searchService = $this->getSearchService();
-        $groupSearchDTOArray = $searchService->pagesearchGroup($auth, $keyword, (int) $page);
+        $groupPageSearchDTO = $searchService->pagesearchGroup($auth, $keyword, (int) $page);
 
-        return $groupSearchDTOArray;
+        return $groupPageSearchDTO;
     }
 
     /**

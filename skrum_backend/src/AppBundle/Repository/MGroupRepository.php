@@ -81,6 +81,27 @@ class MGroupRepository extends BaseRepository
     }
 
     /**
+     * グループ検索（ページング）検索結果数を取得
+     *
+     * @param string $keyword 検索ワード
+     * @param integer $companyId 会社ID
+     * @return integer
+     */
+    public function getPagesearchCount(string $keyword, int $companyId): int
+    {
+        $qb = $this->createQueryBuilder('mg');
+        $qb->select('COUNT(mg.groupId)')
+            ->where('mg.company = :companyId')
+            ->andWhere('mg.companyFlg = :companyFlg')
+            ->andWhere('mg.groupName LIKE :groupName')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('companyFlg', DBConstant::FLG_FALSE)
+            ->setParameter('groupName', $keyword . '%');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      * グループ検索（ページング）
      *
      * @param string $keyword 検索ワード
