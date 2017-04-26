@@ -12,5 +12,5 @@ parameters:
     #お試しプラン期間（単位：日）
     trial_plan_period: 14
 
-    #１ページあたり表示データ数
+    #1ページあたり表示データ数
     paging_data_number: 20

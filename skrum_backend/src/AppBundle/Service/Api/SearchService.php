@@ -5,11 +5,14 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Utils\Auth;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\GroupPageSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupTreeSearchDTO;
 use AppBundle\Api\ResponseDTO\OkrSearchDTO;
 use AppBundle\Api\ResponseDTO\OwnerSearchDTO;
+use AppBundle\Api\ResponseDTO\UserPageSearchDTO;
 use AppBundle\Api\ResponseDTO\UserSearchDTO;
+use AppBundle\Utils\DateUtility;
 
 /**
  * 検索サービスクラス
@@ -45,6 +48,44 @@ class SearchService extends BaseService
         }
 
         return $userSearchDTOArray;
+    }
+
+    /**
+     * ユーザ検索（ページング）
+     *
+     * @param Auth $auth 認証情報
+     * @param string $keyword 検索ワード
+     * @param string $page 要求ページ
+     * @return array
+     */
+    public function pagesearchUser(Auth $auth, string $keyword, int $page): UserPageSearchDTO
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // ユーザ検索
+        $mUserRepos = $this->getMUserRepository();
+        $count = $mUserRepos->getPagesearchCount($escapedKeyword, $auth->getCompanyId());
+        $mUserArray = $mUserRepos->pagesearchUser($escapedKeyword, $page, $this->getParameter('paging_data_number'), $auth->getCompanyId());
+
+        // DTOに詰め替える
+        $userSearchDTOArray = array();
+        foreach ($mUserArray as $mUser) {
+            $userSearchDTO = new UserSearchDTO();
+            $userSearchDTO->setUserId($mUser['user_id']);
+            $userSearchDTO->setUserName($mUser['last_name'] . ' ' . $mUser['first_name']);
+            $userSearchDTO->setRoleAssignmentId($mUser['role_assignment_id']);
+            $userSearchDTO->setRoleLevel($mUser['role_level']);
+            $userSearchDTO->setLastLogin(DateUtility::transIntoDatetime($mUser['last_access_datetime']));
+
+            $userSearchDTOArray[] = $userSearchDTO;
+        }
+
+        $userPageSearchDTO = new UserPageSearchDTO();
+        $userPageSearchDTO->setCount($count);
+        $userPageSearchDTO->setResults($userSearchDTOArray);
+
+        return $userPageSearchDTO;
     }
 
     /**
@@ -84,13 +125,14 @@ class SearchService extends BaseService
      * @param string $page 要求ページ
      * @return array
      */
-    public function pagesearchGroup(Auth $auth, string $keyword, int $page): array
+    public function pagesearchGroup(Auth $auth, string $keyword, int $page): GroupPageSearchDTO
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
 
         // グループ検索
         $mGroupRepos = $this->getMGroupRepository();
+        $count = $mGroupRepos->getPagesearchCount($escapedKeyword, $auth->getCompanyId());
         $mGroupArray = $mGroupRepos->pagesearchGroup($escapedKeyword, $page, $this->getParameter('paging_data_number'), $auth->getCompanyId());
 
         // DTOに詰め替える
@@ -104,7 +146,11 @@ class SearchService extends BaseService
             $groupSearchDTOArray[] = $groupSearchDTO;
         }
 
-        return $groupSearchDTOArray;
+        $groupPageSearchDTO = new GroupPageSearchDTO();
+        $groupPageSearchDTO->setCount($count);
+        $groupPageSearchDTO->setResults($groupSearchDTOArray);
+
+        return $groupPageSearchDTO;
     }
 
     /**

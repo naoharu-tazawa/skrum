@@ -26,6 +26,27 @@ class UserSearchDTO
     private $userName;
 
     /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $roleAssignmentId;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $roleLevel;
+
+    /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d H:i:s'>")
+     */
+    private $lastLogin;
+
+    /**
      * Set userId
      *
      * @param integer $userId
@@ -71,5 +92,77 @@ class UserSearchDTO
     public function getUserName()
     {
         return $this->userName;
+    }
+
+    /**
+     * Set roleAssignmentId
+     *
+     * @param integer $roleAssignmentId
+     *
+     * @return UserSearchDTO
+     */
+    public function setRoleAssignmentId($roleAssignmentId)
+    {
+        $this->roleAssignmentId = $roleAssignmentId;
+
+        return $this;
+    }
+
+    /**
+     * Get roleAssignmentId
+     *
+     * @return integer
+     */
+    public function getRoleAssignmentId()
+    {
+        return $this->roleAssignmentId;
+    }
+
+    /**
+     * Set roleLevel
+     *
+     * @param integer $roleLevel
+     *
+     * @return UserSearchDTO
+     */
+    public function setRoleLevel($roleLevel)
+    {
+        $this->roleLevel = $roleLevel;
+
+        return $this;
+    }
+
+    /**
+     * Get roleLevel
+     *
+     * @return integer
+     */
+    public function getRoleLevel()
+    {
+        return $this->roleLevel;
+    }
+
+    /**
+     * Set lastLogin
+     *
+     * @param \DateTime $lastLogin
+     *
+     * @return UserSearchDTO
+     */
+    public function setLastLogin($lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
+    /**
+     * Get lastLogin
+     *
+     * @return \DateTime
+     */
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
     }
 }
