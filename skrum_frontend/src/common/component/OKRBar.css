@@ -1,9 +1,3 @@
-import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
-import { cssClass } from '../../util/StyleUtil';
-import { imgSrc } from '../../util/ResourceUtil';
-import style from './OKRBar.css';
-
 /*
 const gap = 1
 const gapEm = gap + 'em'
@@ -106,63 +100,3 @@ const style = {
   },
 };
 */
-
-class OKRBar extends Component {
-
-  static propTypes = {
-    isOpen: PropTypes.bool,
-    title: PropTypes.string.isRequired,
-    isRoot: PropTypes.bool.isRequired,
-    progress: PropTypes.number,
-    owner: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-    }).isRequired,
-  };
-
-  static defaultProps = {
-    isOpen: true,
-  };
-
-  static columnWidthsStyle = [
-    { minWidth: (gap + imageDim + gap) + 'em' },
-    { width: remainingWidth },
-    { minWidth: (gap + progressBarWidth + gap) + 'em' },
-    { minWidth: ownerBoxWidth + 'em' },
-    { minWidth: (gap + imageDim) + 'em' },
-    { minWidth: gapEm },
-  ]
-
-  static checkNaviOpen(isOpen) {
-    if (isOpen) {
-      return (Object.assign({}, style.okrNav, style.isOpen));
-    }
-    return style.okrNav;
-  }
-
-  render() {
-    const { isOpen, title, progress, owner } = this.props
-    return (
-      <div style={OKRBar.checkNaviOpen(isOpen)}>
-        <div style={style.typeImage} />
-        <div style={style.title}>
-          {title}
-        </div>
-        <div style={style.progressBox}>
-          <progress style={style.progressBar} max={100} value={progress} />
-          <div>
-            <div style={style.progressLabel}>Progress</div>
-            <div style={style.progressPercent}>{progress}%</div>
-          </div>
-        </div>
-        <div style={style.ownerBox}>
-          <div style={style.ownerImage} />
-          <div style={style.ownerName}>{owner.name}</div>
-        </div>
-        <div style={style.toolImage} />
-        <div style={style.dropdown} />
-      </div>
-    );
-  }
-}
-
-export default OKRBar;

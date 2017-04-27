@@ -1,0 +1,89 @@
+/*
+const style = {
+  menuNav: {
+    display: 'flex',
+    height: '100vh',
+    background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`,
+    overflow: 'hidden',
+    color: '#fff',
+  },
+  isOpen: {
+    height: '60px',
+    width: '100%',
+  },
+  menuNavMenu: {
+    margin: '30px auto',
+  },
+  menuNavTitle: {
+    position: 'relative',
+    padding: '10px 13px',
+  },
+  menuNavTitleText: {
+    position: 'absolute',
+    top: '14px',
+    left: '42px',
+    display: 'block',
+  },
+  isHide: {
+    display: 'none',
+  },
+  menuNavUserName: {
+    margin: 'auto 0',
+  },
+  menuNavUserImage: {
+    display: 'block',
+    minWidth: '36px',
+    minHeight: '36px',
+    margin: 'auto 0 auto 1em',
+    border: '2px solid #fff',
+    borderRadius: '50%',
+    overflow: 'hidden',
+    boxSizing: 'border-box',
+  },
+  menuNavMenuItemLink: {
+//    display: 'block',
+    padding: '12px 10px 12px', // 50px
+    backgroundPosition: '13px center',
+    backgroundRepeat: 'no-repeat',
+    cursor: 'pointer',
+    color: '#fff',
+    textDecoration: 'none',
+    whiteSpace: 'nowrap',
+  },
+  menuNavMenuItemTask: {
+    backgroundImage: `url(${imgSrc('common/ic_task.svg')})`,
+  },
+  menuNavMenuItemMessage: {
+    backgroundImage: `url(${imgSrc('common/ic_message.svg')})`,
+  },
+  menuNavMenuItemCandidate: {
+    backgroundImage: `url(${imgSrc('common/ic_candidate.svg')})`,
+  },
+  isActive: {
+    backgroundColor: '#38b6a5',
+  },
+  menuNavMenuItemLinkHover: {
+    ':hover': {
+      backgroundColor: '#38b6a5',
+    },
+  },
+  menuNavMenuItemNotice: {
+    display: 'inline-block',
+    position: 'relative',
+    top: '-8px',
+    width: '6px',
+    height: '6px',
+    marginLeft: '5px',
+    backgroundColor: '#f66c54',
+    borderRadius: '50%',
+  },
+  dropdown: {
+    backgroundImage: 'linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%)',
+    backgroundPosition: 'calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em',
+    backgroundSize: '5px 5px, 5px 5px, 1px 1.5em',
+    backgroundRepeat: 'no-repeat',
+    width: '40px',
+    marginTop: '10px',
+  }
+};
+*/

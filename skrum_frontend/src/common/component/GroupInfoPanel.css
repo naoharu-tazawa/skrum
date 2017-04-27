@@ -1,0 +1,74 @@
+/*
+const gap = '1em';
+const style = {
+  okrNav: {
+    display: 'flex',
+    backgroundColor: '#fff',
+    //background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`,
+    overflow: 'hidden',
+    color: '#626A7F',
+  },
+  isOpen: {
+    position: 'relative',
+    height: '160px',
+  },
+  isHide: {
+    display: 'none',
+  },
+  isActive: {
+    backgroundColor: '#38b6a5',
+  },
+  groupBox: {
+    margin: 'auto 0',
+    minWidth: '160px',
+  },
+  groupImage: {
+    display: 'block',
+    margin: 'auto',
+    width: '80px',
+    minHeight: '80px',
+    margin: 'auto',
+    border: '2px solid #fff',
+    borderRadius: '50%',
+    overflow: 'hidden',
+    boxSizing: 'border-box',
+  },
+  lastUpdate: {
+    fontSize: 'x-small',
+    textAlign: 'center',
+    margin: '0.5em 0',
+  },
+  groupInfo: {
+    margin: `${gap} ${gap} 0 0`,
+    //borderSpacing: 0,
+  },
+  groupName: {
+    fontSize: 'x-large',
+    marginBottom: '0.5em',
+  },
+  groupDept: {
+    fontSize: 'x-small',
+    color: 'darkgray',
+  },
+  groupGoal: {
+    fontSize: 'x-small',
+    margin: '0.5em 0',
+    verticalAlign: 'top',
+  },
+  groupPart: {
+    fontSize: 'x-small',
+    verticalAlign: 'top',
+  },
+  groupLabel: {
+    whiteSpace: 'nowrap',
+    paddingRight: gap,
+  },
+  moreLink: {
+    fontSize: 'small',
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    right: 0,
+    padding: `0 ${gap} ${gap} 0`,
+  },
+};
+*/

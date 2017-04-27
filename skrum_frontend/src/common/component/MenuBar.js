@@ -2,7 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
+import style from './MenuBar.css';
 
+/*
 const style = {
   menuNav: {
     display: 'flex',
@@ -90,6 +92,7 @@ const style = {
     marginTop: '10px',
   }
 };
+*/
 
 class MenuBar extends Component {
 

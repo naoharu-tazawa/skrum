@@ -3,7 +3,9 @@ import moment from 'moment';
 import { Link } from 'react-router';
 import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
+import style from './GroupInfoPanel.css';
 
+/*
 const gap = '1em';
 const style = {
   okrNav: {
@@ -76,6 +78,7 @@ const style = {
     padding: `0 ${gap} ${gap} 0`,
   },
 };
+*/
 
 class GroupInfoPanel extends Component {
 

@@ -3,7 +3,9 @@ import moment from 'moment';
 import { Link } from 'react-router';
 import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
+import style from './GroupBar.css';
 
+/*
 const gap = 1
 const gapEm = gap + 'em'
 const imageDim = 2.25
@@ -69,6 +71,7 @@ const style = {
     textAlign: 'right',
   },
 };
+*/
 
 class GroupBar extends Component {
 
