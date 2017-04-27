@@ -4,7 +4,6 @@ import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
 import style from './OKRBar.css';
 
-/*
 const gap = 1
 const gapEm = gap + 'em'
 const imageDim = 2.25
@@ -13,6 +12,7 @@ const progressBarWidth = 10
 const ownerBoxWidth = 5
 const dropdownWidth = 5
 
+/*
 const style = {
   okrNav: {
     display: 'flex',

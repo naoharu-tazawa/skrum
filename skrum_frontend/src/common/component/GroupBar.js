@@ -5,7 +5,6 @@ import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
 import style from './GroupBar.css';
 
-/*
 const gap = 1
 const gapEm = gap + 'em'
 const imageDim = 2.25
@@ -15,6 +14,7 @@ const progressPercentWidth = 1
 const progressBarWidth = 10
 const remainingWidth = '100%'
 
+/*
 const style = {
   okrNav: {
     display: 'flex',
