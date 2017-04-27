@@ -37,7 +37,7 @@ class BasicInfoController extends BaseController
         // ユーザIDの一致をチェック
         if ($userId != $auth->getUserId()) {
             throw new ApplicationException('ユーザIDが存在しません');
-        }$this->logDebug('debug');
+        }
 
         // タイムフレーム一覧取得
         $timeframeService = $this->getTimeframeService();
@@ -98,7 +98,7 @@ class BasicInfoController extends BaseController
         $auth = $request->get('auth_token');
 
         // ユーザ存在チェック
-        $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
+        $this->getDBExistanceLogic()->checkUserExistanceIncludingArchivedUsers($userId, $auth->getCompanyId());
 
         // ユーザ基本情報取得
         $userService = $this->getUserService();
@@ -141,7 +141,7 @@ class BasicInfoController extends BaseController
         $auth = $request->get('auth_token');
 
         // グループ存在チェック
-        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+        $this->getDBExistanceLogic()->checkGroupExistanceIncludingArchivedGroups($groupId, $auth->getCompanyId());
 
         // グループ基本情報取得
         $groupService = $this->getGroupService();

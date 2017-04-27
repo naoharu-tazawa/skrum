@@ -50,7 +50,7 @@ class UserSettingController extends BaseController
 
         // ユーザ招待メール送信処理
         $userSettingService = $this->getUserSettingService();
-        $userSettingService->inviteUser($auth, $data['emailAddress'], $mRoleAssignment->getRoleAssignmentId());
+        $userSettingService->inviteUser($auth, $data['emailAddress'], $mRoleAssignment);
 
         return array('result' => 'OK');
     }
@@ -71,6 +71,13 @@ class UserSettingController extends BaseController
 
         // リクエストJSONを取得
         $data = $this->getRequestJsonAsArray($request);
+
+        // カスタムフラグがTRUEの場合に必要なJsonSchemaのプロパティをチェック
+        if ($data['timeframe']['customFlg']) {
+            if (empty($data['timeframe']['end']) || empty($data['timeframe']['timeframeName'])) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        }
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -153,7 +160,7 @@ class UserSettingController extends BaseController
     /**
      * パスワード変更
      *
-     * @Rest\Post("/v1/users/{userId}/changepassword.{_format}")
+     * @Rest\Put("/v1/users/{userId}/changepassword.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $userId ユーザID
      * @return array

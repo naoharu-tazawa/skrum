@@ -17,9 +17,10 @@ class MUserRepository extends BaseRepository
      *
      * @param integer $userId ユーザID
      * @param integer $companyId 会社ID
+     * @param boolean $includingArchivedUsers アーカイブ済ユーザ取得フラグ
      * @return array
      */
-    public function getUser(int $userId, int $companyId): array
+    public function getUser(int $userId, int $companyId, bool $includingArchivedUsers = false): array
     {
         $qb = $this->createQueryBuilder('mu');
         $qb->select('mu')
@@ -28,6 +29,11 @@ class MUserRepository extends BaseRepository
             ->andWhere('mu.company = :companyId')
             ->setParameter('userId', $userId)
             ->setParameter('companyId', $companyId);
+
+        if (!$includingArchivedUsers) {
+            $qb->andWhere('mu.archivedFlg = :archivedFlg')
+                ->setParameter('archivedFlg', DBConstant::FLG_FALSE);
+        }
 
         return $qb->getQuery()->getResult();
     }
@@ -46,12 +52,13 @@ class MUserRepository extends BaseRepository
         FROM (
             SELECT m0_.user_id AS userId, m0_.last_name AS lastName, m0_.first_name AS firstName, CONCAT(m0_.last_name, m0_.first_name) AS name
             FROM m_user m0_
-            WHERE (m0_.company_id = :companyId) AND (m0_.deleted_at IS NULL)
+            WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
             ) AS m1_
         WHERE m1_.name LIKE :keyword;
 SQL;
 
         $params['companyId'] = $companyId;
+        $params['archivedFlg'] = DBConstant::FLG_FALSE;
         $params['keyword'] = $keyword . '%';
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
@@ -74,12 +81,13 @@ SQL;
         FROM (
             SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name
             FROM m_user m0_
-            WHERE (m0_.company_id = :companyId) AND (m0_.deleted_at IS NULL)
+            WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
             ) AS m1_
         WHERE m1_.name LIKE :keyword;
 SQL;
 
         $params['companyId'] = $companyId;
+        $params['archivedFlg'] = DBConstant::FLG_FALSE;
         $params['keyword'] = $keyword . '%';
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
@@ -104,7 +112,7 @@ SQL;
         FROM (
             SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.role_assignment_id, m0_.last_access_datetime
             FROM m_user m0_
-            WHERE (m0_.company_id = :companyId) AND (m0_.deleted_at IS NULL)
+            WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
             ) AS m1_
         INNER JOIN m_role_assignment m2_ ON (m1_.role_assignment_id = m2_.role_assignment_id) AND (m2_.deleted_at IS NULL)
         WHERE m1_.name LIKE :keyword
@@ -113,10 +121,12 @@ SQL;
 
         $likeKeyword = $keyword . '%';
         $offset = ($page - 1) * $perPage;
+        $archivedFlg = DBConstant::FLG_FALSE;
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
-        $stmt->bindParam(':companyId', $companyId);
-        $stmt->bindParam(':keyword', $likeKeyword);
+        $stmt->bindParam(':companyId', $companyId, PDO::PARAM_INT);
+        $stmt->bindParam(':archivedFlg', $archivedFlg, PDO::PARAM_INT);
+        $stmt->bindParam(':keyword', $likeKeyword, PDO::PARAM_STR);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
         $stmt->execute();
@@ -157,8 +167,10 @@ SQL;
             ->innerJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
             ->where('mu.company = :companyId')
             ->andWhere('mra.roleLevel = :roleLevel')
+            ->andWhere('mu.archivedFlg = :archivedFlg')
             ->setParameter('companyId', $companyId)
-            ->setParameter('roleLevel', DBConstant::ROLE_LEVEL_SUPERADMIN);
+            ->setParameter('roleLevel', DBConstant::ROLE_LEVEL_SUPERADMIN)
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE);
 
         return $qb->getQuery()->getSingleScalarResult();
     }

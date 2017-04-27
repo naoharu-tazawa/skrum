@@ -105,7 +105,7 @@ class ExceptionListener
             if ($exception->getResponseValidationErrors()) {
                 $data['details'] = $exception->getResponseValidationErrors();
             } else {
-                $data['details'] = array(array('field' => '', 'message' => 'No payload'));
+                $data['details'] = array(array('field' => '', 'message' => 'Json schema is invalid or url parameters are not enough.'));
             }
         } elseif ($exception instanceof ApplicationException || $exception instanceof SystemException) {
             $response->setStatusCode($exception->getResponseStatusCode());

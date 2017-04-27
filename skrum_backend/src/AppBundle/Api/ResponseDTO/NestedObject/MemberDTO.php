@@ -23,14 +23,7 @@ class MemberDTO
      *
      * @JSON\Type("string")
      */
-    private $lastName;
-
-    /**
-     * @var string
-     *
-     * @JSON\Type("string")
-     */
-    private $firstName;
+    private $name;
 
     /**
      * @var string
@@ -71,51 +64,27 @@ class MemberDTO
     }
 
     /**
-     * Set lastName
+     * Set name
      *
-     * @param string $lastName
+     * @param string $name
      *
      * @return MemberDTO
      */
-    public function setLastName($lastName)
+    public function setName($name)
     {
-        $this->lastName = $lastName;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get lastName
+     * Get name
      *
      * @return string
      */
-    public function getLastName()
+    public function getName()
     {
-        return $this->lastName;
-    }
-
-    /**
-     * Set firstName
-     *
-     * @param string $firstName
-     *
-     * @return MemberDTO
-     */
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    /**
-     * Get firstName
-     *
-     * @return string
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
+        return $this->name;
     }
 
     /**

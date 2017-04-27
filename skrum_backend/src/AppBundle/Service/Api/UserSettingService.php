@@ -36,7 +36,7 @@ class UserSettingService extends BaseService
     {
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
-        $result = $mUserRepos->findBy(array('emailAddress' => $emailAddress));
+        $result = $mUserRepos->findBy(array('emailAddress' => $emailAddress, 'archivedFlg' => DBConstant::FLG_FALSE));
         if (count($result) > 0) {
             throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
         }
@@ -79,17 +79,20 @@ class UserSettingService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param string $emailAddress Eメールアドレス
-     * @param integer $roleAssignmentId ロール割当ID
+     * @param MRoleAssignment $mRoleAssignment ロール割当エンティティ
      * @return void
      */
-    public function inviteUser(Auth $auth, string $emailAddress, int $roleAssignmentId)
+    public function inviteUser(Auth $auth, string $emailAddress, MRoleAssignment $mRoleAssignment)
     {
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
-        $result = $mUserRepos->findBy(array('emailAddress' => $emailAddress));
+        $result = $mUserRepos->findBy(array('emailAddress' => $emailAddress, 'archivedFlg' => DBConstant::FLG_FALSE));
         if (count($result) > 0) {
             throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
         }
+
+        // ロールがスーパー管理者ユーザの場合、スーパー管理者ユーザ数をチェック
+        $this->checkSuperAdminUserCount($mRoleAssignment->getRoleLevel(), $auth->getCompanyId());
 
         // URLトークンを生成
         $urltoken = $this->getToken();
@@ -100,7 +103,7 @@ class UserSettingService extends BaseService
         $tPreUser->setSubdomain($auth->getSubdomain());
         $tPreUser->setUrltoken($urltoken);
         $tPreUser->setCompanyId($auth->getCompanyId());
-        $tPreUser->setRoleAssignmentId($roleAssignmentId);
+        $tPreUser->setRoleAssignmentId($mRoleAssignment->getRoleAssignmentId());
 
         try {
             $this->persist($tPreUser);
@@ -220,10 +223,25 @@ class UserSettingService extends BaseService
             if ($timeframeInfo['customFlg']) {
                 /* カスタム設定の場合 */
 
+                // 開始日妥当性チェック
+                if (!checkdate($timeframeInfo['start']['month'], $timeframeInfo['start']['date'], $timeframeInfo['start']['year'])) {
+                    throw new ApplicationException('開始日が不正です');
+                }
+
+                // 終了日妥当性チェック
+                if (!checkdate($timeframeInfo['end']['month'], $timeframeInfo['end']['date'], $timeframeInfo['end']['year'])) {
+                    throw new ApplicationException('終了日が不正です');
+                }
+
                 // 開始年月日を生成
                 $startYearMonthDate = $timeframeInfo['start']['year'] . '-' . $timeframeInfo['start']['month'] . '-' . $timeframeInfo['start']['date'];
                 // 終了年月日を生成
                 $endYearMonthDate = $timeframeInfo['end']['year'] . '-' . $timeframeInfo['end']['month'] . '-' . $timeframeInfo['end']['date'];
+
+                // 「開始日 <= 終了日」であるかチェック
+                if ($startYearMonthDate > $endYearMonthDate) {
+                    throw new ApplicationException('終了日は開始日以降に設定してください');
+                }
 
                 $tTimeframe = new TTimeframe();
                 $tTimeframe->setCompany($mCompany);
@@ -492,16 +510,8 @@ class UserSettingService extends BaseService
             return;
         }
 
-        // 変更後ロールがスーパー管理者ユーザの場合、スーパー管理者ユーザ数を取得
-        if ($mRoleAssignment->getRoleLevel() >= DBConstant::ROLE_LEVEL_SUPERADMIN) {
-            $mUserRepos = $this->getMUserRepository();
-            $superAdminUserCount = $mUserRepos->getSuperAdminUserCount($auth->getCompanyId());
-
-            // スーパー管理者ユーザが既に2人登録済みの場合、更新不可
-            if ($superAdminUserCount >= 2) {
-                throw new ApplicationException('スーパー管理者ユーザは2人までしか登録できません');
-            }
-        }
+        // 変更後ロールがスーパー管理者ユーザの場合、スーパー管理者ユーザ数をチェック
+        $this->checkSuperAdminUserCount($mRoleAssignment->getRoleLevel(), $auth->getCompanyId());
 
         // ユーザ権限更新
         $mUser->setRoleAssignment($mRoleAssignment);
@@ -510,6 +520,27 @@ class UserSettingService extends BaseService
             $this->flush();
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * スーパー管理者ユーザ数チェック
+     *
+     * @param integer $roleLevel ロールレベル
+     * @param string $companyId 会社ID
+     * @return void
+     */
+    private function checkSuperAdminUserCount(int $roleLevel, string $companyId)
+    {
+        // 変更後ロールがスーパー管理者ユーザの場合、スーパー管理者ユーザ数を取得
+        if ($roleLevel >= DBConstant::ROLE_LEVEL_SUPERADMIN) {
+            $mUserRepos = $this->getMUserRepository();
+            $superAdminUserCount = $mUserRepos->getSuperAdminUserCount($companyId);
+
+            // スーパー管理者ユーザが既に2人登録済みの場合、更新不可
+            if ($superAdminUserCount >= 2) {
+                throw new ApplicationException('スーパー管理者ユーザは2人までしか登録できません');
+            }
         }
     }
 }

@@ -216,6 +216,11 @@ class TimeframeService extends BaseService
      */
     public function deleteTimeframe(TTimeframe $tTimeframe)
     {
+        // デフォルトタイムフレームは削除不可
+        if ($tTimeframe->getDefaultFlg()) {
+            throw new ApplicationException('デフォルトタイムフレームは削除できません');
+        }
+
         try {
             $this->remove($tTimeframe);
             $this->flush();

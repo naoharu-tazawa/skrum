@@ -107,7 +107,9 @@
               "type": "string",
               "maxLength": 2
             }
-          }
+          },
+          "required": ["year", "month", "date"],
+          "additionalProperties": false
         },
         "timeframeName": {
           "title": "タイムフレーム名",

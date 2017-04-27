@@ -50,7 +50,9 @@ class OkrAchievementRateLogic extends BaseLogic
             $summedWeightedAverageRatio = $recalcItems[0]['summedWeightedAverageRatio']; // 子OKRの加重平均比率の合計値
             $lockedRatioCount = $recalcItems[0]['lockedRatioCount']; // 子OKRの持分比率ロックフラグが立っている数
             $childrenOkrsCount = count($tOkrArray) - 1; // 子OKR数
-            $averageRatio = floor(((100 - $summedWeightedAverageRatio) / ($childrenOkrsCount - $lockedRatioCount)) * 10 ) / 10; // ロックフラグが立っていないOKRに設定するの加重平均比率
+            if (($childrenOkrsCount - $lockedRatioCount) !== 0) {
+                $averageRatio = floor(((100 - $summedWeightedAverageRatio) / ($childrenOkrsCount - $lockedRatioCount)) * 10 ) / 10; // ロックフラグが立っていないOKRに設定するの加重平均比率
+            }
 
             // 子OKRの加重平均比率を再設定（ $i=0 は 'parentOkr' なので $i=1 から始める）
             $weightedAverageAchievementRate = array();
@@ -122,7 +124,9 @@ class OkrAchievementRateLogic extends BaseLogic
         $summedWeightedAverageRatio = $recalcItems[0]['summedWeightedAverageRatio']; // 子OKRの加重平均比率の合計値
         $lockedRatioCount = $recalcItems[0]['lockedRatioCount']; // 子OKRの持分比率ロックフラグが立っている数
         $childrenOkrsCount = count($tOkrArray) - 1; // 子OKR数
-        $averageRatio = floor(((100 - $summedWeightedAverageRatio) / ($childrenOkrsCount - $lockedRatioCount)) * 10 ) / 10; // ロックフラグが立っていないOKRに設定するの加重平均比率
+        if (($childrenOkrsCount - $lockedRatioCount) !== 0) {
+            $averageRatio = floor(((100 - $summedWeightedAverageRatio) / ($childrenOkrsCount - $lockedRatioCount)) * 10 ) / 10; // ロックフラグが立っていないOKRに設定するの加重平均比率
+        }
 
         // 子OKRの加重平均比率を再設定（ $i=0 は 'parentOkr' なので $i=1 から始める）
         $tOkrArrayCount = count($tOkrArray);

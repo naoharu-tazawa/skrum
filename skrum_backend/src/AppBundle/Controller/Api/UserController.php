@@ -38,7 +38,7 @@ class UserController extends BaseController
         $auth = $request->get('auth_token');
 
         // ユーザ存在チェック
-        $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
+        $mUser = $this->getDBExistanceLogic()->checkUserExistanceIncludingArchivedUsers($userId, $auth->getCompanyId());
 
         // 操作権限チェック
         $permissionLogic = $this->getPermissionLogic();
@@ -89,7 +89,7 @@ class UserController extends BaseController
 
         // ユーザ削除処理
         $userService = $this->getUserService();
-        $userService->deleteUser($mUser);
+        $userService->deleteUser($mUser, $auth->getCompanyId());
 
         return array('result' => 'OK');
     }

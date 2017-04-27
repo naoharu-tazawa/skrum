@@ -55,7 +55,7 @@ class LoginService extends BaseService
         // 対象ユーザをユーザテーブルから取得
         $mUserRepos = $this->getMUserRepository();
         $mUserArray = $mUserRepos->findBy(array('emailAddress' => $emailAddress));
-        if (count($mUserArray) === 0) {
+        if (count($mUserArray) === 0 || $mUserArray[0]->getArchivedFlg()) {
             throw new AuthenticationException('対象ユーザは存在しません');
         }
 
@@ -121,7 +121,7 @@ class LoginService extends BaseService
 
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
-        $mUserArray = $mUserRepos->findBy(array('emailAddress' => $tPreUser->getEmailAddress()));
+        $mUserArray = $mUserRepos->findBy(array('emailAddress' => $tPreUser->getEmailAddress(), 'archivedFlg' => DBConstant::FLG_FALSE));
         if (count($mUserArray) > 0) {
             throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
         }
@@ -229,7 +229,7 @@ class LoginService extends BaseService
 
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
-        $mUserArray = $mUserRepos->findBy(array('emailAddress' => $tPreUser->getEmailAddress()));
+        $mUserArray = $mUserRepos->findBy(array('emailAddress' => $tPreUser->getEmailAddress(), 'archivedFlg' => DBConstant::FLG_FALSE));
         if (count($mUserArray) > 0) {
             throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
         }
@@ -287,10 +287,10 @@ class LoginService extends BaseService
      * @param string $subdomain サブドメイン
      * @param integer $userId ユーザID
      * @param integer $companyId 会社ID
-     * @param integer $roleId ロールID
+     * @param string $roleId ロールID
      * @return string JWT
      */
-    private function issueJwt(string $subdomain, int $userId, int $companyId, int $roleId): string
+    private function issueJwt(string $subdomain, int $userId, int $companyId, string $roleId): string
     {
         // 権限取得
         $mRolePermissionRepos = $this->getMRolePermissionRepository();

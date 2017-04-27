@@ -16,9 +16,10 @@ class MGroupRepository extends BaseRepository
      *
      * @param integer $groupId グループID
      * @param integer $companyId 会社ID
+     * @param boolean $includingArchivedGroups アーカイブ済グループ取得フラグ
      * @return array
      */
-    public function getGroup(int $groupId, int $companyId): array
+    public function getGroup(int $groupId, int $companyId, bool $includingArchivedGroups = false): array
     {
         $qb = $this->createQueryBuilder('mg');
         $qb->select('mg')
@@ -29,6 +30,11 @@ class MGroupRepository extends BaseRepository
             ->setParameter('groupId', $groupId)
             ->setParameter('companyFlg', DBConstant::FLG_FALSE)
             ->setParameter('companyId', $companyId);
+
+        if (!$includingArchivedGroups) {
+            $qb->andWhere('mg.archivedFlg = :archivedFlg')
+                ->setParameter('archivedFlg', DBConstant::FLG_FALSE);
+        }
 
         return $qb->getQuery()->getResult();
     }
@@ -72,9 +78,11 @@ class MGroupRepository extends BaseRepository
         $qb->select('mg.groupId', 'mg.groupName')
             ->where('mg.company = :companyId')
             ->andWhere('mg.companyFlg = :companyFlg')
+            ->andWhere('mg.archivedFlg = :archivedFlg')
             ->andWhere('mg.groupName LIKE :groupName')
             ->setParameter('companyId', $companyId)
             ->setParameter('companyFlg', DBConstant::FLG_FALSE)
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
             ->setParameter('groupName', $keyword . '%');
 
         return $qb->getQuery()->getResult();
@@ -95,9 +103,11 @@ class MGroupRepository extends BaseRepository
         $qb->select('COUNT(mg.groupId)')
             ->where('mg.company = :companyId')
             ->andWhere('mg.companyFlg = :companyFlg')
+            ->andWhere('mg.archivedFlg = :archivedFlg')
             ->andWhere('mg.groupName LIKE :groupName')
             ->setParameter('companyId', $companyId)
             ->setParameter('companyFlg', DBConstant::FLG_FALSE)
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
             ->setParameter('groupName', $keyword . '%');
 
         return $qb->getQuery()->getSingleScalarResult();
@@ -118,9 +128,11 @@ class MGroupRepository extends BaseRepository
         $qb->select('mg.groupId', 'mg.groupType', 'mg.groupName')
             ->where('mg.company = :companyId')
             ->andWhere('mg.companyFlg = :companyFlg')
+            ->andWhere('mg.archivedFlg = :archivedFlg')
             ->andWhere('mg.groupName LIKE :groupName')
             ->setParameter('companyId', $companyId)
             ->setParameter('companyFlg', DBConstant::FLG_FALSE)
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
             ->setParameter('groupName', $keyword . '%')
             ->setFirstResult(($page - 1) * $perPage)
             ->setMaxResults($perPage);
@@ -142,11 +154,35 @@ class MGroupRepository extends BaseRepository
             ->innerJoin('AppBundle:TGroupTree', 'tgt', 'WITH', 'mg.groupId = tgt.group')
             ->where('mg.company = :companyId')
             ->andWhere('mg.companyFlg = :companyFlg')
+            ->andWhere('mg.archivedFlg = :archivedFlg')
             ->andWhere('mg.groupName LIKE :groupName')
             ->setParameter('companyId', $companyId)
             ->setParameter('companyFlg', DBConstant::FLG_FALSE)
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
             ->setParameter('groupName', $keyword . '%');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 指定リーダーユーザIDをNULLに更新
+     *
+     * @param integer $userId グループID
+     * @param integer $companyId 会社ID
+     * @return void
+     */
+    public function setNullOnLeaderUserId(int $userId, int $companyId)
+    {
+        $sql = <<<SQL
+        UPDATE m_group AS m0_
+        SET m0_.leader_user_id = null, m0_.updated_at = NOW()
+        WHERE (m0_.company_id = :companyId AND m0_.leader_user_id = :leaderUserId) AND (m0_.deleted_at IS NULL);
+SQL;
+
+        $params['companyId'] = $companyId;
+        $params['leaderUserId'] = $userId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
     }
 }

@@ -12,10 +12,10 @@ class MRolePermissionRepository extends BaseRepository
     /**
      * 権限情報を取得
      *
-     * @param integer $roleId ロールID
+     * @param string $roleId ロールID
      * @return array
      */
-    public function getPermissions(int $roleId): array
+    public function getPermissions(string $roleId): array
     {
         $qb = $this->createQueryBuilder('mrp');
         $qb->select('mps.name')

@@ -37,11 +37,6 @@ class OkrMapController extends BaseController
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
-        // ユーザIDの一致をチェック
-        if ($userId != $auth->getUserId()) {
-            throw new ApplicationException('ユーザIDが存在しません');
-        }
-
         // ユーザ目標取得処理
         $okrMapService = $this->getOkrMapService();
         $basicOkrDTOArray = $okrMapService->getObjectives(Constant::SUBJECT_TYPE_USER, $auth, $userId, null, $timeframeId, $auth->getCompanyId());
@@ -68,9 +63,6 @@ class OkrMapController extends BaseController
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
-
-        // グループ存在チェック
-        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
 
         // グループ目標取得処理
         $okrMapService = $this->getOkrMapService();

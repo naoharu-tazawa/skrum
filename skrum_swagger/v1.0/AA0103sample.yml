@@ -1,6 +1,6 @@
 [Request URL]
 HTTP METHOD: POST
-http://company1.localhost:8000/app_dev.php/api/join.json
+http://company1.localhost:8000/v1/join.json
 
 [Request Json Schema]
 {

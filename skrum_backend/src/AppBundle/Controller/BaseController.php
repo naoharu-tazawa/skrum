@@ -290,6 +290,17 @@ class BaseController extends FOSRestController
     }
 
     /**
+     * バリデーション（検索値文字列）
+     *
+     * @param string $item チェック対象検索ワード
+     * @return boolean バリデーションチェック結果
+     */
+    protected function checkSearchKeyword(string $item = null): array
+    {
+        return $this->validateString($item, 255);
+    }
+
+    /**
      * RFC3339形式の日付文字列を生成
      *
      * @param string $datetimeString 日付文字列(例："2017-03-26 22:09:15")
@@ -326,6 +337,11 @@ class BaseController extends FOSRestController
     protected function getOkrNestedIntervalsLogic()
     {
         return $this->get('api.okr_nested_intervals_logic');
+    }
+
+    protected function getOkrOperationLogic()
+    {
+        return $this->get('api.okr_operation_logic');
     }
 
     protected function getPermissionLogic()

@@ -284,6 +284,11 @@ class BaseService
         return $this->getContainer()->get('api.okr_nested_intervals_logic');
     }
 
+    protected function getOkrOperationLogic()
+    {
+        return $this->getContainer()->get('api.okr_operation_logic');
+    }
+
     protected function getPermissionLogic()
     {
         return $this->getContainer()->get('api.permission_logic');

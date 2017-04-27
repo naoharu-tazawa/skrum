@@ -27,9 +27,10 @@ class GroupService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
+     * @param TGroupTree $tGroupTree グループツリーエンティティ
      * @return void
      */
-    public function createGroup(Auth $auth, array $data)
+    public function createGroup(Auth $auth, array $data, TGroupTree $groupTreeEntity = null)
     {
         // トランザクション開始
         $this->beginTransaction();
@@ -47,16 +48,12 @@ class GroupService extends BaseService
             $this->persist($mGroup);
             $this->flush();
 
-            if (array_key_exists('groupTreeId', $data)) {
-                // 所属先グループツリーパスを取得
-                $tGroupTreeRepos = $this->getTGroupTreeRepository();
-                $result = $tGroupTreeRepos->getGroupTreePath($data['groupTreeId'], $auth->getCompanyId());
-
-                // グループツリー登録
+            // グループツリー登録
+            if ($groupTreeEntity !== null) {
                 $tGroupTree = new TGroupTree();
                 $tGroupTree->setGroup($mGroup);
-                $tGroupTree->setGroupTreePath($result['groupTreePath'] . $mGroup->getGroupId() . '/');
-                $tGroupTree->setGroupTreePathName($result['groupTreePathName'] . $mGroup->getGroupName() . '/');
+                $tGroupTree->setGroupTreePath($groupTreeEntity->getGroupTreePath() . $mGroup->getGroupId() . '/');
+                $tGroupTree->setGroupTreePathName($groupTreeEntity->getGroupTreePathName() . $mGroup->getGroupName() . '/');
                 $this->persist($tGroupTree);
             }
 
@@ -89,8 +86,9 @@ class GroupService extends BaseService
         $groupPathArray = array();
         foreach ($tGroupTreeArray as $tGroupTree) {
             $groupPathDTO = new GroupPathDTO();
-            $groupPathDTO->setGroupTreePath($tGroupTree->getGroupTreePath());
-            $groupPathDTO->setGroupTreePathName($tGroupTree->getGroupTreePathName());
+            $groupPathDTO->setGroupTreeId($tGroupTree->getId());
+            $groupPathDTO->setGroupPath($tGroupTree->getGroupTreePath());
+            $groupPathDTO->setGroupPathName($tGroupTree->getGroupTreePathName());
             $groupPathArray[] = $groupPathDTO;
         }
 
@@ -110,17 +108,53 @@ class GroupService extends BaseService
      *
      * @param array $data リクエストJSON連想配列
      * @param MGroup $mGroup グループエンティティ
+     * @param integer $companyId 会社ID
      * @return void
      */
-    public function updateGroup(array $data, MGroup $mGroup)
+    public function updateGroup(array $data, MGroup $mGroup, int $companyId)
     {
-        // グループ情報更新
-        $mGroup->setGroupName($data['groupName']);
-        $mGroup->setMission($data['mission']);
+        // トランザクション開始
+        $this->beginTransaction();
 
         try {
+            // グループ情報更新
+            $mGroup->setGroupName($data['groupName']);
+            $mGroup->setMission($data['mission']);
             $this->flush();
+
+            // グループIDをグループパスに含むグループパスエンティティを取得
+            $groupId = $mGroup->getGroupId();
+            $tGroupTreeRepos = $this->getTGroupTreeRepository();
+            $tGroupTreeArray = $tGroupTreeRepos->getLikeGroupId($groupId, $companyId);
+
+            // グループパス名を更新
+            foreach ($tGroupTreeArray as $tGroupTree) {
+                // グループパスとグループパス名を'/'で分割し配列に格納
+                $groupTreePathItems = explode('/', $tGroupTree->getGroupTreePath(), -1);
+                $groupTreePathNameItems = explode('/', $tGroupTree->getGroupTreePathName(), -1);
+
+                // グループIDが一致する箇所のグループパス名中のグループ名を変更
+                $count = count($groupTreePathItems);
+                for ($i = 0; $i < $count; ++$i) {
+                    if ($groupTreePathItems[$i] == $groupId) {
+                        $groupTreePathNameItems[$i] = $data['groupName'];
+                    }
+                }
+
+                // グループパスを再構成
+                $newGroupTreePathName = '';
+                foreach ($groupTreePathNameItems as $groupTreePathName) {
+                    $newGroupTreePathName .= $groupTreePathName . '/';
+                }
+
+                // グループパス名を更新
+                $tGroupTree->setGroupTreePathName($newGroupTreePathName);
+                $this->flush();
+            }
+
+            $this->commit();
         } catch (\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
     }
@@ -177,35 +211,36 @@ class GroupService extends BaseService
             $tGroupTreeRepos = $this->getTGroupTreeRepository();
             $tGroupTreeRepos->deleteAllPaths($mGroup->getGroupId());
 
-            // グループが所有する全てのOKR、及びそれに紐づく全てのOKR、OKRアクティビティを削除
-            $tTimeframeRepos = $this->getTTimeframeRepository();
-            $tTimeframeArray = $tTimeframeRepos->findBy(array('company' => $auth->getCompanyId()), array('timeframeId' => 'DESC'));
-            $tOkrRepos = $this->getTOkrRepository();
-            $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
-            foreach ($tTimeframeArray as $tTimeframe) {
-                $tOkrArray = $tOkrRepos->getGroupObjectivesAndKeyResults($mGroup->getGroupId(), $tTimeframe->getTimeframeId(), $auth->getCompanyId());
+            /* 今回の開発では以下のコメントアウト部分の対応は行わない */
+//             // グループが所有する全てのOKR、及びそれに紐づく全てのOKR、OKRアクティビティを削除
+//             $tTimeframeRepos = $this->getTTimeframeRepository();
+//             $tTimeframeArray = $tTimeframeRepos->findBy(array('company' => $auth->getCompanyId()), array('timeframeId' => 'DESC'));
+//             $tOkrRepos = $this->getTOkrRepository();
+//             $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
+//             foreach ($tTimeframeArray as $tTimeframe) {
+//                 $tOkrArray = $tOkrRepos->getGroupObjectivesAndKeyResults($mGroup->getGroupId(), $tTimeframe->getTimeframeId(), $auth->getCompanyId());
 
-                // キーリザルトから削除
-                foreach ($tOkrArray as $tOkrKeyResult) {
-                    if (array_key_exists('keyResult', $tOkrKeyResult)) {
-                        if ($tOkrKeyResult['keyResult'] != null) {
-                            $this->deleteOkrs($auth, $tOkrKeyResult['keyResult'], $tOkrRepos, $okrAchievementRateLogic);
-                        }
-                    }
-                }
+//                 // キーリザルトから削除
+//                 foreach ($tOkrArray as $tOkrKeyResult) {
+//                     if (array_key_exists('keyResult', $tOkrKeyResult)) {
+//                         if ($tOkrKeyResult['keyResult'] != null) {
+//                             $this->deleteOkrs($auth, $tOkrKeyResult['keyResult'], $tOkrRepos, $okrAchievementRateLogic);
+//                         }
+//                     }
+//                 }
 
-                // キーリザルト削除後に目標を削除
-                foreach ($tOkrArray as $tOkrObjective) {
-                    if (array_key_exists('objective', $tOkrObjective)) {
-                        if ($tOkrObjective['objective'] != null) {
-                            $this->deleteOkrs($auth, $tOkrObjective['objective'], $tOkrRepos, $okrAchievementRateLogic);
-                        }
-                    }
-                }
-            }
+//                 // キーリザルト削除後に目標を削除
+//                 foreach ($tOkrArray as $tOkrObjective) {
+//                     if (array_key_exists('objective', $tOkrObjective)) {
+//                         if ($tOkrObjective['objective'] != null) {
+//                             $this->deleteOkrs($auth, $tOkrObjective['objective'], $tOkrRepos, $okrAchievementRateLogic);
+//                         }
+//                     }
+//                 }
+//             }
 
-            // グループ削除
-            $this->remove($mGroup);
+            // アーカイブ済フラグを立てる
+            $mGroup->setArchivedFlg(DBConstant::FLG_TRUE);
 
             $this->flush();
             $this->commit();

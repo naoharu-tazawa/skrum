@@ -24,7 +24,7 @@ class OkrDetailsService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param TOkr $okrEntity OKRエンティティ
-     * @return \AppBundle\Api\ResponseDTO\OkrDetailsDTO
+     * @return OkrDetailsDTO
      */
     public function getOkrDetails(Auth $auth, TOkr $okrEntity): OkrDetailsDTO
     {

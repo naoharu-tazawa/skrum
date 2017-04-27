@@ -137,10 +137,27 @@ class OkrSettingController extends BaseController
         // リクエストJSONを取得
         $data = $this->getRequestJsonAsArray($request);
 
+        // オーナー種別に応じて必要なJsonSchemaのプロパティをチェック
+        if ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_USER) {
+            if (empty($data['ownerUserId'])) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        } elseif ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            if (empty($data['ownerGroupId'])) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        } else {
+            if (empty($data['ownerCompanyId'])) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        }
+
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
         // オーナー種別に応じて存在チェック
+        $mUser = null;
+        $mGroup = null;
         if ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_USER) {
             // ユーザ存在チェック
             $mUser = $this->getDBExistanceLogic()->checkUserExistance($data['ownerUserId'], $auth->getCompanyId());

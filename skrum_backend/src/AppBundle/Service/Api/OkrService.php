@@ -3,7 +3,6 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\Auth;
 use AppBundle\Utils\Constant;
@@ -243,44 +242,19 @@ class OkrService extends BaseService
      * @param TOkr $parentOkrEntity 紐付け先OKRエンティティ
      * @return void
      */
-    public function createOkr(string $ownerType, array $data, TTimeframe $tTimeframe, MUser $mUser, MGroup $mGroup, int $companyId, bool $alignmentFlg, TOkr $parentOkrEntity)
+    public function createOkr(string $ownerType, array $data, TTimeframe $tTimeframe, MUser $mUser = null, MGroup $mGroup = null, int $companyId, bool $alignmentFlg, TOkr $parentOkrEntity = null)
     {
-        if ($alignmentFlg) {
-            // 紐付け先OKRが他のOKRに紐付けられていない場合、紐付け不可
-            if (empty($parentOkrEntity->getParentOkr())) {
-                throw new ApplicationException('紐付け先のないOKRには紐付けられません');
-            }
+        // 開始日と終了日の妥当性チェック
+        DateUtility::checkStartDateAndEndDate($data['startDate'], $data['endDate']);
 
-            // 同一オーナーのOKRに紐付ける場合、OKR種別を比較し紐付け可能かチェック
-            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER && $parentOkrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
-                if ($mUser->getUserId() == $parentOkrEntity->getOwnerUser()->getUserId()) {
-                    if (!($parentOkrEntity->getType() === DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT)) {
-                        throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
-                    }
-                } else {
-                    if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
-                        throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
-                    }
-                }
-            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $parentOkrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                if ($mGroup->getGroupId() === $parentOkrEntity->getOwnerGroup()->getGroupId()) {
-                    if (!($parentOkrEntity->getType() === DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT)) {
-                        throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
-                    }
-                } else {
-                    if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
-                        throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
-                    }
-                }
-            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY && $parentOkrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
-                if (!($parentOkrEntity->getType() === DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT)) {
-                    throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
-                }
-            } else {
-                if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
-                    throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
-                }
-            }
+        if ($alignmentFlg) {
+            // 紐付け先チェック
+            $userId = null;
+            $groupId = null;
+            if ($mUser !== null) $userId = $mUser->getUserId();
+            if ($mGroup !== null) $groupId = $mGroup->getGroupId();
+            $okrOperationLogic = $this->getOkrOperationLogic();
+            $okrOperationLogic->checkAlignment($data['okrType'], $ownerType, $userId, $groupId, $parentOkrEntity);
 
             // 入れ子区間モデルの左値と右値を取得
             $treeValues = $this->getLeftRightValues($parentOkrEntity->getOkrId(), $tTimeframe->getTimeframeId());
@@ -419,6 +393,9 @@ class OkrService extends BaseService
      */
     public function changeOkrInfo(array $data, TOkr $tOkr)
     {
+        // 開始日と終了日の妥当性チェック
+        DateUtility::checkStartDateAndEndDate($data['startDate'], $data['endDate']);
+
         // OKR更新
         $tOkr->setName($data['okrName']);
         $tOkr->setDetail($data['okrDetail']);

@@ -19,15 +19,17 @@ class TOkrRepository extends BaseRepository
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function getOkr(int $okrId, int $companyId): array
+    public function getOkr($okrId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to');
         $qb->select('to')
             ->innerJoin('AppBundle:TTimeframe', 'tt', 'WITH', 'to.timeframe = tt.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc', 'WITH', 'tt.company = mc.companyId')
             ->where('to.okrId = :okrId')
+            ->andWhere('to.type <> :type')
             ->andWhere('tt.company = :companyId')
             ->setParameter('okrId', $okrId)
+            ->setParameter('type', DBConstant::OKR_TYPE_ROOT_NODE)
             ->setParameter('companyId', $companyId);
 
         return $qb->getQuery()->getResult();
@@ -50,7 +52,7 @@ class TOkrRepository extends BaseRepository
         LEFT OUTER JOIN (
             SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
             FROM m_user m0_
-            WHERE (m0_.deleted_at IS NULL)
+            WHERE (m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
             ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
         LEFT OUTER JOIN m_group m2_ ON (t0_.owner_group_id = m2_.group_id) AND (m2_.deleted_at IS NULL)
         LEFT OUTER JOIN m_company m3_ ON (t0_.owner_company_id = m3_.company_id) AND (m3_.deleted_at IS NULL)
@@ -111,6 +113,7 @@ SQL;
         $params['type1'] = DBConstant::OKR_TYPE_ROOT_NODE;
         $params['type2'] = DBConstant::OKR_TYPE_ROOT_NODE;
         $params['type3'] = DBConstant::OKR_TYPE_ROOT_NODE;
+        $params['archivedFlg'] = DBConstant::FLG_FALSE;
         $params['okrName'] = $keyword . '%';
         $params['userName'] = $keyword . '%';
         $params['groupName'] = $keyword . '%';
@@ -719,7 +722,7 @@ SQL;
         $sql = <<<SQL
         UPDATE t_okr AS t0_
         INNER JOIN t_timeframe AS t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
-        SET t0_.ratio_locked_flg = :ratioLockedFlg
+        SET t0_.ratio_locked_flg = :ratioLockedFlg, t0_.updated_at = NOW()
         WHERE (t1_.company_id = :companyId
                 AND t0_.timeframe_id = :timeframeId
                 AND t0_.parent_okr_id = :parentOkrId)

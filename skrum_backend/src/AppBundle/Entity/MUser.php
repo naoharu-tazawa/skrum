@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * MUser
  *
- * @ORM\Table(name="m_user", uniqueConstraints={@ORM\UniqueConstraint(name="email_address_UNIQUE", columns={"email_address"})}, indexes={@ORM\Index(name="idx_user_01", columns={"company_id"}), @ORM\Index(name="fk_user_role_assignment_id_idx", columns={"role_assignment_id"})})
+ * @ORM\Table(name="m_user", indexes={@ORM\Index(name="idx_user_01", columns={"company_id"}), @ORM\Index(name="idx_user_02", columns={"role_assignment_id"}), @ORM\Index(name="idx_user_03", columns={"last_name"}), @ORM\Index(name="idx_user_04", columns={"email_address"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MUserRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
@@ -69,6 +69,13 @@ class MUser
      * @ORM\Column(name="image_path", type="string", length=45, nullable=true)
      */
     private $imagePath;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="archived_flg", type="boolean", nullable=false)
+     */
+    private $archivedFlg = '0';
 
     /**
      * @var \DateTime
@@ -314,6 +321,30 @@ class MUser
     public function getImagePath()
     {
         return $this->imagePath;
+    }
+
+    /**
+     * Set archivedFlg
+     *
+     * @param boolean $archivedFlg
+     *
+     * @return MUser
+     */
+    public function setArchivedFlg($archivedFlg)
+    {
+        $this->archivedFlg = $archivedFlg;
+
+        return $this;
+    }
+
+    /**
+     * Get archivedFlg
+     *
+     * @return boolean
+     */
+    public function getArchivedFlg()
+    {
+        return $this->archivedFlg;
     }
 
     /**

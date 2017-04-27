@@ -28,6 +28,10 @@ class SearchController extends BaseController
         // リクエストパラメータを取得
         $keyword = $request->get('q');
 
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkSearchKeyword($keyword);
+        if($errors) throw new InvalidParameterException("検索キーワードが不正です", $errors);
+
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
@@ -52,15 +56,17 @@ class SearchController extends BaseController
         $page = $request->get('p');
 
         // リクエストパラメータのバリデーション
-        $errors = $this->checkNumeric($page);
-        if($errors) throw new InvalidParameterException('要求ページの値が不正です', $errors);
+        $errors1 = $this->checkSearchKeyword($keyword);
+        if($errors1) throw new InvalidParameterException("検索キーワードが不正です", $errors1);
+        $errors2 = $this->checkNumeric($page);
+        if($errors2) throw new InvalidParameterException('要求ページの値が不正です', $errors2);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
         // ユーザ検索処理
         $searchService = $this->getSearchService();
-        $userPageSearchDTO = $searchService->pagesearchUser($auth, $keyword, (int) $page);
+        $userPageSearchDTO = $searchService->pagesearchUser($auth, $keyword, $page);
 
         return $userPageSearchDTO;
     }
@@ -76,6 +82,10 @@ class SearchController extends BaseController
     {
         // リクエストパラメータを取得
         $keyword = $request->get('q');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkSearchKeyword($keyword);
+        if($errors) throw new InvalidParameterException("検索キーワードが不正です", $errors);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -101,15 +111,17 @@ class SearchController extends BaseController
         $page = $request->get('p');
 
         // リクエストパラメータのバリデーション
-        $errors = $this->checkNumeric($page);
-        if($errors) throw new InvalidParameterException('要求ページの値が不正です', $errors);
+        $errors1 = $this->checkSearchKeyword($keyword);
+        if($errors1) throw new InvalidParameterException("検索キーワードが不正です", $errors1);
+        $errors2 = $this->checkNumeric($page);
+        if($errors2) throw new InvalidParameterException('要求ページの値が不正です', $errors2);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
         // グループ検索処理
         $searchService = $this->getSearchService();
-        $groupPageSearchDTO = $searchService->pagesearchGroup($auth, $keyword, (int) $page);
+        $groupPageSearchDTO = $searchService->pagesearchGroup($auth, $keyword, $page);
 
         return $groupPageSearchDTO;
     }
@@ -125,6 +137,10 @@ class SearchController extends BaseController
     {
         // リクエストパラメータを取得
         $keyword = $request->get('q');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkSearchKeyword($keyword);
+        if($errors) throw new InvalidParameterException("検索キーワードが不正です", $errors);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -148,6 +164,10 @@ class SearchController extends BaseController
         // リクエストパラメータを取得
         $keyword = $request->get('q');
 
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkSearchKeyword($keyword);
+        if($errors) throw new InvalidParameterException("検索キーワードが不正です", $errors);
+
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
@@ -170,6 +190,12 @@ class SearchController extends BaseController
         // リクエストパラメータを取得
         $okrId = $request->get('oid');
         $keyword = $request->get('q');
+
+        // リクエストパラメータのバリデーション
+        $errors1 = $this->checkIntID($okrId);
+        if($errors1) throw new InvalidParameterException("OKRIDが不正です", $errors1);
+        $errors2 = $this->checkSearchKeyword($keyword);
+        if($errors2) throw new InvalidParameterException("検索キーワードが不正です", $errors2);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');

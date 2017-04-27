@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Utils\DateUtility;
+use AppBundle\Utils\DBConstant;
 
 /**
  * TPreUserリポジトリクラス
@@ -27,8 +28,8 @@ class TPreUserRepository extends BaseRepository
             ->andWhere('p.invalidFlg = :invalidFlg')
             ->andWhere('p.createdAt > :createdAt')
             ->setParameter('urltoken', $urltoken)
-            ->setParameter('initialUserFlg', 1)
-            ->setParameter('invalidFlg', 0)
+            ->setParameter('initialUserFlg', DBConstant::FLG_TRUE)
+            ->setParameter('invalidFlg', DBConstant::FLG_FALSE)
             ->setParameter('createdAt', date(DateUtility::DATETIME_FORMAT, strtotime("-1 hour")));
 
         return $qb->getQuery()->getOneOrNullResult();
@@ -50,8 +51,8 @@ class TPreUserRepository extends BaseRepository
             ->andWhere('p.invalidFlg = :invalidFlg')
             ->andWhere('p.createdAt > :createdAt')
             ->setParameter('urltoken', $urltoken)
-            ->setParameter('initialUserFlg', 0)
-            ->setParameter('invalidFlg', 0)
+            ->setParameter('initialUserFlg', DBConstant::FLG_FALSE)
+            ->setParameter('invalidFlg', DBConstant::FLG_FALSE)
             ->setParameter('createdAt', date(DateUtility::DATETIME_FORMAT, strtotime("-72 hour")));
 
         return $qb->getQuery()->getOneOrNullResult();

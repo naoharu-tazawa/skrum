@@ -1,6 +1,6 @@
 [Request URL]
 HTTP METHOD: POST
-http://company1.localhost:8000/app_dev.php/api/invite.json
+http://company1.localhost:8000/v1/invite.json
 
 [Request Json Schema]
 {

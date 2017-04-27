@@ -12,6 +12,12 @@
       "type": "string",
       "maxLength": 255
     },
+    "emailAddress": {
+      "title": "Eメールアドレス",
+      "type": "string",
+      "format": "email",
+      "maxLength": 255
+    },
     "position": {
       "title": "役職",
       "type": "string",
@@ -23,6 +29,6 @@
       "maxLength": 45
     }
   },
-  "required": ["lastName", "firstName", "position", "phoneNumber"],
+  "required": ["lastName", "firstName", "emailAddress", "position", "phoneNumber"],
   "additionalProperties": false
 }

@@ -70,7 +70,7 @@ class GroupMemberController extends BaseController
         $auth = $request->get('auth_token');
 
         // グループ存在チェック
-        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+        $this->getDBExistanceLogic()->checkGroupExistanceIncludingArchivedGroups($groupId, $auth->getCompanyId());
 
         // グループ基本情報取得
         $groupService = $this->getGroupService();
@@ -103,7 +103,7 @@ class GroupMemberController extends BaseController
         $auth = $request->get('auth_token');
 
         // グループ存在チェック
-        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+        $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
 
         // ユーザ存在チェック
         $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
@@ -117,7 +117,7 @@ class GroupMemberController extends BaseController
 
         // グループメンバー取得
         $groupMemberService = $this->getGroupMemberService();
-        $groupMemberService->deleteMember($groupId, $userId);
+        $groupMemberService->deleteMember($mGroup, $userId);
 
         return array('result' => 'OK');
     }

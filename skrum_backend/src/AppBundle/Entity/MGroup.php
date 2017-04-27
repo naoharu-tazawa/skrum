@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * MGroup
  *
- * @ORM\Table(name="m_group", indexes={@ORM\Index(name="idx_group_01", columns={"company_id"}), @ORM\Index(name="idx_group_02", columns={"leader_user_id"})})
+ * @ORM\Table(name="m_group", indexes={@ORM\Index(name="idx_group_01", columns={"company_id"}), @ORM\Index(name="idx_group_02", columns={"group_name"}), @ORM\Index(name="idx_group_03", columns={"leader_user_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MGroupRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
@@ -55,6 +55,13 @@ class MGroup
      * @ORM\Column(name="image_path", type="string", length=45, nullable=true)
      */
     private $imagePath;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="archived_flg", type="boolean", nullable=false)
+     */
+    private $archivedFlg = '0';
 
     /**
      * @var \DateTime
@@ -242,6 +249,30 @@ class MGroup
     public function getImagePath()
     {
         return $this->imagePath;
+    }
+
+    /**
+     * Set archivedFlg
+     *
+     * @param boolean $archivedFlg
+     *
+     * @return MGroup
+     */
+    public function setArchivedFlg($archivedFlg)
+    {
+        $this->archivedFlg = $archivedFlg;
+
+        return $this;
+    }
+
+    /**
+     * Get archivedFlg
+     *
+     * @return boolean
+     */
+    public function getArchivedFlg()
+    {
+        return $this->archivedFlg;
     }
 
     /**

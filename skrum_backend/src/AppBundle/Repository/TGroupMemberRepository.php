@@ -154,4 +154,24 @@ SQL;
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->execute($params);
     }
+
+    /**
+     * 指定ユーザIDの全レコードを削除
+     *
+     * @param integer $userId ユーザID
+     * @return void
+     */
+    public function deleteAllUserGroups(int $userId)
+    {
+        $sql = <<<SQL
+        UPDATE t_group_member AS t0_
+        SET t0_.deleted_at = NOW()
+        WHERE (t0_.user_id = :userId) AND (t0_.deleted_at IS NULL);
+SQL;
+
+        $params['userId'] = $userId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+    }
 }

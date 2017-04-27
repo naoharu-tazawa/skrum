@@ -1,6 +1,6 @@
 [Request URL]
 HTTP METHOD: POST
-http://localhost:8000/app_dev.php/api/preregister.json
+http://localhost:8000/v1/preregister.json
 
 [Request Json Schema]
 {

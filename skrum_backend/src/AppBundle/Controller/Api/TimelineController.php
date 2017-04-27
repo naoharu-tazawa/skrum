@@ -29,7 +29,7 @@ class TimelineController extends BaseController
         $auth = $request->get('auth_token');
 
         // グループ存在チェック
-        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+        $this->getDBExistanceLogic()->checkGroupExistanceIncludingArchivedGroups($groupId, $auth->getCompanyId());
 
         // タイムライン取得処理
         $timelineService = $this->getTimelineService();
@@ -121,7 +121,7 @@ class TimelineController extends BaseController
 
         // いいね登録処理
         $timelineService = $this->getTimelineService();
-        $timelineService->like($auth->getUserId(), $tPost->getId());
+        $timelineService->like($auth->getUserId(), $tPost);
 
         return array('result' => 'OK');
     }

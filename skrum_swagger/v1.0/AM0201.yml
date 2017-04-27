@@ -26,7 +26,7 @@ paths:
                 type: string
               groupType:
                 type: string
-              groupTreeId:
+              groupPathId:
                 type: integer
             required:
               - groupName

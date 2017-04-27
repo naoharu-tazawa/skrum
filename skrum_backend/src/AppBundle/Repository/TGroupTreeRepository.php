@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Utils\DBConstant;
+
 /**
  * TGroupTreeリポジトリクラス
  *
@@ -23,8 +25,10 @@ class TGroupTreeRepository extends BaseRepository
             ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgt.group = mg.groupId')
             ->where('tgt.id = :id')
             ->andWhere('mg.company = :companyId')
+            ->andWhere('mg.archivedFlg = :archivedFlg')
             ->setParameter('id', $groupTreeId)
-            ->setParameter('companyId', $companyId);
+            ->setParameter('companyId', $companyId)
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE);
 
         return $qb->getQuery()->getResult();
     }
@@ -66,6 +70,43 @@ class TGroupTreeRepository extends BaseRepository
             ->setParameter('groupTreePath', $groupTreePath);
 
         return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * 全レコードを取得
+     *
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function getAllGroupPath(int $companyId)
+    {
+        $qb = $this->createQueryBuilder('tgt');
+        $qb->select('tgt')
+            ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgt.group = mg.groupId')
+            ->where('mg.company = :companyId')
+            ->setParameter('companyId', $companyId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * グループIDでグループパスをLIKE検索
+     *
+     * @param integer $groupId グループID
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function getLikeGroupId(int $groupId, int $companyId)
+    {
+        $qb = $this->createQueryBuilder('tgt');
+        $qb->select('tgt')
+            ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgt.group = mg.groupId')
+            ->where('mg.company = :companyId')
+            ->andWhere('tgt.groupTreePath LIKE :groupId')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('groupId', '%' . $groupId . '%');
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

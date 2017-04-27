@@ -12,64 +12,95 @@ use JMS\Serializer\Annotation as JSON;
 class GroupPathDTO
 {
     /**
-     * @var string
+     * @var integer
      *
-     * @JSON\Type("string")
+     * @JSON\Type("integer")
      */
-    private $groupTreePath;
+    private $groupTreeId;
 
     /**
      * @var string
      *
      * @JSON\Type("string")
      */
-    private $groupTreePathName;
+    private $groupPath;
 
     /**
-     * Set groupTreePath
+     * @var string
      *
-     * @param string $groupTreePath
+     * @JSON\Type("string")
+     */
+    private $groupPathName;
+
+    /**
+     * Set groupTreeId
+     *
+     * @param integer $groupTreeId
      *
      * @return GroupPathDTO
      */
-    public function setGroupTreePath($groupTreePath)
+    public function setGroupTreeId($groupTreeId)
     {
-        $this->groupTreePath = $groupTreePath;
+        $this->groupTreeId = $groupTreeId;
 
         return $this;
     }
 
     /**
-     * Get groupTreePath
+     * Get groupTreeId
      *
-     * @return string
+     * @return integer
      */
-    public function getGroupTreePath()
+    public function getGroupTreeId()
     {
-        return $this->groupTreePath;
+        return $this->groupTreeId;
     }
 
     /**
-     * Set groupTreePathName
+     * Set groupPath
      *
-     * @param string $firstName
+     * @param string groupPath
      *
      * @return GroupPathDTO
      */
-    public function setGroupTreePathName($groupTreePathName)
+    public function setGroupPath($groupPath)
     {
-        $this->groupTreePathName = $groupTreePathName;
+        $this->groupPath = $groupPath;
 
         return $this;
     }
 
     /**
-     * Get groupTreePathName
+     * Get groupPath
      *
      * @return string
      */
-    public function getGroupTreePathName()
+    public function getGroupPath()
     {
-        return $this->groupTreePathName;
+        return $this->groupPath;
+    }
+
+    /**
+     * Set groupPathName
+     *
+     * @param string $groupPathName
+     *
+     * @return GroupPathDTO
+     */
+    public function setGroupPathName($groupPathName)
+    {
+        $this->groupPathName = $groupPathName;
+
+        return $this;
+    }
+
+    /**
+     * Get groupPathName
+     *
+     * @return string
+     */
+    public function getGroupPathName()
+    {
+        return $this->groupPathName;
     }
 }

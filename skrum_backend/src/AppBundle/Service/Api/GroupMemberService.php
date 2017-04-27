@@ -61,8 +61,7 @@ class GroupMemberService extends BaseService
         foreach ($mUserArray as $mUser) {
             $memberDTO = new MemberDTO();
             $memberDTO->setUserId($mUser->getUserId());
-            $memberDTO->setLastName($mUser->getLastName());
-            $memberDTO->setFirstName($mUser->getFirstName());
+            $memberDTO->setName($mUser->getLastName() . ' ' . $mUser->getFirstName());
             $memberDTO->setPosition($mUser->getPosition());
             $memberDTO->setLastLogin($mUser->getLastAccessDatetime());
 
@@ -88,22 +87,35 @@ class GroupMemberService extends BaseService
     /**
      * グループメンバー削除
      *
-     * @param integer $groupId グループID
+     * @param MGroup $groupId グループID
      * @param integer $userId ユーザID
      * @return void
      */
-    public function deleteMember(int $groupId, int $userId)
+    public function deleteMember(MGroup $mGroup, int $userId)
     {
+        // グループメンバー存在チェック
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
-        $tGroupMember = $tGroupMemberRepos->findOneBy(array('group' => $groupId, 'user' => $userId));
+        $tGroupMember = $tGroupMemberRepos->findOneBy(array('group' => $mGroup->getGroupId(), 'user' => $userId));
         if ($tGroupMember === null) {
             throw new DoubleOperationException('このユーザはグループから既に削除されています');
         }
 
+        // トランザクション開始
+        $this->beginTransaction();
+
         try {
+            // グループメンバー削除
             $this->remove($tGroupMember);
+
+            // グループリーダーになっている場合は、NULLを設定
+            if ($mGroup->getLeaderUserId() === $userId) {
+                $mGroup->setLeaderUserId(null);
+            }
+
             $this->flush();
+            $this->commit();
         } catch (\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
     }

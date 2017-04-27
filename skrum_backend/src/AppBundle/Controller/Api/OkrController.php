@@ -20,11 +20,11 @@ class OkrController extends BaseController
     /**
      * 目標新規登録
      *
-     * @Rest\Post("/v1/objectives.{_format}")
+     * @Rest\Post("/v1/okrs.{_format}")
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function postObjectivesAction(Request $request): array
+    public function postOkrsAction(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostObjectivesPdu');
@@ -32,6 +32,28 @@ class OkrController extends BaseController
 
         // リクエストJSONを取得
         $data = $this->getRequestJsonAsArray($request);
+
+        // OKR種別に応じて必要なJsonSchemaのプロパティをチェック
+        if ($data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT) {
+            if (empty($data['parentOkrId'])) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        }
+
+        // オーナー種別に応じて必要なJsonSchemaのプロパティをチェック
+        if ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_USER) {
+            if (empty($data['ownerUserId'])) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        } elseif ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            if (empty($data['ownerGroupId'])) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        } else {
+            if (empty($data['ownerCompanyId'])) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        }
 
         // 認証情報を取得
         $auth = $request->get('auth_token');

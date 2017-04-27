@@ -6,10 +6,12 @@ use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\Auth;
+use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
-use AppBundle\Entity\TOkr;
-use AppBundle\Entity\MUser;
 use AppBundle\Entity\MGroup;
+use AppBundle\Entity\MUser;
+use AppBundle\Entity\TOkr;
+use AppBundle\Entity\TOkrActivity;
 
 /**
  * OKR設定サービスクラス
@@ -122,7 +124,7 @@ class OkrSettingService extends BaseService
      * @param integer $companyId 会社ID
      * @return void
      */
-    public function changeOwner(TOkr $tOkr, string $ownerType, MUser $mUser, MGroup $mGroup, int $companyId)
+    public function changeOwner(TOkr $tOkr, string $ownerType, MUser $mUser = null, MGroup $mGroup = null, int $companyId)
     {
         // OKRアクティビティ登録（オーナー変更）
         $tOkrActivity = new TOkrActivity();
@@ -238,7 +240,7 @@ class OkrSettingService extends BaseService
                 // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝2:グループ」の場合
 
                 // 変更前/変更後オーナー登録
-                $tOkrActivity->setPreviousOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+                $tOkrActivity->setPreviousOwnerCompanyId($tOkr->getOwnerCompanyId());
                 $tOkrActivity->setNewOwnerGroupId($mGroup->getGroupId());
 
                 // オーナー変更
@@ -289,21 +291,29 @@ class OkrSettingService extends BaseService
             $tOkrRepos->resetRatioLockedFlg($okrEntity->getOkrId(), $okrEntity->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
 
             // KR加重平均割合更新
-            $tOkrCount = count($tOkr);
+            $weweightedAverageRatioArray = array();
             foreach ($data as $item) {
-                $tOkr = $tOkrRepos->getOkr($item['keyResultId'], $auth->getCompanyId());
-                if ($tOkrCount !== 1) {
+                $tOkrArray = $tOkrRepos->getOkr($item['keyResultId'], $auth->getCompanyId());
+                if (count($tOkrArray) !== 1) {
                     throw new ApplicationException('指定されたキーリザルトは存在しません');
                 }
 
                 // 親OKRIDが一致しない場合、エラー
-                if ($tOkr[0]->getParentOkr()->getOkrId() != $parentOkrId) {
+                if ($tOkrArray[0]->getParentOkr()->getOkrId() !== $parentOkrId) {
                     throw new ApplicationException('指定されたキーリザルトが不正です');
                 }
 
-                $tOkr[0]->setWeightedAverageRatio($item['weightedAverageRatio']);
-                $tOkr[0]->setRatioLockedFlg(DBConstant::FLG_TRUE);
+                $tOkrArray[0]->setWeightedAverageRatio($item['weightedAverageRatio']);
+                $tOkrArray[0]->setRatioLockedFlg(DBConstant::FLG_TRUE);
                 $this->flush();
+
+                // KR加重平均割合を全て配列に格納
+                $weweightedAverageRatioArray[] = $item['weightedAverageRatio'];
+            }
+
+            // 持分比率ロックフラグを立てるKR加重平均割合の合計値が100を超えていないかチェック
+            if (array_sum($weweightedAverageRatioArray) > 100) {
+                throw new ApplicationException('キーリザルト加重平均割合の合計値が100%を超えています');
             }
 
             // 達成率を再計算

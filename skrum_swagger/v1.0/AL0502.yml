@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /objectives.json:
+  /okrs.json:
     get:
       description: 目標新規登録
       parameters:

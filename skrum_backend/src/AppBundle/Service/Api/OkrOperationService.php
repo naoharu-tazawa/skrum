@@ -33,41 +33,13 @@ class OkrOperationService extends BaseService
             throw new ApplicationException('異なるタイムフレームのOKRには紐付けできません');
         }
 
-        // 紐付け先OKRが他のOKRに紐付けられていない場合、紐付け不可
-        if (empty($newParentOkr->getParentOkr())) {
-            throw new ApplicationException('紐付け先のないOKRには紐付けられません');
-        }
-
-        // 同一オーナーのOKRに紐付ける場合、OKR種別を比較し紐付け可能かチェック
-        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER && $newParentOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
-            if ($tOkr->getOwnerUser()->getUserId() == $newParentOkr->getOwnerUser()->getUserId()) {
-                if (!($newParentOkr->getType() == DBConstant::OKR_TYPE_OBJECTIVE && $tOkr->getType() == DBConstant::OKR_TYPE_KEY_RESULT)) {
-                    throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
-                }
-            } else {
-                if ($tOkr->getType() == DBConstant::OKR_TYPE_KEY_RESULT) {
-                    throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
-                }
-            }
-        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP && $newParentOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
-            if ($tOkr->getOwnerGroup()->getGroupId() == $newParentOkr->getOwnerGroup()->getGroupId()) {
-                if (!($newParentOkr->getType() == DBConstant::OKR_TYPE_OBJECTIVE && $tOkr->getType() == DBConstant::OKR_TYPE_KEY_RESULT)) {
-                    throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
-                }
-            } else {
-                if ($tOkr->getType() == DBConstant::OKR_TYPE_KEY_RESULT) {
-                    throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
-                }
-            }
-        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_COMPANY && $newParentOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_COMPANY) {
-            if (!($newParentOkr->getType() == DBConstant::OKR_TYPE_OBJECTIVE && $tOkr->getType() == DBConstant::OKR_TYPE_KEY_RESULT)) {
-                throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
-            }
-        } else {
-            if ($tOkr->getType() == DBConstant::OKR_TYPE_KEY_RESULT) {
-                throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
-            }
-        }
+        // 紐付け先チェック
+        $userId = null;
+        $groupId = null;
+        if ($tOkr->getOwnerUser() !== null) $userId = $tOkr->getOwnerUser()->getUserId();
+        if ($tOkr->getOwnerGroup() !== null) $groupId = $tOkr->getOwnerGroup()->getGroupId();
+        $okrOperationLogic = $this->getOkrOperationLogic();
+        $okrOperationLogic->checkAlignment($tOkr->getType(), $tOkr->getOwnerType(), $userId, $groupId, $newParentOkr);
 
         // 現在の紐付け先OKRを取得
         $currentParentOkr = $tOkr->getParentOkr();
