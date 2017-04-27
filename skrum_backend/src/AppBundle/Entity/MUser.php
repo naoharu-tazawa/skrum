@@ -57,13 +57,6 @@ class MUser
     private $phoneNumber;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="last_access_datetime", type="datetime", nullable=true)
-     */
-    private $lastAccessDatetime;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="image_path", type="string", length=45, nullable=true)
@@ -273,30 +266,6 @@ class MUser
     public function getPhoneNumber()
     {
         return $this->phoneNumber;
-    }
-
-    /**
-     * Set lastAccessDatetime
-     *
-     * @param \DateTime $lastAccessDatetime
-     *
-     * @return MUser
-     */
-    public function setLastAccessDatetime($lastAccessDatetime)
-    {
-        $this->lastAccessDatetime = $lastAccessDatetime;
-
-        return $this;
-    }
-
-    /**
-     * Get lastAccessDatetime
-     *
-     * @return \DateTime
-     */
-    public function getLastAccessDatetime()
-    {
-        return $this->lastAccessDatetime;
     }
 
     /**

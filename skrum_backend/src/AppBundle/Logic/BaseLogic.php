@@ -314,6 +314,11 @@ class BaseLogic
         return $this->entityManager->getRepository('AppBundle:TLike');
     }
 
+    protected function getTLoginRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TLogin');
+    }
+
     protected function getTMailReservationRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TMailReservation');

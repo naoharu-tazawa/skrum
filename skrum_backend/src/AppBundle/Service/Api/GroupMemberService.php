@@ -58,12 +58,13 @@ class GroupMemberService extends BaseService
         $mUserArray = $this->getMUserArray($groupId);
 
         $members = array();
+        $tLoginRepos = $this->getTLoginRepository();
         foreach ($mUserArray as $mUser) {
             $memberDTO = new MemberDTO();
             $memberDTO->setUserId($mUser->getUserId());
             $memberDTO->setName($mUser->getLastName() . ' ' . $mUser->getFirstName());
             $memberDTO->setPosition($mUser->getPosition());
-            $memberDTO->setLastLogin($mUser->getLastAccessDatetime());
+            $memberDTO->setLastLogin($tLoginRepos->getLastLogin($mUser->getUserId()));
 
             $members[] = $memberDTO;
         }

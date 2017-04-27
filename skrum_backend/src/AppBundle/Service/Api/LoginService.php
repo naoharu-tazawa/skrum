@@ -18,6 +18,7 @@ use AppBundle\Entity\TAuthorization;
 use AppBundle\Entity\TGroupTree;
 use AppBundle\Entity\TPreUser;
 use \Firebase\JWT\JWT;
+use AppBundle\Entity\TLogin;
 
 /**
  * ログインサービスクラス
@@ -73,9 +74,12 @@ class LoginService extends BaseService
         // 認可レコードチェック
         $this->checkAuthorization($mCompany->getCompanyId());
 
-        // 最終ログイン日時を更新
-        $mUserArray[0]->setLastAccessDatetime(DateUtility::getCurrentDatetime());
+        // ログインテーブルにレコード追加
+        $tLogin = new TLogin();
+        $tLogin->setUserId($mUserArray[0]->getUserId());
+        $tLogin->setLoginDatetime(DateUtility::getCurrentDatetime());
         try {
+            $this->persist($tLogin);
             $this->flush();
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
@@ -174,8 +178,14 @@ class LoginService extends BaseService
             $mUser->setEmailAddress($tPreUser->getEmailAddress());
             $mUser->setPassword($hashedPassword);
             $mUser->setRoleAssignment($mRoleAssignment);
-            $mUser->setLastAccessDatetime(DateUtility::getCurrentDatetime());
             $this->persist($mUser);
+            $this->flush();
+
+            // ログインテーブルにレコード追加
+            $tLogin = new TLogin();
+            $tLogin->setUserId($mUser->getUserId());
+            $tLogin->setLoginDatetime(DateUtility::getCurrentDatetime());
+            $this->persist($tLogin);
 
             // 仮登録ユーザテーブルのURLトークンを無効にする
             $tPreUser->setInvalidFlg(DBConstant::FLG_TRUE);
@@ -261,8 +271,14 @@ class LoginService extends BaseService
             $mUser->setEmailAddress($tPreUser->getEmailAddress());
             $mUser->setPassword($hashedPassword);
             $mUser->setRoleAssignment($mRoleAssignment);
-            $mUser->setLastAccessDatetime(DateUtility::getCurrentDatetime());
             $this->persist($mUser);
+            $this->flush();
+
+            // ログインテーブルにレコード追加
+            $tLogin = new TLogin();
+            $tLogin->setUserId($mUser->getUserId());
+            $tLogin->setLoginDatetime(DateUtility::getCurrentDatetime());
+            $this->persist($tLogin);
 
             // 仮登録ユーザテーブルのURLトークンを無効にする
             $tPreUser->setInvalidFlg(DBConstant::FLG_TRUE);
