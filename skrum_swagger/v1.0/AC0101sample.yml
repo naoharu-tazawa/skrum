@@ -14,9 +14,9 @@ customFlgがfalseの場合：
     "phoneNumber": "090-2323-2323"
   },
   "company": {
-    "name": "会社名",
-    "vision":"ヴィジョンヴィジョンヴィジョンヴィジョンヴィジョン",
-    "mission":"ミッションミッションミッションミッションミッション"
+    "name": "株式会社Skrum",
+    "vision":"組織で働く全ての人が自己実現できる社会を創る",
+    "mission":"働く人に喜びを与え、企業の生産性を最大化させる"
   },
   "timeframe": {
     "customFlg":false,
@@ -38,9 +38,9 @@ customFlgがtrueの場合：
     "phoneNumber": "090-2323-2323"
   },
   "company": {
-    "name": "会社名",
-    "vision":"ヴィジョンヴィジョンヴィジョンヴィジョンヴィジョン",
-    "mission":"ミッションミッションミッションミッションミッション"
+    "name": "株式会社Skrum",
+    "vision":"組織で働く全ての人が自己実現できる社会を創る",
+    "mission":"働く人に喜びを与え、企業の生産性を最大化させる"
   },
   "timeframe": {
     "customFlg":true,

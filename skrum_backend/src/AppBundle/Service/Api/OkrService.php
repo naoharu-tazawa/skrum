@@ -429,17 +429,19 @@ class OkrService extends BaseService
 
             // 親OKRまたは祖父母OKRのオーナーがグループの場合、そのグループを投稿先グループに入れる
             $tOkrRepos = $this->getTOkrRepository();
-            $parentAndGrandParentOkr = $tOkrRepos->getParentOkr($tOkr->getParentOkr()->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
-            if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
-                if (!empty($parentAndGrandParentOkr[0]['childOkr'])) {
-                    if ($parentAndGrandParentOkr[0]['childOkr']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
-                        $groupIdArray[] = $parentAndGrandParentOkr[0]['childOkr']->getOwnerGroup()->getGroupId();
+            if ($tOkr->getParentOkr() !== null) {
+                $parentAndGrandParentOkr = $tOkrRepos->getParentOkr($tOkr->getParentOkr()->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
+                if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
+                    if (!empty($parentAndGrandParentOkr[0]['childOkr'])) {
+                        if ($parentAndGrandParentOkr[0]['childOkr']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                            $groupIdArray[] = $parentAndGrandParentOkr[0]['childOkr']->getOwnerGroup()->getGroupId();
+                        }
                     }
-                }
-            } else {
-                if (!empty($parentAndGrandParentOkr[1]['parentOkr'])) {
-                    if ($parentAndGrandParentOkr[1]['parentOkr']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
-                        $groupIdArray[] = $parentAndGrandParentOkr[1]['parentOkr']->getOwnerGroup()->getGroupId();
+                } else {
+                    if (!empty($parentAndGrandParentOkr[1]['parentOkr'])) {
+                        if ($parentAndGrandParentOkr[1]['parentOkr']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                            $groupIdArray[] = $parentAndGrandParentOkr[1]['parentOkr']->getOwnerGroup()->getGroupId();
+                        }
                     }
                 }
             }
