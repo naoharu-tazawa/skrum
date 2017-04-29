@@ -45,7 +45,7 @@ class BasicInfoController extends BaseController
 
         // デフォルトタイムフレームのタイムフレームIDを取得
         foreach ($timeframeDTOArray as $timeframeDTO) {
-            if ($timeframeDTO->getDefaultFlg() === DBConstant::FLG_TRUE) {
+            if ($timeframeDTO->getDefaultFlg()) {
                 $timeframeId = $timeframeDTO->getTimeframeId();
             }
         }

@@ -37,11 +37,7 @@ class TimeframeService extends BaseService
             $timeframeDTO = new TimeframeDTO();
             $timeframeDTO->setTimeframeId($tTimeframe->getTimeframeId());
             $timeframeDTO->setTimeframeName($tTimeframe->getTimeframeName());
-            if ($tTimeframe->getDefaultFlg() === null) {
-                $timeframeDTO->setDefaultFlg(DBConstant::FLG_FALSE);
-            } else {
-                $timeframeDTO->setDefaultFlg(DBConstant::FLG_TRUE);
-            }
+            $timeframeDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
             $timeframeDTOArray[] = $timeframeDTO;
         }
 
@@ -68,11 +64,7 @@ class TimeframeService extends BaseService
             $timeframeDetailDTO->setTimeframeName($tTimeframe->getTimeframeName());
             $timeframeDetailDTO->setStartDate($tTimeframe->getStartDate());
             $timeframeDetailDTO->setEndDate($tTimeframe->getEndDate());
-            if ($tTimeframe->getDefaultFlg() === null) {
-                $timeframeDetailDTO->setDefaultFlg(DBConstant::FLG_FALSE);
-            } else {
-                $timeframeDetailDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
-            }
+            $timeframeDetailDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
             $timeframeDetailDTOArray[] = $timeframeDetailDTO;
         }
 
