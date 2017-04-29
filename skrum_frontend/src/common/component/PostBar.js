@@ -3,7 +3,9 @@ import moment from 'moment';
 import { Link } from 'react-router';
 import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
+import style from './PostBar.css';
 
+/*
 const gap = 1
 const gapEm = gap + 'em'
 const imageDim = 2.25
@@ -45,6 +47,7 @@ const style = {
     whiteSpace: 'nowrap',
   },
 };
+*/
 
 class PostBar extends Component {
 

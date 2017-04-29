@@ -2,7 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
+import style from './KRWeightingBar.css';
 
+/*
 const gap = '1em';
 const style = {
   okrNav: {
@@ -62,6 +64,7 @@ const style = {
     margin: 'auto',
   },
 };
+*/
 
 class KRWeightingBar extends Component {
   state = {}

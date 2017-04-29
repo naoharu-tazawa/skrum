@@ -3,6 +3,7 @@ import moment from 'moment';
 import { Link } from 'react-router';
 import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
+import style from './GroupBar.css';
 
 const gap = 1
 const gapEm = gap + 'em'
@@ -13,12 +14,14 @@ const progressPercentWidth = 1
 const progressBarWidth = 10
 const remainingWidth = '100%'
 
+/*
 const style = {
   okrNav: {
     display: 'flex',
-    background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`,
+    backgroundColor: '#fff',
+    //background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`,
     overflow: 'hidden',
-    color: '#fff',
+    color: '#626A7F',
   },
   isOpen: {
     height: '60px',
@@ -68,6 +71,7 @@ const style = {
     textAlign: 'right',
   },
 };
+*/
 
 class GroupBar extends Component {
 

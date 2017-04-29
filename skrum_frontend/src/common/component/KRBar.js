@@ -4,7 +4,9 @@ import moment from 'moment';
 import { Link } from 'react-router';
 import { cssClass } from '../../util/StyleUtil';
 import { imgSrc } from '../../util/ResourceUtil';
+import style from './KRBar.css';
 
+/*
 const gap = '1em';
 const margin = `${gap} ${gap} auto ${gap}`;
 const style = {
@@ -122,6 +124,7 @@ const style = {
     whiteSpace: 'nowrap',
   },
 };
+*/
 
 class KRBar extends Component {
 
