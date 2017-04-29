@@ -14,11 +14,11 @@ class TGroupMemberRepository extends BaseRepository
     /**
      * 指定グループID、ユーザIDのレコードを取得
      *
-     * @param $groupId グループID
-     * @param $userId ユーザID
+     * @param integer $groupId グループID
+     * @param integer $userId ユーザID
      * @return array
      */
-    public function getGroupMember($groupId, $userId)
+    public function getGroupMember(int $groupId, int $userId): array
     {
         $qb = $this->createQueryBuilder('tgm');
         $qb->select('tgm')
@@ -33,10 +33,10 @@ class TGroupMemberRepository extends BaseRepository
     /**
      * 指定グループIDの全レコードを取得
      *
-     * @param $groupId グループID
+     * @param integer $groupId グループID
      * @return array
      */
-    public function getAllGroupMembers($groupId)
+    public function getAllGroupMembers(int $groupId): array
     {
         $qb = $this->createQueryBuilder('tgm');
         $qb->select('mu')
@@ -50,10 +50,10 @@ class TGroupMemberRepository extends BaseRepository
     /**
      * 指定ユーザIDに紐付くグループ（部門のみ）レコードを取得
      *
-     * @param $userId ユーザID
+     * @param integer $userId ユーザID
      * @return array
      */
-    public function getDepartments($userId)
+    public function getDepartments(int $userId): array
     {
         $qb = $this->createQueryBuilder('tgm');
         $qb->select('mg')
@@ -70,10 +70,10 @@ class TGroupMemberRepository extends BaseRepository
     /**
      * 指定ユーザIDに紐付くグループを全レコード取得
      *
-     * @param $userId ユーザID
+     * @param integer $userId ユーザID
      * @return array
      */
-    public function getAllGroups($userId)
+    public function getAllGroups(int $userId): array
     {
         $qb = $this->createQueryBuilder('tgm');
         $qb->select('mg.groupId', 'mg.groupName', 'mg.groupType')
@@ -90,11 +90,11 @@ class TGroupMemberRepository extends BaseRepository
     /**
      * 指定ユーザIDに紐付くグループをそれに紐づくOKR達成率と共に全レコード取得
      *
-     * @param $userId ユーザID
-     * @param $timeframeId タイムフレームID
+     * @param integer $userId ユーザID
+     * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function getAllGroupsWithAchievementRate($userId, $timeframeId)
+    public function getAllGroupsWithAchievementRate(int $userId, int $timeframeId): array
     {
         $qb = $this->createQueryBuilder('tgm');
         $qb->select('mg.groupId', 'mg.groupName', 'to.achievementRate')
@@ -122,7 +122,7 @@ class TGroupMemberRepository extends BaseRepository
      * @param integer $userId2 チェック対象ユーザID（２人目）
      * @return array
      */
-    public function getTheSameGroups($userId1, $userId2)
+    public function getTheSameGroups(int $userId1, int $userId2): array
     {
         $qb = $this->createQueryBuilder('tgm1');
         $qb->select('IDENTITY(tgm1.group)')
@@ -138,10 +138,10 @@ class TGroupMemberRepository extends BaseRepository
     /**
      * 指定グループIDの全レコードを削除
      *
-     * @param $groupId グループID
-     * @return array
+     * @param integer $groupId グループID
+     * @return void
      */
-    public function deleteAllGroupMembers($groupId)
+    public function deleteAllGroupMembers(int $groupId)
     {
         $sql = <<<SQL
         UPDATE t_group_member AS t0_
@@ -150,6 +150,26 @@ class TGroupMemberRepository extends BaseRepository
 SQL;
 
         $params['groupId'] = $groupId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+    }
+
+    /**
+     * 指定ユーザIDの全レコードを削除
+     *
+     * @param integer $userId ユーザID
+     * @return void
+     */
+    public function deleteAllUserGroups(int $userId)
+    {
+        $sql = <<<SQL
+        UPDATE t_group_member AS t0_
+        SET t0_.deleted_at = NOW()
+        WHERE (t0_.user_id = :userId) AND (t0_.deleted_at IS NULL);
+SQL;
+
+        $params['userId'] = $userId;
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->execute($params);

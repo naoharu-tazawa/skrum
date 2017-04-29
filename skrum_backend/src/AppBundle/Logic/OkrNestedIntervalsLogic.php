@@ -2,6 +2,8 @@
 
 namespace AppBundle\Logic;
 
+use AppBundle\Entity\TOkr;
+
 /**
  * OKR入れ子区間モデルロジッククラス
  *
@@ -12,11 +14,11 @@ class OkrNestedIntervalsLogic extends BaseLogic
     /**
      * 入れ子集合モデルの左値・右値を再計算
      *
-     * @param \AppBundle\Entity\TOkr $tOkr 挿入対象OKRエンティティ
+     * @param TOkr $tOkr 挿入対象OKRエンティティ
      * @parame integer $companyId 会社ID
      * @return void
      */
-    public function recalculate($tOkr, $companyId)
+    public function recalculate(TOkr $tOkr, int $companyId)
     {
         // タイムフレームIDを取得
         $timeframeId = $tOkr->getTimeframe()->getTimeframeId();
@@ -46,9 +48,10 @@ class OkrNestedIntervalsLogic extends BaseLogic
      * ノードの左値・右値を取得する際に最左ノードまたは最右ノードをランダムに取得
      *
      * @param integer $parentOkrId 親OKRID
-     * @return void
+     * @param integer $timeframeId タイムフレームID
+     * @return array
      */
-    private function getLeftRightValues($parentOkrId, $timeframeId)
+    private function getLeftRightValues(int $parentOkrId, int $timeframeId): array
     {
         // 1または2をランダムに取得
         $rand = mt_rand(1, 2);

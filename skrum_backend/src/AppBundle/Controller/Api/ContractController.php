@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Utils\Permission;
+use AppBundle\Api\ResponseDTO\ContractDTO;
 
 /**
  * 契約コントローラ
@@ -22,9 +23,9 @@ class ContractController extends BaseController
      * @Permission(value="plan_edit")
      * @param Request $request リクエストオブジェクト
      * @param string $companyId 会社ID
-     * @return array
+     * @return ContractDTO
      */
-    public function getCompanyContractsAction(Request $request, $companyId)
+    public function getCompanyContractsAction(Request $request, string $companyId): ContractDTO
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Utils\Permission;
 
 /**
@@ -23,7 +24,7 @@ class TimeframeController extends BaseController
      * @param string $companyId 会社ID
      * @return array
      */
-    public function getCompanyTimeframesAction(Request $request, $companyId)
+    public function getCompanyTimeframesAction(Request $request, string $companyId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -49,7 +50,7 @@ class TimeframeController extends BaseController
      * @param string $companyId 会社ID
      * @return array
      */
-    public function getCompanyTimeframedetailsAction(Request $request, $companyId)
+    public function getCompanyTimeframedetailsAction(Request $request, string $companyId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -75,7 +76,7 @@ class TimeframeController extends BaseController
      * @param string $timeframeId タイムフレームID
      * @return array
      */
-    public function setDefaultTimeframeAction(Request $request, $timeframeId)
+    public function setDefaultTimeframeAction(Request $request, string $timeframeId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -98,7 +99,7 @@ class TimeframeController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function postTimeframesAction(Request $request)
+    public function postTimeframesAction(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostTimeframesPdu');
@@ -126,7 +127,7 @@ class TimeframeController extends BaseController
      * @param string $timeframeId タイムフレームID
      * @return array
      */
-    public function putTimeframeAction(Request $request, $timeframeId)
+    public function putTimeframeAction(Request $request, string $timeframeId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostTimeframesPdu');
@@ -157,7 +158,7 @@ class TimeframeController extends BaseController
      * @param string $timeframeId タイムフレームID
      * @return array
      */
-    public function deleteTimeframeAction(Request $request, $timeframeId)
+    public function deleteTimeframeAction(Request $request, string $timeframeId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

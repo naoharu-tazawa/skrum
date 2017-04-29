@@ -32,6 +32,8 @@ paths:
                 type: string
               firstName:
                 type: string
+              emailAddress:
+                type: string
               position:
                 type: string
               phoneNumber:
@@ -39,6 +41,7 @@ paths:
             required:
               - lastName
               - firstName
+              - emailAddress
               - position
               - phoneNumber
       responses:

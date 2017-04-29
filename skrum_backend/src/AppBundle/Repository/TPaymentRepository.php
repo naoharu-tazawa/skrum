@@ -14,10 +14,10 @@ class TPaymentRepository extends BaseRepository
     /**
      * 指定会社IDの請求情報を取得
      *
-     * @param $companyId 会社ID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getPayments($companyId)
+    public function getPayments(int $companyId): array
     {
         $qb = $this->createQueryBuilder('tp');
         $qb->select('tp')

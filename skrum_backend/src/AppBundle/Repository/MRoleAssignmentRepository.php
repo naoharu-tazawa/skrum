@@ -18,7 +18,7 @@ class MRoleAssignmentRepository extends BaseRepository
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function getRoleAssignment($roleAssignmentId, $companyId)
+    public function getRoleAssignment(int $roleAssignmentId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mra');
         $qb->select('mra')
@@ -37,7 +37,7 @@ class MRoleAssignmentRepository extends BaseRepository
      * @param boolean $superAdminFlg スーパー管理者取得フラグ
      * @return array
      */
-    public function getRoles($companyId, $superAdminFlg = false)
+    public function getRoles(int $companyId, bool $superAdminFlg = false): array
     {
         $qb = $this->createQueryBuilder('mra');
         $qb->select('mra')

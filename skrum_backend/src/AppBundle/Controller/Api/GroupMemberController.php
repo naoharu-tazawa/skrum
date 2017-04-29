@@ -24,7 +24,7 @@ class GroupMemberController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function postGroupMembersAction(Request $request, $groupId)
+    public function postGroupMembersAction(Request $request, string $groupId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostGroupMembersPdu');
@@ -62,15 +62,15 @@ class GroupMemberController extends BaseController
      * @Rest\Get("/v1/groups/{groupId}/members.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $groupId グループID
-     * @return array
+     * @return GroupMemberDTO
      */
-    public function getGroupMembersAction(Request $request, $groupId)
+    public function getGroupMembersAction(Request $request, string $groupId): GroupMemberDTO
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
         // グループ存在チェック
-        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+        $this->getDBExistanceLogic()->checkGroupExistanceIncludingArchivedGroups($groupId, $auth->getCompanyId());
 
         // グループ基本情報取得
         $groupService = $this->getGroupService();
@@ -97,13 +97,13 @@ class GroupMemberController extends BaseController
      * @param string $userId ユーザID
      * @return array
      */
-    public function deleteGroupMemberAction(Request $request, $groupId, $userId)
+    public function deleteGroupMemberAction(Request $request, string $groupId, string $userId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
         // グループ存在チェック
-        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+        $mGroup = $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
 
         // ユーザ存在チェック
         $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
@@ -117,7 +117,7 @@ class GroupMemberController extends BaseController
 
         // グループメンバー取得
         $groupMemberService = $this->getGroupMemberService();
-        $groupMemberService->deleteMember($groupId, $userId);
+        $groupMemberService->deleteMember($mGroup, $userId);
 
         return array('result' => 'OK');
     }

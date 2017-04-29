@@ -23,13 +23,13 @@ class TimelineController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function getGroupPostsAction(Request $request, $groupId)
+    public function getGroupPostsAction(Request $request, string $groupId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
         // グループ存在チェック
-        $this->getDBExistanceLogic()->checkGroupExistance($groupId, $auth->getCompanyId());
+        $this->getDBExistanceLogic()->checkGroupExistanceIncludingArchivedGroups($groupId, $auth->getCompanyId());
 
         // タイムライン取得処理
         $timelineService = $this->getTimelineService();
@@ -46,7 +46,7 @@ class TimelineController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function postGroupPostsAction(Request $request, $groupId)
+    public function postGroupPostsAction(Request $request, string $groupId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/CommentPdu');
@@ -76,7 +76,7 @@ class TimelineController extends BaseController
      * @param string postId 投稿ID
      * @return array
      */
-    public function postPostRepliesAction(Request $request, $postId)
+    public function postPostRepliesAction(Request $request, string $postId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/ReplyPdu');
@@ -111,7 +111,7 @@ class TimelineController extends BaseController
      * @param string postId 投稿ID
      * @return array
      */
-    public function postPostLikesAction(Request $request, $postId)
+    public function postPostLikesAction(Request $request, string $postId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -121,7 +121,7 @@ class TimelineController extends BaseController
 
         // いいね登録処理
         $timelineService = $this->getTimelineService();
-        $timelineService->like($auth->getUserId(), $tPost->getId());
+        $timelineService->like($auth->getUserId(), $tPost);
 
         return array('result' => 'OK');
     }
@@ -134,7 +134,7 @@ class TimelineController extends BaseController
      * @param string postId 投稿ID
      * @return array
      */
-    public function deletePostLikeAction(Request $request, $postId)
+    public function deletePostLikeAction(Request $request, string $postId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

@@ -7,9 +7,9 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
-use AppBundle\Api\ResponseDTO\UserGroupDTO;
-use AppBundle\Utils\DBConstant;
 use AppBundle\Exception\PermissionException;
+use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\UserGroupDTO;
 
 /**
  * グループコントローラ
@@ -25,7 +25,7 @@ class GroupController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function postGroupsAction(Request $request)
+    public function postGroupsAction(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostGroupsPdu');
@@ -37,6 +37,12 @@ class GroupController extends BaseController
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
+        // グループパス存在チェック
+        $tGroupTree = null;
+        if (array_key_exists('groupPathId', $data)) {
+            $tGroupTree = $this->getDBExistanceLogic()->checkGroupPathExistance($data['groupPathId'], $auth->getCompanyId());
+        }
+
         // 権限チェック
         if ($auth->getRoleLevel() <= DBConstant::ROLE_LEVEL_NORMAL && $data['groupType'] === DBConstant::GROUP_TYPE_DEPARTMENT) {
             throw new PermissionException('一般ユーザは部門の作成はできません');
@@ -44,7 +50,7 @@ class GroupController extends BaseController
 
         // グループ新規登録処理
         $groupService = $this->getGroupService();
-        $groupService->createGroup($auth, $data);
+        $groupService->createGroup($auth, $data, $tGroupTree);
 
         return array('result' => 'OK');
     }
@@ -55,9 +61,9 @@ class GroupController extends BaseController
      * @Rest\Get("/v1/users/{userId}/groups.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $userId ユーザID
-     * @return array
+     * @return UserGroupDTO
      */
-    public function getUserGroupsAction(Request $request, $userId)
+    public function getUserGroupsAction(Request $request, string $userId): UserGroupDTO
     {
         // リクエストパラメータを取得
         $timeframeId = $request->get('tfid');
@@ -68,11 +74,6 @@ class GroupController extends BaseController
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
-
-        // ユーザIDの一致をチェック
-        if ($userId != $auth->getUserId()) {
-            throw new ApplicationException('ユーザIDが存在しません');
-        }
 
         // ユーザ基本情報取得
         $userService = $this->getUserService();
@@ -98,7 +99,7 @@ class GroupController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function putGroupAction(Request $request, $groupId)
+    public function putGroupAction(Request $request, string $groupId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PutGroupPdu');
@@ -122,7 +123,7 @@ class GroupController extends BaseController
 
         // グループ情報更新処理
         $groupService = $this->getGroupService();
-        $groupService->updateGroup($data, $mGroup);
+        $groupService->updateGroup($data, $mGroup, $auth->getCompanyId());
 
         return array('result' => 'OK');
     }
@@ -136,7 +137,7 @@ class GroupController extends BaseController
      * @param string $userId ユーザID
      * @return array
      */
-    public function putGroupLeaderAction(Request $request, $groupId, $userId)
+    public function putGroupLeaderAction(Request $request, string $groupId, string $userId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -169,7 +170,7 @@ class GroupController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function deleteGroupAction(Request $request, $groupId)
+    public function deleteGroupAction(Request $request, string $groupId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

@@ -15,10 +15,10 @@ class TAuthorizationRepository extends BaseRepository
     /**
      * 有効な認可情報を取得
      *
-     * @param $companyId 会社ID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getValidAuthorization($companyId)
+    public function getValidAuthorization(int $companyId): array
     {
         $qb = $this->createQueryBuilder('ta');
         $qb->select('ta')

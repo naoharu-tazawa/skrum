@@ -22,7 +22,7 @@ class GroupTreeController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function postGroupPathsAction(Request $request, $groupId)
+    public function postGroupPathsAction(Request $request, string $groupId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostGroupPathsPdu');
@@ -63,7 +63,7 @@ class GroupTreeController extends BaseController
      * @param string $groupTreeId グループツリーID
      * @return array
      */
-    public function deleteGroupPathAction(Request $request, $groupId, $groupTreeId)
+    public function deleteGroupPathAction(Request $request, string $groupId, string $groupTreeId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

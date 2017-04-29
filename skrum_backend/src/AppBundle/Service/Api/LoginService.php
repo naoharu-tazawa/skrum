@@ -18,6 +18,7 @@ use AppBundle\Entity\TAuthorization;
 use AppBundle\Entity\TGroupTree;
 use AppBundle\Entity\TPreUser;
 use \Firebase\JWT\JWT;
+use AppBundle\Entity\TLogin;
 
 /**
  * ログインサービスクラス
@@ -32,7 +33,7 @@ class LoginService extends BaseService
      * @param string $subdomain サブドメイン
      * @return void
      */
-    public function checkSubdomain($subdomain)
+    public function checkSubdomain(string $subdomain)
     {
         // 会社マスタに対象サブドメインの登録が既にあるかチェック
         $mCompanyRepos = $this->getMCompanyRepository();
@@ -50,12 +51,12 @@ class LoginService extends BaseService
      * @param string $subdomain サブドメイン
      * @return string JWT
      */
-    public function login($emailAddress, $password, $subdomain)
+    public function login(string $emailAddress, string $password, string $subdomain): string
     {
         // 対象ユーザをユーザテーブルから取得
         $mUserRepos = $this->getMUserRepository();
         $mUserArray = $mUserRepos->findBy(array('emailAddress' => $emailAddress));
-        if (count($mUserArray) === 0) {
+        if (count($mUserArray) === 0 || $mUserArray[0]->getArchivedFlg()) {
             throw new AuthenticationException('対象ユーザは存在しません');
         }
 
@@ -73,9 +74,12 @@ class LoginService extends BaseService
         // 認可レコードチェック
         $this->checkAuthorization($mCompany->getCompanyId());
 
-        // 最終ログイン日時を更新
-        $mUserArray[0]->setLastAccessDatetime(DateUtility::getCurrentDatetime());
+        // ログインテーブルにレコード追加
+        $tLogin = new TLogin();
+        $tLogin->setUserId($mUserArray[0]->getUserId());
+        $tLogin->setLoginDatetime(DateUtility::getCurrentDatetime());
         try {
+            $this->persist($tLogin);
             $this->flush();
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
@@ -100,7 +104,7 @@ class LoginService extends BaseService
      * @param integer $planId プランID
      * @return string JWT
      */
-    public function signup($password, $urltoken, $subdomain, $planId = DBConstant::PLAN_ID_TRIAL_PLAN)
+    public function signup(string $password, string $urltoken, string $subdomain, int $planId = DBConstant::PLAN_ID_TRIAL_PLAN): string
     {
         // URLトークン
         $tPreUserRepos = $this->getTPreUserRepository();
@@ -121,7 +125,7 @@ class LoginService extends BaseService
 
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
-        $mUserArray = $mUserRepos->findBy(array('emailAddress' => $tPreUser->getEmailAddress()));
+        $mUserArray = $mUserRepos->findBy(array('emailAddress' => $tPreUser->getEmailAddress(), 'archivedFlg' => DBConstant::FLG_FALSE));
         if (count($mUserArray) > 0) {
             throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
         }
@@ -174,8 +178,14 @@ class LoginService extends BaseService
             $mUser->setEmailAddress($tPreUser->getEmailAddress());
             $mUser->setPassword($hashedPassword);
             $mUser->setRoleAssignment($mRoleAssignment);
-            $mUser->setLastAccessDatetime(DateUtility::getCurrentDatetime());
             $this->persist($mUser);
+            $this->flush();
+
+            // ログインテーブルにレコード追加
+            $tLogin = new TLogin();
+            $tLogin->setUserId($mUser->getUserId());
+            $tLogin->setLoginDatetime(DateUtility::getCurrentDatetime());
+            $this->persist($tLogin);
 
             // 仮登録ユーザテーブルのURLトークンを無効にする
             $tPreUser->setInvalidFlg(DBConstant::FLG_TRUE);
@@ -211,7 +221,7 @@ class LoginService extends BaseService
      * @param string $subdomain サブドメイン
      * @return string JWT
      */
-    public function join($password, $urltoken, $subdomain)
+    public function join(string $password, string $urltoken, string $subdomain): string
     {
         // URLトークン
         $tPreUserRepos = $this->getTPreUserRepository();
@@ -229,7 +239,7 @@ class LoginService extends BaseService
 
         // ユーザテーブルに同一Eメールアドレスの登録がないか確認
         $mUserRepos = $this->getMUserRepository();
-        $mUserArray = $mUserRepos->findBy(array('emailAddress' => $tPreUser->getEmailAddress()));
+        $mUserArray = $mUserRepos->findBy(array('emailAddress' => $tPreUser->getEmailAddress(), 'archivedFlg' => DBConstant::FLG_FALSE));
         if (count($mUserArray) > 0) {
             throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
         }
@@ -261,8 +271,14 @@ class LoginService extends BaseService
             $mUser->setEmailAddress($tPreUser->getEmailAddress());
             $mUser->setPassword($hashedPassword);
             $mUser->setRoleAssignment($mRoleAssignment);
-            $mUser->setLastAccessDatetime(DateUtility::getCurrentDatetime());
             $this->persist($mUser);
+            $this->flush();
+
+            // ログインテーブルにレコード追加
+            $tLogin = new TLogin();
+            $tLogin->setUserId($mUser->getUserId());
+            $tLogin->setLoginDatetime(DateUtility::getCurrentDatetime());
+            $this->persist($tLogin);
 
             // 仮登録ユーザテーブルのURLトークンを無効にする
             $tPreUser->setInvalidFlg(DBConstant::FLG_TRUE);
@@ -287,10 +303,10 @@ class LoginService extends BaseService
      * @param string $subdomain サブドメイン
      * @param integer $userId ユーザID
      * @param integer $companyId 会社ID
-     * @param string $companyId ロールID
+     * @param string $roleId ロールID
      * @return string JWT
      */
-    private function issueJwt($subdomain, $userId, $companyId, $roleId)
+    private function issueJwt(string $subdomain, int $userId, int $companyId, string $roleId): string
     {
         // 権限取得
         $mRolePermissionRepos = $this->getMRolePermissionRepository();
@@ -332,7 +348,7 @@ class LoginService extends BaseService
      * @param integer $companyId 会社ID
      * @return void
      */
-    private function checkAuthorization($companyId)
+    private function checkAuthorization(int $companyId)
     {
         $tAuthorizationRepos = $this->getTAuthorizationRepository();
         $tAuthorizationArray = $tAuthorizationRepos->getValidAuthorization($companyId);

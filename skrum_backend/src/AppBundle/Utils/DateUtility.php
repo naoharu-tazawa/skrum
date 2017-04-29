@@ -2,6 +2,8 @@
 
 namespace AppBundle\Utils;
 
+use AppBundle\Exception\ApplicationException;
+
 /**
  * 汎用日付クラス
  *
@@ -29,7 +31,7 @@ class DateUtility
      *
      * @return \DateTime 現在時刻
      */
-    public static function getCurrentDatetime()
+    public static function getCurrentDatetime(): \DateTime
     {
         return new \DateTime(date(self::DATETIME_FORMAT));
     }
@@ -39,7 +41,7 @@ class DateUtility
      *
      * @return string 現在時刻
      */
-    public static function getCurrentDatetimeString()
+    public static function getCurrentDatetimeString(): string
     {
         return date(self::DATETIME_FORMAT);
     }
@@ -49,7 +51,7 @@ class DateUtility
      *
      * @return \DateTime 最大年月日時分秒
      */
-    public static function getMaxDatetime()
+    public static function getMaxDatetime(): \DateTime
     {
         return new \DateTime(self::MAX_DATETIME);
     }
@@ -59,7 +61,7 @@ class DateUtility
      *
      * @return string 最大年月日時分秒
      */
-    public static function getMaxDatetimeString()
+    public static function getMaxDatetimeString(): string
     {
         return self::MAX_DATETIME;
     }
@@ -69,7 +71,7 @@ class DateUtility
      *
      * @return string 今月１日
      */
-    public static function get1stOfThisMonthString()
+    public static function get1stOfThisMonthString(): string
     {
         return date(self::DATE_FORMAT, mktime(0, 0, 0, date('m'), 1, date('Y')));
     }
@@ -79,7 +81,7 @@ class DateUtility
      *
      * @return string 今月１日時分秒
      */
-    public static function get1stOfThisMonthDatetimeString()
+    public static function get1stOfThisMonthDatetimeString(): string
     {
         return date(self::DATETIME_FORMAT, mktime(0, 0, 0, date('m'), 1, date('Y')));
     }
@@ -89,7 +91,7 @@ class DateUtility
      *
      * @return string 今月末日
      */
-    public static function getEndOfThisMonthString()
+    public static function getEndOfThisMonthString(): string
     {
         return date(self::DATE_FORMAT, mktime(0, 0, 0, date('m') + 1, 0, date('Y')));
     }
@@ -99,7 +101,7 @@ class DateUtility
      *
      * @return string 今月末日時分秒
      */
-    public static function getEndOfThisMonthDatetimeString()
+    public static function getEndOfThisMonthDatetimeString(): string
     {
         return date(self::DATETIME_FORMAT, mktime(23, 59, 59, date('m') + 1, 0, date('Y')));
     }
@@ -107,11 +109,11 @@ class DateUtility
     /**
      * 指定月末日を取得
      *
-     * @param string $year
-     * @param string $month
+     * @param string $year 指定年
+     * @param string $month 指定月
      * @return string 指定月末日
      */
-    public static function getEndOfMonthString($year, $month)
+    public static function getEndOfMonthString(int $year, int $month): string
     {
         return date(self::DATE_FORMAT, mktime(0, 0, 0, $month + 1, 0, $year));
     }
@@ -119,11 +121,11 @@ class DateUtility
     /**
      * 指定月末日時分秒を取得
      *
-     * @param string $year
-     * @param string $month
+     * @param integer $year 指定年
+     * @param integer $month 指定月
      * @return string 指定月末日時分秒
      */
-    public static function getEndOfMonthDatetimeString($year, $month)
+    public static function getEndOfMonthDatetimeString(int $year, int $month): string
     {
         return date(self::DATETIME_FORMAT, mktime(23, 59, 59, $month + 1, 0, $year));
     }
@@ -131,12 +133,12 @@ class DateUtility
     /**
      * 指定年月のXヶ月後の１日を取得
      *
-     * @param string $year
-     * @param string $month
-     * @param integer $plus
+     * @param integer $year 指定年
+     * @param integer $month 指定月
+     * @param integer $plus Xヶ月後
      * @return string 指定年月のXヶ月後の１日
      */
-    public static function get1stOfXMonthDateString($year, $month, $plus = 0)
+    public static function get1stOfXMonthDateString(int $year, int $month, int $plus = 0): string
     {
         return date(self::DATE_FORMAT, mktime(0, 0, 0, $month + $plus, 1, $year));
     }
@@ -144,12 +146,12 @@ class DateUtility
     /**
      * 指定年月のXヶ月後の月末日を取得
      *
-     * @param string $year
-     * @param string $month
-     * @param integer $plus
+     * @param integer $year 指定年
+     * @param integer $month 指定月
+     * @param integer $plus Xヶ月後
      * @return string 指定年月のXヶ月後の月末日
      */
-    public static function getEndOfXMonthDateString($year, $month, $plus = 0)
+    public static function getEndOfXMonthDateString(int $year, int $month, int $plus = 0): string
     {
         return date(self::DATE_FORMAT, mktime(0, 0, 0, $month + 1 + $plus, 0, $year));
     }
@@ -157,9 +159,10 @@ class DateUtility
     /**
      * string型の年月日をDateTime型に変換
      *
-     * @return $dateString 年月日時分秒
+     * @param string $dateString 年月日時分秒
+     * @return \DateTime
      */
-    public static function transIntoDatetime($dateString)
+    public static function transIntoDatetime(string $dateString): \DateTime
     {
         return new \DateTime($dateString);
     }
@@ -170,7 +173,7 @@ class DateUtility
      * @param $days X日
      * @return \DateTime X日後の年月日23時59分59秒
      */
-    public static function getXDaysAfter($days)
+    public static function getXDaysAfter(int $days): \DateTime
     {
         $dateString = date(self::DATETIME_FORMAT, mktime(23, 59, 59, date('m'), date('d') + $days, date('Y')));
         return new \DateTime($dateString);
@@ -179,11 +182,40 @@ class DateUtility
     /**
      * string型年月日（yyyy-MM-dd）の要素を配列に分解（array('yyyy', 'MM', 'dd')）
      *
-     * @param $dateString string型年月日（yyyy-MM-dd）
+     * @param string $dateString 年月日（yyyy-MM-dd）
      * @return array array('yyyy', 'MM', 'dd')
      */
-    public static function analyzeDate($dateString)
+    public static function analyzeDate(string $dateString): array
     {
         return explode('-', $dateString);
+    }
+
+    /**
+     * 開始日と終了日の妥当性チェック
+     *
+     * @param string $startDate 年月日時分秒（yyyy-MM-ddThh:mm:ssZ）
+     * @param string $endDate 年月日時分秒（yyyy-MM-ddThh:mm:ssZ）
+     * @return void
+     */
+    public static function checkStartDateAndEndDate(string $startDate, string $endDate)
+    {
+        // 開始日と終了日を分解し配列に格納
+        $startDateArray = preg_split("(-|T)", $startDate);
+        $endDateArray = preg_split("(-|T)", $endDate);
+
+        // 開始日妥当性チェック
+        if (!checkdate($startDateArray[1], $startDateArray[2], $startDateArray[0])) {
+            throw new ApplicationException('開始日が不正です');
+        }
+
+        // 終了日妥当性チェック
+        if (!checkdate($endDateArray[1], $endDateArray[2], $endDateArray[0])) {
+            throw new ApplicationException('終了日が不正です');
+        }
+
+        // 「開始日 <= 終了日」であるかチェック
+        if ($startDate > $endDate) {
+            throw new ApplicationException('終了日は開始日以降に設定してください');
+        }
     }
 }

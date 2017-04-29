@@ -2,7 +2,7 @@
 LOGIN USER: sampleuser1
 
 HTTP METHOD: POST
-http://company1.localhost:8000/app_dev.php/api/companies/1/establish.json
+http://company1.localhost:8000/v1/companies/1/establish.json
 
 [Request Json Schema]
 customFlgがfalseの場合：

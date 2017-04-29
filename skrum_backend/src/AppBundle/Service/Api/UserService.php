@@ -3,9 +3,12 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
+use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\NoDataException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\MGroup;
+use AppBundle\Entity\MUser;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\DepartmentDTO;
 
@@ -21,9 +24,9 @@ class UserService extends BaseService
      *
      * @param integer $userId グループID
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO
+     * @return BasicUserInfoDTO
      */
-    public function getBasicUserInfo($userId, $companyId)
+    public function getBasicUserInfo(int $userId, int $companyId): BasicUserInfoDTO
     {
         $mUserRepos = $this->getMUserRepository();
         $mUserArray = $mUserRepos->findBy(array('userId' => $userId, 'company' => $companyId));
@@ -57,14 +60,24 @@ class UserService extends BaseService
      * ユーザ情報更新
      *
      * @param array $data リクエストJSON連想配列
-     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @param MUser $mUser ユーザエンティティ
      * @return void
      */
-    public function updateUser($data, $mUser)
+    public function updateUser(array $data, MUser $mUser)
     {
+        // Eメールアドレスを更新する場合は、ユーザテーブルに同一Eメールアドレスの登録がないか確認
+        if ($mUser->getEmailAddress() !== $data['emailAddress']) {
+            $mUserRepos = $this->getMUserRepository();
+            $result = $mUserRepos->findBy(array('emailAddress' => $data['emailAddress'], 'archivedFlg' => DBConstant::FLG_FALSE));
+            if (count($result) > 0) {
+                throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
+            }
+        }
+
         // ユーザ情報更新
         $mUser->setLastName($data['lastName']);
         $mUser->setFirstName($data['firstName']);
+        $mUser->setEmailAddress($data['emailAddress']);
         $mUser->setPosition($data['position']);
         $mUser->setPhoneNumber($data['phoneNumber']);
 
@@ -78,16 +91,31 @@ class UserService extends BaseService
     /**
      * ユーザ削除
      *
-     * @param \AppBundle\Entity\MUser $mUser ユーザエンティティ
+     * @param MUser $mUser ユーザエンティティ
+     * @param integer $companyId 会社ID
      * @return void
      */
-    public function deleteUser($mUser)
+    public function deleteUser(MUser $mUser, int $companyId)
     {
-        // ユーザ削除
+        // トランザクション開始
+        $this->beginTransaction();
+
         try {
-            $this->remove($mUser);
+            // グループメンバーレコードを全て削除
+            $tGroupMemberRepos = $this->getTGroupMemberRepository();
+            $tGroupMemberRepos->deleteAllUserGroups($mUser->getUserId());
+
+            // グループリーダーユーザの場合、NULLを設定
+            $mGroupRepos = $this->getMGroupRepository();
+            $mGroupRepos->setNullOnLeaderUserId($mUser->getUserId(), $companyId);
+
+            // アーカイブ済フラグを立てる
+            $mUser->setArchivedFlg(DBConstant::FLG_TRUE);
+
             $this->flush();
+            $this->commit();
         } catch (\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
     }

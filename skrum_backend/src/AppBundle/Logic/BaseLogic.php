@@ -4,6 +4,8 @@ namespace AppBundle\Logic;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use AppBundle\Utils\LoggerManager;
+use Doctrine\ORM\EntityManager;
+use Monolog\Logger;
 
 /**
  * ベースロジック（被継承クラス）
@@ -46,7 +48,7 @@ class BaseLogic
      *
      * @return ContainerInterface サービスコンテナ
      */
-    protected function getContainer()
+    protected function getContainer(): ContainerInterface
     {
         return $this->container;
     }
@@ -57,7 +59,7 @@ class BaseLogic
      * @param string $name The parameter name
      * @return mixed
      */
-    protected function getParameter($name)
+    protected function getParameter(string $name)
     {
         return $this->container->getParameter($name);
     }
@@ -65,9 +67,9 @@ class BaseLogic
     /**
      * ロガー取得
      *
-     * @return \Monolog\Logger monologロガーインスタンス
+     * @return Logger monologロガーインスタンス
      */
-    private function getLogger()
+    private function getLogger(): Logger
     {
         return LoggerManager::getInstance()->getLogger();
     }
@@ -77,9 +79,9 @@ class BaseLogic
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logDebug($message, array $context = array())
+    protected function logDebug(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addDebug($message, $context);
     }
@@ -89,9 +91,9 @@ class BaseLogic
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logInfo($message, array $context = array())
+    protected function logInfo(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addInfo($message, $context);
     }
@@ -101,9 +103,9 @@ class BaseLogic
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logWarning($message, array $context = array())
+    protected function logWarning(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addWarning($message, $context);
     }
@@ -113,9 +115,9 @@ class BaseLogic
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logError($message, array $context = array())
+    protected function logError(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addError($message, $context);
     }
@@ -125,9 +127,9 @@ class BaseLogic
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logCritical($message, array $context = array())
+    protected function logCritical(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addCritical($message, $context);
     }
@@ -137,9 +139,9 @@ class BaseLogic
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return boolean Whether the record has been processed
      */
-    protected function logAlert($message, array $context = array())
+    protected function logAlert(string $message, array $context = array()): bool
     {
         return $this->getLogger()->addAlert($message, $context);
     }
@@ -147,9 +149,9 @@ class BaseLogic
     /**
      * Doctrineエンティティマネージャの取得
      *
-     * @return \Doctrine\ORM\EntityManager Doctrineエンティティマネージャ
+     * @return EntityManager Doctrineエンティティマネージャ
      */
-    protected function getEntityManager()
+    protected function getEntityManager(): EntityManager
     {
         return $this->entityManager;
     }
@@ -257,11 +259,6 @@ class BaseLogic
         return $this->entityManager->getRepository('AppBundle:MNormalTimeframe');
     }
 
-    protected function getMNormalTimeframeDetailRepository()
-    {
-        return $this->entityManager->getRepository('AppBundle:MNormalTimeframeDetail');
-    }
-
     protected function getMPermissionSettingsRepository()
     {
         return $this->entityManager->getRepository('AppBundle:MPermissionSettings');
@@ -292,11 +289,6 @@ class BaseLogic
         return $this->entityManager->getRepository('AppBundle:MUser');
     }
 
-    protected function getSGroupTreePathIdRepository()
-    {
-        return $this->entityManager->getRepository('AppBundle:SGroupTreePathId');
-    }
-
     protected function getTAuthorizationRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TAuthorization');
@@ -315,6 +307,16 @@ class BaseLogic
     protected function getTGroupTreeRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TGroupTree');
+    }
+
+    protected function getTLikeRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TLike');
+    }
+
+    protected function getTLoginRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TLogin');
     }
 
     protected function getTMailReservationRepository()

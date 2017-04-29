@@ -26,7 +26,7 @@ class UserSettingController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function inviteAction(Request $request)
+    public function inviteAction(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/InvitePdu');
@@ -50,7 +50,7 @@ class UserSettingController extends BaseController
 
         // ユーザ招待メール送信処理
         $userSettingService = $this->getUserSettingService();
-        $userSettingService->inviteUser($auth, $data['emailAddress'], $mRoleAssignment->getRoleAssignmentId());
+        $userSettingService->inviteUser($auth, $data['emailAddress'], $mRoleAssignment);
 
         return array('result' => 'OK');
     }
@@ -63,7 +63,7 @@ class UserSettingController extends BaseController
      * @param string $companyId 会社ID
      * @return array
      */
-    public function establishCompanyAction(Request $request, $companyId)
+    public function establishCompanyAction(Request $request, string $companyId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/EstablishCompanyPdu');
@@ -71,6 +71,13 @@ class UserSettingController extends BaseController
 
         // リクエストJSONを取得
         $data = $this->getRequestJsonAsArray($request);
+
+        // カスタムフラグがTRUEの場合に必要なJsonSchemaのプロパティをチェック
+        if ($data['timeframe']['customFlg']) {
+            if (empty($data['timeframe']['end']) || empty($data['timeframe']['timeframeName'])) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        }
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -95,7 +102,7 @@ class UserSettingController extends BaseController
      * @param string $userId ユーザID
      * @return array
      */
-    public function establishUserAction(Request $request, $userId)
+    public function establishUserAction(Request $request, string $userId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/EstablishUserPdu');
@@ -128,7 +135,7 @@ class UserSettingController extends BaseController
      * @param string $userId ユーザID
      * @return array
      */
-    public function resetUserPasswordAction(Request $request, $userId)
+    public function resetUserPasswordAction(Request $request, string $userId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -153,12 +160,12 @@ class UserSettingController extends BaseController
     /**
      * パスワード変更
      *
-     * @Rest\Post("/v1/users/{userId}/changepassword.{_format}")
+     * @Rest\Put("/v1/users/{userId}/changepassword.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $userId ユーザID
      * @return array
      */
-    public function changeUserPasswordAction(Request $request, $userId)
+    public function changeUserPasswordAction(Request $request, string $userId): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/ChangeUserPasswordPdu');
@@ -191,7 +198,7 @@ class UserSettingController extends BaseController
      * @param string $companyId 会社ID
      * @return array
      */
-    public function getCompanyRolesAction(Request $request, $companyId)
+    public function getCompanyRolesAction(Request $request, string $companyId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -218,7 +225,7 @@ class UserSettingController extends BaseController
      * @param string $roleAssignmentId ロール割当ID
      * @return array
      */
-    public function putUserRoleAction(Request $request, $userId, $roleAssignmentId)
+    public function putUserRoleAction(Request $request, string $userId, string $roleAssignmentId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

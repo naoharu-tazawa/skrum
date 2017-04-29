@@ -12,7 +12,7 @@ basePath: /v1
 paths:
   /posts/{postId}/replies:
     post:
-      description: リプライコメント
+      description: リプライ投稿
       parameters:
         -
           name: postId

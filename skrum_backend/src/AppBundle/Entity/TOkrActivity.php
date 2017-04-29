@@ -45,14 +45,14 @@ class TOkrActivity
     /**
      * @var string
      *
-     * @ORM\Column(name="achievement_rate", type="decimal", precision=4, scale=1, nullable=true)
+     * @ORM\Column(name="achievement_rate", type="decimal", precision=15, scale=1, nullable=true)
      */
     private $achievementRate;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="changed_percentage", type="decimal", precision=4, scale=1, nullable=true)
+     * @ORM\Column(name="changed_percentage", type="decimal", precision=15, scale=1, nullable=true)
      */
     private $changedPercentage;
 
@@ -87,16 +87,16 @@ class TOkrActivity
     /**
      * @var integer
      *
-     * @ORM\Column(name="new_owner_company_id", type="integer", nullable=true)
+     * @ORM\Column(name="new_owner_user_id", type="integer", nullable=true)
      */
-    private $newOwnerCompanyId;
+    private $newOwnerUserId;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="previous_owner_company_id", type="integer", nullable=true)
+     * @ORM\Column(name="previous_owner_user_id", type="integer", nullable=true)
      */
-    private $previousOwnerCompanyId;
+    private $previousOwnerUserId;
 
     /**
      * @var integer
@@ -115,16 +115,16 @@ class TOkrActivity
     /**
      * @var integer
      *
-     * @ORM\Column(name="new_owner_user_id", type="integer", nullable=true)
+     * @ORM\Column(name="new_owner_company_id", type="integer", nullable=true)
      */
-    private $newOwnerUserId;
+    private $newOwnerCompanyId;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="previous_owner_user_id", type="integer", nullable=true)
+     * @ORM\Column(name="previous_owner_company_id", type="integer", nullable=true)
      */
-    private $previousOwnerUserId;
+    private $previousOwnerCompanyId;
 
     /**
      * @var \DateTime
@@ -411,51 +411,51 @@ class TOkrActivity
     }
 
     /**
-     * Set newOwnerCompanyId
+     * Set newOwnerUserId
      *
-     * @param integer $newOwnerCompanyId
+     * @param integer $newOwnerUserId
      *
      * @return TOkrActivity
      */
-    public function setNewOwnerCompanyId($newOwnerCompanyId)
+    public function setNewOwnerUserId($newOwnerUserId)
     {
-        $this->newOwnerCompanyId = $newOwnerCompanyId;
+        $this->newOwnerUserId = $newOwnerUserId;
 
         return $this;
     }
 
     /**
-     * Get newOwnerCompanyId
+     * Get newOwnerUserId
      *
      * @return integer
      */
-    public function getNewOwnerCompanyId()
+    public function getNewOwnerUserId()
     {
-        return $this->newOwnerCompanyId;
+        return $this->newOwnerUserId;
     }
 
     /**
-     * Set previousOwnerCompanyId
+     * Set previousOwnerUserId
      *
-     * @param integer $previousOwnerCompanyId
+     * @param integer $previousOwnerUserId
      *
      * @return TOkrActivity
      */
-    public function setPreviousOwnerCompanyId($previousOwnerCompanyId)
+    public function setPreviousOwnerUserId($previousOwnerUserId)
     {
-        $this->previousOwnerCompanyId = $previousOwnerCompanyId;
+        $this->previousOwnerUserId = $previousOwnerUserId;
 
         return $this;
     }
 
     /**
-     * Get previousOwnerCompanyId
+     * Get previousOwnerUserId
      *
      * @return integer
      */
-    public function getPreviousOwnerCompanyId()
+    public function getPreviousOwnerUserId()
     {
-        return $this->previousOwnerCompanyId;
+        return $this->previousOwnerUserId;
     }
 
     /**
@@ -507,51 +507,51 @@ class TOkrActivity
     }
 
     /**
-     * Set newOwnerUserId
+     * Set newOwnerCompanyId
      *
-     * @param integer $newOwnerUserId
+     * @param integer $newOwnerCompanyId
      *
      * @return TOkrActivity
      */
-    public function setNewOwnerUserId($newOwnerUserId)
+    public function setNewOwnerCompanyId($newOwnerCompanyId)
     {
-        $this->newOwnerUserId = $newOwnerUserId;
+        $this->newOwnerCompanyId = $newOwnerCompanyId;
 
         return $this;
     }
 
     /**
-     * Get newOwnerUserId
+     * Get newOwnerCompanyId
      *
      * @return integer
      */
-    public function getNewOwnerUserId()
+    public function getNewOwnerCompanyId()
     {
-        return $this->newOwnerUserId;
+        return $this->newOwnerCompanyId;
     }
 
     /**
-     * Set previousOwnerUserId
+     * Set previousOwnerCompanyId
      *
-     * @param integer $previousOwnerUserId
+     * @param integer $previousOwnerCompanyId
      *
      * @return TOkrActivity
      */
-    public function setPreviousOwnerUserId($previousOwnerUserId)
+    public function setPreviousOwnerCompanyId($previousOwnerCompanyId)
     {
-        $this->previousOwnerUserId = $previousOwnerUserId;
+        $this->previousOwnerCompanyId = $previousOwnerCompanyId;
 
         return $this;
     }
 
     /**
-     * Get previousOwnerUserId
+     * Get previousOwnerCompanyId
      *
      * @return integer
      */
-    public function getPreviousOwnerUserId()
+    public function getPreviousOwnerCompanyId()
     {
-        return $this->previousOwnerUserId;
+        return $this->previousOwnerCompanyId;
     }
 
     /**

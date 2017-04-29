@@ -1,6 +1,6 @@
 [Request URL]
 HTTP METHOD: POST
-http://company1.localhost:8000/app_dev.php/api/objectives.json
+http://company1.localhost:8000/v1/okrs.json
 
 [Request Json Schema]
 目標（OBJECTIVE）登録の場合　（オーナー：ユーザ）（紐付け先：なし）：

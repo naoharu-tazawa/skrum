@@ -44,6 +44,8 @@ paths:
                     items:
                       type: object
                       properties:
+                        groupTreeId:
+                          type: integer
                         groupPath:
                           type: string
                         groupPathName:

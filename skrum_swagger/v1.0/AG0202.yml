@@ -12,7 +12,7 @@ basePath: /v1
 paths:
   /groups/{groupId}/posts:
     post:
-      description: タイムラインコメント
+      description: コメント投稿
       parameters:
         -
           name: groupId

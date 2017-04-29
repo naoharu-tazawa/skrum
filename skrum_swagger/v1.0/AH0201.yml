@@ -55,9 +55,7 @@ paths:
                   properties:
                     userId:
                       type: integer
-                    lastName:
-                      type: string
-                    firstName:
+                    name:
                       type: string
                     position:
                       type: string

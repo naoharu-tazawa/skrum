@@ -4,6 +4,7 @@ namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
 use AppBundle\Entity\TOkrActivity;
@@ -21,11 +22,11 @@ class OkrDetailsService extends BaseService
     /**
      * OKR詳細情報を取得
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
-     * @param \AppBundle\Entity\TOkr $okrEntity OKRエンティティ
-     * @return \AppBundle\Api\ResponseDTO\OkrDetailsDTO
+     * @param Auth $auth 認証情報
+     * @param TOkr $okrEntity OKRエンティティ
+     * @return OkrDetailsDTO
      */
-    public function getOkrDetails($auth, $okrEntity)
+    public function getOkrDetails(Auth $auth, TOkr $okrEntity): OkrDetailsDTO
     {
         // OKRIDを取得
         $okrId = $okrEntity->getOkrId();
@@ -105,11 +106,11 @@ class OkrDetailsService extends BaseService
     /**
      * OKRエンティティをDTOに詰め替える
      *
-     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param TOkr $tOkr OKRエンティティ
      * @param string $companyName 会社名
-     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO
+     * @return BasicOkrDTO
      */
-    private function repackDTOWithOkrEntity($tOkr, $companyName = null)
+    private function repackDTOWithOkrEntity(TOkr $tOkr, string $companyName = null): BasicOkrDTO
     {
         $basicOkrDTO = new BasicOkrDTO();
         $basicOkrDTO->setOkrId($tOkr->getOkrId());

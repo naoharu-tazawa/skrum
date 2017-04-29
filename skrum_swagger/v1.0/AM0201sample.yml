@@ -1,13 +1,13 @@
 [Request URL]
 HTTP METHOD: POST
-http://company1.localhost:8000/app_dev.php/api/groups.json
+http://company1.localhost:8000/v1/groups.json
 
 [Request Json Schema]
 所属先グループ指定がある場合：
 {
   "groupName": "グループ名",
   "groupType": "1",
-  "groupTreeId": 1
+  "groupPathId": 1
 }
 
 所属先グループ指定が無い場合：

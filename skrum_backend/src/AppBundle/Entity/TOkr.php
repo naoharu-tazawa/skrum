@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * TOkr
  *
- * @ORM\Table(name="t_okr", indexes={@ORM\Index(name="idx_okr_01", columns={"timeframe_id"}), @ORM\Index(name="idx_okr_02", columns={"parent_okr_id"}), @ORM\Index(name="idx_okr_04", columns={"owner_group_id"}), @ORM\Index(name="idx_okr_05", columns={"owner_user_id"}), @ORM\Index(name="idx_okr_06", columns={"tree_left", "tree_right"})})
+ * @ORM\Table(name="t_okr", indexes={@ORM\Index(name="idx_okr_01", columns={"timeframe_id"}), @ORM\Index(name="idx_okr_02", columns={"parent_okr_id"}), @ORM\Index(name="idx_okr_04", columns={"owner_group_id"}), @ORM\Index(name="idx_okr_05", columns={"owner_user_id"}), @ORM\Index(name="idx_okr_06", columns={"tree_left", "tree_right"}), @ORM\Index(name="idx_okr_07", columns={"name"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TOkrRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
@@ -52,7 +52,7 @@ class TOkr
     /**
      * @var string
      *
-     * @ORM\Column(name="achievement_rate", type="decimal", precision=4, scale=1, nullable=false)
+     * @ORM\Column(name="achievement_rate", type="decimal", precision=15, scale=1, nullable=false)
      */
     private $achievementRate;
 

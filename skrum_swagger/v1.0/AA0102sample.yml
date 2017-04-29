@@ -1,6 +1,6 @@
 [Request URL]
 HTTP METHOD: POST
-http://company6.localhost:8000/app_dev.php/api/signup.json
+http://company6.localhost:8000/v1/signup.json
 
 [Request Json Schema]
 {

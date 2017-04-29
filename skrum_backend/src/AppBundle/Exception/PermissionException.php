@@ -28,9 +28,9 @@ class PermissionException extends ApplicationException
     /**
      * コンストラクタ
      *
-	 * @param $message ログ出力メッセージ
+	 * @param string $message ログ出力メッセージ
 	 */
-    public function __construct($message)
+    public function __construct(string $message)
     {
         parent::__construct($message, 0, false, null);
     }

@@ -1,0 +1,21 @@
+[Request URL]
+LOGIN USER: sampleuser1
+
+HTTP METHOD: PUT
+http://company1.localhost:8000/v1/okrs/2/setratio.json
+
+[Request Json Schema]
+[
+  {
+    "keyResultId": 3,
+    "weightedAverageRatio": 20.3
+  },
+  {
+    "keyResultId": 4,
+    "weightedAverageRatio": 13.0
+  },
+  {
+    "keyResultId": 5,
+    "weightedAverageRatio": 29.5
+  }
+]

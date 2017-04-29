@@ -46,6 +46,10 @@ services:
         class: AppBundle\Logic\OkrNestedIntervalsLogic
         arguments: ['@service_container']
 
+    api.okr_operation_logic:
+        class: AppBundle\Logic\OkrOperationLogic
+        arguments: ['@service_container']
+
     api.permission_logic:
         class: AppBundle\Logic\PermissionLogic
         arguments: ['@service_container']

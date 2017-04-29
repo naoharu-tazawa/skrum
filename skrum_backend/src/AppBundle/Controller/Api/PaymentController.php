@@ -24,7 +24,7 @@ class PaymentController extends BaseController
      * @param string $companyId 会社ID
      * @return array
      */
-    public function getCompanyPaymentsAction(Request $request, $companyId): array
+    public function getCompanyPaymentsAction(Request $request, string $companyId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');

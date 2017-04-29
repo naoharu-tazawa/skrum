@@ -3,15 +3,17 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\Constant;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\MGroup;
+use AppBundle\Entity\MUser;
 use AppBundle\Entity\TOkr;
 use AppBundle\Entity\TOkrActivity;
 use AppBundle\Entity\TPost;
+use AppBundle\Entity\TTimeframe;
 use AppBundle\Api\ResponseDTO\NestedObject\AlignmentsInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\CompanyAlignmentsDTO;
@@ -29,14 +31,14 @@ class OkrService extends BaseService
      * 目標とキーリザルトの一覧を取得
      *
      * @param string $subjectType 主体種別
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param integer $userId 取得対象ユーザID
      * @param integer $groupId 取得対象グループID
      * @param integer $timeframeId タイムフレームID
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function getObjectivesAndKeyResults($subjectType, $auth, $userId, $groupId, $timeframeId, $companyId)
+    public function getObjectivesAndKeyResults(string $subjectType, Auth $auth, int $userId = null, int $groupId = null, int $timeframeId, int $companyId): array
     {
         // 目標とキーリザルトを取得
         $tOkrRepos = $this->getTOkrRepository();
@@ -164,7 +166,7 @@ class OkrService extends BaseService
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function getAlignmentsInfo($subjectType, $userId, $groupId, $timeframeId, $companyId)
+    public function getAlignmentsInfo(string $subjectType, int $userId = null, int $groupId = null, int $timeframeId, int $companyId): array
     {
         $alignmentsInfoDTOArray = array();
         $tOkrRepos = $this->getTOkrRepository();
@@ -232,52 +234,27 @@ class OkrService extends BaseService
      *
      * @param string $ownerType OKRオーナー種別
      * @param array $data リクエストJSON連想配列
-     * @param \AppBundle\Entity\TTimeframe $tTimeframe タイムフレームエンティティ
-     * @param \AppBundle\Entity\MUser $mUser オーナーユーザエンティティ
-     * @param \AppBundle\Entity\MGroup $mGroup オーナーグループエンティティ
+     * @param TTimeframe $tTimeframe タイムフレームエンティティ
+     * @param MUser $mUser オーナーユーザエンティティ
+     * @param MGroup $mGroup オーナーグループエンティティ
      * @param integer $companyId オーナー会社ID
      * @param boolean $alignmentFlg 紐付け先OKR有りフラグ
-     * @param \AppBundle\Entity\TOkr $parentOkrEntity 紐付け先OKRエンティティ
+     * @param TOkr $parentOkrEntity 紐付け先OKRエンティティ
      * @return void
      */
-    public function createOkr($ownerType, $data, $tTimeframe, $mUser, $mGroup, $companyId, $alignmentFlg, $parentOkrEntity)
+    public function createOkr(string $ownerType, array $data, TTimeframe $tTimeframe, MUser $mUser = null, MGroup $mGroup = null, int $companyId, bool $alignmentFlg, TOkr $parentOkrEntity = null)
     {
-        if ($alignmentFlg) {
-            // 紐付け先OKRが他のOKRに紐付けられていない場合、紐付け不可
-            if (empty($parentOkrEntity->getParentOkr())) {
-                throw new ApplicationException('紐付け先のないOKRには紐付けられません');
-            }
+        // 開始日と終了日の妥当性チェック
+        DateUtility::checkStartDateAndEndDate($data['startDate'], $data['endDate']);
 
-            // 同一オーナーのOKRに紐付ける場合、OKR種別を比較し紐付け可能かチェック
-            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER && $parentOkrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
-                if ($mUser->getUserId() == $parentOkrEntity->getOwnerUser()->getUserId()) {
-                    if (!($parentOkrEntity->getType() === DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT)) {
-                        throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
-                    }
-                } else {
-                    if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
-                        throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
-                    }
-                }
-            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $parentOkrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                if ($mGroup->getGroupId() === $parentOkrEntity->getOwnerGroup()->getGroupId()) {
-                    if (!($parentOkrEntity->getType() === DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT)) {
-                        throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
-                    }
-                } else {
-                    if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
-                        throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
-                    }
-                }
-            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY && $parentOkrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
-                if (!($parentOkrEntity->getType() === DBConstant::OKR_TYPE_OBJECTIVE && $data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT)) {
-                    throw new ApplicationException('同一オーナーのOKRに紐づける場合、目標に対してキーリザルトを紐づけるパターンしかありません');
-                }
-            } else {
-                if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
-                    throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
-                }
-            }
+        if ($alignmentFlg) {
+            // 紐付け先チェック
+            $userId = null;
+            $groupId = null;
+            if ($mUser !== null) $userId = $mUser->getUserId();
+            if ($mGroup !== null) $groupId = $mGroup->getGroupId();
+            $okrOperationLogic = $this->getOkrOperationLogic();
+            $okrOperationLogic->checkAlignment($data['okrType'], $ownerType, $userId, $groupId, $parentOkrEntity);
 
             // 入れ子区間モデルの左値と右値を取得
             $treeValues = $this->getLeftRightValues($parentOkrEntity->getOkrId(), $tTimeframe->getTimeframeId());
@@ -391,9 +368,10 @@ class OkrService extends BaseService
      * ノードの左値・右値を取得する際に最左ノードまたは最右ノードをランダムに取得
      *
      * @param integer $parentOkrId 親OKRID
-     * @return void
+     * @param integer $timeframeId タイムフレームID
+     * @return array
      */
-    private function getLeftRightValues($parentOkrId, $timeframeId)
+    private function getLeftRightValues(int $parentOkrId, int $timeframeId)
     {
         // 1または2をランダムに取得
         $rand = mt_rand(1, 2);
@@ -410,11 +388,14 @@ class OkrService extends BaseService
      * OKR更新
      *
      * @param array $data リクエストJSON連想配列
-     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param TOkr $tOkr OKRエンティティ
      * @return void
      */
-    public function changeOkrInfo($data, $tOkr)
+    public function changeOkrInfo(array $data, TOkr $tOkr)
     {
+        // 開始日と終了日の妥当性チェック
+        DateUtility::checkStartDateAndEndDate($data['startDate'], $data['endDate']);
+
         // OKR更新
         $tOkr->setName($data['okrName']);
         $tOkr->setDetail($data['okrDetail']);
@@ -431,12 +412,12 @@ class OkrService extends BaseService
     /**
      * OKR進捗登録
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
-     * @param \AppBundle\Entity\TOkr $tOkr OKRエンティティ
+     * @param TOkr $tOkr OKRエンティティ
      * @return void
      */
-    public function registerAchievement($auth, $data, $tOkr)
+    public function registerAchievement(Auth $auth, array $data, TOkr $tOkr)
     {
         // 投稿ありの場合、投稿先グループを取得
         $groupIdArray = array();
@@ -524,11 +505,11 @@ class OkrService extends BaseService
     /**
      * OKR削除
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
-     * @param \AppBundle\Entity\TOkr $tOkr 削除対象OKRエンティティ
+     * @param Auth $auth 認証情報
+     * @param TOkr $tOkr 削除対象OKRエンティティ
      * @return void
      */
-    public function deleteOkrs($auth, $tOkr)
+    public function deleteOkrs(Auth $auth, TOkr $tOkr)
     {
         // 親OKRを取得
         $parentOkr = $tOkr->getParentOkr();

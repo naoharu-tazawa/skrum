@@ -16,7 +16,7 @@ class MCompanyRepository extends BaseRepository
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function searchCompany($keyword, $companyId)
+    public function searchCompany(string $keyword, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mc');
         $qb->select('mc.companyId', 'mc.companyName')

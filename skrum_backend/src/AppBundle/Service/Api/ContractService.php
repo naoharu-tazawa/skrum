@@ -17,9 +17,9 @@ class ContractService extends BaseService
      * 契約プラン情報取得
      *
      * @param integer $companyId 会社ID
-     * @return \AppBundle\Api\ResponseDTO\ContractDTO
+     * @return ContractDTO
      */
-    public function getContractInfo($companyId)
+    public function getContractInfo(int $companyId): ContractDTO
     {
         // ユーザ数を取得
         $mUserRepos = $this->getMUserRepository();

@@ -5,6 +5,7 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TTimeframe;
@@ -21,10 +22,10 @@ class TimeframeService extends BaseService
     /**
      * タイムフレーム取得
      *
-     * @param string $companyId 会社ID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getTimeframes($companyId)
+    public function getTimeframes(int $companyId): array
     {
         // タイムフレーム取得
         $tTimeframeRepos = $this->getTTimeframeRepository();
@@ -39,7 +40,7 @@ class TimeframeService extends BaseService
             if ($tTimeframe->getDefaultFlg() === null) {
                 $timeframeDTO->setDefaultFlg(DBConstant::FLG_FALSE);
             } else {
-                $timeframeDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
+                $timeframeDTO->setDefaultFlg(DBConstant::FLG_TRUE);
             }
             $timeframeDTOArray[] = $timeframeDTO;
         }
@@ -50,10 +51,10 @@ class TimeframeService extends BaseService
     /**
      * タイムフレーム詳細取得
      *
-     * @param string $companyId 会社ID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getTimeframeDetails($companyId)
+    public function getTimeframeDetails(int $companyId): array
     {
         // タイムフレーム取得
         $tTimeframeRepos = $this->getTTimeframeRepository();
@@ -81,11 +82,11 @@ class TimeframeService extends BaseService
     /**
      * デフォルトタイムフレーム変更
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
-     * @param \AppBundle\Entity\TTimeframe $tTimeframe タイムフレームエンティティ
+     * @param Auth $auth 認証情報
+     * @param TTimeframe $tTimeframe タイムフレームエンティティ
      * @return void
      */
-    public function changeDefault($auth, $tTimeframe)
+    public function changeDefault(Auth $auth, TTimeframe $tTimeframe)
     {
         // 現在デフォルトに設定されているタイムフレームエンティティを取得
         $tTimeframeRepos = $this->getTTimeframeRepository();
@@ -115,11 +116,11 @@ class TimeframeService extends BaseService
     /**
      * タイムフレーム登録
      *
-     * @param \AppBundle\Utils\Auth $auth 認証情報
+     * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @return void
      */
-    public function registerTimeframe($auth, $data)
+    public function registerTimeframe(Auth $auth, array $data)
     {
         // 開始日妥当性チェック
         if (!checkdate($data['start']['month'], $data['start']['date'], $data['start']['year'])) {
@@ -167,10 +168,10 @@ class TimeframeService extends BaseService
      * タイムフレーム更新
      *
      * @param array $data リクエストJSON連想配列
-     * @param \AppBundle\Entity\TTimeframe $tTimeframe タイムフレームエンティティ
+     * @param TTimeframe $tTimeframe タイムフレームエンティティ
      * @return void
      */
-    public function updateTimeframe($data, $tTimeframe)
+    public function updateTimeframe(array $data, TTimeframe $tTimeframe)
     {
         // 開始日妥当性チェック
         if (!checkdate($data['start']['month'], $data['start']['date'], $data['start']['year'])) {
@@ -210,11 +211,16 @@ class TimeframeService extends BaseService
     /**
      * タイムフレーム削除
      *
-     * @param \AppBundle\Entity\TTimeframe $tTimeframe タイムフレームエンティティ
+     * @param TTimeframe $tTimeframe タイムフレームエンティティ
      * @return void
      */
-    public function deleteTimeframe($tTimeframe)
+    public function deleteTimeframe(TTimeframe $tTimeframe)
     {
+        // デフォルトタイムフレームは削除不可
+        if ($tTimeframe->getDefaultFlg()) {
+            throw new ApplicationException('デフォルトタイムフレームは削除できません');
+        }
+
         try {
             $this->remove($tTimeframe);
             $this->flush();

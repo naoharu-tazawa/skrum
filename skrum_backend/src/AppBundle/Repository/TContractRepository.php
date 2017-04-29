@@ -12,10 +12,10 @@ class TContractRepository extends BaseRepository
     /**
      * 指定会社IDのレコードを取得
      *
-     * @param $companyId 会社ID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getContract($companyId)
+    public function getContract(int $companyId): array
     {
         $qb = $this->createQueryBuilder('tc');
         $qb->select('tc', 'mp')

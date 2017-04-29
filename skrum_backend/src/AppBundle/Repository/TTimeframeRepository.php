@@ -12,11 +12,11 @@ class TTimeframeRepository extends BaseRepository
     /**
      * 指定タイムフレームIDのレコードを取得
      *
-     * @param $timeframeId タイムフレームID
-     * @param $companyId 会社ID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
      * @return array
      */
-    public function getTimeframe($timeframeId, $companyId)
+    public function getTimeframe(int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('tt');
         $qb->select('tt')

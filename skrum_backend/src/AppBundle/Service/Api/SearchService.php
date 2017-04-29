@@ -4,7 +4,9 @@ namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
 use AppBundle\Utils\Auth;
+use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TOkr;
 use AppBundle\Api\ResponseDTO\GroupPageSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupSearchDTO;
 use AppBundle\Api\ResponseDTO\GroupTreeSearchDTO;
@@ -12,7 +14,6 @@ use AppBundle\Api\ResponseDTO\OkrSearchDTO;
 use AppBundle\Api\ResponseDTO\OwnerSearchDTO;
 use AppBundle\Api\ResponseDTO\UserPageSearchDTO;
 use AppBundle\Api\ResponseDTO\UserSearchDTO;
-use AppBundle\Utils\DateUtility;
 
 /**
  * 検索サービスクラス
@@ -28,7 +29,7 @@ class SearchService extends BaseService
      * @param string $keyword 検索ワード
      * @return array
      */
-    public function searchUser(Auth $auth, $keyword)
+    public function searchUser(Auth $auth, string $keyword): array
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -55,7 +56,7 @@ class SearchService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param string $keyword 検索ワード
-     * @param string $page 要求ページ
+     * @param integer $page 要求ページ
      * @return array
      */
     public function pagesearchUser(Auth $auth, string $keyword, int $page): UserPageSearchDTO
@@ -95,7 +96,7 @@ class SearchService extends BaseService
      * @param string $keyword 検索ワード
      * @return array
      */
-    public function searchGroup(Auth $auth, $keyword)
+    public function searchGroup(Auth $auth, string $keyword): array
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -122,8 +123,8 @@ class SearchService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param string $keyword 検索ワード
-     * @param string $page 要求ページ
-     * @return array
+     * @param integer $page 要求ページ
+     * @return GroupPageSearchDTO
      */
     public function pagesearchGroup(Auth $auth, string $keyword, int $page): GroupPageSearchDTO
     {
@@ -160,7 +161,7 @@ class SearchService extends BaseService
      * @param string $keyword 検索ワード
      * @return array
      */
-    public function searchOwner(Auth $auth, $keyword)
+    public function searchOwner(Auth $auth, string $keyword): array
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -219,7 +220,7 @@ class SearchService extends BaseService
      * @param string $keyword 検索ワード
      * @return array
      */
-    public function searchGroupTree(Auth $auth, $keyword)
+    public function searchGroupTree(Auth $auth, string $keyword): array
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -246,10 +247,10 @@ class SearchService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param string $keyword 検索ワード
-     * @param \AppBundle\Entity\TOkr $okrEntity OKRエンティティ
+     * @param TOkr $okrEntity OKRエンティティ
      * @return array
      */
-    public function searchOkr(Auth $auth, $keyword, $okrEntity)
+    public function searchOkr(Auth $auth, string $keyword, TOkr $okrEntity): array
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
