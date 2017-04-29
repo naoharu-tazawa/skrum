@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Header from './Header';
+import { timeframesPropTypes } from './propTypes';
 
 const menus = [
   {
@@ -21,7 +23,11 @@ const menus = [
 ];
 
 
-export default class HeaderContainer extends Component {
+class HeaderContainer extends Component {
+
+  static propTypes = {
+    timeframes: timeframesPropTypes.isRequired,
+  };
 
   getActiveMenu() {
     const path = window.location.pathname;
@@ -31,7 +37,16 @@ export default class HeaderContainer extends Component {
 
   render() {
     return (
-      <Header activeMenu={this.getActiveMenu()} />
+      <Header activeMenu={this.getActiveMenu()} timeframes={this.props.timeframes} />
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  const { timeframes = {} } = state.user.data || {};
+  return { timeframes };
+};
+
+export default connect(
+  mapStateToProps,
+)(HeaderContainer);

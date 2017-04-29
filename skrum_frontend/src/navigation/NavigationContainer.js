@@ -15,7 +15,10 @@ const style = {
     width: '200px',
   },
   layoutMain: {
+    display: 'flex',
+    flexDirection: 'column',
     width: '100%',
+    overflowY: 'hidden',
   },
 };
 

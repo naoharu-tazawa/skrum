@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import Select from 'react-select';
+import { timeframesPropTypes } from './propTypes';
 
 const style = {
   /* -----------------------------------
@@ -35,6 +38,7 @@ const style = {
   },
   timePeriod: {
     marginRight: '10px',
+    minWidth: '11.25em',
   },
   userIcon: {
     width: '20px',
@@ -87,10 +91,26 @@ class Tab extends Component {
 }
 
 class SubMenu extends Component {
+
+  static propTypes = {
+    timeframes: timeframesPropTypes.isRequired,
+  };
+
   render() {
+    const { timeframes } = this.props;
+    const timeframeOptions = _.orderBy(timeframes, 'timeframeId', 'asc')
+      .map(({ timeframeId, timeframeName }) => ({ value: timeframeId, label: timeframeName }));
+    const timeframeDefault = (_.find(timeframes, { defaultFlg: 1 }) || {}).timeframeId;
     return (
       <div style={style.subMenu}>
-        <p style={style.timePeriod}>2017/1Q ▼</p>
+        <Select
+          style={style.timePeriod}
+          options={timeframeOptions}
+          value={timeframeDefault}
+          placeholder=""
+          clearable={false}
+          searchable={false}
+        />
         <img
           style={style.userIcon}
           src="https://cdn3.iconfinder.com/data/icons/users/100/user_male_1-512.png"
@@ -109,6 +129,7 @@ export default class Header extends Component {
 
   static propTypes = {
     activeMenu: PropTypes.oneOf(['okr', 'map', 'tl', 'gr']).isRequired,
+    timeframes: timeframesPropTypes.isRequired,
   };
 
   isActive(key) {
@@ -122,9 +143,8 @@ export default class Header extends Component {
         <Tab title="マップ" isActive={this.isActive('map')} to="/map" />
         <Tab title="タイムライン" isActive={this.isActive('tl')} to="/timeline" />
         <Tab title="グループ管理" isActive={this.isActive('gr')} to="/group" />
-
         <div style={style.rightArea}>
-          <SubMenu />
+          <SubMenu timeframes={this.props.timeframes} />
         </div>
       </div>
     );
