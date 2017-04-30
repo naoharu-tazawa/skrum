@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
+use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\Auth;
 use AppBundle\Utils\Constant;
@@ -419,6 +420,15 @@ class OkrService extends BaseService
      */
     public function registerAchievement(Auth $auth, array $data, TOkr $tOkr)
     {
+        // 「OKR種別＝1:目標」の場合、かつ子OKRが紐づいている場合、進捗登録不可
+        $tOkrRepos = $this->getTOkrRepository();
+        if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
+            $tOkrArray = $tOkrRepos->findBy(array('parentOkr' => $tOkr->getOkrId()), null, 1);
+            if (count($tOkrArray) !== 0) {
+                throw new ApplicationException('進捗登録対象目標に子OKRが紐づいている場合、進捗登録できません');
+            }
+        }
+
         // 投稿ありの場合、投稿先グループを取得
         $groupIdArray = array();
         if (!empty($data['post'])) {
@@ -428,7 +438,6 @@ class OkrService extends BaseService
             }
 
             // 親OKRまたは祖父母OKRのオーナーがグループの場合、そのグループを投稿先グループに入れる
-            $tOkrRepos = $this->getTOkrRepository();
             if ($tOkr->getParentOkr() !== null) {
                 $parentAndGrandParentOkr = $tOkrRepos->getParentOkr($tOkr->getParentOkr()->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
                 if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
