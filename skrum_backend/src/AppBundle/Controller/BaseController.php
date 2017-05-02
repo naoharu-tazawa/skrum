@@ -133,7 +133,7 @@ class BaseController extends FOSRestController
     protected function validateSchema(Request $request, string $schemaFilePath): array
     {
         $data = json_decode($request->getContent());
-        if (!$data) throw new JsonSchemaException("リクエストデータが存在しません");
+        if (!$data) throw new JsonSchemaException('リクエストデータが存在しません');
 
         $validator = new Validator();
         $validator->validate($data, (object)['$ref' => 'file://' . realpath(dirname(__FILE__) . '/../../' . $schemaFilePath . '.json')]);
@@ -172,7 +172,7 @@ class BaseController extends FOSRestController
     {
         $data = json_decode($request->getContent(), true);
         if ($data === null) {
-            throw new JsonSchemaException("リクエストデータが存在しません");
+            throw new JsonSchemaException('リクエストデータが存在しません');
         }
 
         $form->submit($data);

@@ -17,6 +17,11 @@ class DateUtility
     const MAX_DATETIME = '9999-12-31 23:59:59';
 
     /**
+     * 最大年月日
+     */
+    const MAX_DATE = '9999-12-31';
+
+    /**
      * 年月日時分秒フォーマット
      */
     const DATETIME_FORMAT = 'Y-m-d H:i:s';
@@ -47,6 +52,26 @@ class DateUtility
     }
 
     /**
+     * 本日日付（DateTime型）を取得
+     *
+     * @return \DateTime 本日日付
+     */
+    public static function getCurrentDate(): \DateTime
+    {
+        return new \DateTime(date(self::DATE_FORMAT));
+    }
+
+    /**
+     * 本日日付（string型）を取得
+     *
+     * @return string 本日日付
+     */
+    public static function getCurrentDateString(): string
+    {
+        return date(self::DATE_FORMAT);
+    }
+
+    /**
      * 最大年月日時分秒（DateTime型）を取得
      *
      * @return \DateTime 最大年月日時分秒
@@ -64,6 +89,26 @@ class DateUtility
     public static function getMaxDatetimeString(): string
     {
         return self::MAX_DATETIME;
+    }
+
+    /**
+     * 最大年月日（DateTime型）を取得
+     *
+     * @return \DateTime 最大年月日
+     */
+    public static function getMaxDate(): \DateTime
+    {
+        return new \DateTime(self::MAX_DATE);
+    }
+
+    /**
+     * 最大年月日（string型）を取得
+     *
+     * @return string 最大年月日
+     */
+    public static function getMaxDateString(): string
+    {
+        return self::MAX_DATE;
     }
 
     /**
@@ -165,6 +210,28 @@ class DateUtility
     public static function transIntoDatetime(string $dateString): \DateTime
     {
         return new \DateTime($dateString);
+    }
+
+    /**
+     * DateTime型をstring型（年月日時分秒）に変換
+     *
+     * @param \DateTime $datetime 年月日時分秒
+     * @return string
+     */
+    public static function transIntoDatetimeString(\DateTime $datetime): string
+    {
+        return date(self::DATETIME_FORMAT, $datetime->format('U'));
+    }
+
+    /**
+     * DateTime型をstring型（年月日）に変換
+     *
+     * @param \DateTime $datetime 年月日時分秒
+     * @return string
+     */
+    public static function transIntoDateString(\DateTime $datetime): string
+    {
+        return date(self::DATE_FORMAT, $datetime->format('U'));
     }
 
     /**

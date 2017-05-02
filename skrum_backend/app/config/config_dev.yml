@@ -17,12 +17,12 @@ monolog:
             type: stream
             path: "%kernel.logs_dir%/application.log"
             level: debug
-            channels: [!event, !doctrine, !php, !security]
+            channels: [!event, !doctrine, !security]
         alert:
             type: stream
             path: "%kernel.logs_dir%/alert.log"
             level: alert
-            channels: [!event, !doctrine, !php]
+            channels: [!event, !doctrine]
         doctrine:
             type: stream
             path: "%kernel.logs_dir%/sql.log"
@@ -30,7 +30,7 @@ monolog:
             channels: [doctrine]
         console:
             type: console
-            channels: [!event, !doctrine, !php]
+            channels: [!event, !doctrine]
 
 swiftmailer:
     delivery_addresses: ['skrum.development@gmail.com']

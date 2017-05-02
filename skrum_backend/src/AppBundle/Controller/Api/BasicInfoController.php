@@ -8,7 +8,6 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Utils\Constant;
-use AppBundle\Utils\DBConstant;
 use AppBundle\Api\ResponseDTO\CompanyBasicsDTO;
 use AppBundle\Api\ResponseDTO\GroupBasicsDTO;
 use AppBundle\Api\ResponseDTO\TopDTO;

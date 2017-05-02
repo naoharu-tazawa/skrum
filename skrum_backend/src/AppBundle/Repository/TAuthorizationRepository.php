@@ -24,7 +24,7 @@ class TAuthorizationRepository extends BaseRepository
         $qb->select('ta')
             ->where('ta.companyId = :companyId')
             ->andWhere('ta.authorizationStartDatetime <= :authorizationStartDatetime')
-            ->andWhere('ta.authorizationEndDatetime >= :authorizationEndDatetime')
+            ->andWhere('ta.authorizationEndDatetime > :authorizationEndDatetime')
             ->andWhere('ta.authorizationStopFlg = :authorizationStopFlg')
             ->setParameter('companyId', $companyId)
             ->setParameter('authorizationStartDatetime', DateUtility::getCurrentDatetimeString())
