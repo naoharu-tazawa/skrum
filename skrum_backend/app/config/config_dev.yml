@@ -17,7 +17,7 @@ monolog:
             type: stream
             path: "%kernel.logs_dir%/application.log"
             level: debug
-            channels: [!event, !doctrine, !security]
+            channels: [!event, !doctrine, !security, !snc_redis]
         alert:
             type: stream
             path: "%kernel.logs_dir%/alert.log"

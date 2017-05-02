@@ -19,4 +19,4 @@ services:
   redis:
     image: redis:3.2.6
     ports:
-      - "26379:6379"
+      - "6379:6379"

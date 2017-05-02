@@ -8,6 +8,9 @@ parameters:
     database_user:     root
     database_password: password
 
+    redis_dsn_default: redis://localhost
+    redis_dsn_cache:   redis://localhost/1
+
     mailer_transport:  gmail
     mailer_host:       ~
     mailer_user:       skrum.development@gmail.com
