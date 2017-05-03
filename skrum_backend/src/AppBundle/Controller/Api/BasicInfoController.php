@@ -53,6 +53,10 @@ class BasicInfoController extends BaseController
         $groupMemberService = $this->getGroupMemberService();
         $groups = $groupMemberService->getTeamsAndDepartments($userId);
 
+        // 会社情報取得
+        $companyService = $this->getCompanyService();
+        $basicCompanyInfoDTO = $companyService->getCompanyName($auth->getCompanyId());
+
         // ユーザ基本情報取得
         $userService = $this->getUserService();
         $basicUserInfoDTO = $userService->getBasicUserInfo($userId, $auth->getCompanyId());
@@ -69,6 +73,7 @@ class BasicInfoController extends BaseController
         $topDTO->setTimeframes($timeframeDTOArray);
         $topDTO->setTeams($groups['teams']);
         $topDTO->setDepartments($groups['departments']);
+        $topDTO->setCompany($basicCompanyInfoDTO);
         $topDTO->setUser($basicUserInfoDTO);
         $topDTO->setOkrs($okrsArray);
         $topDTO->setAlignmentsInfo($alignmentsInfoDTOArray);
