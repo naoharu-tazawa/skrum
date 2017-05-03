@@ -1,4 +1,4 @@
-import { PropTypes } from 'react';
+import PropTypes from 'prop-types';
 
 export const errorType = PropTypes.shape({
   message: PropTypes.string,

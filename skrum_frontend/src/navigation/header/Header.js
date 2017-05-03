@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import Select from 'react-select';
+import _ from 'lodash';
 import { timeframesPropTypes } from './propTypes';
 
 const style = {
@@ -97,7 +97,7 @@ class SubMenu extends Component {
   };
 
   render() {
-    const { timeframes } = this.props;
+    const { timeframes = [] } = this.props;
     const timeframeOptions = _.orderBy(timeframes, 'timeframeId', 'asc')
       .map(({ timeframeId, timeframeName }) => ({ value: timeframeId, label: timeframeName }));
     const timeframeDefault = (_.find(timeframes, { defaultFlg: 1 }) || {}).timeframeId;
@@ -129,7 +129,7 @@ export default class Header extends Component {
 
   static propTypes = {
     activeMenu: PropTypes.oneOf(['okr', 'map', 'tl', 'gr']).isRequired,
-    timeframes: timeframesPropTypes.isRequired,
+    timeframes: timeframesPropTypes,
   };
 
   isActive(key) {

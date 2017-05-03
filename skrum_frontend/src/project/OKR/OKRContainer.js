@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import UserInfoContainer from '../UserInfo/UserInfoContainer';
-import OKRListContainer from './OKRList/OKRListContainer';
+import OKRListContainer from '../OKRList/OKRListContainer';
 import styles from './OKRContainer.css';
 
 export default class OKRContainer extends Component {

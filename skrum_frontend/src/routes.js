@@ -13,11 +13,11 @@ const loginPage = '/login';
 const children = { children: PropTypes.oneOfType([
   PropTypes.element.isRequired,
   PropTypes.arrayOf(PropTypes.element.isRequired).isRequired,
-])};
+]) };
 
 // inject config
 class AuthenticatedRegion extends Component {
-  propTypes = { children };
+  static propTypes = children;
   render() {
     return (<Authenticated login={loginPage}>
       {this.props.children}
@@ -26,7 +26,7 @@ class AuthenticatedRegion extends Component {
 }
 
 class AnonymousRegion extends Component {
-  propTypes = { children };
+  static propTypes = children;
   render() {
     return (<Anonymous top={topPage}>
       {this.props.children}

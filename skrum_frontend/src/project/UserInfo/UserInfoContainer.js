@@ -6,12 +6,12 @@ import UserInfo from './UserInfo';
 class UserInfoContainer extends Component {
 
   static propTypes = {
-    user: userPropTypes.isRequired,
+    user: userPropTypes,
   };
 
   render() {
     const { user } = this.props;
-    return (
+    return !user ? null : (
       <UserInfo
         user={user}
         infoLink="./"
@@ -20,8 +20,9 @@ class UserInfoContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
+  const { isFetching } = state.user;
   const { user = {} } = state.user.data || {};
-  return { user };
+  return isFetching ? {} : { user };
 };
 
 export default connect(

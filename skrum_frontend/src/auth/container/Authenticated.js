@@ -43,9 +43,9 @@ class Authenticated extends Component {
 const mapStateToProps = (state) => {
   const { isAuthorized } = state.auth;
   const { data } = state.user || {};
-  const { departments = [] } = data || {};
-  const { group_id } = departments[0] || {};
-  return { isAuthorized, defaultId: group_id };
+  const { user } = data || {};
+  const { userId } = user || {};
+  return { isAuthorized, defaultId: userId };
 };
 
 export default connect(mapStateToProps)(Authenticated);

@@ -36,14 +36,15 @@ class HeaderContainer extends Component {
   }
 
   render() {
+    const { timeframes } = this.props;
     return (
-      <Header activeMenu={this.getActiveMenu()} timeframes={this.props.timeframes} />
+      <Header activeMenu={this.getActiveMenu()} timeframes={timeframes} />
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  const { timeframes = {} } = state.user.data || {};
+  const { timeframes = [] } = state.user.data || {};
   return { timeframes };
 };
 

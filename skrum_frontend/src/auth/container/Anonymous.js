@@ -19,7 +19,6 @@ class Anonymous extends Component {
   }
 
   transfer() {
-    console.log(this.props);
     const { top, isAuthorized } = this.props;
     if (isAuthorized) {
       browserHistory.push(top);

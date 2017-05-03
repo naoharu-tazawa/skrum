@@ -11,7 +11,7 @@ export default class TeamRouter extends Component {
     }),
   };
 
-  renderInner() {
+  renderContent() {
     switch (this.props.params.action) {
       case 'okr':
         return <OKRContainer />;
@@ -23,7 +23,7 @@ export default class TeamRouter extends Component {
   render() {
     return (
       <div className={styles.container}>
-        {this.renderInner()}
+        {this.renderContent()}
       </div>);
   }
 }
