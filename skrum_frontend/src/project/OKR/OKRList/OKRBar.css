@@ -3,16 +3,24 @@
   overflow: hidden;
   font-size: small;
   margin: 0.5em auto;
+  padding: 5px 40px;
+  background-color: #fff;
+  color: #626A7F;
 }
 .header {
   display: flex;
   width: 100%;
   margin: auto 0;
+  background-color: #fff;
 }
 .mapImage {
-  display: inline-block;
+  display: none;
+  width: 20px;
+  height: 20px;
+  min-height: 2.5em;
   margin: auto 0 auto 1em;
-  border: 2px solid #fff;
+  /*border: 2px solid #626A7F;*/
+  background-color: #626A7F;
   border-radius: 50%;
   overflow: hidden;
   box-sizing: border-box;
@@ -23,13 +31,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin: auto 1em;
+  font-size: 16px;
 }
 .progressBox {
   display: flex;
-  margin: auto 1em;
+  margin: auto 30px auto 1em;
+  width: 150px;
 }
 .progressPercent {
-  margin: 0;
+  margin-right: 4px;
   width: 4em;
   font-size: x-small;
 }
@@ -40,11 +50,13 @@
 .ownerBox {
   display: flex;
   margin: auto 0;
+  width: 150px;
 }
 .ownerImage {
   width: 3em;
   height: 3em;
   border: 2px solid #fff;
+  background-color: #626A7F;
   border-radius: 50%;
   overflow: hidden;
   box-sizing: border-box;
@@ -58,8 +70,10 @@
 .toolImage {
   display: inline-block;
   margin: auto 1em auto 0;
-  border: 2px solid #fff;
+  /*border: 2px solid #626A7F;*/
+  background-color: #626A7F;
   border-radius: 50%;
   overflow: hidden;
   box-sizing: border-box;
+  width: 20px;
 }

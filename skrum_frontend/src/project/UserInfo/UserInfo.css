@@ -41,7 +41,6 @@
 }
 .userRank {
   font-size: small;
-  margin: 0.5em 0;
   vertical-align: top;
 }
 .userPart {
@@ -51,6 +50,7 @@
 .userLabel {
   white-space: nowrap;
   padding-right: 20px;
+  padding-bottom: 2px;
 }
 .moreLink {
   font-size: small;
