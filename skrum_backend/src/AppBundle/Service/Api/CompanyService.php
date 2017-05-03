@@ -24,7 +24,7 @@ class CompanyService extends BaseService
     {
         $mCompanyRepos = $this->getMCompanyRepository();
         $mCompany = $mCompanyRepos->find($companyId);
-        if ($mCompany == null) {
+        if ($mCompany === null) {
             throw new ApplicationException('会社が存在しません');
         }
 
@@ -33,6 +33,27 @@ class CompanyService extends BaseService
         $basicCompanyInfoDTO->setName($mCompany->getCompanyName());
         $basicCompanyInfoDTO->setVision($mCompany->getVision());
         $basicCompanyInfoDTO->setMission($mCompany->getMission());
+
+        return $basicCompanyInfoDTO;
+    }
+
+    /**
+     * 会社名取得
+     *
+     * @param integer $companyId 会社ID
+     * @return BasicCompanyInfoDTO
+     */
+    public function getCompanyName(int $companyId): BasicCompanyInfoDTO
+    {
+        $mCompanyRepos = $this->getMCompanyRepository();
+        $mCompany = $mCompanyRepos->find($companyId);
+        if ($mCompany === null) {
+            throw new ApplicationException('会社が存在しません');
+        }
+
+        $basicCompanyInfoDTO = new BasicCompanyInfoDTO();
+        $basicCompanyInfoDTO->setCompanyId($mCompany->getCompanyId());
+        $basicCompanyInfoDTO->setName($mCompany->getCompanyName());
 
         return $basicCompanyInfoDTO;
     }

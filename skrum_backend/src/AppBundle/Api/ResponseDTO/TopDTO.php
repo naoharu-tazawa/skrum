@@ -33,6 +33,13 @@ class TopDTO
     private $departments;
 
     /**
+     * @var \AppBundle\Api\ResponseDTO\NestedObject\BasicCompanyInfoDTO
+     *
+     * @JSON\Type("AppBundle\Api\ResponseDTO\NestedObject\BasicCompanyInfoDTO")
+     */
+    private $company;
+
+    /**
      * @var \AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO
      *
      * @JSON\Type("AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO")
@@ -123,6 +130,30 @@ class TopDTO
     public function getDepartments()
     {
         return $this->departments;
+    }
+
+    /**
+     * Set company
+     *
+     * @param \AppBundle\Api\ResponseDTO\NestedObject\BasicCompanyInfoDTO $company
+     *
+     * @return TopDTO
+     */
+    public function setCompany($company)
+    {
+        $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * Get company
+     *
+     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicCompanyInfoDTO
+     */
+    public function getCompany()
+    {
+        return $this->company;
     }
 
     /**

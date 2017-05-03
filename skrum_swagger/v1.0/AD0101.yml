@@ -59,6 +59,13 @@ paths:
                       type: integer
                     groupName:
                       type: string
+              company:
+                type: object
+                properties:
+                  companyId:
+                    type: integer
+                  name:
+                    type: string
               user:
                 type: object
                 properties:
