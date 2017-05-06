@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import OKRContainer from './OKR/OKRContainer';
-import styles from './TeamRouter.css';
+import styles from './GroupRouter.css';
 
-export default class TeamRouter extends Component {
+export default class GroupRouter extends Component {
   static propTypes = {
     params: PropTypes.shape({
       groupId: PropTypes.string,
@@ -14,6 +14,8 @@ export default class TeamRouter extends Component {
   renderContent() {
     switch (this.props.params.action) {
       case 'objective':
+        return <OKRContainer subject="group" />;
+      case 'control':
         return <OKRContainer subject="group" />;
       default:
         return null;

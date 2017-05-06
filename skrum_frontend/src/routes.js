@@ -5,7 +5,7 @@ import App from './base/container/App';
 import Authenticated from './auth/container/Authenticated';
 import Anonymous from './auth/container/Anonymous';
 import RootRedirect from './auth/container/RootRedirect';
-import TeamRouter from './project/TeamRouter';
+import GroupRouter from './project/GroupRouter';
 
 const topPage = '/group';
 const loginPage = '/login';
@@ -38,8 +38,8 @@ const RedirectRoute = () => (<RootRedirect top={topPage} login={loginPage} />);
 
 export default <Route path="/" component={App} >
   <Route path="" component={AuthenticatedRegion}>
-    <Route path="/group" component={TeamRouter} />
-    <Route path="/group/:groupId/:action" component={TeamRouter} />
+    <Route path="/group" component={GroupRouter} />
+    <Route path="/group/:groupId/:action" component={GroupRouter} />
   </Route>
   <Route path="/login" component={AnonymousRegion} />
   <IndexRoute component={RedirectRoute} />
