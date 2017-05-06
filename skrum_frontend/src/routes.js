@@ -7,7 +7,7 @@ import Anonymous from './auth/container/Anonymous';
 import RootRedirect from './auth/container/RootRedirect';
 import TeamRouter from './project/TeamRouter';
 
-const topPage = '/team';
+const topPage = '/group';
 const loginPage = '/login';
 
 const children = { children: PropTypes.oneOfType([
@@ -38,8 +38,8 @@ const RedirectRoute = () => (<RootRedirect top={topPage} login={loginPage} />);
 
 export default <Route path="/" component={App} >
   <Route path="" component={AuthenticatedRegion}>
-    <Route path="/team" component={TeamRouter} />
-    <Route path="/team/:teamId/:action" component={TeamRouter} />
+    <Route path="/group" component={TeamRouter} />
+    <Route path="/group/:groupId/:action" component={TeamRouter} />
   </Route>
   <Route path="/login" component={AnonymousRegion} />
   <IndexRoute component={RedirectRoute} />

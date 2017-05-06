@@ -5,8 +5,8 @@ import { timeframesPropTypes } from './propTypes';
 
 const menus = [
   {
-    path: 'okr',
-    key: 'okr',
+    path: 'objective',
+    key: 'objective',
   },
   {
     path: 'map',
@@ -14,11 +14,11 @@ const menus = [
   },
   {
     path: 'timeline',
-    key: 'tl',
+    key: 'timeline',
   },
   {
-    path: 'group',
-    key: 'gr',
+    path: 'control',
+    key: 'control',
   },
 ];
 
@@ -31,7 +31,7 @@ class HeaderContainer extends Component {
 
   getActiveMenu() {
     const path = window.location.pathname;
-    const { key = 'okr' } = menus.find(menu => path.endsWith(menu.path)) || {};
+    const { key = 'objective' } = menus.find(menu => path.endsWith(menu.path)) || {};
     return key;
   }
 

@@ -43,7 +43,7 @@ const mapStateToProps = (state) => {
     items: teams.map(({ groupId: id, groupName: title }) => ({ id, title })),
   };
   const depSection = {
-    title: 'グループ',
+    title: '部署',
     items: departments.map(({ groupId: id, groupName: title }) => ({ id, title })),
   };
 

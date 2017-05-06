@@ -6,15 +6,15 @@ import styles from './TeamRouter.css';
 export default class TeamRouter extends Component {
   static propTypes = {
     params: PropTypes.shape({
-      teamId: PropTypes.string,
+      groupId: PropTypes.string,
       action: PropTypes.string,
     }),
   };
 
   renderContent() {
     switch (this.props.params.action) {
-      case 'okr':
-        return <OKRContainer />;
+      case 'objective':
+        return <OKRContainer subject="group" />;
       default:
         return null;
     }

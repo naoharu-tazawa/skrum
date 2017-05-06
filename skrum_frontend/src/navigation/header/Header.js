@@ -74,7 +74,7 @@ class Tab extends Component {
   getTo() {
     const path = window.location.pathname;
     const { to } = this.props;
-    if (path.startsWith('/team')) {
+    if (path.startsWith('/group')) {
       const bases = path.split('/');
       return `/${bases[1]}/${bases[2]}${to}`;
     }
@@ -128,7 +128,7 @@ class SubMenu extends Component {
 export default class Header extends Component {
 
   static propTypes = {
-    activeMenu: PropTypes.oneOf(['okr', 'map', 'tl', 'gr']).isRequired,
+    activeMenu: PropTypes.oneOf(['objective', 'map', 'timeline', 'control']).isRequired,
     timeframes: timeframesPropTypes,
   };
 
@@ -139,10 +139,10 @@ export default class Header extends Component {
   render() {
     return (
       <div style={style.container}>
-        <Tab title="目標管理" isActive={this.isActive('okr')} to="/okr" />
+        <Tab title="目標管理" isActive={this.isActive('objective')} to="/objective" />
         <Tab title="マップ" isActive={this.isActive('map')} to="/map" />
-        <Tab title="タイムライン" isActive={this.isActive('tl')} to="/timeline" />
-        <Tab title="グループ管理" isActive={this.isActive('gr')} to="/group" />
+        <Tab title="タイムライン" isActive={this.isActive('timeline')} to="/timeline" />
+        <Tab title="グループ管理" isActive={this.isActive('control')} to="/control" />
         <div style={style.rightArea}>
           <SubMenu timeframes={this.props.timeframes} />
         </div>
