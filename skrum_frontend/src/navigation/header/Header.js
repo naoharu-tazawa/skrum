@@ -74,7 +74,7 @@ class Tab extends Component {
   getTo() {
     const path = window.location.pathname;
     const { to } = this.props;
-    if (path.startsWith('/group')) {
+    if (path.startsWith('/user') || path.startsWith('/group') || path.startsWith('/company')) {
       const bases = path.split('/');
       return `/${bases[1]}/${bases[2]}${to}`;
     }

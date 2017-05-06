@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import OKRContainer from './OKR/OKRContainer';
 import styles from './GroupRouter.css';
 
-export default class GroupRouter extends Component {
+export default class CompanyRouter extends Component {
   static propTypes = {
     params: PropTypes.shape({
-      groupId: PropTypes.string,
+      companyId: PropTypes.string,
       action: PropTypes.string,
     }),
   };
@@ -14,7 +14,7 @@ export default class GroupRouter extends Component {
   renderContent() {
     switch (this.props.params.action) {
       case 'objective':
-        return <OKRContainer subject="group" />;
+        return <OKRContainer subject="company" />;
       default:
         return null;
     }
