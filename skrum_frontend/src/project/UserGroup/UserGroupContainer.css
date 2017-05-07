@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 0 60px;
+}
+.userInfoEdit {
+  margin-top: 30px;
+}
+.userGroupList {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}

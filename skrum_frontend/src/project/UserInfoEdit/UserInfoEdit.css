@@ -1,0 +1,63 @@
+.component {
+  display: flex;
+  background-color: #fff;
+  /*background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`*/
+  overflow: hidden;
+  color: #626A7F;
+  padding: 40px 20px 20px 40px;
+}
+.userBox {
+  margin: auto 0;
+  /*min-width: 160px;*/
+  width: 70px;
+}
+.userImage {
+  display: block;
+  margin: auto;
+  width: 70px;
+  min-height: 70px;
+  margin: auto;
+  border: 2px solid #95989A;
+  border-radius: 50%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.lastUpdate {
+  font-size: x-small;
+  text-align: center;
+  margin: 0.5em 0;
+}
+.userInfo {
+  width: 100%;
+  margin: 0 1em 0 40px;
+}
+.userName {
+  font-size: x-large;
+  margin-bottom: 0.5em;
+}
+.userDept {
+  font-size: x-small;
+  color: darkgray;
+}
+.userRank {
+  font-size: small;
+  vertical-align: top;
+}
+.userPart {
+  font-size: x-small;
+  vertical-align: top;
+}
+.userLabel {
+  white-space: nowrap;
+  padding-right: 20px;
+  padding-bottom: 2px;
+}
+.moreLink {
+  font-size: small;
+  align-self: flex-end;
+  padding: 8px;
+  border: solid 1px #D8DFE5;
+  background-color: #F0F4F5;
+  color: #8E9AA6;
+  white-space: nowrap;
+}

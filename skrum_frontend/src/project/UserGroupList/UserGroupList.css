@@ -1,0 +1,37 @@
+.component {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  font-size: small;
+  color: #626A7F;
+}
+.okrHeader {
+  display: flex;
+  /*
+  height: 2em;
+  border-width: thin;
+  border-style: solid;
+  position: relative;
+  */
+  margin-bottom: 1px;
+  z-index: 2;
+}
+.okrBars {
+  max-height: 100%;
+  overflow-y: auto;
+  /*
+  border-width: thin;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  */
+  position: relative;
+  top: -1px;
+}
+.okrBar {
+  /*
+  border-width: thin;
+  border-top-style: solid;
+  */
+}
