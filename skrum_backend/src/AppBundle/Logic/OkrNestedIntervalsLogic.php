@@ -24,13 +24,19 @@ class OkrNestedIntervalsLogic extends BaseLogic
         $timeframeId = $tOkr->getTimeframe()->getTimeframeId();
 
         // 親OKR存在チェック
-        if ($tOkr->getParentOkr() == null) {
+        if ($tOkr->getParentOkr() === null) {
             return;
         }
 
         // 指定OKRとそれに紐づくOKRを全て取得
         $tOkrRepos = $this->getTOkrRepository();
-        $tOkrArray = $tOkrRepos->getOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $timeframeId, $companyId);
+        if ($tOkr->getTreeLeft() !== null) {
+            // 入れ子区間モデルの左値・右値が存在する場合
+            $tOkrArray = $tOkrRepos->getOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $timeframeId, $companyId);
+        } else {
+            // 入れ子区間モデルの左値・右値が存在しない場合
+            $tOkrArray = $this->getOkrAndAllAlignmentOkrsByRecursion($tOkr);
+        }
 
         // OKRの左値・右値を再設定
         $tOkrArrayCount = count($tOkrArray);
@@ -42,6 +48,33 @@ class OkrNestedIntervalsLogic extends BaseLogic
 
             $this->flush();
         }
+    }
+
+    /**
+     * 左値・右値が存在しない指定OKRとそれに紐づくOKRを再帰処理により全て取得
+     *
+     * @param TOkr $tOkr 対象OKRエンティティ
+     * @return array
+     */
+    public function getOkrAndAllAlignmentOkrsByRecursion(TOkr $tOkr): array
+    {
+        $parentOkrIdArray = array($tOkr->getOkrId());
+        $tOkrArray = array($tOkr);
+        $tOkrRepos = $this->getTOkrRepository();
+
+        while (!empty($parentOkrIdArray)) {
+            // 全ての子OKRを取得
+            $childrenOkrArray = $tOkrRepos->getAllChildrenOkrsOfMultipleParentOkrs($parentOkrIdArray);
+
+            // 子OKRエンティティとOKRIDを配列に格納
+            $parentOkrIdArray = array();
+            foreach ($childrenOkrArray as $childOkr) {
+                $parentOkrIdArray[] = $childOkr->getOkrId();
+                $tOkrArray[] = $childOkr;
+            }
+        }
+
+        return $tOkrArray;
     }
 
     /**

@@ -22,6 +22,8 @@ class OkrAchievementRateLogic extends BaseLogic
      */
     public function recalculate(TOkr $tOkr, int $companyId, bool $weightedAverageRatioFlg = false)
     {
+        $tOkrRepos = $this->getTOkrRepository();
+
         while (!empty($tOkr)) {
             // 親OKR存在チェック
             if (empty($tOkr->getParentOkr())) {
@@ -34,7 +36,6 @@ class OkrAchievementRateLogic extends BaseLogic
             }
 
             // 親子OKRを取得
-            $tOkrRepos = $this->getTOkrRepository();
             $tOkrArray = $tOkrRepos->getChildrenOkrsForRecalc(
                     $tOkr->getParentOkr()->getOkrId(),
                     $tOkr->getTimeframe()->getTimeframeId(),

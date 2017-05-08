@@ -25,11 +25,6 @@ class OkrOperationLogic extends BaseLogic
      */
     public function checkAlignment(string $okrType, string $ownerType, int $userId = null, int $groupId = null, TOkr $parentOkrEntity)
     {
-        // 紐付け先OKRが他のOKRに紐付けられていない場合、紐付け不可
-        if (empty($parentOkrEntity->getParentOkr())) {
-            throw new ApplicationException('紐付け先のないOKRには紐付けられません');
-        }
-
         // OKR種別を比較し紐付け可能かチェック
         if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER && $parentOkrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
             if ($userId === $parentOkrEntity->getOwnerUser()->getUserId()) {
@@ -60,5 +55,34 @@ class OkrOperationLogic extends BaseLogic
                 throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
             }
         }
+    }
+
+    /**
+     * 指定OKRとそれに紐づくOKRを全て削除（ループ処理）
+     *
+     * @param TOkr $tOkr 操作対象OKRエンティティ
+     * @return void
+     */
+    public function deleteOkrAndAllAlignmentOkrs(TOkr $tOkr)
+    {
+        $parentOkrIdArray = array($tOkr->getOkrId());
+        $tOkrRepos = $this->getTOkrRepository();
+
+        // 捜査対象OKRを削除
+        $this->remove($tOkr);
+
+        while (!empty($parentOkrIdArray)) {
+            // 全ての子OKRを取得
+            $childrenOkrArray = $tOkrRepos->getAllChildrenOkrsOfMultipleParentOkrs($parentOkrIdArray);
+
+            // 子OKRのOKRIDを配列に格納し、子OKRは削除する
+            $parentOkrIdArray = array();
+            foreach ($childrenOkrArray as $childOkr) {
+                $parentOkrIdArray[] = $childOkr->getOkrId();
+                $this->remove($childOkr);
+            }
+        }
+
+        $this->flush();
     }
 }
