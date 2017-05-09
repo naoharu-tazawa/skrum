@@ -94,10 +94,11 @@ class SubMenu extends Component {
 
   static propTypes = {
     timeframes: timeframesPropTypes.isRequired,
+    handleLogoutSubmit: PropTypes.func.isRequired,
   };
 
   render() {
-    const { timeframes = [] } = this.props;
+    const { timeframes, handleLogoutSubmit } = this.props;
     const timeframeOptions = _.orderBy(timeframes, 'timeframeId', 'asc')
       .map(({ timeframeId, timeframeName }) => ({ value: timeframeId, label: timeframeName }));
     const timeframeDefault = (_.find(timeframes, { defaultFlg: 1 }) || {}).timeframeId;
@@ -121,6 +122,9 @@ class SubMenu extends Component {
           src="http://www.iconsdb.com/icons/preview/white/gear-2-xxl.png"
           alt=""
         />
+        <button onClick={handleLogoutSubmit}>
+          Logout
+        </button>
       </div>);
   }
 }
@@ -130,6 +134,7 @@ export default class Header extends Component {
   static propTypes = {
     activeMenu: PropTypes.oneOf(['objective', 'map', 'timeline', 'control']).isRequired,
     timeframes: timeframesPropTypes,
+    handleLogoutSubmit: PropTypes.func.isRequired,
   };
 
   isActive(key) {
@@ -137,6 +142,7 @@ export default class Header extends Component {
   }
 
   render() {
+    const { timeframes = [], handleLogoutSubmit } = this.props;
     return (
       <div style={style.container}>
         <Tab title="目標管理" isActive={this.isActive('objective')} to="/objective" />
@@ -144,7 +150,7 @@ export default class Header extends Component {
         <Tab title="タイムライン" isActive={this.isActive('timeline')} to="/timeline" />
         <Tab title="グループ管理" isActive={this.isActive('control')} to="/control" />
         <div style={style.rightArea}>
-          <SubMenu timeframes={this.props.timeframes} />
+          <SubMenu {...{ timeframes, handleLogoutSubmit }} />
         </div>
       </div>
     );
