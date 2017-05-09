@@ -530,8 +530,15 @@ class OkrService extends BaseService
 
         try {
             // 削除対象OKRとそれに紐づくOKRを全て削除する
-            $tOkrRepos = $this->getTOkrRepository();
-            $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
+            if ($tOkr->getTreeLeft() !== null) {
+                // 入れ子区間モデルの左値・右値が存在する場合
+                $tOkrRepos = $this->getTOkrRepository();
+                $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
+            } else {
+                // 入れ子区間モデルの左値・右値が存在しない場合
+                $okrOperationLogic = $this->getOkrOperationLogic();
+                $okrOperationLogic->deleteOkrAndAllAlignmentOkrs($tOkr);
+            }
 
             // 達成率を再計算
             if ($parentOkr != null) {
