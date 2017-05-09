@@ -25,9 +25,9 @@ class Authenticated extends Component {
     if (!isAuthorized) {
       browserHistory.push(login);
     }
-    const to = id => `/team/${id}/okr`;
+    const to = id => `/group/${id}/objective`;
     const current = window.location.pathname;
-    if (defaultId && current === '/team') {
+    if (defaultId && current === '/group') {
       browserHistory.push(to(defaultId));
     }
   }
