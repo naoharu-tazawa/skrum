@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import LoginForm from '../component/LoginForm';
 import { startLogin } from '../action';
 import { errorType } from '../../util/PropUtil';
@@ -28,9 +29,25 @@ const containerStyle = {
 class LoginContainer extends Component {
   static propTypes = {
     isFetching: PropTypes.bool,
+    isAuthorized: PropTypes.bool,
     dispatchLogin: PropTypes.func,
     error: errorType,
   };
+
+  componentWillMount() {
+    this.transfer();
+  }
+
+  componentWillReceiveProps(next) {
+    this.transfer(next);
+  }
+
+  transfer(props = this.props) {
+    const { isAuthorized } = props;
+    if (isAuthorized) {
+      browserHistory.push('/');
+    }
+  }
 
   render() {
     return (
@@ -49,8 +66,8 @@ class LoginContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { isFetching, error } = state.auth;
-  return { isFetching, error };
+  const { isFetching, isAuthorized, error } = state.auth;
+  return { isFetching, isAuthorized, error };
 };
 
 const mapDispatchToProps = (dispatch) => {
