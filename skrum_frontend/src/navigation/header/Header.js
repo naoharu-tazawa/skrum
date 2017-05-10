@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import Select from 'react-select';
+import _ from 'lodash';
 import { timeframesPropTypes } from './propTypes';
 
 const style = {
@@ -74,7 +74,7 @@ class Tab extends Component {
   getTo() {
     const path = window.location.pathname;
     const { to } = this.props;
-    if (path.startsWith('/team')) {
+    if (path.startsWith('/user') || path.startsWith('/group') || path.startsWith('/company')) {
       const bases = path.split('/');
       return `/${bases[1]}/${bases[2]}${to}`;
     }
@@ -94,10 +94,11 @@ class SubMenu extends Component {
 
   static propTypes = {
     timeframes: timeframesPropTypes.isRequired,
+    handleLogoutSubmit: PropTypes.func.isRequired,
   };
 
   render() {
-    const { timeframes } = this.props;
+    const { timeframes, handleLogoutSubmit } = this.props;
     const timeframeOptions = _.orderBy(timeframes, 'timeframeId', 'asc')
       .map(({ timeframeId, timeframeName }) => ({ value: timeframeId, label: timeframeName }));
     const timeframeDefault = (_.find(timeframes, { defaultFlg: 1 }) || {}).timeframeId;
@@ -121,6 +122,9 @@ class SubMenu extends Component {
           src="http://www.iconsdb.com/icons/preview/white/gear-2-xxl.png"
           alt=""
         />
+        <button onClick={handleLogoutSubmit}>
+          Logout
+        </button>
       </div>);
   }
 }
@@ -128,8 +132,9 @@ class SubMenu extends Component {
 export default class Header extends Component {
 
   static propTypes = {
-    activeMenu: PropTypes.oneOf(['okr', 'map', 'tl', 'gr']).isRequired,
-    timeframes: timeframesPropTypes.isRequired,
+    activeMenu: PropTypes.oneOf(['objective', 'map', 'timeline', 'control']).isRequired,
+    timeframes: timeframesPropTypes,
+    handleLogoutSubmit: PropTypes.func.isRequired,
   };
 
   isActive(key) {
@@ -137,14 +142,15 @@ export default class Header extends Component {
   }
 
   render() {
+    const { timeframes = [], handleLogoutSubmit } = this.props;
     return (
       <div style={style.container}>
-        <Tab title="目標管理" isActive={this.isActive('okr')} to="/okr" />
+        <Tab title="目標管理" isActive={this.isActive('objective')} to="/objective" />
         <Tab title="マップ" isActive={this.isActive('map')} to="/map" />
-        <Tab title="タイムライン" isActive={this.isActive('tl')} to="/timeline" />
-        <Tab title="グループ管理" isActive={this.isActive('gr')} to="/group" />
+        <Tab title="タイムライン" isActive={this.isActive('timeline')} to="/timeline" />
+        <Tab title="グループ管理" isActive={this.isActive('control')} to="/control" />
         <div style={style.rightArea}>
-          <SubMenu timeframes={this.props.timeframes} />
+          <SubMenu {...{ timeframes, handleLogoutSubmit }} />
         </div>
       </div>
     );

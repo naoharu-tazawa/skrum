@@ -32,7 +32,7 @@ export default class OKRBar extends Component {
 
   static propTypes = {
     header: PropTypes.bool,
-    okr: okrPropTypes.isRequired,
+    okr: okrPropTypes,
   };
 
   render() {

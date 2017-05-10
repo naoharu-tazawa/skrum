@@ -5,19 +5,21 @@ import App from './base/container/App';
 import Authenticated from './auth/container/Authenticated';
 import Anonymous from './auth/container/Anonymous';
 import RootRedirect from './auth/container/RootRedirect';
-import TeamRouter from './project/TeamRouter';
+import UserRouter from './project/UserRouter';
+import GroupRouter from './project/GroupRouter';
+import CompanyRouter from './project/CompanyRouter';
 
-const topPage = '/team';
+const topPage = '/group';
 const loginPage = '/login';
 
 const children = { children: PropTypes.oneOfType([
   PropTypes.element.isRequired,
   PropTypes.arrayOf(PropTypes.element.isRequired).isRequired,
-])};
+]) };
 
 // inject config
 class AuthenticatedRegion extends Component {
-  propTypes = { children };
+  static propTypes = children;
   render() {
     return (<Authenticated login={loginPage}>
       {this.props.children}
@@ -26,7 +28,7 @@ class AuthenticatedRegion extends Component {
 }
 
 class AnonymousRegion extends Component {
-  propTypes = { children };
+  static propTypes = children;
   render() {
     return (<Anonymous top={topPage}>
       {this.props.children}
@@ -38,8 +40,12 @@ const RedirectRoute = () => (<RootRedirect top={topPage} login={loginPage} />);
 
 export default <Route path="/" component={App} >
   <Route path="" component={AuthenticatedRegion}>
-    <Route path="/team" component={TeamRouter} />
-    <Route path="/team/:teamId/:action" component={TeamRouter} />
+    <Route path="/user" component={UserRouter} />
+    <Route path="/user/:userId/:action" component={UserRouter} />
+    <Route path="/group" component={GroupRouter} />
+    <Route path="/group/:groupId/:action" component={GroupRouter} />
+    <Route path="/company" component={CompanyRouter} />
+    <Route path="/company/:companyId/:action" component={CompanyRouter} />
   </Route>
   <Route path="/login" component={AnonymousRegion} />
   <IndexRoute component={RedirectRoute} />

@@ -28,6 +28,11 @@ class OkrOperationService extends BaseService
      */
     public function changeParent(Auth $auth, TOkr $tOkr, TOkr $newParentOkr)
     {
+        // 紐付け先変更対象OKRがキーリザルトの場合、紐付け先変更不可
+        if ($tOkr->getType() === DBConstant::OKR_TYPE_KEY_RESULT) {
+            throw new ApplicationException('キーリザルトは紐付け先変更できません');
+        }
+
         // タイムフレームIDの一致チェック
         if ($tOkr->getTimeframe()->getTimeframeId() != $newParentOkr->getTimeframe()->getTimeframeId()) {
             throw new ApplicationException('異なるタイムフレームのOKRには紐付けできません');

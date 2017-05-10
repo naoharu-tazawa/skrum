@@ -10,7 +10,7 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\MUser;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\DepartmentDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\GroupDTO;
 
 /**
  * ユーザサービスクラス
@@ -37,18 +37,18 @@ class UserService extends BaseService
         // 所属部門を取得
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
         $mGroupArray = $tGroupMemberRepos->getDepartments($userId);
-        $departmentArray = array();
+        $groupDTOArray = array();
         foreach ($mGroupArray as $mGroup) {
-            $departmentDTO = new DepartmentDTO();
-            $departmentDTO->setGroupId($mGroup->getGroupId());
-            $departmentDTO->setDepartmentName($mGroup->getGroupName());
-            $departmentArray[] = $departmentDTO;
+            $groupDTO = new GroupDTO();
+            $groupDTO->setGroupId($mGroup->getGroupId());
+            $groupDTO->setGroupName($mGroup->getGroupName());
+            $groupDTOArray[] = $groupDTO;
         }
 
         $basicUserInfoDTO = new BasicUserInfoDTO();
         $basicUserInfoDTO->setUserId($mUserArray[0]->getUserId());
         $basicUserInfoDTO->setName($mUserArray[0]->getLastName() . ' ' . $mUserArray[0]->getFirstName());
-        $basicUserInfoDTO->setDepartments($departmentArray);
+        $basicUserInfoDTO->setDepartments($groupDTOArray);
         $basicUserInfoDTO->setPosition($mUserArray[0]->getPosition());
         $basicUserInfoDTO->setPhoneNumber($mUserArray[0]->getPhoneNumber());
         $basicUserInfoDTO->setEmailAddress($mUserArray[0]->getEmailAddress());

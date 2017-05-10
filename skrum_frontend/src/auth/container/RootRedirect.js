@@ -17,7 +17,7 @@ class RootRedirect extends Component {
   }
 
   componentWillUpdate() {
-    console.log('================================');
+    // console.log('================================');
     const { isAuthorized, top, login } = this.props;
     const to = isAuthorized ? top : login;
     browserHistory.push(to);

@@ -179,6 +179,22 @@ SQL;
     }
 
     /**
+     * 複数の親OKRに対する全ての子OKRを取得
+     *
+     * @param array $parentOkrIdArray 親OKRID配列
+     * @return array
+     */
+    public function getAllChildrenOkrsOfMultipleParentOkrs(array $parentOkrIdArray): array
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to2')
+            ->innerJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
+            ->where($qb->expr()->in('to1.okrId', $parentOkrIdArray));
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * 親子OKRを取得（親OKRを指定）（達成率再計算ロジック用）
      *
      * @param integer $okrId OKRID

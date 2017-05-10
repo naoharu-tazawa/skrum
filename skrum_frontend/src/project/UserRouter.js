@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import OKRContainer from './OKR/OKRContainer';
-import styles from './TeamRouter.css';
+import styles from './GroupRouter.css';
 
-export default class TeamRouter extends Component {
+export default class UserRouter extends Component {
   static propTypes = {
     params: PropTypes.shape({
-      teamId: PropTypes.string,
+      userId: PropTypes.string,
       action: PropTypes.string,
     }),
   };
 
-  renderInner() {
+  renderContent() {
     switch (this.props.params.action) {
-      case 'okr':
-        return <OKRContainer />;
+      case 'objective':
+        return <OKRContainer subject="user" />;
+      case 'control':
+        return <OKRContainer subject="user" />;
       default:
         return null;
     }
@@ -23,7 +25,7 @@ export default class TeamRouter extends Component {
   render() {
     return (
       <div className={styles.container}>
-        {this.renderInner()}
+        {this.renderContent()}
       </div>);
   }
 }

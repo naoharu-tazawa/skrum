@@ -46,7 +46,7 @@ paths:
                       properties:
                         groupId:
                           type: string
-                        departmentName:
+                        groupName:
                           type: string
                   position:
                     type: string

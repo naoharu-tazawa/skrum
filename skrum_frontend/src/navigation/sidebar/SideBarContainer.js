@@ -37,19 +37,19 @@ class SideBarContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { teams = [], departments = [], user = {} } = state.user.data || {};
+  const { teams = [], departments = [], user = {}, company = {} } = state.user.data || {};
   const teamSection = {
     title: 'チーム',
-    items: teams,
+    items: teams.map(({ groupId: id, groupName: title }) => ({ id, title })),
   };
   const depSection = {
-    title: 'グループ',
-    items: departments,
+    title: '部署',
+    items: departments.map(({ groupId: id, groupName: title }) => ({ id, title })),
   };
 
   return {
     userName: user.name,
-    companyName: '株式会社◯◯◯◯',
+    companyName: company.name,
     sections: [teamSection, depSection],
   };
 };
