@@ -64,7 +64,7 @@ class UserSettingService extends BaseService
         $data['urltoken'] = $urltoken;
         $data['supportAddress'] = $this->getParameter('support_address');
 
-        // Eメール送信
+        // Eメール非同期送信
         $this->sendEmail(
                 $this->getParameter('from_address'),
                 $emailAddress,
@@ -118,7 +118,7 @@ class UserSettingService extends BaseService
         $data['urltoken'] = $urltoken;
         $data['supportAddress'] = $this->getParameter('support_address');
 
-        // Eメール送信
+        // Eメール非同期送信
         $this->sendEmail(
                 $this->getParameter('from_address'),
                 $emailAddress,
@@ -129,7 +129,7 @@ class UserSettingService extends BaseService
     }
 
     /**
-     * Eメール送信
+     * Eメール非同期送信
      *
      * @param string $fromAddress Fromアドレス
      * @param string $toAddress Toアドレス
@@ -140,6 +140,7 @@ class UserSettingService extends BaseService
      */
     private function sendEmail(string $fromAddress, string $toAddress, string $subject, string $bodyTemplatePath, array $data)
     {
+        // Eメールスプール
         $message = \Swift_Message::newInstance()
             ->setFrom($fromAddress)
             ->setTo($toAddress)
@@ -153,10 +154,13 @@ class UserSettingService extends BaseService
 
         $result = $this->getContainer()->get('mailer')->send($message);
 
-        // メール送信結果判定
+        // メールスプール結果判定
         if (!$result) {
             throw new SystemException('メールの送信に失敗しました');
         }
+
+        // スプールしたEメールを送信するコマンドを非同期実行
+        exec('php ../app/console swiftmailer:spool:send > /dev/null &');
     }
 
     /**
