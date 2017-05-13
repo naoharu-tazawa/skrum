@@ -21,7 +21,7 @@ use AppBundle\Api\ResponseDTO\UserBasicsDTO;
 class BasicInfoController extends BaseController
 {
     /**
-     * ログイン後初期表示情報取得
+     * ナビゲーション情報取得
      *
      * @Rest\Get("/v1/users/{userId}/top.{_format}")
      * @param Request $request リクエストオブジェクト
@@ -57,16 +57,9 @@ class BasicInfoController extends BaseController
         $companyService = $this->getCompanyService();
         $basicCompanyInfoDTO = $companyService->getCompanyName($auth->getCompanyId());
 
-        // ユーザ基本情報取得
+        // ユーザリスト取得
         $userService = $this->getUserService();
-        $basicUserInfoDTO = $userService->getBasicUserInfo($userId, $auth->getCompanyId());
-
-        // OKR一覧取得
-        $okrService = $this->getOkrService();
-        $okrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_USER, $auth, $userId, null, $timeframeId, $auth->getCompanyId());
-
-        // 紐付け先情報取得
-        $alignmentsInfoDTOArray = $okrService->getAlignmentsInfo(Constant::SUBJECT_TYPE_USER, $userId, null, $timeframeId, $auth->getCompanyId());
+        $users = $userService->getSideBarUsers($userId, $auth->getCompanyId());
 
         // 返却DTOをセット
         $topDTO = new TopDTO();
@@ -74,9 +67,7 @@ class BasicInfoController extends BaseController
         $topDTO->setTeams($groups['teams']);
         $topDTO->setDepartments($groups['departments']);
         $topDTO->setCompany($basicCompanyInfoDTO);
-        $topDTO->setUser($basicUserInfoDTO);
-        $topDTO->setOkrs($okrsArray);
-        $topDTO->setAlignmentsInfo($alignmentsInfoDTOArray);
+        $topDTO->setUsers($users);
 
         return $topDTO;
     }

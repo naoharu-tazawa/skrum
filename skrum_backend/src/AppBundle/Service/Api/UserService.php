@@ -57,6 +57,31 @@ class UserService extends BaseService
     }
 
     /**
+     * サイドバーユーザリスト取得
+     *
+     * @param integer $userId グループID
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function getSideBarUsers(int $userId, int $companyId): array
+    {
+        $mUserRepos = $this->getMUserRepository();
+        $mUserArray = $mUserRepos->findBy(array('userId' => $userId, 'company' => $companyId));
+        if (count($mUserArray) === 0) {
+            throw new NoDataException('ユーザが存在しません');
+        }
+
+        $users = array();
+        $basicUserInfoDTO = new BasicUserInfoDTO();
+        $basicUserInfoDTO->setUserId($mUserArray[0]->getUserId());
+        $basicUserInfoDTO->setName($mUserArray[0]->getLastName() . ' ' . $mUserArray[0]->getFirstName());
+
+        $users[] = $basicUserInfoDTO;
+
+        return $users;
+    }
+
+    /**
      * ユーザ情報更新
      *
      * @param array $data リクエストJSON連想配列

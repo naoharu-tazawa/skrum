@@ -40,25 +40,11 @@ class TopDTO
     private $company;
 
     /**
-     * @var \AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO
-     *
-     * @JSON\Type("AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO")
-     */
-    private $user;
-
-    /**
      * @var array
      *
      * @JSON\Type("array")
      */
-    private $okrs;
-
-    /**
-     * @var array
-     *
-     * @JSON\Type("array")
-     */
-    private $alignmentsInfo;
+    private $users;
 
     /**
      * Set timeframes
@@ -157,74 +143,26 @@ class TopDTO
     }
 
     /**
-     * Set user
+     * Set users
      *
-     * @param \AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO $user
+     * @param array $users
      *
      * @return TopDTO
      */
-    public function setUser($user)
+    public function setUsers($users)
     {
-        $this->user = $user;
+        $this->users = $users;
 
         return $this;
     }
 
     /**
-     * Get user
-     *
-     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Set okrs
-     *
-     * @param array $okrs
-     *
-     * @return TopDTO
-     */
-    public function setOkrs($okrs)
-    {
-        $this->okrs = $okrs;
-
-        return $this;
-    }
-
-    /**
-     * Get okrs
+     * Get users
      *
      * @return array
      */
-    public function getOkrs()
+    public function getUsers()
     {
-        return $this->okrs;
-    }
-
-    /**
-     * Set alignmentsInfo
-     *
-     * @param array $alignmentsInfo
-     *
-     * @return TopDTO
-     */
-    public function setAlignmentsInfo($alignmentsInfo)
-    {
-        $this->alignmentsInfo = $alignmentsInfo;
-
-        return $this;
-    }
-
-    /**
-     * Get alignmentsInfo
-     *
-     * @return array
-     */
-    public function getAlignmentsInfo()
-    {
-        return $this->alignmentsInfo;
+        return $this->users;
     }
 }
