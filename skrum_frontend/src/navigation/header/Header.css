@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  background-color: #004D99;
+  padding: 0 60px;
+  box-shadow: 2px 1px 6px 0px #000;
+}
+.rightArea {
+  margin-left: auto;
+}
+.tab {
+  cursor: pointer;
+  color: #739BC3;
+}
+.tabNormal {
+  padding: 20px 20px;
+}
+.tabActive {
+  border-bottom: 6px solid #fff;
+  color: #fff;
+  padding: 20px 20px 14px 20px;
+}
+.subMenu {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.timePeriod {
+  margin-right: 10px;
+  min-width: 11.25em;
+}
+.userIcon {
+  width: 20px;
+  height: 20px;
+  margin: 0 10px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+.settingIcon {
+  width: 20px;
+  height: 20px;
+  margin: 0 10px;
+}

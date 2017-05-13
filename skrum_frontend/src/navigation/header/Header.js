@@ -5,56 +5,7 @@ import Select from 'react-select';
 import _ from 'lodash';
 import { tabPropType, timeframesPropTypes } from './propTypes';
 import { explodePath, implodePath, replacePath } from '../../util/RouteUtil';
-
-const style = {
-  /* -----------------------------------
-   *  Main
-   *  ----------------------------------- */
-  container: {
-    display: 'flex',
-    backgroundColor: '#004D99',
-    padding: '0 60px',
-    boxShadow: '2px 1px 6px 0px #000',
-  },
-  rightArea: {
-    marginLeft: 'auto',
-  },
-  tab: {
-    cursor: 'pointer',
-    color: '#739BC3',
-  },
-  tabNormal: {
-    padding: '20px 20px',
-  },
-  tabActive: {
-    borderBottom: '6px solid #fff',
-    color: '#fff',
-    padding: '20px 20px 14px 20px',
-  },
-  subMenu: {
-    color: '#fff',
-    display: 'flex',
-    alignItems: 'center',
-    height: '100%',
-  },
-  timePeriod: {
-    marginRight: '10px',
-    minWidth: '11.25em',
-  },
-  userIcon: {
-    width: '20px',
-    height: '20px',
-    margin: '0 10px',
-    backgroundColor: '#fff',
-    borderRadius: '50%',
-    border: '1px solid #fff',
-  },
-  settingIcon: {
-    width: '20px',
-    height: '20px',
-    margin: '0 10px',
-  },
-};
+import styles from './Header.css';
 
 class Tab extends Component {
   static propTypes = {
@@ -62,10 +13,10 @@ class Tab extends Component {
     name: tabPropType.isRequired,
   };
 
-  getStyle() {
+  getStyles() {
     const { name } = this.props;
     const { tab } = explodePath();
-    return { ...style.tab, ...(name === tab ? style.tabActive : style.tabNormal) };
+    return `${styles.tab} ${name === tab ? styles.tabActive : styles.tabNormal}`;
   }
 
   getPath() {
@@ -80,7 +31,7 @@ class Tab extends Component {
     const { title } = this.props;
     return (
       <Link to={this.getPath()}>
-        <div style={this.getStyle()}>
+        <div className={this.getStyles()}>
           {title}
         </div>
       </Link>);
@@ -95,12 +46,12 @@ class SubMenu extends Component {
   };
 
   static getTimeframeStyle() {
-    return { ...style.tab };
+    return styles.tab;
   }
 
   static timeframeRenderer({ value: timeframeId, label }) {
     return (
-      <div style={SubMenu.getTimeframeStyle(timeframeId)}>
+      <div className={SubMenu.getTimeframeStyle(timeframeId)}>
         {label}
       </div>);
   }
@@ -115,9 +66,9 @@ class SubMenu extends Component {
       .map(({ timeframeId: value, timeframeName: label }) => ({ value, label }));
     const { timeframeId } = explodePath();
     return (
-      <div style={style.subMenu}>
+      <div className={styles.subMenu}>
         <Select
-          style={style.timePeriod}
+          className={styles.timePeriod}
           options={timeframeOptions}
           optionRenderer={SubMenu.timeframeRenderer}
           onChange={SubMenu.handleTimeframeChange}
@@ -127,12 +78,12 @@ class SubMenu extends Component {
           searchable={false}
         />
         <img
-          style={style.userIcon}
+          className={styles.userIcon}
           src="https://cdn3.iconfinder.com/data/icons/users/100/user_male_1-512.png"
           alt=""
         />
         <img
-          style={style.settingIcon}
+          className={styles.settingIcon}
           src="http://www.iconsdb.com/icons/preview/white/gear-2-xxl.png"
           alt=""
         />
@@ -153,12 +104,12 @@ export default class Header extends Component {
   render() {
     const { timeframes = [], handleLogoutSubmit } = this.props;
     return (
-      <div style={style.container}>
+      <div className={styles.container}>
         <Tab title="目標管理" name="objective" />
         <Tab title="マップ" name="map" />
         <Tab title="タイムライン" name="timeline" />
         <Tab title="グループ管理" name="control" />
-        <div style={style.rightArea}>
+        <div className={styles.rightArea}>
           <SubMenu {...{ timeframes, handleLogoutSubmit }} />
         </div>
       </div>
