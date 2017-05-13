@@ -30,13 +30,14 @@ class NavigationContainer extends Component {
       PropTypes.arrayOf([PropTypes.element]),
     ]),
     dispatchFetchUserInfo: PropTypes.func,
+    userId: PropTypes.number,
   };
 
   static defaultProps = {
   };
 
   componentWillMount() {
-    this.props.dispatchFetchUserInfo();
+    this.props.dispatchFetchUserInfo(this.props.userId);
   }
 
   render() {
@@ -53,7 +54,10 @@ class NavigationContainer extends Component {
   }
 }
 
-const mapStateToProps = state => state;
+const mapStateToProps = (state) => {
+  const { userId } = state.auth;
+  return { state, userId };
+};
 
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchUserInfo = userId => dispatch(fetchUserTop(userId));

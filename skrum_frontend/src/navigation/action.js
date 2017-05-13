@@ -16,7 +16,7 @@ const {
   Action.REQUEST_FETCH_USER_TOP,
 );
 
-export function fetchUserTop(userId = 1) {
+export function fetchUserTop(userId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
     const { isFetching } = status.user;

@@ -23,10 +23,17 @@ export default (state = {
       }
 
       const { jwt } = payload.data;
+      const splitedJwt = jwt.split('.');
+      const jwtPayload = JSON.parse(window.atob(splitedJwt[1]));
       return Object.assign({}, state, {
         isFetching: false,
         isAuthorized: true,
         token: jwt,
+        userId: jwtPayload.uid,
+        companyId: jwtPayload.cid,
+        roleId: jwtPayload.rid,
+        roleLevel: jwtPayload.rlv,
+        permissions: jwtPayload.permissions,
         error: null,
       });
     }
