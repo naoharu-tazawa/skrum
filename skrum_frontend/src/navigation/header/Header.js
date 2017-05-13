@@ -45,13 +45,13 @@ class SubMenu extends Component {
     handleLogoutSubmit: PropTypes.func.isRequired,
   };
 
-  static getTimeframeStyle() {
-    return styles.tab;
+  static getTimeframeStyle(id, currentId) {
+    return `${styles.timeframe} ${id === currentId ? styles.timeframeCurrent : ''}`;
   }
 
-  static timeframeRenderer({ value: timeframeId, label }) {
+  static timeframeRenderer(currentId, { value: id, label }) {
     return (
-      <div className={SubMenu.getTimeframeStyle(timeframeId)}>
+      <div className={SubMenu.getTimeframeStyle(id, currentId)}>
         {label}
       </div>);
   }
@@ -65,14 +65,15 @@ class SubMenu extends Component {
     const timeframeOptions = _.orderBy(timeframes, 'timeframeId', 'asc')
       .map(({ timeframeId: value, timeframeName: label }) => ({ value, label }));
     const { timeframeId } = explodePath();
+    const currentTimeframeId = _.toNumber(timeframeId);
     return (
       <div className={styles.subMenu}>
         <Select
           className={styles.timePeriod}
           options={timeframeOptions}
-          optionRenderer={SubMenu.timeframeRenderer}
+          optionRenderer={_.partial(SubMenu.timeframeRenderer, currentTimeframeId)}
           onChange={SubMenu.handleTimeframeChange}
-          value={_.toNumber(timeframeId)}
+          value={currentTimeframeId}
           placeholder=""
           clearable={false}
           searchable={false}
@@ -84,11 +85,14 @@ class SubMenu extends Component {
         />
         <img
           className={styles.settingIcon}
-          src="http://www.iconsdb.com/icons/preview/white/gear-2-xxl.png"
+          src="/img/setting.svg"
           alt=""
         />
         <button onClick={handleLogoutSubmit}>
-          Logout
+          <img
+            src="/img/logout.svg"
+            alt=""
+          />
         </button>
       </div>);
   }
