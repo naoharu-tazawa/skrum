@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 
+export const tabPropType = PropTypes.oneOf(['objective', 'map', 'timeline', 'control']);
+
 export const timeframePropTypes = PropTypes.shape({
   timeframeId: PropTypes.number.isRequired,
   timeframeName: PropTypes.string.isRequired,

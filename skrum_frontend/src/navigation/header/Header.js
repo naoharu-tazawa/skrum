@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import Select from 'react-select';
 import _ from 'lodash';
-import { timeframesPropTypes } from './propTypes';
+import { tabPropType, timeframesPropTypes } from './propTypes';
+import { explodePath, implodePath, replacePath } from '../../util/RouteUtil';
 
 const style = {
   /* -----------------------------------
@@ -58,33 +59,29 @@ const style = {
 class Tab extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
-    isActive: PropTypes.bool,
-    to: PropTypes.string.isRequired,
-  };
-
-  static defaultProp = {
-    isActive: false,
+    name: tabPropType.isRequired,
   };
 
   getStyle() {
-    const { isActive } = this.props;
-    return Object.assign({}, style.tab, isActive ? style.tabActive : style.tabNormal);
+    const { name } = this.props;
+    const { tab } = explodePath();
+    return { ...style.tab, ...(name === tab ? style.tabActive : style.tabNormal) };
   }
 
-  getTo() {
-    const path = window.location.pathname;
-    const { to } = this.props;
-    if (path.startsWith('/user') || path.startsWith('/group') || path.startsWith('/company')) {
-      const bases = path.split('/');
-      return `/${bases[1]}/${bases[2]}${to}`;
-    }
+  getPath() {
+    const { name: tab } = this.props;
+    const { section, ...others } = explodePath();
+    // if (/^(user|group|company)$/.test(section)) {
+    return implodePath({ ...others, section, tab });
+    // }
   }
 
   render() {
+    const { title } = this.props;
     return (
-      <Link to={this.getTo()}>
+      <Link to={this.getPath()}>
         <div style={this.getStyle()}>
-          {this.props.title}
+          {title}
         </div>
       </Link>);
   }
@@ -97,17 +94,34 @@ class SubMenu extends Component {
     handleLogoutSubmit: PropTypes.func.isRequired,
   };
 
+  static getTimeframeStyle() {
+    return { ...style.tab };
+  }
+
+  static timeframeRenderer({ value: timeframeId, label }) {
+    return (
+      <div style={SubMenu.getTimeframeStyle(timeframeId)}>
+        {label}
+      </div>);
+  }
+
+  static handleTimeframeChange({ value: timeframeId }) {
+    browserHistory.push(replacePath({ timeframeId }));
+  }
+
   render() {
     const { timeframes, handleLogoutSubmit } = this.props;
     const timeframeOptions = _.orderBy(timeframes, 'timeframeId', 'asc')
-      .map(({ timeframeId, timeframeName }) => ({ value: timeframeId, label: timeframeName }));
-    const timeframeDefault = (_.find(timeframes, { defaultFlg: 1 }) || {}).timeframeId;
+      .map(({ timeframeId: value, timeframeName: label }) => ({ value, label }));
+    const { timeframeId } = explodePath();
     return (
       <div style={style.subMenu}>
         <Select
           style={style.timePeriod}
           options={timeframeOptions}
-          value={timeframeDefault}
+          optionRenderer={SubMenu.timeframeRenderer}
+          onChange={SubMenu.handleTimeframeChange}
+          value={_.toNumber(timeframeId)}
           placeholder=""
           clearable={false}
           searchable={false}
@@ -132,23 +146,18 @@ class SubMenu extends Component {
 export default class Header extends Component {
 
   static propTypes = {
-    activeMenu: PropTypes.oneOf(['objective', 'map', 'timeline', 'control']).isRequired,
     timeframes: timeframesPropTypes,
     handleLogoutSubmit: PropTypes.func.isRequired,
   };
-
-  isActive(key) {
-    return this.props.activeMenu === key;
-  }
 
   render() {
     const { timeframes = [], handleLogoutSubmit } = this.props;
     return (
       <div style={style.container}>
-        <Tab title="目標管理" isActive={this.isActive('objective')} to="/objective" />
-        <Tab title="マップ" isActive={this.isActive('map')} to="/map" />
-        <Tab title="タイムライン" isActive={this.isActive('timeline')} to="/timeline" />
-        <Tab title="グループ管理" isActive={this.isActive('control')} to="/control" />
+        <Tab title="目標管理" name="objective" />
+        <Tab title="マップ" name="map" />
+        <Tab title="タイムライン" name="timeline" />
+        <Tab title="グループ管理" name="control" />
         <div style={style.rightArea}>
           <SubMenu {...{ timeframes, handleLogoutSubmit }} />
         </div>

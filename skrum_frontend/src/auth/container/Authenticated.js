@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import _ from 'lodash';
 import NavigationContainer from '../../navigation/NavigationContainer';
+import { implodePath } from '../../util/RouteUtil';
 
 class Authenticated extends Component {
   static propTypes = {
     login: PropTypes.string.isRequired,
     isAuthorized: PropTypes.bool,
-    defaultId: PropTypes.number,
+    userId: PropTypes.number,
+    timeframeId: PropTypes.number,
     children: PropTypes.element,
   };
 
@@ -21,14 +24,11 @@ class Authenticated extends Component {
   }
 
   transfer(props = this.props) {
-    const { login, isAuthorized, defaultId } = props;
+    const { login, isAuthorized, userId, timeframeId } = props;
     if (!isAuthorized) {
       browserHistory.push(login);
-    }
-    const to = id => `/group/${id}/objective`;
-    const current = window.location.pathname;
-    if (defaultId && current === '/group') {
-      browserHistory.push(to(defaultId));
+    } else if (userId && timeframeId && window.location.pathname === '/user') {
+      browserHistory.push(implodePath({ section: 'user', id: userId, timeframeId, tab: 'objective' }));
     }
   }
 
@@ -41,11 +41,12 @@ class Authenticated extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { isAuthorized } = state.auth;
-  const { data } = state.user || {};
-  const { user } = data || {};
-  const { userId } = user || {};
-  return { isAuthorized, defaultId: userId };
+  const { isAuthorized, userId } = state.auth;
+  const { timeframes = [] } = state.top.data || {};
+  const timeframeId = (_.find(timeframes, { defaultFlg: 1 }) || {}).timeframeId;
+  return { isAuthorized, userId, timeframeId };
 };
 
-export default connect(mapStateToProps)(Authenticated);
+export default connect(
+  mapStateToProps,
+)(Authenticated);
