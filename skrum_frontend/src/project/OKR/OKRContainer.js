@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import UserInfoContainer from '../UserInfo/UserInfoContainer';
+import GroupInfoContainer from '../GroupInfo/GroupInfoContainer';
+import CompanyInfoContainer from '../CompanyInfo/CompanyInfoContainer';
 import { UserOKRListContainer, GroupOKRListContainer, CompanyOKRListContainer } from '../OKRList/OKRListContainer';
 import styles from './OKRContainer.css';
 import { imgSrc } from '../../util/ResourceUtil';
@@ -18,6 +20,19 @@ class OKRContainer extends Component {
     isFetching: PropTypes.bool,
     subject: PropTypes.string,
   };
+
+  renderInfoContainer() {
+    switch (this.props.subject) {
+      case 'user':
+        return <UserInfoContainer />;
+      case 'group':
+        return <GroupInfoContainer />;
+      case 'company':
+        return <CompanyInfoContainer />;
+      default:
+        return null;
+    }
+  }
 
   renderOKRListContainer() {
     switch (this.props.subject) {
@@ -39,7 +54,7 @@ class OKRContainer extends Component {
     return (
       <div className={styles.container}>
         <div className={styles.userInfo}>
-          <UserInfoContainer />
+          {this.renderInfoContainer()}
         </div>
         <div className={styles.okrList}>
           {this.renderOKRListContainer()}
