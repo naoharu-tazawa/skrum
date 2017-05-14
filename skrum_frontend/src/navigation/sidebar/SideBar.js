@@ -3,129 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { sectionPropType, itemsPropTypes, sectionPropTypes, sectionsPropTypes } from './propTypes';
 import { explodePath, replacePath } from '../../util/RouteUtil';
-
-const style = {
-  /* -----------------------------------
-  *  Main
-  *  ----------------------------------- */
-  sideNav: {
-    height: '100vh',
-    overflow: 'hidden',
-    color: '#fff',
-    boxShadow: '0px 0px 10px 0px #000',
-    backgroundColor: '#626A7F',
-  },
-  sideNavTitle: {
-    position: 'relative',
-    padding: '10px 13px',
-    borderBottom: '1px solid #666',
-  },
-  sideNavTitleText: {
-    position: 'absolute',
-    top: '14px',
-    left: '42px',
-    display: 'block',
-  },
-  isOpen: {
-    width: '100%',
-  },
-  isHide: {
-    display: 'none',
-  },
-  isActive: {
-    backgroundColor: 'slategray',
-  },
-  toggleArea: {
-    padding: '10px 20px',
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  toggleButton: {
-    cursor: 'pointer',
-    color: '#fff',
-    backgroundColor: 'transparent',
-    border: 'none',
-    fontSize: '20px',
-  },
-  userName: {
-    padding: '20px',
-  },
-  companyName: {
-    padding: '20px',
-  },
-  /* -----------------------------------
-   *  Header
-   *  ----------------------------------- */
-  header: {
-    backgroundColor: '#27588F',
-    padding: '20px',
-  },
-  /* -----------------------------------
-   *  Section
-   *  ----------------------------------- */
-  sectionContainer: {
-    marginBottom: '30px',
-  },
-  sectionTitle: {
-    padding: '5px 20px',
-    color: '#818C9A',
-  },
-  /* -----------------------------------
-   *  Section Item
-   *  ----------------------------------- */
-  sectionItem: {
-    padding: '10px 20px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  sectionItemLink: {
-    color: 'inherit',
-    width: '100%',
-  },
-  sectionItemImg: {
-    width: '20px',
-    height: '20px',
-    borderRadius: '50%',
-    border: '1px solid #fff',
-  },
-  sideNavMainItemLink: {
-    display: 'block',
-    padding: '10px 13px',
-    backgroundPosition: '13px center',
-    backgroundRepeat: 'no-repeat',
-    cursor: 'pointer',
-    color: '#fff',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-    marginLeft: '-40px',
-  },
-  sideNavMenuItemLink: {
-    display: 'block',
-    padding: '12px 10px 12px', // 50px
-    backgroundPosition: '13px center',
-    backgroundRepeat: 'no-repeat',
-    cursor: 'pointer',
-    color: '#fff',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-  },
-  sideNavMenuItemLinkHover: {
-    ':hover': {
-      backgroundColor: '#38b6a5',
-    },
-  },
-  sideNavMenuItemNotice: {
-    display: 'inline-block',
-    position: 'relative',
-    top: '-8px',
-    width: '6px',
-    height: '6px',
-    marginLeft: '5px',
-    backgroundColor: '#f66c54',
-    borderRadius: '50%',
-  },
-};
+import styles from './SideBar.css';
 
 class SectionItem extends Component {
   static propTypes = {
@@ -135,11 +13,11 @@ class SectionItem extends Component {
     imgSrc: PropTypes.string,
   };
 
-  getStyle() {
+  getStyles() {
     const { section, id } = this.props;
     const { section: currentSection, id: currentId } = explodePath();
     const isActive = section === currentSection && `${id}` === currentId;
-    return { ...style.sectionItem, ...(isActive ? style.isActive : {}) };
+    return `${styles.sectionItem} ${isActive ? styles.isActive : ''}`;
   }
 
   getPath() {
@@ -155,14 +33,14 @@ class SectionItem extends Component {
     return (<img
       src={imgSrc}
       alt=""
-      style={style.sectionItemImg}
+      className={styles.sectionItemImg}
     />);
   }
 
   render() {
     const { title } = this.props;
-    return (<li style={this.getStyle()}>
-      <Link to={this.getPath()} style={style.sectionItemLink}>
+    return (<li className={this.getStyles()}>
+      <Link to={this.getPath()} className={styles.sectionItemLink}>
         {title}
       </Link>
       {this.renderImg()}
@@ -193,8 +71,8 @@ class Section extends Component {
   }
 
   render() {
-    return (<div style={style.sectionContainer}>
-      <p style={style.sectionTitle}>{this.props.title}</p>
+    return (<div className={styles.sectionContainer}>
+      <p className={styles.sectionTitle}>{this.props.title}</p>
       <ul>
         {this.renderItem()}
       </ul>
@@ -217,10 +95,8 @@ export default class SideBar extends Component {
     isOpen: true,
   };
 
-  getBaseStyle = () => (
-    this.props.isOpen
-      ? { ...style.sideNav, ...style.isOpen }
-      : style.sideNav);
+  getBaseStyles = () =>
+    `${styles.component} ${this.props.isOpen ? styles.isOpen : ''}`;
 
   renderSection = (section, { title, items }) => (
     <Section
@@ -235,12 +111,18 @@ export default class SideBar extends Component {
   render() {
     const { userSection, groupSections, companyId, companyName, onClickToggle } = this.props;
     return (
-      <div style={this.getBaseStyle()}>
-        <div style={style.header}>Skrum</div>
-        <div style={style.toggleArea}>
+      <div className={this.getBaseStyles()}>
+        <div className={styles.header}>
+          <img
+            className={styles.headerLogo}
+            src="/img/skrum_logo.svg"
+            alt=""
+          />
+        </div>
+        <div className={styles.toggleArea}>
           <button
             onClick={onClickToggle}
-            style={style.toggleButton}
+            className={styles.toggleButton}
           >≡
           </button>
         </div>
