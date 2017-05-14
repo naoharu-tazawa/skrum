@@ -3,26 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SideBarContainer from '../navigation/sidebar/SideBarContainer';
 import HeaderContainer from '../navigation/header/HeaderContainer';
+import styles from './NavigationContainer.css';
 import { fetchUserTop } from './action';
 import { fetchUserBasics, fetchGroupBasics, fetchCompanyBasics } from '../project/OKR/action';
 import { explodePath, isPathFinal } from '../util/RouteUtil';
-
-const style = {
-  layoutBase: {
-    display: 'flex',
-    width: '100%',
-    height: '100vh',
-  },
-  layoutSide: {
-    width: '200px',
-  },
-  layoutMain: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    overflowY: 'hidden',
-  },
-};
 
 class NavigationContainer extends Component {
 
@@ -79,11 +63,11 @@ class NavigationContainer extends Component {
   render() {
     const { pathname } = this.props;
     return (
-      <div style={style.layoutBase}>
-        <div style={style.layoutSide}>
+      <div className={styles.layoutBase}>
+        <div className={styles.layoutSide}>
           <SideBarContainer pathname={pathname} />
         </div>
-        <main style={style.layoutMain}>
+        <main className={styles.layoutMain}>
           <HeaderContainer pathname={pathname} />
           {this.props.children}
         </main>
