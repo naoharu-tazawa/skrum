@@ -1,8 +1,9 @@
-import { Action } from './UserGroupActions';
+import { Action } from './action';
 
 export default (state = {
   isFetching: false,
-  data: {},
+  user: {},
+  group: {},
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_USER_GROUPS:
@@ -20,7 +21,7 @@ export default (state = {
       }
       return Object.assign({}, state, {
         isFetching: false,
-        data: payload.data,
+        ...payload,
         error: null,
       });
     }

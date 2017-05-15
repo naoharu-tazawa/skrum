@@ -15,3 +15,8 @@
   margin-top: 20px;
   margin-bottom: 30px;
 }
+.spinner {
+  height: 100%;
+  width: 100%;
+  background: url(/img/rolling.svg) center no-repeat;
+}

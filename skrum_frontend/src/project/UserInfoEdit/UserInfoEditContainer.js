@@ -20,9 +20,9 @@ class UserInfoEditContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { isFetching } = state.userGroupData;
-  const { user = {} } = state.userGroupData.data || {};
-  return isFetching ? {} : { user };
+  const { groupManagement = {} } = state;
+  const { isFetching, user = {} } = groupManagement;
+  return isFetching ? {} : { user: user.user };
 };
 
 export default connect(

@@ -18,7 +18,7 @@ class UserGroupListContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { groups = [] } = state.userGroupData.data || {};
+  const { groups = [] } = state.groupManagement.user || {};
   const items = groups.map((group) => {
     const { groupId, groupName, achievementRate } = group;
     return {
