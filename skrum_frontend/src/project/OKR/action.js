@@ -4,65 +4,51 @@ import { getJson } from '../../util/ApiUtil';
 
 export const Action = {
   REQUEST_FETCH_USER_BASICS: 'REQUEST_FETCH_USER_BASICS',
+  REQUEST_FETCH_GROUP_BASICS: 'REQUEST_FETCH_GROUP_BASICS',
+  REQUEST_FETCH_COMPANY_BASICS: 'REQUEST_FETCH_COMPANY_BASICS',
   FINISH_FETCH_USER_BASICS: 'FINISH_FETCH_USER_BASICS',
+  FINISH_FETCH_GROUP_BASICS: 'FINISH_FETCH_GROUP_BASICS',
+  FINISH_FETCH_COMPANY_BASICS: 'FINISH_FETCH_COMPANY_BASICS',
 };
 
 const {
   requestFetchUserBasics,
+  requestFetchGroupBasics,
+  requestFetchCompanyBasics,
   finishFetchUserBasics,
+  finishFetchGroupBasics,
+  finishFetchCompanyBasics,
 } = createActions({
   [Action.FINISH_FETCH_USER_BASICS]: keyValueIdentity,
+  [Action.FINISH_FETCH_GROUP_BASICS]: keyValueIdentity,
+  [Action.FINISH_FETCH_COMPANY_BASICS]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_USER_BASICS,
+  Action.REQUEST_FETCH_GROUP_BASICS,
+  Action.REQUEST_FETCH_COMPANY_BASICS,
 );
 
-export function fetchUserBasics(userId, timeframeId) {
-  return (dispatch, getStatus) => {
+const fetchBasics = (section, node, request, finish) => (id, timeframeId) =>
+  (dispatch, getStatus) => {
     const status = getStatus();
     const { isFetching } = status.basics;
     if (isFetching) {
       return Promise.resolve();
     }
-    dispatch(requestFetchUserBasics());
-    return getJson(`/users/${userId}/basics.json?tfid=${timeframeId}`, status)()
-      .then(json => dispatch(finishFetchUserBasics('user', json)))
+    dispatch(request());
+    return getJson(`/${section}/${id}/basics.json?tfid=${timeframeId}`, status)()
+      .then(json => dispatch(finish(node, json)))
       .catch((err) => {
         const { message } = err;
-        return dispatch(finishFetchUserBasics(new Error(message)));
+        return dispatch(finish(new Error(message)));
       });
   };
-}
 
-export function fetchGroupBasics(groupId, timeframeId) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    const { isFetching } = status.basics;
-    if (isFetching) {
-      return Promise.resolve();
-    }
-    dispatch(requestFetchUserBasics());
-    return getJson(`/groups/${groupId}/basics.json?tfid=${timeframeId}`, status)()
-      .then(json => dispatch(finishFetchUserBasics('group', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishFetchUserBasics(new Error(message)));
-      });
-  };
-}
+export const fetchUserBasics = (id, timeframeId) =>
+  fetchBasics('users', 'user', requestFetchUserBasics, finishFetchUserBasics)(id, timeframeId);
 
-export function fetchCompanyBasics(companyId, timeframeId) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    const { isFetching } = status.basics;
-    if (isFetching) {
-      return Promise.resolve();
-    }
-    dispatch(requestFetchUserBasics());
-    return getJson(`/companies/${companyId}/basics.json?tfid=${timeframeId}`, status)()
-      .then(json => dispatch(finishFetchUserBasics('company', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishFetchUserBasics(new Error(message)));
-      });
-  };
-}
+export const fetchGroupBasics = (id, timeframeId) =>
+  fetchBasics('groups', 'group', requestFetchGroupBasics, finishFetchGroupBasics)(id, timeframeId);
+
+export const fetchCompanyBasics = (id, timeframeId) =>
+  fetchBasics('companies', 'company', requestFetchCompanyBasics, finishFetchCompanyBasics)(id, timeframeId);
