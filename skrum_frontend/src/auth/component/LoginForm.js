@@ -1,46 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { errorType } from '../../util/PropUtil';
-import { imgSrc } from '../../util/ResourceUtil';
-
-const defaultPStyle = {
-  color: '#fff',
-  textAlign: 'center',
-};
-
-const defaultInputStyle = {
-  width: '100%',
-  border: 0,
-  padding: '10px',
-  margin: '0 -10px 20px',
-  borderRadius: '3px',
-};
-
-const defaultButtonStyle = {
-  display: 'block',
-  margin: 'auto',
-  border: 'none',
-  width: '50%',
-  padding: '10px 0',
-  borderRadius: '3px',
-  cursor: 'pointer',
-};
-
-const disableButtonStyle = {
-  height: '50px',
-  background: `url("${imgSrc('./rolling.svg')}") center no-repeat`,
-};
+import styles from './LoginForm.css';
 
 function SubmitButton() {
   return (
-    <button style={defaultButtonStyle}>
+    <button className={styles.defaultButton}>
       ログイン
     </button>
   );
 }
 
 function DisabledButton() {
-  return <div style={disableButtonStyle} />;
+  return <div className={styles.disableButton} />;
 }
 
 class LoginForm extends Component {
@@ -76,12 +48,12 @@ class LoginForm extends Component {
   render() {
     return (
       <div>
-        <p style={defaultPStyle}>Skrum Login</p>
+        <p className={styles.default}>Skrum Login</p>
         <br />
         <form onSubmit={e => this.handleSubmit(e)}>
-          <input type="text" id="email" placeholder="Email" style={defaultInputStyle} />
+          <input type="text" id="email" placeholder="Email" className={styles.defaultInput} />
           <br />
-          <input type="password" id="password" placeholder="Password" style={defaultInputStyle} />
+          <input type="password" id="password" placeholder="Password" className={styles.defaultInput} />
           {this.renderError()}
           <br />
           <div>

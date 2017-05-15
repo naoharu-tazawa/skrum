@@ -2,15 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import UserInfoContainer from '../UserInfo/UserInfoContainer';
+import GroupInfoContainer from '../GroupInfo/GroupInfoContainer';
+import CompanyInfoContainer from '../CompanyInfo/CompanyInfoContainer';
 import { UserOKRListContainer, GroupOKRListContainer, CompanyOKRListContainer } from '../OKRList/OKRListContainer';
 import styles from './OKRContainer.css';
-import { imgSrc } from '../../util/ResourceUtil';
-
-const spinnerStyle = {
-  height: '100%',
-  width: '100%',
-  background: `url("${imgSrc('./rolling.svg')}") center no-repeat`,
-};
 
 class OKRContainer extends Component {
 
@@ -18,6 +13,19 @@ class OKRContainer extends Component {
     isFetching: PropTypes.bool,
     subject: PropTypes.string,
   };
+
+  renderInfoContainer() {
+    switch (this.props.subject) {
+      case 'user':
+        return <UserInfoContainer />;
+      case 'group':
+        return <GroupInfoContainer />;
+      case 'company':
+        return <CompanyInfoContainer />;
+      default:
+        return null;
+    }
+  }
 
   renderOKRListContainer() {
     switch (this.props.subject) {
@@ -34,12 +42,12 @@ class OKRContainer extends Component {
 
   render() {
     if (this.props.isFetching) {
-      return <div style={spinnerStyle} />;
+      return <div className={styles.spinner} />;
     }
     return (
       <div className={styles.container}>
         <div className={styles.userInfo}>
-          <UserInfoContainer />
+          {this.renderInfoContainer()}
         </div>
         <div className={styles.okrList}>
           {this.renderOKRListContainer()}

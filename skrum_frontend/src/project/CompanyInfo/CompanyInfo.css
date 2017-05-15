@@ -4,14 +4,13 @@
   /*background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`*/
   overflow: hidden;
   color: #626A7F;
-  padding: 40px 20px 20px 40px;
+  padding: 40px 40px 20px;
 }
-.userBox {
+.companyBox {
   margin: auto 0;
-  /*min-width: 160px;*/
   width: 70px;
 }
-.userImage {
+.companyImage {
   display: block;
   margin: auto;
   width: 70px;
@@ -26,30 +25,34 @@
   text-align: center;
   margin: 0.5em 0;
 }
-.userInfo {
+.companyInfo {
   width: 100%;
   margin: 0 1em 0 40px;
 }
-.userName {
+.companyName {
   font-size: x-large;
   margin-bottom: 0.5em;
 }
-.userDept {
+.companyDept {
   font-size: x-small;
-  color: darkgray;
 }
-.userRank {
-  font-size: small;
+.companyGoal {
+  font-size: x-small;
+  margin: 0.5em 0;
   vertical-align: top;
 }
-.userPart {
+.companyVision {
+  display: block;
+  width: 100%;
+}
+.companyPart {
   font-size: x-small;
   vertical-align: top;
+  display: flex;
 }
-.userLabel {
+.companyLabel {
   white-space: nowrap;
   padding-right: 20px;
-  padding-bottom: 2px;
 }
 .moreLink {
   font-size: small;
