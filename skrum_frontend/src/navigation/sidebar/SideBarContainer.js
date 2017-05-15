@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { sections } from './propTypes';
+import { sectionPropTypes, sectionsPropTypes } from './propTypes';
 import SideBar from './SideBar';
+import { fetchUserBasics } from '../action';
 
 class SideBarContainer extends Component {
 
   static propTypes = {
-    userName: PropTypes.string,
+    userSection: sectionPropTypes,
+    groupSections: sectionsPropTypes,
+    companyId: PropTypes.number,
     companyName: PropTypes.string,
-    sections,
-  };
-
-  static defaultProps = {
-    isOpen: true,
+    dispatchLoadEntity: PropTypes.func,
+    pathname: PropTypes.string,
   };
 
   state = {
@@ -25,19 +25,23 @@ class SideBarContainer extends Component {
   }
 
   render() {
+    const { userSection, groupSections, companyId, companyName, dispatchLoadEntity } = this.props;
     return (
       <SideBar
         isOpen={this.state.isOpen}
         onClickToggle={this.toggleSideBar}
-        userName={this.props.userName}
-        companyName={this.props.companyName}
-        sections={this.props.sections}
+        handleClick={dispatchLoadEntity}
+        {...{ userSection, groupSections, companyId, companyName }}
       />);
   }
 }
 
 const mapStateToProps = (state) => {
-  const { teams = [], departments = [], user = {}, company = {} } = state.user.data || {};
+  const { users = [], teams = [], departments = [], company = {} } = state.top.data || {};
+  const userSection = {
+    title: '',
+    items: users.map(({ userId: id, name: title }) => ({ id, title })),
+  };
   const teamSection = {
     title: 'チーム',
     items: teams.map(({ groupId: id, groupName: title }) => ({ id, title })),
@@ -46,17 +50,18 @@ const mapStateToProps = (state) => {
     title: '部署',
     items: departments.map(({ groupId: id, groupName: title }) => ({ id, title })),
   };
-
   return {
-    userName: user.name,
+    userSection,
+    groupSections: [teamSection, depSection],
+    companyId: company.companyId,
     companyName: company.name,
-    sections: [teamSection, depSection],
   };
 };
 
-const mapDispatchToProps = () => {
-  const handleSubmit = () => console.log('hogehoge');
-  return { handleSubmit };
+const mapDispatchToProps = (dispatch) => {
+  const dispatchLoadEntity = id =>
+    dispatch(fetchUserBasics(id));
+  return { dispatchLoadEntity };
 };
 
 export default connect(

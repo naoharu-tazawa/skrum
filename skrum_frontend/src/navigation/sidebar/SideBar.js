@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
+import { sectionPropType, itemsPropTypes, sectionPropTypes, sectionsPropTypes } from './propTypes';
+import { explodePath, replacePath } from '../../util/RouteUtil';
 
 const style = {
   /* -----------------------------------
@@ -28,6 +31,9 @@ const style = {
   },
   isHide: {
     display: 'none',
+  },
+  isActive: {
+    backgroundColor: 'slategray',
   },
   toggleArea: {
     padding: '10px 20px',
@@ -72,6 +78,10 @@ const style = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  sectionItemLink: {
+    color: 'inherit',
+    width: '100%',
   },
   sectionItemImg: {
     width: '20px',
@@ -119,14 +129,29 @@ const style = {
 
 class SectionItem extends Component {
   static propTypes = {
+    section: sectionPropType.isRequired,
+    id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     imgSrc: PropTypes.string,
   };
 
+  getStyle() {
+    const { section, id } = this.props;
+    const { section: currentSection, id: currentId } = explodePath();
+    const isActive = section === currentSection && `${id}` === currentId;
+    return { ...style.sectionItem, ...(isActive ? style.isActive : {}) };
+  }
+
+  getPath() {
+    const { section, id } = this.props;
+    // if (/^(user|group|company)$/.test(section)) {
+    return replacePath({ section, id });
+    // }
+  }
+
   renderImg() {
     const { imgSrc } = this.props;
     if (!imgSrc) return;
-
     return (<img
       src={imgSrc}
       alt=""
@@ -135,10 +160,11 @@ class SectionItem extends Component {
   }
 
   render() {
-    return (<li style={style.sectionItem}>
-      <div>
-        {this.props.title}
-      </div>
+    const { title } = this.props;
+    return (<li style={this.getStyle()}>
+      <Link to={this.getPath()} style={style.sectionItemLink}>
+        {title}
+      </Link>
       {this.renderImg()}
     </li>);
   }
@@ -146,17 +172,23 @@ class SectionItem extends Component {
 
 class Section extends Component {
   static propTypes = {
+    section: sectionPropType.isRequired,
     title: PropTypes.string.isRequired,
-    items: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      imgSrc: PropTypes.string,
-    })).isRequired,
+    items: itemsPropTypes.isRequired,
   };
 
   renderItem() {
+    const { section } = this.props;
     return this.props.items.map((item) => {
       const { title, imgSrc, id } = item;
-      return (<SectionItem key={id} title={title} imgSrc={imgSrc} />);
+      return (
+        <SectionItem
+          key={id}
+          section={section}
+          id={id}
+          title={title}
+          imgSrc={imgSrc}
+        />);
     });
   }
 
@@ -173,55 +205,48 @@ class Section extends Component {
 export default class SideBar extends Component {
 
   static propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onClickToggle: PropTypes.func.isRequired,
-    userName: PropTypes.string,
+    isOpen: PropTypes.bool,
+    onClickToggle: PropTypes.func,
+    userSection: sectionPropTypes,
+    groupSections: sectionsPropTypes,
+    companyId: PropTypes.number,
     companyName: PropTypes.string,
-    sections: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      items: PropTypes.arrayOf(PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        imgSrc: PropTypes.string,
-      })).isRequired,
-    })).isRequired,
   };
 
   static defaultProps = {
     isOpen: true,
   };
 
-  getBaseStyle() {
-    if (this.props.isOpen) {
-      return (Object.assign({}, style.sideNav, style.isOpen));
-    }
-    return style.sideNav;
-  }
+  getBaseStyle = () => (
+    this.props.isOpen
+      ? { ...style.sideNav, ...style.isOpen }
+      : style.sideNav);
 
-  renderContent() {
-    return this.props.sections.map((section) => {
-      const { title, items } = section;
-      return (<Section
-        key={title}
-        title={title}
-        items={items}
-      />);
-    });
-  }
+  renderSection = (section, { title, items }) => (
+    <Section
+      key={title}
+      {...{ section, title, items }}
+    />);
+
+  renderUserSection = section => this.renderSection('user', section);
+
+  renderGroupSection = section => this.renderSection('group', section);
 
   render() {
+    const { userSection, groupSections, companyId, companyName, onClickToggle } = this.props;
     return (
       <div style={this.getBaseStyle()}>
         <div style={style.header}>Skrum</div>
         <div style={style.toggleArea}>
           <button
-            onClick={this.props.onClickToggle}
+            onClick={onClickToggle}
             style={style.toggleButton}
           >≡
           </button>
         </div>
-        <p style={style.userName}>{this.props.userName}</p>
-        {this.renderContent()}
-        <p style={style.companyName}>{this.props.companyName}</p>
+        {this.renderUserSection(userSection)}
+        {groupSections.map(this.renderGroupSection)}
+        {companyId ? <SectionItem section="company" id={companyId} title={companyName} /> : null}
       </div>
     );
   }

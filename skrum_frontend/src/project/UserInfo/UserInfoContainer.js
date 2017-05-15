@@ -20,8 +20,9 @@ class UserInfoContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { isFetching } = state.user;
-  const { user = {} } = state.user.data || {};
+  const { basics = {} } = state;
+  const { isFetching } = basics;
+  const { user = {} } = basics.user || {};
   return isFetching ? {} : { user };
 };
 
