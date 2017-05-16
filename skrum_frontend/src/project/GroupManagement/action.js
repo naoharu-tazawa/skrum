@@ -30,7 +30,7 @@ export function fetchUserGroups(userId, timeframeId) {
       return Promise.resolve();
     }
     dispatch(requestFetchUserGroups());
-    return getJson(`/users/${userId}/groups.json?tfid=${timeframeId}`, status)()
+    return getJson(`/users/${userId}/groups.json`, status)({ tfid: timeframeId })
       .then(json => dispatch(finishFetchUserGroups('user', json)))
       .catch((err) => {
         const { message } = err;
