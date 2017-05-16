@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { groupPropTypes } from './propTypes';
-import styles from './GroupInfoEdit.css';
-import { convertToRelativeTimeText } from '../../util/DatetimeUtil';
+import styles from './GroupInfo.css';
+import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
 
-export default class GroupInfoEdit extends Component {
+export default class GroupInfo extends Component {
 
   static propTypes = {
     group: groupPropTypes.isRequired,

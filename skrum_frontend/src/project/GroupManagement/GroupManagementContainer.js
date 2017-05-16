@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import UserInfoEditContainer from '../UserInfoEdit/UserInfoEditContainer';
-import GroupInfoEditContainer from '../GroupInfoEdit/GroupInfoEditContainer';
-import UserGroupListContainer from '../UserGroupList/UserGroupListContainer';
-import GroupMemberListContainer from '../GroupMemberList/GroupMemberListContainer';
+import UserInfoEditContainer from './UserInfoEdit/UserInfoEditContainer';
+import GroupInfoEditContainer from './GroupInfoEdit/GroupInfoEditContainer';
+import UserGroupListContainer from './UserGroupList/UserGroupListContainer';
+import GroupMemberListContainer from './GroupMemberList/GroupMemberListContainer';
 import { fetchUserGroups, fetchGroupMembers } from './action';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
 import styles from './GroupManagementContainer.css';

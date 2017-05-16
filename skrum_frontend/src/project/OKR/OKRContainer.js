@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import UserInfoContainer from '../UserInfo/UserInfoContainer';
-import GroupInfoContainer from '../GroupInfo/GroupInfoContainer';
-import CompanyInfoContainer from '../CompanyInfo/CompanyInfoContainer';
-import { UserOKRListContainer, GroupOKRListContainer, CompanyOKRListContainer } from '../OKRList/OKRListContainer';
+import UserInfoContainer from './UserInfo/UserInfoContainer';
+import GroupInfoContainer from './GroupInfo/GroupInfoContainer';
+import CompanyInfoContainer from './CompanyInfo/CompanyInfoContainer';
+import { UserOKRListContainer, GroupOKRListContainer, CompanyOKRListContainer } from './OKRList/OKRListContainer';
 import styles from './OKRContainer.css';
 
 class OKRContainer extends Component {

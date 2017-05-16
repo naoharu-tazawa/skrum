@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { userPropTypes } from './propTypes';
 import styles from './UserInfo.css';
-import { convertToRelativeTimeText } from '../../util/DatetimeUtil';
+import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
 
 export default class UserInfo extends Component {
 

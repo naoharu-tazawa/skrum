@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { companyPropTypes } from './propTypes';
 import styles from './CompanyInfo.css';
-import { convertToRelativeTimeText } from '../../util/DatetimeUtil';
+import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
 
 export default class CompanyInfo extends Component {
 
