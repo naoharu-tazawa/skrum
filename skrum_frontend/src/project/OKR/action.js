@@ -36,7 +36,7 @@ const fetchBasics = (section, node, request, finish) => (id, timeframeId) =>
       return Promise.resolve();
     }
     dispatch(request());
-    return getJson(`/${section}/${id}/basics.json?tfid=${timeframeId}`, status)()
+    return getJson(`/${section}/${id}/basics.json`, status)({ tfid: timeframeId })
       .then(json => dispatch(finish(node, json)))
       .catch((err) => {
         const { message } = err;

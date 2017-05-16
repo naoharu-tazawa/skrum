@@ -6,17 +6,14 @@ const getBaseUrl = sub => `${host(sub)}/v1`;
 const getUrlParam = (param) => {
   if (!param) return '';
   const toQuery = (k, v) => `${k}=${v}`;
-  const params = [];
-  Object.keys(param)
-    .forEach((key) => {
+  const params = Object.keys(param)
+    .filter(key => param[key])
+    .map((key) => {
       const value = param[key];
-      if (value) {
-        if (value.length > 0) {
-          value.forEach(el => params.push(toQuery(key, el)));
-        }
-
-        params.push(toQuery(key, value));
+      if (value instanceof Array && value.length > 0) {
+        return value.map(el => toQuery(key, el)).join('&');
       }
+      return toQuery(key, value);
     });
   return `?${params.join('&')}`;
 };
@@ -25,6 +22,7 @@ const createUrl = (path, param, status) => {
   const domain = extractDomain(status);
   const url = getBaseUrl(domain);
   const urlParam = getUrlParam(param);
+  console.log({ param, urlParam });
   return url + path + urlParam;
 };
 
