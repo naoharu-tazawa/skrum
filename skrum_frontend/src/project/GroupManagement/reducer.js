@@ -7,9 +7,11 @@ export default (state = {
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_USER_GROUPS:
+    case Action.REQUEST_FETCH_GROUP_MEMBERS:
       return Object.assign({}, state, { isFetching: true });
 
-    case Action.FINISH_FETCH_USER_GROUPS: {
+    case Action.FINISH_FETCH_USER_GROUPS:
+    case Action.FINISH_FETCH_GROUP_MEMBERS: {
       const { payload, error } = action;
       if (error) {
         return Object.assign({}, state, {
