@@ -5,8 +5,6 @@ import SideBarContainer from '../navigation/sidebar/SideBarContainer';
 import HeaderContainer from '../navigation/header/HeaderContainer';
 import styles from './NavigationContainer.css';
 import { fetchUserTop } from './action';
-import { fetchUserBasics, fetchGroupBasics, fetchCompanyBasics } from '../project/OKR/action';
-import { explodePath, isPathFinal } from '../util/RouteUtil';
 
 class NavigationContainer extends Component {
 
@@ -16,48 +14,13 @@ class NavigationContainer extends Component {
       PropTypes.arrayOf([PropTypes.element]),
     ]),
     dispatchFetchUserInfo: PropTypes.func,
-    dispatchFetchUserBasics: PropTypes.func,
-    dispatchFetchGroupBasics: PropTypes.func,
-    dispatchFetchCompanyBasics: PropTypes.func,
     userId: PropTypes.number,
     pathname: PropTypes.string,
   };
 
   componentWillMount() {
-    const { userId, dispatchFetchUserInfo, pathname } = this.props;
+    const { dispatchFetchUserInfo, userId } = this.props;
     dispatchFetchUserInfo(userId);
-    if (isPathFinal(pathname)) {
-      this.fetchBasics(pathname);
-    }
-  }
-
-  componentWillReceiveProps(next) {
-    const { pathname } = next;
-    if (this.props.pathname !== pathname) {
-      this.fetchBasics(pathname);
-    }
-  }
-
-  fetchBasics(pathname) {
-    const {
-      dispatchFetchUserBasics,
-      dispatchFetchGroupBasics,
-      dispatchFetchCompanyBasics,
-    } = this.props;
-    const { section, id, timeframeId } = explodePath(pathname);
-    switch (section) {
-      case 'user':
-        dispatchFetchUserBasics(id, timeframeId);
-        break;
-      case 'group':
-        dispatchFetchGroupBasics(id, timeframeId);
-        break;
-      case 'company':
-        dispatchFetchCompanyBasics(id, timeframeId);
-        break;
-      default:
-        break;
-    }
   }
 
   render() {
@@ -83,19 +46,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const dispatchFetchUserInfo = userId =>
-    dispatch(fetchUserTop(userId));
-  const dispatchFetchUserBasics = (userId, timeframeId) =>
-    dispatch(fetchUserBasics(userId, timeframeId));
-  const dispatchFetchGroupBasics = (groupId, timeframeId) =>
-    dispatch(fetchGroupBasics(groupId, timeframeId));
-  const dispatchFetchCompanyBasics = (companyId, timeframeId) =>
-    dispatch(fetchCompanyBasics(companyId, timeframeId));
+  const dispatchFetchUserInfo = userId => dispatch(fetchUserTop(userId));
   return {
     dispatchFetchUserInfo,
-    dispatchFetchUserBasics,
-    dispatchFetchGroupBasics,
-    dispatchFetchCompanyBasics,
   };
 };
 

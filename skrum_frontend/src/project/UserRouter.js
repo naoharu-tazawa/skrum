@@ -8,9 +8,9 @@ import styles from './GroupRouter.css';
 export default class UserRouter extends Component {
   static propTypes = {
     params: PropTypes.shape({
-      userId: PropTypes.string.isRequired,
-      timeframeId: PropTypes.string.isRequired,
-      tab: tabPropType.isRequired,
+      userId: PropTypes.string,
+      timeframeId: PropTypes.string,
+      tab: tabPropType,
     }),
   };
 
