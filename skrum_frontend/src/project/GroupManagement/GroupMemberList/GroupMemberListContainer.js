@@ -6,7 +6,7 @@ import GroupMemberList from './GroupMemberList';
 class GroupMemberListContainer extends Component {
 
   static propTypes = {
-    items: groupMembersPropTypes.isRequired,
+    items: groupMembersPropTypes,
   };
 
   render() {

@@ -6,7 +6,7 @@ import UserGroupList from './UserGroupList';
 class UserGroupListContainer extends Component {
 
   static propTypes = {
-    items: userGroupsPropTypes.isRequired,
+    items: userGroupsPropTypes,
   };
 
   render() {
