@@ -85,7 +85,7 @@ class TimelineService extends BaseService
                 if ($outOfDisclosureFlg) continue;
 
                 // OKRアクティビティがnullの場合、スキップ
-                if ($tPostArray[$i]['okrActivity'] == null) {
+                if ($tPostArray[$i]['okrActivity'] === null) {
                     // 最終ループ
                     if ($i === ($tPostArrayCount - 1)) {
                         $postDTOArray[] = $postDTOPost;
@@ -99,8 +99,11 @@ class TimelineService extends BaseService
                 // 非公開の場合、スキップ
                 if ($outOfDisclosureFlg) continue;
 
+                // 投稿者名をセット
+                $postDTOPost->setPosterName($tPostArray[$i]['lastNamePost'] . ' ' . $tPostArray[$i]['firstNamePost']);
+
                 // リプライがnullの場合、スキップ
-                if ($tPostArray[$i]['reply'] == null) {
+                if ($tPostArray[$i]['reply'] === null) {
                     // 最終ループ
                     if ($i === ($tPostArrayCount - 1)) {
                         $postDTOArray[] = $postDTOPost;
@@ -111,6 +114,7 @@ class TimelineService extends BaseService
                 $postDTOReply = new PostDTO();
                 $postDTOReply->setPostId($tPostArray[$i]['reply']->getId());
                 $postDTOReply->setPosterId($tPostArray[$i]['reply']->getPosterId());
+                $postDTOReply->setPosterName($tPostArray[$i]['lastNameReply'] . ' ' . $tPostArray[$i]['firstNameReply']);
                 $postDTOReply->setPost($tPostArray[$i]['reply']->getPost());
                 $postDTOReply->setPostedDatetime($tPostArray[$i]['reply']->getPostedDatetime());
 

@@ -30,6 +30,13 @@ class PostDTO
      *
      * @JSON\Type("string")
      */
+    private $posterName;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
     private $post;
 
     /**
@@ -113,6 +120,30 @@ class PostDTO
     public function getPosterId()
     {
         return $this->posterId;
+    }
+
+    /**
+     * Set posterName
+     *
+     * @param string $posterName
+     *
+     * @return PostDTO
+     */
+    public function setPosterName($posterName)
+    {
+        $this->posterName = $posterName;
+
+        return $this;
+    }
+
+    /**
+     * Get posterName
+     *
+     * @return string
+     */
+    public function getPosterName()
+    {
+        return $this->posterName;
     }
 
     /**

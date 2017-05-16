@@ -38,9 +38,11 @@ class TPostRepository extends BaseRepository
     public function getTimeline(int $groupId): array
     {
         $qb = $this->createQueryBuilder('tp1');
-        $qb->select('tp1 AS post', 'toa AS okrActivity', 'tp2 AS reply')
+        $qb->select('tp1 AS post', 'mu1.lastName AS lastNamePost', 'mu1.firstName AS firstNamePost', 'toa AS okrActivity', 'tp2 AS reply', 'mu2.lastName AS lastNameReply', 'mu2.firstName AS firstNameReply')
+            ->innerJoin('AppBundle:MUser', 'mu1', 'WITH', 'tp1.posterId = mu1.userId')
             ->leftJoin('AppBundle:TOkrActivity', 'toa', 'WITH', 'tp1.okrActivity = toa.id')
             ->leftJoin('AppBundle:TPost', 'tp2', 'WITH', 'tp1.id = tp2.parent')
+            ->leftJoin('AppBundle:MUser', 'mu2', 'WITH', 'tp2.posterId = mu2.userId')
             ->where('tp1.timelineOwnerGroupId = :timelineOwnerGroupId')
             ->andWhere('tp1.parent IS NULL')
             ->setParameter('timelineOwnerGroupId', $groupId)
