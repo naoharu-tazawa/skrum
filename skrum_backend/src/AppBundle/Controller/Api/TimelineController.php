@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
+use AppBundle\Api\ResponseDTO\PostDTO;
 
 /**
  * タイムラインコントローラ
@@ -44,9 +45,9 @@ class TimelineController extends BaseController
      * @Rest\Post("/v1/groups/{groupId}/posts.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $groupId グループID
-     * @return array
+     * @return PostDTO
      */
-    public function postGroupPostsAction(Request $request, string $groupId): array
+    public function postGroupPostsAction(Request $request, string $groupId): PostDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/CommentPdu');
@@ -63,9 +64,9 @@ class TimelineController extends BaseController
 
         // コメント登録処理
         $timelineService = $this->getTimelineService();
-        $timelineService->postComment($auth, $data, $groupId);
+        $postDTO = $timelineService->postComment($auth, $data, $groupId);
 
-        return array('result' => 'OK');
+        return $postDTO;
     }
 
     /**

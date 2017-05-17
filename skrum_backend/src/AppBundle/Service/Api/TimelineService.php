@@ -142,9 +142,9 @@ class TimelineService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param integer $groupId グループID
-     * @return void
+     * @return PostDTO
      */
-    public function postComment(Auth $auth, array $data, int $groupId)
+    public function postComment(Auth $auth, array $data, int $groupId): PostDTO
     {
         // コメント登録
         $tPost = new TPost();
@@ -160,6 +160,21 @@ class TimelineService extends BaseService
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンスデータ生成
+        $mUserRepos = $this->getMUserRepository();
+        $mUser = $mUserRepos->find($tPost->getPosterId());
+
+        $postDTO = new PostDTO();
+        $postDTO->setPostId($tPost->getId());
+        $postDTO->setPosterId($tPost->getPosterId());
+        $postDTO->setPosterName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $postDTO->setPost($tPost->getPost());
+        $postDTO->setPostedDatetime($tPost->getPostedDatetime());
+        $postDTO->setLikesCount(0);
+        $postDTO->setLikedFlg(0);
+
+        return $postDTO;
     }
 
     /**

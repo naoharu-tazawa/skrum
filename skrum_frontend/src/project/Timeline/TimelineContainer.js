@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PostListContainer from './PostList/PostListContainer';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
 import styles from './TimelineContainer.css';
-import { fetchGroupPosts } from './action';
+import { fetchGroupPosts, postGroupPosts } from './action';
 
 class TimelineContainer extends Component {
 
@@ -12,6 +12,7 @@ class TimelineContainer extends Component {
     isFetching: PropTypes.bool,
     pathname: PropTypes.string,
     dispatchFetchGroupPosts: PropTypes.func,
+    dispatchPostGroupPosts: PropTypes.func,
   };
 
   componentWillMount() {
@@ -32,6 +33,18 @@ class TimelineContainer extends Component {
     }
   }
 
+  handleSubmit(e) {
+    const { pathname } = this.props;
+    const { id } = explodePath(pathname);
+    const target = e.target;
+    e.preventDefault();
+    this.props.dispatchPostGroupPosts(
+      id,
+      target.post.value.trim(),
+      '1',
+    );
+  }
+
   render() {
     if (this.props.isFetching) {
       return <div className={styles.spinner} />;
@@ -40,12 +53,14 @@ class TimelineContainer extends Component {
     return (
       <div className={styles.container}>
         <div className={styles.userInfo}>
-          <div className={styles.postHeader}>新規投稿作成</div>
-          <div className={styles.postBody}>
-            <div className={styles.ownerImage} />
-            <textarea className={styles.postInput} />
-            <button className={styles.postButton}>投稿</button>
-          </div>
+          <form onSubmit={e => this.handleSubmit(e)}>
+            <div className={styles.postHeader}>新規投稿作成</div>
+            <div className={styles.postBody}>
+              <div className={styles.ownerImage} />
+              <textarea id="post" className={styles.postInput} />
+              <button className={styles.postButton}>投稿</button>
+            </div>
+          </form>
         </div>
         <main className={styles.okrList}>
           <PostListContainer pathname={pathname} />
@@ -63,7 +78,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchGroupPosts = groupId => dispatch(fetchGroupPosts(groupId));
-  return { dispatchFetchGroupPosts };
+  const dispatchPostGroupPosts = (groupId, post, disclosureType) =>
+    dispatch(postGroupPosts(groupId, post, disclosureType));
+  return { dispatchFetchGroupPosts, dispatchPostGroupPosts };
 };
 
 export default connect(
