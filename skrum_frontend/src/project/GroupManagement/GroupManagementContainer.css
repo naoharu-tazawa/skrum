@@ -5,10 +5,10 @@
   width: 100%;
   padding: 0 60px;
 }
-.userInfoEdit {
+.userInfo {
   margin-top: 30px;
 }
-.userGroupList {
+.okrList {
   display: flex;
   flex-direction: column;
   height: 100%;
