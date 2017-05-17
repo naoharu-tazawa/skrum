@@ -1,0 +1,126 @@
+/* -----------------------------------
+*  Main
+*  ----------------------------------- */
+.component {
+  height: 100vh;
+  overflow: hidden;
+  color: #fff;
+  box-shadow: 0px 0px 10px 0px #000;
+  background-color: #626A7F;
+  box-sizing: border-box;
+}
+.sideNavTitle {
+  position: relative;
+  padding: 10px 13px;
+  border-bottom: 1px solid #666;
+}
+.sideNavTitleText {
+  position: absolute;
+  top: 14px;
+  left: 42px;
+  display: block;
+}
+.isOpen {
+  width: 100%;
+}
+.isHide {
+  display: none;
+}
+.isActive {
+  background-color: slategray;
+}
+.toggleArea {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+.toggleButton {
+  cursor: pointer;
+  color: #fff;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+}
+.userName {
+  padding: 20px;
+}
+.companyName {
+  padding: 20px;
+}
+/* -----------------------------------
+ *  Header
+ *  ----------------------------------- */
+.header {
+  background-color: #27588F;
+  padding: 14px 30px;
+  height: 64px;
+  box-sizing: border-box;
+}
+.headerLogo {
+  box-sizing: border-box;
+}
+/* -----------------------------------
+ *  Section
+ *  ----------------------------------- */
+.sectionContainer {
+  margin-bottom: 30px;
+}
+.sectionTitle {
+  padding: 5px 20px;
+  color: #818C9A;
+}
+/* -----------------------------------
+ *  Section Item
+ *  ----------------------------------- */
+.sectionItem {
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sectionItemLink {
+  color: inherit;
+  width: 100%;
+}
+.sectionItemImg {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+.sideNavMainItemLink {
+  display: block;
+  padding: 10px 13px;
+  background-position: 13px center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  margin-left: -40px;
+}
+.sideNavMenuItemLink {
+  display: block;
+  padding: 12px 10px 12px; /* 50px */
+  background-position: 13px center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.sideNavMenuItemLinkHover {
+}
+.sideNavMenuItemLinkHover:hover {
+  background-color: #38b6a5;
+}
+.sideNavMenuItemNotice {
+  display: inline-block;
+  position: relative;
+  top: -8px;
+  width: 6px;
+  height: 6px;
+  margin-left: 5px;
+  background-color: #f66c54;
+  border-radius: 50%;
+}

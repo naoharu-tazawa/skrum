@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { convertToRelativeTimeText } from '../../util/DatetimeUtil';
 import { userPropTypes } from './propTypes';
 import styles from './UserInfo.css';
+import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
 
 export default class UserInfo extends Component {
 
   static propTypes = {
-    user: userPropTypes,
+    user: userPropTypes.isRequired,
     infoLink: PropTypes.string,
   };
 
@@ -38,7 +38,7 @@ export default class UserInfo extends Component {
             </tbody>
           </table>
         </div>
-        <a className={styles.moreLink} href={infoLink}>詳細 &gt;</a>
+        <a className={styles.moreLink} href={infoLink}>詳細 ➔</a>
       </div>);
   }
 }

@@ -9,7 +9,7 @@ import UserRouter from './project/UserRouter';
 import GroupRouter from './project/GroupRouter';
 import CompanyRouter from './project/CompanyRouter';
 
-const topPage = '/group';
+const topPage = '/user';
 const loginPage = '/login';
 
 const children = { children: PropTypes.oneOfType([
@@ -41,11 +41,9 @@ const RedirectRoute = () => (<RootRedirect top={topPage} login={loginPage} />);
 export default <Route path="/" component={App} >
   <Route path="" component={AuthenticatedRegion}>
     <Route path="/user" component={UserRouter} />
-    <Route path="/user/:userId/:action" component={UserRouter} />
-    <Route path="/group" component={GroupRouter} />
-    <Route path="/group/:groupId/:action" component={GroupRouter} />
-    <Route path="/company" component={CompanyRouter} />
-    <Route path="/company/:companyId/:action" component={CompanyRouter} />
+    <Route path="/user/:userId/:timeframeId/:tab" component={UserRouter} />
+    <Route path="/group/:groupId/:timeframeId/:tab" component={GroupRouter} />
+    <Route path="/company/:companyId/:timeframeId/:tab" component={CompanyRouter} />
   </Route>
   <Route path="/login" component={AnonymousRegion} />
   <IndexRoute component={RedirectRoute} />

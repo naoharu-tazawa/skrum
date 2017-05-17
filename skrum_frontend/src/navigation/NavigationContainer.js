@@ -3,24 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SideBarContainer from '../navigation/sidebar/SideBarContainer';
 import HeaderContainer from '../navigation/header/HeaderContainer';
+import styles from './NavigationContainer.css';
 import { fetchUserTop } from './action';
-
-const style = {
-  layoutBase: {
-    display: 'flex',
-    width: '100%',
-    height: '100vh',
-  },
-  layoutSide: {
-    width: '200px',
-  },
-  layoutMain: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    overflowY: 'hidden',
-  },
-};
 
 class NavigationContainer extends Component {
 
@@ -31,23 +15,23 @@ class NavigationContainer extends Component {
     ]),
     dispatchFetchUserInfo: PropTypes.func,
     userId: PropTypes.number,
-  };
-
-  static defaultProps = {
+    pathname: PropTypes.string,
   };
 
   componentWillMount() {
-    this.props.dispatchFetchUserInfo(this.props.userId);
+    const { dispatchFetchUserInfo, userId } = this.props;
+    dispatchFetchUserInfo(userId);
   }
 
   render() {
+    const { pathname } = this.props;
     return (
-      <div style={style.layoutBase}>
-        <div style={style.layoutSide}>
-          <SideBarContainer />
+      <div className={styles.layoutBase}>
+        <div className={styles.layoutSide}>
+          <SideBarContainer pathname={pathname} />
         </div>
-        <main style={style.layoutMain}>
-          <HeaderContainer />
+        <main className={styles.layoutMain}>
+          <HeaderContainer pathname={pathname} />
           {this.props.children}
         </main>
       </div>);
@@ -56,12 +40,16 @@ class NavigationContainer extends Component {
 
 const mapStateToProps = (state) => {
   const { userId } = state.auth;
-  return { state, userId };
+  const { locationBeforeTransitions } = state.routing || {};
+  const { pathname } = locationBeforeTransitions || {};
+  return { state, userId, pathname };
 };
 
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchUserInfo = userId => dispatch(fetchUserTop(userId));
-  return { dispatchFetchUserInfo };
+  return {
+    dispatchFetchUserInfo,
+  };
 };
 
 export default connect(

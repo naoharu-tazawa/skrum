@@ -32,6 +32,8 @@ paths:
                   type: integer
                 posterId:
                   type: integer
+                posterName:
+                  type: string
                 post:
                   type: string
                 postedDatetime:
@@ -51,6 +53,8 @@ paths:
                         type: integer
                       posterId:
                         type: integer
+                      posterName:
+                        type: string
                       post:
                         type: string
                       postedDatetime:
@@ -58,11 +62,13 @@ paths:
                     required:
                       - postId
                       - posterId
+                      - posterName
                       - post
                       - postedDatetime
               required:
                 - postId
                 - posterId
+                - posterName
                 - post
                 - postedDatetime
                 - likesCount

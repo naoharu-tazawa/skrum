@@ -11,4 +11,6 @@ export const userPropTypes = PropTypes.shape({
   emailAddress: PropTypes.string,
 });
 
-export const otherPropTypes = PropTypes.node;
+export default {
+  userPropTypes,
+};

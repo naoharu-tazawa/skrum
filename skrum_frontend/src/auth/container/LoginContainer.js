@@ -5,26 +5,7 @@ import { browserHistory } from 'react-router';
 import LoginForm from '../component/LoginForm';
 import { startLogin } from '../action';
 import { errorType } from '../../util/PropUtil';
-import { imgSrc } from '../../util/ResourceUtil';
-
-const defaultStyle = {
-  height: '100vh',
-  backgroundImage: `url("${imgSrc('top_back.png')}")`,
-  backgroundSize: 'cover',
-};
-
-const shadowStyle = Object.assign({ height: '100%' }, {});
-
-const containerStyle = {
-  width: '300px',
-  height: '200px',
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  margin: 'auto',
-};
+import styles from './LoginContainer.css';
 
 class LoginContainer extends Component {
   static propTypes = {
@@ -51,9 +32,9 @@ class LoginContainer extends Component {
 
   render() {
     return (
-      <div style={defaultStyle}>
-        <div style={shadowStyle}>
-          <div style={containerStyle}>
+      <div className={styles.default}>
+        <div className={styles.shadow}>
+          <div className={styles.container}>
             <LoginForm
               isFetching={this.props.isFetching}
               handleLoginSubmit={this.props.dispatchLogin}

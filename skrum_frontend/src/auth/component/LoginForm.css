@@ -1,0 +1,24 @@
+.default {
+  color: #fff;
+  text-align: center;
+}
+.defaultInput {
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  margin: 0 -10px 20px;
+  border-radius: 3px;
+}
+.defaultButton {
+  display: block;
+  margin: auto;
+  border: none;
+  width: 50%;
+  padding: 10px 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.disableButton {
+  height: 50px;
+  background: url(/img/rolling.svg) center no-repeat;
+}

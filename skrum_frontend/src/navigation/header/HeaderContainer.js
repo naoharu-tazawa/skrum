@@ -5,43 +5,19 @@ import Header from './Header';
 import { timeframesPropTypes } from './propTypes';
 import { logout } from '../../auth/action';
 
-const menus = [
-  {
-    path: 'objective',
-    key: 'objective',
-  },
-  {
-    path: 'map',
-    key: 'map',
-  },
-  {
-    path: 'timeline',
-    key: 'timeline',
-  },
-  {
-    path: 'control',
-    key: 'control',
-  },
-];
-
 class HeaderContainer extends Component {
 
   static propTypes = {
-    timeframes: timeframesPropTypes.isRequired,
+    timeframes: timeframesPropTypes,
     dispatchLogout: PropTypes.func,
+    pathname: PropTypes.string,
   };
 
-  getActiveMenu() {
-    const path = window.location.pathname;
-    const { key = 'objective' } = menus.find(menu => path.endsWith(menu.path)) || {};
-    return key;
-  }
-
   render() {
-    const { timeframes } = this.props;
+    const { timeframes = [] } = this.props;
     return (
       <Header
-        activeMenu={this.getActiveMenu()} timeframes={timeframes}
+        timeframes={timeframes}
         handleLogoutSubmit={this.props.dispatchLogout}
       />
     );
@@ -49,13 +25,12 @@ class HeaderContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { timeframes = [] } = state.user.data || {};
+  const { timeframes = [] } = state.top.data || {};
   return { timeframes };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const dispatchLogout = () =>
-    dispatch(logout());
+  const dispatchLogout = () => dispatch(logout());
   return { dispatchLogout };
 };
 
