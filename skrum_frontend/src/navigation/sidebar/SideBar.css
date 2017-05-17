@@ -52,12 +52,13 @@
  *  ----------------------------------- */
 .header {
   background-color: #27588F;
-  padding: 5px 30px;
+  padding: 9px 20px;
   height: 43px;
   box-sizing: border-box;
 }
 .headerLogo {
   box-sizing: border-box;
+  width: 90px;
 }
 /* -----------------------------------
  *  Section
