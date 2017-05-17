@@ -52,8 +52,8 @@
  *  ----------------------------------- */
 .header {
   background-color: #27588F;
-  padding: 14px 30px;
-  height: 64px;
+  padding: 5px 30px;
+  height: 43px;
   box-sizing: border-box;
 }
 .headerLogo {
