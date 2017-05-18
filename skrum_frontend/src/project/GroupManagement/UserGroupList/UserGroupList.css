@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
   font-size: small;
   color: #626A7F;
 }

@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
   font-size: small;
   color: #626A7F;
 }
@@ -19,7 +18,7 @@
 }
 .okrBars {
   max-height: 100%;
-  overflow-y: auto;
+  /*overflow-y: auto;*/
   /*
   border-width: thin;
   border-left-style: solid;
@@ -27,7 +26,7 @@
   border-bottom-style: solid;
   */
   position: relative;
-  top: -1px;
+  top: 30px;
 }
 .okrBar {
   /*
