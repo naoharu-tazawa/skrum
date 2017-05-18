@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { tabPropType } from '../navigation/header/propTypes';
 import OKRContainer from './OKR/OKRContainer';
+import MapContainer from './Map/MapContainer';
 import styles from './GroupRouter.css';
 
 export default class CompanyRouter extends Component {
@@ -17,6 +18,8 @@ export default class CompanyRouter extends Component {
     switch (this.props.params.tab) {
       case 'objective':
         return <OKRContainer subject="company" />;
+      case 'map':
+        return <MapContainer subject="company" />;
       default:
         return null;
     }
