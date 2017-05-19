@@ -7,7 +7,6 @@ export const d3treePropTypes = PropTypes.shape({
   ownerType: PropTypes.string.isRequired,
   ownerUserId: PropTypes.number.isRequired,
   ownerUserName: PropTypes.string.isRequired,
-  parent: PropTypes.string.isRequired,
   children: PropTypes.array,
 });
 

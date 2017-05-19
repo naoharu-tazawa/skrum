@@ -35,8 +35,6 @@ export default class D3Tree extends Component {
     const margin = { top: 180, right: 90, bottom: 30, left: 90 }; // SVG描画スペースの余白
     const width = svgDomNode.clientWidth - margin.left - margin.right; // SVG描画スペースの横幅
     const height = 1200 - margin.top - margin.bottom; // SVG描画スペースの縦幅
-    const rectWidth = 230; // 四角形の横幅
-    const rectHeight = 150; // 四角形の縦幅
 
     // SVGを作成
     // append the svg object to the body of the page
@@ -58,8 +56,8 @@ export default class D3Tree extends Component {
     const tree = d3.tree().size([height, width]);
 
     // Assigns parent, children, height, depth
-    // const root = d3.hierarchy(treeData, (d) => { return d.children; });
-    const root = d3.hierarchy(treeData);
+    const root = d3.hierarchy(treeData, (d) => { return d.children; });
+    // const root = d3.hierarchy(treeData);
     root.x0 = height / 2;
     root.y0 = 0;
 
@@ -74,6 +72,26 @@ export default class D3Tree extends Component {
     // Compute the new tree layout.
     const nodes = data.descendants();
     const links = data.descendants().slice(1);
+
+    let rectWidth = 230; // 四角形の標準横幅
+    let rectHeight = 150; // 四角形の標準縦幅
+    const minWidthMargen = 5; // 最小の横幅のマージン
+    const heightRatio = 0.65; // 横に対する縦の比率
+
+    // 縮める場合に四角形の縦横の長さを計算
+    const nodesLength = nodes.length;
+    if (nodesLength > 2) {
+      for (let i = 0; i < (nodesLength - 1); i += 1) {
+        if (nodes[nodesLength - 1 - i].depth === nodes[nodesLength - 2 - i].depth) {
+          const diffWidth = nodes[nodesLength - 1 - i].x - nodes[nodesLength - 2 - i].x;
+          if (diffWidth < rectWidth) {
+            rectWidth = diffWidth - minWidthMargen; // 四角形の横幅を調整
+            rectHeight = (diffWidth - minWidthMargen) * heightRatio; // 四角形の縦幅を調整
+          }
+          i = nodesLength;
+        }
+      }
+    }
 
     // Normalize for fixed-depth.
     // nodes.forEach((d) => { d.y = d.depth * 180; });
@@ -91,7 +109,9 @@ export default class D3Tree extends Component {
       .attr('stroke-width', 1) // 枠線の太さを指定
       .attr('fill', 'none') // 固定値
       .attr('d', (d) => {
-        return `M${d.x},${d.y - rectHeight}C${d.x},${((d.y + d.parent.y) / 2)} ${d.parent.x},${((d.y + d.parent.y) / 2)} ${d.parent.x},${d.parent.y}`;
+        const dy = d.y / 2;
+        const dparenty = d.parent.y / 2;
+        return `M${d.x},${dy - rectHeight}C${d.x},${((dy + dparenty) / 2) - 70} ${d.parent.x},${((dy + dparenty) / 2) - 70} ${d.parent.x},${dparenty}`;
       });
 
     // Nodeを作成
@@ -104,7 +124,7 @@ export default class D3Tree extends Component {
         return `node${d.children ? ' node--internal' : ' node--leaf'}`;
       })
       .attr('transform', (d) => {
-        return `translate(${d.x},${d.y})`;
+        return `translate(${d.x},${d.y / 2})`;
       });
     console.log(node);
 
@@ -125,6 +145,7 @@ export default class D3Tree extends Component {
       .attr('dy', '.350em')
       .attr('y', '-130px')
       .style('text-anchor', 'middle')
+      .style('font-size', '80%')
       .text((d) => { return d.data.okrName; });
     node.append('text')
       .style('text-anchor', 'start')
