@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-// import { tree } from 'd3-hierarchy';
-import { d3treesPropTypes } from './propTypes';
+import { d3treePropTypes } from './propTypes';
 
 export default class D3Tree extends Component {
 
   static propTypes = {
-    map: d3treesPropTypes.isRequired,
+    map: d3treePropTypes.isRequired,
   };
 
   componentDidMount() {
@@ -33,9 +32,11 @@ export default class D3Tree extends Component {
 
   renderTree(treeData, svgDomNode) {
     // Set the dimensions and margins of the diagram
-    const margin = { top: 200, right: 90, bottom: 30, left: 90 };
-    const width = 960 - margin.left - margin.right;
-    const height = 500 - margin.top - margin.bottom;
+    const margin = { top: 180, right: 90, bottom: 30, left: 90 }; // SVG描画スペースの余白
+    const width = svgDomNode.clientWidth - margin.left - margin.right; // SVG描画スペースの横幅
+    const height = 1200 - margin.top - margin.bottom; // SVG描画スペースの縦幅
+    const rectWidth = 230; // 四角形の横幅
+    const rectHeight = 150; // 四角形の縦幅
 
     // SVGを作成
     // append the svg object to the body of the page
@@ -54,10 +55,11 @@ export default class D3Tree extends Component {
 
     // Treeを作成
     // declares a tree layout and assigns the size
-    const treemap = d3.tree().size([height, width]);
+    const tree = d3.tree().size([height, width]);
 
     // Assigns parent, children, height, depth
-    const root = d3.hierarchy(treeData, (d) => { return d.children; });
+    // const root = d3.hierarchy(treeData, (d) => { return d.children; });
+    const root = d3.hierarchy(treeData);
     root.x0 = height / 2;
     root.y0 = 0;
 
@@ -67,7 +69,7 @@ export default class D3Tree extends Component {
     // update(root);
 
     // Assigns the x and y position for the nodes
-    const data = treemap(root);
+    const data = tree(root);
 
     // Compute the new tree layout.
     const nodes = data.descendants();
@@ -82,17 +84,22 @@ export default class D3Tree extends Component {
     // adds the links between the nodes
     svg.selectAll('.link')
       .data(links)
-      .enter().append('path')
+      .enter()
+      .append('path')
       .attr('class', 'link')
+      .attr('stroke', 'grey') // 枠線の色を指定
+      .attr('stroke-width', 1) // 枠線の太さを指定
+      .attr('fill', 'none') // 固定値
       .attr('d', (d) => {
-        return `M${d.x},${d.y}C${d.x},${((d.y + d.parent.y) / 2)} ${d.parent.x},${((d.y + d.parent.y) / 2)} ${d.parent.x},${d.parent.y}`;
+        return `M${d.x},${d.y - rectHeight}C${d.x},${((d.y + d.parent.y) / 2)} ${d.parent.x},${((d.y + d.parent.y) / 2)} ${d.parent.x},${d.parent.y}`;
       });
 
     // Nodeを作成
     // adds each node as a group
     const node = svg.selectAll('g.node')
       .data(nodes)
-      .enter().append('g')
+      .enter()
+      .append('g')
       .attr('class', (d) => {
         return `node${d.children ? ' node--internal' : ' node--leaf'}`;
       })
@@ -101,17 +108,27 @@ export default class D3Tree extends Component {
       });
     console.log(node);
 
-    // 円を作成
-    // adds the circle to the node
-    node.append('circle').attr('r', 10);
+    // 四角形を作成
+    // adds the rectangle to the node
+    node.append('rect')
+      .attr('x', (rectWidth / 2) * -1) // x座標を指定
+      .attr('y', rectHeight * -1) // y座標を指定
+      .attr('width', rectWidth) // 横幅を指定
+      .attr('height', rectHeight) // 縦幅を指定
+      .attr('fill', 'white') // 背景色を指定
+      .attr('stroke', '#F2F2F2') // 枠線の色を指定
+      .attr('stroke-width', 1); // 枠線の太さを指定
 
     // テキストを作成
     // adds the text to the node
     node.append('text')
-      .attr('dy', '.35em')
-      .attr('y', (d) => { return d.children ? -20 : 20; })
+      .attr('dy', '.350em')
+      .attr('y', '-130px')
       .style('text-anchor', 'middle')
-      .text((d) => { return d.data.name; });
+      .text((d) => { return d.data.okrName; });
+    node.append('text')
+      .style('text-anchor', 'start')
+      .text((d) => { return d.data.achievementRate; });
 
     return '';
   }

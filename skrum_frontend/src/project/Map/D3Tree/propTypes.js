@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
 
 export const d3treePropTypes = PropTypes.shape({
-  name: PropTypes.string.isRequired,
+  okrId: PropTypes.number.isRequired,
+  okrName: PropTypes.string.isRequired,
+  achievementRate: PropTypes.number.isRequired,
+  ownerType: PropTypes.string.isRequired,
+  ownerUserId: PropTypes.number.isRequired,
+  ownerUserName: PropTypes.string.isRequired,
   parent: PropTypes.string.isRequired,
   children: PropTypes.array,
 });

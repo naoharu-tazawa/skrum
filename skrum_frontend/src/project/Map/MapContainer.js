@@ -53,32 +53,51 @@ class MapContainer extends Component {
   }
 
   render() {
-    const map = [
+    const map =
       {
-        name: 'Top Level',
-        parent: 'null',
+        okrId: 1,
+        okrName: 'Top Level',
+        achievementRate: 30.0,
+        ownerType: '1',
+        ownerUserId: 1,
+        ownerUserName: '田澤尚治',
         children: [
           {
-            name: 'Level 2: A',
-            parent: 'Top Level',
+            okrId: 1,
+            okrName: 'Level 2: A',
+            achievementRate: 30.0,
+            ownerType: '1',
+            ownerUserId: 1,
+            ownerUserName: '田澤尚治',
             children: [
               {
-                name: 'Son of A',
-                parent: 'Level 2: A',
+                okrId: 1,
+                okrName: 'Son of A',
+                achievementRate: 30.0,
+                ownerType: '1',
+                ownerUserId: 1,
+                ownerUserName: '田澤尚治',
               },
               {
-                name: 'Daughter of A',
-                parent: 'Level 2: A',
+                okrId: 1,
+                okrName: 'Daughter of A',
+                achievementRate: 30.0,
+                ownerType: '1',
+                ownerUserId: 1,
+                ownerUserName: '田澤尚治',
               },
             ],
           },
           {
-            name: 'Level 2: B',
-            parent: 'Top Level',
+            okrId: 1,
+            okrName: 'Level 2: B',
+            achievementRate: 30.0,
+            ownerType: '1',
+            ownerUserId: 1,
+            ownerUserName: '田澤尚治',
           },
         ],
-      },
-    ];
+      };
 
     return (
       <div className={styles.container}>
