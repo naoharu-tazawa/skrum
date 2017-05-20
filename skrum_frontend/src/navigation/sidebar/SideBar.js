@@ -11,6 +11,7 @@ class SectionItem extends Component {
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     imgSrc: PropTypes.string,
+    isExpanded: PropTypes.bool.isRequired,
   };
 
   getStyles() {
@@ -29,20 +30,17 @@ class SectionItem extends Component {
 
   renderImg() {
     const { imgSrc } = this.props;
-    if (!imgSrc) return;
-    return (<img
-      src={imgSrc}
-      alt=""
-      className={styles.sectionItemImg}
-    />);
+    return (!imgSrc) ? null : (
+      <img src={imgSrc} alt="" className={styles.sectionItemImg} />);
   }
 
   render() {
-    const { title } = this.props;
+    const { title, isExpanded } = this.props;
     return (<li className={this.getStyles()}>
-      <Link to={this.getPath()} className={styles.sectionItemLink}>
-        {title}
-      </Link>
+      {!isExpanded ? null : (
+        <Link to={this.getPath()} className={styles.sectionItemLink}>
+          {title}
+        </Link>)}
       {this.renderImg()}
     </li>);
   }
@@ -53,28 +51,22 @@ class Section extends Component {
     section: sectionPropType.isRequired,
     title: PropTypes.string.isRequired,
     items: itemsPropTypes.isRequired,
+    isExpanded: PropTypes.bool.isRequired,
   };
 
-  renderItem() {
-    const { section } = this.props;
-    return this.props.items.map((item) => {
-      const { title, imgSrc, id } = item;
-      return (
-        <SectionItem
-          key={id}
-          section={section}
-          id={id}
-          title={title}
-          imgSrc={imgSrc}
-        />);
+  renderItem(isExpanded) {
+    const { section, items } = this.props;
+    return items.map(({ id, title, imgSrc }) => {
+      return <SectionItem key={id} {...{ section, id, title, imgSrc, isExpanded }} />;
     });
   }
 
   render() {
+    const { title, isExpanded } = this.props;
     return (<div className={styles.sectionContainer}>
-      <p className={styles.sectionTitle}>{this.props.title}</p>
+      {isExpanded ? <p className={styles.sectionTitle}>{title}</p> : null}
       <ul>
-        {this.renderItem()}
+        {this.renderItem(isExpanded)}
       </ul>
     </div>);
   }
@@ -83,33 +75,30 @@ class Section extends Component {
 export default class SideBar extends Component {
 
   static propTypes = {
-    isOpen: PropTypes.bool,
-    onClickToggle: PropTypes.func,
     userSection: sectionPropTypes,
     groupSections: sectionsPropTypes,
     companyId: PropTypes.number,
     companyName: PropTypes.string,
-  };
-
-  static defaultProps = {
-    isOpen: true,
+    isExpanded: PropTypes.bool,
+    onClickToggle: PropTypes.func,
   };
 
   getBaseStyles = () =>
-    `${styles.component} ${this.props.isOpen ? styles.isOpen : ''}`;
+    `${styles.component} ${this.props.isExpanded ? styles.isExpanded : styles.isCollapsed}`;
 
-  renderSection = (section, { title, items }) => (
+  renderSection = (section, { title, items }) =>
     <Section
       key={title}
-      {...{ section, title, items }}
-    />);
+      {...{ section, title, items, isExpanded: this.props.isExpanded }}
+    />;
 
   renderUserSection = section => this.renderSection('user', section);
 
   renderGroupSection = section => this.renderSection('group', section);
 
   render() {
-    const { userSection, groupSections, companyId, companyName, onClickToggle } = this.props;
+    const { userSection, groupSections, companyId, companyName,
+            isExpanded = true, onClickToggle } = this.props;
     const { tab } = explodePath();
     const showUser = tab !== 'timeline';
     const showCompany = companyId && /^(objective|map)$/.test(tab);
@@ -126,12 +115,12 @@ export default class SideBar extends Component {
           <button
             onClick={onClickToggle}
             className={styles.toggleButton}
-          >≡
+          >{isExpanded ? '<' : '>'}
           </button>
         </div>
         {showUser ? this.renderUserSection(userSection) : null}
         {groupSections.map(this.renderGroupSection)}
-        {showCompany ? <SectionItem section="company" id={companyId} title={companyName} /> : null}
+        {showCompany ? <SectionItem section="company" id={companyId} title={companyName} isExpanded={isExpanded} /> : null}
       </div>
     );
   }

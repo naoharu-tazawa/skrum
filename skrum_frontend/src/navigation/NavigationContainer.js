@@ -27,9 +27,7 @@ class NavigationContainer extends Component {
     const { pathname } = this.props;
     return (
       <div className={styles.layoutBase}>
-        <div className={styles.layoutSide}>
-          <SideBarContainer pathname={pathname} />
-        </div>
+        <SideBarContainer pathname={pathname} />
         <main className={styles.layoutMain}>
           <HeaderContainer pathname={pathname} />
           {this.props.children}
