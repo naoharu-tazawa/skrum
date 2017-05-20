@@ -22,7 +22,6 @@ const createUrl = (path, param, status) => {
   const domain = extractDomain(status);
   const url = getBaseUrl(domain);
   const urlParam = getUrlParam(param);
-  console.log({ param, urlParam });
   return url + path + urlParam;
 };
 
