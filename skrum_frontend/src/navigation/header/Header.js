@@ -107,12 +107,13 @@ export default class Header extends Component {
 
   render() {
     const { timeframes = [], handleLogoutSubmit } = this.props;
+    const { section } = explodePath();
     return (
       <div className={styles.container}>
         <Tab title="目標管理" name="objective" />
         <Tab title="マップ" name="map" />
-        <Tab title="タイムライン" name="timeline" />
-        <Tab title="グループ管理" name="control" />
+        {section === 'group' ? <Tab title="タイムライン" name="timeline" /> : null}
+        {section !== 'company' ? <Tab title="グループ管理" name="control" /> : null}
         <div className={styles.rightArea}>
           <SubMenu {...{ timeframes, handleLogoutSubmit }} />
         </div>
