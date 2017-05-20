@@ -19,6 +19,29 @@ class OKRListContainer extends Component {
   }
 }
 
+const getOwnerTypeSubject = (ownerType) => {
+  switch (ownerType) {
+    case '1': return 'User';
+    case '2': return 'Group';
+    case '3': return 'Company';
+    default: return '';
+  }
+};
+
+const mapKeyResults = (kr) => {
+  const { okrId, okrName, achievementRate, ownerType, status, ratioLockedFlg } = kr;
+  const ownerSubject = `owner${getOwnerTypeSubject(ownerType)}`;
+  const { [`${ownerSubject}Id`]: ownerId, [`${ownerSubject}Name`]: ownerName } = kr;
+  return {
+    id: okrId,
+    name: okrName,
+    achievementRate,
+    owner: { id: ownerId, name: ownerName, type: ownerType },
+    status,
+    ratioLockedFlg,
+  };
+};
+
 const mapStateToProps = subject => (state) => {
   const { [subject]: basics = {} } = state.basics || {};
   const ownerSubject = `owner${_.upperFirst(subject)}`;
@@ -27,12 +50,13 @@ const mapStateToProps = subject => (state) => {
     ({ okrId, okrName, achievementRate,
        [`${ownerSubject}Id`]: ownerId,
        [`${ownerSubject}Name`]: ownerName,
-       status }) =>
+       keyResults = [], status }) =>
     ({
       id: okrId,
       name: okrName,
       achievementRate,
       owner: { id: ownerId, name: ownerName },
+      keyResults: keyResults.map(mapKeyResults),
       status,
     }));
   return { items };
