@@ -110,6 +110,9 @@ export default class SideBar extends Component {
 
   render() {
     const { userSection, groupSections, companyId, companyName, onClickToggle } = this.props;
+    const { tab } = explodePath();
+    const showUser = tab !== 'timeline';
+    const showCompany = companyId && /^(objective|map)$/.test(tab);
     return (
       <div className={this.getBaseStyles()}>
         <div className={styles.header}>
@@ -126,9 +129,9 @@ export default class SideBar extends Component {
           >≡
           </button>
         </div>
-        {this.renderUserSection(userSection)}
+        {showUser ? this.renderUserSection(userSection) : null}
         {groupSections.map(this.renderGroupSection)}
-        {companyId ? <SectionItem section="company" id={companyId} title={companyName} /> : null}
+        {showCompany ? <SectionItem section="company" id={companyId} title={companyName} /> : null}
       </div>
     );
   }
