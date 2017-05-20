@@ -56,7 +56,7 @@ class MapContainer extends Component {
     const map =
       {
         okrId: 1,
-        okrName: 'Top Level',
+        okrName: 'ああああああああああああああああああああああああああああああああああああ',
         achievementRate: 30.0,
         ownerType: '1',
         ownerUserId: 1,
@@ -64,7 +64,7 @@ class MapContainer extends Component {
         children: [
           {
             okrId: 1,
-            okrName: 'Level 2: A',
+            okrName: 'いいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいい',
             achievementRate: 30.0,
             ownerType: '1',
             ownerUserId: 1,
@@ -85,44 +85,10 @@ class MapContainer extends Component {
                 ownerType: '1',
                 ownerUserId: 1,
                 ownerUserName: '田澤尚治',
-                children: [
-                  {
-                    okrId: 1,
-                    okrName: 'Daughter of A',
-                    achievementRate: 30.0,
-                    ownerType: '1',
-                    ownerUserId: 1,
-                    ownerUserName: '田澤尚治',
-                  },
-                  {
-                    okrId: 1,
-                    okrName: 'Daughter of A',
-                    achievementRate: 30.0,
-                    ownerType: '1',
-                    ownerUserId: 1,
-                    ownerUserName: '田澤尚治',
-                  },
-                ],
               },
               {
                 okrId: 1,
-                okrName: 'Daughter of A',
-                achievementRate: 30.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Daughter of A',
-                achievementRate: 30.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Daughter of A',
+                okrName: 'Son of A',
                 achievementRate: 30.0,
                 ownerType: '1',
                 ownerUserId: 1,
