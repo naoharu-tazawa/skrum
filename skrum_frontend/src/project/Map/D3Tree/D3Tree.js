@@ -3,13 +3,13 @@ import * as d3 from 'd3';
 import _ from 'lodash';
 import { d3treePropTypes } from './propTypes';
 
-let root;
-
 export default class D3Tree extends Component {
 
   static propTypes = {
     map: d3treePropTypes.isRequired,
   };
+
+  static root;
 
   componentDidMount() {
     // Render the tree usng d3 after first component mount
@@ -141,7 +141,6 @@ export default class D3Tree extends Component {
       d.children = d._children;
       d._children = null;
     }
-    console.log(d);
     self.update(d, tree, svg, i, duration);
   }
 
@@ -153,11 +152,9 @@ export default class D3Tree extends Component {
     const nodes = data.descendants();
     const links = data.descendants().slice(1);
 
-    // Normalize for fixed-depth.
-    nodes.forEach((d) => { d.y = d.depth * 220; });
-
     let rectWidth = 230; // カードの標準横幅
     let rectHeight = 150; // カードの標準縦幅
+    const originalRectHeight = 150; // カードの標準縦幅
     const minWidthMargen = 5; // 最小の横幅のマージン
     const heightRatio = 0.65; // 横に対する縦の比率
 
@@ -175,6 +172,11 @@ export default class D3Tree extends Component {
         }
       }
     }
+
+    const reductionRatio = rectHeight / originalRectHeight;
+
+    // Normalize for fixed-depth.
+    nodes.forEach((d) => { d.y = (d.depth * 220) + (originalRectHeight - rectHeight); });
 
     // ****************** Nodes section ***************************
 
@@ -208,18 +210,20 @@ export default class D3Tree extends Component {
       .style('filter', 'url(#drop-shadow)');
 
     nodeEnter.append('image')
+      .attr('class', 'uim')
       .attr('xlink:href', () => { return 'https://cdn3.iconfinder.com/data/icons/users/100/user_male_1-512.png'; })
-      .attr('x', '-87px')
-      .attr('y', '-47px')
-      .attr('width', '32px')
-      .attr('height', '32px');
+      .attr('x', `${-87 * reductionRatio}px`)
+      .attr('y', `${-47 * reductionRatio}px`)
+      .attr('width', `${32 * reductionRatio}px`)
+      .attr('height', `${32 * reductionRatio}px`);
 
     nodeEnter.append('image')
+      .attr('class', 'menu')
       .attr('xlink:href', () => { return 'https://cdn3.iconfinder.com/data/icons/users/100/user_male_1-512.png'; })
-      .attr('x', '58px')
-      .attr('y', '-47px')
-      .attr('width', '32px')
-      .attr('height', '32px');
+      .attr('x', `${58 * reductionRatio}px`)
+      .attr('y', `${-47 * reductionRatio}px`)
+      .attr('width', `${32 * reductionRatio}px`)
+      .attr('height', `${32 * reductionRatio}px`);
 
     // プログレスバーを生成
     // this.createProgressBar(node);
@@ -227,31 +231,34 @@ export default class D3Tree extends Component {
     // テキストを作成
     // adds the text to the node
     nodeEnter.append('text')
+      .attr('class', 'oname')
       .attr('y', 0)
       .attr('dy', 0)
       .attr('fill', 'grey')
       .style('text-anchor', 'start')
-      .style('font-size', '0.8em')
+      .style('font-size', `${0.8 * reductionRatio}em`)
       .html((d) => { return this.leftLinebreak(d.data.okrName); });
 
     nodeEnter.append('text')
-      .attr('y', '-65px')
+      .attr('class', 'arate')
+      .attr('y', `${-65 * reductionRatio}px`)
       .attr('dy', 0)
-      .attr('x', '-87px')
+      .attr('x', `${-87 * reductionRatio}px`)
       .attr('dx', 0)
       .attr('fill', 'grey')
       .style('text-anchor', 'start')
-      .style('font-size', '0.7em')
+      .style('font-size', `${0.7 * reductionRatio}em`)
       .text((d) => { return `${d.data.achievementRate}%`; });
 
     nodeEnter.append('text')
-      .attr('y', '-26px')
+      .attr('class', 'uname')
+      .attr('y', `${-26 * reductionRatio}px`)
       .attr('dy', 0)
-      .attr('x', '-46px')
+      .attr('x', `${-46 * reductionRatio}px`)
       .attr('dx', 0)
       .attr('fill', 'grey')
       .style('text-anchor', 'start')
-      .style('font-size', '0.8em')
+      .style('font-size', `${0.8 * reductionRatio}em`)
       .text((d) => { return d.data.ownerUserName; });
 
     // UPDATE
@@ -269,6 +276,8 @@ export default class D3Tree extends Component {
 
     // Update the node attributes and style
     nodeUpdate.select('rect')
+      .attr('x', (rectWidth / 2) * -1) // x座標を指定
+      .attr('y', rectHeight * -1) // y座標を指定
       .attr('width', rectWidth) // 横幅を指定
       .attr('height', rectHeight) // 縦幅を指定
       .style('fill', (d) => {
@@ -276,9 +285,36 @@ export default class D3Tree extends Component {
       })
       .attr('cursor', 'pointer');
 
+    nodeUpdate.select('image.uim')
+      .attr('x', `${-87 * reductionRatio}px`)
+      .attr('y', `${-47 * reductionRatio}px`)
+      .attr('width', `${32 * reductionRatio}px`)
+      .attr('height', `${32 * reductionRatio}px`);
+
+    nodeUpdate.select('image.menu')
+      .attr('x', `${58 * reductionRatio}px`)
+      .attr('y', `${-47 * reductionRatio}px`)
+      .attr('width', `${32 * reductionRatio}px`)
+      .attr('height', `${32 * reductionRatio}px`);
+
+    nodeUpdate.select('text.oname')
+      .style('font-size', `${0.8 * reductionRatio}em`)
+      .html((d) => { return this.leftLinebreak(d.data.okrName); });
+
+    nodeUpdate.select('text.arate')
+      .attr('y', `${-65 * reductionRatio}px`)
+      .attr('x', `${-87 * reductionRatio}px`)
+      .style('font-size', `${0.7 * reductionRatio}em`)
+      .text((d) => { return `${d.data.achievementRate}%`; });
+
+    nodeUpdate.select('text.uname')
+      .attr('y', `${-26 * reductionRatio}px`)
+      .attr('x', `${-46 * reductionRatio}px`)
+      .style('font-size', `${0.8 * reductionRatio}em`)
+      .text((d) => { return d.data.ownerUserName; });
+
     nodeUpdate.select('text')
       .attr('cursor', 'pointer');
-
 
     // Remove any exiting nodes
     const nodeExit = node.exit().transition()
@@ -287,10 +323,6 @@ export default class D3Tree extends Component {
         return `translate(${source.x},${source.y})`;
       })
       .remove();
-
-    // On exit reduce the node circles size to 0
-    // nodeExit.select('rect')
-    //   .style('fill-opacity', 1e-6);
 
     // On exit reduce the opacity of text labels
     nodeExit.select('text')
@@ -340,9 +372,9 @@ export default class D3Tree extends Component {
 
   renderTree(treeData, svgDomNode) {
     // Set the dimensions and margins of the diagram
-    const margin = { top: 180, right: 90, bottom: 30, left: 90 }; // SVG描画スペースの余白
+    const margin = { top: 180, right: 0, bottom: 30, left: 0 }; // SVG描画スペースの余白
     const width = svgDomNode.clientWidth - margin.left - margin.right; // SVG描画スペースの横幅
-    const height = 1200 - margin.top - margin.bottom; // SVG描画スペースの縦幅
+    const height = 1290 - margin.top - margin.bottom; // SVG描画スペースの縦幅
 
     // SVGを作成
     // append the svg object to the body of the page
@@ -367,8 +399,6 @@ export default class D3Tree extends Component {
     // const root = d3.hierarchy(treeData);
     this.root.x0 = height / 2;
     this.root.y0 = 0;
-    console.log(this.root);
-    console.log(root);
 
     // Collapse after the second level
     this.root.children.forEach(_.partial(this.collapse, this));
