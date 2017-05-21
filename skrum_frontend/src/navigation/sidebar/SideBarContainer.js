@@ -17,19 +17,20 @@ class SideBarContainer extends Component {
   };
 
   state = {
-    isOpen: true,
+    isExpanded: true,
   };
 
   toggleSideBar() {
-    this.setState({ isOpen: !this.state.isOpen });
+    this.setState({ isExpanded: !this.state.isExpanded });
   }
 
   render() {
     const { userSection, groupSections, companyId, companyName, dispatchLoadEntity } = this.props;
+    const { isExpanded } = this.state;
     return (
       <SideBar
-        isOpen={this.state.isOpen}
-        onClickToggle={this.toggleSideBar}
+        isExpanded={isExpanded}
+        onClickToggle={() => this.toggleSideBar()}
         handleClick={dispatchLoadEntity}
         {...{ userSection, groupSections, companyId, companyName }}
       />);

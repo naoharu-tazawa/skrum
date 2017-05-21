@@ -2,10 +2,16 @@
   display: flex;
   overflow: hidden;
   font-size: small;
-  margin: 0.5em auto;
+  margin: 1px auto;
   padding: 5px 40px;
   background-color: #fff;
   color: #626A7F;
+}
+.keyResult {
+  background-color: #f8f8f8;
+}
+.keyResultConnector {
+  margin: auto 1em auto 0;
 }
 .header {
   display: flex;
@@ -66,6 +72,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.krCount {
+  margin: auto;
 }
 .toolImage {
   display: inline-block;

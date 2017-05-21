@@ -23,8 +23,11 @@
   left: 42px;
   display: block;
 }
-.isOpen {
-  width: 100%;
+.isExpanded {
+  width: 200px;
+}
+.isCollapsed {
+  width: 54px;
 }
 .isHide {
   display: none;
@@ -33,7 +36,7 @@
   background-color: slategray;
 }
 .toggleArea {
-  padding: 10px 20px;
+  padding: 10px 15px;
   display: flex;
   justify-content: flex-end;
 }

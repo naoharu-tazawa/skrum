@@ -3,9 +3,9 @@
   width: 100%;
   height: 100vh;
 }
-.layoutSide {
-  width: 200px;
-}
+/*.layoutSide {*/
+  /*width: 200px;*/
+/*}*/
 .layoutMain {
   display: flex;
   flex-direction: column;
