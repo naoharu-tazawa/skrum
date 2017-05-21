@@ -89,8 +89,10 @@ export default class D3Tree extends Component {
     nodeEnter.selectAll('rect.progress-rect').remove();
 
     const states = ['started', 'inProgress', 'completed'];
-    const segmentWidth = 48 * reductionRatio;
-    const currentState = 'started';
+    const segmentWidth = 144 * reductionRatio;
+    const startedCap = 30;
+    const inProgressCap = 70;
+    let currentState;
 
     const colorScale = d3.scaleOrdinal()
       .domain(states)
@@ -102,15 +104,21 @@ export default class D3Tree extends Component {
       .attr('ry', 10)
       .attr('fill', 'gray')
       .attr('height', 15 * reductionRatio)
-      .attr('width', () => {
-        return segmentWidth * states.length;
-      })
+      .attr('width', segmentWidth)
       .attr('y', `${-77 * reductionRatio}px`)
       .attr('x', `${-55 * reductionRatio}px`);
 
+    // nodeEnter.append('rect')
     const progress = nodeEnter.append('rect')
       .attr('class', 'progress-rect')
-      .attr('fill', () => {
+      .attr('fill', (d) => {
+        if (d.data.achievementRate < startedCap) {
+          currentState = 'started';
+        } else if (d.data.achievementRate < inProgressCap) {
+          currentState = 'inProgress';
+        } else {
+          currentState = 'completed';
+        }
         return colorScale(currentState);
       })
       .attr('height', 15 * reductionRatio)
@@ -122,9 +130,8 @@ export default class D3Tree extends Component {
 
     progress.transition()
       .duration(1000)
-      .attr('width', () => {
-        const index = states.indexOf(currentState);
-        return (index + 1) * segmentWidth;
+      .attr('width', (d) => {
+        return (d.data.achievementRate / 100) * segmentWidth;
       });
   }
 
