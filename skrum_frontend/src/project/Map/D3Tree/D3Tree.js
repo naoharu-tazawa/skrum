@@ -83,44 +83,50 @@ export default class D3Tree extends Component {
   }
 
   // プログレスバー生成
-  // createProgressBar(node) {
-  //   const states = ['started', 'inProgress', 'completed'];
-  //   const segmentWidth = 100;
-  //   const currentState = 'started';
-  //
-  //   const colorScale = d3.scale.ordinal()
-  //     .domain(states)
-  //     .range(['yellow', 'orange', 'green']);
-  //
-  //   node.append('rect')
-  //     .attr('class', 'bg-rect')
-  //     .attr('rx', 10)
-  //     .attr('ry', 10)
-  //     .attr('fill', 'gray')
-  //     .attr('height', 15)
-  //     .attr('width', () => {
-  //       return segmentWidth * states.length;
-  //     })
-  //     .attr('x', 0);
-  //
-  //   const progress = node.append('rect')
-  //     .attr('class', 'progress-rect')
-  //     .attr('fill', () => {
-  //       return colorScale(currentState);
-  //     })
-  //     .attr('height', 15)
-  //     .attr('width', 0)
-  //     .attr('rx', 10)
-  //     .attr('ry', 10)
-  //     .attr('x', 0);
-  //
-  //   progress.transition()
-  //     .duration(1000)
-  //     .attr('width', () => {
-  //       const index = states.indexOf(currentState);
-  //       return (index + 1) * segmentWidth;
-  //     });
-  // }
+  createProgressBar(nodeEnter, reductionRatio) {
+    // 再描画時に直前のプログレスバーを消す
+    nodeEnter.selectAll('rect.bg-rect').remove();
+    nodeEnter.selectAll('rect.progress-rect').remove();
+
+    const states = ['started', 'inProgress', 'completed'];
+    const segmentWidth = 48 * reductionRatio;
+    const currentState = 'started';
+
+    const colorScale = d3.scaleOrdinal()
+      .domain(states)
+      .range(['yellow', 'orange', 'green']);
+
+    nodeEnter.append('rect')
+      .attr('class', 'bg-rect')
+      .attr('rx', 10)
+      .attr('ry', 10)
+      .attr('fill', 'gray')
+      .attr('height', 15 * reductionRatio)
+      .attr('width', () => {
+        return segmentWidth * states.length;
+      })
+      .attr('y', `${-77 * reductionRatio}px`)
+      .attr('x', `${-55 * reductionRatio}px`);
+
+    const progress = nodeEnter.append('rect')
+      .attr('class', 'progress-rect')
+      .attr('fill', () => {
+        return colorScale(currentState);
+      })
+      .attr('height', 15 * reductionRatio)
+      .attr('width', 0)
+      .attr('rx', 10)
+      .attr('ry', 10)
+      .attr('y', `${-77 * reductionRatio}px`)
+      .attr('x', `${-55 * reductionRatio}px`);
+
+    progress.transition()
+      .duration(1000)
+      .attr('width', () => {
+        const index = states.indexOf(currentState);
+        return (index + 1) * segmentWidth;
+      });
+  }
 
   // Collapse the node and all it's children
   collapse(self, d) {
@@ -226,7 +232,7 @@ export default class D3Tree extends Component {
       .attr('height', `${32 * reductionRatio}px`);
 
     // プログレスバーを生成
-    // this.createProgressBar(node);
+    this.createProgressBar(nodeEnter, reductionRatio);
 
     // テキストを作成
     // adds the text to the node
@@ -296,6 +302,9 @@ export default class D3Tree extends Component {
       .attr('y', `${-47 * reductionRatio}px`)
       .attr('width', `${32 * reductionRatio}px`)
       .attr('height', `${32 * reductionRatio}px`);
+
+    // プログレスバーを生成
+    this.createProgressBar(nodeUpdate, reductionRatio);
 
     nodeUpdate.select('text.oname')
       .style('font-size', `${0.8 * reductionRatio}em`)
