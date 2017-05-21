@@ -69,6 +69,7 @@ class MapContainer extends Component {
             ownerType: '1',
             ownerUserId: 1,
             ownerUserName: '田澤尚治',
+            parent: 1,
             children: [
               {
                 okrId: 1,
@@ -101,6 +102,24 @@ class MapContainer extends Component {
                 ownerType: '1',
                 ownerUserId: 1,
                 ownerUserName: '田澤尚治',
+              },
+              {
+                okrId: 1,
+                okrName: 'Son of A',
+                achievementRate: 30.0,
+                ownerType: '1',
+                ownerUserId: 1,
+                ownerUserName: '田澤尚治',
+                children: [
+                  {
+                    okrId: 1,
+                    okrName: 'Son of A',
+                    achievementRate: 30.0,
+                    ownerType: '1',
+                    ownerUserId: 1,
+                    ownerUserName: '田澤尚治',
+                  },
+                ],
               },
             ],
           },
