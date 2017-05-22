@@ -61,6 +61,7 @@ class MapContainer extends Component {
         ownerType: '1',
         ownerUserId: 1,
         ownerUserName: '田澤尚治',
+        hidden: true,
         children: [
           {
             okrId: 1,
@@ -211,12 +212,37 @@ class MapContainer extends Component {
             ownerUserId: 1,
             ownerUserName: '田澤尚治',
           },
+          {
+            okrId: 1,
+            okrName: 'Level 2: B',
+            achievementRate: 30.0,
+            ownerType: '1',
+            ownerUserId: 1,
+            ownerUserName: '田澤尚治',
+          },
+          {
+            okrId: 1,
+            okrName: 'Level 2: B',
+            achievementRate: 30.0,
+            ownerType: '1',
+            ownerUserId: 1,
+            ownerUserName: '田澤尚治',
+          },
         ],
+      };
+    const map2 =
+      {
+        okrId: 1,
+        okrName: 'ああああああああああああああああああああああああああああああああああああ',
+        achievementRate: 90.0,
+        ownerType: '1',
+        ownerUserId: 1,
+        ownerUserName: '田澤尚治',
       };
 
     return (
       <div className={styles.container}>
-        <D3Tree map={map} />
+        <D3Tree map={map} map2={map2} />
       </div>);
   }
 }

@@ -11,6 +11,8 @@ export default class D3Tree extends Component {
 
   static root;
 
+  static isHidden = false;
+
   componentDidMount() {
     // Render the tree usng d3 after first component mount
     this.renderTree(this.props.map, this.node);
@@ -106,7 +108,10 @@ export default class D3Tree extends Component {
       .attr('height', 15 * reductionRatio)
       .attr('width', segmentWidth)
       .attr('y', `${-77 * reductionRatio}px`)
-      .attr('x', `${-55 * reductionRatio}px`);
+      .attr('x', `${-55 * reductionRatio}px`)
+      .style('display', (d) => {
+        return d.data.hidden ? 'none' : '';
+      });
 
     // nodeEnter.append('rect')
     const progress = nodeEnter.append('rect')
@@ -126,7 +131,10 @@ export default class D3Tree extends Component {
       .attr('rx', 10)
       .attr('ry', 10)
       .attr('y', `${-77 * reductionRatio}px`)
-      .attr('x', `${-55 * reductionRatio}px`);
+      .attr('x', `${-55 * reductionRatio}px`)
+      .style('display', (d) => {
+        return d.data.hidden ? 'none' : '';
+      });
 
     progress.transition()
       .duration(1000)
@@ -190,6 +198,11 @@ export default class D3Tree extends Component {
 
     // Normalize for fixed-depth.
     nodes.forEach((d) => { d.y = (d.depth * 220) + (originalRectHeight - rectHeight); });
+    nodes.forEach((d) => {
+      if (d.depth === 0) {
+        d.hidden = true;
+      }
+    });
 
     // ****************** Nodes section ***************************
 
@@ -220,7 +233,10 @@ export default class D3Tree extends Component {
       .attr('fill', 'white') // 背景色を指定
       .attr('stroke', '#F2F2F2') // 枠線の色を指定
       .attr('stroke-width', 1) // 枠線の太さを指定
-      .style('filter', 'url(#drop-shadow)');
+      .style('filter', 'url(#drop-shadow)')
+      .style('display', (d) => {
+        return d.data.hidden ? 'none' : '';
+      });
 
     nodeEnter.append('image')
       .attr('class', 'uim')
@@ -228,7 +244,10 @@ export default class D3Tree extends Component {
       .attr('x', `${-87 * reductionRatio}px`)
       .attr('y', `${-47 * reductionRatio}px`)
       .attr('width', `${32 * reductionRatio}px`)
-      .attr('height', `${32 * reductionRatio}px`);
+      .attr('height', `${32 * reductionRatio}px`)
+      .style('display', (d) => {
+        return d.data.hidden ? 'none' : '';
+      });
 
     nodeEnter.append('image')
       .attr('class', 'menu')
@@ -236,7 +255,10 @@ export default class D3Tree extends Component {
       .attr('x', `${58 * reductionRatio}px`)
       .attr('y', `${-47 * reductionRatio}px`)
       .attr('width', `${32 * reductionRatio}px`)
-      .attr('height', `${32 * reductionRatio}px`);
+      .attr('height', `${32 * reductionRatio}px`)
+      .style('display', (d) => {
+        return d.data.hidden ? 'none' : '';
+      });
 
     // プログレスバーを生成
     this.createProgressBar(nodeEnter, reductionRatio);
@@ -250,7 +272,10 @@ export default class D3Tree extends Component {
       .attr('fill', 'grey')
       .style('text-anchor', 'start')
       .style('font-size', `${0.8 * reductionRatio}em`)
-      .html((d) => { return this.leftLinebreak(d.data.okrName); });
+      .html((d) => { return this.leftLinebreak(d.data.okrName); })
+      .style('display', (d) => {
+        return d.data.hidden ? 'none' : '';
+      });
 
     nodeEnter.append('text')
       .attr('class', 'arate')
@@ -261,7 +286,10 @@ export default class D3Tree extends Component {
       .attr('fill', 'grey')
       .style('text-anchor', 'start')
       .style('font-size', `${0.7 * reductionRatio}em`)
-      .text((d) => { return `${d.data.achievementRate}%`; });
+      .text((d) => { return `${d.data.achievementRate}%`; })
+      .style('display', (d) => {
+        return d.data.hidden ? 'none' : '';
+      });
 
     nodeEnter.append('text')
       .attr('class', 'uname')
@@ -272,7 +300,10 @@ export default class D3Tree extends Component {
       .attr('fill', 'grey')
       .style('text-anchor', 'start')
       .style('font-size', `${0.8 * reductionRatio}em`)
-      .text((d) => { return d.data.ownerUserName; });
+      .text((d) => { return d.data.ownerUserName; })
+      .style('display', (d) => {
+        return d.data.hidden ? 'none' : '';
+      });
 
     // UPDATE
     const nodeUpdate = nodeEnter.merge(node);
@@ -368,7 +399,10 @@ export default class D3Tree extends Component {
     linkUpdate.transition()
       .duration(duration)
       .attr('d', (d) => {
-        return `M${d.x},${d.y - rectHeight}C${d.x},${((d.y + d.parent.y) / 2) - 70} ${d.parent.x},${((d.y + d.parent.y) / 2) - 70} ${d.parent.x},${d.parent.y}`;
+        return (d.depth === 1 && this.isHidden === true) ? null : `M${d.x},${d.y - rectHeight}C${d.x},${((d.y + d.parent.y) / 2) - 70} ${d.parent.x},${((d.y + d.parent.y) / 2) - 70} ${d.parent.x},${d.parent.y}`;
+      })
+      .style('display', (d) => {
+        return d.data.hidden ? 'none' : '';
       });
 
       // Remove any exiting links
@@ -387,8 +421,12 @@ export default class D3Tree extends Component {
   }
 
   renderTree(treeData, svgDomNode) {
+    // hidden setting
+    this.isHidden = (treeData.hidden !== undefined);
+
     // Set the dimensions and margins of the diagram
-    const margin = { top: 180, right: 0, bottom: 30, left: 0 }; // SVG描画スペースの余白
+    const marginTop = this.isHidden ? 180 : 180;
+    const margin = { top: marginTop, right: 0, bottom: 30, left: 0 }; // SVG描画スペースの余白
     const width = svgDomNode.clientWidth - margin.left - margin.right; // SVG描画スペースの横幅
     const height = 1290 - margin.top - margin.bottom; // SVG描画スペースの縦幅
 
