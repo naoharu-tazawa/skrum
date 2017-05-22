@@ -5,6 +5,8 @@ namespace AppBundle\Logic;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
+use AppBundle\Api\ResponseDTO\OkrMapDTO;
+use AppBundle\Utils\Auth;
 
 /**
  * OKR操作ロジッククラス
@@ -55,6 +57,99 @@ class OkrOperationLogic extends BaseLogic
                 throw new ApplicationException('異なるオーナーのOKRに紐づける場合、キーリザルトは紐付けできません');
             }
         }
+    }
+
+    /**
+     * OKRエンティティ配列を階層構造に変換
+     *
+     * @param Auth $auth 認証情報
+     * @param array $tOkrArray 操作対象OKRエンティティ配列
+     * @param string $companyName 会社名
+     * @return OkrMapDTO
+     */
+    public function tree(Auth $auth, array $tOkrArray, string $companyName = null): OkrMapDTO
+    {
+        $disclosureLogic = $this->getDisclosureLogic();
+
+        // 親OKRの閲覧権限をチェック
+        if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[0])) {
+            return new OkrMapDTO();
+        }
+
+        // 親OKRをDTOに詰め替える
+        $okrMapDTO = $this->repackDTOWithOkrEntity($tOkrArray[0], $companyName);
+
+        // 子OKRを同じ親OKRIDで配列にまとめる
+        $childrenOkrs = array();
+        $count = count($tOkrArray);
+        for ($i = 0; $i < $count; ++$i) {
+            // 閲覧権限をチェック
+            if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[$i])) {
+                continue;
+            }
+
+            // DTOに詰め替える
+            $childOkrMapDTO = $this->repackDTOWithOkrEntity($tOkrArray[$i], $companyName);
+
+            $childrenOkrs[$tOkrArray[$i]->getParentOkr()->getOkrId()][] = $childOkrMapDTO;
+        }
+
+        // ツリー生成
+        $tree = $this->makeTree($childrenOkrs, array($okrMapDTO));
+
+        return $tree[0];
+    }
+
+    /**
+     * ツリー生成（再帰処理）
+     *
+     * @param array $childrenOkrs 認証情報
+     * @param array $parentOkrMapDTO 親OKRマップDTO
+     * @return OkrMapDTO
+     */
+    private function makeTree(array &$childrenOkrs, array $parentOkrMapDTOArray): array
+    {
+        $tree = array();
+        foreach ($parentOkrMapDTOArray as $key => $value) {
+            if (isset($childrenOkrs[$value->getOkrId()])) {
+                $value->setChildren($this->makeTree($childrenOkrs, $childrenOkrs[$value->getOkrId()]));
+            }
+            $tree[] = $value;
+        }
+
+        return $tree;
+    }
+
+    /**
+     * OKRエンティティをDTOに詰め替える
+     *
+     * @param TOkr $tOkr OKRエンティティ
+     * @param string $companyName 会社名
+     * @return OkrMapDTO
+     */
+    private function repackDTOWithOkrEntity(TOkr $tOkr, string $companyName = null): OkrMapDTO
+    {
+        $okrMapDTO = new OkrMapDTO();
+        $okrMapDTO->setOkrId($tOkr->getOkrId());
+        $okrMapDTO->setOkrName($tOkr->getName());
+        $okrMapDTO->setTargetValue($tOkr->getTargetValue());
+        $okrMapDTO->setAchievedValue($tOkr->getAchievedValue());
+        $okrMapDTO->setAchievementRate($tOkr->getAchievementRate());
+        $okrMapDTO->setUnit($tOkr->getUnit());
+        $okrMapDTO->setOwnerType($tOkr->getOwnerType());
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            $okrMapDTO->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
+            $okrMapDTO->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            $okrMapDTO->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+            $okrMapDTO->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+        } else {
+            $okrMapDTO->setOwnerCompanyId($tOkr->getOwnerCompanyId());
+            $okrMapDTO->setOwnerCompanyName($companyName);
+        }
+        $okrMapDTO->setStatus($tOkr->getStatus());
+
+        return $okrMapDTO;
     }
 
     /**
