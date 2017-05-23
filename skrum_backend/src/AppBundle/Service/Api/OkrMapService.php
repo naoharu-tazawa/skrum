@@ -106,6 +106,9 @@ class OkrMapService extends BaseService
         }
 
         $retOkrMapDTO = new OkrMapDTO();
+        $retOkrMapDTO->setOkrId(1);
+        $retOkrMapDTO->setAchievementRate(1);
+        $retOkrMapDTO->setStatus('0');
         $retOkrMapDTO->setChildren($children);
         $retOkrMapDTO->setHidden(true);
 

@@ -1,269 +1,100 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import D3Tree from './D3Tree/D3Tree';
-import { fetchUserObjectives, fetchGroupObjectives, fetchCompanyObjectives } from './action';
+import { fetchUserOkrs, fetchGroupOkrs, fetchCompanyOkrs } from './action';
+import { UserD3TreeContainer, GroupD3TreeContainer, CompanyD3TreeContainer } from './D3Tree/D3TreeContainer';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
 import styles from './MapContainer.css';
 
 class MapContainer extends Component {
 
   static propTypes = {
+    isFetching: PropTypes.bool,
     subject: PropTypes.string,
-    dispatchFetchUserObjectives: PropTypes.func,
-    dispatchFetchGroupObjectives: PropTypes.func,
-    dispatchFetchCompanyObjectives: PropTypes.func,
+    dispatchFetchUserOkrs: PropTypes.func,
+    dispatchFetchGroupOkrs: PropTypes.func,
+    dispatchFetchCompanyOkrs: PropTypes.func,
     pathname: PropTypes.string,
   };
 
   componentWillMount() {
     const { pathname } = this.props;
     if (isPathFinal(pathname)) {
-      this.fetchObjectives(pathname);
+      this.fetchOkrs(pathname);
     }
   }
 
   componentWillReceiveProps(next) {
     const { pathname } = next;
     if (this.props.pathname !== pathname) {
-      this.fetchObjectives(pathname);
+      this.fetchOkrs(pathname);
     }
   }
 
-  fetchObjectives(pathname) {
+  fetchOkrs(pathname) {
     const {
-      dispatchFetchUserObjectives,
-      dispatchFetchGroupObjectives,
-      dispatchFetchCompanyObjectives,
+      dispatchFetchUserOkrs,
+      dispatchFetchGroupOkrs,
+      dispatchFetchCompanyOkrs,
     } = this.props;
     const { section, id, timeframeId } = explodePath(pathname);
     switch (section) {
       case 'user':
-        dispatchFetchUserObjectives(id, timeframeId);
+        dispatchFetchUserOkrs(id, timeframeId);
         break;
       case 'group':
-        dispatchFetchGroupObjectives(id, timeframeId);
+        dispatchFetchGroupOkrs(id, timeframeId);
         break;
       case 'company':
-        dispatchFetchCompanyObjectives(id, timeframeId);
+        dispatchFetchCompanyOkrs(id, timeframeId);
         break;
       default:
         break;
     }
   }
 
-  render() {
-    const map =
-      {
-        okrId: 1,
-        okrName: 'ああああああああああああああああああああああああああああああああああああ',
-        achievementRate: 30.0,
-        ownerType: '1',
-        ownerUserId: 1,
-        ownerUserName: '田澤尚治',
-        hidden: true,
-        children: [
-          {
-            okrId: 1,
-            okrName: 'いいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいい',
-            achievementRate: 30.0,
-            ownerType: '1',
-            ownerUserId: 1,
-            ownerUserName: '田澤尚治',
-            parent: 1,
-            children: [
-              {
-                okrId: 1,
-                okrName: 'Son of A',
-                achievementRate: 30.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Daughter of A',
-                achievementRate: 30.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Son of A',
-                achievementRate: 30.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Daughter of A',
-                achievementRate: 30.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Son of A',
-                achievementRate: 30.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Daughter of A',
-                achievementRate: 0.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Son of A',
-                achievementRate: 99.9,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Daughter of A',
-                achievementRate: 100.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Son of A',
-                achievementRate: 30.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Daughter of A',
-                achievementRate: 25.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-              },
-              {
-                okrId: 1,
-                okrName: 'Son of A',
-                achievementRate: 30.0,
-                ownerType: '1',
-                ownerUserId: 1,
-                ownerUserName: '田澤尚治',
-                children: [
-                  {
-                    okrId: 1,
-                    okrName: 'Son of A',
-                    achievementRate: 22.7,
-                    ownerType: '1',
-                    ownerUserId: 1,
-                    ownerUserName: '田澤尚治',
-                  },
-                  {
-                    okrId: 1,
-                    okrName: 'Son of A',
-                    achievementRate: 47.7,
-                    ownerType: '1',
-                    ownerUserId: 1,
-                    ownerUserName: '田澤尚治',
-                  },
-                  {
-                    okrId: 1,
-                    okrName: 'Son of A',
-                    achievementRate: 30.0,
-                    ownerType: '1',
-                    ownerUserId: 1,
-                    ownerUserName: '田澤尚治',
-                  },
-                  {
-                    okrId: 1,
-                    okrName: 'Son of A',
-                    achievementRate: 30.0,
-                    ownerType: '1',
-                    ownerUserId: 1,
-                    ownerUserName: '田澤尚治',
-                  },
-                  {
-                    okrId: 1,
-                    okrName: 'Son of A',
-                    achievementRate: 30.0,
-                    ownerType: '1',
-                    ownerUserId: 1,
-                    ownerUserName: '田澤尚治',
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            okrId: 1,
-            okrName: 'Level 2: B',
-            achievementRate: 30.0,
-            ownerType: '1',
-            ownerUserId: 1,
-            ownerUserName: '田澤尚治',
-          },
-          {
-            okrId: 1,
-            okrName: 'Level 2: B',
-            achievementRate: 30.0,
-            ownerType: '1',
-            ownerUserId: 1,
-            ownerUserName: '田澤尚治',
-          },
-          {
-            okrId: 1,
-            okrName: 'Level 2: B',
-            achievementRate: 30.0,
-            ownerType: '1',
-            ownerUserId: 1,
-            ownerUserName: '田澤尚治',
-          },
-        ],
-      };
-    const map2 =
-      {
-        okrId: 1,
-        okrName: 'ああああああああああああああああああああああああああああああああああああ',
-        achievementRate: 90.0,
-        ownerType: '1',
-        ownerUserId: 1,
-        ownerUserName: '田澤尚治',
-      };
+  renderD3TreeContainer() {
+    switch (this.props.subject) {
+      case 'user':
+        return <UserD3TreeContainer />;
+      case 'group':
+        return <GroupD3TreeContainer />;
+      case 'company':
+        return <CompanyD3TreeContainer />;
+      default:
+        return null;
+    }
+  }
 
+  render() {
+    if (this.props.isFetching) {
+      return <div className={styles.spinner} />;
+    }
     return (
       <div className={styles.container}>
-        <D3Tree map={map} map2={map2} />
+        {this.renderD3TreeContainer()}
       </div>);
   }
 }
 
 const mapStateToProps = (state) => {
+  const { isFetching = false } = state.map || {};
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
-  return { pathname };
+  return { isFetching, pathname };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const dispatchFetchUserObjectives = (userId, timeframeId) =>
-    dispatch(fetchUserObjectives(userId, timeframeId));
-  const dispatchFetchGroupObjectives = (groupId, timeframeId) =>
-    dispatch(fetchGroupObjectives(groupId, timeframeId));
-  const dispatchFetchCompanyObjectives = (companyId, timeframeId) =>
-    dispatch(fetchCompanyObjectives(companyId, timeframeId));
+  const dispatchFetchUserOkrs = (userId, timeframeId) =>
+    dispatch(fetchUserOkrs(userId, timeframeId));
+  const dispatchFetchGroupOkrs = (groupId, timeframeId) =>
+    dispatch(fetchGroupOkrs(groupId, timeframeId));
+  const dispatchFetchCompanyOkrs = (companyId, timeframeId) =>
+    dispatch(fetchCompanyOkrs(companyId, timeframeId));
   return {
-    dispatchFetchUserObjectives,
-    dispatchFetchGroupObjectives,
-    dispatchFetchCompanyObjectives,
+    dispatchFetchUserOkrs,
+    dispatchFetchGroupOkrs,
+    dispatchFetchCompanyOkrs,
   };
 };
 

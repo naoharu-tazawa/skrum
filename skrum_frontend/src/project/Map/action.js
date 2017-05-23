@@ -3,32 +3,32 @@ import { keyValueIdentity } from '../../util/ActionUtil';
 import { getJson } from '../../util/ApiUtil';
 
 export const Action = {
-  REQUEST_FETCH_USER_OBJECTIVES: 'REQUEST_FETCH_USER_OBJECTIVES',
-  REQUEST_FETCH_GROUP_OBJECTIVES: 'REQUEST_FETCH_GROUP_OBJECTIVES',
-  REQUEST_FETCH_COMPANY_OBJECTIVES: 'REQUEST_FETCH_COMPANY_OBJECTIVES',
-  FINISH_FETCH_USER_OBJECTIVES: 'FINISH_FETCH_USER_OBJECTIVES',
-  FINISH_FETCH_GROUP_OBJECTIVES: 'FINISH_FETCH_GROUP_OBJECTIVES',
-  FINISH_FETCH_COMPANY_OBJECTIVES: 'FINISH_FETCH_COMPANY_OBJECTIVES',
+  REQUEST_FETCH_USER_OKRS: 'REQUEST_FETCH_USER_OKRS',
+  REQUEST_FETCH_GROUP_OKRS: 'REQUEST_FETCH_GROUP_OKRS',
+  REQUEST_FETCH_COMPANY_OKRS: 'REQUEST_FETCH_COMPANY_OKRS',
+  FINISH_FETCH_USER_OKRS: 'FINISH_FETCH_USER_OKRS',
+  FINISH_FETCH_GROUP_OKRS: 'FINISH_FETCH_GROUP_OKRS',
+  FINISH_FETCH_COMPANY_OKRS: 'FINISH_FETCH_COMPANY_OKRS',
 };
 
 const {
-  requestFetchUserObjectives,
-  requestFetchGroupObjectives,
-  requestFetchCompanyObjectives,
-  finishFetchUserObjectives,
-  finishFetchGroupObjectives,
-  finishFetchCompanyObjectives,
+  requestFetchUserOkrs,
+  requestFetchGroupOkrs,
+  requestFetchCompanyOkrs,
+  finishFetchUserOkrs,
+  finishFetchGroupOkrs,
+  finishFetchCompanyOkrs,
 } = createActions({
-  [Action.FINISH_FETCH_USER_OBJECTIVES]: keyValueIdentity,
-  [Action.FINISH_FETCH_GROUP_OBJECTIVES]: keyValueIdentity,
-  [Action.FINISH_FETCH_COMPANY_OBJECTIVES]: keyValueIdentity,
+  [Action.FINISH_FETCH_USER_OKRS]: keyValueIdentity,
+  [Action.FINISH_FETCH_GROUP_OKRS]: keyValueIdentity,
+  [Action.FINISH_FETCH_COMPANY_OKRS]: keyValueIdentity,
 },
-  Action.REQUEST_FETCH_USER_OBJECTIVES,
-  Action.REQUEST_FETCH_GROUP_OBJECTIVES,
-  Action.REQUEST_FETCH_COMPANY_OBJECTIVES,
+  Action.REQUEST_FETCH_USER_OKRS,
+  Action.REQUEST_FETCH_GROUP_OKRS,
+  Action.REQUEST_FETCH_COMPANY_OKRS,
 );
 
-const fetchBasics = (section, node, request, finish) => (id, timeframeId) =>
+const fetchMap = (section, node, request, finish) => (id, timeframeId) =>
   (dispatch, getStatus) => {
     const status = getStatus();
     const { isFetching } = status.map;
@@ -36,7 +36,7 @@ const fetchBasics = (section, node, request, finish) => (id, timeframeId) =>
       return Promise.resolve();
     }
     dispatch(request());
-    return getJson(`/${section}/${id}/objectives.json`, status)({ tfid: timeframeId })
+    return getJson(`/${section}/${id}/okrs.json`, status)({ tfid: timeframeId })
       .then(json => dispatch(finish(node, json)))
       .catch((err) => {
         const { message } = err;
@@ -44,11 +44,11 @@ const fetchBasics = (section, node, request, finish) => (id, timeframeId) =>
       });
   };
 
-export const fetchUserObjectives = (id, timeframeId) =>
-  fetchBasics('users', 'user', requestFetchUserObjectives, finishFetchUserObjectives)(id, timeframeId);
+export const fetchUserOkrs = (id, timeframeId) =>
+  fetchMap('users', 'user', requestFetchUserOkrs, finishFetchUserOkrs)(id, timeframeId);
 
-export const fetchGroupObjectives = (id, timeframeId) =>
-  fetchBasics('groups', 'group', requestFetchGroupObjectives, finishFetchGroupObjectives)(id, timeframeId);
+export const fetchGroupOkrs = (id, timeframeId) =>
+  fetchMap('groups', 'group', requestFetchGroupOkrs, finishFetchGroupOkrs)(id, timeframeId);
 
-export const fetchCompanyObjectives = (id, timeframeId) =>
-  fetchBasics('companies', 'company', requestFetchCompanyObjectives, finishFetchCompanyObjectives)(id, timeframeId);
+export const fetchCompanyOkrs = (id, timeframeId) =>
+  fetchMap('companies', 'company', requestFetchCompanyOkrs, finishFetchCompanyOkrs)(id, timeframeId);

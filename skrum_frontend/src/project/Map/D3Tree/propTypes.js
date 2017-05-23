@@ -1,12 +1,21 @@
 import PropTypes from 'prop-types';
 
 export const d3treePropTypes = PropTypes.shape({
-  okrId: PropTypes.number.isRequired,
-  okrName: PropTypes.string.isRequired,
-  achievementRate: PropTypes.number.isRequired,
-  ownerType: PropTypes.string.isRequired,
-  ownerUserId: PropTypes.number.isRequired,
-  ownerUserName: PropTypes.string.isRequired,
+  okrId: PropTypes.number,
+  okrName: PropTypes.string,
+  targetValue: PropTypes.number,
+  achievedValue: PropTypes.number,
+  unit: PropTypes.string,
+  achievementRate: PropTypes.number,
+  ownerType: PropTypes.string,
+  ownerUserId: PropTypes.number,
+  ownerUserName: PropTypes.string,
+  ownerGroupId: PropTypes.number,
+  ownerGroupName: PropTypes.string,
+  ownerCompanyId: PropTypes.number,
+  ownerCompanyName: PropTypes.string,
+  status: PropTypes.string,
+  hidden: PropTypes.boolean,
   children: PropTypes.array,
 });
 

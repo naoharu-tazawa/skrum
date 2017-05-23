@@ -61,9 +61,9 @@ class OkrMapDTO
     private $unit;
 
     /**
-     * @var string
+     * @var double
      *
-     * @JSON\Type("string")
+     * @JSON\Type("double")
      */
     private $achievementRate;
 
@@ -336,7 +336,7 @@ class OkrMapDTO
     /**
      * Set achievementRate
      *
-     * @param string $achievementRate
+     * @param double $achievementRate
      *
      * @return OkrMapDTO
      */
@@ -350,7 +350,7 @@ class OkrMapDTO
     /**
      * Get achievementRate
      *
-     * @return string
+     * @return double
      */
     public function getAchievementRate()
     {
