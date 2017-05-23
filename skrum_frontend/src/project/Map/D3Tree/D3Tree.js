@@ -455,9 +455,11 @@ export default class D3Tree extends Component {
     this.root.y0 = 0;
 
     // Collapse after the second level
-    this.root.children.forEach(_.partial(this.collapse, this));
-
-    this.update(this.root, tree, svg, i, duration);
+    const { children = [] } = this.root;
+    if (children.length > 0) {
+      children.forEach(_.partial(this.collapse, this));
+      this.update(this.root, tree, svg, i, duration);
+    }
   }
 
   render() {
