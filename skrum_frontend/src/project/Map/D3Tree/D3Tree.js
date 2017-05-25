@@ -91,7 +91,7 @@ export default class D3Tree extends Component {
     nodeEnter.selectAll('rect.progress-rect').remove();
 
     const states = ['started', 'inProgress', 'completed'];
-    const segmentWidth = 144 * reductionRatio;
+    const segmentWidth = 134 * reductionRatio;
     const startedCap = 30;
     const inProgressCap = 70;
     let currentState;
@@ -108,7 +108,7 @@ export default class D3Tree extends Component {
       .attr('height', 15 * reductionRatio)
       .attr('width', segmentWidth)
       .attr('y', `${-77 * reductionRatio}px`)
-      .attr('x', `${-55 * reductionRatio}px`)
+      .attr('x', `${-45 * reductionRatio}px`)
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
@@ -131,7 +131,7 @@ export default class D3Tree extends Component {
       .attr('rx', 10)
       .attr('ry', 10)
       .attr('y', `${-77 * reductionRatio}px`)
-      .attr('x', `${-55 * reductionRatio}px`)
+      .attr('x', `${-45 * reductionRatio}px`)
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
@@ -139,6 +139,9 @@ export default class D3Tree extends Component {
     progress.transition()
       .duration(1000)
       .attr('width', (d) => {
+        if (d.data.achievementRate >= 100) {
+          return segmentWidth;
+        }
         return (d.data.achievementRate / 100) * segmentWidth;
       });
   }
@@ -300,7 +303,15 @@ export default class D3Tree extends Component {
       .attr('fill', 'grey')
       .style('text-anchor', 'start')
       .style('font-size', `${0.8 * reductionRatio}em`)
-      .text((d) => { return d.data.ownerUserName; })
+      .text((d) => {
+        if (d.data.ownerType === '1') {
+          return d.data.ownerUserName;
+        } else if (d.data.ownerType === '2') {
+          return d.data.ownerGroupName;
+        } else if (d.data.ownerType === '3') {
+          return d.data.ownerCompanyName;
+        }
+      })
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
@@ -358,7 +369,15 @@ export default class D3Tree extends Component {
       .attr('y', `${-26 * reductionRatio}px`)
       .attr('x', `${-46 * reductionRatio}px`)
       .style('font-size', `${0.8 * reductionRatio}em`)
-      .text((d) => { return d.data.ownerUserName; });
+      .text((d) => {
+        if (d.data.ownerType === '1') {
+          return d.data.ownerUserName;
+        } else if (d.data.ownerType === '2') {
+          return d.data.ownerGroupName;
+        } else if (d.data.ownerType === '3') {
+          return d.data.ownerCompanyName;
+        }
+      });
 
     nodeUpdate.select('text')
       .attr('cursor', 'pointer');
