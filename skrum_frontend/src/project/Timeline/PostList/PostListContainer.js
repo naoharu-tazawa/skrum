@@ -18,11 +18,22 @@ class PostListContainer extends Component {
   }
 }
 
+const mapReplies = (reply) => {
+  const { postId, posterId, posterName, post, postedDatetime } = reply;
+  return {
+    postId,
+    posterId,
+    posterName,
+    post,
+    postedDatetime,
+  };
+};
+
 const mapStateToProps = (state) => {
   const { data = [] } = state.timeline || {};
   const items = data.map((item) => {
     const { postId, posterId, posterName, post, postedDatetime,
-    okrId, likesCount, likedFlg, replies } = item;
+    okrId, likesCount, likedFlg, replies = [] } = item;
     return {
       id: postId,
       posterId,
@@ -32,7 +43,7 @@ const mapStateToProps = (state) => {
       okrId,
       likesCount,
       likedFlg,
-      replies,
+      replies: replies.map(mapReplies),
     };
   });
   return { items };

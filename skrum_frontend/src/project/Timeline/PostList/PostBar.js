@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { postPropTypes } from './propTypes';
+import { postPropTypes, replyPropTypes } from './propTypes';
 import styles from './PostBar.css';
 
 const imageDim = 2.25;
@@ -30,11 +30,12 @@ export default class PostBar extends Component {
 
   static propTypes = {
     timeline: postPropTypes,
+    reply: replyPropTypes,
   };
 
   render() {
     const { posterId, posterName, post, postedDatetime, likesCount,
-    likedFlg } = this.props.timeline;
+    likedFlg } = this.props.timeline || this.props.reply;
     return (
       <div className={styles.component}>
         <div className={styles.name} style={colStyle.name}>{posterId}</div>
