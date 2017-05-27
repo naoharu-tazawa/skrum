@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { okrPropTypes, keyResultPropTypes } from './propTypes';
+import { replacePath } from '../../../util/RouteUtil';
 import styles from './OKRBar.css';
 
 const gap = 1;
@@ -51,13 +53,15 @@ export default class OKRBar extends Component {
           <div style={{ ...colStyle.krCount, margin: `auto ${gap}em auto 0` }}>KR</div>
         </div>);
     }
-    const { name, achievementRate, owner, keyResults } = okr || keyResult;
+    const { id, name, achievementRate, owner, keyResults } = okr || keyResult;
     return (
       <div className={this.getBaseStyles()}>
         <div className={styles.mapImage} style={colStyle.mapImage} />
         <div className={styles.name} style={colStyle.name}>
           {keyResult ? <span className={styles.keyResultConnector}>└</span> : null}
-          <span>{name}</span>
+          <Link to={replacePath({ subSection: 'o', subId: `${id}` })} className={styles.okrDetailsLink}>
+            {name}
+          </Link>
         </div>
         <div className={styles.progressBox} style={colStyle.progressBar}>
           <div className={styles.progressPercent}>{achievementRate}%</div>

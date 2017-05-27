@@ -5,6 +5,7 @@ import OKRContainer from './OKR/OKRContainer';
 import MapContainer from './Map/MapContainer';
 import TimelineContainer from './Timeline/TimelineContainer';
 import GroupManagementContainer from './GroupManagement/GroupManagementContainer';
+import OKRDetailsContainer from './OKRDetails/OKRDetailsContainer';
 import styles from './GroupRouter.css';
 
 export default class GroupRouter extends Component {
@@ -13,11 +14,16 @@ export default class GroupRouter extends Component {
       groupId: PropTypes.string.isRequired,
       timeframeId: PropTypes.string.isRequired,
       tab: tabPropType.isRequired,
+      okrId: PropTypes.string,
     }),
   };
 
   renderContent() {
-    switch (this.props.params.tab) {
+    const { tab, okrId } = this.props.params;
+    if (okrId) {
+      return <OKRDetailsContainer />;
+    }
+    switch (tab) {
       case 'objective':
         return <OKRContainer subject="group" />;
       case 'map':

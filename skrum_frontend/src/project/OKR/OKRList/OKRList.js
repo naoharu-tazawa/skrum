@@ -23,7 +23,7 @@ export default class OKRList extends Component {
   render() {
     const { items } = this.props;
     const { openedKeyResults } = this.state;
-    const mapKeyResults = keyResult => (
+    const mapKeyResult = keyResult => (
       <a
         key={keyResult.id}
         tabIndex={keyResult.id}
@@ -47,7 +47,7 @@ export default class OKRList extends Component {
               >
                 <OKRBar okr={okr} />
               </a>),
-              ...(!openedKeyResults[okr.id] ? [] : okr.keyResults.map(mapKeyResults)),
+              ...(!openedKeyResults[okr.id] ? [] : okr.keyResults.map(mapKeyResult)),
             ];
           }))}
         </div>

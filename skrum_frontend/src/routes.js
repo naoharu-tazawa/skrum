@@ -44,6 +44,9 @@ export default <Route path="/" component={App} >
     <Route path="/user/:userId/:timeframeId/:tab" component={UserRouter} />
     <Route path="/group/:groupId/:timeframeId/:tab" component={GroupRouter} />
     <Route path="/company/:companyId/:timeframeId/:tab" component={CompanyRouter} />
+    <Route path="/user/:userId/:timeframeId/:tab/o/:okrId" component={UserRouter} />
+    <Route path="/group/:groupId/:timeframeId/:tab/o/:okrId" component={GroupRouter} />
+    <Route path="/company/:companyId/:timeframeId/:tab/o/:okrId" component={CompanyRouter} />
   </Route>
   <Route path="/login" component={AnonymousRegion} />
   <IndexRoute component={RedirectRoute} />

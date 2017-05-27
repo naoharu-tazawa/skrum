@@ -1,12 +1,13 @@
 import _ from 'lodash';
 
 export const explodePath = (path = window.location.pathname) => {
-  const [, section, id, timeframeId, tab] = path.split('/');
-  return { section, id, timeframeId, tab };
+  const [, section, id, timeframeId, tab, subSection, subId] = path.split('/');
+  const basicParts = { section, id, timeframeId, tab };
+  return subSection ? { ...basicParts, subSection, subId } : basicParts;
 };
 
-export const implodePath = ({ section, id, timeframeId, tab }) =>
-  `/${section}/${id}/${timeframeId}/${tab}`;
+export const implodePath = ({ section, id, timeframeId, tab, subSection, subId }) =>
+  `/${section}/${id}/${timeframeId}/${tab}${subSection ? `/${subSection}/${subId}` : ''}`;
 
 export const replacePath = components =>
   implodePath({ ...explodePath(), ...components });

@@ -6,6 +6,7 @@ import okrReducer from '../../project/OKR/reducer';
 import mapReducer from '../../project/Map/reducer';
 import timelineReducer from '../../project/Timeline/reducer';
 import groupManagementReducer from '../../project/GroupManagement/reducer';
+import okrDetailsReducer from '../../project/OKRDetails/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   map: mapReducer,
   groupManagement: groupManagementReducer,
   timeline: timelineReducer,
+  okr: okrDetailsReducer,
   routing: routerReducer,
 });
 
