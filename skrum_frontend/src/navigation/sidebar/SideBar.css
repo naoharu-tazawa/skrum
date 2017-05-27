@@ -11,6 +11,7 @@
   z-index:2;
   background-color: #626A7F;
   box-sizing: border-box;
+  transition: 0.3s width;
 }
 .sideNavTitle {
   position: relative;
