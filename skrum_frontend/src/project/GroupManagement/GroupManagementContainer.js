@@ -79,12 +79,8 @@ class GroupManagementContainer extends Component {
     }
     return (
       <div className={styles.container}>
-        <div className={styles.userInfo}>
-          {this.renderInfoEditContainer()}
-        </div>
-        <div className={styles.okrList}>
-          {this.renderGroupManagementListContainer()}
-        </div>
+        {this.renderInfoEditContainer()}
+        {this.renderGroupManagementListContainer()}
       </div>);
   }
 }

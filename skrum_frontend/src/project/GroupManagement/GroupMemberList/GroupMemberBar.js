@@ -3,31 +3,6 @@ import PropTypes from 'prop-types';
 import { groupMemberPropTypes } from './propTypes';
 import styles from './GroupMemberBar.css';
 
-const gap = 1;
-const imageDim = 2.25;
-const progressBarWidth = 10;
-const ownerBoxWidth = 10;
-
-const colStyle = {
-  mapImage: {
-    minWidth: `${imageDim}em`,
-//    height: `${imageDim}em`,
-  },
-  name: {
-    width: '100%',
-  },
-  progressBar: {
-    minWidth: `${progressBarWidth}em`,
-  },
-  ownerBox: {
-    minWidth: `${ownerBoxWidth}em`,
-  },
-  tool: {
-    minWidth: `${imageDim}em`,
-    height: `${imageDim}em`,
-  },
-};
-
 export default class GroupMemberBar extends Component {
 
   static propTypes = {
@@ -39,20 +14,18 @@ export default class GroupMemberBar extends Component {
     const { header, member } = this.props;
     if (header) {
       return (
-        <div className={styles.header}>
-          <div style={{ ...colStyle.name, margin: 'auto 0' }}>名前</div>
-          <div style={{ ...colStyle.progressBar, margin: `auto ${gap}em auto 0` }}>役職</div>
-          <div style={{ ...colStyle.progressBar, margin: `auto ${gap}em auto 0` }}>最終ログイン日時</div>
-          <div style={{ ...colStyle.deleteButton, margin: `auto ${gap}em auto 0` }} />
-        </div>);
+        <tr>
+          <th className={styles.name}>名前</th>
+          <th className={styles.position}>役職</th>
+          <th className={styles.update}>最終更新日</th>
+        </tr>);
     }
     const { name, position, lastLogin } = member;
     return (
-      <div className={styles.component}>
-        <div className={styles.name} style={colStyle.name}>{name}</div>
-        <div className={styles.name} style={colStyle.name}>{position}</div>
-        <div className={styles.name} style={colStyle.name}>{lastLogin}</div>
-        <div className={styles.name} style={colStyle.name}>×</div>
-      </div>);
+      <tr>
+        <td><span><img src="/img/profile/img_leader.jpg" alt="" /></span>{name}</td>
+        <td>{position}</td>
+        <td>{lastLogin}</td>
+      </tr>);
   }
 }

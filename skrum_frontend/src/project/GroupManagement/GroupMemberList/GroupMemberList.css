@@ -1,36 +1,41 @@
-.component {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  font-size: small;
-  color: #626A7F;
-}
-.okrHeader {
-  display: flex;
-  /*
-  height: 2em;
-  border-width: thin;
-  border-style: solid;
-  position: relative;
-  */
-  margin-bottom: 1px;
-  z-index: 2;
-}
-.okrBars {
-  max-height: 100%;
-  overflow-y: auto;
-  /*
-  border-width: thin;
-  border-left-style: solid;
-  border-right-style: solid;
-  border-bottom-style: solid;
-  */
-  position: relative;
-  top: -1px;
-}
-.okrBar {
-  /*
-  border-width: thin;
-  border-top-style: solid;
-  */
-}
+@charset "UTF-8";
+
+/* -------- CLEAR -------- */
+.cf:after {
+  clear: both;
+  display: block;
+  content: ""; }
+
+/* ====================================================
+共通
+==================================================== */
+.ttl_setion {
+  padding: 14px 70px 12px;
+  background: #d8dfe5;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: .5px; }
+
+/* ====================================================
+プロファイル画面
+==================================================== */
+.cont_box {
+  background: #fff; }
+
+.member_list .cont_box {
+  margin-bottom: 80px;
+  padding-bottom: 66px; }
+
+.member_list table {
+  width: 100%;
+  font-size: 14px; }
+  .member_list table th {
+    padding: 15px 0 12px;
+    border-bottom: 1px solid #d8dfe5; }
+  .member_list table td {
+    padding: 10px 0;
+    border-bottom: 1px solid #d8dfe5; }
+    .member_list table td:first-of-type {
+      padding-left: 70px; }
+    .member_list table td span {
+      margin-right: 10px; }
