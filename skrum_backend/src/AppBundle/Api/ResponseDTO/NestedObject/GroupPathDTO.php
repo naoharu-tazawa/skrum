@@ -19,18 +19,11 @@ class GroupPathDTO
     private $groupTreeId;
 
     /**
-     * @var string
+     * @var array
      *
-     * @JSON\Type("string")
+     * @JSON\Type("array")
      */
     private $groupPath;
-
-    /**
-     * @var string
-     *
-     * @JSON\Type("string")
-     */
-    private $groupPathName;
 
     /**
      * Set groupTreeId
@@ -59,7 +52,7 @@ class GroupPathDTO
     /**
      * Set groupPath
      *
-     * @param string groupPath
+     * @param array groupPath
      *
      * @return GroupPathDTO
      */
@@ -73,34 +66,10 @@ class GroupPathDTO
     /**
      * Get groupPath
      *
-     * @return string
+     * @return array
      */
     public function getGroupPath()
     {
         return $this->groupPath;
-    }
-
-    /**
-     * Set groupPathName
-     *
-     * @param string $groupPathName
-     *
-     * @return GroupPathDTO
-     */
-    public function setGroupPathName($groupPathName)
-    {
-        $this->groupPathName = $groupPathName;
-
-        return $this;
-    }
-
-    /**
-     * Get groupPathName
-     *
-     * @return string
-     */
-    public function getGroupPathName()
-    {
-        return $this->groupPathName;
     }
 }

@@ -14,6 +14,7 @@ use AppBundle\Entity\TGroupTree;
 use AppBundle\Entity\TOkr;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\GroupPathElementDTO;
 
 /**
  * グループサービスクラス
@@ -85,10 +86,24 @@ class GroupService extends BaseService
         $tGroupTreeArray = $tGroupTreeRepos->findBy(array('group' => $groupId));
         $groupPathArray = array();
         foreach ($tGroupTreeArray as $tGroupTree) {
+            $groupTreePathArray = explode('/', $tGroupTree->getGroupTreePath(), -1);
+            $groupTreePathNameArray = explode('/', $tGroupTree->getGroupTreePathName(), -1);
+            $count = count($groupTreePathArray);
+            $groupIdAndNameArray = array();
+            for ($i = 0; $i < $count; ++$i) {
+                $groupPathElementDTO = new GroupPathElementDTO();
+                if ($i === 0) {
+                    $groupPathElementDTO->setId($companyId);
+                } else {
+                    $groupPathElementDTO->setId($groupTreePathArray[$i]);
+                }
+                $groupPathElementDTO->setName($groupTreePathNameArray[$i]);
+                $groupIdAndNameArray[] = $groupPathElementDTO;
+            }
+
             $groupPathDTO = new GroupPathDTO();
             $groupPathDTO->setGroupTreeId($tGroupTree->getId());
-            $groupPathDTO->setGroupPath($tGroupTree->getGroupTreePath());
-            $groupPathDTO->setGroupPathName($tGroupTree->getGroupTreePathName());
+            $groupPathDTO->setGroupPath($groupIdAndNameArray);
             $groupPathArray[] = $groupPathDTO;
         }
 
@@ -97,8 +112,10 @@ class GroupService extends BaseService
         $basicGroupInfoDTO->setName($mGroupArray['mGroup']->getGroupName());
         $basicGroupInfoDTO->setGroupPaths($groupPathArray);
         $basicGroupInfoDTO->setMission($mGroupArray['mGroup']->getMission());
-        $basicGroupInfoDTO->setLeaderUserId($mGroupArray['mGroup']->getLeaderUserId());
-        $basicGroupInfoDTO->setLeaderName($mGroupArray['mUser']->getLastName() . ' ' . $mGroupArray['mUser']->getFirstName());
+        if ($mGroupArray['mGroup']->getLeaderUserId() !== null) {
+            $basicGroupInfoDTO->setLeaderUserId($mGroupArray['mGroup']->getLeaderUserId());
+            $basicGroupInfoDTO->setLeaderName($mGroupArray['mUser']->getLastName() . ' ' . $mGroupArray['mUser']->getFirstName());
+        }
 
         return $basicGroupInfoDTO;
     }
