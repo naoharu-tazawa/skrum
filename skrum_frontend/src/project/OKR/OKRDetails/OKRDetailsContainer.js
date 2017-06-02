@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { okrPropTypes, keyResultsPropTypes } from '../OKRList/propTypes';
+import { ProgressSeriesPropTypes } from './propTypes';
 import OKRBar from '../OKRList/OKRBar';
 import OKRList from '../OKRList/OKRList';
+import OKRObjectiveProgressChart from './OKRObjectiveProgressChart';
 import { fetchOKRDetails } from './action';
 import { explodePath, isPathFinal } from '../../../util/RouteUtil';
 import { mapOKR, mapKeyResult } from '../../../util/OKRUtil';
@@ -16,6 +18,7 @@ class OKRDetailsContainer extends Component {
     error: PropTypes.shape({ message: PropTypes.string.isRequired }),
     okr: okrPropTypes,
     keyResults: keyResultsPropTypes,
+    progressSeries: ProgressSeriesPropTypes,
     dispatchFetchOKRDetails: PropTypes.func,
     pathname: PropTypes.string,
   };
@@ -43,7 +46,7 @@ class OKRDetailsContainer extends Component {
   }
 
   render() {
-    const { isFetching, error, okr, keyResults = [] } = this.props;
+    const { isFetching, error, okr, keyResults = [], progressSeries = [] } = this.props;
     if (error) {
       return <div className={`${styles.container} ${styles.error}`} >エーラ：{error.message}</div>;
     }
@@ -57,6 +60,11 @@ class OKRDetailsContainer extends Component {
             <div className={styles.sectionLabel}>Ｏの詳細</div>
             <OKRBar okr={okr} display="full" />
           </div>
+          <div className={styles.chart}>
+            <div className={styles.sectionLabel}>Oの進捗状況</div>
+            <OKRObjectiveProgressChart progressSeries={progressSeries} />
+            <div style={{ clear: 'both' }} />
+          </div>
         </div>
         <div className={styles.keyResults}>
           <div className={styles.sectionLabel}>上記Ｏに紐づくＫＲ</div>
@@ -68,7 +76,7 @@ class OKRDetailsContainer extends Component {
 
 const mapStateToProps = (state) => {
   const { okr } = state;
-  const { isFetching, error, objective, keyResults } = okr;
+  const { isFetching, error, objective, keyResults, chart } = okr;
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
   const basicProps = { isFetching, error, pathname };
@@ -76,6 +84,7 @@ const mapStateToProps = (state) => {
     ...basicProps,
     okr: mapOKR(objective, []),
     keyResults: keyResults.map(mapKeyResult),
+    progressSeries: chart,
   };
 };
 

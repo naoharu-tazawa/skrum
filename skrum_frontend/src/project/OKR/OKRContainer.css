@@ -252,7 +252,7 @@
 
 .list {
   margin: 30px 0 80px;
-  background-color: #fff;
+  /*background-color: #fff;*/
 }
 .list .ttl {
   padding: 7px 50px;
@@ -479,7 +479,7 @@
   width: 25px;
   height: 25px;
   padding-right: 6px;
-  background: transparent url(/img/common/inc_arrow_l.png) no-repeat -2px 0px;
+  background: transparent url(/img/common/inc_arrow_l.png) no-repeat -2px 0;
   vertical-align: middle;
   content: "";
 }
@@ -487,8 +487,8 @@
   display: inline-block;
   width: 25px;
   height: 25px;
-  padding-right: 6px;
-  background: transparent url(/img/common/inc_arrow_r.png) no-repeat 9px 0px;
+  padding-right: 4px;
+  background: transparent url(/img/common/inc_arrow_r.png) no-repeat 6px 0;
   vertical-align: middle;
   content: "";
 }
@@ -498,7 +498,7 @@
 }
 .info {
   width: 100%;
-  margin-right: 1em;
+  margin-right: 1.5em;
 }
 .overall {
   background-color: #fff;

@@ -34,10 +34,11 @@ export default class OKRAlignmentsInfo extends Component {
       value,
       fill: fills[index],
     }));
-    const renderLabel = props => (
-      <text {...props} fill="#626A7F" fontSize="x-small">
-        {props.name}
-      </text>);
+    const renderLabel = (
+      // eslint-disable-next-line no-unused-vars
+      { percent, cornerRadius, innerRadius, outerRadius, startAngle, endAngle, midAngle, index,
+        name, ...textProps }) => (
+          <text {...textProps} fill="#626A7F" fontSize="x-small">{name}</text>);
     return (
       <div className={styles.component}>
         <div className={styles.header}>

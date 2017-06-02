@@ -5,6 +5,9 @@
   width: 100%;
   overflow: scroll;
 }
+.error {
+  color: crimson;
+}
 .sectionLabel {
   background-color: #D8DFE5;
   color: #626A7F;
@@ -14,20 +17,26 @@
   display: flex;
   align-items: center;
 }
+.header {
+  display: flex;
+  margin-bottom: 1.5em;
+}
 .okr {
+  width: 100%;
+  margin-right: 1.5em;
+  background-color: #fff;
+}
+.chart {
+  background-color: #fff;
 }
 .keyResults {
   display: flex;
   flex-direction: column;
   height: 100%;
-  margin-top: 20px;
   margin-bottom: 30px;
 }
 .spinner {
   height: 100%;
   width: 100%;
   background: url(/img/rolling.svg) center no-repeat;
-}
-.error {
-  color: crimson;
 }
