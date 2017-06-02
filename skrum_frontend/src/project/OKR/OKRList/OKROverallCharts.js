@@ -26,7 +26,7 @@ export default class OKROverallCharts extends Component {
     const ratesGroupCountData = ratesGroupCount.map(([fill, value]) => ({ value, fill }));
     const chartRadius = 60;
     return (
-      <div className={styles.component}>
+      <div className={styles.content}>
         <Surface
           className={styles.progressChart}
           width={chartRadius * 2}

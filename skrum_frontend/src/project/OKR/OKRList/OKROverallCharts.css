@@ -1,7 +1,7 @@
-.component {
+.content {
+  padding: 20px 10px;
 }
 .progressChart, .okrCountChart {
-  margin-top: 1.25em;
   fill: #626A7F;
 }
 .progressChart {

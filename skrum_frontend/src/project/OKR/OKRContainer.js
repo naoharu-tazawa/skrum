@@ -150,34 +150,42 @@ class OKRContainer extends Component {
           </div>
           <OKRDetailsContainer />
         </div>
-        <div style={showDetails ? { display: 'none' } : {}}>
-          <div className={styles.header}>
-            <div className={styles.info}>
-              <div className={styles.sectionLabel}>基本情報</div>
+        <article style={showDetails ? { display: 'none' } : {}}>
+          <section className={`${styles.overall_info} ${styles.cf}`}>
+            <div className={`${styles.basic_info} ${styles.h_line} ${styles.floatL}`}>
+              <div className={styles.ttl}><h2 className={styles.ttl_bi}>基本情報</h2></div>
               {this.renderInfoContainer()}
             </div>
-            <div className={styles.overall} style={{ minWidth: (chartRadius * 4) + 80 + 14 }}>
-              <div className={styles.sectionLabel}>全体の状況</div>
+            <div className={`${styles.overall_situation} ${styles.h_line} ${styles.floatR}`} style={{ minWidth: (chartRadius * 4) + 80 + 14 }}>
+              <div className={styles.ttl}><h2 className={styles.ttl_os}>全体の状況</h2></div>
               {this.renderChartContainer()}
             </div>
-          </div>
-          <div className={styles.okrList}>
-            <div className={styles.sectionLabel}>
-              <Link
-                className={showAlignmentsInfo || subject === 'company' ? styles.tabNormal : styles.tabSelected}
-                onClick={() => this.setState({ showAlignmentsInfo: false })}
-                to={pathname}
-              >
-                所有OKR一覧
-              </Link>
-              {subject === 'company' ? null : (
-                <Link
-                  className={showAlignmentsInfo ? styles.tabSelected : styles.tabNormal}
-                  onClick={() => this.setState({ showAlignmentsInfo: true })}
-                  to={pathname}
-                >
-                  目標の紐付け先
-                </Link>)}
+          </section>
+          <section className={styles.list}>
+            <div className={styles.ttl}>
+              <nav>
+                <ul>
+                  <li>
+                    <Link
+                      className={showAlignmentsInfo || subject === 'company' ? '' : styles.active}
+                      onClick={() => this.setState({ showAlignmentsInfo: false })}
+                      to={pathname}
+                    >
+                      所有OKR一覧
+                    </Link>
+                  </li>
+                  <li>
+                    {subject === 'company' ? null : (
+                      <Link
+                        className={showAlignmentsInfo ? styles.active : ''}
+                        onClick={() => this.setState({ showAlignmentsInfo: true })}
+                        to={pathname}
+                      >
+                        目標の紐付け先
+                      </Link>)}
+                  </li>
+                </ul>
+              </nav>
             </div>
             <div style={showAlignmentsInfo ? { display: 'none' } : {}}>
               {this.renderOKRListContainer()}
@@ -185,8 +193,8 @@ class OKRContainer extends Component {
             <div style={showAlignmentsInfo ? {} : { display: 'none' }}>
               {this.renderOKRAlignmentsInfoContainer()}
             </div>
-          </div>
-        </div>
+          </section>
+        </article>
       </div>
     );
   }

@@ -91,6 +91,7 @@
         padding-left: 10px;
         vertical-align: middle; }
         .profile_box .profile_txt .leader dl dt {
+          font-size: 10px;
           margin-bottom: 5px;
           color: #8e9aa6; }
         .profile_box .profile_txt .leader dl dd {
