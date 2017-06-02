@@ -191,6 +191,10 @@ class OKRContainer extends Component {
               {this.renderOKRListContainer()}
             </div>
             <div style={showAlignmentsInfo ? {} : { display: 'none' }}>
+              <div className={styles.alignmentheader}>
+                <span className={styles.alignment}>紐付け先</span>
+                <span className={styles.numberOfOkrs}>目標数</span>
+              </div>
               {this.renderOKRAlignmentsInfoContainer()}
             </div>
           </section>

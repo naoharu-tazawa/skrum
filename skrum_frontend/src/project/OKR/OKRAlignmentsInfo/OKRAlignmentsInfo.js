@@ -3,21 +3,9 @@ import { Surface, Pie } from 'recharts';
 import { AlignmentsInfoPropTypes } from './propTypes';
 import styles from './OKRAlignmentsInfo.css';
 
-const nameColumnWidth = 16;
-const countColumnWidth = 4;
 const chartRadius = 60;
 const widthFactor = 8;
 const heightFactor = 3.5;
-
-const colStyle = {
-  name: {
-    minWidth: `${nameColumnWidth}em`,
-  },
-  count: {
-    minWidth: `${countColumnWidth}em`,
-    textAlign: 'right',
-  },
-};
 
 export default class OKRAlignmentsInfo extends Component {
 
@@ -40,13 +28,8 @@ export default class OKRAlignmentsInfo extends Component {
         name, ...textProps }) => (
           <text {...textProps} fill="#626A7F" fontSize="x-small">{name}</text>);
     return (
-      <div className={styles.component}>
-        <div className={styles.header}>
-          <div style={{ width: chartRadius * widthFactor }} />
-          <div style={{ ...colStyle.name }}>紐付け先</div>
-          <div style={{ ...colStyle.count }}>目標数</div>
-        </div>
-        <div className={styles.content}>
+      <div className={`${styles.content} ${styles.goal_for}`}>
+        <div className={`${styles.grap} ${styles.alignC}`}>
           <Surface
             className={styles.okrAlignChart}
             width={chartRadius * widthFactor}
@@ -69,11 +52,15 @@ export default class OKRAlignmentsInfo extends Component {
           <div className={styles.list}>
             {details.map(({ companyId, groupId, name, numberOfOkrs }) => (
               <div key={`${companyId}${groupId}`} className={styles.detail}>
-                <div className={styles.nameBox} style={colStyle.name}>
-                  <div className={styles.nameImage} />
-                  <div className={styles.name}>{name}</div>
+                <div className={styles.group}>
+                  <div className={`${styles.user_info} ${styles.cf}`}>
+                    <div className={`${styles.avatar} ${styles.circle} ${styles.circle_gray} ${styles.floatL}`}><img src="/img/common/icn_user.png" alt="User Name" /></div>
+                    <div className={`${styles.info} ${styles.floatL}`}>
+                      <p className={styles.user_name}>{name}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className={styles.count} style={colStyle.count}>{numberOfOkrs}</div>
+                <div className={styles.target_number}>{numberOfOkrs}</div>
               </div>))}
           </div>
           <div style={{ clear: 'both' }} />

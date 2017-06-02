@@ -242,7 +242,7 @@
   background-color: #fff;
 }
 .overall_info .content {
-  padding: 30px 65px 30px 70px;
+  padding: 30px 5px 30px 0px;
 }
 .overall_info h2 {
   font-size: 14px;
@@ -509,6 +509,19 @@
   height: 100%;
   /*margin-top: 20px;*/
   margin-bottom: 30px;
+}
+.alignmentheader {
+  padding: 15px 0px 5px 0px;
+  border-bottom: 1px solid #d8dfe5;
+  background-color: #fff;
+  text-align: right;
+  font-size: 14px;
+}
+.alignment {
+  margin-right: 270px;
+}
+.numberOfOkrs {
+  margin-right: 165px;
 }
 .spinner {
   height: 100%;
