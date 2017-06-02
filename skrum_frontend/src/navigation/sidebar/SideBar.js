@@ -16,15 +16,15 @@ class SectionItem extends Component {
 
   getStyles() {
     const { section, id } = this.props;
-    const { section: currentSection, id: currentId } = explodePath();
-    const isActive = section === currentSection && `${id}` === currentId;
+    const { subject, id: currentId } = explodePath();
+    const isActive = subject === section && `${id}` === currentId;
     return `${styles.sectionItem} ${isActive ? styles.isActive : ''}`;
   }
 
   getPath() {
     const { section, id } = this.props;
     // if (/^(user|group|company)$/.test(section)) {
-    return replacePath({ section, id });
+    return replacePath({ subject: section, id }, { basicOnly: true });
     // }
   }
 

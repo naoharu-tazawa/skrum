@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { Link } from 'react-router';
 import { userPropTypes } from './propTypes';
 import styles from './UserInfo.css';
+import { replacePath } from '../../../util/RouteUtil';
 import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
 
 export default class UserInfo extends Component {
@@ -15,6 +16,11 @@ export default class UserInfo extends Component {
   render() {
     const { user, infoLink } = this.props;
     const { name, departments, position, phoneNumber, emailAddress, lastUpdate } = user;
+    const groupsLink = departments.map(({ groupId, groupName }, index) =>
+      <span key={groupId}>
+        {index ? '／' : ''}
+        <Link to={replacePath({ subject: 'group', id: groupId })} className={styles.groupLink}>{groupName}</Link>
+      </span>);
     return (
       <div className={styles.component}>
         <div className={styles.userBox}>
@@ -23,11 +29,13 @@ export default class UserInfo extends Component {
         </div>
         <div className={styles.userInfo}>
           <div className={styles.userName}>{name}</div>
-          <div className={styles.userDept}>所属部署: {(_.head(departments) || {}).groupName}</div>
           <table>
             <tbody>
+              <tr className={styles.userDept}>
+                <td className={styles.userLabel}>所属部署:</td><td>{groupsLink}</td>
+              </tr>
               <tr className={styles.userRank}>
-                <td className={styles.userLabel}>役 職:</td><td>{position}</td>
+                <td className={styles.userLabel}>役職:</td><td>{position}</td>
               </tr>
               <tr className={styles.userPart}>
                 <td className={styles.userLabel}>Tel:</td><td>{phoneNumber}</td>

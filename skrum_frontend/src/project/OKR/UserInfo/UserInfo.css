@@ -38,6 +38,9 @@
   font-size: x-small;
   color: darkgray;
 }
+.userDept .userLabel {
+  margin-bottom: 1em;
+}
 .userRank {
   font-size: small;
   vertical-align: top;
@@ -59,4 +62,8 @@
   background-color: #F0F4F5;
   color: #8E9AA6;
   white-space: nowrap;
+}
+.groupLink {
+  color: darkgray;
+  text-decoration-line: underline;
 }

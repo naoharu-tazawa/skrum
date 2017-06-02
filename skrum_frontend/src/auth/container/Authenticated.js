@@ -28,7 +28,7 @@ class Authenticated extends Component {
     if (!isAuthorized) {
       browserHistory.push(login);
     } else if (userId && timeframeId && window.location.pathname === '/user') {
-      browserHistory.push(implodePath({ section: 'user', id: userId, timeframeId, tab: 'objective' }));
+      browserHistory.push(implodePath({ subject: 'user', id: userId, timeframeId, tab: 'objective' }));
     }
   }
 

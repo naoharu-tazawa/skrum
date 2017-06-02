@@ -35,6 +35,10 @@
 }
 .groupDept {
   font-size: x-small;
+  color: darkgray;
+}
+.groupTree {
+  margin-top: 0.5em;
 }
 .groupGoal {
   font-size: x-small;
@@ -62,4 +66,8 @@
   background-color: #F0F4F5;
   color: #8E9AA6;
   white-space: nowrap;
+}
+.groupLink {
+  color: darkgray;
+  text-decoration-line: underline;
 }

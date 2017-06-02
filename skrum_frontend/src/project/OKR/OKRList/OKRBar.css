@@ -1,14 +1,27 @@
 .component {
-  display: flex;
   overflow: hidden;
   font-size: small;
-  margin: 1px auto;
+  margin: 1px auto 0 auto;
   padding: 5px 40px;
   background-color: #fff;
   color: #626A7F;
+  max-height: 500px;
+  transition: all 0.3s ease-in;
+}
+.normal {
+  display: flex;
+}
+.full{
+  display: block;
+}
+.collapsed {
+  max-height: 0;
+  padding: 0 40px;
+  margin: 0 auto;
+  transition: all 0.3s ease-out;
 }
 .keyResult {
-  background-color: #fbfbfb;
+  background-color: #F7F9F9;
 }
 .keyResultConnector {
   margin: auto 1em auto 0;
@@ -16,7 +29,7 @@
 .header {
   display: flex;
   width: 100%;
-  margin: auto 0;
+  padding: 1em 0 0.5em 0;
   background-color: #fff;
 }
 .mapImage {
@@ -36,27 +49,66 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: auto 1em;
+  margin: auto 0;
   font-size: 16px;
+}
+.detailed .name {
+  margin: 1em 0;
+}
+.detail {
+  font-size: smaller;
+  margin-top: 1em;
+}
+.progressColumn {
+  margin: auto 30px auto 1em;
+}
+.full .progressColumn {
+  margin: auto 0;
 }
 .progressBox {
   display: flex;
-  margin: auto 30px auto 1em;
-  width: 150px;
+  /*width: 150px;*/
 }
 .progressPercent {
   margin-right: 4px;
   width: 4em;
   font-size: x-small;
+  font-weight: bold;
 }
 .progressBar {
-  height: 12px;
-  border: 1px solid #fff;
+  height: 8px;
+  width: 80px;
+  border-radius: 10px;
+  background-color: #D8DFE5;
+}
+.full .progressBar {
+  width: 100%;
+}
+.progress {
+  height: 100%;
+  max-width: 100%;
+  border-radius: 4px;
+}
+.progress.high {
+  background-color: #42BBF8;
+}
+.progress.mid {
+  background-color: #AFDB56;
+}
+.progress.low {
+  background-color: #EFB04C;
+}
+.progressConstituents {
+  font-size: x-small;
+  margin-top: 0.75em;
 }
 .ownerBox {
   display: flex;
   margin: auto 0;
   width: 150px;
+}
+.full .ownerBox {
+  margin: 1em 0;
 }
 .ownerImage {
   width: 3em;
@@ -68,10 +120,12 @@
   box-sizing: border-box;
 }
 .ownerName {
-  margin: auto 1em auto 1em;
+  margin: auto 1em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: x-small;
+  font-weight: bold;
 }
 .krCount {
   margin: auto;
@@ -86,6 +140,6 @@
   box-sizing: border-box;
   width: 20px;
 }
-.okrDetailsLink {
+.detailsLink {
   color: inherit;
 }

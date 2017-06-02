@@ -21,9 +21,9 @@ class Tab extends Component {
 
   getPath() {
     const { name: tab } = this.props;
-    const { section, ...others } = explodePath();
-    // if (/^(user|group|company)$/.test(section)) {
-    return implodePath({ ...others, section, tab });
+    const { subject, ...others } = explodePath();
+    // if (/^(user|group|company)$/.test(subject)) {
+    return implodePath({ ...others, subject, tab }, { basicOnly: true });
     // }
   }
 
@@ -107,13 +107,13 @@ export default class Header extends Component {
 
   render() {
     const { timeframes = [], handleLogoutSubmit } = this.props;
-    const { section } = explodePath();
+    const { subject } = explodePath();
     return (
       <div className={styles.container}>
         <Tab title="目標管理" name="objective" />
         <Tab title="マップ" name="map" />
-        {section === 'group' ? <Tab title="タイムライン" name="timeline" /> : null}
-        {section !== 'company' ? <Tab title="グループ管理" name="control" /> : null}
+        {subject === 'group' ? <Tab title="タイムライン" name="timeline" /> : null}
+        {subject !== 'company' ? <Tab title="グループ管理" name="control" /> : null}
         <div className={styles.rightArea}>
           <SubMenu {...{ timeframes, handleLogoutSubmit }} />
         </div>

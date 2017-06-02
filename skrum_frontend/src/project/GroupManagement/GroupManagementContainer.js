@@ -38,8 +38,8 @@ class GroupManagementContainer extends Component {
       dispatchFetchUserGroups,
       dispatchFetchGroupMembers,
     } = this.props;
-    const { section, id, timeframeId } = explodePath(pathname);
-    switch (section) {
+    const { subject, id, timeframeId } = explodePath(pathname);
+    switch (subject) {
       case 'user':
         dispatchFetchUserGroups(id, timeframeId);
         break;

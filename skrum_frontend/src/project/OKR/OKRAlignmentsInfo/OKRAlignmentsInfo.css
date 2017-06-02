@@ -1,0 +1,55 @@
+.component {
+  font-size: small;
+  color: #626A7F;
+}
+.okrAlignChart {
+  fill: #626A7F;
+}
+.okrAlignChart path[fill="none"] {
+  stroke: #626A7F;
+}
+.header {
+  display: flex;
+  width: 100%;
+  padding: 1em 0 0.5em 0;
+  background-color: #fff;
+}
+.content {
+  margin: 1px auto 0 auto;
+  background-color: #fff;
+}
+.list {
+  float: right;
+  width: calc(100% - 60px * 8);
+}
+.detail {
+  display: flex;
+  padding: 0.25em 0;
+  border-bottom: 1px solid whitesmoke;
+}
+.nameBox {
+  display: flex;
+  margin: auto 0;
+  width: 150px;
+}
+.nameImage {
+  width: 3em;
+  height: 3em;
+  border: 2px solid #fff;
+  background-color: #626A7F;
+  border-radius: 50%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.name {
+  margin: auto 1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: x-small;
+  font-weight: bold;
+}
+.count {
+  margin: auto 0;
+  font-size: smaller;
+}

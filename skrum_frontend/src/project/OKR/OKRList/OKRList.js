@@ -1,55 +1,53 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { okrsPropTypes } from './propTypes';
+import { okrsPropTypes, keyResultsPropTypes } from './propTypes';
 import OKRBar from './OKRBar';
 import styles from './OKRList.css';
 
 export default class OKRList extends Component {
 
   static propTypes = {
-    items: okrsPropTypes.isRequired,
+    okrs: okrsPropTypes,
+    keyResults: keyResultsPropTypes,
   };
 
   state = {
-    openedKeyResults: {},
+    expandedKeyResults: {},
   };
 
   toggleKeyResults(id) {
-    const { openedKeyResults } = this.state;
-    const { [id]: opened = false } = openedKeyResults;
-    this.setState({ openedKeyResults: { ...openedKeyResults, [id]: !opened } });
+    const { expandedKeyResults } = this.state;
+    const { [id]: expanded = false } = expandedKeyResults;
+    this.setState({ expandedKeyResults: { ...expandedKeyResults, [id]: !expanded } });
   }
 
   render() {
-    const { items } = this.props;
-    const { openedKeyResults } = this.state;
-    const mapKeyResult = keyResult => (
-      <a
-        key={keyResult.id}
-        tabIndex={keyResult.id}
-        className={styles.okrBar}
-      >
-        <OKRBar keyResult={keyResult} />
-      </a>);
+    const { okrs = [], keyResults = [] } = this.props;
+    const { expandedKeyResults } = this.state;
+    const mapKeyResult = ({ display, okr, keyResult }) =>
+      <OKRBar key={keyResult.id} {...{ display, okr, keyResult }} />;
     return (
       <div className={styles.component}>
         <div className={styles.okrHeader}>
-          <OKRBar header />
+          <OKRBar display={okrs.length ? 'o-header' : 'kr-header'} />
         </div>
-        <div className={styles.okrBars}>
-          {_.flatten(items.map((okr) => {
+        <div className={styles.bars}>
+          {_.flatten(okrs.map((okr) => {
+            const { id, keyResults: okrKeyResults = [] } = okr;
+            const display = expandedKeyResults[id] ? 'expanded' : 'collapsed';
             return [
               (<a
-                key={okr.id}
-                tabIndex={okr.id}
-                className={styles.okrBar}
-                onClick={() => { if (okr.keyResults.length > 0) this.toggleKeyResults(okr.id); }}
+                key={id}
+                tabIndex={id}
+                className={styles.bar}
+                onClick={() => { if (okrKeyResults.length > 0) this.toggleKeyResults(id); }}
               >
-                <OKRBar okr={okr} />
+                <OKRBar display="normal" okr={okr} />
               </a>),
-              ...(!openedKeyResults[okr.id] ? [] : okr.keyResults.map(mapKeyResult)),
+              ...(okrKeyResults.map(keyResult => mapKeyResult({ display, okr, keyResult }))),
             ];
           }))}
+          {keyResults.map(keyResult => mapKeyResult({ display: 'normal', keyResult }))}
         </div>
       </div>);
   }

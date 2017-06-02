@@ -9,12 +9,17 @@ export const getOwnerTypeSubject = (ownerType) => {
 };
 
 export const mapKeyResult = (kr) => {
-  const { okrId, okrName, achievementRate, ownerType, status, ratioLockedFlg } = kr;
+  const { okrId, okrName, okrDetail, unit, targetValue, achievedValue, achievementRate,
+    ownerType, status, ratioLockedFlg } = kr;
   const ownerSubject = `owner${getOwnerTypeSubject(ownerType)}`;
   const { [`${ownerSubject}Id`]: ownerId, [`${ownerSubject}Name`]: ownerName } = kr;
   return {
     id: okrId,
     name: okrName,
+    detail: okrDetail,
+    unit,
+    targetValue,
+    achievedValue,
     achievementRate,
     owner: { id: ownerId, name: ownerName, type: ownerType },
     status,
@@ -22,6 +27,6 @@ export const mapKeyResult = (kr) => {
   };
 };
 
-export const mapOKR = (okr, keyResults = okr.keyResults) => {
+export const mapOKR = (okr, keyResults = okr.keyResults || []) => {
   return { ...mapKeyResult(okr), keyResults: keyResults.map(mapKeyResult) };
 };

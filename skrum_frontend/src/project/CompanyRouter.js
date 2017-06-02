@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { tabPropType } from '../navigation/header/propTypes';
 import OKRContainer from './OKR/OKRContainer';
 import MapContainer from './Map/MapContainer';
-import OKRDetailsContainer from './OKRDetails/OKRDetailsContainer';
 import styles from './GroupRouter.css';
 
 export default class CompanyRouter extends Component {
@@ -17,10 +16,7 @@ export default class CompanyRouter extends Component {
   };
 
   renderContent() {
-    const { tab, okrId } = this.props.params;
-    if (okrId) {
-      return <OKRDetailsContainer />;
-    }
+    const { tab } = this.props.params;
     switch (tab) {
       case 'objective':
         return <OKRContainer subject="company" />;

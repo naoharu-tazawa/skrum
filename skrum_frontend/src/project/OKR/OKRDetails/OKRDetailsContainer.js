@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { okrPropTypes, keyResultsPropTypes } from '../OKR/OKRList/propTypes';
-import OKRDetails from './OKRDetails';
-import OKRList from '../OKR/OKRList/OKRList';
+import { okrPropTypes, keyResultsPropTypes } from '../OKRList/propTypes';
+import OKRBar from '../OKRList/OKRBar';
+import OKRList from '../OKRList/OKRList';
 import { fetchOKRDetails } from './action';
-import { explodePath, isPathFinal } from '../../util/RouteUtil';
-import { mapOKR, mapKeyResult } from '../../util/OKRUtil';
+import { explodePath, isPathFinal } from '../../../util/RouteUtil';
+import { mapOKR, mapKeyResult } from '../../../util/OKRUtil';
 import styles from './OKRDetailsContainer.css';
 
 class OKRDetailsContainer extends Component {
 
   static propTypes = {
     isFetching: PropTypes.bool,
-    details: okrPropTypes,
+    error: PropTypes.shape({ message: PropTypes.string.isRequired }),
+    okr: okrPropTypes,
     keyResults: keyResultsPropTypes,
     dispatchFetchOKRDetails: PropTypes.func,
     pathname: PropTypes.string,
@@ -35,24 +36,31 @@ class OKRDetailsContainer extends Component {
 
   fetchDetails(pathname) {
     const { dispatchFetchOKRDetails } = this.props;
-    const { subSection, subId } = explodePath(pathname);
-    if (subSection === 'o') {
-      dispatchFetchOKRDetails(subId);
+    const { aspect, aspectId } = explodePath(pathname);
+    if (aspect === 'o') {
+      dispatchFetchOKRDetails(aspectId);
     }
   }
 
   render() {
-    const { details, keyResults = [] } = this.props;
-    if (this.props.isFetching || !details) {
-      return <div className={styles.spinner} />;
+    const { isFetching, error, okr, keyResults = [] } = this.props;
+    if (error) {
+      return <div className={`${styles.container} ${styles.error}`} >エーラ：{error.message}</div>;
+    }
+    if (isFetching || !okr) {
+      return <div className={`${styles.container} ${styles.spinner}`} />;
     }
     return (
       <div className={styles.container}>
-        <div className={styles.details}>
-          <OKRDetails details={details} />
+        <div className={styles.header}>
+          <div className={styles.okr}>
+            <div className={styles.sectionLabel}>Ｏの詳細</div>
+            <OKRBar okr={okr} display="full" />
+          </div>
         </div>
         <div className={styles.keyResults}>
-          <OKRList items={keyResults} />
+          <div className={styles.sectionLabel}>上記Ｏに紐づくＫＲ</div>
+          <OKRList keyResults={keyResults} />
         </div>
       </div>);
   }
@@ -60,13 +68,13 @@ class OKRDetailsContainer extends Component {
 
 const mapStateToProps = (state) => {
   const { okr } = state;
-  const { isFetching, objective, keyResults } = okr;
+  const { isFetching, error, objective, keyResults } = okr;
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
-  const basicProps = { isFetching, pathname };
+  const basicProps = { isFetching, error, pathname };
   return !objective ? basicProps : {
     ...basicProps,
-    details: mapOKR(objective, []),
+    okr: mapOKR(objective, []),
     keyResults: keyResults.map(mapKeyResult),
   };
 };

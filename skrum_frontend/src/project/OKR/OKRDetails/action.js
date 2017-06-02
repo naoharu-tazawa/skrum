@@ -1,6 +1,6 @@
 import { createActions } from 'redux-actions';
-import { keyValueIdentity } from '../../util/ActionUtil';
-import { getJson } from '../../util/ApiUtil';
+import { keyValueIdentity } from '../../../util/ActionUtil';
+import { getJson } from '../../../util/ApiUtil';
 
 export const Action = {
   REQUEST_FETCH_OKR_DETAILS: 'REQUEST_FETCH_OKR_DETAILS',

@@ -28,7 +28,7 @@ const {
   Action.REQUEST_FETCH_COMPANY_OKRS,
 );
 
-const fetchMap = (section, node, request, finish) => (id, timeframeId) =>
+const fetchMap = (subject, node, request, finish) => (id, timeframeId) =>
   (dispatch, getStatus) => {
     const status = getStatus();
     const { isFetching } = status.map;
@@ -36,7 +36,7 @@ const fetchMap = (section, node, request, finish) => (id, timeframeId) =>
       return Promise.resolve();
     }
     dispatch(request());
-    return getJson(`/${section}/${id}/okrs.json`, status)({ tfid: timeframeId })
+    return getJson(`/${subject}/${id}/okrs.json`, status)({ tfid: timeframeId })
       .then(json => dispatch(finish(node, json)))
       .catch((err) => {
         const { message } = err;

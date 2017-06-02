@@ -28,7 +28,7 @@ const {
   Action.REQUEST_FETCH_COMPANY_BASICS,
 );
 
-const fetchBasics = (section, node, request, finish) => (id, timeframeId) =>
+const fetchBasics = (subject, node, request, finish) => (id, timeframeId) =>
   (dispatch, getStatus) => {
     const status = getStatus();
     const { isFetching } = status.basics;
@@ -36,7 +36,7 @@ const fetchBasics = (section, node, request, finish) => (id, timeframeId) =>
       return Promise.resolve();
     }
     dispatch(request());
-    return getJson(`/${section}/${id}/basics.json`, status)({ tfid: timeframeId })
+    return getJson(`/${subject}/${id}/basics.json`, status)({ tfid: timeframeId })
       .then(json => dispatch(finish(node, json)))
       .catch((err) => {
         const { message } = err;

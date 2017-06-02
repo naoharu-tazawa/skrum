@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import _ from 'lodash';
 import { okrPropTypes, keyResultPropTypes } from './propTypes';
 import { replacePath } from '../../../util/RouteUtil';
 import styles from './OKRBar.css';
@@ -33,45 +34,79 @@ const colStyle = {
 export default class OKRBar extends Component {
 
   static propTypes = {
-    header: PropTypes.bool,
+    display: PropTypes.oneOf(['o-header', 'kr-header', 'normal', 'full', 'expanded', 'collapsed']).isRequired,
     okr: okrPropTypes,
     keyResult: keyResultPropTypes,
   };
 
-  getBaseStyles = () =>
-    `${styles.component} ${this.props.keyResult ? styles.keyResult : ''}`;
+  getBaseStyles = (detail) => {
+    const { display } = this.props;
+    const baseStyles = [
+      styles.component,
+      ...[detail ? [styles.detailed] : []],
+      ...[display === 'full' ? [styles.full] : [styles.normal]],
+      ...[display === 'expanded' || display === 'collapsed' ? [styles.keyResult] : []],
+      ...[display === 'collapsed' ? [styles.collapsed] : []],
+    ];
+    return _.join(baseStyles, ' ');
+  };
+
+  getProgressStyles = rate =>
+    `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { header, okr, keyResult } = this.props;
-    if (header) {
+    const { display, okr, keyResult } = this.props;
+    if (display === 'o-header' || display === 'kr-header') {
       return (
         <div className={styles.header}>
-          <div style={{ ...colStyle.mapImage, margin: `auto ${gap}em` }}>MAP</div>
+          <div style={{ ...colStyle.mapImage, margin: `auto ${gap / 2}em` }} />
           <div style={{ ...colStyle.name, margin: 'auto 0' }}>OKR</div>
           <div style={{ ...colStyle.progressBar, margin: `auto ${gap}em auto 0` }}>進捗</div>
           <div style={{ ...colStyle.ownerBox, margin: 'auto 0' }}>所有者</div>
-          <div style={{ ...colStyle.krCount, margin: `auto ${gap}em auto 0` }}>KR</div>
+          <div style={{ ...colStyle.krCount, margin: `auto ${gap}em auto 0` }}>{display === 'o-header' ? 'KR' : ''}</div>
         </div>);
     }
-    const { id, name, achievementRate, owner, keyResults } = okr || keyResult;
+    const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
+      owner, keyResults } = keyResult || okr;
     return (
-      <div className={this.getBaseStyles()}>
+      <div className={this.getBaseStyles(detail)}>
         <div className={styles.mapImage} style={colStyle.mapImage} />
         <div className={styles.name} style={colStyle.name}>
-          {keyResult ? <span className={styles.keyResultConnector}>└</span> : null}
-          <Link to={replacePath({ subSection: 'o', subId: `${id}` })} className={styles.okrDetailsLink}>
-            {name}
-          </Link>
+          <div>
+            {keyResult && okr ? <span className={styles.keyResultConnector}>└</span> : null}
+            {keyResult || display === 'full' ? name : (
+              <Link
+                to={replacePath({ aspect: 'o', aspectId: `${id}` })}
+                className={styles.detailsLink}
+                onClick={e => e.stopPropagation()}
+              >
+                {name}
+              </Link>
+            )}
+          </div>
+          {detail ? <div className={styles.detail}>{detail}</div> : null}
         </div>
-        <div className={styles.progressBox} style={colStyle.progressBar}>
-          <div className={styles.progressPercent}>{achievementRate}%</div>
-          <progress className={styles.progressBar} max={100} value={achievementRate} />
+        <div className={styles.progressColumn}>
+          <div className={styles.progressBox} style={colStyle.progressBar}>
+            <div className={styles.progressPercent}>{achievementRate}%</div>
+            <div className={styles.progressBar}>
+              <div
+                className={this.getProgressStyles(achievementRate)}
+                style={{ width: `${achievementRate}%` }}
+              />
+            </div>
+          </div>
+          <div className={styles.progressConstituents}>
+            {achievedValue}{unit}／{targetValue}{unit}
+          </div>
         </div>
         <div className={styles.ownerBox} style={colStyle.ownerBox}>
           <div className={styles.ownerImage} />
           <div className={styles.ownerName}>{owner.name}</div>
         </div>
-        <div className={styles.krCount} style={colStyle.krCount}>{keyResults ? keyResults.length : ''}</div>
+        <div className={styles.krCount} style={colStyle.krCount}>
+          {keyResults && display !== 'full' ? keyResults.length : ''}
+        </div>
       </div>);
   }
 }

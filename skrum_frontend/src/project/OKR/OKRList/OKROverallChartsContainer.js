@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { okrsPropTypes } from './propTypes';
 import { mapOKR } from '../../../util/OKRUtil';
-import OKRList from './OKRList';
+import OKROverallCharts from './OKROverallCharts';
 
-class OKRListContainer extends Component {
+class OKROverallChartsContainer extends Component {
 
   static propTypes = {
     okrs: okrsPropTypes,
@@ -12,7 +12,7 @@ class OKRListContainer extends Component {
 
   render() {
     const { okrs = [] } = this.props;
-    return <OKRList okrs={okrs} />;
+    return <OKROverallCharts okrs={okrs} />;
   }
 }
 
@@ -22,14 +22,14 @@ const mapBasicsStateToProps = (subject, ownerType) => (state) => {
   return { okrs: okrs.map(okr => mapOKR({ ...okr, ownerType })) };
 };
 
-export const UserOKRListContainer = connect(
+export const UserOKROverallChartsContainer = connect(
   mapBasicsStateToProps('user', '1'),
-)(OKRListContainer);
+)(OKROverallChartsContainer);
 
-export const GroupOKRListContainer = connect(
+export const GroupOKROverallChartsContainer = connect(
   mapBasicsStateToProps('group', '2'),
-)(OKRListContainer);
+)(OKROverallChartsContainer);
 
-export const CompanyOKRListContainer = connect(
+export const CompanyOKROverallChartsContainer = connect(
   mapBasicsStateToProps('company', '3'),
-)(OKRListContainer);
+)(OKROverallChartsContainer);

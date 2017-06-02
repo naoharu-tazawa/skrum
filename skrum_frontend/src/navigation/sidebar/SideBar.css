@@ -76,6 +76,8 @@
 .sectionTitle {
   padding: 5px 20px;
   color: #818C9A;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 /* -----------------------------------
  *  Section Item
@@ -89,6 +91,8 @@
 .sectionItemLink {
   color: inherit;
   width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .sectionItemImg {
   width: 20px;

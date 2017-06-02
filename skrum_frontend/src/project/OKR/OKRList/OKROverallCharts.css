@@ -1,0 +1,16 @@
+.component {
+}
+.progressChart, .okrCountChart {
+  margin-top: 1.25em;
+  fill: #626A7F;
+}
+.progressChart {
+  margin-left: 40px;
+}
+.okrCountChart {
+  margin-right: 40px;
+  float: right;
+}
+.progressChart > text:first-child, .okrCountChart > text:first-child {
+  font-size: x-small;
+}

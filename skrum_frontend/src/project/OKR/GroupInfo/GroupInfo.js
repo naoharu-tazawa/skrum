@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { groupPropTypes } from './propTypes';
 import styles from './GroupInfo.css';
+import { replacePath } from '../../../util/RouteUtil';
 import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
 
 export default class GroupInfo extends Component {
@@ -13,7 +15,20 @@ export default class GroupInfo extends Component {
 
   render() {
     const { group, infoLink } = this.props;
-    const { name, /* company, dept, */ mission, leaderName, lastUpdate } = group;
+    const { name, groupPaths, mission, leaderName, lastUpdate } = group;
+    const groupPathsLink = groupPaths.map(({ groupTreeId, groupPath }) =>
+      <div key={groupTreeId} className={styles.groupTree}>
+        {groupPath.map(({ id, name: groupName }, index) =>
+          <span key={id}>
+            {index ? '／' : ''}
+            <Link
+              to={replacePath({ subject: !index ? 'company' : 'group', id })}
+              className={styles.groupLink}
+            >
+              {groupName}
+            </Link>
+          </span>)}
+      </div>);
     return (
       <div className={styles.component}>
         <div className={styles.groupBox}>
@@ -22,7 +37,7 @@ export default class GroupInfo extends Component {
         </div>
         <div className={styles.groupInfo}>
           <div className={styles.groupName}>{name}</div>
-          {/* <div className={styles.groupDept}>{company} > {dept}</div> */}
+          <div className={styles.groupDept}>{groupPathsLink}</div>
           <div className={styles.groupGoal}>{mission}</div>
           <div className={styles.groupPart}>
             <div className={styles.groupLeader}>
