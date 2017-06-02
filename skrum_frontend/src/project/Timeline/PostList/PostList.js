@@ -12,27 +12,16 @@ export default class PostList extends Component {
 
   render() {
     const { items } = this.props;
-    const mapReplies = reply => (
-      <div
-        key={reply.postId}
-        tabIndex={reply.postId}
-        className={styles.okrBars}
-      >
-        <PostBar reply={reply} />
-      </div>);
+    const mapReplies = reply => (<PostBar key={reply.postId} reply={reply} />);
 
     return (
-      <div className={styles.component}>
-        <div className={styles.okrBars}>
-          {_.flatten(items.map((post) => {
-            return [
-              (<div key={post.id} className={styles.okrBar}>
-                <PostBar timeline={post} />
-              </div>),
-              ...(post.replies.map(mapReplies)),
-            ];
-          }))}
-        </div>
-      </div>);
+      <section className={styles.timeline_box}>
+        {_.flatten(items.map((post) => {
+          return [
+            (<PostBar key={post.id} timeline={post} />),
+            ...(post.replies.map(mapReplies)),
+          ];
+        }))}
+      </section>);
   }
 }

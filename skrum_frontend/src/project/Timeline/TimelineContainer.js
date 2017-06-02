@@ -52,19 +52,24 @@ class TimelineContainer extends Component {
     const { pathname } = this.props;
     return (
       <div className={styles.container}>
-        <div className={styles.userInfo}>
-          <form onSubmit={e => this.handleSubmit(e)}>
-            <div className={styles.postHeader}>新規投稿作成</div>
-            <div className={styles.postBody}>
-              <div className={styles.ownerImage} />
-              <textarea id="post" className={styles.postInput} />
-              <button className={styles.postButton}>投稿</button>
-            </div>
-          </form>
-        </div>
-        <main className={styles.okrList}>
+        <div className={`${styles.inner} ${styles.timeline}`}>
+          <section className={styles.new_post_box}>
+            <form onSubmit={e => this.handleSubmit(e)}>
+              <h1 className={styles.ttl_section}>新規投稿作成</h1>
+              <div className={styles.cont_box}>
+                <div className={styles.user_name}>
+                  <dl>
+                    <dt><img src="/img/common/icn_user.png" alt="" /></dt>
+                    <dd>User Name</dd>
+                  </dl>
+                </div>
+                <div className={styles.text_area}><textarea id="post" placeholder="仕事の状況はどうですか？" /></div>
+                <div className={styles.btn}><button>投稿する</button></div>
+              </div>
+            </form>
+          </section>
           <PostListContainer pathname={pathname} />
-        </main>
+        </div>
       </div>);
   }
 }
