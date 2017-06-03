@@ -47,7 +47,8 @@
       margin-left: 70px;
       padding: 30px 70px 30px 60px;
       background: #fff;
-      border-bottom: 1px solid #d8dfe5; }
+      border-bottom: 1px solid #d8dfe5;
+      box-shadow: 1px 0px 1px rgba(0,0,0,0.20); }
       .timeline_content .time {
         margin-bottom: 10px;
         margin-left: 170px;
@@ -89,10 +90,10 @@
                 border-radius: 50%;
                 border: 1px solid #8e9aa6; }
           .timeline_content .content_inner .text textarea {
-            padding: 10px;
+            padding: 12px;
             width: 100%;
             color: #626a7f;
-            font-size: 18px;
+            font-size: 14px;
             line-height: 1.2;
             border: 1px solid #d8dfe5;
             resize: none;
@@ -167,6 +168,8 @@
               border-radius: 19px; }
               .timeline_content .content_inner .btn_area .btn.btn_comment button:hover {
                 opacity: .7; }
-    .timeline_block .timeline_content {
+    .timeline_block_last .timeline_content {
       margin-bottom: 30px;
-      border-bottom: 0; }
+      border-bottom: 0;
+      padding: 10px 70px 10px 60px;
+      box-shadow: 1px 1px 1px rgba(0,0,0,0.20); }

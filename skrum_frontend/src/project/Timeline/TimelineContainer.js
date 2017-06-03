@@ -60,7 +60,7 @@ class TimelineContainer extends Component {
                 <div className={styles.user_name}>
                   <dl>
                     <dt><img src="/img/common/icn_user.png" alt="" /></dt>
-                    <dd>User Name</dd>
+                    <dd />
                   </dl>
                 </div>
                 <div className={styles.text_area}><textarea id="post" placeholder="仕事の状況はどうですか？" /></div>

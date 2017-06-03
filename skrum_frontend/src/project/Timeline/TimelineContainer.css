@@ -16,7 +16,8 @@
   タイムライン画面
   ==================================================== */
   .timeline .new_post_box {
-    margin-bottom: 40px; }
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.20); }
 
   .timeline .new_post_box .cont_box {
     display: table;
