@@ -9,6 +9,7 @@ import CompanyInfoContainer from './CompanyInfo/CompanyInfoContainer';
 import { UserOKROverallChartsContainer, GroupOKROverallChartsContainer, CompanyOKROverallChartsContainer } from './OKRList/OKROverallChartsContainer';
 import { UserOKRListContainer, GroupOKRListContainer, CompanyOKRListContainer } from './OKRList/OKRListContainer';
 import { UserOKRAlignmentsInfoContainer, GroupOKRAlignmentsInfoContainer } from './OKRAlignmentsInfo/OKRAlignmentsInfoContainer';
+import OKRAlignmentsInfo from './OKRAlignmentsInfo/OKRAlignmentsInfo';
 import OKRDetailsContainer from './OKRDetails/OKRDetailsContainer';
 import { fetchUserBasics, fetchGroupBasics, fetchCompanyBasics } from './action';
 import { explodePath, implodePath, comparePath, isPathFinal } from '../../util/RouteUtil';
@@ -190,10 +191,7 @@ class OKRContainer extends Component {
               {this.renderOKRListContainer()}
             </div>
             <div style={showAlignmentsInfo ? {} : { display: 'none' }}>
-              <div className={styles.alignmentheader}>
-                <span className={styles.alignment}>紐付け先</span>
-                <span className={styles.numberOfOkrs}>目標数</span>
-              </div>
+              <OKRAlignmentsInfo display="header" />
               {this.renderOKRAlignmentsInfoContainer()}
             </div>
           </section>
