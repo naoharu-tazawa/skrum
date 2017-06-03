@@ -127,9 +127,8 @@ class OKRContainer extends Component {
     const { subject } = basicPath;
     const okrIndex = okrId ? okrIds.indexOf(_.toNumber(okrId)) : null;
     const prevOkrId = okrIndex > 0 ? okrIds[okrIndex - 1] : null;
-    const nextOkrId = okrIndex < okrIds.length - 1 ? okrIds[okrIndex + 1] : null;
+    const nextOkrId = okrIndex !== -1 && okrIndex < okrIds.length - 1 ? okrIds[okrIndex + 1] : null;
     const showDetails = aspect === 'o' && okrId;
-    const chartRadius = 60;
     return (
       <div className={styles.container}>
         <div style={!showDetails ? { display: 'none' } : {}}>
@@ -156,7 +155,7 @@ class OKRContainer extends Component {
               <div className={styles.ttl}><h2 className={styles.ttl_bi}>基本情報</h2></div>
               {this.renderInfoContainer()}
             </div>
-            <div className={`${styles.overall_situation} ${styles.h_line} ${styles.floatR}`} style={{ minWidth: (chartRadius * 4) + 80 + 14 }}>
+            <div className={`${styles.overall_situation} ${styles.h_line} ${styles.floatR}`}>
               <div className={styles.ttl}><h2 className={styles.ttl_os}>全体の状況</h2></div>
               {this.renderChartContainer()}
             </div>

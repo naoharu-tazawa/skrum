@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line } from 'recharts';
 import _ from 'lodash';
 import { ProgressSeriesPropTypes } from './propTypes';
+import { convertToRelativeTimeText, DateFormat } from '../../../util/DatetimeUtil';
 import styles from './OKRObjectiveProgressChart.css';
 
 export default class OKRObjectiveProgressChart extends Component {
@@ -14,8 +15,13 @@ export default class OKRObjectiveProgressChart extends Component {
     const { progressSeries = [] } = this.props;
     const progressData = progressSeries.map(({ datetime, achievementRate }) =>
       ({ datetime, progress: _.toNumber(achievementRate) }));
-    const dateFormatter = date => `${date}`;
     const percentFormatter = percent => (percent ? `${percent}%` : '');
+    const dateFormatter = date => `${convertToRelativeTimeText(date, { format: DateFormat.YMD })}`;
+    const renderTooltip = ([{ payload } = {}]) => (!payload ? null : (
+      <div className={styles.tooltip} key={`tooltip-item-${payload.datetime}`}>
+        <li>{dateFormatter(payload.datetime)}</li>
+        <li>達成値: {payload.progress}%</li>
+      </div>));
     return (
       <div className={styles.component}>
         <LineChart
@@ -37,7 +43,7 @@ export default class OKRObjectiveProgressChart extends Component {
             stroke="#626A7E"
             tickFormatter={percentFormatter}
           />
-          <Tooltip />
+          <Tooltip content={({ payload }) => renderTooltip(payload)} />
           <Line
             isAnimationActive={false}
             dataKey="progress"

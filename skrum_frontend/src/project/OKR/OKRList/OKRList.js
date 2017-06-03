@@ -28,7 +28,7 @@ export default class OKRList extends Component {
       <OKRBar key={keyResult.id} {...{ display, okr, keyResult }} />;
     return (
       <div className={styles.component}>
-        <div className={styles.okrHeader}>
+        <div className={styles.header}>
           <OKRBar display={okrs.length ? 'o-header' : 'kr-header'} />
         </div>
         <div className={styles.bars}>

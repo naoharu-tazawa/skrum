@@ -3,3 +3,9 @@
 .progressChart {
   font-size: x-small;
 }
+.tooltip {
+  opacity: 0.95;
+  padding: 0.5em;
+  background-color: white;
+  border: 1px solid #ECF0F3;
+}

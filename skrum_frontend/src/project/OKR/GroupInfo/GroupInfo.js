@@ -17,7 +17,7 @@ export default class GroupInfo extends Component {
     const { group, infoLink } = this.props;
     const { name, groupPaths, mission, leaderName, lastUpdate } = group;
     const groupPathsLink = groupPaths.map(({ groupTreeId, groupPath }) =>
-      <div key={groupTreeId} className={styles.groupTree}>
+      <li key={groupTreeId} className={styles.groupTree}>
         {groupPath.map(({ id, name: groupName }, index) =>
           <span key={id}>
             {index ? '／' : ''}
@@ -28,7 +28,7 @@ export default class GroupInfo extends Component {
               {groupName}
             </Link>
           </span>)}
-      </div>);
+      </li>);
     return (
       <div className={`${styles.content} ${styles.cf}`}>
         <figure className={`${styles.avatar} ${styles.floatL}`}>
@@ -39,14 +39,9 @@ export default class GroupInfo extends Component {
         </figure>
         <div className={`${styles.boxInfo} ${styles.floatR}`}>
           <p className={styles.ttl_team}>{name}</p>
-          <nav className={styles.breads}>
-            <ul>
-              <li><a href="">Company Name</a></li>
-              <li><a href="">Group Name</a></li>
-              <li><a href="">Group Name</a></li>
-              <li>{groupPathsLink}</li>
-            </ul>
-          </nav>
+          <ul>
+            {groupPathsLink}
+          </ul>
           <div className={styles.txt}>{mission}</div>
           <div className={`${styles.nav_info} ${styles.cf}`}>
             <div className={`${styles.user_info} ${styles.floatL} ${styles.cf}`}>

@@ -27,52 +27,54 @@ export default class OKROverallCharts extends Component {
     const chartRadius = 60;
     return (
       <div className={styles.content}>
-        <Surface
-          className={styles.progressChart}
-          width={chartRadius * 2}
-          height={chartRadius * 2}
-        >
-          <text x={chartRadius} y={chartRadius - 10} textAnchor="middle" dominantBaseline="middle">
-            全体進捗
-          </text>
-          <text x={chartRadius} y={chartRadius + 10} textAnchor="middle" dominantBaseline="middle">
-            {overallProgress.toLocaleString(undefined, { maximumFractionDigits: 2 })}%
-          </text>
-          <Pie
-            isAnimationActive={false}
-            startAngle={90}
-            endAngle={-270}
-            cx={chartRadius}
-            cy={chartRadius}
-            outerRadius={chartRadius}
-            innerRadius={chartRadius * 0.88}
-            data={progressData}
-            paddingAngle={0}
-          />
-        </Surface>
-        <Surface
-          className={styles.okrCountChart}
-          width={chartRadius * 2}
-          height={chartRadius * 2}
-        >
-          <text x={chartRadius} y={chartRadius - 10} textAnchor="middle" dominantBaseline="middle">
-            目標数
-          </text>
-          <text x={chartRadius} y={chartRadius + 10} textAnchor="middle" dominantBaseline="middle">
-            {rates.length}
-          </text>
-          <Pie
-            isAnimationActive={false}
-            startAngle={90}
-            endAngle={-270}
-            cx={chartRadius}
-            cy={chartRadius}
-            outerRadius={chartRadius}
-            innerRadius={chartRadius * 0.88}
-            data={_.orderBy(ratesGroupCountData, 'fill', 'desc')}
-            paddingAngle={0}
-          />
-        </Surface>
+        <div className={styles.charts}>
+          <Surface
+            className={styles.progressChart}
+            width={chartRadius * 2}
+            height={chartRadius * 2}
+          >
+            <text x={chartRadius} y={chartRadius - 10} textAnchor="middle" dominantBaseline="middle">
+              全体進捗
+            </text>
+            <text x={chartRadius} y={chartRadius + 10} textAnchor="middle" dominantBaseline="middle">
+              {overallProgress.toLocaleString(undefined, { maximumFractionDigits: 2 })}%
+            </text>
+            <Pie
+              isAnimationActive={false}
+              startAngle={90}
+              endAngle={-270}
+              cx={chartRadius}
+              cy={chartRadius}
+              outerRadius={chartRadius}
+              innerRadius={chartRadius * 0.88}
+              data={progressData}
+              paddingAngle={0}
+            />
+          </Surface>
+          <Surface
+            className={styles.okrCountChart}
+            width={chartRadius * 2}
+            height={chartRadius * 2}
+          >
+            <text x={chartRadius} y={chartRadius - 10} textAnchor="middle" dominantBaseline="middle">
+              目標数
+            </text>
+            <text x={chartRadius} y={chartRadius + 10} textAnchor="middle" dominantBaseline="middle">
+              {rates.length}
+            </text>
+            <Pie
+              isAnimationActive={false}
+              startAngle={90}
+              endAngle={-270}
+              cx={chartRadius}
+              cy={chartRadius}
+              outerRadius={chartRadius}
+              innerRadius={chartRadius * 0.88}
+              data={_.orderBy(ratesGroupCountData, 'fill', 'desc')}
+              paddingAngle={0}
+            />
+          </Surface>
+        </div>
       </div>);
   }
 }

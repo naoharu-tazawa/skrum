@@ -199,3 +199,10 @@
   color: #626A7F;
   padding: 40px 40px 20px;
 }
+.groupTree {
+  color: #d8dfe5;
+}
+.groupLink {
+  display: inline-block;
+  text-decoration: underline !important;
+}

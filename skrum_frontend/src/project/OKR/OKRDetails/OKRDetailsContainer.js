@@ -48,7 +48,7 @@ class OKRDetailsContainer extends Component {
   render() {
     const { isFetching, error, okr, keyResults = [], progressSeries = [] } = this.props;
     if (error) {
-      return <div className={`${styles.container} ${styles.error}`} >エーラ：{error.message}</div>;
+      return <div className={`${styles.container} ${styles.error}`} >{error.message}</div>;
     }
     if (isFetching || !okr) {
       return <div className={`${styles.container} ${styles.spinner}`} />;

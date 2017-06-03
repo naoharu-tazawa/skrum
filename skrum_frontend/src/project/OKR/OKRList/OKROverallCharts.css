@@ -1,15 +1,17 @@
 .content {
   padding: 20px 10px;
+  height: calc(100% - 40px);
+  display: flex;
+}
+.charts {
+  margin: auto;
 }
 .progressChart, .okrCountChart {
   fill: #626A7F;
-}
-.progressChart {
-  margin-left: 40px;
+  margin: auto 0 auto 40px;
 }
 .okrCountChart {
   margin-right: 40px;
-  float: right;
 }
 .progressChart > text:first-child, .okrCountChart > text:first-child {
   font-size: x-small;

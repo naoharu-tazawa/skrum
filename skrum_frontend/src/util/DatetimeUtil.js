@@ -25,7 +25,8 @@ const businessHour = 8;
 * ~ 8時間 : N時間前
 * それ以外 : 2016年3月10日午後4時37分
 */
-export const convertToRelativeTimeText = (date) => {
+export const convertToRelativeTimeText = (date, options = {}) => {
+  const { format = DateFormat.YMDHM } = options;
   const dateMoment = moment(date).locale('ja');
   const nowMoment = moment();
 
@@ -51,5 +52,5 @@ export const convertToRelativeTimeText = (date) => {
     return dateMoment.startOf(TimeUnit.HOUR).fromNow();
   }
   // over day
-  return dateMoment.format(DateFormat.YMDHM);
+  return dateMoment.format(format);
 };
