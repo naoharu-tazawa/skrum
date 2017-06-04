@@ -31,7 +31,7 @@ export default class UserInfo extends Component {
         </figure>
         <div className={`${styles.boxInfo} ${styles.floatR}`}>
           <p className={styles.ttl_user}>{name}</p>
-          <div className={styles.breads}>
+          <div className={styles.groups}>
             {groupsLink}
           </div>
           <table className={`${styles.user_info} ${styles.floatL}`}>

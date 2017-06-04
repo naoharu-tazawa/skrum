@@ -12,16 +12,18 @@ export default class UserGroupList extends Component {
   render() {
     const { items } = this.props;
     return (
-      <div className={styles.component}>
-        <div className={styles.okrHeader}>
-          <UserGroupBar header />
+      <section className={styles.group_list}>
+        <h1 className={styles.ttl_setion}>所属グループ一覧</h1>
+        <div className={`${styles.cont_box} ${styles.cf}`}>
+          <table>
+            <thead>
+              <UserGroupBar header />
+            </thead>
+            <tbody>
+              {items.map(group => <UserGroupBar key={group.id} group={group} />)}
+            </tbody>
+          </table>
         </div>
-        <div className={styles.okrBars}>
-          {items.map(group =>
-            <div key={group.id} className={styles.okrBar}>
-              <UserGroupBar group={group} />
-            </div>)}
-        </div>
-      </div>);
+      </section>);
   }
 }
