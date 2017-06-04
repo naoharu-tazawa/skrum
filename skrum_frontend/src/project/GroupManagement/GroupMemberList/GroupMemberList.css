@@ -14,7 +14,8 @@
   background: #d8dfe5;
   font-size: 14px;
   font-weight: 300;
-  letter-spacing: .5px; }
+  letter-spacing: .5px;
+  box-shadow: 1px 0px 1px 1px rgba(0,0,0,0.12); }
 
 /* ====================================================
 プロファイル画面
@@ -24,7 +25,8 @@
 
 .member_list .cont_box {
   margin-bottom: 80px;
-  padding-bottom: 66px; }
+  padding-bottom: 66px;
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12); }
 
 .member_list table {
   width: 100%;

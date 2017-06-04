@@ -48,7 +48,7 @@
       padding: 30px 70px 30px 60px;
       background: #fff;
       border-bottom: 1px solid #d8dfe5;
-      box-shadow: 1px 0px 1px rgba(0,0,0,0.20); }
+      box-shadow: 1px 0px 1px 1px rgba(0,0,0,0.12); }
       .timeline_content .time {
         margin-bottom: 10px;
         margin-left: 170px;
@@ -172,4 +172,4 @@
       margin-bottom: 30px;
       border-bottom: 0;
       padding: 10px 70px 10px 60px;
-      box-shadow: 1px 1px 1px rgba(0,0,0,0.20); }
+      box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12); }

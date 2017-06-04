@@ -181,6 +181,7 @@
   width: 63.5%;
   margin-right: 30px;
   background-color: #fff;
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12);
 }
 .overall_info .basic_info figure {
   width: 69px;
@@ -240,6 +241,7 @@
   width: 32.5%;
   width: calc(36.5% - 30px);
   background-color: #fff;
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12);
 }
 .overall_info .content {
   padding: 30px 5px 30px 0px;
@@ -256,6 +258,7 @@
 }
 .list .ttl {
   padding: 7px 50px;
+  box-shadow: 1px 0px 1px 1px rgba(0,0,0,0.12);
 }
 .list .ttl nav ul li {
   display: inline-block;
