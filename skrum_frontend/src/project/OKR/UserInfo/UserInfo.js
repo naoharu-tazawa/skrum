@@ -18,35 +18,42 @@ export default class UserInfo extends Component {
     const { name, departments, position, phoneNumber, emailAddress, lastUpdate } = user;
     const groupsLink = departments.map(({ groupId, groupName }, index) =>
       <span key={groupId}>
-        {index ? '／' : ''}
+        {index ? '・' : ''}
         <Link to={replacePath({ subject: 'group', id: groupId })} className={styles.groupLink}>{groupName}</Link>
       </span>);
     return (
-      <div className={styles.component}>
-        <div className={styles.userBox}>
-          <div className={styles.userImage} />
-          <div className={styles.lastUpdate}>最終更新: {convertToRelativeTimeText(lastUpdate)}</div>
-        </div>
-        <div className={styles.userInfo}>
-          <div className={styles.userName}>{name}</div>
-          <table>
+      <div className={`${styles.content} ${styles.cf}`}>
+        <figure className={`${styles.avatar} ${styles.floatL}`}>
+          <img src="/img/time_management/icn_team.png" alt="Team Name" />
+          <figcaption className={styles.alignC}>
+            最終更新: {convertToRelativeTimeText(lastUpdate)}
+          </figcaption>
+        </figure>
+        <div className={`${styles.boxInfo} ${styles.floatR}`}>
+          <p className={styles.ttl_user}>{name}</p>
+          <div className={styles.breads}>
+            {groupsLink}
+          </div>
+          <table className={`${styles.user_info} ${styles.floatL}`}>
             <tbody>
-              <tr className={styles.userDept}>
-                <td className={styles.userLabel}>所属部署:</td><td>{groupsLink}</td>
+              <tr>
+                <td><div className={styles.info}>役　職:</div></td>
+                <td><div className={styles.info_data}>{position}</div></td>
               </tr>
-              <tr className={styles.userRank}>
-                <td className={styles.userLabel}>役職:</td><td>{position}</td>
+              <tr>
+                <td><div className={styles.info}>電　話:</div></td>
+                <td><div className={styles.info_data}>{phoneNumber}</div></td>
               </tr>
-              <tr className={styles.userPart}>
-                <td className={styles.userLabel}>Tel:</td><td>{phoneNumber}</td>
-              </tr>
-              <tr className={styles.userPart}>
-                <td className={styles.userLabel}>Email:</td><td>{emailAddress}</td>
+              <tr>
+                <td><div className={styles.info}>メール:</div></td>
+                <td><div className={styles.info_data}>{emailAddress}</div></td>
               </tr>
             </tbody>
           </table>
+          <div className={styles.member_list}>
+            <a className={`${styles.btn} ${styles.btn_arrow_r}`} href={infoLink}>グループ一覧</a>
+          </div>
         </div>
-        <a className={styles.moreLink} href={infoLink}>詳細 ➔</a>
       </div>);
   }
 }
