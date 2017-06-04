@@ -24,7 +24,7 @@ export default class UserInfo extends Component {
     return (
       <div className={`${styles.content} ${styles.cf}`}>
         <figure className={`${styles.avatar} ${styles.floatL}`}>
-          <img src="/img/time_management/icn_team.png" alt="Team Name" />
+          <img src="/img/time_management/icn_team.png" alt="User Name" />
           <figcaption className={styles.alignC}>
             最終更新: {convertToRelativeTimeText(lastUpdate)}
           </figcaption>

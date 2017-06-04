@@ -1,65 +1,41 @@
-.component {
-  display: flex;
-  background-color: #fff;
-  /*background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`*/
-  overflow: hidden;
-  color: #626A7F;
-  padding: 40px 40px 20px;
-}
-.companyBox {
-  margin: auto 0;
-  width: 70px;
-}
-.companyImage {
+/* -------- CLEAR -------- */
+.cf:after {
+  clear: both;
   display: block;
-  margin: auto;
-  width: 70px;
-  min-height: 70px;
-  border: 2px solid #95989A;
-  border-radius: 50%;
-  overflow: hidden;
-  box-sizing: border-box;
+  content: ""; }
+
+/* -------- CLEAR -------- */
+.floatL {
+  float: left; }
+
+.floatR {
+  float: right; }
+
+.alignC {
+  text-align: center; }
+
+
+.overall_info .basic_info figure figcaption {
+  margin-top: 10px;
+  font-size: 12px;
 }
-.lastUpdate {
-  font-size: x-small;
-  text-align: center;
-  margin: 0.5em 0;
+.boxInfo {
+  width: calc(100% - 103px);
 }
-.companyInfo {
-  width: 100%;
-  margin: 0 1em 0 40px;
+.boxInfo .ttl_company {
+  font-size: 20px;
 }
-.companyName {
-  font-size: x-large;
-  margin-bottom: 0.5em;
+.content {
+  padding: 30px 65px 30px 70px;
 }
-.companyDept {
-  font-size: x-small;
-}
-.companyGoal {
-  font-size: x-small;
-  margin: 0.5em 0;
-  vertical-align: top;
-}
-.companyVision {
-  display: block;
-  width: 100%;
-}
+
 .companyPart {
-  font-size: x-small;
-  vertical-align: top;
-  display: flex;
+  margin-top: 10px;
 }
-.companyLabel {
-  white-space: nowrap;
-  padding-right: 20px;
+.title {
+  font-size: 10px;
+  margin-bottom: 5px;
 }
-.moreLink {
-  font-size: small;
-  align-self: flex-end;
-  padding: 8px;
-  border: solid 1px #D8DFE5;
-  background-color: #F0F4F5;
-  color: #8E9AA6;
-  white-space: nowrap;
+.data {
+  margin-bottom: 10px;
 }
