@@ -30,16 +30,19 @@ export default class GroupInfoEdit extends Component {
               <span>Group Name</span>
               <span>Group Name</span>
             </div>
-            <p>{mission}</p>
+            <div>
+              <div className={styles.title}>ミッション</div>
+              <p>{mission}</p>
+            </div>
             <div className={`${styles.leader} ${styles.cf}`}>
               <div><img src="/img/profile/img_leader.jpg" alt="" /></div>
               <dl>
                 <dt>リーダー</dt>
                 <dd>{leaderName}</dd>
               </dl>
-              <button className={styles.hover}><img src="/img/profile/icn_write.png" alt="" width="39" /></button>
             </div>
           </div>
+          <button className={styles.hover}><img src="/img/profile/icn_write.png" alt="" width="39" /></button>
         </div>
       </section>
     );

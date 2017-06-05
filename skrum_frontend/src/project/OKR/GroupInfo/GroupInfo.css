@@ -173,7 +173,7 @@
   background: transparent;
 }
 .boxInfo .txt {
-  margin: 10px 0 12px;
+  margin-bottom: 10px;
 }
 .boxInfo .user_info .ttl_user {
   margin-top: 7px;
@@ -205,4 +205,10 @@
 .groupLink {
   display: inline-block;
   text-decoration: underline !important;
+}
+
+.title {
+  font-size: 10px;
+  margin-top: 10px;
+  margin-bottom: 5px;
 }

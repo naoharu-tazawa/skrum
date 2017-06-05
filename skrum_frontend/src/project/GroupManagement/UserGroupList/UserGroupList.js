@@ -22,6 +22,15 @@ export default class UserGroupList extends Component {
             <tbody>
               {items.map(group => <UserGroupBar key={group.id} group={group} />)}
             </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan="3" >
+                  <div className={`${styles.add_okr} ${styles.alignC}`}>
+                    <a href=""><span className={styles.circle}><img src="/img/common/icn_plus.png" alt="Add" /></span><span>メンバーを追加</span></a>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </section>);

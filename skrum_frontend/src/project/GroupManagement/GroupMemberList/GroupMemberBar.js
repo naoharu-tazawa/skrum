@@ -17,7 +17,8 @@ export default class GroupMemberBar extends Component {
         <tr>
           <th className={styles.name}>名前</th>
           <th className={styles.position}>役職</th>
-          <th className={styles.update}>最終更新日</th>
+          <th className={styles.update}>最終ログイン</th>
+          <th />
         </tr>);
     }
     const { name, position, lastLogin } = member;
@@ -26,6 +27,7 @@ export default class GroupMemberBar extends Component {
         <td><span><img src="/img/profile/img_leader.jpg" alt="" /></span>{name}</td>
         <td>{position}</td>
         <td>{lastLogin}</td>
+        <td><div className={styles.delete}><img src="/img/delete.svg" alt="" /></div></td>
       </tr>);
   }
 }

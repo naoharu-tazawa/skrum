@@ -2,9 +2,16 @@
 /* ====================================================
 プロファイル画面
 ==================================================== */
-    .name_a {
-      border-bottom: 1px solid #d8dfe5;
-      padding-left: 70px;
-      width: 405px; }
-    .position {
-      width: 500px; }
+.name {
+  border-bottom: 1px solid #d8dfe5;
+  padding-left: 70px !important;
+  width: 40%; }
+.position {
+  width: 20%; }
+.update {
+  width: 35%; }
+.delete {
+  width: 10px;
+  text-align: right;
+  cursor: pointer;
+}

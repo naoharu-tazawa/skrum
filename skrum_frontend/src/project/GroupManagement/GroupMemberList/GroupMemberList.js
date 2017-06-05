@@ -22,6 +22,15 @@ export default class GroupMemberList extends Component {
             <tbody>
               {items.map(member => <GroupMemberBar key={member.id} member={member} />)}
             </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan="4" >
+                  <div className={`${styles.add_okr} ${styles.alignC}`}>
+                    <a href=""><span className={styles.circle}><img src="/img/common/icn_plus.png" alt="Add" /></span><span>メンバーを追加</span></a>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </section>);

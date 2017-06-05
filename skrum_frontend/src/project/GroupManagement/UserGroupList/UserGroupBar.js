@@ -17,6 +17,7 @@ export default class UserGroupBar extends Component {
         <tr>
           <th className={styles.name}>名前</th>
           <th className={styles.position}>進捗状況</th>
+          <th />
         </tr>);
     }
     const { name, achievementRate } = group;
@@ -29,6 +30,7 @@ export default class UserGroupBar extends Component {
             <progress className={styles.progressBar} max={100} value={achievementRate} />
           </div>
         </td>
+        <td><div className={styles.delete}><img src="/img/delete.svg" alt="" /></div></td>
       </tr>);
   }
 }

@@ -6,6 +6,9 @@
   display: block;
   content: ""; }
 
+.alignC {
+  text-align: center; }
+
 /* ====================================================
 共通
 ==================================================== */
@@ -25,7 +28,6 @@
 
 .group_list .cont_box {
   margin-bottom: 80px;
-  padding-bottom: 66px;
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12); }
 
 .group_list table {
@@ -41,3 +43,23 @@
       padding-left: 70px; }
     .group_list table td span {
       margin-right: 10px; }
+
+.add_okr {
+  background-color: #fff;
+  padding-right: 70px;
+}
+.circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.circle {
+  display: inline-block;
+  border-color: #8e9aa6;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  margin-right: 10px;
+}

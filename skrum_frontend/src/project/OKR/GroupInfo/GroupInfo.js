@@ -42,7 +42,10 @@ export default class GroupInfo extends Component {
           <ul>
             {groupPathsLink}
           </ul>
-          <div className={styles.txt}>{mission}</div>
+          <div>
+            <div className={styles.title}>ミッション</div>
+            <div className={styles.txt}>{mission}</div>
+          </div>
           <div className={`${styles.nav_info} ${styles.cf}`}>
             <div className={`${styles.user_info} ${styles.floatL} ${styles.cf}`}>
               <div className={`${styles.avatar} ${styles.floatL}`}><img src="/img/common/icn_user.png" alt="User Name" /></div>
