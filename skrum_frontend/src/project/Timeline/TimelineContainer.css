@@ -47,6 +47,9 @@
           border: 1px solid #d8dfe5;
           resize: none;
           height: 80px; }
+        .timeline .new_post_box .cont_box > div.text_area textarea:focus {
+          outline: 0;
+        }
           .timeline .new_post_box .cont_box > div.text_area textarea::-webkit-input-placeholder {
             color: #d8dfe5;
             font-weight: 300; }

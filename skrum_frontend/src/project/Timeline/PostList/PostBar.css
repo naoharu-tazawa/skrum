@@ -99,6 +99,9 @@
             resize: none;
             height: 40px;
             overflow: auto; }
+          .timeline_content .content_inner .text textarea {
+            outline: 0;
+          }
             .timeline_content .content_inner .text textarea::-webkit-input-placeholder {
               color: #d8dfe5;
               font-weight: 300; }
