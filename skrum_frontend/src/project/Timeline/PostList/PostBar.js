@@ -28,7 +28,7 @@ export default class PostBar extends Component {
               <p>{post}</p>
               <div className={styles.comments}>
                 <span className={styles.fb_comment}><img src="/img/common/icn_good.png" alt="" width="20" />{likesCount}件{posterId}{likedFlg}</span>
-                <span>コメント ◯件</span>
+                <span>コメント {replies.length}件</span>
               </div>
             </div>
             <div className={styles.btn_area}>

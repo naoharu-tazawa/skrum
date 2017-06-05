@@ -45,7 +45,7 @@
     .timeline_content {
       position: relative;
       margin-left: 70px;
-      padding: 30px 70px 30px 60px;
+      padding: 30px 60px;
       background: #fff;
       border-bottom: 1px solid #d8dfe5;
       box-shadow: 1px 0px 1px 1px rgba(0,0,0,0.12); }
@@ -67,12 +67,12 @@
           .timeline_content .content_inner .user_name dl {
             display: table;
             width: 100%; }
-            .timeline_content .content_inner .user_name dl dt, .timeline .timeline_block .timeline_content .content_inner .user_name dl dd {
+            .timeline_content .content_inner .user_name dl dt, .timeline_content .content_inner .user_name dl dd {
               display: table-cell;
               vertical-align: middle; }
         .timeline_content .content_inner .text {
           display: table-cell;
-          width: 520px;
+          width: 56%;
           line-height: 1.3;
           vertical-align: top; }
           .timeline_content .content_inner .text p {
