@@ -6,17 +6,6 @@
   color: #626A7F;
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12);
 }
-.header {
-  /*
-  display: flex;
-  height: 2em;
-  border-width: thin;
-  border-style: solid;
-  position: relative;
-  margin-bottom: 1px;
-  z-index: 2;
-  */
-}
 .bars {
   max-height: 100%;
   /*overflow-y: auto;*/
@@ -29,9 +18,24 @@
   /*position: relative;*/
   /*top: 30px;*/
 }
-.bar {
-  /*
-  border-width: thin;
-  border-top-style: solid;
-  */
+.add_okr {
+  background-color: #fff;
+  padding: 10px 0px;
 }
+.circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.circle {
+  display: inline-block;
+  border-color: #8e9aa6;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.alignC {
+  text-align: center; }

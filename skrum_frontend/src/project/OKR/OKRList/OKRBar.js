@@ -6,31 +6,6 @@ import { okrPropTypes, keyResultPropTypes } from './propTypes';
 import { replacePath } from '../../../util/RouteUtil';
 import styles from './OKRBar.css';
 
-const gap = 1;
-const imageDim = 2.25;
-const progressBarWidth = 10;
-const ownerBoxWidth = 10;
-
-const colStyle = {
-  mapImage: {
-    minWidth: `${imageDim}em`,
-//    height: `${imageDim}em`,
-  },
-  name: {
-    width: '100%',
-  },
-  progressBar: {
-    minWidth: `${progressBarWidth}em`,
-  },
-  ownerBox: {
-    minWidth: `${ownerBoxWidth}em`,
-  },
-  krCount: {
-    minWidth: `${imageDim}em`,
-    textAlign: 'right',
-  },
-};
-
 export default class OKRBar extends Component {
 
   static propTypes = {
@@ -59,21 +34,19 @@ export default class OKRBar extends Component {
     if (display === 'o-header' || display === 'kr-header') {
       return (
         <div className={styles.header}>
-          <div style={{ ...colStyle.mapImage, margin: `auto ${gap / 2}em` }} />
-          <div style={{ ...colStyle.name, margin: 'auto 0' }}>OKR</div>
-          <div style={{ ...colStyle.progressBar, margin: `auto ${gap}em auto 0` }}>進捗</div>
-          <div style={{ ...colStyle.ownerBox, margin: 'auto 0' }}>所有者</div>
-          <div style={{ ...colStyle.krCount, margin: `auto ${gap}em auto 0` }}>{display === 'o-header' ? 'KR' : ''}</div>
+          <div className={styles.okr}>目標</div>
+          <div className={styles.progress}>進捗</div>
+          <div className={styles.owner}>担当者</div>
+          <div className={styles.action}>{display === 'o-header' ? 'アクション' : ''}</div>
         </div>);
     }
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
       owner, keyResults } = keyResult || okr;
     return (
       <div className={this.getBaseStyles(detail)}>
-        <div className={styles.mapImage} style={colStyle.mapImage} />
-        <div className={styles.name} style={colStyle.name}>
+        <div className={styles.name}>
           <div>
-            {keyResult && okr ? <span className={styles.keyResultConnector}>└</span> : null}
+            {keyResult && okr ? <span className={styles.keyResultConnector}><img src="/img/common/inc_sub_nav.png" alt="" /></span> : null}
             {keyResult || display === 'full' ? name : (
               <Link
                 to={replacePath({ aspect: 'o', aspectId: `${id}` })}
@@ -87,7 +60,7 @@ export default class OKRBar extends Component {
           {detail ? <div className={styles.detail}>{detail}</div> : null}
         </div>
         <div className={styles.progressColumn}>
-          <div className={styles.progressBox} style={colStyle.progressBar}>
+          <div className={styles.progressBox}>
             <div className={styles.progressPercent}>{achievementRate}%</div>
             <div className={styles.progressBar}>
               <div
@@ -97,15 +70,17 @@ export default class OKRBar extends Component {
             </div>
           </div>
           <div className={styles.progressConstituents}>
-            {achievedValue}{unit}／{targetValue}{unit}
+            {achievedValue}／{targetValue}{unit}
           </div>
         </div>
-        <div className={styles.ownerBox} style={colStyle.ownerBox}>
+        <div className={styles.ownerBox}>
           <div className={styles.ownerImage} />
           <div className={styles.ownerName}>{owner.name}</div>
         </div>
-        <div className={styles.krCount} style={colStyle.krCount}>
-          {keyResults && display !== 'full' ? keyResults.length : ''}
+        <div className={styles.krCount}>
+          <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
+          <a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>
+          {keyResults && display !== 'full' ? <div className={`${styles.circle} ${styles.circle_small} ${styles.circle_plus}`}>＋{keyResults.length}</div> : ''}
         </div>
       </div>);
   }

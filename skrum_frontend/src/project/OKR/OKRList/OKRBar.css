@@ -21,7 +21,7 @@
   transition: all 0.3s ease-out;
 }
 .keyResult {
-  background-color: #F7F9F9;
+  background-color: #f8f9fb;
 }
 .keyResultConnector {
   margin: auto 1em auto 0;
@@ -29,28 +29,25 @@
 .header {
   display: flex;
   width: 100%;
-  padding: 1em 0 0.5em 0;
+  padding: 10px 40px;
   background-color: #fff;
 }
-.mapImage {
-  display: none;
-  width: 20px;
-  height: 20px;
-  min-height: 2.5em;
-  margin: auto 0 auto 1em;
-  /*border: 2px solid #626A7F;*/
-  background-color: #626A7F;
-  border-radius: 50%;
-  overflow: hidden;
-  box-sizing: border-box;
+.okr {
+  width: 40%;
+}
+.progress {
+  width: 25%;
+}
+.owner {
+  width: 18%;
 }
 .name {
   position: relative;
+  width: 40%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin: auto 0;
-  font-size: 16px;
 }
 .detailed .name {
   margin: 1em 0;
@@ -60,7 +57,8 @@
   margin-top: 1em;
 }
 .progressColumn {
-  margin: auto 30px auto 1em;
+  width: 25%;
+  margin: 10px 0px;
 }
 .full .progressColumn {
   margin: auto 0;
@@ -70,15 +68,16 @@
   /*width: 150px;*/
 }
 .progressPercent {
-  margin-right: 4px;
-  width: 4em;
-  font-size: x-small;
+  margin-right: 8px;
+  width: 3.2em;
+  font-size: 14px;
   font-weight: bold;
+  text-align: right;
 }
 .progressBar {
-  height: 8px;
-  width: 80px;
-  border-radius: 10px;
+  height: 15px; /* height: 8px; */
+  width: 120px;
+  border-radius: 0px; /* border-radius: 10px; */
   background-color: #D8DFE5;
 }
 .full .progressBar {
@@ -87,7 +86,7 @@
 .progress {
   height: 100%;
   max-width: 100%;
-  border-radius: 4px;
+  border-radius: 0px; /* border-radius: 4px; */
 }
 .progress.high {
   background-color: #42BBF8;
@@ -99,13 +98,15 @@
   background-color: #EFB04C;
 }
 .progressConstituents {
-  font-size: x-small;
+  font-size: 12px;
   margin-top: 0.75em;
+  margin-left: 0.5em;
+  color: #d8dfe5;
 }
 .ownerBox {
   display: flex;
   margin: auto 0;
-  width: 150px;
+  width: 18%;
 }
 .full .ownerBox {
   margin: 1em 0;
@@ -124,22 +125,38 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: x-small;
-  font-weight: bold;
 }
 .krCount {
-  margin: auto;
-}
-.toolImage {
-  display: inline-block;
-  margin: auto 1em auto 0;
-  /*border: 2px solid #626A7F;*/
-  background-color: #626A7F;
-  border-radius: 50%;
-  overflow: hidden;
-  box-sizing: border-box;
-  width: 20px;
+  margin: 8px 0px;
 }
 .detailsLink {
   color: inherit;
+}
+.circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.circle {
+  display: inline-block;
+  border-color: #8e9aa6;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  margin-right: 15px;
+}
+.list table tfoot tr td .circle {
+  margin-right: 10px;
+}
+.circle_small {
+  width: 27px;
+  height: 27px;
+  font-size: 10px;
+  line-height: 27px;
+}
+.circle_plus {
+  background-color: #8e9aa6;
+  color: #fff;
 }

@@ -171,7 +171,7 @@ class OKRContainer extends Component {
                       onClick={() => this.setState({ showAlignmentsInfo: false })}
                       to={pathname}
                     >
-                      所有OKR一覧
+                      目標一覧
                     </Link>
                   </li>
                   <li>

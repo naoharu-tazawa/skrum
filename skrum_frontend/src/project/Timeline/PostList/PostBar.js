@@ -83,7 +83,7 @@ export default class PostBar extends Component {
     return (
       <div>
         {main()}
-        {(replies.length !== 0) ? replies.map((item) => { return reply(item); }) : null}
+        {(replies.length !== 0) ? replies.reverse().map((item) => { return reply(item); }) : null}
         {replyArea()}
       </div>);
   }
