@@ -11,8 +11,8 @@ basePath: /v1
 
 paths:
   /companies/{companyId}.json:
-    get:
-      description: 会社基本情報取得
+    put:
+      description: 会社基本情報変更
       parameters:
         -
           name: companyId
@@ -20,9 +20,11 @@ paths:
           type: string
           description: 会社ID
           required: true
-      responses:
-        200:
-          description: 会社基本情報
+        -
+          name: JsonRequest
+          in: body
+          description: 会社名、ヴィジョン、ミッション
+          required: true
           schema:
             type: object
             properties:
@@ -36,6 +38,16 @@ paths:
               - companyName
               - vision
               - mission
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
         400:
           description: JSONスキーマ不正
         409:
