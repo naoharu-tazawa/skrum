@@ -7,6 +7,7 @@ import mapReducer from '../../project/Map/reducer';
 import timelineReducer from '../../project/Timeline/reducer';
 import groupManagementReducer from '../../project/GroupManagement/reducer';
 import okrDetailsReducer from '../../project/OKR/OKRDetails/reducer';
+import companyProfileReducer from '../../project/CompanyProfile/reducer';
 import passwordChangeReducer from '../../project/PasswordChange/reducer';
 
 const rootReducer = combineReducers({
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   groupManagement: groupManagementReducer,
   timeline: timelineReducer,
   okr: okrDetailsReducer,
+  companySetting: companyProfileReducer,
   setting: passwordChangeReducer,
   routing: routerReducer,
 });

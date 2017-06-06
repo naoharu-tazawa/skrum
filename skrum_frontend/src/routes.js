@@ -8,6 +8,7 @@ import RootRedirect from './auth/container/RootRedirect';
 import UserRouter from './project/UserRouter';
 import GroupRouter from './project/GroupRouter';
 import CompanyRouter from './project/CompanyRouter';
+import CompanyProfileContainer from './project/CompanyProfile/CompanyProfileContainer';
 import PasswordChangeContainer from './project/PasswordChange/PasswordChangeContainer';
 
 const topPage = '/user';
@@ -48,6 +49,7 @@ export default <Route path="/" component={App} >
     <Route path="/user/:userId/:timeframeId/:tab/o/:okrId" component={UserRouter} />
     <Route path="/group/:groupId/:timeframeId/:tab/o/:okrId" component={GroupRouter} />
     <Route path="/company/:companyId/:timeframeId/:tab/o/:okrId" component={CompanyRouter} />
+    <Route path="/setting/company" component={CompanyProfileContainer} />
     <Route path="/setting/password" component={PasswordChangeContainer} />
   </Route>
   <Route path="/login" component={AnonymousRegion} />
