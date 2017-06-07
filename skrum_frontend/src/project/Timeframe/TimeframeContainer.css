@@ -1,0 +1,21 @@
+@charset "UTF-8";
+  /* ====================================================
+  共通
+  ==================================================== */
+.title {
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 30px 60px;
+  overflow: scroll;
+}
+.spinner {
+  height: 100%;
+  width: 100%;
+  background: url(/img/rolling.svg) center no-repeat;
+}

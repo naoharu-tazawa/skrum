@@ -1,0 +1,25 @@
+@charset "UTF-8";
+/* ====================================================
+プロファイル画面
+==================================================== */
+.name {
+  border-bottom: 1px solid #d8dfe5;
+  padding-left: 70px !important;
+  width: 35%; }
+.date {
+  width: 20%; }
+.default {
+  width: 20%
+}
+.delete {
+  width: 10px;
+  text-align: right;
+  cursor: pointer;
+}
+.check {
+  width: 15px;
+  margin-left: 40px;
+}
+.hyphen {
+  margin-left: 44px;
+}
