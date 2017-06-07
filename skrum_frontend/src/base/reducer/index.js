@@ -8,6 +8,7 @@ import timelineReducer from '../../project/Timeline/reducer';
 import groupManagementReducer from '../../project/GroupManagement/reducer';
 import okrDetailsReducer from '../../project/OKR/OKRDetails/reducer';
 import userSettingReducer from '../../project/UserSetting/reducer';
+import groupSettingReducer from '../../project/GroupSetting/reducer';
 import companyProfileReducer from '../../project/CompanyProfile/reducer';
 import timeframeReducer from '../../project/Timeframe/reducer';
 import passwordChangeReducer from '../../project/PasswordChange/reducer';
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   timeline: timelineReducer,
   okr: okrDetailsReducer,
   userSetting: userSettingReducer,
+  groupSetting: groupSettingReducer,
   companySetting: companyProfileReducer,
   timeframeSetting: timeframeReducer,
   setting: passwordChangeReducer,

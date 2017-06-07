@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+.btn {
+  vertical-align: bottom;
+  margin-bottom: -4px;
+  margin-left: 200px;
+  background: none;
+  border: 0px;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  width: 150px;
+  height: 38px;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 19px;
+  background-color: #2562b2; }
+  .btn button:hover {
+    opacity: .7; }
+
+.input {
+  width: 400px;
+  height: 30px;
+  margin-top: 30px;
+}
+
+.group_search_label {
+  margin-left: 50px;
+}
+.group_search {
+  width: 300px;
+  height: 30px;
+  margin: 30px 30px 0px 30px;
+}
+
+.radio {
+  margin-left: 30px;
+}
