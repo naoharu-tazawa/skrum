@@ -8,6 +8,7 @@ import RootRedirect from './auth/container/RootRedirect';
 import UserRouter from './project/UserRouter';
 import GroupRouter from './project/GroupRouter';
 import CompanyRouter from './project/CompanyRouter';
+import UserSettingContainer from './project/UserSetting/UserSettingContainer';
 import CompanyProfileContainer from './project/CompanyProfile/CompanyProfileContainer';
 import TimeframeContainer from './project/Timeframe/TimeframeContainer';
 import PasswordChangeContainer from './project/PasswordChange/PasswordChangeContainer';
@@ -50,6 +51,7 @@ export default <Route path="/" component={App} >
     <Route path="/user/:userId/:timeframeId/:tab/o/:okrId" component={UserRouter} />
     <Route path="/group/:groupId/:timeframeId/:tab/o/:okrId" component={GroupRouter} />
     <Route path="/company/:companyId/:timeframeId/:tab/o/:okrId" component={CompanyRouter} />
+    <Route path="/setting/user" component={UserSettingContainer} />
     <Route path="/setting/company" component={CompanyProfileContainer} />
     <Route path="/setting/timeframe" component={TimeframeContainer} />
     <Route path="/setting/password" component={PasswordChangeContainer} />
