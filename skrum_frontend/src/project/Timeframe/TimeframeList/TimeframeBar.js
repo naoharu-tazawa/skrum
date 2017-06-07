@@ -29,10 +29,10 @@ export default class TimeframeBar extends Component {
     return (
       <tr>
         <td><div className={styles.td}>{name}</div></td>
-        <td><div className={styles.td}>{startDate}</div></td>
-        <td><div className={styles.td}>{endDate}</div></td>
+        <td><div>{startDate}</div></td>
+        <td><div>{endDate}</div></td>
         <td>
-          {defaultFlg === 1 ? <div className={styles.check}><img src="/img/check.svg" alt="" /></div> : <div className={styles.hyphen}>-</div>}
+          {defaultFlg === 1 ? <div className={styles.circle}><img className={styles.check} src="/img/check.svg" alt="" /></div> : <div className={styles.circle_inactive} />}
         </td>
         <td><div className={styles.delete}><img src="/img/delete.svg" alt="" /></div></td>
       </tr>);

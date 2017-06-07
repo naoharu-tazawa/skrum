@@ -2,6 +2,9 @@
 /* ====================================================
 プロファイル画面
 ==================================================== */
+.td {
+  margin: 10px 0px;
+}
 .name {
   border-bottom: 1px solid #d8dfe5;
   padding-left: 70px !important;
@@ -18,8 +21,36 @@
 }
 .check {
   width: 15px;
-  margin-left: 40px;
+  padding-left: 1px;
 }
 .hyphen {
   margin-left: 44px;
+}
+.circle {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.circle {
+  display: inline-block;
+  border-color: #8e9aa6;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  margin-left: 30px;
+  background-color: #2562b2;
+}
+.circle_inactive {
+  width: 35px;
+  height: 35px;
+  border: 1px solid #8e9aa6;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 50%;
+  display: inline-block;
+  overflow: hidden;
+  margin-left: 30px;
+  cursor: pointer;
 }
