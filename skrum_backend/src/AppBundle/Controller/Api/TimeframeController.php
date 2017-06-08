@@ -130,7 +130,7 @@ class TimeframeController extends BaseController
     public function putTimeframeAction(Request $request, string $timeframeId): array
     {
         // JsonSchemaバリデーション
-        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostTimeframesPdu');
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PutTimeframesPdu');
         if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
 
         // リクエストJSONを取得
