@@ -33,6 +33,9 @@ class GroupService extends BaseService
      */
     public function createGroup(Auth $auth, array $data, TGroupTree $groupTreeEntity = null)
     {
+        // グループ名に'/'(スラッシュ)が入っている場合除外する
+        $data['groupName'] = str_replace('/', '', $data['groupName']);
+
         // トランザクション開始
         $this->beginTransaction();
 
@@ -135,38 +138,45 @@ class GroupService extends BaseService
 
         try {
             // グループ情報更新
-            $mGroup->setGroupName($data['groupName']);
-            $mGroup->setMission($data['mission']);
+            if (array_key_exists('groupName', $data) && !empty($data['groupName'])) {
+                $data['groupName'] = str_replace('/', '', $data['groupName']);
+                $mGroup->setGroupName($data['groupName']);
+            }
+            if (array_key_exists('mission', $data)) {
+                $mGroup->setMission($data['mission']);
+            }
             $this->flush();
 
             // グループIDをグループパスに含むグループパスエンティティを取得
-            $groupId = $mGroup->getGroupId();
-            $tGroupTreeRepos = $this->getTGroupTreeRepository();
-            $tGroupTreeArray = $tGroupTreeRepos->getLikeGroupId($groupId, $companyId);
-
-            // グループパス名を更新
-            foreach ($tGroupTreeArray as $tGroupTree) {
-                // グループパスとグループパス名を'/'で分割し配列に格納
-                $groupTreePathItems = explode('/', $tGroupTree->getGroupTreePath(), -1);
-                $groupTreePathNameItems = explode('/', $tGroupTree->getGroupTreePathName(), -1);
-
-                // グループIDが一致する箇所のグループパス名中のグループ名を変更
-                $count = count($groupTreePathItems);
-                for ($i = 0; $i < $count; ++$i) {
-                    if ($groupTreePathItems[$i] == $groupId) {
-                        $groupTreePathNameItems[$i] = $data['groupName'];
-                    }
-                }
-
-                // グループパスを再構成
-                $newGroupTreePathName = '';
-                foreach ($groupTreePathNameItems as $groupTreePathName) {
-                    $newGroupTreePathName .= $groupTreePathName . '/';
-                }
+            if (array_key_exists('groupName', $data) && !empty($data['groupName'])) {
+                $groupId = $mGroup->getGroupId();
+                $tGroupTreeRepos = $this->getTGroupTreeRepository();
+                $tGroupTreeArray = $tGroupTreeRepos->getLikeGroupId($groupId, $companyId);
 
                 // グループパス名を更新
-                $tGroupTree->setGroupTreePathName($newGroupTreePathName);
-                $this->flush();
+                foreach ($tGroupTreeArray as $tGroupTree) {
+                    // グループパスとグループパス名を'/'で分割し配列に格納
+                    $groupTreePathItems = explode('/', $tGroupTree->getGroupTreePath(), -1);
+                    $groupTreePathNameItems = explode('/', $tGroupTree->getGroupTreePathName(), -1);
+
+                    // グループIDが一致する箇所のグループパス名中のグループ名を変更
+                    $count = count($groupTreePathItems);
+                    for ($i = 0; $i < $count; ++$i) {
+                        if ($groupTreePathItems[$i] == $groupId) {
+                            $groupTreePathNameItems[$i] = $data['groupName'];
+                        }
+                    }
+
+                    // グループパスを再構成
+                    $newGroupTreePathName = '';
+                    foreach ($groupTreePathNameItems as $groupTreePathName) {
+                        $newGroupTreePathName .= $groupTreePathName . '/';
+                    }
+
+                    // グループパス名を更新
+                    $tGroupTree->setGroupTreePathName($newGroupTreePathName);
+                    $this->flush();
+                }
             }
 
             $this->commit();

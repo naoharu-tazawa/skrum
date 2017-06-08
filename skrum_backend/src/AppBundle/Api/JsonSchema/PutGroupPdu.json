@@ -13,6 +13,5 @@
       "maxLength": 255
     }
   },
-  "required": ["groupName", "mission"],
   "additionalProperties": false
 }
