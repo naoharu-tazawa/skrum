@@ -23,6 +23,5 @@
       "format": "date-time"
     }
   },
-  "required": ["okrName", "okrDetail", "startDate", "endDate"],
   "additionalProperties": false
 }

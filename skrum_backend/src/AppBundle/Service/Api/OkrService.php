@@ -395,13 +395,35 @@ class OkrService extends BaseService
     public function changeOkrInfo(array $data, TOkr $tOkr)
     {
         // 開始日と終了日の妥当性チェック
-        DateUtility::checkStartDateAndEndDate($data['startDate'], $data['endDate']);
+        if (array_key_exists('startDate', $data) || array_key_exists('endDate', $data)) {
+            if (array_key_exists('startDate', $data)) {
+                $startDate = $data['startDate'];
+            } else {
+                $startDate = DateUtility::transIntoDatetimeString($tOkr->getStartDate());
+            }
+
+            if (array_key_exists('endDate', $data)) {
+                $endDate = $data['endDate'];
+            } else {
+                $endDate = DateUtility::transIntoDatetimeString($tOkr->getEndDate());
+            }
+
+            DateUtility::checkStartDateAndEndDate($startDate, $endDate);
+        }
 
         // OKR更新
-        $tOkr->setName($data['okrName']);
-        $tOkr->setDetail($data['okrDetail']);
-        $tOkr->setStartDate(DateUtility::transIntoDatetime($data['startDate']));
-        $tOkr->setEndDate(DateUtility::transIntoDatetime($data['endDate']));
+        if (array_key_exists('okrName', $data) && !empty($data['okrName'])) {
+            $tOkr->setName($data['okrName']);
+        }
+        if (array_key_exists('okrDetail', $data)) {
+            $tOkr->setDetail($data['okrDetail']);
+        }
+        if (array_key_exists('startDate', $data) && !empty($data['startDate'])) {
+            $tOkr->setStartDate(DateUtility::transIntoDatetime($data['startDate']));
+        }
+        if (array_key_exists('endDate', $data) && !empty($data['endDate'])) {
+            $tOkr->setEndDate(DateUtility::transIntoDatetime($data['endDate']));
+        }
 
         try {
             $this->flush();
