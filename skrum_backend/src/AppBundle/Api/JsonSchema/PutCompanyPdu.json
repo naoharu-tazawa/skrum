@@ -18,6 +18,5 @@
       "maxLength": 255
     }
   },
-  "required": ["companyName", "vision", "mission"],
   "additionalProperties": false
 }

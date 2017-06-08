@@ -147,8 +147,9 @@ class GroupService extends BaseService
             }
             $this->flush();
 
-            // グループIDをグループパスに含むグループパスエンティティを取得
+            // グループパス名を更新
             if (array_key_exists('groupName', $data) && !empty($data['groupName'])) {
+                // グループIDをグループパスに含むグループパスエンティティを取得
                 $groupId = $mGroup->getGroupId();
                 $tGroupTreeRepos = $this->getTGroupTreeRepository();
                 $tGroupTreeArray = $tGroupTreeRepos->getLikeGroupId($groupId, $companyId);

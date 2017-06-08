@@ -191,6 +191,9 @@ class UserSettingService extends BaseService
             throw new DoubleOperationException('既に初期設定登録されています');
         }
 
+        // 会社名に'/'(スラッシュ)が入っている場合除外する
+        $companyInfo['name'] = str_replace('/', '', $companyInfo['name']);
+
         // トランザクション開始
         $this->beginTransaction();
 

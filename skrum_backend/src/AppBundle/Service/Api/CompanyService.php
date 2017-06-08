@@ -76,31 +76,41 @@ class CompanyService extends BaseService
 
         try {
             // 会社情報更新
-            $mCompany->setCompanyName($data['companyName']);
-            $mCompany->setVision($data['vision']);
-            $mCompany->setMission($data['mission']);
-
-            // 全てのグループツリーエンティティを取得
-            $tGroupTreeRepos = $this->getTGroupTreeRepository();
-            $tGroupTreeArray = $tGroupTreeRepos->getAllGroupPath($companyId);
+            if (array_key_exists('companyName', $data) && !empty($data['companyName'])) {
+                $data['companyName'] = str_replace('/', '', $data['companyName']);
+                $mCompany->setCompanyName($data['companyName']);
+            }
+            if (array_key_exists('vision', $data)) {
+                $mCompany->setVision($data['vision']);
+            }
+            if (array_key_exists('mission', $data)) {
+                $mCompany->setMission($data['mission']);
+            }
 
             // グループパス名を更新
-            foreach ($tGroupTreeArray as $tGroupTree) {
-                // グループパス名を'/'で分割し配列に格納
-                $groupTreePathNameItems = explode('/', $tGroupTree->getGroupTreePathName(), -1);
-
-                // グループパス名中のグループ名（会社名）を変更
-                $groupTreePathNameItems[0] = $data['companyName'];
-
-                // グループパスを再構成
-                $newGroupTreePathName = '';
-                foreach ($groupTreePathNameItems as $groupTreePathName) {
-                    $newGroupTreePathName .= $groupTreePathName . '/';
-                }
+            if (array_key_exists('companyName', $data) && !empty($data['companyName'])) {
+                // 全てのグループツリーエンティティを取得
+                $tGroupTreeRepos = $this->getTGroupTreeRepository();
+                $tGroupTreeArray = $tGroupTreeRepos->getAllGroupPath($companyId);
 
                 // グループパス名を更新
-                $tGroupTree->setGroupTreePathName($newGroupTreePathName);
-                $this->flush();
+                foreach ($tGroupTreeArray as $tGroupTree) {
+                    // グループパス名を'/'で分割し配列に格納
+                    $groupTreePathNameItems = explode('/', $tGroupTree->getGroupTreePathName(), -1);
+
+                    // グループパス名中のグループ名（会社名）を変更
+                    $groupTreePathNameItems[0] = $data['companyName'];
+
+                    // グループパスを再構成
+                    $newGroupTreePathName = '';
+                    foreach ($groupTreePathNameItems as $groupTreePathName) {
+                        $newGroupTreePathName .= $groupTreePathName . '/';
+                    }
+
+                    // グループパス名を更新
+                    $tGroupTree->setGroupTreePathName($newGroupTreePathName);
+                    $this->flush();
+                }
             }
 
             $this->flush();
