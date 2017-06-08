@@ -93,7 +93,8 @@
   text-overflow: ellipsis;
 }
 .krCount {
-  margin: 8px 0px;
+  display: flex;
+  margin: auto 0;
 }
 .detailsLink {
   color: inherit;
@@ -120,7 +121,8 @@
   width: 27px;
   height: 27px;
   font-size: 10px;
-  line-height: 27px;
+  line-height: 25px;
+  margin-top: 7px;
 }
 .circle_plus {
   background-color: #8e9aa6;

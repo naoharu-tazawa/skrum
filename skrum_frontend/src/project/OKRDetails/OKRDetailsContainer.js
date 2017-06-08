@@ -54,21 +54,20 @@ class OKRDetailsContainer extends Component {
     }
     return (
       <div className={styles.container}>
-        <div className={styles.header}>
-          <div className={styles.okr}>
-            <div className={styles.sectionLabel}>Ｏの詳細</div>
+        <section className={`${styles.overall_info} ${styles.cf}`}>
+          <div className={`${styles.basic_info} ${styles.h_line} ${styles.floatL}`}>
+            <div className={styles.ttl}><h2>目標の詳細</h2></div>
             <OKRDetails okr={okr} />
           </div>
-          <div className={styles.chart}>
-            <div className={styles.sectionLabel}>Oの進捗状況</div>
+          <div className={`${styles.overall_situation} ${styles.h_line} ${styles.floatR}`}>
+            <div className={styles.ttl}><h2>目標の進捗状況</h2></div>
             <OKRObjectiveProgressChart progressSeries={progressSeries} />
-            <div style={{ clear: 'both' }} />
           </div>
-        </div>
-        <div className={styles.keyResults}>
-          <div className={styles.sectionLabel}>上記Ｏに紐づくＫＲ</div>
+        </section>
+        <section className={styles.list}>
+          <div className={styles.ttl}><h2>上記目標に紐づくサブ目標</h2></div>
           <KRDetailsList keyResults={keyResults} />
-        </div>
+        </section>
       </div>);
   }
 }

@@ -114,7 +114,8 @@
   text-overflow: ellipsis;
 }
 .krCount {
-  margin: 8px 0px;
+  display: flex;
+  margin: auto 0;
 }
 .detailsLink {
   color: inherit;

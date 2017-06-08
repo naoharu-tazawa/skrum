@@ -20,7 +20,7 @@ export default class KRDetailsBar extends Component {
     if (header) {
       return (
         <div className={styles.header}>
-          <div className={styles.okr}>目標</div>
+          <div className={styles.okr}>サブ目標</div>
           <div className={styles.progress}>進捗</div>
           <div className={styles.owner}>担当者</div>
           <div className={styles.action}>アクション</div>
@@ -45,6 +45,10 @@ export default class KRDetailsBar extends Component {
           </div>
           <div className={styles.progressConstituents}>
             {achievedValue}／{targetValue}{unit}
+          </div>
+          <div className={styles.txt_date}>
+            <p>開始日：2017/01/01</p>
+            <p>期限日：2017/01/01</p>
           </div>
         </div>
         <div className={styles.ownerBox}>

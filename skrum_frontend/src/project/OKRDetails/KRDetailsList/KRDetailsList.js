@@ -20,7 +20,7 @@ export default class KRDetailsList extends Component {
           {keyResults.map(keyResult => <KRDetailsBar key={keyResult.id} keyResult={keyResult} />)}
         </div>
         <div className={`${styles.add_okr} ${styles.alignC}`}>
-          <a href=""><span className={styles.circle}><img src="/img/common/icn_plus.png" alt="Add" /></span><span>新しい目標を追加</span></a>
+          <a href=""><span className={styles.circle}><img src="/img/common/icn_plus.png" alt="Add" /></span><span>新しいサブ目標を追加</span></a>
         </div>
       </div>);
   }
