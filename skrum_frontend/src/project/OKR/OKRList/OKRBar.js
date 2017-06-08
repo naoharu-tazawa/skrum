@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import _ from 'lodash';
 import { okrPropTypes, keyResultPropTypes } from './propTypes';
+import InlineTextInput from '../../../editors/InlineTextInput';
+import InlineTextArea from '../../../editors/InlineTextArea';
 import { replacePath } from '../../../util/RouteUtil';
 import styles from './OKRBar.css';
 
@@ -45,9 +47,10 @@ export default class OKRBar extends Component {
     return (
       <div className={this.getBaseStyles(detail)}>
         <div className={styles.name}>
-          <div>
-            {keyResult && okr ? <span className={styles.keyResultConnector}><img src="/img/common/inc_sub_nav.png" alt="" /></span> : null}
-            {keyResult || display === 'full' ? name : (
+          {keyResult && okr ? <span className={styles.keyResultConnector}><img src="/img/common/inc_sub_nav.png" alt="" /></span> : null}
+          {keyResult || display === 'full'
+            ? <InlineTextInput value={name} />
+            : (
               <Link
                 to={replacePath({ aspect: 'o', aspectId: `${id}` })}
                 className={styles.detailsLink}
@@ -55,9 +58,8 @@ export default class OKRBar extends Component {
               >
                 {name}
               </Link>
-            )}
-          </div>
-          {detail ? <div className={styles.detail}>{detail}</div> : null}
+          )}
+          {detail ? <div className={styles.detail}><InlineTextArea value={detail} /></div> : null}
         </div>
         <div className={styles.progressColumn}>
           <div className={styles.progressBox}>
