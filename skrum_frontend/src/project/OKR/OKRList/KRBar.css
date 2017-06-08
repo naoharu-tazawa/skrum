@@ -4,18 +4,26 @@
   font-size: small;
   margin: 1px auto 0 auto;
   padding: 5px 40px;
-  background-color: #fff;
+  background-color: #f8f9fb;
   color: #626A7F;
   max-height: 500px;
+  transition: all 0.3s ease-in;
+}
+.collapsed {
+  overflow: hidden;
+  max-height: 0;
+  padding: 0 40px;
+  margin: 0 auto;
+  transition: all 0.3s ease-out;
+}
+.keyResultConnector {
+  margin: auto 1em auto 0;
 }
 .header {
   display: flex;
   width: 100%;
   padding: 10px 40px;
   background-color: #fff;
-}
-.okr {
-  width: 40%;
 }
 .progress {
   width: 25%;
@@ -31,9 +39,16 @@
   text-overflow: ellipsis;
   margin: auto 0;
 }
+.detail {
+  font-size: smaller;
+  margin-top: 1em;
+}
 .progressColumn {
   width: 25%;
   margin: 10px 0px;
+}
+.full .progressColumn {
+  margin: auto 0;
 }
 .progressBox {
   display: flex;
@@ -51,6 +66,9 @@
   width: 120px;
   border-radius: 0px; /* border-radius: 10px; */
   background-color: #D8DFE5;
+}
+.full .progressBar {
+  width: 100%;
 }
 .progress {
   height: 100%;
@@ -76,6 +94,9 @@
   display: flex;
   margin: auto 0;
   width: 18%;
+}
+.full .ownerBox {
+  margin: 1em 0;
 }
 .ownerImage {
   width: 3em;

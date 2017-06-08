@@ -7,7 +7,7 @@ import okrReducer from '../../project/OKR/reducer';
 import mapReducer from '../../project/Map/reducer';
 import timelineReducer from '../../project/Timeline/reducer';
 import groupManagementReducer from '../../project/GroupManagement/reducer';
-import okrDetailsReducer from '../../project/OKR/OKRDetails/reducer';
+import okrDetailsReducer from '../../project/OKRDetails/reducer';
 import userSettingReducer from '../../project/UserSetting/reducer';
 import groupSettingReducer from '../../project/GroupSetting/reducer';
 import companyProfileReducer from '../../project/CompanyProfile/reducer';

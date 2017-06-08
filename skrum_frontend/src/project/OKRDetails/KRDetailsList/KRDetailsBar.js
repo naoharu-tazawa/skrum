@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
-import { okrPropTypes } from './propTypes';
-import { replacePath } from '../../../util/RouteUtil';
-import styles from './OKRBar.css';
+import { keyResultPropTypes } from '../propTypes';
+import InlineTextInput from '../../../editors/InlineTextInput';
+import InlineTextArea from '../../../editors/InlineTextArea';
+import styles from './KRDetailsBar.css';
 
-export default class OKRBar extends Component {
+export default class KRDetailsBar extends Component {
 
   static propTypes = {
     header: PropTypes.bool,
-    okr: okrPropTypes,
+    keyResult: keyResultPropTypes,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { header, okr } = this.props;
+    const { header, keyResult } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -26,18 +26,12 @@ export default class OKRBar extends Component {
           <div className={styles.action}>アクション</div>
         </div>);
     }
-    const { id, name, unit, targetValue, achievedValue, achievementRate,
-      owner, keyResults } = okr;
+    const { name, detail, unit, targetValue, achievedValue, achievementRate, owner } = keyResult;
     return (
       <div className={styles.component}>
         <div className={styles.name}>
-          <Link
-            to={replacePath({ aspect: 'o', aspectId: `${id}` })}
-            className={styles.detailsLink}
-            onMouseUp={e => e.stopPropagation()}
-          >
-            {name}
-          </Link>
+          <InlineTextInput value={name} />
+          <div className={styles.detail}><InlineTextArea value={detail} /></div>
         </div>
         <div className={styles.progressColumn}>
           <div className={styles.progressBox}>
@@ -60,7 +54,6 @@ export default class OKRBar extends Component {
         <div className={styles.krCount}>
           <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
           <a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>
-          {keyResults && <div className={`${styles.circle} ${styles.circle_small} ${styles.circle_plus}`}>＋{keyResults.length}</div>}
         </div>
       </div>);
   }

@@ -1,43 +1,38 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
-import { okrPropTypes } from './propTypes';
-import { replacePath } from '../../../util/RouteUtil';
-import styles from './OKRBar.css';
+import _ from 'lodash';
+import { keyResultPropTypes } from './propTypes';
+import InlineTextInput from '../../../editors/InlineTextInput';
+import styles from './KRBar.css';
 
-export default class OKRBar extends Component {
+export default class KRBar extends Component {
 
   static propTypes = {
-    header: PropTypes.bool,
-    okr: okrPropTypes,
+    display: PropTypes.oneOf(['expanded', 'collapsed']).isRequired,
+    keyResult: keyResultPropTypes.isRequired,
+  };
+
+  getBaseStyles = (display) => {
+    const baseStyles = [
+      styles.component,
+      ...[display === 'collapsed' ? [styles.collapsed] : []],
+    ];
+    return _.join(baseStyles, ' ');
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { header, okr } = this.props;
-    if (header) {
-      return (
-        <div className={styles.header}>
-          <div className={styles.okr}>目標</div>
-          <div className={styles.progress}>進捗</div>
-          <div className={styles.owner}>担当者</div>
-          <div className={styles.action}>アクション</div>
-        </div>);
-    }
-    const { id, name, unit, targetValue, achievedValue, achievementRate,
-      owner, keyResults } = okr;
+    const { display, keyResult } = this.props;
+    const { name, unit, targetValue, achievedValue, achievementRate, owner } = keyResult;
     return (
-      <div className={styles.component}>
+      <div className={this.getBaseStyles(display)}>
         <div className={styles.name}>
-          <Link
-            to={replacePath({ aspect: 'o', aspectId: `${id}` })}
-            className={styles.detailsLink}
-            onMouseUp={e => e.stopPropagation()}
-          >
-            {name}
-          </Link>
+          <span className={styles.keyResultConnector}>
+            <img src="/img/common/inc_sub_nav.png" alt="" />
+          </span>
+          <InlineTextInput value={name} />
         </div>
         <div className={styles.progressColumn}>
           <div className={styles.progressBox}>
@@ -60,7 +55,6 @@ export default class OKRBar extends Component {
         <div className={styles.krCount}>
           <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
           <a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>
-          {keyResults && <div className={`${styles.circle} ${styles.circle_small} ${styles.circle_plus}`}>＋{keyResults.length}</div>}
         </div>
       </div>);
   }

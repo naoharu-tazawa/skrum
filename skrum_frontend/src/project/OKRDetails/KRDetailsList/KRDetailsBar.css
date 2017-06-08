@@ -29,11 +29,18 @@
   white-space: nowrap;
   /*overflow: hidden;*/
   text-overflow: ellipsis;
-  margin: auto 0;
+  margin: 1em 0;
+}
+.detail {
+  font-size: smaller;
+  margin-top: 1em;
 }
 .progressColumn {
   width: 25%;
   margin: 10px 0px;
+}
+.full .progressColumn {
+  margin: auto 0;
 }
 .progressBox {
   display: flex;
@@ -51,6 +58,9 @@
   width: 120px;
   border-radius: 0px; /* border-radius: 10px; */
   background-color: #D8DFE5;
+}
+.full .progressBar {
+  width: 100%;
 }
 .progress {
   height: 100%;
@@ -76,6 +86,9 @@
   display: flex;
   margin: auto 0;
   width: 18%;
+}
+.full .ownerBox {
+  margin: 1em 0;
 }
 .ownerImage {
   width: 3em;

@@ -10,7 +10,7 @@ import { UserOKROverallChartsContainer, GroupOKROverallChartsContainer, CompanyO
 import { UserOKRListContainer, GroupOKRListContainer, CompanyOKRListContainer } from './OKRList/OKRListContainer';
 import { UserOKRAlignmentsInfoContainer, GroupOKRAlignmentsInfoContainer } from './OKRAlignmentsInfo/OKRAlignmentsInfoContainer';
 import OKRAlignmentsInfo from './OKRAlignmentsInfo/OKRAlignmentsInfo';
-import OKRDetailsContainer from './OKRDetails/OKRDetailsContainer';
+import OKRDetailsContainer from '../OKRDetails/OKRDetailsContainer';
 import { fetchUserBasics, fetchGroupBasics, fetchCompanyBasics } from './action';
 import { explodePath, implodePath, comparePath, isPathFinal } from '../../util/RouteUtil';
 import styles from './OKRContainer.css';

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 export const keyResultPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
+  detail: PropTypes.string,
   unit: PropTypes.string.isRequired,
   targetValue: PropTypes.number.isRequired,
   achievedValue: PropTypes.number.isRequired,
@@ -21,6 +22,7 @@ export const keyResultsPropTypes = PropTypes.arrayOf(keyResultPropTypes);
 export const okrPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
+  detail: PropTypes.string,
   unit: PropTypes.string.isRequired,
   targetValue: PropTypes.number.isRequired,
   achievedValue: PropTypes.number.isRequired,
@@ -34,4 +36,9 @@ export const okrPropTypes = PropTypes.shape({
   ratioLockedFlg: PropTypes.number,
 });
 
-export const okrsPropTypes = PropTypes.arrayOf(okrPropTypes);
+export const ProgressPropTypes = PropTypes.shape({
+  datetime: PropTypes.string.isRequired,
+  achievementRate: PropTypes.string.isRequired,
+});
+
+export const ProgressSeriesPropTypes = PropTypes.arrayOf(ProgressPropTypes);

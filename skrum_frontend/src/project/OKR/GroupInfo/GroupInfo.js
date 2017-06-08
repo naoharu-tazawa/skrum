@@ -19,7 +19,7 @@ export default class GroupInfo extends Component {
     const groupPathsLink = groupPaths.map(({ groupTreeId, groupPath }) =>
       <ul key={groupTreeId}>
         {groupPath.map(({ id, name: groupName }, index) =>
-          <li>
+          <li key={id}>
             <Link
               to={replacePath({ subject: !index ? 'company' : 'group', id })}
               className={styles.groupLink}

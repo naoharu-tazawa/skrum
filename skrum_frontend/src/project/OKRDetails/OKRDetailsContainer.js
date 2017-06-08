@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { okrPropTypes, keyResultsPropTypes } from '../OKRList/propTypes';
-import { ProgressSeriesPropTypes } from './propTypes';
-import OKRBar from '../OKRList/OKRBar';
-import OKRList from '../OKRList/OKRList';
+import { okrPropTypes, keyResultsPropTypes, ProgressSeriesPropTypes } from './propTypes';
+import OKRDetails from './OKRDetails';
+import KRDetailsList from './KRDetailsList/KRDetailsList';
 import OKRObjectiveProgressChart from './OKRObjectiveProgressChart';
 import { fetchOKRDetails } from './action';
-import { explodePath, isPathFinal } from '../../../util/RouteUtil';
-import { mapOKR, mapKeyResult } from '../../../util/OKRUtil';
+import { explodePath, isPathFinal } from '../../util/RouteUtil';
+import { mapOKR, mapKeyResult } from '../../util/OKRUtil';
 import styles from './OKRDetailsContainer.css';
 
 class OKRDetailsContainer extends Component {
@@ -58,7 +57,7 @@ class OKRDetailsContainer extends Component {
         <div className={styles.header}>
           <div className={styles.okr}>
             <div className={styles.sectionLabel}>Ｏの詳細</div>
-            <OKRBar okr={okr} display="full" />
+            <OKRDetails okr={okr} />
           </div>
           <div className={styles.chart}>
             <div className={styles.sectionLabel}>Oの進捗状況</div>
@@ -68,7 +67,7 @@ class OKRDetailsContainer extends Component {
         </div>
         <div className={styles.keyResults}>
           <div className={styles.sectionLabel}>上記Ｏに紐づくＫＲ</div>
-          <OKRList keyResults={keyResults} />
+          <KRDetailsList keyResults={keyResults} />
         </div>
       </div>);
   }

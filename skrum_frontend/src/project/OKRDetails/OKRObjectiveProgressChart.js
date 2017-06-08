@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line } from 'recharts';
 import _ from 'lodash';
 import { ProgressSeriesPropTypes } from './propTypes';
-import { convertToRelativeTimeText, DateFormat } from '../../../util/DatetimeUtil';
+import { convertToRelativeTimeText, DateFormat } from '../../util/DatetimeUtil';
 import styles from './OKRObjectiveProgressChart.css';
 
 export default class OKRObjectiveProgressChart extends Component {

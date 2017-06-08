@@ -1,5 +1,5 @@
 .component {
-  display: flex;
+  display: block;
   /*overflow: hidden;*/
   font-size: small;
   margin: 1px auto 0 auto;
@@ -7,15 +7,7 @@
   background-color: #fff;
   color: #626A7F;
   max-height: 500px;
-}
-.header {
-  display: flex;
-  width: 100%;
-  padding: 10px 40px;
-  background-color: #fff;
-}
-.okr {
-  width: 40%;
+  transition: all 0.3s ease-in;
 }
 .progress {
   width: 25%;
@@ -29,11 +21,15 @@
   white-space: nowrap;
   /*overflow: hidden;*/
   text-overflow: ellipsis;
-  margin: auto 0;
+  margin: 1em 0;
+}
+.detail {
+  font-size: smaller;
+  margin-top: 1em;
 }
 .progressColumn {
   width: 25%;
-  margin: 10px 0px;
+  margin: auto 0;
 }
 .progressBox {
   display: flex;
@@ -48,7 +44,7 @@
 }
 .progressBar {
   height: 15px; /* height: 8px; */
-  width: 120px;
+  width: 100%;
   border-radius: 0px; /* border-radius: 10px; */
   background-color: #D8DFE5;
 }
@@ -74,7 +70,7 @@
 }
 .ownerBox {
   display: flex;
-  margin: auto 0;
+  margin: 1em 0;
   width: 18%;
 }
 .ownerImage {
