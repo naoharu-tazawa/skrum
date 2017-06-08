@@ -69,6 +69,7 @@
     "recharts": "^0.22.4",
     "redux": "latest",
     "redux-actions": "^1.2.0",
+    "redux-form": "^6.7.0",
     "redux-localstorage": "^0.4.1",
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.1.0",

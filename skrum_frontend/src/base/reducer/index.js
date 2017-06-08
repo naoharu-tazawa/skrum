@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { reducer as formReducer } from 'redux-form';
 import { routerReducer } from 'react-router-redux';
 import authReducer from '../../auth/reducer';
 import navigationReducer from '../../navigation/reducer';
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   timeframeSetting: timeframeReducer,
   setting: passwordChangeReducer,
   routing: routerReducer,
+  form: formReducer,
 });
 
 export default rootReducer;

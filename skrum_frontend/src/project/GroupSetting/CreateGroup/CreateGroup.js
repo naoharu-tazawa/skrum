@@ -16,7 +16,7 @@ export default class CreateGroup extends Component {
     // const { id, name } = items;
     return (
       <section>
-        <div>グループ作成</div>
+        <div className={styles.title}>グループ作成</div>
         <form onSubmit={e => this.handleSubmit(e)}>
           <div>
             <span><input className={styles.input} type="text" placeholder="グループ名" /></span>
