@@ -18,9 +18,9 @@ export default class InlineTextInput extends PureComponent {
     const { hitMode = false, editMode = false } = this.state;
     return (
       <span
-        onMouseEnter={() => !readonly && this.setState({ hitMode: true })}
-        onMouseLeave={() => !readonly && this.setState({ hitMode: false })}
-        onMouseDown={() => !readonly && this.setState({ editMode: true })}
+        onMouseEnter={() => !readonly && !editMode && this.setState({ hitMode: true })}
+        onMouseLeave={() => !readonly && !editMode && this.setState({ hitMode: false })}
+        onMouseDown={() => !readonly && this.setState({ editMode: true, hitMode: false })}
         className={`${styles.default} ${!editMode && hitMode ? styles.hitMode : ''}`}
       >
         {!editMode && value}
