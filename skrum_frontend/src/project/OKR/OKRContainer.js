@@ -126,9 +126,9 @@ class OKRContainer extends Component {
     const { showAlignmentsInfo } = this.state;
     const { aspect, aspectId: okrId, ...basicPath } = explodePath(pathname);
     const { subject } = basicPath;
-    const okrIndex = okrId ? okrIds.indexOf(_.toNumber(okrId)) : null;
-    const prevOkrId = okrIndex > 0 ? okrIds[okrIndex - 1] : null;
-    const nextOkrId = okrIndex !== -1 && okrIndex < okrIds.length - 1 ? okrIds[okrIndex + 1] : null;
+    const okrIndex = okrId && okrIds.indexOf(_.toNumber(okrId));
+    const prevOkrId = okrIndex > 0 && okrIds[okrIndex - 1];
+    const nextOkrId = okrIndex !== -1 && okrIndex < okrIds.length - 1 && okrIds[okrIndex + 1];
     const showDetails = aspect === 'o' && okrId;
     return (
       <div className={styles.container}>

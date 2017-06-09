@@ -112,8 +112,8 @@ export default class Header extends Component {
       <div className={styles.container}>
         <Tab title="目標管理" name="objective" />
         <Tab title="マップ" name="map" />
-        {subject === 'group' ? <Tab title="タイムライン" name="timeline" /> : null}
-        {subject !== 'company' ? <Tab title="グループ管理" name="control" /> : null}
+        {subject === 'group' && <Tab title="タイムライン" name="timeline" />}
+        {subject !== 'company' && <Tab title="グループ管理" name="control" />}
         <div className={styles.rightArea}>
           <SubMenu {...{ timeframes, handleLogoutSubmit }} />
         </div>

@@ -64,7 +64,7 @@ class Section extends Component {
   render() {
     const { title, isExpanded } = this.props;
     return (<div className={styles.sectionContainer}>
-      {isExpanded ? <p className={styles.sectionTitle}>{title}</p> : null}
+      {isExpanded && <p className={styles.sectionTitle}>{title}</p>}
       <ul>
         {this.renderItem(isExpanded)}
       </ul>
@@ -118,9 +118,9 @@ export default class SideBar extends Component {
           >{isExpanded ? '<' : '>'}
           </button>
         </div>
-        {showUser ? this.renderUserSection(userSection) : null}
+        {showUser && this.renderUserSection(userSection)}
         {groupSections.map(this.renderGroupSection)}
-        {showCompany ? <SectionItem section="company" id={companyId} title={companyName} isExpanded={isExpanded} /> : null}
+        {showCompany && <SectionItem section="company" id={companyId} title={companyName} isExpanded={isExpanded} />}
       </div>
     );
   }

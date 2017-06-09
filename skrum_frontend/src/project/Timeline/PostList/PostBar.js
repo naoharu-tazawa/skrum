@@ -10,7 +10,7 @@ export default class PostBar extends Component {
 
   render() {
     const { posterId, posterName, post, postedDatetime, likesCount,
-    likedFlg, replies = [] } = this.props.timeline;
+      likedFlg, replies = [] } = this.props.timeline;
 
     const main = () => (
       <div className={styles.timeline_block}>
@@ -83,7 +83,7 @@ export default class PostBar extends Component {
     return (
       <div>
         {main()}
-        {(replies.length !== 0) ? replies.reverse().map((item) => { return reply(item); }) : null}
+        {replies.reverse().map(reply)}
         {replyArea()}
       </div>);
   }
