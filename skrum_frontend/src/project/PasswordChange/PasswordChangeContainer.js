@@ -15,13 +15,16 @@ class PasswordChangeContainer extends Component {
     error: errorType,
   };
 
-  handleSubmit(e) {
-    const target = e.target;
-    console.log(e);
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(values) {
     this.props.dispatchPutUserChangepassword(
       this.props.userId,
-      target.currentPassword.value.trim(),
-      target.newPassword.value.trim(),
+      values.currentPassword,
+      values.newPassword,
     );
   }
 

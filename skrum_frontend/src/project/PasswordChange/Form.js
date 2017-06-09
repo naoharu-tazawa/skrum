@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
+import fieldsPropTypes from './propTypes';
 import { errorType } from '../../util/PropUtil';
 import styles from './Form.css';
 
@@ -12,12 +13,27 @@ function DisabledButton() {
   return <div className={styles.disable_btn} />;
 }
 
+const validate = (values) => {
+  const errors = {};
+  if (!values.currentPassword) {
+    errors.currentPassword = '現在のパスワードを入力してください。';
+  }
+  if (!values.newPassword) {
+    errors.newPassword = '新しいパスワードを入力してください。';
+  }
+  if (values.newPassword !== values.confirm) {
+    errors.confirm = '確認パスワードが異なります。';
+  }
+  return errors;
+};
+
 class _Form extends Component {
 
   static propTypes = {
     isProcessing: PropTypes.bool,
     error: errorType,
     handleSubmit: PropTypes.func,
+    fields: fieldsPropTypes.isRequired,
   };
 
   renderError() {
@@ -34,22 +50,8 @@ class _Form extends Component {
     return this.props.isProcessing ? <DisabledButton /> : <SubmitButton />;
   }
 
-  const validate = values => {
-    const errors = {};
-    if (!values.currentPassword) {
-      errors.currentPassword = "現在のパスワードを入力してください。";
-    }
-    if (!values.newPassword) {
-      errors.newPassword = "新しいパスワードを入力してください。";
-    }
-    if (!values.confirm) {
-      errors.confirm = "新しいパスワードの確認を入力してください。";
-    }
-    return errors;
-  };
-
   render() {
-    const { handleSubmit } = this.props;
+    const { fields: { currentPassword, newPassword, confirm }, handleSubmit } = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <table className={styles.floatL}>
@@ -76,6 +78,7 @@ class _Form extends Component {
             </tr>
           </tbody>
         </table>
+        <div>{currentPassword}{newPassword}{confirm}</div>
         <div className={`${styles.btn_area} ${styles.floatL}`}>{this.renderButton()}</div>
       </form>);
   }
@@ -84,7 +87,7 @@ class _Form extends Component {
 const Form = reduxForm({
   form: 'form',
   validate,
-  fields: ['currentPassword', 'newPassword', 'confirm']
+  fields: ['currentPassword', 'newPassword', 'confirm'],
 })(_Form);
 
 export default Form;
