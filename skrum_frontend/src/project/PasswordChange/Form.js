@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
+import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { errorType } from '../../util/PropUtil';
 import styles from './Form.css';
 
 function SubmitButton() {
-  return <button className={styles.btn}>変更する</button>;
+  return <button type="submit" className={styles.btn}>変更する</button>;
 }
 
 function DisabledButton() {
   return <div className={styles.disable_btn} />;
 }
 
-export default class Form extends Component {
+class _Form extends Component {
 
   static propTypes = {
-    userId: PropTypes.number,
     isProcessing: PropTypes.bool,
-    dispatchPutUserChangepassword: PropTypes.func,
     error: errorType,
     handleSubmit: PropTypes.func,
   };
@@ -35,9 +34,24 @@ export default class Form extends Component {
     return this.props.isProcessing ? <DisabledButton /> : <SubmitButton />;
   }
 
+  const validate = values => {
+    const errors = {};
+    if (!values.currentPassword) {
+      errors.currentPassword = "現在のパスワードを入力してください。";
+    }
+    if (!values.newPassword) {
+      errors.newPassword = "新しいパスワードを入力してください。";
+    }
+    if (!values.confirm) {
+      errors.confirm = "新しいパスワードの確認を入力してください。";
+    }
+    return errors;
+  };
+
   render() {
+    const { handleSubmit } = this.props;
     return (
-      <form onSubmit={e => this.props.handleSubmit(e)}>
+      <form onSubmit={handleSubmit}>
         <table className={styles.floatL}>
           <thead>
             <tr>
@@ -46,16 +60,16 @@ export default class Form extends Component {
           </thead>
           <tbody>
             <tr>
-              <td><div className={styles.td}>現在のパスワード：</div></td>
-              <td><input id="currentPassword" type="password" ref={input => (this.currentPassword = input)} /></td>
+              <td><div className={styles.td}><label htmlFor="currentPassword">現在のパスワード：</label></div></td>
+              <td><Field name="currentPassword" component="input" type="password" /></td>
             </tr>
             <tr>
-              <td><div className={styles.td}>新しいパスワード：</div></td>
-              <td><input id="newPassword" type="password" ref={input => (this.newPassword = input)} /></td>
+              <td><div className={styles.td}><label htmlFor="newPassword">新しいパスワード：</label></div></td>
+              <td><Field name="newPassword" component="input" type="password" /></td>
             </tr>
             <tr>
-              <td><div className={styles.td}>新しいパスワードの確認：</div></td>
-              <td><input type="password" ref={input => (this.confirm = input)} /></td>
+              <td><div className={styles.td}><label htmlFor="confirm">新しいパスワードの確認：</label></div></td>
+              <td><Field name="confirm" component="input" type="password" /></td>
             </tr>
             <tr>
               <td colSpan="2"><div className={styles.td}>{this.renderError()}</div></td>
@@ -66,3 +80,11 @@ export default class Form extends Component {
       </form>);
   }
 }
+
+const Form = reduxForm({
+  form: 'form',
+  validate,
+  fields: ['currentPassword', 'newPassword', 'confirm']
+})(_Form);
+
+export default Form;

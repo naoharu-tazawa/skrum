@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { errorType } from '../../util/PropUtil';
 import { putUserChangepassword } from './action';
 import styles from './PasswordChangeContainer.css';
-import { Form } from './Form';
+import Form from './Form';
 
 class PasswordChangeContainer extends Component {
 
@@ -17,7 +17,7 @@ class PasswordChangeContainer extends Component {
 
   handleSubmit(e) {
     const target = e.target;
-    e.preventDefault();
+    console.log(e);
     this.props.dispatchPutUserChangepassword(
       this.props.userId,
       target.currentPassword.value.trim(),
@@ -26,13 +26,11 @@ class PasswordChangeContainer extends Component {
   }
 
   render() {
-    const { userId, isProcessing, dispatchPutUserChangepassword, error } = this.props;
+    const { isProcessing, error } = this.props;
     return (
       <div className={styles.container}>
         <Form
-          userId={userId}
           isProcessing={isProcessing}
-          dispatchPutUserChangepassword={dispatchPutUserChangepassword}
           error={error}
           onSubmit={this.handleSubmit}
         />
