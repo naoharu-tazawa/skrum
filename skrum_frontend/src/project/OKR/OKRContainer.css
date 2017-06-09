@@ -1,35 +1,15 @@
 /* -------- CLEAR -------- */
-.clear {
-  clear: both; }
-
 .cf:after {
   clear: both;
   display: block;
   content: ""; }
 
 /* -------- CLEAR -------- */
-.inner {
-  margin: 0 auto;
-  padding: 0 10px;
-  width: 1390px; }
-
 .floatL {
   float: left; }
 
 .floatR {
   float: right; }
-
-.alignL {
-  text-align: left; }
-
-.alignR {
-  text-align: right; }
-
-.alignC {
-  text-align: center; }
-
-.alignJ {
-  text-align: justify; }
 
 .ttl {
   padding: 14px 0 12px 70px;
@@ -76,57 +56,11 @@
   margin-top: 10px;
   font-size: 12px;
 }
-.overall_info .basic_info .boxInfo {
-  width: calc(100% - 103px);
-}
-.overall_info .basic_info .boxInfo .ttl_team {
-  font-size: 24px;
-  font-size: 2.4rem;
-}
-.overall_info .basic_info .boxInfo .breads {
-  margin-top: 8px;
-  font-size: 14px;
-  font-size: 1.4rem;
-}
-.overall_info .basic_info .boxInfo .breads ul li {
-  display: inline-block;
-  color: #d8dfe5;
-  text-decoration: underline;
-}
-.overall_info .basic_info .boxInfo .breads ul li:after {
-  display: inline-block;
-  width: 21px;
-  height: 21px;
-  padding-right: 2px;
-  background: transparent url(/img/common/inc_arrow_angle_r.png) no-repeat 2px -1px;
-  vertical-align: middle;
-  content: "";
-}
-.overall_info .basic_info .boxInfo .breads ul li:last-child:after {
-  padding-right: 0;
-  background: transparent; /* background: transparent url(); */
-}
-.overall_info .basic_info .boxInfo .txt {
-  margin: 10px 0 12px;
-}
-.overall_info .basic_info .boxInfo .user_info .ttl_user {
-  margin-top: 7px;
-}
-.overall_info .basic_info .boxInfo .user_info .user_name {
-  margin-top: 0;
-}
-.overall_info .basic_info .boxInfo .member_list {
-  padding-top: 9px;
-  text-align: right;
-}
 .overall_info .overall_situation {
   width: 32.5%;
   width: calc(36.5% - 30px);
   background-color: #fff;
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12);
-}
-.overall_info .content {
-  padding: 30px 5px 30px 0px;
 }
 .overall_info h2 {
   font-size: 14px;
@@ -165,32 +99,6 @@
   width: 100%;
   padding: 2em 60px 0 60px;
   overflow: scroll;
-}
-.sectionLabel {
-  background-color: #D8DFE5;
-  color: #626A7F;
-  font-size: 12px;
-  padding: 0 40px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-}
-.tabSelected {
-  background-color: #8E9AA4;
-  padding: 1em;
-  border-radius: 1em;
-  height: 0;
-  display: flex;
-  align-items: center;
-  color: white;
-}
-.tabNormal {
-  color: #626A7F;
-}
-.tabSelected, .tabNormal {
-  font-size: smaller;
-  margin-left: -1em;
-  margin-right: 4em;
 }
 .navigator {
   display: block;
@@ -235,24 +143,6 @@
   background: transparent url(/img/common/inc_arrow_r.png) no-repeat 6px 0;
   vertical-align: middle;
   content: "";
-}
-.header {
-  display: flex;
-  margin-bottom: 1.5em;
-}
-.info {
-  width: 100%;
-  margin-right: 1.5em;
-}
-.overall {
-  background-color: #fff;
-}
-.okrList {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  /*margin-top: 20px;*/
-  margin-bottom: 30px;
 }
 .spinner {
   height: 100%;

@@ -7,12 +7,14 @@
   background-color: #fff;
   color: #626A7F;
   max-height: 500px;
+  border-bottom: 1px solid #d8dfe5;
 }
 .header {
   display: flex;
   width: 100%;
   padding: 10px 40px;
   background-color: #fff;
+  border-bottom: 1px solid #d8dfe5;
 }
 .okr {
   width: 40%;

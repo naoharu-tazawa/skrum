@@ -1,13 +1,13 @@
 .component {
   display: flex;
-  /*overflow: hidden;*/
   font-size: small;
-  margin: 1px auto 0 auto;
   padding: 5px 40px;
   background-color: #f8f9fb;
   color: #626A7F;
   max-height: 500px;
   transition: all 0.3s ease-in;
+  border-bottom: 1px solid #d8dfe5;
+  border-collapse: collapse;
 }
 .collapsed {
   overflow: hidden;
@@ -15,6 +15,7 @@
   padding: 0 40px;
   margin: 0 auto;
   transition: all 0.3s ease-out;
+  border-bottom: 0;
 }
 .keyResultConnector {
   margin: auto 1em auto 0;
@@ -28,9 +29,6 @@
 .progress {
   width: 25%;
 }
-.owner {
-  width: 18%;
-}
 .name {
   position: relative;
   width: 40%;
@@ -39,16 +37,9 @@
   text-overflow: ellipsis;
   margin: auto 0;
 }
-.detail {
-  font-size: smaller;
-  margin-top: 1em;
-}
 .progressColumn {
   width: 25%;
   margin: 10px 0px;
-}
-.full .progressColumn {
-  margin: auto 0;
 }
 .progressBox {
   display: flex;
@@ -66,9 +57,6 @@
   width: 120px;
   border-radius: 0px; /* border-radius: 10px; */
   background-color: #D8DFE5;
-}
-.full .progressBar {
-  width: 100%;
 }
 .progress {
   height: 100%;
@@ -95,9 +83,6 @@
   margin: auto 0;
   width: 18%;
 }
-.full .ownerBox {
-  margin: 1em 0;
-}
 .ownerImage {
   width: 3em;
   height: 3em;
@@ -117,9 +102,6 @@
   display: flex;
   margin: auto 0;
 }
-.detailsLink {
-  color: inherit;
-}
 .circle {
   width: 40px;
   height: 40px;
@@ -134,17 +116,4 @@
   text-align: center;
   vertical-align: middle;
   margin-right: 15px;
-}
-.list table tfoot tr td .circle {
-  margin-right: 10px;
-}
-.circle_small {
-  width: 27px;
-  height: 27px;
-  font-size: 10px;
-  line-height: 27px;
-}
-.circle_plus {
-  background-color: #8e9aa6;
-  color: #fff;
 }

@@ -1,18 +1,19 @@
 .component {
   display: flex;
-  /*overflow: hidden;*/
   font-size: small;
-  margin: 1px auto 0 auto;
   padding: 5px 40px;
   background-color: #fff;
   color: #626A7F;
   max-height: 500px;
+  border-bottom: 1px solid #d8dfe5;
+  border-collapse: collapse;
 }
 .header {
   display: flex;
   width: 100%;
   padding: 10px 40px;
   background-color: #fff;
+  border-bottom: 1px solid #d8dfe5;
 }
 .okr {
   width: 40%;
@@ -27,7 +28,6 @@
   position: relative;
   width: 40%;
   white-space: nowrap;
-  /*overflow: hidden;*/
   text-overflow: ellipsis;
   margin: auto 0;
 }
@@ -113,9 +113,6 @@
   text-align: center;
   vertical-align: middle;
   margin-right: 15px;
-}
-.list table tfoot tr td .circle {
-  margin-right: 10px;
 }
 .circle_small {
   width: 27px;

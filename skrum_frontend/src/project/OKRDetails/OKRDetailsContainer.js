@@ -65,7 +65,7 @@ class OKRDetailsContainer extends Component {
           </div>
         </section>
         <section className={styles.list}>
-          <div className={styles.ttl}><h2>上記目標に紐づくサブ目標</h2></div>
+          <div className={styles.ttl_list}><h2>上記目標に紐づくサブ目標</h2></div>
           <KRDetailsList keyResults={keyResults} />
         </section>
       </div>);

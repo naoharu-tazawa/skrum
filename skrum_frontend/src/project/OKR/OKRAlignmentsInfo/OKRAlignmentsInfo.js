@@ -23,7 +23,7 @@ export default class OKRAlignmentsInfo extends Component {
     const { display, alignments = [] } = this.props;
     if (display === 'header') {
       return (
-        <div className={`${styles.header} ${styles.goal_for}`}>
+        <div className={styles.header}>
           <div>
             <div className={styles.chart} />
             <div className={styles.group}>紐付け先</div>
@@ -45,7 +45,7 @@ export default class OKRAlignmentsInfo extends Component {
         name, ...textProps }) => (
           <text {...textProps} fill="#626A7F" fontSize="x-small">{name}</text>);
     return (
-      <div className={`${styles.content} ${styles.goal_for}`}>
+      <div className={styles.content}>
         <div>
           <Surface
             className={styles.okrAlignChart}
@@ -82,7 +82,6 @@ export default class OKRAlignmentsInfo extends Component {
                 <div className={styles.numberOfOkrs}>{numberOfOkrs}</div>
               </div>))}
           </div>
-          <div style={{ clear: 'both' }} />
         </div>
       </div>);
   }

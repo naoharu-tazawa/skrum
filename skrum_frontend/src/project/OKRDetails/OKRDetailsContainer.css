@@ -16,6 +16,11 @@
   padding: 14px 0 12px 70px;
   background-color: #d8dfe5; }
 
+.ttl_list {
+  padding: 14px 0 12px 70px;
+  background-color: #d8dfe5;
+  box-shadow: 1px 0px 1px 1px rgba(0,0,0,0.12); }
+
 .overall_info {
   display:-webkit-box;
   display:-moz-box;
@@ -42,7 +47,7 @@
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12); }
 .overall_info .overall_situation {
   width: 32.5%;
-  width: calc(36.5% - 33px);
+  width: calc(36.5% - 30px);
   background-color: #fff;
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12); }
 .overall_info h2, .list h2 {
@@ -51,7 +56,7 @@
   letter-spacing: .5px; }
 
 .list {
-  margin: 30px 0 80px;
+  margin: 30px 0px 80px;
   background-color: #fff; }
 
 /*# sourceMappingURL=okr.css.map */
@@ -63,6 +68,7 @@
   height: 100%;
   width: 100%;
   overflow: scroll;
+  padding: 3px;
 }
 .error {
   color: crimson;
