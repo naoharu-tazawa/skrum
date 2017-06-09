@@ -1,4 +1,4 @@
-.default {
+.editor {
   margin: 0 0 0 -5px;
   padding: 2px 30px 2px 5px;
   /*z-index: 1;*/
@@ -14,12 +14,15 @@
   cursor: text;
   box-shadow: 0 0 0 0 transparent;
 }
-.default form {
-  margin: -3px -30px -4px -2px;
-  display: inline-block;
+.editor:not(.readonly):not(.editing):hover {
+  border: 1px solid #ccc;
+  margin: -1px -1px -1px -6px;
 }
-.default textarea {
-  margin: -1px 0 0 1px;
+.editor input {
+  margin: -3px -30px -4px -2px;
+}
+.editor textarea {
+  margin: -2px -30px -4px -1px;
 }
 .editButton {
   color: #707070;
@@ -56,15 +59,12 @@
   position: absolute;
   speak: none;
 }
-.hitMode {
-  border: 1px solid #ccc;
-  margin: -1px -1px -1px -6px;
-}
-.hitMode .editButton {
+.editor:hover .editButton {
   opacity: 1;
   /*z-index: auto;*/
 }
 .saveOptions {
+  display: flex;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
   border-top: none;

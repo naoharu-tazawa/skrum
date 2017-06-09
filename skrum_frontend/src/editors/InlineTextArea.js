@@ -6,36 +6,55 @@ export default class InlineTextArea extends PureComponent {
 
   static propTypes = {
     // name: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     readonly: PropTypes.bool,
+    onSubmit: PropTypes.func,
   };
 
   state = {};
 
+  componentWillReceiveProps() {
+    this.setState({ value: undefined });
+  }
+
+  setEditingState(editing) {
+    this.setState({ editing });
+  }
+
+  submitChange() {
+    const { onSubmit } = this.props;
+    const { value } = this.state;
+    this.setEditingState(false);
+    return value !== undefined && onSubmit && onSubmit(value);
+  }
+
+  cancelChange() {
+    this.setEditingState(false);
+    this.setState({ value: undefined });
+  }
+
   render() {
     const { value = '', readonly = false } = this.props;
-    const { hitMode = false, editMode = false } = this.state;
+    const { editing = false } = this.state;
     return (
       <span
-        onMouseEnter={() => !readonly && !editMode && this.setState({ hitMode: true })}
-        onMouseLeave={() => !readonly && !editMode && this.setState({ hitMode: false })}
-        onMouseDown={() => !readonly && this.setState({ editMode: true, hitMode: false })}
-        className={`${styles.default} ${!editMode && hitMode ? styles.hitMode : ''}`}
+        className={`${styles.editor} ${readonly && styles.readonly} ${editing && styles.editing}`}
+        onMouseDown={() => !readonly && this.setEditingState(true)}
       >
-        {!editMode && value}
-        {!editMode && <span className={styles.editButton} />}
-        {editMode && (
-          <form onSubmit={() => this.setState({ editMode: false })}>
-            <textarea
-              defaultValue={value}
-              onBlur={() => this.setState({ editMode: false })}
-              onKeyDown={e => e.key === 'Escape' && this.setState({ editMode: false })}
-            />
-            <div className={styles.saveOptions}>
-              <button type="submit" className={styles.submit}>&nbsp;</button>
-              <button type="cancel" className={styles.cancel}>&nbsp;</button>
-            </div>
-          </form>)}
+        {!editing && value}
+        {!editing && !readonly && <span className={styles.editButton} />}
+        {editing && (
+          <textarea
+            defaultValue={value}
+            onChange={e => this.setState({ value: e.target.value })}
+            onBlur={() => this.submitChange()}
+            onKeyDown={e => e.key === 'Escape' && this.cancelChange()}
+          />)}
+        {editing && (
+          <div className={styles.saveOptions}>
+            <button className={styles.submit} onClick={() => this.submitChange()}>&nbsp;</button>
+            <button className={styles.cancel} onClick={() => this.cancelChange()}>&nbsp;</button>
+          </div>)}
       </span>
     );
   }

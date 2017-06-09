@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { okrPropTypes } from './propTypes';
 import InlineTextInput from '../../editors/InlineTextInput';
 import InlineTextArea from '../../editors/InlineTextArea';
@@ -8,14 +9,15 @@ export default class OKRDetails extends Component {
 
   static propTypes = {
     okr: okrPropTypes,
+    dispatchPutOKR: PropTypes.func.isRequired,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { okr } = this.props;
-    const { name, detail, unit, targetValue, achievedValue, achievementRate, owner } = okr;
+    const { okr, dispatchPutOKR } = this.props;
+    const { id, name, detail, unit, targetValue, achievedValue, achievementRate, owner } = okr;
     return (
       <div>
         <div className={`${styles.content} ${styles.txt_top} ${styles.cf}`}>
@@ -32,11 +34,17 @@ export default class OKRDetails extends Component {
         </div>
         <div className={`${styles.content} ${styles.cf}`}>
           <div className={styles.boxInfo}>
-            <p className={styles.ttl_team}>
-              <InlineTextInput value={name} />
-            </p>
+            <div className={styles.ttl_team}>
+              <InlineTextInput
+                value={name}
+                onSubmit={value => dispatchPutOKR(id, { okrName: value })}
+              />
+            </div>
             <div className={styles.txt}>
-              <InlineTextArea value={detail} />
+              <InlineTextArea
+                value={detail}
+                onSubmit={value => dispatchPutOKR(id, { okrDetail: value })}
+              />
             </div>
             <div className={`${styles.bar_top} ${styles.cf}`}>
               <div className={styles.progressBox}>
