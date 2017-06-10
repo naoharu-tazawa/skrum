@@ -44,6 +44,7 @@ export default class OKRAlignmentsInfo extends Component {
       { percent, cornerRadius, innerRadius, outerRadius, startAngle, endAngle, midAngle, index,
         name, ...textProps }) => (
           <text {...textProps} fill="#626A7F" fontSize="x-small">{name}</text>);
+    const lineInset = 0.82; // fraction
     return (
       <div className={styles.content}>
         <div>
@@ -59,7 +60,7 @@ export default class OKRAlignmentsInfo extends Component {
               cx={chartRadius * (widthFactor / 2)}
               cy={chartRadius * (heightFactor / 2)}
               outerRadius={chartRadius}
-              innerRadius={chartRadius * 0.88}
+              innerRadius={chartRadius * lineInset}
               data={data}
               paddingAngle={0}
               dataKey="name"

@@ -10,13 +10,14 @@ export default class KRDetailsBar extends Component {
   static propTypes = {
     header: PropTypes.bool,
     keyResult: keyResultPropTypes,
+    dispatchPutOKR: PropTypes.func,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { header, keyResult } = this.props;
+    const { header, keyResult, dispatchPutOKR } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -26,12 +27,21 @@ export default class KRDetailsBar extends Component {
           <div className={styles.action}>アクション</div>
         </div>);
     }
-    const { name, detail, unit, targetValue, achievedValue, achievementRate, owner } = keyResult;
+    const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
+      owner } = keyResult;
     return (
       <div className={styles.component}>
         <div className={styles.name}>
-          <InlineTextInput value={name} />
-          <div className={styles.detail}><InlineTextArea value={detail} /></div>
+          <InlineTextInput
+            value={name}
+            onSubmit={value => dispatchPutOKR(id, { okrName: value })}
+          />
+          <div className={styles.detail}>
+            <InlineTextArea
+              value={detail}
+              onSubmit={value => dispatchPutOKR(id, { okrDetail: value })}
+            />
+          </div>
         </div>
         <div className={styles.progressColumn}>
           <div className={styles.progressBox}>

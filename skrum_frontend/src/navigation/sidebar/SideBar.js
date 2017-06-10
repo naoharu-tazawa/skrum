@@ -30,14 +30,14 @@ class SectionItem extends Component {
 
   renderImg() {
     const { imgSrc } = this.props;
-    return (!imgSrc) ? null : (
+    return !imgSrc ? null : (
       <img src={imgSrc} alt="" className={styles.sectionItemImg} />);
   }
 
   render() {
     const { title, isExpanded } = this.props;
     return (<li className={this.getStyles()}>
-      {!isExpanded ? null : (
+      {isExpanded && (
         <Link to={this.getPath()} className={styles.sectionItemLink}>
           {title}
         </Link>)}
