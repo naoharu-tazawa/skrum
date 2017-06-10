@@ -48,32 +48,29 @@
     .profile_box .profile_txt .team_name {
       margin-bottom: 10px;
       font-size: 20px; }
-    .profile_box .profile_txt .member_tree {
-      margin-bottom: 10px;
+    .profile_box .profile_txt .breads {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    .profile_box .profile_txt .breads ul li {
+      display: inline-block;
       color: #d8dfe5;
-      font-size: 14px; }
-      .profile_box .profile_txt .member_tree span {
-        position: relative;
-        margin-left: .5em;
-        padding-right: 1em;
-        text-decoration: underline; }
-        .profile_box .profile_txt .member_tree span:after {
-          position: absolute;
-          top: 50%;
-          right: 0;
-          margin-top: -3px;
-          content: '';
-          width: 6px;
-          height: 6px;
-          border-top: 2px solid #626a7f;
-          border-right: 2px solid #626a7f;
-          -webkit-transform: rotate(45deg);
-          transform: rotate(45deg); }
-        .profile_box .profile_txt .member_tree span:first-of-type {
-          margin-left: 0; }
-        .profile_box .profile_txt .member_tree span:last-of-type:after {
-          border-top: 0;
-          border-right: 0; }
+      text-decoration: underline;
+    }
+    .profile_box .profile_txt .breads ul li:after {
+      display: inline-block;
+      width: 21px;
+      height: 21px;
+      padding-right: 2px;
+      background: transparent url(/img/common/inc_arrow_angle_r.png) no-repeat 2px -1px;
+      vertical-align: middle;
+      content: "";
+    }
+    .profile_box .profile_txt .breads ul li:last-child:after {
+      padding-right: 0;
+      /* background: transparent url(); */
+      background: transparent;
+    }
     .profile_box .profile_txt p {
       margin-bottom: 10px;
       font-size: 14px;
@@ -117,6 +114,7 @@
 
 .title {
   font-size: 10px;
+  margin-top: 10px;
   margin-bottom: 5px;
   color: #8e9aa6;
 }

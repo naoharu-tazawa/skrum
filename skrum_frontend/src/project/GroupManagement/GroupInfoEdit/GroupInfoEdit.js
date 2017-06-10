@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { groupPropTypes } from './propTypes';
 import styles from './GroupInfoEdit.css';
+import { replacePath } from '../../../util/RouteUtil';
 import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
 
 export default class GroupInfoEdit extends Component {
@@ -13,7 +15,19 @@ export default class GroupInfoEdit extends Component {
 
   render() {
     const { group } = this.props;
-    const { name, /* company, dept, */ mission, leaderName, lastUpdate } = group;
+    const { name, groupPaths, mission, leaderName, lastUpdate } = group;
+    const groupPathsLink = groupPaths.map(({ groupTreeId, groupPath }) =>
+      <ul key={groupTreeId}>
+        {groupPath.map(({ id, name: groupName }, index) =>
+          <li key={id}>
+            <Link
+              to={replacePath({ subject: !index ? 'company' : 'group', id })}
+              className={styles.groupLink}
+            >
+              {groupName}
+            </Link>
+          </li>)}
+      </ul>);
     return (
       <section className={styles.profile_box}>
         <h1 className={styles.ttl_setion}>基本情報</h1>
@@ -24,12 +38,9 @@ export default class GroupInfoEdit extends Component {
           </div>
           <div className={styles.profile_txt}>
             <h2 className={styles.team_name}>{name}</h2>
-            <div className={styles.member_tree}>
-              <span>Company Name</span>
-              <span>Group Name</span>
-              <span>Group Name</span>
-              <span>Group Name</span>
-            </div>
+            <nav className={styles.breads}>
+              {groupPathsLink}
+            </nav>
             <div>
               <div className={styles.title}>ミッション</div>
               <p>{mission}</p>
