@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import { routerReducer } from 'react-router-redux';
+import { reducer as toastrReducer } from 'react-redux-toastr';
 import authReducer from '../../auth/reducer';
 import navigationReducer from '../../navigation/reducer';
 import okrReducer from '../../project/OKR/reducer';
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   setting: passwordChangeReducer,
   routing: routerReducer,
   form: formReducer,
+  toastr: toastrReducer,
 });
 
 export default rootReducer;

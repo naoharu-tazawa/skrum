@@ -9,11 +9,17 @@
   font-size: 18px;
 }
 .td {
-  margin: 30px 20px 0px 20px;
+  margin: 30px 0px 0px 20px;
+}
+.label {
+  margin-top: 3px;
+  display: block;
+  float: left;
+  width: 220px;
 }
 
 .btn_area {
-  margin: 128px 0px 0px 200px;
+  margin: 138px 0px 0px 200px;
 }
 .btn {
   vertical-align: bottom;
@@ -37,6 +43,9 @@
     height: 50px;
     width: 150px;
     background: url(/img/rolling.svg) center no-repeat; }
+.warning {
+  color: #FA5858;
+}
 
 .container {
   display: flex;

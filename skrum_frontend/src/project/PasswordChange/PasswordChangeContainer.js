@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { toastr } from 'react-redux-toastr';
 import { errorType } from '../../util/PropUtil';
 import { putUserChangepassword } from './action';
 import styles from './PasswordChangeContainer.css';
@@ -20,12 +21,13 @@ class PasswordChangeContainer extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(values) {
+  handleSubmit(data) {
     this.props.dispatchPutUserChangepassword(
       this.props.userId,
-      values.currentPassword,
-      values.newPassword,
+      data.currentPassword,
+      data.newPassword,
     );
+    toastr.warning('The title', 'The message');
   }
 
   render() {

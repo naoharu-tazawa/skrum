@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, propTypes } from 'redux-form';
 import PropTypes from 'prop-types';
-import fieldsPropTypes from './propTypes';
 import { errorType } from '../../util/PropUtil';
 import styles from './Form.css';
 
@@ -16,24 +15,43 @@ function DisabledButton() {
 const validate = (values) => {
   const errors = {};
   if (!values.currentPassword) {
-    errors.currentPassword = '現在のパスワードを入力してください。';
+    errors.currentPassword = '入力してください';
+  } else if (!/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,20}$/i.test(values.currentPassword)) {
+    errors.currentPassword = '半角英数字8字以上20字以下で、アルファベット・数字をそれぞれ1字以上含めてください';
   }
+
   if (!values.newPassword) {
-    errors.newPassword = '新しいパスワードを入力してください。';
+    errors.newPassword = '入力してください';
+  } else if (!/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,20}$/i.test(values.newPassword)) {
+    errors.newPassword = '半角英数字8字以上20字以下で、アルファベット・数字をそれぞれ1字以上含めてください';
   }
-  if (values.newPassword !== values.confirm) {
-    errors.confirm = '確認パスワードが異なります。';
+
+  if (!values.confirm) {
+    errors.confirm = '入力してください';
+  } else if (values.newPassword !== values.confirm) {
+    errors.confirm = '確認パスワードが異なります';
   }
   return errors;
 };
 
+// eslint-disable-next-line react/prop-types
+const renderField = ({ input, type, label, meta: { touched, error } }) => (
+  <div>
+    <label className={styles.label}>{label}</label>
+    <span>
+      <input {...input} type={type} />
+      {touched && error && <div className={styles.warning}>{error}</div>}
+    </span>
+  </div>
+);
+
 class _Form extends Component {
 
   static propTypes = {
+    ...propTypes,
     isProcessing: PropTypes.bool,
     error: errorType,
     handleSubmit: PropTypes.func,
-    fields: fieldsPropTypes.isRequired,
   };
 
   renderError() {
@@ -51,34 +69,24 @@ class _Form extends Component {
   }
 
   render() {
-    const { fields: { currentPassword, newPassword, confirm }, handleSubmit } = this.props;
+    const { handleSubmit } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <table className={styles.floatL}>
-          <thead>
-            <tr>
-              <th className={styles.title} colSpan="2">パスワード変更</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><div className={styles.td}><label htmlFor="currentPassword">現在のパスワード：</label></div></td>
-              <td><Field name="currentPassword" component="input" type="password" /></td>
-            </tr>
-            <tr>
-              <td><div className={styles.td}><label htmlFor="newPassword">新しいパスワード：</label></div></td>
-              <td><Field name="newPassword" component="input" type="password" /></td>
-            </tr>
-            <tr>
-              <td><div className={styles.td}><label htmlFor="confirm">新しいパスワードの確認：</label></div></td>
-              <td><Field name="confirm" component="input" type="password" /></td>
-            </tr>
-            <tr>
-              <td colSpan="2"><div className={styles.td}>{this.renderError()}</div></td>
-            </tr>
-          </tbody>
-        </table>
-        <div>{currentPassword}{newPassword}{confirm}</div>
+        <div className={styles.floatL}>
+          <div className={styles.title} >パスワード変更</div>
+          <div className={styles.td}>
+            <Field name="currentPassword" type="password" component={renderField} label="現在のパスワード：" />
+          </div>
+          <div className={styles.td}>
+            <Field name="newPassword" type="password" component={renderField} label="新しいパスワード：" />
+          </div>
+          <div className={styles.td}>
+            <Field name="confirm" type="password" component={renderField} label="新しいパスワード（確認）：" />
+          </div>
+          <div className={styles.td}>
+            {this.renderError()}
+          </div>
+        </div>
         <div className={`${styles.btn_area} ${styles.floatL}`}>{this.renderButton()}</div>
       </form>);
   }
@@ -87,7 +95,6 @@ class _Form extends Component {
 const Form = reduxForm({
   form: 'form',
   validate,
-  fields: ['currentPassword', 'newPassword', 'confirm'],
 })(_Form);
 
 export default Form;
