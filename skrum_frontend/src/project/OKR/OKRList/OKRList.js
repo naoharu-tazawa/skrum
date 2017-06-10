@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { okrsPropTypes } from './propTypes';
-import OKRBar from './OKRBar';
+import OkrBar from './OkrBar';
 import KRBar from './KRBar';
 import styles from './OKRList.css';
 
@@ -27,7 +27,7 @@ export default class OKRList extends Component {
     return (
       <div className={styles.component}>
         <div className={styles.header}>
-          <OKRBar header />
+          <OkrBar header />
         </div>
         <div className={styles.bars}>
           {_.flatten(okrs.map((okr) => {
@@ -39,7 +39,7 @@ export default class OKRList extends Component {
                 tabIndex={id}
                 onMouseUp={() => keyResults.length > 0 && this.toggleKeyResults(id)}
               >
-                <OKRBar okr={okr} />
+                <OkrBar okr={okr} />
               </div>),
               ...keyResults.map(keyResult =>
                 <KRBar key={keyResult.id} {...{ display, keyResult }} />),

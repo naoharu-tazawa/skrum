@@ -31,11 +31,23 @@
 }
 .name {
   position: relative;
-  width: 40%;
-  white-space: nowrap;
+  width: calc(40% - 20px);
+  /*white-space: nowrap;*/
   /*overflow: hidden;*/
-  text-overflow: ellipsis;
-  margin: auto 0;
+  /*text-overflow: ellipsis;*/
+  margin: auto 0 auto 20px;
+}
+.name:before {
+  content: " ";
+  width: 11px;
+  background: url(/img/common/inc_sub_nav.png) no-repeat center;
+  background-size: 100%;
+  margin-top: -5px;
+  left: -20px;
+  color: inherit;
+  position: absolute;
+  top: 0;
+  height: 100%;
 }
 .progressColumn {
   width: 25%;

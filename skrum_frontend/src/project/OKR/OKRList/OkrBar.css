@@ -27,9 +27,12 @@
 .name {
   position: relative;
   width: 40%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  /*white-space: nowrap;*/
+  /*text-overflow: ellipsis;*/
   margin: auto 0;
+}
+.name link {
+  color: inherit;
 }
 .progressColumn {
   width: 25%;
@@ -95,9 +98,6 @@
 .krCount {
   display: flex;
   margin: auto 0;
-}
-.detailsLink {
-  color: inherit;
 }
 .circle {
   width: 40px;

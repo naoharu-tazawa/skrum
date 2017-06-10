@@ -23,10 +23,10 @@ export default class InlineTextInput extends PureComponent {
   }
 
   submitChange() {
-    const { onSubmit } = this.props;
+    const { onSubmit, value: defaultValue = '' } = this.props;
     const { value } = this.state;
     this.setEditingState(false);
-    return value !== undefined && onSubmit && onSubmit(value);
+    return value !== undefined && value !== defaultValue && onSubmit && onSubmit(value);
   }
 
   cancelChange() {

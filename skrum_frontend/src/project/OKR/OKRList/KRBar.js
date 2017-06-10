@@ -28,9 +28,6 @@ export default class KRBar extends Component {
     return (
       <div className={this.getBaseStyles(display)}>
         <div className={styles.name}>
-          <span className={styles.keyResultConnector}>
-            <img src="/img/common/inc_sub_nav.png" alt="" />
-          </span>
           {name}
         </div>
         <div className={styles.progressColumn}>
