@@ -9,13 +9,13 @@ const Root = ({ store, history }) => (
   <Provider store={store}>
     <Router history={history} routes={routes} />
     <ReduxToastr
-      timeOut={4000}
+      timeOut={2000}
       newestOnTop={false}
       preventDuplicates
       position="top-center"
       transitionIn="fadeIn"
       transitionOut="fadeOut"
-      progressBar
+      progressBar={false}
     />
   </Provider>
 );

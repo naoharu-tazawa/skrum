@@ -27,7 +27,7 @@ class PasswordChangeContainer extends Component {
       data.currentPassword,
       data.newPassword,
     );
-    toastr.warning('The title', 'The message');
+    toastr.info('パスワードを変更しました');
   }
 
   render() {
