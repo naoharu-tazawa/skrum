@@ -33,6 +33,7 @@ export const okrPropTypes = PropTypes.shape({
   }).isRequired,
   keyResults: keyResultsPropTypes.isRequired,
   status: PropTypes.string.isRequired,
+  weightedAverageRatio: PropTypes.string,
   ratioLockedFlg: PropTypes.number,
 });
 

@@ -15,6 +15,7 @@ class OKRDetailsContainer extends Component {
   static propTypes = {
     isFetching: PropTypes.bool,
     error: PropTypes.shape({ message: PropTypes.string.isRequired }),
+    parentOkr: okrPropTypes,
     okr: okrPropTypes,
     keyResults: keyResultsPropTypes,
     progressSeries: ProgressSeriesPropTypes,
@@ -46,7 +47,7 @@ class OKRDetailsContainer extends Component {
   }
 
   render() {
-    const { isFetching, error, okr, keyResults = [], progressSeries = [],
+    const { isFetching, error, parentOkr, okr, keyResults = [], progressSeries = [],
       dispatchPutOKR } = this.props;
     if (error) {
       return <div className={`${styles.container} ${styles.error}`} >{error.message}</div>;
@@ -59,7 +60,7 @@ class OKRDetailsContainer extends Component {
         <section className={`${styles.overall_info} ${styles.cf}`}>
           <div className={`${styles.basic_info} ${styles.h_line} ${styles.floatL}`}>
             <div className={styles.ttl}><h2>目標の詳細</h2></div>
-            <OKRDetails okr={okr} dispatchPutOKR={dispatchPutOKR} />
+            <OKRDetails parentOkr={parentOkr} okr={okr} dispatchPutOKR={dispatchPutOKR} />
           </div>
           <div className={`${styles.overall_situation} ${styles.h_line} ${styles.floatR}`}>
             <div className={styles.ttl}><h2>目標の進捗状況</h2></div>
@@ -76,12 +77,13 @@ class OKRDetailsContainer extends Component {
 
 const mapStateToProps = (state) => {
   const { okr } = state;
-  const { isFetching, error, objective, keyResults, chart } = okr;
+  const { isFetching, error, parentOkr, objective, keyResults, chart } = okr;
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
   const basicProps = { isFetching, error, pathname };
   return !objective ? basicProps : {
     ...basicProps,
+    parentOkr: mapOKR(parentOkr, []),
     okr: mapOKR(objective, []),
     keyResults: keyResults.map(mapKeyResult),
     progressSeries: chart,

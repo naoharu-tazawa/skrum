@@ -8,6 +8,7 @@ import styles from './OKRDetails.css';
 export default class OKRDetails extends Component {
 
   static propTypes = {
+    parentOkr: okrPropTypes,
     okr: okrPropTypes,
     dispatchPutOKR: PropTypes.func.isRequired,
   };
@@ -16,20 +17,18 @@ export default class OKRDetails extends Component {
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { okr, dispatchPutOKR } = this.props;
+    const { parentOkr, okr, dispatchPutOKR } = this.props;
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate, owner } = okr;
     return (
       <div>
         <div className={`${styles.content} ${styles.txt_top} ${styles.cf}`}>
           <p className={styles.alignment}>紐付け先目標</p>
           <div className={`${styles.txt_content_top} ${styles.floatL}`}>
-              こちらは上位OKRが入りますこちらは上位 こちらは上位OKRが入りますこちらは上位 こちらは上位OKRが入りますこちらは上位
-              こちらは上位OKRが入りますこちらは上位
-              こちらは上位OKRが。。。
+              ${parentOkr.name}
           </div>
           <div className={`${styles.img_content_top} ${styles.floatL}`}>
             <img src="/img/common/icn_user.png" alt="User Name" />
-            <span>User Name</span>
+            <span>{parentOkr.owner.name}</span>
           </div>
         </div>
         <div className={`${styles.content} ${styles.cf}`}>

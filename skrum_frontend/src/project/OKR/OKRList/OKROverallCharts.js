@@ -25,6 +25,7 @@ export default class OKROverallCharts extends Component {
     }));
     const ratesGroupCountData = ratesGroupCount.map(([fill, value]) => ({ value, fill }));
     const chartRadius = 60;
+    const lineInset = 0.82; // fraction
     return (
       <div className={styles.content}>
         <div className={styles.charts}>
@@ -46,7 +47,7 @@ export default class OKROverallCharts extends Component {
               cx={chartRadius}
               cy={chartRadius}
               outerRadius={chartRadius}
-              innerRadius={chartRadius * 0.88}
+              innerRadius={chartRadius * lineInset}
               data={progressData}
               paddingAngle={0}
             />
@@ -69,7 +70,7 @@ export default class OKROverallCharts extends Component {
               cx={chartRadius}
               cy={chartRadius}
               outerRadius={chartRadius}
-              innerRadius={chartRadius * 0.88}
+              innerRadius={chartRadius * lineInset}
               data={_.orderBy(ratesGroupCountData, 'fill', 'desc')}
               paddingAngle={0}
             />
