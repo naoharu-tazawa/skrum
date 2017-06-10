@@ -3,9 +3,9 @@ import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, L
 import _ from 'lodash';
 import { ProgressSeriesPropTypes } from './propTypes';
 import { convertToRelativeTimeText, DateFormat } from '../../util/DatetimeUtil';
-import styles from './OKRObjectiveProgressChart.css';
+import styles from './OkrProgressChart.css';
 
-export default class OKRObjectiveProgressChart extends Component {
+export default class OkrProgressChart extends Component {
 
   static propTypes = {
     progressSeries: ProgressSeriesPropTypes.isRequired,

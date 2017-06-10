@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { okrPropTypes } from './propTypes';
 import InlineTextInput from '../../editors/InlineTextInput';
 import InlineTextArea from '../../editors/InlineTextArea';
-import styles from './OKRDetails.css';
+import styles from './OkrDetails.css';
 
-export default class OKRDetails extends Component {
+export default class OkrDetails extends Component {
 
   static propTypes = {
     parentOkr: okrPropTypes,
