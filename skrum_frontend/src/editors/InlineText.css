@@ -5,6 +5,7 @@
   word-wrap: break-word;
   word-break: break-all;
   /*display: inline-block;*/
+  display: table;
   max-width: 100%;
   position: relative;
   vertical-align: top;
@@ -13,6 +14,7 @@
   border-radius: 2px;
   cursor: text;
   box-shadow: 0 0 0 0 transparent;
+  white-space: pre-line;
 }
 .editor:not(.readonly):not(.editing):hover {
   border: 1px solid #ccc;
@@ -23,6 +25,10 @@
 }
 .editor textarea {
   margin: -2px -30px -4px -1px;
+}
+.editing, .editing input, .editing textarea {
+  width: 100%;
+  padding-right: 0;
 }
 .editButton {
   color: #707070;
@@ -75,7 +81,7 @@
   margin: 0;
   position: absolute;
   right: 0;
-  /*top: calc(100% + 3px);*/
+  top: calc(100% + 3px);
   z-index: 1;
 }
 .submit:before {

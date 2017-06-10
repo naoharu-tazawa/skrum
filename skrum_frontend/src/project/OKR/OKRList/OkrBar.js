@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { okrPropTypes } from './propTypes';
 import { replacePath } from '../../../util/RouteUtil';
-import styles from './OKRBar.css';
+import styles from './OkrBar.css';
 
-export default class OKRBar extends Component {
+export default class OkrBar extends Component {
 
   static propTypes = {
     header: PropTypes.bool,
@@ -33,7 +33,6 @@ export default class OKRBar extends Component {
         <div className={styles.name}>
           <Link
             to={replacePath({ aspect: 'o', aspectId: `${id}` })}
-            className={styles.detailsLink}
             onMouseUp={e => e.stopPropagation()}
           >
             {name}
@@ -60,7 +59,9 @@ export default class OKRBar extends Component {
         <div className={styles.krCount}>
           <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
           <a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>
-          {keyResults && <div className={`${styles.circle} ${styles.circle_small} ${styles.circle_plus}`}>＋{keyResults.length}</div>}
+          {keyResults && <div className={`${styles.circle} ${styles.circle_small} ${styles.circle_plus}`}>
+            ＋{keyResults.length}
+            </div>}
         </div>
       </div>);
   }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { keyResultPropTypes } from '../propTypes';
-import InlineTextInput from '../../../editors/InlineTextInput';
 import InlineTextArea from '../../../editors/InlineTextArea';
 import styles from './KRDetailsBar.css';
 
@@ -32,7 +31,7 @@ export default class KRDetailsBar extends Component {
     return (
       <div className={styles.component}>
         <div className={styles.name}>
-          <InlineTextInput
+          <InlineTextArea
             value={name}
             onSubmit={value => dispatchPutOKR(id, { okrName: value })}
           />

@@ -14,7 +14,8 @@ export default (state = {
       if (error) {
         return { ...state, isFetching: false, error: { message: payload.message } };
       }
-      return { ...state, isFetching: false, ...values(payload)[0], error: null };
+      const newOkr = { parentOkr: null, ...values(payload)[0] };
+      return { ...state, isFetching: false, ...newOkr, error: null };
     }
 
     case Action.REQUEST_PUT_OKR_DETAILS: {

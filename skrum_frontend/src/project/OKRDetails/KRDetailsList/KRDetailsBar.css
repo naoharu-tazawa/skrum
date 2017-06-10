@@ -28,9 +28,9 @@
 .name {
   position: relative;
   width: 40%;
-  white-space: nowrap;
+  /*white-space: nowrap;*/
   /*overflow: hidden;*/
-  text-overflow: ellipsis;
+  /*text-overflow: ellipsis;*/
   margin: 1em 0;
 }
 .detail {
@@ -113,9 +113,6 @@
 .krCount {
   display: flex;
   margin: auto 0;
-}
-.detailsLink {
-  color: inherit;
 }
 .circle {
   width: 40px;

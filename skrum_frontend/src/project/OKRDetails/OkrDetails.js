@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { okrPropTypes } from './propTypes';
-import InlineTextInput from '../../editors/InlineTextInput';
+import { replacePath } from '../../util/RouteUtil';
 import InlineTextArea from '../../editors/InlineTextArea';
 import styles from './OkrDetails.css';
 
@@ -9,7 +10,7 @@ export default class OkrDetails extends Component {
 
   static propTypes = {
     parentOkr: okrPropTypes,
-    okr: okrPropTypes,
+    okr: okrPropTypes.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
   };
 
@@ -17,24 +18,29 @@ export default class OkrDetails extends Component {
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { parentOkr, okr, dispatchPutOKR } = this.props;
+    const { parentOkr = {}, okr, dispatchPutOKR } = this.props;
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate, owner } = okr;
     return (
       <div>
         <div className={`${styles.content} ${styles.txt_top} ${styles.cf}`}>
           <p className={styles.alignment}>紐付け先目標</p>
           <div className={`${styles.txt_content_top} ${styles.floatL}`}>
-              ${parentOkr.name}
+            {parentOkr && (
+              <Link to={replacePath({ aspect: 'o', aspectId: `${parentOkr.id}` })}>
+                {parentOkr.name}
+              </Link>)}
+            {!parentOkr && <span>➖</span>}
           </div>
-          <div className={`${styles.img_content_top} ${styles.floatL}`}>
-            <img src="/img/common/icn_user.png" alt="User Name" />
-            <span>{parentOkr.owner.name}</span>
-          </div>
+          {parentOkr && (
+            <div className={`${styles.img_content_top} ${styles.floatL}`}>
+              <img src="/img/common/icn_user.png" alt="User Name" />
+              <span>{parentOkr.owner.name}</span>
+            </div>)}
         </div>
         <div className={`${styles.content} ${styles.cf}`}>
           <div className={styles.boxInfo}>
             <div className={styles.ttl_team}>
-              <InlineTextInput
+              <InlineTextArea
                 value={name}
                 onSubmit={value => dispatchPutOKR(id, { okrName: value })}
               />

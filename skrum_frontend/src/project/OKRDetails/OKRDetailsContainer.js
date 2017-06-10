@@ -83,7 +83,7 @@ const mapStateToProps = (state) => {
   const basicProps = { isFetching, error, pathname };
   return !objective ? basicProps : {
     ...basicProps,
-    parentOkr: mapOKR(parentOkr, []),
+    parentOkr: parentOkr && mapOKR(parentOkr, []),
     okr: mapOKR(objective, []),
     keyResults: keyResults.map(mapKeyResult),
     progressSeries: chart,
