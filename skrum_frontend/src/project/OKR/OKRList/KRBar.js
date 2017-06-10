@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { keyResultPropTypes } from './propTypes';
-import InlineTextInput from '../../../editors/InlineTextInput';
 import styles from './KRBar.css';
 
 export default class KRBar extends Component {
@@ -32,7 +31,7 @@ export default class KRBar extends Component {
           <span className={styles.keyResultConnector}>
             <img src="/img/common/inc_sub_nav.png" alt="" />
           </span>
-          <InlineTextInput value={name} />
+          {name}
         </div>
         <div className={styles.progressColumn}>
           <div className={styles.progressBox}>
