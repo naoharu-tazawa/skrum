@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const sectionPropType = PropTypes.oneOf(['user', 'group', 'company']);
+export const subjectPropType = PropTypes.oneOf(['u', 'user', 'g', 'group', 'c', 'company']);
 
 export const itemsPropTypes = PropTypes.arrayOf(PropTypes.shape({
   id: PropTypes.number.isRequired,

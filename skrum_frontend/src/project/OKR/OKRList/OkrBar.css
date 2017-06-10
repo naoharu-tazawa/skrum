@@ -31,8 +31,8 @@
   /*text-overflow: ellipsis;*/
   margin: auto 0;
 }
-.name link {
-  color: inherit;
+.name a {
+  display: block;
 }
 .progressColumn {
   width: 25%;
@@ -98,6 +98,12 @@
 .krCount {
   display: flex;
   margin: auto 0;
+}
+.krCount a {
+  cursor: pointer;
+}
+.krCount a:focus {
+  outline: none;
 }
 .circle {
   width: 40px;

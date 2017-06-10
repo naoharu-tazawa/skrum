@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { sectionPropType, itemsPropTypes, sectionPropTypes, sectionsPropTypes } from './propTypes';
+import { subjectPropType, itemsPropTypes, sectionPropTypes, sectionsPropTypes } from './propTypes';
 import { explodePath, replacePath } from '../../util/RouteUtil';
 import styles from './SideBar.css';
 
 class SectionItem extends Component {
   static propTypes = {
-    section: sectionPropType.isRequired,
+    section: subjectPropType.isRequired,
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     imgSrc: PropTypes.string,
@@ -48,7 +48,7 @@ class SectionItem extends Component {
 
 class Section extends Component {
   static propTypes = {
-    section: sectionPropType.isRequired,
+    section: subjectPropType.isRequired,
     title: PropTypes.string.isRequired,
     items: itemsPropTypes.isRequired,
     isExpanded: PropTypes.bool.isRequired,

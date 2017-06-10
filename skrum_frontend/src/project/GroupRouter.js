@@ -5,6 +5,7 @@ import OKRContainer from './OKR/OKRContainer';
 import MapContainer from './Map/MapContainer';
 import TimelineContainer from './Timeline/TimelineContainer';
 import GroupManagementContainer from './GroupManagement/GroupManagementContainer';
+import { explodeTab } from '../util/RouteUtil';
 import styles from './GroupRouter.css';
 
 export default class GroupRouter extends Component {
@@ -19,7 +20,7 @@ export default class GroupRouter extends Component {
 
   renderContent() {
     const { tab } = this.props.params;
-    switch (tab) {
+    switch (explodeTab(tab)) {
       case 'objective':
         return <OKRContainer subject="group" />;
       case 'map':

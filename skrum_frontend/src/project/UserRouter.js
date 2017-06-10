@@ -4,6 +4,7 @@ import { tabPropType } from '../navigation/header/propTypes';
 import OKRContainer from './OKR/OKRContainer';
 import MapContainer from './Map/MapContainer';
 import GroupManagementContainer from './GroupManagement/GroupManagementContainer';
+import { explodeTab } from '../util/RouteUtil';
 import styles from './GroupRouter.css';
 
 export default class UserRouter extends Component {
@@ -18,7 +19,7 @@ export default class UserRouter extends Component {
 
   renderContent() {
     const { tab } = this.props.params;
-    switch (tab) {
+    switch (explodeTab(tab)) {
       case 'objective':
         return <OKRContainer subject="user" />;
       case 'map':

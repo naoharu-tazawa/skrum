@@ -10,13 +10,14 @@ export default class OkrBar extends Component {
   static propTypes = {
     header: PropTypes.bool,
     okr: okrPropTypes,
+    onKRClicked: PropTypes.func,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { header, okr } = this.props;
+    const { header, okr, onKRClicked } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -59,9 +60,14 @@ export default class OkrBar extends Component {
         <div className={styles.krCount}>
           <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
           <a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>
-          {keyResults && <div className={`${styles.circle} ${styles.circle_small} ${styles.circle_plus}`}>
-            ＋{keyResults.length}
-            </div>}
+          {keyResults && (
+            <a
+              className={`${styles.circle} ${styles.circle_small} ${styles.circle_plus}`}
+              onClick={onKRClicked}
+              tabIndex={0}
+            >
+              ＋{keyResults.length}
+            </a>)}
         </div>
       </div>);
   }
