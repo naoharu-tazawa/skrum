@@ -95,7 +95,7 @@
           color: #8e9aa6; }
         .profile_box .profile_txt .leader dl dd {
           font-size: 14px; }
-      .profile_box button {
+      .profile_box .btn button {
         margin-top: 95px;
         padding: 0;
         width: 39px;
@@ -109,7 +109,7 @@
         -moz-appearance: none;
         appearance: none;
         cursor: pointer; }
-        .profile_box button:hover {
+        .profile_box .btn button:hover {
           opacity: .7; }
 
 .title {

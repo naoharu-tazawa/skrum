@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { groupPropTypes } from './propTypes';
 import styles from './GroupInfoEdit.css';
+import InlineTextInput from '../../../editors/InlineTextInput';
 import InlineTextArea from '../../../editors/InlineTextArea';
 import { replacePath } from '../../../util/RouteUtil';
 import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
@@ -40,7 +41,7 @@ export default class GroupInfoEdit extends Component {
           </div>
           <div className={styles.profile_txt}>
             <h2 className={styles.team_name}>
-              <InlineTextArea
+              <InlineTextInput
                 value={name}
                 onSubmit={value => dispatchPutGroup(groupId, { name: value })}
               />
@@ -65,7 +66,7 @@ export default class GroupInfoEdit extends Component {
               </dl>
             </div>
           </div>
-          <button className={styles.hover}><img src="/img/profile/icn_write.png" alt="" width="39" /></button>
+          <div className={styles.btn}><button className={styles.hover}><img src="/img/profile/icn_write.png" alt="" width="39" /></button></div>
         </div>
       </section>
     );

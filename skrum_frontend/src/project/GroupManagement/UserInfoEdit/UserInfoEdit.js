@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { userPropTypes } from './propTypes';
 import styles from './UserInfoEdit.css';
-import InlineTextArea from '../../../editors/InlineTextArea';
+import InlineTextInput from '../../../editors/InlineTextInput';
 import { replacePath } from '../../../util/RouteUtil';
 import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
 
@@ -33,7 +33,7 @@ export default class UserInfoEdit extends Component {
           </div>
           <div className={styles.profile_txt}>
             <h2 className={styles.user_name}>
-              <InlineTextArea
+              <InlineTextInput
                 value={name}
                 onSubmit={value => dispatchPutUser(userId, { name: value })}
               />
@@ -45,9 +45,9 @@ export default class UserInfoEdit extends Component {
               <tbody>
                 <tr>
                   <td><div className={styles.info}>役　職:</div></td>
-                  <td>
+                  <td className={styles.td}>
                     <div className={styles.info_data}>
-                      <InlineTextArea
+                      <InlineTextInput
                         value={position}
                         onSubmit={value => dispatchPutUser(userId, { position: value })}
                       />
@@ -58,7 +58,7 @@ export default class UserInfoEdit extends Component {
                   <td><div className={styles.info}>電　話:</div></td>
                   <td>
                     <div className={styles.info_data}>
-                      <InlineTextArea
+                      <InlineTextInput
                         value={phoneNumber}
                         onSubmit={value => dispatchPutUser(userId, { phoneNumber: value })}
                       />
@@ -69,7 +69,7 @@ export default class UserInfoEdit extends Component {
                   <td><div className={styles.info}>メール:</div></td>
                   <td>
                     <div className={styles.info_data}>
-                      <InlineTextArea
+                      <InlineTextInput
                         value={emailAddress}
                         onSubmit={value => dispatchPutUser(userId, { emailAddress: value })}
                       />
@@ -79,7 +79,7 @@ export default class UserInfoEdit extends Component {
               </tbody>
             </table>
           </div>
-          <button className={styles.hover}><img src="/img/profile/icn_write.png" alt="" width="39" /></button>
+          <div className={styles.btn}><button className={styles.hover}><img src="/img/profile/icn_write.png" alt="" width="39" /></button></div>
         </div>
       </section>);
   }

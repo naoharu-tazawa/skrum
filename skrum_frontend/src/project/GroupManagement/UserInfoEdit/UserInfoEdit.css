@@ -98,7 +98,7 @@
           color: #8e9aa6; }
         .profile_box .profile_txt .leader dl dd {
           font-size: 14px; }
-      .profile_box button {
+      .profile_box .btn button {
         margin-top: 75px;
         padding: 0;
         width: 39px;
@@ -112,7 +112,7 @@
         -moz-appearance: none;
         appearance: none;
         cursor: pointer; }
-        .profile_box button:hover {
+        .profile_box .btn button:hover {
           opacity: .7; }
 
 .user_info {
@@ -121,7 +121,7 @@
 }
 .user_info .info {
   position: relative;
-  top: 3px;
+  top: 2px;
   margin-bottom: 7px;
   font-size: 10px;
 }
@@ -135,4 +135,7 @@
 }
 .groups {
   font-size: 14px;
+}
+.td {
+  width: 400px;
 }
