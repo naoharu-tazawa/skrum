@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Surface, Pie } from 'recharts';
-import _ from 'lodash';
+import { toNumber, mean, isNaN, toPairs, countBy, orderBy } from 'lodash';
 import { okrsPropTypes } from './propTypes';
 import styles from './OKROverallCharts.css';
 
@@ -12,13 +12,15 @@ export default class OKROverallCharts extends Component {
 
   render() {
     const { okrs = [] } = this.props;
-    const rates = okrs.map(({ achievementRate }) => _.toNumber(achievementRate));
-    const overallProgress = _.mean(rates);
+    const rates = okrs.map(({ achievementRate }) => toNumber(achievementRate));
+    const overallProgress = mean(rates);
+    const overallProgressLabel = isNaN(overallProgress) ? '－' :
+      `${overallProgress.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`;
     const progressData = [
       { value: overallProgress, fill: '#626A7E' },
       { value: 100 - overallProgress, fill: '#D8DFE5' },
     ];
-    const ratesGroupCount = _.toPairs(_.countBy(rates, (rate) => {
+    const ratesGroupCount = toPairs(countBy(rates, (rate) => {
       if (rate >= 70) return '#42BBF8';
       if (rate >= 30) return '#AFDB56';
       return '#EFB04C';
@@ -38,7 +40,7 @@ export default class OKROverallCharts extends Component {
               全体進捗
             </text>
             <text x={chartRadius} y={chartRadius + 10} textAnchor="middle" dominantBaseline="middle">
-              {overallProgress.toLocaleString(undefined, { maximumFractionDigits: 2 })}%
+              {overallProgressLabel}
             </text>
             <Pie
               isAnimationActive={false}
@@ -71,7 +73,7 @@ export default class OKROverallCharts extends Component {
               cy={chartRadius}
               outerRadius={chartRadius}
               innerRadius={chartRadius * lineInset}
-              data={_.orderBy(ratesGroupCountData, 'fill', 'desc')}
+              data={orderBy(ratesGroupCountData, 'fill', 'desc')}
               paddingAngle={0}
             />
           </Surface>

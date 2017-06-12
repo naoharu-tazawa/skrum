@@ -29,6 +29,8 @@ export default class InlineTextArea extends PureComponent {
   }
 
   cancelChange() {
+    const { value = '' } = this.props;
+    this.input.value = value;
     this.setEditingState(false);
     this.setState({ value: undefined });
   }
@@ -38,23 +40,25 @@ export default class InlineTextArea extends PureComponent {
     const { editing = false } = this.state;
     return (
       <span
-        className={`${styles.editor} ${readonly && styles.readonly} ${editing && styles.editing}`}
+        className={`${styles.editor} ${styles.multiline} ${readonly && styles.readonly} ${editing && styles.editing}`}
         onMouseDown={() => !readonly && this.setEditingState(true)}
       >
-        {!editing && value}
-        {!editing && !readonly && <span className={styles.editButton} />}
-        {editing && (
+        <span className={styles.value}>{value}</span>
+        {!readonly && <span className={styles.editButton} />}
+        <div className={styles.inputArea}>
           <textarea
+            ref={(ref) => { this.input = ref; }}
             defaultValue={value}
             onChange={e => this.setState({ value: e.target.value })}
             onBlur={() => this.submitChange()}
             onKeyDown={e => e.key === 'Escape' && this.cancelChange()}
-          />)}
-        {editing && (
-          <div className={styles.saveOptions}>
-            <button className={styles.submit} onClick={() => this.submitChange()}>&nbsp;</button>
-            <button className={styles.cancel} onClick={() => this.cancelChange()}>&nbsp;</button>
-          </div>)}
+          />
+          {editing && (
+            <div className={styles.saveOptions}>
+              <button className={styles.submit} onClick={() => this.submitChange()}>&nbsp;</button>
+              <button className={styles.cancel} onClick={() => this.cancelChange()}>&nbsp;</button>
+            </div>)}
+        </div>
       </span>
     );
   }
