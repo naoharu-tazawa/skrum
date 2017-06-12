@@ -2,7 +2,7 @@
   "title": "グループ基本情報変更",
   "type": "object",
   "properties": {
-    "groupName": {
+    "name": {
       "title": "グループ名",
       "type": "string",
       "maxLength": 255

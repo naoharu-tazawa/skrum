@@ -138,9 +138,9 @@ class GroupService extends BaseService
 
         try {
             // グループ情報更新
-            if (array_key_exists('groupName', $data) && !empty($data['groupName'])) {
-                $data['groupName'] = str_replace('/', '', $data['groupName']);
-                $mGroup->setGroupName($data['groupName']);
+            if (array_key_exists('name', $data) && !empty($data['name'])) {
+                $data['name'] = str_replace('/', '', $data['name']);
+                $mGroup->setGroupName($data['name']);
             }
             if (array_key_exists('mission', $data)) {
                 $mGroup->setMission($data['mission']);
@@ -148,7 +148,7 @@ class GroupService extends BaseService
             $this->flush();
 
             // グループパス名を更新
-            if (array_key_exists('groupName', $data) && !empty($data['groupName'])) {
+            if (array_key_exists('name', $data) && !empty($data['name'])) {
                 // グループIDをグループパスに含むグループパスエンティティを取得
                 $groupId = $mGroup->getGroupId();
                 $tGroupTreeRepos = $this->getTGroupTreeRepository();
@@ -164,7 +164,7 @@ class GroupService extends BaseService
                     $count = count($groupTreePathItems);
                     for ($i = 0; $i < $count; ++$i) {
                         if ($groupTreePathItems[$i] == $groupId) {
-                            $groupTreePathNameItems[$i] = $data['groupName'];
+                            $groupTreePathNameItems[$i] = $data['name'];
                         }
                     }
 

@@ -120,6 +120,8 @@
   font-size: 14px;
 }
 .user_info .info {
+  position: relative;
+  top: 3px;
   margin-bottom: 7px;
   font-size: 10px;
 }

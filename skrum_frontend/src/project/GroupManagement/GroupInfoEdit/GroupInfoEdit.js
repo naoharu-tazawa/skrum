@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { groupPropTypes } from './propTypes';
 import styles from './GroupInfoEdit.css';
+import InlineTextArea from '../../../editors/InlineTextArea';
 import { replacePath } from '../../../util/RouteUtil';
 import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
 
@@ -11,11 +12,12 @@ export default class GroupInfoEdit extends Component {
   static propTypes = {
     group: groupPropTypes.isRequired,
     infoLink: PropTypes.string.isRequired,
+    dispatchPutGroup: PropTypes.func.isRequired,
   };
 
   render() {
-    const { group } = this.props;
-    const { name, groupPaths, mission, leaderName, lastUpdate } = group;
+    const { group, dispatchPutGroup } = this.props;
+    const { groupId, name, groupPaths, mission, leaderName, lastUpdate } = group;
     const groupPathsLink = groupPaths.map(({ groupTreeId, groupPath }) =>
       <ul key={groupTreeId}>
         {groupPath.map(({ id, name: groupName }, index) =>
@@ -37,13 +39,23 @@ export default class GroupInfoEdit extends Component {
             <p>最終更新: {convertToRelativeTimeText(lastUpdate)}</p>
           </div>
           <div className={styles.profile_txt}>
-            <h2 className={styles.team_name}>{name}</h2>
+            <h2 className={styles.team_name}>
+              <InlineTextArea
+                value={name}
+                onSubmit={value => dispatchPutGroup(groupId, { name: value })}
+              />
+            </h2>
             <nav className={styles.breads}>
               {groupPathsLink}
             </nav>
             <div>
               <div className={styles.title}>ミッション</div>
-              <p>{mission}</p>
+              <div className={styles.txt}>
+                <InlineTextArea
+                  value={mission}
+                  onSubmit={value => dispatchPutGroup(groupId, { mission: value })}
+                />
+              </div>
             </div>
             <div className={`${styles.leader} ${styles.cf}`}>
               <div><img src="/img/profile/img_leader.jpg" alt="" /></div>

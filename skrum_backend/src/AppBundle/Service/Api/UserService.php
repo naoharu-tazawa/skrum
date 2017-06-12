@@ -91,20 +91,32 @@ class UserService extends BaseService
     public function updateUser(array $data, MUser $mUser)
     {
         // Eメールアドレスを更新する場合は、ユーザテーブルに同一Eメールアドレスの登録がないか確認
-        if ($mUser->getEmailAddress() !== $data['emailAddress']) {
-            $mUserRepos = $this->getMUserRepository();
-            $result = $mUserRepos->findBy(array('emailAddress' => $data['emailAddress'], 'archivedFlg' => DBConstant::FLG_FALSE));
-            if (count($result) > 0) {
-                throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
+        if (array_key_exists('emailAddress', $data) && !empty($data['emailAddress'])) {
+            if ($mUser->getEmailAddress() !== $data['emailAddress']) {
+                $mUserRepos = $this->getMUserRepository();
+                $result = $mUserRepos->findBy(array('emailAddress' => $data['emailAddress'], 'archivedFlg' => DBConstant::FLG_FALSE));
+                if (count($result) > 0) {
+                    throw new DoubleOperationException('Eメールアドレスはすでに登録済みです');
+                }
             }
         }
 
         // ユーザ情報更新
-        $mUser->setLastName($data['lastName']);
-        $mUser->setFirstName($data['firstName']);
-        $mUser->setEmailAddress($data['emailAddress']);
-        $mUser->setPosition($data['position']);
-        $mUser->setPhoneNumber($data['phoneNumber']);
+        if (array_key_exists('lastName', $data) && !empty($data['lastName'])) {
+            $mUser->setLastName($data['lastName']);
+        }
+        if (array_key_exists('firstName', $data) && !empty($data['firstName'])) {
+            $mUser->setFirstName($data['firstName']);
+        }
+        if (array_key_exists('emailAddress', $data) && !empty($data['emailAddress'])) {
+            $mUser->setEmailAddress($data['emailAddress']);
+        }
+        if (array_key_exists('position', $data)) {
+            $mUser->setPosition($data['position']);
+        }
+        if (array_key_exists('phoneNumber', $data)) {
+            $mUser->setPhoneNumber($data['phoneNumber']);
+        }
 
         try {
             $this->flush();

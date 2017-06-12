@@ -1,22 +1,34 @@
 import { createActions } from 'redux-actions';
 import { keyValueIdentity } from '../../util/ActionUtil';
-import { getJson } from '../../util/ApiUtil';
+import { getJson, putJson } from '../../util/ApiUtil';
 
 export const Action = {
   REQUEST_FETCH_USER_GROUPS: 'REQUEST_FETCH_USER_GROUPS',
-  REQUEST_FETCH_GROUP_MEMBERS: 'REQUEST_FETCH_GROUP_MEMBERS',
   FINISH_FETCH_USER_GROUPS: 'FINISH_FETCH_USER_GROUPS',
+  REQUEST_FETCH_GROUP_MEMBERS: 'REQUEST_FETCH_GROUP_MEMBERS',
   FINISH_FETCH_GROUP_MEMBERS: 'FINISH_FETCH_GROUP_MEMBERS',
+  REQUEST_PUT_USER: 'REQUEST_PUT_USER',
+  FINISH_PUT_USER: 'FINISH_PUT_USER',
+  REQUEST_PUT_GROUP: 'REQUEST_PUT_GROUP',
+  FINISH_PUT_GROUP: 'FINISH_PUT_GROUP',
 };
 
 const {
   requestFetchUserGroups,
-  requestFetchGroupMembers,
   finishFetchUserGroups,
+  requestFetchGroupMembers,
   finishFetchGroupMembers,
+  requestPutUser,
+  finishPutUser,
+  requestPutGroup,
+  finishPutGroup,
 } = createActions({
   [Action.FINISH_FETCH_USER_GROUPS]: keyValueIdentity,
   [Action.FINISH_FETCH_GROUP_MEMBERS]: keyValueIdentity,
+  [Action.FINISH_PUT_USER]: keyValueIdentity,
+  [Action.REQUEST_PUT_USER]: keyValueIdentity,
+  [Action.FINISH_PUT_GROUP]: keyValueIdentity,
+  [Action.REQUEST_PUT_GROUP]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_USER_GROUPS,
   Action.REQUEST_FETCH_GROUP_MEMBERS,
@@ -55,3 +67,29 @@ export function fetchGroupMembers(groupId) {
       });
   };
 }
+
+export const putUser = (id, data) =>
+  (dispatch, getStatus) => {
+    const status = getStatus();
+    const { isPutting } = status.groupManagement;
+    if (isPutting) {
+      return Promise.resolve();
+    }
+    dispatch(requestPutUser('data', { id: Number(id), ...data }));
+    return putJson(`/users/${id}.json`, status)(null, data)
+      .then(json => dispatch(finishPutUser('data', json)))
+      .catch(({ message }) => dispatch(finishPutUser(new Error(message))));
+  };
+
+export const putGroup = (id, data) =>
+  (dispatch, getStatus) => {
+    const status = getStatus();
+    const { isPutting } = status.groupManagement;
+    if (isPutting) {
+      return Promise.resolve();
+    }
+    dispatch(requestPutGroup('data', { id: Number(id), ...data }));
+    return putJson(`/groups/${id}.json`, status)(null, data)
+      .then(json => dispatch(finishPutGroup('data', json)))
+      .catch(({ message }) => dispatch(finishPutGroup(new Error(message))));
+  };

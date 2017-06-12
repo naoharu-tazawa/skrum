@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { userPropTypes } from './propTypes';
 import styles from './UserInfoEdit.css';
+import InlineTextArea from '../../../editors/InlineTextArea';
 import { replacePath } from '../../../util/RouteUtil';
 import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
 
@@ -11,11 +12,12 @@ export default class UserInfoEdit extends Component {
   static propTypes = {
     user: userPropTypes.isRequired,
     infoLink: PropTypes.string,
+    dispatchPutUser: PropTypes.func.isRequired,
   };
 
   render() {
-    const { user } = this.props;
-    const { name, departments, position, phoneNumber, emailAddress, lastUpdate } = user;
+    const { user, dispatchPutUser } = this.props;
+    const { userId, name, departments, position, phoneNumber, emailAddress, lastUpdate } = user;
     const groupsLink = departments.map(({ groupId, groupName }, index) =>
       <span key={groupId}>
         {index ? '・' : ''}
@@ -30,7 +32,12 @@ export default class UserInfoEdit extends Component {
             <p>最終更新: {convertToRelativeTimeText(lastUpdate)}</p>
           </div>
           <div className={styles.profile_txt}>
-            <h2 className={styles.user_name}>{name}</h2>
+            <h2 className={styles.user_name}>
+              <InlineTextArea
+                value={name}
+                onSubmit={value => dispatchPutUser(userId, { name: value })}
+              />
+            </h2>
             <div className={styles.groups}>
               {groupsLink}
             </div>
@@ -38,15 +45,36 @@ export default class UserInfoEdit extends Component {
               <tbody>
                 <tr>
                   <td><div className={styles.info}>役　職:</div></td>
-                  <td><div className={styles.info_data}>{position}</div></td>
+                  <td>
+                    <div className={styles.info_data}>
+                      <InlineTextArea
+                        value={position}
+                        onSubmit={value => dispatchPutUser(userId, { position: value })}
+                      />
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td><div className={styles.info}>電　話:</div></td>
-                  <td><div className={styles.info_data}>{phoneNumber}</div></td>
+                  <td>
+                    <div className={styles.info_data}>
+                      <InlineTextArea
+                        value={phoneNumber}
+                        onSubmit={value => dispatchPutUser(userId, { phoneNumber: value })}
+                      />
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td><div className={styles.info}>メール:</div></td>
-                  <td><div className={styles.info_data}>{emailAddress}</div></td>
+                  <td>
+                    <div className={styles.info_data}>
+                      <InlineTextArea
+                        value={emailAddress}
+                        onSubmit={value => dispatchPutUser(userId, { emailAddress: value })}
+                      />
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
