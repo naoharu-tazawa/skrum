@@ -66,7 +66,10 @@ export default class OkrDetails extends Component {
               <div className={`${styles.txt_percent} ${styles.floatL}`}>
                 {achievedValue}／{targetValue}{unit}
               </div>
-              <div className={`${styles.txt_date} ${styles.floatR}`}>開始日：2017/01/01 期限日：2017/01/01</div>
+              <div className={`${styles.txt_date} ${styles.floatR}`}>
+                <span>開始日：<span>2017/01/01</span></span>
+                <span>期限日：<span>2017/03/31</span></span>
+              </div>
             </div>
             <div className={`${styles.nav_info} ${styles.cf}`}>
               <div className={`${styles.user_info} ${styles.floatL} ${styles.cf}`}>

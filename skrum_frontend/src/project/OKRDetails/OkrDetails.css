@@ -90,6 +90,8 @@
     margin-bottom: 18px; }
     .boxInfo .bar_top_bottom .txt_date {
       font-size: 12px; }
+      .boxInfo .bar_top_bottom .txt_date > span {
+        margin-left: 10px; }
   .boxInfo .member_list button {
     margin: 0 5px;
     padding: 0;

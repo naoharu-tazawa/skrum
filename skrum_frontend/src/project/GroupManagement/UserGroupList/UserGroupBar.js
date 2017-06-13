@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { userGroupPropTypes } from './propTypes';
+import { replacePath } from '../../../util/RouteUtil';
 import styles from './UserGroupBar.css';
 
 export default class UserGroupBar extends Component {
@@ -23,10 +25,17 @@ export default class UserGroupBar extends Component {
           <th />
         </tr>);
     }
-    const { name, achievementRate } = group;
+    const { id, name, achievementRate } = group;
     return (
       <tr>
-        <td><span><img src="/img/profile/img_leader.jpg" alt="" /></span>{name}</td>
+        <td>
+          <span>
+            <img src="/img/profile/img_leader.jpg" alt="" />
+          </span>
+          <span key={id}>
+            <Link to={replacePath({ subject: 'group', id })}>{name}</Link>
+          </span>
+        </td>
         <td>
           <div className={styles.progressBox}>
             <span className={styles.progressPercent}>{achievementRate}%</span>
