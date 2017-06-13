@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import _ from 'lodash';
 import NavigationContainer from '../../navigation/NavigationContainer';
-import { implodePath, isPathFinal } from '../../util/RouteUtil';
+import { implodePath } from '../../util/RouteUtil';
 
 class Authenticated extends Component {
   static propTypes = {
@@ -25,9 +25,10 @@ class Authenticated extends Component {
 
   transfer(props = this.props) {
     const { login, isAuthorized, userId, timeframeId } = props;
+    const pathname = window.location.pathname;
     if (!isAuthorized) {
       browserHistory.push(login);
-    } else if (userId && timeframeId && !isPathFinal(window.location.pathname)) {
+    } else if (userId && timeframeId && (pathname === '/user' || pathname === '/u')) {
       browserHistory.push(implodePath({ subject: 'user', id: userId, timeframeId, tab: 'objective' }));
     }
   }
