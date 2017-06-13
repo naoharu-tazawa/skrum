@@ -14,6 +14,7 @@ import groupSettingReducer from '../../project/GroupSetting/reducer';
 import companyProfileReducer from '../../project/CompanyProfile/reducer';
 import timeframeReducer from '../../project/Timeframe/reducer';
 import passwordChangeReducer from '../../project/PasswordChange/reducer';
+import { Action } from '../../project/PasswordChange/action';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -29,7 +30,16 @@ const rootReducer = combineReducers({
   timeframeSetting: timeframeReducer,
   setting: passwordChangeReducer,
   routing: routerReducer,
-  form: formReducer,
+  form: formReducer.plugin({
+    form: (state, action) => {
+      switch (action.type) {
+        case Action.FINISH_PUT_USER_CHANGEPASSWORD:
+          return undefined;
+        default:
+          return state;
+      }
+    },
+  }),
   toastr: toastrReducer,
 });
 

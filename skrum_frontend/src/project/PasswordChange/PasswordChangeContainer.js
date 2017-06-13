@@ -21,13 +21,27 @@ class PasswordChangeContainer extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentWillReceiveProps(next) {
+    this.result(next);
+  }
+
+  result(props = this.props) {
+    const { isProcessing, error } = props;
+    if (!isProcessing) {
+      if (!isProcessing && !error) {
+        toastr.info('パスワードを変更しました');
+      } else {
+        toastr.error('パスワードが正しくありません');
+      }
+    }
+  }
+
   handleSubmit(data) {
     this.props.dispatchPutUserChangepassword(
       this.props.userId,
       data.currentPassword,
       data.newPassword,
     );
-    toastr.info('パスワードを変更しました');
   }
 
   render() {
