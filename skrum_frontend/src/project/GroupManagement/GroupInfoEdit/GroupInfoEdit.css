@@ -96,11 +96,12 @@
         .profile_box .profile_txt .leader dl dd {
           font-size: 14px; }
       .profile_box .btn button {
-        margin-top: 95px;
+        position: relative;
+        top: -2px;
+        margin-left: 20px;
         padding: 0;
-        width: 39px;
-        height: 39px;
-        float: right;
+        width: 25px;
+        height: 25px;
         background: none;
         border: 1px solid #8e9aa6;
         border-radius: 50%;
@@ -115,11 +116,24 @@
 .title {
   font-size: 10px;
   margin-top: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
   color: #8e9aa6;
 }
 .txt {
   font-size: 14px;
   line-height: 1.3;
   margin-bottom: 10px;
+}
+.delete {
+  position: relative;
+  top: -1px;
+  margin-left: 25px;
+  cursor: pointer;
+}
+.add_belonging {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #d8dfe5;
+  text-decoration: underline;
+  cursor: pointer;
 }

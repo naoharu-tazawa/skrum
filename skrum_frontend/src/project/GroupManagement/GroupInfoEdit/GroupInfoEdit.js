@@ -29,6 +29,7 @@ export default class GroupInfoEdit extends Component {
             >
               {groupName}
             </Link>
+            { index === (groupPath.length - 1) ? <span className={styles.delete}><img src="/img/delete.svg" alt="" width="10px" /></span> : null }
           </li>)}
       </ul>);
     return (
@@ -49,6 +50,7 @@ export default class GroupInfoEdit extends Component {
             <nav className={styles.breads}>
               {groupPathsLink}
             </nav>
+            <div className={styles.add_belonging}>所属先グループを追加</div>
             <div>
               <div className={styles.title}>ミッション</div>
               <div className={styles.txt}>
@@ -62,11 +64,17 @@ export default class GroupInfoEdit extends Component {
               <div><img src="/img/profile/img_leader.jpg" alt="" /></div>
               <dl>
                 <dt>リーダー</dt>
-                <dd>{leaderName}</dd>
+                <dd>
+                  {leaderName}
+                  <span className={styles.btn}>
+                    <button className={styles.hover}>
+                      <img src="/img/profile/icn_write.png" alt="" width="25" />
+                    </button>
+                  </span>
+                </dd>
               </dl>
             </div>
           </div>
-          <div className={styles.btn}><button className={styles.hover}><img src="/img/profile/icn_write.png" alt="" width="39" /></button></div>
         </div>
       </section>
     );

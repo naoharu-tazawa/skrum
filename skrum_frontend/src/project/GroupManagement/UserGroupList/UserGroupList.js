@@ -26,7 +26,7 @@ export default class UserGroupList extends Component {
               <tr>
                 <td colSpan="3" >
                   <div className={`${styles.add_okr} ${styles.alignC}`}>
-                    <a href=""><span className={styles.circle}><img src="/img/common/icn_plus.png" alt="Add" /></span><span>メンバーを追加</span></a>
+                    <a href=""><span className={styles.circle}><img src="/img/common/icn_plus.png" alt="Add" /></span><span>所属グループを追加</span></a>
                   </div>
                 </td>
               </tr>

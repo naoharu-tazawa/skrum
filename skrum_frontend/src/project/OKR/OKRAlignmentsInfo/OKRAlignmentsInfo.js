@@ -7,6 +7,7 @@ import styles from './OKRAlignmentsInfo.css';
 const chartRadius = 60;
 const widthFactor = 8;
 const heightFactor = 3.5;
+const lineInset = 0.82; // fraction
 
 export default class OKRAlignmentsInfo extends Component {
 
@@ -59,7 +60,7 @@ export default class OKRAlignmentsInfo extends Component {
               cx={chartRadius * (widthFactor / 2)}
               cy={chartRadius * (heightFactor / 2)}
               outerRadius={chartRadius}
-              innerRadius={chartRadius * 0.88}
+              innerRadius={chartRadius * lineInset}
               data={data}
               paddingAngle={0}
               dataKey="name"

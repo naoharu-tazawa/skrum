@@ -79,7 +79,6 @@ export default class UserInfoEdit extends Component {
               </tbody>
             </table>
           </div>
-          <div className={styles.btn}><button className={styles.hover}><img src="/img/profile/icn_write.png" alt="" width="39" /></button></div>
         </div>
       </section>);
   }
