@@ -48,6 +48,10 @@
     .profile_box .profile_txt .user_name {
       margin-bottom: 10px;
       font-size: 20px; }
+      .profile_box .profile_txt .user_name .user_name_f {
+        position: relative;
+        left: -22px;
+      }
 
 .user_info {
   margin-top: 10px;

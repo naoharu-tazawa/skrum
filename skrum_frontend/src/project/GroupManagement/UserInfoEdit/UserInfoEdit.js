@@ -34,14 +34,18 @@ export default class UserInfoEdit extends Component {
           </div>
           <div className={styles.profile_txt}>
             <h2 className={styles.user_name}>
-              <InlineTextInput
-                value={lastName}
-                onSubmit={value => dispatchPutUser(userId, { lastName: value })}
-              />
-              <InlineTextInput
-                value={firstName}
-                onSubmit={value => dispatchPutUser(userId, { firstName: value })}
-              />
+              <span className={styles.user_name_l}>
+                <InlineTextInput
+                  value={lastName}
+                  onSubmit={value => dispatchPutUser(userId, { lastName: value })}
+                />
+              </span>
+              <span className={styles.user_name_f}>
+                <InlineTextInput
+                  value={firstName}
+                  onSubmit={value => dispatchPutUser(userId, { firstName: value })}
+                />
+              </span>
             </h2>
             <div className={styles.groups}>
               {groupsLink}
