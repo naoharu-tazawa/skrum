@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { timeframePropTypes } from './propTypes';
+import InlineTextInput from '../../../editors/InlineTextInput';
 import styles from './TimeframeBar.css';
 
 export default class TimeframeBar extends Component {
@@ -8,13 +9,14 @@ export default class TimeframeBar extends Component {
   static propTypes = {
     header: PropTypes.bool,
     timeframe: timeframePropTypes,
+    dispatchPutTimeframe: PropTypes.func,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { header, timeframe } = this.props;
+    const { header, timeframe, dispatchPutTimeframe } = this.props;
     if (header) {
       return (
         <tr>
@@ -25,10 +27,17 @@ export default class TimeframeBar extends Component {
           <th />
         </tr>);
     }
-    const { name, startDate, endDate, defaultFlg } = timeframe;
+    const { id, name, startDate, endDate, defaultFlg } = timeframe;
     return (
       <tr>
-        <td><div className={styles.td}>{name}</div></td>
+        <td>
+          <div className={styles.td}>
+            <InlineTextInput
+              value={name}
+              onSubmit={value => dispatchPutTimeframe(id, { timeframeName: value })}
+            />
+          </div>
+        </td>
         <td><div>{startDate}</div></td>
         <td><div>{endDate}</div></td>
         <td>

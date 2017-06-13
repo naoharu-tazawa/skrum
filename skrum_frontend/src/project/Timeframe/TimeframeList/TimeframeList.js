@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { timeframesPropTypes } from './propTypes';
 import TimeframeBar from './TimeframeBar';
 import styles from './TimeframeList.css';
@@ -7,10 +8,11 @@ export default class TimeframeList extends Component {
 
   static propTypes = {
     items: timeframesPropTypes.isRequired,
+    dispatchPutTimeframe: PropTypes.func.isRequired,
   };
 
   render() {
-    const { items } = this.props;
+    const { items, dispatchPutTimeframe } = this.props;
     return (
       <section className={styles.group_list}>
         <h1 className={styles.ttl_setion}>タイムフレーム一覧</h1>
@@ -20,7 +22,12 @@ export default class TimeframeList extends Component {
               <TimeframeBar header />
             </thead>
             <tbody>
-              {items.map(timeframe => <TimeframeBar key={timeframe.id} timeframe={timeframe} />)}
+              {items.map(timeframe =>
+                <TimeframeBar
+                  key={timeframe.id}
+                  timeframe={timeframe}
+                  dispatchPutTimeframe={dispatchPutTimeframe}
+                />)}
             </tbody>
             <tfoot>
               <tr>

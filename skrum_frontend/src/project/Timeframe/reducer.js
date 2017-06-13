@@ -25,6 +25,25 @@ export default (state = {
       });
     }
 
+    case Action.REQUEST_PUT_TIMEFRAME: {
+      const { payload } = action;
+      const { id, ...item } = payload.data;
+      // const { data = [] } = state;
+      // const newTimeframeList = data.map(value => (value.timeframeId === id ? value : item));
+      console.log(id);
+      console.log(item);
+      // return { ...state, data: [...newTimeframeList], isPutting: true };
+      return { ...state, isPutting: true };
+    }
+
+    case Action.FINISH_PUT_TIMEFRAME: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isPutting: false, error: { message: payload.message } };
+      }
+      return { ...state, isPutting: false, error: null };
+    }
+
     default:
       return state;
   }
