@@ -17,7 +17,8 @@ export default class UserInfoEdit extends Component {
 
   render() {
     const { user, dispatchPutUser } = this.props;
-    const { userId, name, departments, position, phoneNumber, emailAddress, lastUpdate } = user;
+    const { userId, lastName, firstName, departments,
+      position, phoneNumber, emailAddress, lastUpdate } = user;
     const groupsLink = departments.map(({ groupId, groupName }, index) =>
       <span key={groupId}>
         {index ? '・' : ''}
@@ -34,8 +35,12 @@ export default class UserInfoEdit extends Component {
           <div className={styles.profile_txt}>
             <h2 className={styles.user_name}>
               <InlineTextInput
-                value={name}
-                onSubmit={value => dispatchPutUser(userId, { name: value })}
+                value={lastName}
+                onSubmit={value => dispatchPutUser(userId, { lastName: value })}
+              />
+              <InlineTextInput
+                value={firstName}
+                onSubmit={value => dispatchPutUser(userId, { firstName: value })}
               />
             </h2>
             <div className={styles.groups}>

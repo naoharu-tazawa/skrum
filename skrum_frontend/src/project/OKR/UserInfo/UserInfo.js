@@ -15,7 +15,8 @@ export default class UserInfo extends Component {
 
   render() {
     const { user, infoLink } = this.props;
-    const { name, departments, position, phoneNumber, emailAddress, lastUpdate } = user;
+    const { lastName, firstName, departments, position,
+      phoneNumber, emailAddress, lastUpdate } = user;
     const groupsLink = departments.map(({ groupId, groupName }, index) =>
       <span key={groupId}>
         {index ? '・' : ''}
@@ -30,7 +31,7 @@ export default class UserInfo extends Component {
           </figcaption>
         </figure>
         <div className={`${styles.boxInfo} ${styles.floatR}`}>
-          <p className={styles.ttl_user}>{name}</p>
+          <p className={styles.ttl_user}>{lastName} {firstName}</p>
           <div className={styles.groups}>
             {groupsLink}
           </div>
