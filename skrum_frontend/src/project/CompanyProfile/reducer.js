@@ -2,8 +2,8 @@ import { Action } from './action';
 
 export default (state = {
   isFetching: false,
-  isProcessing: false,
-  data: [],
+  isPutting: false,
+  data: {},
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_COMPANY:
@@ -26,24 +26,21 @@ export default (state = {
       });
     }
 
-    case Action.REQUEST_POST_COMPANY:
-      return Object.assign({}, state, { isProcessing: true });
+    case Action.REQUEST_PUT_COMPANY: {
+      const { payload } = action;
+      const { id, ...items } = payload.data;
+      const { data } = state;
+      console.log(items);
+      const newCompanyData = { ...data, ...(id === data.companyId ? items : {}) };
+      return { ...state, data: newCompanyData, isPutting: true };
+    }
 
-    case Action.FINISH_POST_COMPANY: {
+    case Action.FINISH_PUT_COMPANY: {
       const { payload, error } = action;
       if (error) {
-        return Object.assign({}, state, {
-          isProcessing: false,
-          error: {
-            message: payload.message,
-          },
-        });
+        return { ...state, isPutting: false, error: { message: payload.message } };
       }
-      return Object.assign({}, state, {
-        isProcessing: false,
-        data: [payload.data, ...state.data],
-        error: null,
-      });
+      return { ...state, isPutting: false, error: null };
     }
 
     default:

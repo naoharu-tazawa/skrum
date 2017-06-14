@@ -5,19 +5,17 @@
 .floatL {
   float: left; }
 
+.packet {
+  margin-top: 50px;
+}
 .title {
-  font-size: 18px;
+  margin-right: 30px;
 }
-.top {
-  vertical-align: top;
-}
-.td {
-  margin: 50px 20px 10px 0px;
+.data {
+  position: relative;
+  top: -3px;
 }
 
-.btn_area {
-  margin: 368px 0px 0px 200px;
-}
 .btn {
   vertical-align: bottom;
   padding: 0;

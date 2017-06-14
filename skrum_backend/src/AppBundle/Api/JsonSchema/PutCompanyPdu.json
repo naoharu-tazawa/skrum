@@ -2,7 +2,7 @@
   "title": "会社基本情報変更",
   "type": "object",
   "properties": {
-    "companyName": {
+    "name": {
       "title": "会社名",
       "type": "string",
       "maxLength": 255

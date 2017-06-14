@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { errorType } from '../../util/PropUtil';
 import styles from './CompanyProfileContainer.css';
+import InlineTextInput from '../../editors/InlineTextInput';
+import InlineTextArea from '../../editors/InlineTextArea';
 import { fetchCompany, putCompany } from './action';
 
 function SubmitButton() {
-  return <button className={styles.btn}>変更する</button>;
+  return <button className={styles.btn}>画像アップロード</button>;
 }
 
 function DisabledButton() {
@@ -21,7 +23,8 @@ class CompanyProfileContainer extends Component {
     vision: PropTypes.string,
     mission: PropTypes.string,
     isFetching: PropTypes.bool,
-    isProcessing: PropTypes.bool,
+    isPutting: PropTypes.bool,
+    isPosting: PropTypes.bool,
     dispatchFetchCompany: PropTypes.func,
     dispatchPutCompany: PropTypes.func,
     error: errorType,
@@ -30,37 +33,6 @@ class CompanyProfileContainer extends Component {
   componentWillMount() {
     const { dispatchFetchCompany, companyId } = this.props;
     dispatchFetchCompany(companyId);
-  }
-
-  componentWillReceiveProps() {
-  }
-
-  handleSubmit(e) {
-    const target = e.target;
-    e.preventDefault();
-    this.props.dispatchPutCompany(
-      this.props.companyId,
-      target.name.value.trim(),
-      target.vision.value.trim(),
-      target.mission.value.trim(),
-    );
-  }
-
-  changeText(e) {
-    // This is incorrect code. should be revised.
-    const target = e.target;
-    e.preventDefault();
-    this.setState({ companySetting: { data:
-    { name: target.name.value.trim(),
-      vision: target.vision.value.trim(),
-      mission: target.mission.value.trim(),
-    } } });
-    this.props.dispatchPutCompany(
-      this.props.companyId,
-      target.name.value.trim(),
-      target.vision.value.trim(),
-      target.mission.value.trim(),
-    );
   }
 
   renderError() {
@@ -74,11 +46,12 @@ class CompanyProfileContainer extends Component {
   }
 
   renderButton() {
-    return this.props.isProcessing ? <DisabledButton /> : <SubmitButton />;
+    return this.props.isPosting ? <DisabledButton /> : <SubmitButton />;
   }
 
   render() {
-    if (this.props.isFetching) {
+    const { companyId, name, vision, mission, dispatchPutCompany, isFetching } = this.props;
+    if (isFetching) {
       return <div className={styles.spinner} />;
     }
     return (
@@ -86,59 +59,55 @@ class CompanyProfileContainer extends Component {
         <div className={styles.title}>会社情報設定</div>
         <div className={styles.company_img}>
           <span><img className={styles.img} src="/img/profile/img_leader.jpg" alt="" /></span>
-          <span><button className={styles.btn}>画像アップロード</button></span>
+          <span>{this.renderButton()}</span>
         </div>
-        <form onSubmit={e => this.handleSubmit(e)}>
-          <table className={styles.floatL}>
-            <tbody>
-              <tr>
-                <td colSpan="2"><div className={styles.td}>会社名</div></td>
-              </tr>
-              <tr>
-                <td className={styles.title} colSpan="2">
-                  <input id="companyName" type="text" ref={input => (this.name = input)} value={this.props.name} onChange={this.changeText} />
-                </td>
-              </tr>
-              <tr>
-                <td className={styles.top}>
-                  <div className={styles.td}>ヴィジョン：</div>
-                </td>
-                <td>
-                  <textarea className={styles.textarea} id="vision" type="password" ref={input => (this.vision = input)} value={this.props.vision} onChange={this.changeText} />
-                </td>
-              </tr>
-              <tr>
-                <td className={styles.top}>
-                  <div className={styles.td}>ミッション：</div>
-                </td>
-                <td>
-                  <textarea className={styles.textarea} id="mission" type="password" ref={input => (this.mission = input)} value={this.props.mission} onChange={this.changeText} />
-                </td>
-              </tr>
-              <tr>
-                <td colSpan="2">
-                  <div className={styles.td}>{this.renderError()}</div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div className={`${styles.btn_area} ${styles.floatL}`}>{this.renderButton()}</div>
-        </form>
+        <div>
+          <div className={styles.packet}>
+            <span className={styles.title}>会社名：</span>
+            <span className={styles.data}>
+              <InlineTextInput
+                value={name}
+                onSubmit={value => dispatchPutCompany(companyId, { name: value })}
+              />
+            </span>
+          </div>
+          <div className={styles.packet}>
+            <span className={styles.title}>ヴィジョン：</span>
+            <span className={styles.data}>
+              <InlineTextArea
+                value={vision}
+                onSubmit={value => dispatchPutCompany(companyId, { vision: value })}
+              />
+            </span>
+          </div>
+          <div className={styles.packet}>
+            <span className={styles.title}>ミッション：</span>
+            <span className={styles.data}>
+              <InlineTextArea
+                value={mission}
+                onSubmit={value => dispatchPutCompany(companyId, { mission: value })}
+              />
+            </span>
+          </div>
+          <div className={styles.packet}>
+            <div className={styles.title}>{this.renderError()}</div>
+          </div>
+        </div>
       </div>);
   }
 }
 
 const mapStateToProps = (state) => {
   const { companyId } = state.auth || {};
-  const { isFetching = false, isProcessing = false } = state.companySetting || {};
+  const { isFetching = false, isPutting = false } = state.companySetting || {};
   const { name, vision, mission } = state.companySetting.data || {};
-  return { companyId, name, vision, mission, isFetching, isProcessing };
+  return { companyId, name, vision, mission, isFetching, isPutting };
 };
 
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchCompany = companyId => dispatch(fetchCompany(companyId));
-  const dispatchPutCompany = (companyId, companyName, vision, mission) =>
-    dispatch(putCompany(companyId, companyName, vision, mission));
+  const dispatchPutCompany = (companyId, name, vision, mission) =>
+    dispatch(putCompany(companyId, name, vision, mission));
   return { dispatchFetchCompany, dispatchPutCompany };
 };
 

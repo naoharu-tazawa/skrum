@@ -4,22 +4,22 @@ import { getJson, putJson } from '../../util/ApiUtil';
 
 export const Action = {
   REQUEST_FETCH_COMPANY: 'REQUEST_FETCH_COMPANY',
-  REQUEST_PUT_COMPANY: 'REQUEST_PUT_COMPANY',
   FINISH_FETCH_COMPANY: 'FINISH_FETCH_COMPANY',
+  REQUEST_PUT_COMPANY: 'REQUEST_PUT_COMPANY',
   FINISH_PUT_COMPANY: 'FINISH_PUT_COMPANY',
 };
 
 const {
   requestFetchCompany,
-  requestPutCompany,
   finishFetchCompany,
+  requestPutCompany,
   finishPutCompany,
 } = createActions({
   [Action.FINISH_FETCH_COMPANY]: keyValueIdentity,
   [Action.FINISH_PUT_COMPANY]: keyValueIdentity,
+  [Action.REQUEST_PUT_COMPANY]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_COMPANY,
-  Action.REQUEST_PUT_COMPANY,
 );
 
 export function fetchCompany(companyId) {
@@ -39,15 +39,15 @@ export function fetchCompany(companyId) {
   };
 }
 
-export function putCompany(companyId, companyName, vision, mission) {
+export function putCompany(id, data) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isProcessing } = status.companySetting;
-    if (isProcessing) {
+    const { isPutting } = status.companySetting;
+    if (isPutting) {
       return Promise.resolve();
     }
-    dispatch(requestPutCompany());
-    return putJson(`/companies/${companyId}.json`, status)(null, { companyName, vision, mission })
+    dispatch(requestPutCompany('data', { id: Number(id), ...data }));
+    return putJson(`/companies/${id}.json`, status)(null, data)
       .then(json => dispatch(finishPutCompany('data', json)))
       .catch((err) => {
         const { message } = err;

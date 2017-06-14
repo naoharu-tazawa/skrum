@@ -76,9 +76,9 @@ class CompanyService extends BaseService
 
         try {
             // 会社情報更新
-            if (array_key_exists('companyName', $data) && !empty($data['companyName'])) {
-                $data['companyName'] = str_replace('/', '', $data['companyName']);
-                $mCompany->setCompanyName($data['companyName']);
+            if (array_key_exists('name', $data) && !empty($data['name'])) {
+                $data['name'] = str_replace('/', '', $data['name']);
+                $mCompany->setCompanyName($data['name']);
             }
             if (array_key_exists('vision', $data)) {
                 $mCompany->setVision($data['vision']);
@@ -88,7 +88,7 @@ class CompanyService extends BaseService
             }
 
             // グループパス名を更新
-            if (array_key_exists('companyName', $data) && !empty($data['companyName'])) {
+            if (array_key_exists('name', $data) && !empty($data['name'])) {
                 // 全てのグループツリーエンティティを取得
                 $tGroupTreeRepos = $this->getTGroupTreeRepository();
                 $tGroupTreeArray = $tGroupTreeRepos->getAllGroupPath($companyId);
@@ -99,7 +99,7 @@ class CompanyService extends BaseService
                     $groupTreePathNameItems = explode('/', $tGroupTree->getGroupTreePathName(), -1);
 
                     // グループパス名中のグループ名（会社名）を変更
-                    $groupTreePathNameItems[0] = $data['companyName'];
+                    $groupTreePathNameItems[0] = $data['name'];
 
                     // グループパスを再構成
                     $newGroupTreePathName = '';
