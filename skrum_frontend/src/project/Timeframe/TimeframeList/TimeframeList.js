@@ -33,7 +33,12 @@ export default class TimeframeList extends Component {
               <tr>
                 <td colSpan="5" >
                   <div className={`${styles.add_okr} ${styles.alignC}`}>
-                    <a href=""><span className={styles.circle}><img src="/img/common/icn_plus.png" alt="Add" /></span><span>新しいタイムフレームを追加</span></a>
+                    <a href="">
+                      <span className={styles.circle}>
+                        <img src="/img/common/icn_plus.png" alt="Add" />
+                      </span>
+                      <span>新しいタイムフレームを追加</span>
+                    </a>
                   </div>
                 </td>
               </tr>

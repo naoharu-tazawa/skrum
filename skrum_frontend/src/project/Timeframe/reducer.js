@@ -28,12 +28,10 @@ export default (state = {
     case Action.REQUEST_PUT_TIMEFRAME: {
       const { payload } = action;
       const { id, ...item } = payload.data;
-      // const { data = [] } = state;
-      // const newTimeframeList = data.map(value => (value.timeframeId === id ? value : item));
-      console.log(id);
-      console.log(item);
-      // return { ...state, data: [...newTimeframeList], isPutting: true };
-      return { ...state, isPutting: true };
+      const { data = [] } = state;
+      const newData = data.map(tf => (
+        { ...tf, ...(id === tf.timeframeId ? item : {}) }));
+      return { ...state, data: newData, isPutting: true };
     }
 
     case Action.FINISH_PUT_TIMEFRAME: {

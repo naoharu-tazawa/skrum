@@ -1,7 +1,7 @@
 .editor {
   border: 1px solid transparent;
   margin: 0 0 0 -4px;
-  padding: 2px 24px 2px 4px;
+  padding: 2px 20px 2px 4px;
   display: inline-block;
   max-width: 100%;
   position: relative;
@@ -18,16 +18,17 @@
 }
 .editor input, .editor textarea {
   line-height: inherit;
-  margin: -1px 0 -1px -1px;
   min-width: calc(100% + 3px);
   width: 100%;
   z-index: 2;
 }
 .editor input {
-  padding: 1px 1px 1px 3px;
+  padding: 0 0 0 3px;
+  margin: -3px 0 -2px -1px
 }
 .editor textarea {
   padding: 2px 2px 0 4px;
+  margin: -1px 0 -1px -1px;
   min-height: 100%;
 }
 .editor.editing {
@@ -56,7 +57,7 @@
   z-index: 2;
 }
 .editing.multiline .inputArea {
-  padding-right: 24px;
+  padding-right: 20px;
 }
 .editing .value {
   opacity: 0;
@@ -74,7 +75,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  width: 23px;
+  width: calc(20px - 1px);
   line-height: 0;
   vertical-align: text-top;
   display: inline-block;
@@ -120,11 +121,11 @@
   margin: 0;
   position: absolute;
   right: -2px;
-  top: calc(100% + 1px);
+  top: 100%;
   z-index: 1;
 }
 .multiline .saveOptions {
-  right: 22px;
+  right: calc(20px - 2px);
 }
 .submit:before {
   content: " ";

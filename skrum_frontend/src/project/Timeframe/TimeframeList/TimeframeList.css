@@ -42,7 +42,7 @@
     .group_list table td:first-of-type {
       padding-left: 70px; }
     .group_list table td span {
-      margin-right: 10px; }
+      /*margin-right: 10px;*/ }
 
 .add_okr {
   background-color: #fff;
