@@ -29,6 +29,7 @@
 .txt {
   font-size: 14px;
   line-height: 1.3;
+  white-space: pre-line;
 }
 
 .user_info .avatar {

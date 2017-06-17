@@ -38,4 +38,5 @@
 }
 .data {
   margin-bottom: 10px;
+  white-space: pre-line;
 }

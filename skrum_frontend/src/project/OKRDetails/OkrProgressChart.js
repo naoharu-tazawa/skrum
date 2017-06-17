@@ -46,11 +46,12 @@ export default class OkrProgressChart extends Component {
             />
             <Tooltip content={({ payload }) => renderTooltip(payload)} />
             <Line
-              isAnimationActive={false}
+              type="monotone"
               dataKey="progress"
+              /* isAnimationActive={false} */
               stroke="#626A7E"
-              strokeWidth={8}
-              dot={false}
+              strokeWidth={0.7}
+              /* dot={false} */
             />
           </LineChart>
         </ResponsiveContainer>
