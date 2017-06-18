@@ -33,7 +33,7 @@ export default class OKRAlignmentsInfo extends Component {
         </div>
       );
     }
-    const details = alignments.map(({ group, company }) => group || company);
+    const details = alignments.map(({ user, group, company }) => user || group || company);
     const fills = ['#626A7E', '#D8DFE5', '#F0F4F5', 'gray', 'silver'];
     const data = details.map(({ name, numberOfOkrs: value }, index) => ({
       name,
@@ -68,8 +68,8 @@ export default class OKRAlignmentsInfo extends Component {
             />
           </Surface>
           <div className={styles.list}>
-            {details.map(({ companyId, groupId, name, numberOfOkrs }) => (
-              <div key={`${companyId}${groupId}`} className={styles.detail}>
+            {details.map(({ companyId, userId, groupId, name, numberOfOkrs }) => (
+              <div key={`${companyId}-${userId || groupId}`} className={styles.detail}>
                 <div className={styles.group}>
                   <div className={`${styles.user_info} ${styles.cf}`}>
                     <div className={`${styles.avatar} ${styles.circle} ${styles.circle_gray} ${styles.floatL}`}>
