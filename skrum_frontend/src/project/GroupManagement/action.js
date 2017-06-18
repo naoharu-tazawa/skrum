@@ -51,7 +51,7 @@ export function fetchUserGroups(userId, timeframeId) {
   };
 }
 
-export function fetchGroupMembers(groupId) {
+export function fetchGroupMembers(groupId, timeframeId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
     const { isFetching } = status.groupManagement;
@@ -59,7 +59,7 @@ export function fetchGroupMembers(groupId) {
       return Promise.resolve();
     }
     dispatch(requestFetchGroupMembers());
-    return getJson(`/groups/${groupId}/members.json`, status)()
+    return getJson(`/groups/${groupId}/members.json`, status)({ tfid: timeframeId })
       .then(json => dispatch(finishFetchGroupMembers('group', json)))
       .catch((err) => {
         const { message } = err;

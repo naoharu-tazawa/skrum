@@ -44,7 +44,7 @@ class GroupManagementContainer extends Component {
         dispatchFetchUserGroups(id, timeframeId);
         break;
       case 'group':
-        dispatchFetchGroupMembers(id);
+        dispatchFetchGroupMembers(id, timeframeId);
         break;
       default:
         break;
@@ -95,8 +95,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchUserGroups = (userId, timeframeId) =>
     dispatch(fetchUserGroups(userId, timeframeId));
-  const dispatchFetchGroupMembers = groupId =>
-    dispatch(fetchGroupMembers(groupId));
+  const dispatchFetchGroupMembers = (groupId, timeframeId) =>
+    dispatch(fetchGroupMembers(groupId, timeframeId));
   return {
     dispatchFetchUserGroups,
     dispatchFetchGroupMembers,

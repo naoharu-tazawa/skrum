@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Api;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
+use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Api\ResponseDTO\GroupMemberDTO;
@@ -66,6 +67,13 @@ class GroupMemberController extends BaseController
      */
     public function getGroupMembersAction(Request $request, string $groupId): GroupMemberDTO
     {
+        // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkIntID($timeframeId);
+        if($errors) throw new InvalidParameterException("タイムフレームIDが不正です", $errors);
+
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
@@ -78,7 +86,7 @@ class GroupMemberController extends BaseController
 
         // グループメンバー取得
         $groupMemberService = $this->getGroupMemberService();
-        $memberDTOArray = $groupMemberService->getMembers($groupId);
+        $memberDTOArray = $groupMemberService->getMembers($groupId, $timeframeId);
 
         // 返却DTOをセット
         $groupMemberDTO = new GroupMemberDTO();
