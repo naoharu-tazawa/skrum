@@ -247,17 +247,17 @@ class SearchService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param string $keyword 検索ワード
-     * @param TOkr $okrEntity OKRエンティティ
+     * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function searchOkr(Auth $auth, string $keyword, TOkr $okrEntity): array
+    public function searchOkr(Auth $auth, string $keyword, int $timeframeId = null): array
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
 
         // OKR検索
         $tOkrRepos = $this->getTOkrRepository();
-        $tOkrArray = $tOkrRepos->searchOkr($escapedKeyword, $okrEntity, $auth->getCompanyId());
+        $tOkrArray = $tOkrRepos->searchOkr($escapedKeyword, $timeframeId, $auth->getCompanyId());
 
         // DTOに詰め替える
         $okrSearchDTOArray = array();

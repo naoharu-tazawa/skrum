@@ -188,24 +188,36 @@ class SearchController extends BaseController
     public function searchOkrsAction(Request $request): array
     {
         // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
         $okrId = $request->get('oid');
         $keyword = $request->get('q');
 
         // リクエストパラメータのバリデーション
-        $errors1 = $this->checkIntID($okrId);
-        if($errors1) throw new InvalidParameterException("OKRIDが不正です", $errors1);
-        $errors2 = $this->checkSearchKeyword($keyword);
-        if($errors2) throw new InvalidParameterException("検索キーワードが不正です", $errors2);
+        if ($timeframeId !== null) {
+            $errors1 = $this->checkIntID($timeframeId);
+            if($errors1) throw new InvalidParameterException("タイムフレームIDが不正です", $errors1);
+        }
+        if ($okrId !== null) {
+            $errors2 = $this->checkIntID($okrId);
+            if($errors2) throw new InvalidParameterException("OKRIDが不正です", $errors2);
+        }
+        $errors3 = $this->checkSearchKeyword($keyword);
+        if($errors3) throw new InvalidParameterException("検索キーワードが不正です", $errors3);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
-        // OKR存在チェック
-        $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+        // タイムフレームID設定
+        if ($okrId !== null) {
+            // OKR存在チェック
+            $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+
+            $timeframeId = $tOkr->getTimeframe()->getTimeframeId();
+        }
 
         // グループ検索処理
         $searchService = $this->getSearchService();
-        $okrSearchDTOArray = $searchService->searchOkr($auth, $keyword, $tOkr);
+        $okrSearchDTOArray = $searchService->searchOkr($auth, $keyword, $timeframeId);
 
         return $okrSearchDTOArray;
     }

@@ -39,11 +39,11 @@ class TOkrRepository extends BaseRepository
      * OKR検索
      *
      * @param string $keyword 検索ワード
-     * @param TOkr $tOkr OKRエンティティ
+     * @param integer $timeframeId タイムフレームID
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function searchOkr(string $keyword, TOkr $tOkr, int $companyId): array
+    public function searchOkr(string $keyword, int $timeframeId = null, int $companyId): array
     {
         $sql = <<<SQL
         SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
@@ -104,9 +104,9 @@ class TOkrRepository extends BaseRepository
               AND (t0_.deleted_at IS NULL);
 SQL;
 
-        $params['timeframeId1'] = $tOkr->getTimeframe()->getTimeframeId();
-        $params['timeframeId2'] = $tOkr->getTimeframe()->getTimeframeId();
-        $params['timeframeId3'] = $tOkr->getTimeframe()->getTimeframeId();
+        $params['timeframeId1'] = $timeframeId;
+        $params['timeframeId2'] = $timeframeId;
+        $params['timeframeId3'] = $timeframeId;
         $params['companyId1'] = $companyId;
         $params['companyId2'] = $companyId;
         $params['companyId3'] = $companyId;
