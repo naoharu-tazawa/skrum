@@ -267,14 +267,14 @@ class SearchService extends BaseService
             $okrSearchDTO->setOkrName($tOkr['name']);
             $okrSearchDTO->setOwnerType($tOkr['owner_type']);
             if ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_USER) {
-                $okrSearchDTO->setUserId($tOkr['user_id']);
-                $okrSearchDTO->setUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
+                $okrSearchDTO->setOwnerUserId($tOkr['user_id']);
+                $okrSearchDTO->setOwnerUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
             } elseif ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
-                $okrSearchDTO->setGroupId($tOkr['group_id']);
-                $okrSearchDTO->setGroupName($tOkr['group_name']);
+                $okrSearchDTO->setOwnerGroupId($tOkr['group_id']);
+                $okrSearchDTO->setOwnerGroupName($tOkr['group_name']);
             } else {
-                $okrSearchDTO->setCompanyId($tOkr['company_id']);
-                $okrSearchDTO->setCompanyName($tOkr['company_name']);
+                $okrSearchDTO->setOwnerCompanyId($tOkr['company_id']);
+                $okrSearchDTO->setOwnerCompanyName($tOkr['company_name']);
             }
 
             $okrSearchDTOArray[] = $okrSearchDTO;
