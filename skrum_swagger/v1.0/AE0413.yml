@@ -28,17 +28,17 @@ paths:
             properties:
               ownerType:
                 type: string
-              userId:
+              ownerUserId:
                 type: integer
-              userName:
+              ownerUserName:
                 type: string
-              groupId:
+              ownerGroupId:
                 type: integer
-              groupName:
+              ownerGroupName:
                 type: string
-              companyId:
+              ownerCompanyId:
                 type: integer
-              companyName:
+              ownerCompanyName:
                 type: string
             required:
               - ownerType

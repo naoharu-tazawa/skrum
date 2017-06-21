@@ -176,8 +176,8 @@ class SearchService extends BaseService
         foreach ($mUserArray as $mUser) {
             $ownerSearchDTO = new OwnerSearchDTO();
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
-            $ownerSearchDTO->setUserId($mUser['userId']);
-            $ownerSearchDTO->setUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
+            $ownerSearchDTO->setOwnerUserId($mUser['userId']);
+            $ownerSearchDTO->setOwnerUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
         }
@@ -190,8 +190,8 @@ class SearchService extends BaseService
         foreach ($mGroupArray as $mGroup) {
             $ownerSearchDTO = new OwnerSearchDTO();
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
-            $ownerSearchDTO->setGroupId($mGroup['groupId']);
-            $ownerSearchDTO->setGroupName($mGroup['groupName']);
+            $ownerSearchDTO->setOwnerGroupId($mGroup['groupId']);
+            $ownerSearchDTO->setOwnerGroupName($mGroup['groupName']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
         }
@@ -204,8 +204,8 @@ class SearchService extends BaseService
         foreach ($mCompanyArray as $mCompany) {
             $ownerSearchDTO = new OwnerSearchDTO();
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
-            $ownerSearchDTO->setCompanyId($mCompany['companyId']);
-            $ownerSearchDTO->setCompanyName($mCompany['companyName']);
+            $ownerSearchDTO->setOwnerCompanyId($mCompany['companyId']);
+            $ownerSearchDTO->setOwnerCompanyName($mCompany['companyName']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
         }
