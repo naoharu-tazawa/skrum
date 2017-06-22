@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import InvitationContainer from './Invitation/InvitationContainer';
 import UserListContainer from './UserList/UserListContainer';
 import { fetchCompanyRoles } from './action';
@@ -17,9 +17,6 @@ class UserSettingContainer extends Component {
   componentWillMount() {
     const { dispatchFetchCompanyRoles, companyId } = this.props;
     dispatchFetchCompanyRoles(companyId);
-  }
-
-  componentWillReceiveProps() {
   }
 
   render() {
