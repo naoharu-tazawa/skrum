@@ -473,9 +473,9 @@ class OkrService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param TOkr $tOkr OKRエンティティ
-     * @return void
+     * @return BasicOkrDTO
      */
-    public function registerAchievement(Auth $auth, array $data, TOkr $tOkr)
+    public function registerAchievement(Auth $auth, array $data, TOkr $tOkr): BasicOkrDTO
     {
         // 「OKR種別＝1:目標」の場合、かつ子OKRが紐づいている場合、進捗登録不可
         $tOkrRepos = $this->getTOkrRepository();
@@ -564,6 +564,15 @@ class OkrService extends BaseService
 
             $this->flush();
             $this->commit();
+
+            // レスポンス用DTOを作成
+            $basicOkrDTO = new BasicOkrDTO;
+            $basicOkrDTO->setOkrId($tOkr->getOkrId());
+            $basicOkrDTO->setAchievedValue($tOkr->getAchievedValue());
+            $basicOkrDTO->setTargetValue($tOkr->getTargetValue());
+            $basicOkrDTO->setAchievementRate($tOkr->getAchievementRate());
+
+            return $basicOkrDTO;
         } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());

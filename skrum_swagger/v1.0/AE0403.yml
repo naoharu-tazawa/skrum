@@ -43,10 +43,14 @@ paths:
           schema:
             type: object
             properties:
-              result:
-                type: string
-            required:
-              - result
+              okrId:
+                type: integer
+              achievedValue:
+                type: integer
+              targetValue:
+                type: integer
+              achievementRate:
+                type: number
         400:
           description: パラメータ不正
         401:

@@ -144,9 +144,9 @@ class OkrController extends BaseController
      * @Rest\Post("/v1/okrs/{okrId}/achievements.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $okrId OKRID
-     * @return array
+     * @return BasicOkrDTO
      */
-    public function postOkrAchievementsAction(Request $request, string $okrId): array
+    public function postOkrAchievementsAction(Request $request, string $okrId): BasicOkrDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostOkrAchievementsPdu');
@@ -172,9 +172,9 @@ class OkrController extends BaseController
 
         // OKR進捗登録処理
         $okrService = $this->getOkrService();
-        $okrService->registerAchievement($auth, $data, $tOkr);
+        $basicOkrDTO = $okrService->registerAchievement($auth, $data, $tOkr);
 
-        return array('result' => 'OK');
+        return $basicOkrDTO;
     }
 
     /**
