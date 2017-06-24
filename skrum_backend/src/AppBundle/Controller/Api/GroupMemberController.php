@@ -8,7 +8,9 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
+use AppBundle\Utils\Constant;
 use AppBundle\Api\ResponseDTO\GroupMemberDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
 
 /**
  * グループメンバーコントローラ
@@ -23,10 +25,17 @@ class GroupMemberController extends BaseController
      * @Rest\Post("/v1/groups/{groupId}/members.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $groupId グループID
-     * @return array
+     * @return MemberDTO
      */
-    public function postGroupMembersAction(Request $request, string $groupId): array
+    public function postGroupMembersAction(Request $request, string $groupId): MemberDTO
     {
+        // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkIntID($timeframeId);
+        if($errors) throw new InvalidParameterException("タイムフレームIDが不正です", $errors);
+
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostGroupMembersPdu');
         if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
@@ -50,11 +59,15 @@ class GroupMemberController extends BaseController
             throw new PermissionException('グループ操作権限がありません');
         }
 
+        // OKR一覧取得
+        $okrService = $this->getOkrService();
+        $okrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_USER, $auth, $data['userId'], null, $timeframeId, $auth->getCompanyId());
+
         // グループメンバー追加登録処理
         $groupMemberService = $this->getGroupMemberService();
-        $groupMemberService->addMember($mUser, $mGroup);
+        $memberDTO = $groupMemberService->addMember($mUser, $mGroup, $okrsArray);
 
-        return array('result' => 'OK');
+        return $memberDTO;
     }
 
     /**

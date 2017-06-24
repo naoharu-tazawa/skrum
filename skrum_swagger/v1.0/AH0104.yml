@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/members.json:
+  /groups/{groupId}/members.json?{tfid}:
     post:
       description: グループメンバー追加
       parameters:
@@ -19,6 +19,12 @@ paths:
           in: path
           type: string
           description: グループID
+          required: true
+        -
+          name: timeframeId
+          in: path
+          type: string
+          description: タイムフレームID
           required: true
         -
           name: JsonRequest
@@ -38,10 +44,16 @@ paths:
           schema:
             type: object
             properties:
-              result:
+              userId:
+                type: integer
+              name:
                 type: string
-            required:
-              - result
+              position:
+                type: string
+              achievementRate:
+                type: number
+              lastLogin:
+                type: string
         400:
           description: JSONスキーマ不正
         409:

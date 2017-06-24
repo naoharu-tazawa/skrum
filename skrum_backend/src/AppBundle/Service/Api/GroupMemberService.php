@@ -9,8 +9,8 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\TGroupMember;
-use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
 
 /**
  * グループメンバーサービスクラス
@@ -24,9 +24,10 @@ class GroupMemberService extends BaseService
      *
      * @param MUser $mUser ユーザエンティティ
      * @param MGroup $mGroup グループエンティティ
-     * @return void
+     * @param array $okrsArray 当該メンバー所有OKR配列
+     * @return MemberDTO
      */
-    public function addMember(MUser $mUser, MGroup $mGroup)
+    public function addMember(MUser $mUser, MGroup $mGroup, array $okrsArray): MemberDTO
     {
         // グループメンバー排他チェック
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
@@ -45,6 +46,21 @@ class GroupMemberService extends BaseService
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
+
+
+        $memberDTO = new MemberDTO();
+        $memberDTO->setUserId($mUser->getUserId());
+        $memberDTO->setName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $memberDTO->setPosition($mUser->getPosition());
+        $achievementRateArray = array();
+        foreach ($okrsArray as $tOkr) {
+            $achievementRateArray[] = $tOkr->getAchievementRate();
+        }
+        $memberDTO->setAchievementRate(floor((array_sum($achievementRateArray) / count($achievementRateArray)) * 10) / 10);
+        $tLoginRepos = $this->getTLoginRepository();
+        $memberDTO->setLastLogin($tLoginRepos->getLastLogin($mUser->getUserId()));
+
+        return $memberDTO;
     }
 
     /**
