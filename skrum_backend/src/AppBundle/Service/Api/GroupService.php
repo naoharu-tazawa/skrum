@@ -29,9 +29,9 @@ class GroupService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param TGroupTree $tGroupTree グループツリーエンティティ
-     * @return void
+     * @return BasicGroupInfoDTO
      */
-    public function createGroup(Auth $auth, array $data, TGroupTree $groupTreeEntity = null)
+    public function createGroup(Auth $auth, array $data, TGroupTree $groupTreeEntity = null): BasicGroupInfoDTO
     {
         // グループ名に'/'(スラッシュ)が入っている場合除外する
         $data['groupName'] = str_replace('/', '', $data['groupName']);
@@ -63,6 +63,37 @@ class GroupService extends BaseService
 
             $this->flush();
             $this->commit();
+
+            // レスポンスDTOを生成
+            $basicGroupInfoDTO = new BasicGroupInfoDTO;
+            $basicGroupInfoDTO->setGroupId($mGroup->getGroupId());
+            $basicGroupInfoDTO->setName($mGroup->getGroupName());
+            if ($groupTreeEntity !== null) {
+                $groupTreePathArray = explode('/', $tGroupTree->getGroupTreePath(), -1);
+                $groupTreePathNameArray = explode('/', $tGroupTree->getGroupTreePathName(), -1);
+                $count = count($groupTreePathArray);
+                $groupIdAndNameArray = array();
+                for ($i = 0; $i < $count; ++$i) {
+                    $groupPathElementDTO = new GroupPathElementDTO();
+                    if ($i === 0) {
+                        $groupPathElementDTO->setId($auth->getCompanyId());
+                    } else {
+                        $groupPathElementDTO->setId($groupTreePathArray[$i]);
+                    }
+                    $groupPathElementDTO->setName($groupTreePathNameArray[$i]);
+                    $groupIdAndNameArray[] = $groupPathElementDTO;
+                }
+                $basicGroupInfoDTO->setGroupPaths($groupIdAndNameArray);
+            }
+            $basicGroupInfoDTO->setMission($mGroup->getMission());
+            if ($mGroup->getLeaderUserId() !== null) {
+                $basicGroupInfoDTO->setLeaderUserId($mGroup->getLeaderUserId());
+                $mUserRepos = $this->getMUserRepository();
+                $mUser = $mUserRepos->find($mGroup->getLeaderUserId());
+                $basicGroupInfoDTO->setLeaderName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+            }
+
+            return $basicGroupInfoDTO;
         } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());

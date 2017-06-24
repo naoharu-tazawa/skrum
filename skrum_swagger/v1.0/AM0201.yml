@@ -37,10 +37,23 @@ paths:
           schema:
             type: object
             properties:
-              result:
+              groupId:
+                type: integer
+              name:
                 type: string
-            required:
-              - result
+              groupPaths:
+                type: array
+                items:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+              mission:
+                type: string
+              leaderUserId:
+                type: integer
+              leaderName:
+                type: string
         400:
           description: JSONスキーマ不正
         409:
