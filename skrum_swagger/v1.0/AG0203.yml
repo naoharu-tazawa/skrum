@@ -36,10 +36,16 @@ paths:
           schema:
             type: object
             properties:
-              result:
+              postId:
+                type: integer
+              posterId:
+                type: integer
+              posterName:
                 type: string
-            required:
-              - result
+              post:
+                type: string
+              postedDatetime:
+                type: string
         400:
           description: パラメータ不正
         401:

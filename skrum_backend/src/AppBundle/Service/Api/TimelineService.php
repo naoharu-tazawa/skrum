@@ -183,9 +183,9 @@ class TimelineService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param TPost $tPost 投稿エンティティ
-     * @return void
+     * @return PostDTO
      */
-    public function postReply(Auth $auth, array $data, TPost $tPost)
+    public function postReply(Auth $auth, array $data, TPost $tPost): PostDTO
     {
         // リプライ登録
         $tPostReply = new TPost();
@@ -202,6 +202,19 @@ class TimelineService extends BaseService
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンスデータ生成
+        $mUserRepos = $this->getMUserRepository();
+        $mUser = $mUserRepos->find($tPostReply->getPosterId());
+
+        $postDTO = new PostDTO();
+        $postDTO->setPostId($tPost->getId());
+        $postDTO->setPosterId($tPost->getPosterId());
+        $postDTO->setPosterName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $postDTO->setPost($tPost->getPost());
+        $postDTO->setPostedDatetime($tPost->getPostedDatetime());
+
+        return $postDTO;
     }
 
     /**

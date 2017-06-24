@@ -75,9 +75,9 @@ class TimelineController extends BaseController
      * @Rest\Post("/v1/posts/{postId}/replies.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string postId 投稿ID
-     * @return array
+     * @return $postDTO
      */
-    public function postPostRepliesAction(Request $request, string $postId): array
+    public function postPostRepliesAction(Request $request, string $postId): PostDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/ReplyPdu');
@@ -99,9 +99,9 @@ class TimelineController extends BaseController
 
         // リプライ登録処理
         $timelineService = $this->getTimelineService();
-        $timelineService->postReply($auth, $data, $tPost);
+        $postDTO = $timelineService->postReply($auth, $data, $tPost);
 
-        return array('result' => 'OK');
+        return $postDTO;
     }
 
     /**
