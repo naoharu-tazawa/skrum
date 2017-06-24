@@ -213,7 +213,7 @@ class UserSettingService extends BaseService
             $mCompany->setCompanyName($companyInfo['name']);
             $mCompany->setVision($companyInfo['vision']);
             $mCompany->setMission($companyInfo['mission']);
-            $mCompany->setDefaultDisclosureType(DBConstant::OKR_DISCLOSURE_TYPE_OVERALL);
+            $mCompany->setDefaultDisclosureType($companyInfo['defaultDisclosureType']);
             $this->persist($mCompany);
 
             // グループマスタに登録されている会社レコードの会社名を変更

@@ -6,6 +6,7 @@ use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicCompanyInfoDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\PolicyDTO;
 
 /**
  * 会社サービスクラス
@@ -43,7 +44,7 @@ class CompanyService extends BaseService
      * @param integer $companyId 会社ID
      * @return BasicCompanyInfoDTO
      */
-    public function getCompanyName(int $companyId): BasicCompanyInfoDTO
+    public function getSideBarCompany(int $companyId): BasicCompanyInfoDTO
     {
         $mCompanyRepos = $this->getMCompanyRepository();
         $mCompany = $mCompanyRepos->find($companyId);
@@ -51,9 +52,13 @@ class CompanyService extends BaseService
             throw new ApplicationException('会社が存在しません');
         }
 
+        $policyDTO = new PolicyDTO();
+        $policyDTO->setDefaultDisclosureType($mCompany->getDefaultDisclosureType());
+
         $basicCompanyInfoDTO = new BasicCompanyInfoDTO();
         $basicCompanyInfoDTO->setCompanyId($mCompany->getCompanyId());
         $basicCompanyInfoDTO->setName($mCompany->getCompanyName());
+        $basicCompanyInfoDTO->setPolicy($policyDTO);
 
         return $basicCompanyInfoDTO;
     }

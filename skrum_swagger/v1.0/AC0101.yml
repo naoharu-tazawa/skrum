@@ -53,10 +53,16 @@ paths:
                     type: string
                   mission:
                     type: string
+                  policy:
+                    type: object
+                    properties:
+                      defaultDisclosureType:
+                        type: string
                 required:
                   - name
                   - vision
                   - mission
+                  - policy
               timeframe:
                 type: object
                 properties:
