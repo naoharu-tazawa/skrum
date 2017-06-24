@@ -241,9 +241,9 @@ class OkrService extends BaseService
      * @param integer $companyId オーナー会社ID
      * @param boolean $alignmentFlg 紐付け先OKR有りフラグ
      * @param TOkr $parentOkrEntity 紐付け先OKRエンティティ
-     * @return void
+     * @return BasicOkrDTO
      */
-    public function createOkr(string $ownerType, array $data, TTimeframe $tTimeframe, MUser $mUser = null, MGroup $mGroup = null, int $companyId, bool $alignmentFlg, TOkr $parentOkrEntity = null)
+    public function createOkr(string $ownerType, array $data, TTimeframe $tTimeframe, MUser $mUser = null, MGroup $mGroup = null, int $companyId, bool $alignmentFlg, TOkr $parentOkrEntity = null): BasicOkrDTO
     {
         // 開始日と終了日の妥当性チェック
         DateUtility::checkStartDateAndEndDate($data['startDate'], $data['endDate']);
@@ -359,6 +359,41 @@ class OkrService extends BaseService
 
             $this->flush();
             $this->commit();
+
+            // レスポンス用DTO作成
+            $basicOkrDTO = new BasicOkrDTO();
+            $basicOkrDTO->setOkrId($tOkr->getOkrId());
+            $basicOkrDTO->setOkrType($tOkr->getType());
+            $basicOkrDTO->setOkrName($tOkr->getName());
+            $basicOkrDTO->setOkrDetail($tOkr->getDetail());
+            if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+                $basicOkrDTO->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
+                $basicOkrDTO->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+            } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                $basicOkrDTO->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+                $basicOkrDTO->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+            } else {
+                // 会社エンティティを取得
+                $mCompanyRepos = $this->getMCompanyRepository();
+                $mCompany = $mCompanyRepos->find($companyId);
+
+                $basicOkrDTO->setOwnerCompanyId($tOkr->getOwnerCompanyId());
+                $basicOkrDTO->setOwnerCompanyName($mCompany->getCompanyName());
+            }
+            $basicOkrDTO->setTargetValue($tOkr->getTargetValue());
+            $basicOkrDTO->setAchievedValue($tOkr->getAchievedValue());
+            $basicOkrDTO->setUnit($tOkr->getUnit());
+            $basicOkrDTO->setAchievementRate($tOkr->getAchievementRate());
+            if ($tOkr->getParentOkr() !== null) {
+                $basicOkrDTO->setParentOkrId($tOkr->getParentOkr()->getOkrId());
+            }
+            $basicOkrDTO->setStartDate($tOkr->getStartDate());
+            $basicOkrDTO->setEndDate($tOkr->getEndDate());
+            $basicOkrDTO->setStatus($tOkr->getStatus());
+            $basicOkrDTO->setWeightedAverageRatio($tOkr->getWeightedAverageRatio());
+            $basicOkrDTO->setRatioLockedFlg($tOkr->getRatioLockedFlg());
+
+            return $basicOkrDTO;
         } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());

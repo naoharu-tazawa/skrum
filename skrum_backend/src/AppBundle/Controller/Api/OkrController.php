@@ -9,6 +9,7 @@ use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 
 /**
  * OKRコントローラ
@@ -22,9 +23,9 @@ class OkrController extends BaseController
      *
      * @Rest\Post("/v1/okrs.{_format}")
      * @param Request $request リクエストオブジェクト
-     * @return array
+     * @return BasicOkrDTO
      */
-    public function postOkrsAction(Request $request): array
+    public function postOkrsAction(Request $request): BasicOkrDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostObjectivesPdu');
@@ -93,9 +94,9 @@ class OkrController extends BaseController
 
         // 目標新規登録処理
         $okrService = $this->getOkrService();
-        $okrService->createOkr($data['ownerType'], $data, $tTimeframe, $mUser, $mGroup, $auth->getCompanyId(), $alignmentFlg, $tOkr);
+        $basicOkrDTO = $okrService->createOkr($data['ownerType'], $data, $tTimeframe, $mUser, $mGroup, $auth->getCompanyId(), $alignmentFlg, $tOkr);
 
-        return array('result' => 'OK');
+        return $basicOkrDTO;
     }
 
     /**

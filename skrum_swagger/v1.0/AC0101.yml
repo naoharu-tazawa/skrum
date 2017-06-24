@@ -58,6 +58,8 @@ paths:
                     properties:
                       defaultDisclosureType:
                         type: string
+                    required:
+                      - defaultDisclosureType
                 required:
                   - name
                   - vision
