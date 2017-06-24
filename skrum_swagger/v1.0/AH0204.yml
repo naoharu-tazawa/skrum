@@ -38,10 +38,15 @@ paths:
           schema:
             type: object
             properties:
-              result:
-                type: string
-            required:
-              - result
+              groupTreeId:
+                type: integer
+              groupPath:
+                type: array
+                items:
+                  id:
+                    type: integer
+                  name:
+                    type: string
         400:
           description: JSONスキーマ不正
         409:

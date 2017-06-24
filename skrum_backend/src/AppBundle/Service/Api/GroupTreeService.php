@@ -6,8 +6,11 @@ use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\DoubleOperationException;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\Auth;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\TGroupTree;
+use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\GroupPathElementDTO;
 
 /**
  * グループツリーサービスクラス
@@ -19,12 +22,13 @@ class GroupTreeService extends BaseService
     /**
      * グループツリー新規登録
      *
+     * @param Auth $auth 認証情報
      * @param MGroup $mGroup グループエンティティ
      * @param string $groupTreePath グループツリーパス
      * @param string $groupTreePathName グループツリーパス名
      * @return void
      */
-    public function createGroupPath(MGroup $mGroup, string $groupTreePath, string $groupTreePathName)
+    public function createGroupPath(Auth $auth, MGroup $mGroup, string $groupTreePath, string $groupTreePathName): GroupPathDTO
     {
         // 登録グループツリーパス
         $newGroupTreePath = $groupTreePath . $mGroup->getGroupId() . '/';
@@ -49,6 +53,28 @@ class GroupTreeService extends BaseService
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンスDTOを作成
+        $groupTreePathArray = explode('/', $tGroupTree->getGroupTreePath(), -1);
+        $groupTreePathNameArray = explode('/', $tGroupTree->getGroupTreePathName(), -1);
+        $count = count($groupTreePathArray);
+        $groupIdAndNameArray = array();
+        for ($i = 0; $i < $count; ++$i) {
+            $groupPathElementDTO = new GroupPathElementDTO();
+            if ($i === 0) {
+                $groupPathElementDTO->setId($auth->getCompanyId());
+            } else {
+                $groupPathElementDTO->setId($groupTreePathArray[$i]);
+            }
+            $groupPathElementDTO->setName($groupTreePathNameArray[$i]);
+            $groupIdAndNameArray[] = $groupPathElementDTO;
+        }
+
+        $groupPathDTO = new GroupPathDTO();
+        $groupPathDTO->setGroupTreeId($tGroupTree->getId());
+        $groupPathDTO->setGroupPath($groupIdAndNameArray);
+
+        return $groupPathDTO;
     }
 
     /**
