@@ -9,8 +9,8 @@ use AppBundle\Utils\Auth;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TTimeframe;
-use AppBundle\Api\ResponseDTO\NestedObject\TimeframeDTO;
 use AppBundle\Api\ResponseDTO\TimeframeDetailDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\TimeframeDTO;
 
 /**
  * タイムフレームサービスクラス
@@ -110,9 +110,9 @@ class TimeframeService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
-     * @return void
+     * @return TimeframeDetailDTO
      */
-    public function registerTimeframe(Auth $auth, array $data)
+    public function registerTimeframe(Auth $auth, array $data): TimeframeDetailDTO
     {
         // 開始日妥当性チェック
         if (!checkdate($data['start']['month'], $data['start']['date'], $data['start']['year'])) {
@@ -154,6 +154,16 @@ class TimeframeService extends BaseService
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンス用DTO生成
+        $timeframeDetailDTO = new TimeframeDetailDTO();
+        $timeframeDetailDTO->setTimeframeId($tTimeframe->getTimeframeId());
+        $timeframeDetailDTO->setTimeframeName($tTimeframe->getTimeframeName());
+        $timeframeDetailDTO->setStartDate($tTimeframe->getStartDate());
+        $timeframeDetailDTO->setEndDate($tTimeframe->getEndDate());
+        $timeframeDetailDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
+
+        return $timeframeDetailDTO;
     }
 
     /**

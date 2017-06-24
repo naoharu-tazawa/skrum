@@ -60,10 +60,38 @@ paths:
           schema:
             type: object
             properties:
-              result:
+              timeframeName:
                 type: string
+              start:
+                type: object
+                properties:
+                  year:
+                    type: string
+                  month:
+                    type: string
+                  date:
+                    type: string
+                required:
+                  - year
+                  - month
+                  - date
+              end:
+                type: object
+                properties:
+                  year:
+                    type: string
+                  month:
+                    type: string
+                  date:
+                    type: string
+                required:
+                  - year
+                  - month
+                  - date
             required:
-              - result
+              - timeframeName
+              - start
+              - end
         400:
           description: JSONスキーマ不正
         409:
