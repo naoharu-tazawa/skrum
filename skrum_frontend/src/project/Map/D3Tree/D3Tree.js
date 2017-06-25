@@ -98,13 +98,13 @@ export default class D3Tree extends Component {
 
     const colorScale = d3.scaleOrdinal()
       .domain(states)
-      .range(['yellow', 'orange', 'green']);
+      .range(['#EFB04C', '#AFDB56', '#42BBF8']);
 
     nodeEnter.append('rect')
       .attr('class', 'bg-rect')
-      .attr('rx', 10)
-      .attr('ry', 10)
-      .attr('fill', 'gray')
+      .attr('rx', 0)
+      .attr('ry', 0)
+      .attr('fill', '#D8DFE5')
       .attr('height', 15 * reductionRatio)
       .attr('width', segmentWidth)
       .attr('y', `${-77 * reductionRatio}px`)
@@ -128,8 +128,8 @@ export default class D3Tree extends Component {
       })
       .attr('height', 15 * reductionRatio)
       .attr('width', 0)
-      .attr('rx', 10)
-      .attr('ry', 10)
+      .attr('rx', 0)
+      .attr('ry', 0)
       .attr('y', `${-77 * reductionRatio}px`)
       .attr('x', `${-45 * reductionRatio}px`)
       .style('display', (d) => {

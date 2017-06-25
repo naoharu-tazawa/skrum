@@ -91,7 +91,11 @@ class OkrOperationLogic extends BaseLogic
             // DTOに詰め替える
             $childOkrMapDTO = $this->repackDTOWithOkrEntity($tOkrArray[$i], $companyName);
 
-            $childrenOkrs[$tOkrArray[$i]->getParentOkr()->getOkrId()][] = $childOkrMapDTO;
+            if (empty($tOkrArray[$i]->getParentOkr())) {
+                $childrenOkrs[][] = $childOkrMapDTO;
+            } else {
+                $childrenOkrs[$tOkrArray[$i]->getParentOkr()->getOkrId()][] = $childOkrMapDTO;
+            }
         }
 
         // ツリー生成

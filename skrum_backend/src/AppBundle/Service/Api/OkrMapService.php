@@ -99,6 +99,11 @@ class OkrMapService extends BaseService
             // OKRマップを取得
             $tOkrArray = $tOkrRepos->getOkrAndAllAlignmentOkrs($objective->getTreeLeft(), $objective->getTreeRight(), $timeframeId, $auth->getCompanyId());
 
+            // OKRの左値・右値が存在しない場合、直接取得
+            if (empty($tOkrArray)) {
+                $tOkrArray[] = $objective;
+            }
+
             // 階層構造に変換
             $okrMapDTO = $okrOperationLogic->tree($auth, $tOkrArray, $companyName);
 
