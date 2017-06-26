@@ -9,6 +9,7 @@ export default class InlineTextInput extends PureComponent {
     type: PropTypes.string,
     value: PropTypes.string,
     readonly: PropTypes.bool,
+    maxLength: PropTypes.number,
     onSubmit: PropTypes.func,
   };
 
@@ -37,20 +38,22 @@ export default class InlineTextInput extends PureComponent {
   }
 
   render() {
-    const { type = 'text', value = '', readonly = false } = this.props;
+    const { type = 'text', value = '', readonly = false, maxLength } = this.props;
     const { editing = false } = this.state;
     return (
       <span
         className={`${styles.editor} ${readonly && styles.readonly} ${editing && styles.editing}`}
         onMouseDown={() => !readonly && this.setEditingState(true)}
       >
-        <span className={styles.value}>{value}</span>
-        {!readonly && <span className={styles.editButton} />}
-        <div className={styles.inputArea}>
+        <span className={styles.value}>{value === '' ? <span>&nbsp;</span> : value}</span>
+        {!readonly && !editing &&
+          <span className={styles.editButton} onMouseDown={() => this.setEditingState(true)} />}
+        {!readonly && <div className={styles.inputArea}>
           <input
             ref={(ref) => { this.input = ref; }}
             type={type}
             defaultValue={value}
+            {...{ maxLength }}
             onChange={e => this.setState({ value: e.target.value })}
             onBlur={() => this.submitChange()}
             onKeyDown={e => e.key === 'Escape' && this.cancelChange()}
@@ -61,7 +64,7 @@ export default class InlineTextInput extends PureComponent {
               <button className={styles.submit} onClick={() => this.submitChange()}>&nbsp;</button>
               <button className={styles.cancel} onClick={() => this.cancelChange()}>&nbsp;</button>
             </div>)}
-        </div>
+        </div>}
       </span>
     );
   }

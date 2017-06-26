@@ -1,0 +1,27 @@
+.component {
+  width: 100%;
+  display: flex !important;
+}
+.input {
+  min-width: 100%;
+}
+.component:after {
+  content: " ";
+  min-width: 21px;
+  min-height: 21px;
+  right: 23px;
+  position: relative;
+}
+.component:not(.focused):after {
+  mask: url(/img/search.svg);
+  mask-repeat: no-repeat;
+  mask-position-y: 2px;
+  -webkit-mask: url(/img/search.svg);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position-y: 2px;
+  background-color: #dddddd;
+}
+.component.searching:after {
+  background: url(/img/rolling.svg) center no-repeat;
+  background-size: contain;
+}

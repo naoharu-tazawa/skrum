@@ -1,0 +1,15 @@
+.content {
+  padding: 0 2em;
+  font-size: 12px;
+  max-width: 50em;
+}
+.choice {
+  padding-top: 2em;
+  font-size: 12px;
+}
+.choice label {
+  margin-right: 2em;
+}
+.choice input {
+  margin-right: 0.5em;
+}

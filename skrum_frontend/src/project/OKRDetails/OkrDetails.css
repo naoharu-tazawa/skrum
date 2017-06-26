@@ -97,7 +97,6 @@
     padding: 0;
     width: 39px;
     height: 39px;
-    float: right;
     background: none;
     border: 1px solid #8e9aa6;
     border-radius: 50%;
@@ -106,6 +105,8 @@
     -moz-appearance: none;
     appearance: none;
     cursor: pointer; }
+  .boxInfo .tool, .boxInfo :global(.dropdown) {
+    float: right; }
   .boxInfo .nav_info .user_name {
     margin-top: 12px !important; }
 

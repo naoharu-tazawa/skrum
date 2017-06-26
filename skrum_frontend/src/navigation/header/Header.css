@@ -40,6 +40,9 @@
   align-items: center;
   height: 100%;
 }
+.subMenu button:focus {
+  outline: 0;
+}
 .timePeriod {
   /* margin-right: 10px; */
   min-width: 12.5em;
@@ -52,6 +55,9 @@
   background-color: #fff;
   border-radius: 50%;
   border: 1px solid #fff;
+}
+.addIcon {
+  margin-left: -1em;
 }
 .settingIcon {
   width: 20px;

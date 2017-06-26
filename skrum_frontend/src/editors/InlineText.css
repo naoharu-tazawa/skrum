@@ -47,6 +47,9 @@
   display: block;
   padding: 0 2px 0 0;
 }
+.editor.multiline .value {
+  word-break: break-word;
+}
 .editor:not(.multiline) .value {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -84,7 +87,7 @@
   text-indent: -999em;
   word-wrap: break-word;
   word-break: break-all;
-  /*z-index: 3;*/
+  z-index: 3;
 }
 .editButton:before {
   content: " ";

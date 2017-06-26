@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from './Header';
 import { timeframesPropTypes } from './propTypes';
+import BasicModalDialog from '../../dialogs/BasicModalDialog';
+import NewOKR from '../../project/OKR/NewOKR/NewOKR';
 import { logout } from '../../auth/action';
 
 class HeaderContainer extends Component {
@@ -13,13 +15,30 @@ class HeaderContainer extends Component {
     pathname: PropTypes.string,
   };
 
+  handleAddOkrOpen() {
+    this.setState({ isAddOkrModalOpen: true });
+  }
+
+  handleAddOkrClose() {
+    this.setState({ isAddOkrModalOpen: false });
+  }
+
   render() {
     const { timeframes = [] } = this.props;
+    const { isAddOkrModalOpen = false } = this.state || {};
     return (
-      <Header
-        timeframes={timeframes}
-        handleLogoutSubmit={this.props.dispatchLogout}
-      />
+      <div>
+        <Header
+          timeframes={timeframes}
+          handleAdd={this.handleAddOkrOpen.bind(this)}
+          handleLogoutSubmit={this.props.dispatchLogout}
+        />
+        {isAddOkrModalOpen && (
+          <BasicModalDialog onClose={this.handleAddOkrClose.bind(this)}>
+            <NewOKR type="Okr" onClose={this.handleAddOkrClose.bind(this)} />
+          </BasicModalDialog>
+        )}
+      </div>
     );
   }
 }

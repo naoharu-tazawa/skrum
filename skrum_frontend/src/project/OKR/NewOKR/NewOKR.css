@@ -1,0 +1,40 @@
+.label {
+  margin: 8px 1em auto 1em;
+  white-space: nowrap;
+  cursor: default;
+}
+.label:first-child {
+  margin-left: 0;
+}
+.ownerDateRange {
+}
+.ownerBox {
+  display: inline-flex;
+}
+.dateRange {
+  float: right;
+  display: flex;
+}
+.disclosureType {
+  margin: 1em 0 0 0;
+}
+.disclosureType input {
+  margin: 0 .5em 0 1.5em;
+}
+.dialog textarea {
+  display: block;
+  width: 52em;
+  max-width: 52em;
+  margin-top: 1em;
+}
+.progressBox, .alignmentBox {
+  display: flex;
+  margin: 1em 0 0 0;
+}
+.inputWithHint {
+  display: grid;
+}
+.hint {
+  margin: 2px 0 0 0 !important;
+  font-size: xx-small;
+}

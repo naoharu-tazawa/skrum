@@ -43,6 +43,7 @@ class SubMenu extends Component {
   static propTypes = {
     timeframes: timeframesPropTypes.isRequired,
     handleLogoutSubmit: PropTypes.func.isRequired,
+    handleAdd: PropTypes.func.isRequired,
   };
 
   static getTimeframeStyle(id, currentId) {
@@ -61,7 +62,7 @@ class SubMenu extends Component {
   }
 
   render() {
-    const { timeframes, handleLogoutSubmit } = this.props;
+    const { timeframes, handleAdd, handleLogoutSubmit } = this.props;
     const timeframeOptions = _.orderBy(timeframes, 'timeframeId', 'asc')
       .map(({ timeframeId: value, timeframeName: label }) => ({ value, label }));
     const { timeframeId } = explodePath();
@@ -78,6 +79,13 @@ class SubMenu extends Component {
           clearable={false}
           searchable={false}
         />
+        <button onClick={handleAdd}>
+          <img
+            className={styles.addIcon}
+            src="/img/common/icn_add.png"
+            alt=""
+          />
+        </button>
         <img
           className={styles.userIcon}
           src="https://cdn3.iconfinder.com/data/icons/users/100/user_male_1-512.png"
@@ -102,11 +110,12 @@ export default class Header extends Component {
 
   static propTypes = {
     timeframes: timeframesPropTypes,
+    handleAdd: PropTypes.func.isRequired,
     handleLogoutSubmit: PropTypes.func.isRequired,
   };
 
   render() {
-    const { timeframes = [], handleLogoutSubmit } = this.props;
+    const { timeframes = [], handleAdd, handleLogoutSubmit } = this.props;
     const { subject } = explodePath();
     return (
       <div className={styles.container}>
@@ -115,7 +124,7 @@ export default class Header extends Component {
         {subject === 'group' && <Tab title="タイムライン" name="timeline" />}
         {subject !== 'company' && <Tab title="グループ管理" name="control" />}
         <div className={styles.rightArea}>
-          <SubMenu {...{ timeframes, handleLogoutSubmit }} />
+          <SubMenu {...{ timeframes, handleAdd, handleLogoutSubmit }} />
         </div>
       </div>
     );
