@@ -10,19 +10,19 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/posts:
+  /companies/{companyId}/posts:
     get:
-      description: タイムライン取得（グループ）
+      description: タイムライン取得（会社）
       parameters:
         -
-          name: groupId
+          name: companyId
           in: path
           type: integer
-          description: グループID
+          description: 会社ID
           required: true
       responses:
         200:
-          description: タイムライン（グループ）
+          description: タイムライン（会社）
           schema:
             type: array
             items:
@@ -36,9 +36,9 @@ paths:
                   type: integer
                 posterUserName:
                   type: string
-                posterGroupId:
+                posterCompanyId:
                   type: integer
-                posterGroupName:
+                posterCompanyName:
                   type: string
                 post:
                   type: string
@@ -78,8 +78,8 @@ paths:
                 - posterType
                 - posterUserId
                 - posterUserName
-                - posterGroupId
-                - posterGroupName
+                - posterCompanyId
+                - posterCompanyName
                 - post
                 - postedDatetime
                 - likesCount

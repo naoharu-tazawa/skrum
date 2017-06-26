@@ -150,6 +150,21 @@ class DBConstant
     const OKR_OPERATION_TYPE_OPEN = '9';
 
     /**
+     * 投稿者種別（ユーザ）
+     */
+    const POSTER_TYPE_USER = '1';
+
+    /**
+     * 投稿者種別（グループ）
+     */
+    const POSTER_TYPE_GROUP = '2';
+
+    /**
+     * 投稿者種別（会社）
+     */
+    const POSTER_TYPE_COMPANY = '3';
+
+    /**
      * ロールID（一般ユーザ（スタンダードプラン））
      */
     const ROLE_ID_NORMAL_STANDARD = 'A001';

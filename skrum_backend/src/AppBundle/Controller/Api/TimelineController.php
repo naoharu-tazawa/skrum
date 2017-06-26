@@ -17,7 +17,7 @@ use AppBundle\Api\ResponseDTO\PostDTO;
 class TimelineController extends BaseController
 {
     /**
-     * タイムライン取得
+     * タイムライン取得（グループ）
      *
      * @Rest\Get("/v1/groups/{groupId}/posts.{_format}")
      * @param Request $request リクエストオブジェクト
@@ -40,7 +40,32 @@ class TimelineController extends BaseController
     }
 
     /**
-     * コメント投稿
+     * タイムライン取得（会社）
+     *
+     * @Rest\Get("/v1/companies/{companyId}/posts.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
+     * @return array
+     */
+    public function getCompanyPostsAction(Request $request, string $companyId): array
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 会社IDの一致をチェック
+        if ($companyId != $auth->getCompanyId()) {
+            throw new ApplicationException('会社IDが存在しません');
+        }
+
+        // タイムライン取得処理
+        $timelineService = $this->getTimelineService();
+        $postDTOArray = $timelineService->getCompanyTimeline($auth, $companyId);
+
+        return $postDTOArray;
+    }
+
+    /**
+     * コメント投稿（グループ）
      *
      * @Rest\Post("/v1/groups/{groupId}/posts.{_format}")
      * @param Request $request リクエストオブジェクト
@@ -65,6 +90,38 @@ class TimelineController extends BaseController
         // コメント登録処理
         $timelineService = $this->getTimelineService();
         $postDTO = $timelineService->postComment($auth, $data, $groupId);
+
+        return $postDTO;
+    }
+
+    /**
+     * コメント投稿（会社）
+     *
+     * @Rest\Post("/v1/companies/{companyId}/posts.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
+     * @return PostDTO
+     */
+    public function postCompanyPostsAction(Request $request, string $companyId): PostDTO
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/CommentPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 会社IDの一致をチェック
+        if ($companyId != $auth->getCompanyId()) {
+            throw new ApplicationException('会社IDが存在しません');
+        }
+
+        // コメント登録処理
+        $timelineService = $this->getTimelineService();
+        $postDTO = $timelineService->postCompanyComment($auth, $data, $companyId);
 
         return $postDTO;
     }

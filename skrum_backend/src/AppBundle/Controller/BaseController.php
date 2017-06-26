@@ -349,6 +349,11 @@ class BaseController extends FOSRestController
         return $this->get('api.permission_logic');
     }
 
+    protected function getPostLogic()
+    {
+        return $this->get('api.post_logic');
+    }
+
     //----------------------------------------------
     //ここからサービスクラスの取得メソッド
     //----------------------------------------------

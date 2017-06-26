@@ -9,7 +9,8 @@ export default class PostBar extends Component {
   };
 
   render() {
-    const { posterId, posterName, post, postedDatetime, likesCount,
+    const { posterType, posterUserId, posterUserName, posterGroupId, posterGroupName,
+      posterCompanyId, posterCompanyName, post, postedDatetime, likesCount,
       likedFlg, replies = [] } = this.props.timeline;
 
     const main = () => (
@@ -21,13 +22,22 @@ export default class PostBar extends Component {
             <div className={styles.user_name}>
               <dl>
                 <dt><img src="/img/common/icn_user.png" alt="" /></dt>
-                <dd>{posterName}</dd>
+                <dd>
+                  {(() => {
+                    if (posterType === '1') {
+                      return posterUserName;
+                    } else if (posterType === '2') {
+                      return posterGroupName;
+                    }
+                    return posterCompanyName;
+                  })()}
+                </dd>
               </dl>
             </div>
             <div className={styles.text}>
               <p>{post}</p>
               <div className={styles.comments}>
-                <span className={styles.fb_comment}><img src="/img/common/icn_good.png" alt="" width="20" />{likesCount}件{posterId}{likedFlg}</span>
+                <span className={styles.fb_comment}><img src="/img/common/icn_good.png" alt="" width="20" />{likesCount}件{posterUserId}{posterGroupId}{posterCompanyId}{likedFlg}</span>
                 <span>コメント {replies.length}件</span>
               </div>
             </div>
@@ -47,7 +57,7 @@ export default class PostBar extends Component {
             <div className={styles.user_name}>
               <dl>
                 <dt><img src="/img/common/icn_user.png" alt="" /></dt>
-                <dd>{item.posterName}</dd>
+                <dd>{item.posterUserName}</dd>
               </dl>
             </div>
             <div className={styles.text}>

@@ -15,6 +15,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class TGroupMember
 {
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="post_share_flg", type="boolean", nullable=true)
+     */
+    private $postShareFlg = '1';
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -67,6 +74,30 @@ class TGroupMember
     private $user;
 
 
+
+    /**
+     * Set postShareFlg
+     *
+     * @param boolean $postShareFlg
+     *
+     * @return TGroupMember
+     */
+    public function setPostShareFlg($postShareFlg)
+    {
+        $this->postShareFlg = $postShareFlg;
+
+        return $this;
+    }
+
+    /**
+     * Get postShareFlg
+     *
+     * @return boolean
+     */
+    public function getPostShareFlg()
+    {
+        return $this->postShareFlg;
+    }
 
     /**
      * Set createdAt

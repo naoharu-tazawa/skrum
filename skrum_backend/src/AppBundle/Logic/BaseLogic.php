@@ -274,6 +274,11 @@ class BaseLogic
         return $this->getContainer()->get('api.permission_logic');
     }
 
+    protected function getPostLogic()
+    {
+        return $this->getContainer()->get('api.post_logic');
+    }
+
     //----------------------------------------------
     //ここからリポジトリクラスの取得メソッド
     //----------------------------------------------

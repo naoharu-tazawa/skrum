@@ -19,11 +19,11 @@ class PostListContainer extends Component {
 }
 
 const mapReplies = (reply) => {
-  const { postId, posterId, posterName, post, postedDatetime } = reply;
+  const { postId, posterUserId, posterUserName, post, postedDatetime } = reply;
   return {
     postId,
-    posterId,
-    posterName,
+    posterUserId,
+    posterUserName,
     post,
     postedDatetime,
   };
@@ -32,12 +32,18 @@ const mapReplies = (reply) => {
 const mapStateToProps = (state) => {
   const { data = [] } = state.timeline || {};
   const items = data.map((item) => {
-    const { postId, posterId, posterName, post, postedDatetime,
-    okrId, likesCount, likedFlg, replies = [] } = item;
+    const { postId, posterType, posterUserId, posterUserName,
+      posterGroupId, posterGroupName, posterCompanyId, posterCompanyName,
+      post, postedDatetime, okrId, likesCount, likedFlg, replies = [] } = item;
     return {
       id: postId,
-      posterId,
-      posterName,
+      posterType,
+      posterUserId,
+      posterUserName,
+      posterGroupId,
+      posterGroupName,
+      posterCompanyId,
+      posterCompanyName,
       post,
       postedDatetime,
       okrId,

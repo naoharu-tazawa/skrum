@@ -10,15 +10,15 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/posts:
+  /companies/{companyId}/posts:
     post:
-      description: コメント投稿（グループ）
+      description: コメント投稿（会社）
       parameters:
         -
-          name: groupId
+          name: companyId
           in: path
           type: integer
-          description: グループID
+          description: 会社ID
           required: true
         -
           name: JsonRequest
@@ -34,7 +34,7 @@ paths:
                 type: string
       responses:
         200:
-          description: 投稿内容（グループ）
+          description: 投稿内容（会社）
           schema:
             type: object
             properties:
