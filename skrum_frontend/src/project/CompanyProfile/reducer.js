@@ -30,7 +30,6 @@ export default (state = {
       const { payload } = action;
       const { id, ...items } = payload.data;
       const { data } = state;
-      console.log(items);
       const newCompanyData = { ...data, ...(id === data.companyId ? items : {}) };
       return { ...state, data: newCompanyData, isPutting: true };
     }
