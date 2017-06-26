@@ -48,6 +48,9 @@
   border: none;
   font-size: 20px;
 }
+.toggleButton:focus {
+  outline: 0;
+}
 .userName {
   padding: 20px;
 }

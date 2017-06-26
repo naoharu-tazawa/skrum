@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import { routerReducer } from 'react-router-redux';
+import { reducer as formReducer } from 'redux-form';
 import { reducer as toastrReducer } from 'react-redux-toastr';
 import authReducer from '../../auth/reducer';
 import navigationReducer from '../../navigation/reducer';
@@ -9,6 +9,9 @@ import mapReducer from '../../project/Map/reducer';
 import timelineReducer from '../../project/Timeline/reducer';
 import groupManagementReducer from '../../project/GroupManagement/reducer';
 import okrDetailsReducer from '../../project/OKRDetails/reducer';
+import okrSearchReducer from '../../project/OKR/OKRSearch/reducer';
+import ownerSearchReducer from '../../project/OwnerSearch/reducer';
+import newOKRReducer from '../../project/OKR/NewOKR/reducer';
 import userSettingReducer from '../../project/UserSetting/reducer';
 import groupSettingReducer from '../../project/GroupSetting/reducer';
 import companyProfileReducer from '../../project/CompanyProfile/reducer';
@@ -24,6 +27,9 @@ const rootReducer = combineReducers({
   groupManagement: groupManagementReducer,
   timeline: timelineReducer,
   okr: okrDetailsReducer,
+  okrsFound: okrSearchReducer,
+  ownersFound: ownerSearchReducer,
+  newOKR: newOKRReducer,
   userSetting: userSettingReducer,
   groupSetting: groupSettingReducer,
   companySetting: companyProfileReducer,

@@ -1,18 +1,9 @@
-
-export const getOwnerTypeSubject = (ownerType) => {
-  switch (ownerType) {
-    case '1': return 'User';
-    case '2': return 'Group';
-    case '3': return 'Company';
-    default: return '';
-  }
-};
+import { omitBy, isUndefined } from 'lodash';
+import { mapOwner } from './OwnerUtil';
 
 export const mapKeyResult = (kr) => {
   const { okrId, okrName, okrDetail, unit, targetValue, achievedValue, achievementRate,
-    ownerType, status, ratioLockedFlg } = kr;
-  const ownerSubject = `owner${getOwnerTypeSubject(ownerType)}`;
-  const { [`${ownerSubject}Id`]: ownerId, [`${ownerSubject}Name`]: ownerName } = kr;
+    status, ratioLockedFlg } = kr;
   return {
     id: okrId,
     name: okrName,
@@ -21,12 +12,14 @@ export const mapKeyResult = (kr) => {
     targetValue,
     achievedValue,
     achievementRate,
-    owner: { id: ownerId, name: ownerName, type: ownerType },
+    owner: mapOwner(kr),
     status,
     ratioLockedFlg,
   };
 };
 
-export const mapOKR = (okr, keyResults = okr.keyResults || []) => {
-  return { ...mapKeyResult(okr), keyResults: keyResults.map(mapKeyResult) };
+export const mapOKR = (okr, keyResults = okr.keyResults) => {
+  return omitBy(
+    { ...mapKeyResult(okr), keyResults: keyResults && keyResults.map(mapKeyResult) },
+    isUndefined);
 };

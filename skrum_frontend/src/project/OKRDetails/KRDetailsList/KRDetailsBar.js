@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { keyResultPropTypes } from '../propTypes';
 import InlineTextArea from '../../../editors/InlineTextArea';
+import InlineTextInput from '../../../editors/InlineTextInput';
+import DeletionPrompt from '../../../dialogs/DeletionPrompt';
+import DropdownMenu from '../../../components/DropdownMenu';
 import styles from './KRDetailsBar.css';
 
 export default class KRDetailsBar extends Component {
@@ -12,8 +15,20 @@ export default class KRDetailsBar extends Component {
     dispatchPutOKR: PropTypes.func,
   };
 
+  state = {
+    isDeleteKRModalOpen: false,
+  };
+
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
+
+  handleDeleteKROpen() {
+    this.setState({ isDeleteKRModalOpen: true });
+  }
+
+  handleDeleteKRClose() {
+    this.setState({ isDeleteKRModalOpen: false });
+  }
 
   render() {
     const { header, keyResult, dispatchPutOKR } = this.props;
@@ -28,16 +43,19 @@ export default class KRDetailsBar extends Component {
     }
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
       owner } = keyResult;
+    const { isDeleteKRModalOpen } = this.state;
     return (
       <div className={styles.component}>
         <div className={styles.name}>
           <InlineTextArea
             value={name}
+            maxLength={120}
             onSubmit={value => dispatchPutOKR(id, { okrName: value })}
           />
           <div className={styles.detail}>
             <InlineTextArea
               value={detail}
+              maxLength={250}
               onSubmit={value => dispatchPutOKR(id, { okrDetail: value })}
             />
           </div>
@@ -66,8 +84,37 @@ export default class KRDetailsBar extends Component {
         </div>
         <div className={styles.krCount}>
           <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
-          <a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>
+          <DropdownMenu
+            trigger={<a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>}
+            options={[
+              { caption: '担当者変更' },
+              { caption: '紐付け先設定' },
+              { caption: '公開範囲設定' },
+              { caption: '影響度設定' },
+              { caption: '削除', onClick: this.handleDeleteKROpen.bind(this) },
+            ]}
+          />
         </div>
+        {isDeleteKRModalOpen && (
+          <DeletionPrompt
+            title="OKRの削除"
+            prompt="こちらのOKRを削除しますか?"
+            onDelete={() => true}
+            onClose={this.handleDeleteKRClose.bind(this)}
+          >
+            <div>
+              <div>
+                <InlineTextInput readonly value={name} />
+              </div>
+              <div>
+                <InlineTextInput readonly value={detail} />
+              </div>
+              <div className={styles.ownerBox}>
+                <div className={styles.ownerImage} />
+                <div className={styles.ownerName}>{owner.name}</div>
+              </div>
+            </div>
+          </DeletionPrompt>)}
       </div>);
   }
 }

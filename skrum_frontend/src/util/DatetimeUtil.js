@@ -54,3 +54,6 @@ export const convertToRelativeTimeText = (date, options = {}) => {
   // over day
   return dateMoment.format(format);
 };
+
+export const convertToUtc = date =>
+  moment(new Date(date)).local().format();

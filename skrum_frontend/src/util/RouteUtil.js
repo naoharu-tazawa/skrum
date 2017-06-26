@@ -53,6 +53,9 @@ export const implodePath = ({ subject, id, timeframeId, tab, aspect, aspectId },
 export const replacePath = (components, options = {}) =>
   implodePath({ ...explodePath(window.location.pathname, options), ...components });
 
+export const toBasicPath = (path = window.location.pathname) =>
+  implodePath(explodePath(path, { basicOnly: true }));
+
 export const comparePath = (pathname1, pathname2, options = {}) =>
   implodePath(explodePath(pathname1, options)) === implodePath(explodePath(pathname2, options));
 
