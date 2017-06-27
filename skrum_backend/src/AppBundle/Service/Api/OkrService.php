@@ -233,6 +233,7 @@ class OkrService extends BaseService
     /**
      * OKR新規登録
      *
+     * @param Auth $auth 認証情報
      * @param string $ownerType OKRオーナー種別
      * @param array $data リクエストJSON連想配列
      * @param TTimeframe $tTimeframe タイムフレームエンティティ
@@ -243,7 +244,7 @@ class OkrService extends BaseService
      * @param TOkr $parentOkrEntity 紐付け先OKRエンティティ
      * @return BasicOkrDTO
      */
-    public function createOkr(string $ownerType, array $data, TTimeframe $tTimeframe, MUser $mUser = null, MGroup $mGroup = null, int $companyId, bool $alignmentFlg, TOkr $parentOkrEntity = null): BasicOkrDTO
+    public function createOkr(Auth $auth, string $ownerType, array $data, TTimeframe $tTimeframe, MUser $mUser = null, MGroup $mGroup = null, int $companyId, bool $alignmentFlg, TOkr $parentOkrEntity = null): BasicOkrDTO
     {
         // 開始日と終了日の妥当性チェック
         DateUtility::checkStartDateAndEndDate($data['startDate'], $data['endDate']);
@@ -339,6 +340,22 @@ class OkrService extends BaseService
             $tOkrActivity->setChangedPercentage(0);
             $this->persist($tOkrActivity);
 
+            // 自動投稿登録（作成）
+            $tPost = new TPost();
+            $tPost->setTimelineOwnerGroupId(1);
+            if ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                $tPost->setPosterType(DBConstant::POSTER_TYPE_GROUP);
+                $tPost->setPosterGroupId();
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY) {
+                $tPost->setPosterType(DBConstant::POSTER_TYPE_COMPANY);
+                $tPost->setPosterCompanyId($companyId);
+            }
+            $tPost->setPost($this->getParameter('auto_post_type_generate'));
+            $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
+            $tPost->setOkrActivity($tOkrActivity);
+            $tPost->setDisclosureType($disclosureType);
+            $this->persist($tPost);
+
             // OKRアクティビティ登録（紐付け）
             if ($alignmentFlg) {
                 if (!($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY && $data['okrType'] === DBConstant::OKR_TYPE_OBJECTIVE)) {
@@ -355,7 +372,7 @@ class OkrService extends BaseService
 
             // 達成率を再計算
             $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
-            $okrAchievementRateLogic->recalculate($tOkr, $companyId, true);
+            $okrAchievementRateLogic->recalculate($auth, $tOkr, true);
 
             $this->flush();
             $this->commit();
@@ -486,9 +503,8 @@ class OkrService extends BaseService
             }
         }
 
-        // 投稿ありの場合、投稿先グループを取得
-        $postLogic = $this->getPostLogic();
-        $groupIdArray = $postLogic->getGroupIdArrayForGroup($auth, $data['post'], $tOkr);
+        // 前回の達成値を取得
+        $previousAchievedValue = $tOkr->getAchievedValue();
 
         // 前回進捗登録時の達成率を取得
         $previousAchievementRate = $tOkr->getAchievementRate();
@@ -516,22 +532,42 @@ class OkrService extends BaseService
             $tOkrActivity->setChangedPercentage($achievementRate - $previousAchievementRate);
             $this->persist($tOkrActivity);
 
-            // 投稿登録
-            foreach ($groupIdArray as $groupId) {
-                $tPost = new TPost();
-                $tPost->setTimelineOwnerGroupId($groupId);
-                $tPost->setPosterType(DBConstant::POSTER_TYPE_USER);
-                $tPost->setPosterUserId($auth->getUserId());
-                $tPost->setPost($data['post']);
-                $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
-                $tPost->setOkrActivity($tOkrActivity);
-                $tPost->setDisclosureType($tOkr->getDisclosureType());
-                $this->persist($tPost);
+            // 自動投稿（進捗登録時）文面作成
+            $balanceAmount = $data['achievedValue'] - $previousAchievedValue;
+            if ($balanceAmount >= 0) {
+                $mathSymbol = '+';
+            } else {
+                $mathSymbol = null;
             }
+            $unit = $tOkr->getUnit();
+            $autoPostAchievement = sprintf(
+                    $this->getParameter('auto_post_type_achievement'),
+                    $previousAchievedValue,
+                    $unit,
+                    $data['achievedValue'],
+                    $unit,
+                    $mathSymbol,
+                    $balanceAmount,
+                    $unit);
+
+            // 投稿
+            $postLogic = $this->getPostLogic();
+            if (array_key_exists('post', $data)) {
+                $manualPost = $data['post'];
+
+                // 手動投稿登録
+                $postLogic->manualPost($auth, $manualPost, $autoPostAchievement, $tOkr, $tOkrActivity);
+            } else {
+                // 自動投稿登録
+                $postLogic->autoPost($auth, $autoPostAchievement, $tOkr, $tOkrActivity);
+            }
+
+            // 自動投稿登録（◯%達成時）
+            $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkr, $tOkrActivity);
 
             // 達成率を再計算
             $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
-            $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), false);
+            $okrAchievementRateLogic->recalculate($auth, $tOkr, false);
 
             $this->flush();
             $this->commit();
@@ -580,7 +616,7 @@ class OkrService extends BaseService
             // 達成率を再計算
             if ($parentOkr != null) {
                 $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
-                $okrAchievementRateLogic->recalculateFromParent($parentOkr, $auth->getCompanyId(), true);
+                $okrAchievementRateLogic->recalculateFromParent($auth, $parentOkr, true);
             }
 
             $this->commit();

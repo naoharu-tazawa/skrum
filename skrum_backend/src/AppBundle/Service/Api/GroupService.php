@@ -328,7 +328,7 @@ class GroupService extends BaseService
             $tOkr->setWeightedAverageRatio(0);
             $tOkr->setRatioLockedFlg(DBConstant::FLG_TRUE);
             $this->flush();
-            $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), true);
+            $okrAchievementRateLogic->recalculate($auth, $tOkr, true);
 
             // 削除対象OKRとそれに紐づくOKRを全て削除する
             $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());

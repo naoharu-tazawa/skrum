@@ -57,6 +57,13 @@ class TPost
     private $post;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="auto_post", type="string", length=3072, nullable=true)
+     */
+    private $autoPost;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="posted_datetime", type="datetime", nullable=false)
@@ -266,6 +273,30 @@ class TPost
     public function getPost()
     {
         return $this->post;
+    }
+
+    /**
+     * Set autoPost
+     *
+     * @param string $autoPost
+     *
+     * @return TPost
+     */
+    public function setAutoPost($autoPost)
+    {
+        $this->autoPost = $autoPost;
+
+        return $this;
+    }
+
+    /**
+     * Get autoPost
+     *
+     * @return string
+     */
+    public function getAutoPost()
+    {
+        return $this->autoPost;
     }
 
     /**
