@@ -13,7 +13,6 @@ use AppBundle\Entity\MGroup;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\TOkr;
 use AppBundle\Entity\TOkrActivity;
-use AppBundle\Entity\TPost;
 use AppBundle\Entity\TTimeframe;
 use AppBundle\Api\ResponseDTO\NestedObject\AlignmentsInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
