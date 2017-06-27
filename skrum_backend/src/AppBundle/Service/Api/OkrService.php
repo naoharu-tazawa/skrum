@@ -341,20 +341,8 @@ class OkrService extends BaseService
             $this->persist($tOkrActivity);
 
             // 自動投稿登録（作成）
-            $tPost = new TPost();
-            $tPost->setTimelineOwnerGroupId(1);
-            if ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                $tPost->setPosterType(DBConstant::POSTER_TYPE_GROUP);
-                $tPost->setPosterGroupId();
-            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY) {
-                $tPost->setPosterType(DBConstant::POSTER_TYPE_COMPANY);
-                $tPost->setPosterCompanyId($companyId);
-            }
-            $tPost->setPost($this->getParameter('auto_post_type_generate'));
-            $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
-            $tPost->setOkrActivity($tOkrActivity);
-            $tPost->setDisclosureType($disclosureType);
-            $this->persist($tPost);
+            $postLogic = $this->getPostLogic();
+            $postLogic->autoPost($auth, $this->getParameter('auto_post_type_generate'), $tOkr, $tOkrActivity);
 
             // OKRアクティビティ登録（紐付け）
             if ($alignmentFlg) {

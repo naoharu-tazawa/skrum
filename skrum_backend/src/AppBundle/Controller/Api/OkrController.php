@@ -94,7 +94,7 @@ class OkrController extends BaseController
 
         // 目標新規登録処理
         $okrService = $this->getOkrService();
-        $basicOkrDTO = $okrService->createOkr($data['ownerType'], $data, $tTimeframe, $mUser, $mGroup, $auth->getCompanyId(), $alignmentFlg, $tOkr);
+        $basicOkrDTO = $okrService->createOkr($auth, $data['ownerType'], $data, $tTimeframe, $mUser, $mGroup, $auth->getCompanyId(), $alignmentFlg, $tOkr);
 
         return $basicOkrDTO;
     }
