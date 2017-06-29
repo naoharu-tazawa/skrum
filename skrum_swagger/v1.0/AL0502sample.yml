@@ -83,11 +83,9 @@ http://company1.localhost:8000/v1/okrs.json
 キーリザルト（KEY RESULT）登録の場合　（オーナー：ユーザ）：
 {
   "timeframeId": 1,
-  "okrType": "1",
-  "ownerType": "3",
+  "okrType": "2",
+  "ownerType": "1",
   "ownerUserId":2,
-  "ownerGroupId":2,
-  "ownerCompanyId":2,
   "startDate":"2013-04-04T01:10:00Z",
   "endDate":"2013-05-05T10:01:00Z",
   "okrName":"OKR名",
@@ -101,7 +99,7 @@ http://company1.localhost:8000/v1/okrs.json
 キーリザルト（KEY RESULT）登録の場合　（オーナー：グループ）：
 {
   "timeframeId": 1,
-  "okrType": "1",
+  "okrType": "2",
   "ownerType": "2",
   "ownerGroupId":2,
   "startDate":"2013-04-04T01:10:00Z",
@@ -117,7 +115,7 @@ http://company1.localhost:8000/v1/okrs.json
 キーリザルト（KEY RESULT）登録の場合　（オーナー：会社）：
 {
   "timeframeId": 1,
-  "okrType": "1",
+  "okrType": "2",
   "ownerType": "3",
   "ownerCompanyId":1,
   "startDate":"2013-04-04T01:10:00Z",

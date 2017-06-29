@@ -28,25 +28,25 @@ class OkrController extends BaseController
     public function postOkrsAction(Request $request): BasicOkrDTO
     {
         // JsonSchemaバリデーション
-        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostObjectivesPdu');
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostOkrsPdu');
         if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
 
         // リクエストJSONを取得
         $data = $this->getRequestJsonAsArray($request);
 
         // OKR種別に応じて必要なJsonSchemaのプロパティをチェック
-        if ($data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT) {
+        if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
             if (empty($data['parentOkrId'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }
         }
 
         // オーナー種別に応じて必要なJsonSchemaのプロパティをチェック
-        if ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_USER) {
+        if ($data['ownerType'] === DBConstant::OKR_OWNER_TYPE_USER) {
             if (empty($data['ownerUserId'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }
-        } elseif ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
+        } elseif ($data['ownerType'] === DBConstant::OKR_OWNER_TYPE_GROUP) {
             if (empty($data['ownerGroupId'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }
@@ -79,15 +79,25 @@ class OkrController extends BaseController
         }
 
         // タイムフレーム存在チェック
-        $tTimeframe = $this->getDBExistanceLogic()->checkTimeframeExistance($data['timeframeId'], $auth->getCompanyId());
+        if ($data['okrType'] === DBConstant::OKR_TYPE_OBJECTIVE) {
+            if (empty($data['timeframeId'])) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+            $tTimeframe = $this->getDBExistanceLogic()->checkTimeframeExistance($data['timeframeId'], $auth->getCompanyId());
+        }
 
         // 紐付け先OKR存在チェック
         $alignmentFlg = false;
         $tOkr = null;
         if (array_key_exists('parentOkrId', $data)) {
             $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($data['parentOkrId'], $auth->getCompanyId());
-            if ($tOkr->getTimeframe()->getTimeframeId() != $data['timeframeId']) {
-                throw new ApplicationException('登録OKRと紐付け先OKRのタイムフレームIDが一致しません');
+            if ($data['okrType'] === DBConstant::OKR_TYPE_OBJECTIVE) {
+                if ($tOkr->getTimeframe()->getTimeframeId() != $data['timeframeId']) {
+                    throw new ApplicationException('登録OKRと紐付け先OKRのタイムフレームIDが一致しません');
+                }
+            } else {
+                // キーリザルトの場合、紐付け先OKRのタイムフレームを利用
+                $tTimeframe = $tOkr->getTimeframe();
             }
             $alignmentFlg = true;
         }

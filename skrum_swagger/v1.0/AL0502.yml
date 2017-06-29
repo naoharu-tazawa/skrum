@@ -51,6 +51,7 @@ paths:
               disclosureType:
                 type: string
             required:
+              - okrType
               - ownerType
               - startDate
               - endDate
