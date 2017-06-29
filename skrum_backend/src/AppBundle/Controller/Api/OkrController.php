@@ -78,28 +78,35 @@ class OkrController extends BaseController
             }
         }
 
-        // タイムフレーム存在チェック
-        if ($data['okrType'] === DBConstant::OKR_TYPE_OBJECTIVE) {
-            if (empty($data['timeframeId'])) {
-                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
-            }
-            $tTimeframe = $this->getDBExistanceLogic()->checkTimeframeExistance($data['timeframeId'], $auth->getCompanyId());
-        }
-
-        // 紐付け先OKR存在チェック
         $alignmentFlg = false;
         $tOkr = null;
         if (array_key_exists('parentOkrId', $data)) {
+            /* 紐付け先ありの場合 */
+
+            // 紐付け先OKR存在チェック
             $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($data['parentOkrId'], $auth->getCompanyId());
+
+            // 紐付け先OKRのタイムフレームエンティティを取得
+            $tTimeframe = $tOkr->getTimeframe();
+
             if ($data['okrType'] === DBConstant::OKR_TYPE_OBJECTIVE) {
-                if ($tOkr->getTimeframe()->getTimeframeId() != $data['timeframeId']) {
-                    throw new ApplicationException('登録OKRと紐付け先OKRのタイムフレームIDが一致しません');
+                if (!empty($data['timeframeId'])) {
+                    // 新規登録対象OKRと紐付け先OKRのタイムフレームの一致をチェック
+                    if ($tOkr->getTimeframe()->getTimeframeId() != $data['timeframeId']) {
+                        throw new ApplicationException('登録OKRと紐付け先OKRのタイムフレームIDが一致しません');
+                    }
                 }
-            } else {
-                // キーリザルトの場合、紐付け先OKRのタイムフレームを利用
-                $tTimeframe = $tOkr->getTimeframe();
             }
             $alignmentFlg = true;
+        } else {
+            /* 紐付け先なしの場合 */
+
+            // タイムフレームエンティティ取得
+            if (!empty($data['timeframeId'])) {
+                $tTimeframe = $this->getDBExistanceLogic()->checkTimeframeExistance($data['timeframeId'], $auth->getCompanyId());
+            } else {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
         }
 
         // 目標新規登録処理
