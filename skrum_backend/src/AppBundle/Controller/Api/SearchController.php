@@ -196,15 +196,15 @@ class SearchController extends BaseController
 
         // リクエストパラメータのバリデーション
         if ($timeframeId !== null) {
-            $errors1 = $this->checkIntID($timeframeId);
-            if($errors1) throw new InvalidParameterException("タイムフレームIDが不正です", $errors1);
+            $timeframeIdErrors = $this->checkIntID($timeframeId);
+            if($timeframeIdErrors) throw new InvalidParameterException("タイムフレームIDが不正です", $timeframeIdErrors);
         }
         if ($okrId !== null) {
-            $errors2 = $this->checkIntID($okrId);
-            if($errors2) throw new InvalidParameterException("OKRIDが不正です", $errors2);
+            $okrIdErrors = $this->checkIntID($okrId);
+            if($okrIdErrors) throw new InvalidParameterException("OKRIDが不正です", $okrIdErrors);
         }
-        $errors3 = $this->checkSearchKeyword($keyword);
-        if($errors3) throw new InvalidParameterException("検索キーワードが不正です", $errors3);
+        $keywordErrors = $this->checkSearchKeyword($keyword);
+        if($keywordErrors) throw new InvalidParameterException("検索キーワードが不正です", $keywordErrors);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -307,6 +307,54 @@ class SearchController extends BaseController
         // グループ検索処理
         $searchService = $this->getSearchService();
         $okrSearchDTOArray = $searchService->searchParentOkr($auth, $keyword, $timeframeId, $ownerType, $ownerUserId, $ownerGroupId, $ownerCompanyId);
+
+        return $okrSearchDTOArray;
+    }
+
+    /**
+     * 紐付け先Objective検索（紐付け先変更時(対象:Key Result)用）
+     *
+     * @Rest\Get("/v1/parentobjectives/search.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @return array
+     */
+    public function searchParentobjectivesAction(Request $request): array
+    {
+        // リクエストパラメータを取得
+        $okrId = $request->get('krid');
+        $keyword = $request->get('q');
+
+        // リクエストパラメータのバリデーション
+        $okrIdErrors = $this->checkIntID($okrId);
+        if($okrIdErrors) throw new InvalidParameterException("OKRIDが不正です", $okrIdErrors);
+        $keywordErrors = $this->checkSearchKeyword($keyword);
+        if($keywordErrors) throw new InvalidParameterException("検索キーワードが不正です", $keywordErrors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // OKR存在チェック
+        $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+
+        // オーナー(ユーザ/グループ/会社)IDを設定
+        $ownerUserId = null;
+        $ownerGroupId = null;
+        $ownerCompanyId = null;
+        $ownerType = $tOkr->getOwnerType();
+        if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
+            $ownerUserId = $tOkr->getOwnerUser()->getUserId();
+        } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
+            $ownerGroupId = $tOkr->getOwnerGroup()->getGroupId();
+        } else {
+            $ownerCompanyId = $tOkr->getOwnerCompanyId();
+        }
+
+        // タイムフレームID設定
+        $timeframeId = $tOkr->getTimeframe()->getTimeframeId();
+
+        // グループ検索処理
+        $searchService = $this->getSearchService();
+        $okrSearchDTOArray = $searchService->searchParentObjective($auth, $keyword, $timeframeId, $ownerType, $ownerUserId, $ownerGroupId, $ownerCompanyId);
 
         return $okrSearchDTOArray;
     }

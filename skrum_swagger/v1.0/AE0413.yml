@@ -10,15 +10,15 @@ produces:
 basePath: /v1
 
 paths:
-  /parentobjectives/search.json?{oid}&{q}:
+  /parentobjectives/search.json?{krid}&{q}:
     get:
       description: 紐付け先Objective検索（紐付け先変更時(対象:Key Result)用）
       parameters:
         -
-          name: oid
+          name: krid
           in: path
           type: string
-          description: 紐付け先変更対象のOKRID
+          description: 紐付け先変更対象のOKRID（キーリザルトのみ）
           required: true
         -
           name: q

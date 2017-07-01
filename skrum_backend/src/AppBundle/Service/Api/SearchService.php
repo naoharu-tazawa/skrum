@@ -327,4 +327,49 @@ class SearchService extends BaseService
 
         return $okrSearchDTOArray;
     }
+
+    /**
+     * 紐付け先Objective検索（紐付け先変更時(対象:Key Result)用）
+     *
+     * @param Auth $auth 認証情報
+     * @param string $keyword 検索ワード
+     * @param integer $timeframeId タイムフレームID
+     * @param string $ownerType OKRオーナータイプ
+     * @param integer $ownerUserId OKRオーナーユーザーID
+     * @param integer $ownerGroupId OKRオーナーグループID
+     * @param integer $ownerCompanyId OKRオーナー会社ID
+     * @return array
+     */
+    public function searchParentObjective(Auth $auth, string $keyword, int $timeframeId = null, string $ownerType, int $ownerUserId = null, int $ownerGroupId = null, int $ownerCompanyId = null): array
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // OKR検索
+        $tOkrRepos = $this->getTOkrRepository();
+        $tOkrArray = $tOkrRepos->searchParentObjective($escapedKeyword, $timeframeId, $auth->getCompanyId(), $ownerType, $ownerUserId, $ownerGroupId, $ownerCompanyId);
+
+        // DTOに詰め替える
+        $okrSearchDTOArray = array();
+        foreach ($tOkrArray as $tOkr) {
+            $okrSearchDTO = new OkrSearchDTO();
+            $okrSearchDTO->setOkrId($tOkr['okr_id']);
+            $okrSearchDTO->setOkrName($tOkr['name']);
+            $okrSearchDTO->setOwnerType($tOkr['owner_type']);
+            if ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_USER) {
+                $okrSearchDTO->setOwnerUserId($tOkr['user_id']);
+                $okrSearchDTO->setOwnerUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
+            } elseif ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                $okrSearchDTO->setOwnerGroupId($tOkr['group_id']);
+                $okrSearchDTO->setOwnerGroupName($tOkr['group_name']);
+            } else {
+                $okrSearchDTO->setOwnerCompanyId($tOkr['company_id']);
+                $okrSearchDTO->setOwnerCompanyName($tOkr['company_name']);
+            }
+
+            $okrSearchDTOArray[] = $okrSearchDTO;
+        }
+
+        return $okrSearchDTOArray;
+    }
 }
