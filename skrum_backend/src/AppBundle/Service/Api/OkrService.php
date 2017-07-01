@@ -370,6 +370,7 @@ class OkrService extends BaseService
             $basicOkrDTO->setOkrType($tOkr->getType());
             $basicOkrDTO->setOkrName($tOkr->getName());
             $basicOkrDTO->setOkrDetail($tOkr->getDetail());
+            $basicOkrDTO->setOwnerType($tOkr->getOwnerType());
             if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                 $basicOkrDTO->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
                 $basicOkrDTO->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
