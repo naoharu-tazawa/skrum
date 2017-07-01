@@ -10,16 +10,10 @@ produces:
 basePath: /v1
 
 paths:
-  /parentobjectives/search.json?{oid}&{q}:
+  /owners/search.json?{q}:
     get:
-      description: 紐付け先Objective検索（紐付け先変更時(対象:Key Result)用）
+      description: オーナー検索
       parameters:
-        -
-          name: oid
-          in: path
-          type: string
-          description: 紐付け先変更対象のOKRID
-          required: true
         -
           name: q
           in: path
@@ -32,10 +26,6 @@ paths:
           schema:
             type: object
             properties:
-              okrId:
-                type: integer
-              okrName:
-                type: string
               ownerType:
                 type: string
               ownerUserId:
@@ -50,6 +40,8 @@ paths:
                 type: integer
               ownerCompanyName:
                 type: string
+            required:
+              - ownerType
         400:
           description: JSONスキーマ不正
         409:

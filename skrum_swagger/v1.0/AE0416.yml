@@ -10,46 +10,44 @@ produces:
 basePath: /v1
 
 paths:
-  /parentobjectives/search.json?{oid}&{q}:
-    get:
-      description: 紐付け先Objective検索（紐付け先変更時(対象:Key Result)用）
+  /okrs/{okrId}/changeowner.json:
+    put:
+      description: OKR所有者変更
       parameters:
         -
-          name: oid
+          name: okrId
           in: path
           type: string
-          description: 紐付け先変更対象のOKRID
+          description: OKRID
           required: true
         -
-          name: q
-          in: path
-          type: string
-          description: 検索ワード
+          name: JsonRequest
+          in: body
+          description: オーナー種別、オーナーユーザID、オーナーグループID、オーナー会社ID
           required: true
-      responses:
-        200:
-          description: 検索結果
           schema:
             type: object
             properties:
-              okrId:
-                type: integer
-              okrName:
-                type: string
               ownerType:
                 type: string
               ownerUserId:
                 type: integer
-              ownerUserName:
-                type: string
               ownerGroupId:
                 type: integer
-              ownerGroupName:
-                type: string
               ownerCompanyId:
                 type: integer
-              ownerCompanyName:
+            required:
+              - ownerType
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
                 type: string
+            required:
+              - result
         400:
           description: JSONスキーマ不正
         409:

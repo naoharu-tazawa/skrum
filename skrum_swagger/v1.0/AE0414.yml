@@ -10,34 +10,28 @@ produces:
 basePath: /v1
 
 paths:
-  /okrs/{okrId}/changeowner.json:
+  /okrs/{okrId}/changeparent.json:
     put:
-      description: OKR所有者変更
+      description: 紐付け先OKR変更
       parameters:
         -
           name: okrId
           in: path
           type: string
-          description: OKRID
+          description: 紐付け先変更対象のOKRID
           required: true
         -
           name: JsonRequest
           in: body
-          description: オーナー種別、オーナーユーザID、オーナーグループID、オーナー会社ID
+          description: 新紐付け先OKRID
           required: true
           schema:
             type: object
             properties:
-              ownerType:
-                type: string
-              ownerUserId:
-                type: integer
-              ownerGroupId:
-                type: integer
-              ownerCompanyId:
+              newParentOkrId:
                 type: integer
             required:
-              - ownerType
+              - newParentOkrId
       responses:
         200:
           description: 成功
