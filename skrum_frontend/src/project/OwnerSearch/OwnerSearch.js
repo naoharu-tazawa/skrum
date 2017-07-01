@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isEmpty } from 'lodash';
+import { find, isEmpty } from 'lodash';
 import SearchDropdown from '../../components/SearchDropdown';
 import { mapOwner } from '../../util/OwnerUtil';
 import { searchOwner } from './action';
 
 const ownerPropType = PropTypes.shape({
   id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   type: PropTypes.string.isRequired,
 });
 
@@ -17,7 +17,7 @@ class OwnerSearch extends PureComponent {
   static propTypes = {
     defaultOwners: PropTypes.arrayOf(ownerPropType),
     ownersFound: PropTypes.arrayOf(ownerPropType),
-    value: PropTypes.oneOfType([ownerPropType, PropTypes.string]),
+    value: ownerPropType,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -28,7 +28,8 @@ class OwnerSearch extends PureComponent {
   render() {
     const { defaultOwners, ownersFound, value, onChange, onFocus, onBlur,
       dispatchSearchOwner, isSearching } = this.props;
-    const { currentInput = (value || {}).name } = this.state || {};
+    const currentOwnerName = (value || {}).name || (find(defaultOwners, value) || {}).name;
+    const { currentInput = currentOwnerName || '' } = this.state || {};
     return (
       <SearchDropdown
         items={(isEmpty(currentInput) ? defaultOwners : ownersFound) || []}
@@ -36,7 +37,7 @@ class OwnerSearch extends PureComponent {
         onChange={({ target }) => this.setState({ currentInput: target.value })}
         onSearch={val => !isEmpty(val) && dispatchSearchOwner(val)}
         onSelect={onChange}
-        {...{ value, onFocus, onBlur }}
+        {...{ value: { name: currentOwnerName, ...value }, onFocus, onBlur }}
         isSearching={isSearching}
       />
     );

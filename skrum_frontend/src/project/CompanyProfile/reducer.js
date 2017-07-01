@@ -1,4 +1,5 @@
 import { Action } from './action';
+import { mergeUpdateById } from '../../util/ActionUtil';
 
 export default (state = {
   isFetching: false,
@@ -30,7 +31,7 @@ export default (state = {
       const { payload } = action;
       const { id, ...items } = payload.data;
       const { data } = state;
-      const newCompanyData = { ...data, ...(id === data.companyId ? items : {}) };
+      const newCompanyData = mergeUpdateById(data, 'companyId', items, id);
       return { ...state, data: newCompanyData, isPutting: true };
     }
 

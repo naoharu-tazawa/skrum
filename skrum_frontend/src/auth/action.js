@@ -33,11 +33,7 @@ export function forceLogout() {
 export function startLogin(emailAddress, password) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-
-    if (status.isFetching) {
-      return Promise.resolve();
-    }
-
+    if (status.isFetching) return Promise.resolve();
     dispatch(requestLogin());
     return postJson('/login.json', status)(null, { emailAddress, password })
       .then(resp => dispatch(finishLogin('data', resp)))

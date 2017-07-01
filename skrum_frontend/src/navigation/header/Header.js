@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
-import Select from 'react-select';
-import _ from 'lodash';
-import { tabPropType, timeframesPropTypes } from './propTypes';
 import { explodePath, implodePath, replacePath } from '../../util/RouteUtil';
+import TimestampsDropdown from '../../components/TimeframesDropdown';
 import styles from './Header.css';
 
 class Tab extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
-    name: tabPropType.isRequired,
+    name: PropTypes.oneOf(['o', 'objective', 'm', 'map', 't', 'timeline', 'c', 'control']).isRequired,
   };
 
   getStyles() {
@@ -41,45 +39,23 @@ class Tab extends Component {
 class SubMenu extends Component {
 
   static propTypes = {
-    timeframes: timeframesPropTypes.isRequired,
     handleLogoutSubmit: PropTypes.func.isRequired,
-    handleAdd: PropTypes.func.isRequired,
+    onAdd: PropTypes.func.isRequired,
   };
 
-  static getTimeframeStyle(id, currentId) {
-    return `${styles.timeframe} ${id === currentId ? styles.timeframeCurrent : ''}`;
-  }
-
-  static timeframeRenderer(currentId, { value: id, label }) {
-    return (
-      <div className={SubMenu.getTimeframeStyle(id, currentId)}>
-        {label}
-      </div>);
-  }
-
-  static handleTimeframeChange({ value: timeframeId }) {
-    browserHistory.push(replacePath({ timeframeId }));
-  }
-
   render() {
-    const { timeframes, handleAdd, handleLogoutSubmit } = this.props;
-    const timeframeOptions = _.orderBy(timeframes, 'timeframeId', 'asc')
-      .map(({ timeframeId: value, timeframeName: label }) => ({ value, label }));
-    const { timeframeId } = explodePath();
-    const currentTimeframeId = _.toNumber(timeframeId);
+    const { onAdd, handleLogoutSubmit } = this.props;
     return (
       <div className={styles.subMenu}>
-        <Select
-          className={styles.timePeriod}
-          options={timeframeOptions}
-          optionRenderer={_.partial(SubMenu.timeframeRenderer, currentTimeframeId)}
-          onChange={SubMenu.handleTimeframeChange}
-          value={currentTimeframeId}
-          placeholder=""
-          clearable={false}
-          searchable={false}
+        <TimestampsDropdown
+          styleNames={{
+            base: styles.timePeriod,
+            item: styles.timeframe,
+            current: styles.timeframeCurrent,
+          }}
+          onChange={({ value: timeframeId }) => browserHistory.push(replacePath({ timeframeId }))}
         />
-        <button onClick={handleAdd}>
+        <button onClick={onAdd}>
           <img
             className={styles.addIcon}
             src="/img/common/icn_add.png"
@@ -109,13 +85,12 @@ class SubMenu extends Component {
 export default class Header extends Component {
 
   static propTypes = {
-    timeframes: timeframesPropTypes,
-    handleAdd: PropTypes.func.isRequired,
+    onAdd: PropTypes.func.isRequired,
     handleLogoutSubmit: PropTypes.func.isRequired,
   };
 
   render() {
-    const { timeframes = [], handleAdd, handleLogoutSubmit } = this.props;
+    const { onAdd, handleLogoutSubmit } = this.props;
     const { subject } = explodePath();
     return (
       <div className={styles.container}>
@@ -124,7 +99,7 @@ export default class Header extends Component {
         {subject === 'group' && <Tab title="タイムライン" name="timeline" />}
         {subject !== 'company' && <Tab title="グループ管理" name="control" />}
         <div className={styles.rightArea}>
-          <SubMenu {...{ timeframes, handleAdd, handleLogoutSubmit }} />
+          <SubMenu {...{ onAdd, handleLogoutSubmit }} />
         </div>
       </div>
     );

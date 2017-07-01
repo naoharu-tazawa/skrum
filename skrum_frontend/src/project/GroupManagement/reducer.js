@@ -1,4 +1,5 @@
 import { Action } from './action';
+import { mergeUpdateById } from '../../util/ActionUtil';
 
 export default (state = {
   isFetching: false,
@@ -33,7 +34,7 @@ export default (state = {
       const { payload } = action;
       const { id, ...data } = payload.data;
       const { user, groups } = state.user;
-      const newUser = { ...user, ...(id === user.userId ? data : {}) };
+      const newUser = mergeUpdateById(user, 'userId', data, id);
       return { ...state, user: { user: newUser, groups }, isPutting: true };
     }
 
@@ -41,7 +42,7 @@ export default (state = {
       const { payload } = action;
       const { id, ...data } = payload.data;
       const { group, members } = state.group;
-      const newGroup = { ...group, ...(id === group.groupId ? data : {}) };
+      const newGroup = mergeUpdateById(group, 'groupId', data, id);
       return { ...state, group: { group: newGroup, members }, isPutting: true };
     }
 

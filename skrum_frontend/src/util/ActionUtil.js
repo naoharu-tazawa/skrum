@@ -1,13 +1,8 @@
 export const keyValueIdentity = (key, value) => ({ [key]: value });
 
-export const extractToken = (status) => {
-  const { token } = status.auth;
-  return token;
-};
+export const extractToken = ({ auth }) => auth.token;
 
-export const extractDomain = () => {
-  const path = location.hostname;
-  const bases = path.split('.');
-  const subdomain = bases[0];
-  return subdomain;
-};
+export const extractDomain = () => location.hostname.split('.')[0];
+
+export const mergeUpdateById = (object, keyName, update, id) =>
+  ({ ...object, ...(object[keyName] === id ? update : {}) });

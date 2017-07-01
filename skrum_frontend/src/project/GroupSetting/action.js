@@ -19,10 +19,7 @@ const {
 export function fetchCompanyRoles(companyId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isFetching } = status.userSetting;
-    if (isFetching) {
-      return Promise.resolve();
-    }
+    if (status.userSetting.isFetching) return Promise.resolve();
     dispatch(requestFetchCompanyRoles());
     return getJson(`/companies/${companyId}/roles.json`, status)()
       .then(json => dispatch(finishFetchCompanyRoles('roles', json)))

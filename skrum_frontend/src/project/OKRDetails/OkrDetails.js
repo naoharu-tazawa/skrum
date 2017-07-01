@@ -15,6 +15,7 @@ export default class OkrDetails extends Component {
     parentOkr: okrPropTypes,
     okr: okrPropTypes.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
+    dispatchDeleteOkr: PropTypes.func.isRequired,
   };
 
   state = {
@@ -24,17 +25,9 @@ export default class OkrDetails extends Component {
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
-  handleDeleteOkrOpen() {
-    this.setState({ isDeleteOkrModalOpen: true });
-  }
-
-  handleDeleteOkrClose() {
-    this.setState({ isDeleteOkrModalOpen: false });
-  }
-
   render() {
-    const { parentOkr = {}, okr, dispatchPutOKR } = this.props;
-    const { isDeleteOkrModalOpen } = this.state;
+    const { parentOkr = {}, okr, dispatchPutOKR, dispatchDeleteOkr } = this.props;
+    const { isDeleteOkrModalOpen = false, isDeletingOkr = false } = this.state || {};
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate, owner } = okr;
     return (
       <div>
@@ -91,7 +84,9 @@ export default class OkrDetails extends Component {
             </div>
             <div className={`${styles.nav_info} ${styles.cf}`}>
               <div className={`${styles.user_info} ${styles.floatL} ${styles.cf}`}>
-                <div className={`${styles.avatar} ${styles.floatL}`}><img src="/img/common/icn_user.png" alt="User Name" /></div>
+                <div className={`${styles.avatar} ${styles.floatL}`}>
+                  <img src="/img/common/icn_user.png" alt="User Name" />
+                </div>
                 <div className={`${styles.info} ${styles.floatL}`}>
                   <p className={styles.user_name}>{owner.name}</p>
                 </div>
@@ -103,10 +98,12 @@ export default class OkrDetails extends Component {
                     { caption: '担当者変更' },
                     { caption: '紐付け先設定' },
                     { caption: '公開範囲設定' },
-                    { caption: '削除', onClick: this.handleDeleteOkrOpen.bind(this) },
+                    { caption: '削除', onClick: () => this.setState({ isDeleteOkrModalOpen: true }) },
                   ]}
                 />
-                <button className={styles.tool}><img src="/img/common/inc_organization.png" alt="" width="23" /></button>
+                <button className={styles.tool}>
+                  <img src="/img/common/inc_organization.png" alt="" width="23" />
+                </button>
               </div>
             </div>
           </div>
@@ -115,8 +112,16 @@ export default class OkrDetails extends Component {
           <DeletionPrompt
             title="OKRの削除"
             prompt="こちらのOKRを削除しますか?"
-            onDelete={() => browserHistory.push(toBasicPath()) || true}
-            onClose={this.handleDeleteOkrClose.bind(this)}
+            onDelete={() => {
+              this.setState({ isDeletingOkr: true }, () =>
+                dispatchDeleteOkr(id, ({ error }) => {
+                  this.setState({ isDeletingOkr: false, isDeleteOkrModalOpen: !!error });
+                  if (!error) browserHistory.push(toBasicPath());
+                }),
+              );
+            }}
+            isDeleting={isDeletingOkr}
+            onClose={() => this.setState({ isDeleteOkrModalOpen: false })}
           >
             <div className={styles.boxInfo}>
               <div className={styles.ttl_team}>
@@ -127,7 +132,9 @@ export default class OkrDetails extends Component {
               </div>
               <div className={`${styles.nav_info} ${styles.cf}`}>
                 <div className={`${styles.user_info} ${styles.floatL} ${styles.cf}`}>
-                  <div className={`${styles.avatar} ${styles.floatL}`}><img src="/img/common/icn_user.png" alt="User Name" /></div>
+                  <div className={`${styles.avatar} ${styles.floatL}`}>
+                    <img src="/img/common/icn_user.png" alt="User Name" />
+                  </div>
                   <div className={`${styles.info} ${styles.floatL}`}>
                     <p className={styles.user_name}>{owner.name}</p>
                   </div>

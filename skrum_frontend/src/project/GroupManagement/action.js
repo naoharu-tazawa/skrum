@@ -37,10 +37,7 @@ const {
 export function fetchUserGroups(userId, timeframeId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isFetching } = status.groupManagement;
-    if (isFetching) {
-      return Promise.resolve();
-    }
+    if (status.groupManagement.isFetching) return Promise.resolve();
     dispatch(requestFetchUserGroups());
     return getJson(`/users/${userId}/groups.json`, status)({ tfid: timeframeId })
       .then(json => dispatch(finishFetchUserGroups('user', json)))
@@ -54,10 +51,7 @@ export function fetchUserGroups(userId, timeframeId) {
 export function fetchGroupMembers(groupId, timeframeId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isFetching } = status.groupManagement;
-    if (isFetching) {
-      return Promise.resolve();
-    }
+    if (status.groupManagement.isFetching) return Promise.resolve();
     dispatch(requestFetchGroupMembers());
     return getJson(`/groups/${groupId}/members.json`, status)({ tfid: timeframeId })
       .then(json => dispatch(finishFetchGroupMembers('group', json)))
@@ -71,10 +65,7 @@ export function fetchGroupMembers(groupId, timeframeId) {
 export const putUser = (id, data) =>
   (dispatch, getStatus) => {
     const status = getStatus();
-    const { isPutting } = status.groupManagement;
-    if (isPutting) {
-      return Promise.resolve();
-    }
+    if (status.groupManagement.isPutting) return Promise.resolve();
     dispatch(requestPutUser('data', { id: Number(id), ...data }));
     return putJson(`/users/${id}.json`, status)(null, data)
       .then(json => dispatch(finishPutUser('data', json)))
@@ -84,10 +75,7 @@ export const putUser = (id, data) =>
 export const putGroup = (id, data) =>
   (dispatch, getStatus) => {
     const status = getStatus();
-    const { isPutting } = status.groupManagement;
-    if (isPutting) {
-      return Promise.resolve();
-    }
+    if (status.groupManagement.isPutting) return Promise.resolve();
     dispatch(requestPutGroup('data', { id: Number(id), ...data }));
     return putJson(`/groups/${id}.json`, status)(null, data)
       .then(json => dispatch(finishPutGroup('data', json)))

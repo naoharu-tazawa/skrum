@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { toNumber, isEmpty, pickBy, isUndefined } from 'lodash';
 
 export const explodeSubject = (section) => {
   switch (section && section[0]) {
@@ -38,26 +38,38 @@ export const implodeTab = (tab) => {
   }
 };
 
-export const explodePath = (path = window.location.pathname, options = {}) => {
+export const explodePath = (path = location.pathname, options = {}) => {
   const [, subject, id, timeframeId, tab, aspect, aspectId] = path.split('/');
-  const basicParts = { subject: explodeSubject(subject), id, timeframeId, tab: explodeTab(tab) };
+  const basicParts = {
+    subject: explodeSubject(subject),
+    id: toNumber(id),
+    timeframeId: toNumber(timeframeId),
+    tab: explodeTab(tab),
+  };
   const { basicOnly = false } = options;
-  return basicOnly || !aspect ? basicParts : { ...basicParts, aspect, aspectId };
+  return basicOnly || !aspect ? basicParts : {
+    ...basicParts, aspect, aspectId: toNumber(aspectId) };
 };
 
 export const implodePath = ({ subject, id, timeframeId, tab, aspect, aspectId }, options = {}) => {
   const { basicOnly = false } = options;
-  return `/${implodeSubject(subject)}/${id}/${timeframeId}/${implodeTab(tab)}${!basicOnly && aspect ? `/${aspect}/${aspectId}` : ''}`;
+  return `
+    /${implodeSubject(subject)}
+    /${id}
+    /${timeframeId}
+    /${implodeTab(tab)}
+    ${!basicOnly && aspect ? `/${aspect}/${aspectId}` : ''}`
+    .replace(/[\s\n]/g, '');
 };
 
 export const replacePath = (components, options = {}) =>
-  implodePath({ ...explodePath(window.location.pathname, options), ...components });
+  implodePath({ ...explodePath(location.pathname, options), ...components });
 
-export const toBasicPath = (path = window.location.pathname) =>
+export const toBasicPath = (path = location.pathname) =>
   implodePath(explodePath(path, { basicOnly: true }));
 
 export const comparePath = (pathname1, pathname2, options = {}) =>
   implodePath(explodePath(pathname1, options)) === implodePath(explodePath(pathname2, options));
 
-export const isPathFinal = (path = window.location.pathname) =>
-  _.isEmpty(_.pickBy(explodePath(path), _.isUndefined));
+export const isPathFinal = (path = location.pathname) =>
+  isEmpty(pickBy(explodePath(path), isUndefined));

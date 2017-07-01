@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line } from 'recharts';
 import _ from 'lodash';
 import { ProgressSeriesPropTypes } from './propTypes';
-import { convertToRelativeTimeText, DateFormat } from '../../util/DatetimeUtil';
+import { toDate, formatDate, DateFormat } from '../../util/DatetimeUtil';
 import styles from './OkrProgressChart.css';
 
 export default class OkrProgressChart extends Component {
@@ -16,7 +16,7 @@ export default class OkrProgressChart extends Component {
     const progressData = progressSeries.map(({ datetime, achievementRate }) =>
       ({ datetime, progress: _.toNumber(achievementRate) }));
     const percentFormatter = percent => (percent ? `${percent}%` : '');
-    const dateFormatter = date => `${convertToRelativeTimeText(date, { format: DateFormat.YMD })}`;
+    const dateFormatter = date => `${formatDate(toDate(date), { format: DateFormat.YMD })}`;
     const renderTooltip = ([{ payload } = {}]) => (payload && (
       <div className={styles.tooltip} key={`tooltip-item-${payload.datetime}`}>
         <li>{dateFormatter(payload.datetime)}</li>

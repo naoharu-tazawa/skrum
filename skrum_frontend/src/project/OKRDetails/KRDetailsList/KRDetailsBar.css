@@ -41,9 +41,6 @@
   width: 25%;
   margin: 10px 0px;
 }
-.full .progressColumn {
-  margin: auto 0;
-}
 .progressBox {
   display: flex;
   /*width: 150px;*/
@@ -60,9 +57,6 @@
   width: 120px;
   border-radius: 0px; /* border-radius: 10px; */
   background-color: #D8DFE5;
-}
-.full .progressBar {
-  width: 100%;
 }
 .progress {
   height: 100%;
@@ -84,16 +78,13 @@
 .txt_date {
   margin-top: 1.25em;
 }
-  .txt_date p {
-    margin-top: 0.75em;
-  }
+.txt_date p {
+  margin-top: 0.75em;
+}
 .ownerBox {
   display: flex;
   margin: auto 0;
   width: 18%;
-}
-.full .ownerBox {
-  margin: 1em 0;
 }
 .ownerImage {
   width: 3em;

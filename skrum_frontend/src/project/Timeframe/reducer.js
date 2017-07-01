@@ -1,4 +1,5 @@
 import { Action } from './action';
+import { mergeUpdateById } from '../../util/ActionUtil';
 
 export default (state = {
   isFetching: false,
@@ -29,8 +30,7 @@ export default (state = {
       const { payload } = action;
       const { id, ...item } = payload.data;
       const { data = [] } = state;
-      const newData = data.map(tf => (
-        { ...tf, ...(id === tf.timeframeId ? item : {}) }));
+      const newData = data.map(tf => mergeUpdateById(tf, 'timeframeId', item, id));
       return { ...state, data: newData, isPutting: true };
     }
 

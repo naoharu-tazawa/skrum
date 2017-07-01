@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import _ from 'lodash';
 import UserInfoContainer from './UserInfo/UserInfoContainer';
 import GroupInfoContainer from './GroupInfo/GroupInfoContainer';
 import CompanyInfoContainer from './CompanyInfo/CompanyInfoContainer';
@@ -11,7 +10,7 @@ import { UserOKRListContainer, GroupOKRListContainer, CompanyOKRListContainer } 
 import { UserOKRAlignmentsInfoContainer, GroupOKRAlignmentsInfoContainer } from './OKRAlignmentsInfo/OKRAlignmentsInfoContainer';
 import OKRAlignmentsInfo from './OKRAlignmentsInfo/OKRAlignmentsInfo';
 import OKRDetailsContainer from '../OKRDetails/OKRDetailsContainer';
-import { fetchUserBasics, fetchGroupBasics, fetchCompanyBasics } from './action';
+import { fetchUserBasics, fetchGroupBasics, fetchCompanyBasics, deleteOkr } from './action';
 import { explodePath, implodePath, comparePath, isPathFinal } from '../../util/RouteUtil';
 import styles from './OKRContainer.css';
 
@@ -23,6 +22,7 @@ class OKRContainer extends Component {
     dispatchFetchUserBasics: PropTypes.func,
     dispatchFetchGroupBasics: PropTypes.func,
     dispatchFetchCompanyBasics: PropTypes.func,
+    dispatchDeleteOkr: PropTypes.func,
     pathname: PropTypes.string,
     okrIds: PropTypes.arrayOf(PropTypes.number),
   };
@@ -119,14 +119,14 @@ class OKRContainer extends Component {
   }
 
   render() {
-    const { isFetching, pathname, okrIds } = this.props;
+    const { isFetching, pathname, okrIds, dispatchDeleteOkr } = this.props;
     if (isFetching) {
       return <div className={styles.spinner} />;
     }
     const { showAlignmentsInfo } = this.state;
     const { aspect, aspectId: okrId, ...basicPath } = explodePath(pathname);
     const { subject } = basicPath;
-    const okrIndex = okrId && okrIds.indexOf(_.toNumber(okrId));
+    const okrIndex = okrId && okrIds.indexOf(okrId);
     const prevOkrId = okrIndex > 0 && okrIds[okrIndex - 1];
     const nextOkrId = okrIndex !== -1 && okrIndex < okrIds.length - 1 && okrIds[okrIndex + 1];
     const showDetails = aspect === 'o' && okrId;
@@ -148,7 +148,7 @@ class OKRContainer extends Component {
               前のOKR
             </Link>
           </div>
-          <OKRDetailsContainer />
+          <OKRDetailsContainer {...{ dispatchDeleteOkr }} />
         </div>
         <article style={showDetails ? { display: 'none' } : {}}>
           <section className={`${styles.overall_info} ${styles.cf}`}>
@@ -211,17 +211,20 @@ const mapStateToProps = (state) => {
   return { isFetching, pathname, okrIds };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, { subject }) => {
   const dispatchFetchUserBasics = (userId, timeframeId) =>
     dispatch(fetchUserBasics(userId, timeframeId));
   const dispatchFetchGroupBasics = (groupId, timeframeId) =>
     dispatch(fetchGroupBasics(groupId, timeframeId));
   const dispatchFetchCompanyBasics = (companyId, timeframeId) =>
     dispatch(fetchCompanyBasics(companyId, timeframeId));
+  const dispatchDeleteOkr = (id, completion) =>
+    dispatch(deleteOkr(subject, id, completion));
   return {
     dispatchFetchUserBasics,
     dispatchFetchGroupBasics,
     dispatchFetchCompanyBasics,
+    dispatchDeleteOkr,
   };
 };
 

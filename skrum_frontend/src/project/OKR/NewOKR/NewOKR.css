@@ -6,14 +6,50 @@
 .label:first-child {
   margin-left: 0;
 }
-.ownerDateRange {
+.parentOkrBox {
+  margin-bottom: 1em;
+  padding: 1em;
+  border: 1px solid #bfbfbf;
+  border-radius: 1em;
+}
+.parentOkr {
+  display: flex;
+  margin-top: 0.5em;
+}
+.parentOkrOwnerBox {
+  display: flex;
+  margin: auto 0;
+  width: 18%;
+}
+.parentOkrOwnerImage {
+  width: 3em;
+  height: 3em;
+  border: 2px solid #fff;
+  background-color: #626A7F;
+  border-radius: 50%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.parentOkrOwnerName {
+  margin: auto 1em;
+  white-space: nowrap;
+  /*overflow: hidden;*/
+  text-overflow: ellipsis;
+}
+.parentOkrName {
+  margin: auto 1em;
+  white-space: nowrap;
+  /*overflow: hidden;*/
+  text-overflow: ellipsis;
+}
+.ownerTimeframesBox {
+  display: flex;
 }
 .ownerBox {
   display: inline-flex;
+  margin-right: auto;
 }
 .dateRange {
-  float: right;
-  display: flex;
 }
 .disclosureType {
   margin: 1em 0 0 0;
@@ -27,7 +63,7 @@
   max-width: 52em;
   margin-top: 1em;
 }
-.progressBox, .alignmentBox {
+.progressBox, .dateRangeBox, .alignmentBox {
   display: flex;
   margin: 1em 0 0 0;
 }
@@ -37,4 +73,24 @@
 .hint {
   margin: 2px 0 0 0 !important;
   font-size: xx-small;
+}
+.timePeriod {
+  min-width: 11.5em;
+  border: 1px solid #bfbfbf;
+}
+.timePeriod :global(.Select-control) {
+  height: 24px;
+}
+.timePeriod :global(.Select-value-label) {
+  color: #626A7F !important;
+}
+.timePeriod:not(:global(.is-open)) :global(.Select-arrow), .timePeriod :global(.Select-arrow):hover {
+  border-color: #626A7F transparent transparent !important;
+}
+.timePeriod:global(.is-open) :global(.Select-arrow) {
+  border-color: transparent transparent #626A7F !important;
+}
+.timeframe {
+}
+.timeframeCurrent {
 }

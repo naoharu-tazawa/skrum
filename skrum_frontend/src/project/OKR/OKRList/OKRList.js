@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
+import PropTypes from 'prop-types';
+import { flatten } from 'lodash';
 import { okrsPropTypes } from './propTypes';
 import OkrBar from './OkrBar';
 import KRBar from './KRBar';
@@ -9,10 +10,7 @@ export default class OKRList extends Component {
 
   static propTypes = {
     okrs: okrsPropTypes,
-  };
-
-  state = {
-    expandedKeyResults: {},
+    onAdd: PropTypes.func.isRequired,
   };
 
   toggleKeyResults(id) {
@@ -22,15 +20,15 @@ export default class OKRList extends Component {
   }
 
   render() {
-    const { okrs = [] } = this.props;
-    const { expandedKeyResults } = this.state;
+    const { okrs = [], onAdd } = this.props;
+    const { expandedKeyResults = {} } = this.state || {};
     return (
       <div className={styles.component}>
         <div className={styles.header}>
           <OkrBar header />
         </div>
         <div className={styles.bars}>
-          {_.flatten(okrs.map((okr) => {
+          {flatten(okrs.map((okr) => {
             const { id, keyResults } = okr;
             const display = expandedKeyResults[id] ? 'expanded' : 'collapsed';
             return [
@@ -46,12 +44,12 @@ export default class OKRList extends Component {
           }))}
         </div>
         <div className={`${styles.add_okr} ${styles.alignC}`}>
-          <a href="">
+          <button className={styles.addOkr} onClick={onAdd}>
             <span className={styles.circle}>
               <img src="/img/common/icn_plus.png" alt="Add" />
             </span>
             <span>新しい目標を追加</span>
-          </a>
+          </button>
         </div>
       </div>);
   }

@@ -19,10 +19,7 @@ const {
 export function putUserChangepassword(userId, currentPassword, newPassword) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isProcessing } = status.setting;
-    if (isProcessing) {
-      return Promise.resolve();
-    }
+    if (status.setting.isProcessing) return Promise.resolve();
     dispatch(requestPutUserChangepassword());
     return putJson(`/users/${userId}/changepassword.json`, status)(null, { currentPassword, newPassword })
       .then(json => dispatch(finishPutUserChangepassword('data', json)))

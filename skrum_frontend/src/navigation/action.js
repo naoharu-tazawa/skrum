@@ -19,10 +19,7 @@ const {
 export function fetchUserTop(userId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isFetching } = status.top;
-    if (isFetching) {
-      return Promise.resolve();
-    }
+    if (status.top.isFetching) return Promise.resolve();
     dispatch(requestFetchUserTop());
     return getJson(`/users/${userId}/top.json`, status)()
       .then(json => dispatch(finishFetchUserTop('data', json)))

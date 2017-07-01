@@ -18,7 +18,7 @@ export const mapKeyResult = (kr) => {
   };
 };
 
-export const mapOKR = (okr, keyResults = okr.keyResults) => {
+export const mapOKR = (okr, keyResults = okr.keyResults || []) => {
   return omitBy(
     { ...mapKeyResult(okr), keyResults: keyResults && keyResults.map(mapKeyResult) },
     isUndefined);

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { errorType } from '../util/PropUtil';
 import styles from './DialogForm.css';
 
 export default class DialogForm extends Component {
@@ -10,27 +9,33 @@ export default class DialogForm extends Component {
     message: PropTypes.string,
     cancelButton: PropTypes.string,
     submitButton: PropTypes.string,
-    submitEnabled: PropTypes.bool,
+    isSubmitting: PropTypes.bool,
     handleSubmit: PropTypes.func, // for redux-form
     onSubmit: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     children: PropTypes.node,
-    error: errorType,
+    valid: PropTypes.bool,
+    error: PropTypes.string,
   };
 
   render() {
-    const { title, message, cancelButton = 'キャンセル', submitButton = 'OK', submitEnabled = true,
-      handleSubmit, onSubmit, onClose, children } = this.props;
+    const { title, message, cancelButton = 'キャンセル', submitButton = 'OK',
+      isSubmitting, handleSubmit, onSubmit, onClose, children, valid = true, error } = this.props;
     return (
       <form
-        className={styles.form}
+        className={`${styles.form} ${isSubmitting ? styles.submitting : ''}`}
         onSubmit={handleSubmit ? handleSubmit(onSubmit) : onSubmit}
+        disabled={isSubmitting}
       >
         <div className={styles.title}>{title}</div>
         {message && <div className={styles.message}>{message}</div>}
-        <div className={styles.content}>{children}</div>
+        <div className={styles.content}>
+          {children}
+          {error && <div className={styles.error}>{error}</div>}
+        </div>
         <div className={styles.buttons}>
           <button
+            type="button"
             className={styles.cancelButton}
             onClick={onClose}
           >
@@ -39,7 +44,7 @@ export default class DialogForm extends Component {
           <button
             type="submit"
             className={styles.submitButton}
-            disabled={!submitEnabled}
+            disabled={!valid}
           >
             {submitButton}
           </button>

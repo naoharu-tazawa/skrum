@@ -25,10 +25,7 @@ const {
 export function fetchGroupPosts(groupId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isFetching } = status.timeline;
-    if (isFetching) {
-      return Promise.resolve();
-    }
+    if (status.timeline.isFetching) return Promise.resolve();
     dispatch(requestFetchGroupPosts());
     return getJson(`/groups/${groupId}/posts.json`, status)()
       .then(json => dispatch(finishFetchGroupPosts('data', json)))
@@ -42,10 +39,7 @@ export function fetchGroupPosts(groupId) {
 export function postGroupPosts(groupId, post, disclosureType = '1') {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isPosting } = status.timeline;
-    if (isPosting) {
-      return Promise.resolve();
-    }
+    if (status.timeline.isPosting) return Promise.resolve();
     dispatch(requestPostGroupPosts());
     return postJson(`/groups/${groupId}/posts.json`, status)(null, { post, disclosureType })
       .then(json => dispatch(finishPostGroupPosts('data', json)))

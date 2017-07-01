@@ -10,12 +10,13 @@ export default class DeletionPrompt extends Component {
     title: PropTypes.string.isRequired,
     prompt: PropTypes.string.isRequired,
     onDelete: PropTypes.func.isRequired,
+    isDeleting: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    children: PropTypes.node,
+    children: PropTypes.node.isRequired,
   };
 
   render() {
-    const { title, prompt, onDelete, onClose, children } = this.props;
+    const { title, prompt, onDelete, isDeleting, onClose, children } = this.props;
     const { yesSelected = false } = this.state || {};
     return (
       <BasicModalDialog onClose={onClose}>
@@ -23,28 +24,29 @@ export default class DeletionPrompt extends Component {
           title={title}
           message={prompt}
           submitButton="削除"
-          submitEnabled={yesSelected}
-          onSubmit={onDelete}
+          valid={yesSelected}
+          onSubmit={(e) => { e.preventDefault(); onDelete(); }}
+          isSubmitting={isDeleting}
           onClose={onClose}
         >
           <div className={styles.content}>{children}</div>
           <div className={styles.choice}>
             <label>
               <input
-                type="radio"
                 name="choice"
+                type="radio"
                 value="no"
                 defaultChecked
-                onChange={() => this.setState({ yesSelected: false })}
+                onClick={() => this.setState({ yesSelected: false })}
               />
               いいえ
             </label>
             <label>
               <input
-                type="radio"
                 name="choice"
+                type="radio"
                 value="yes"
-                onChange={() => this.setState({ yesSelected: true })}
+                onClick={() => this.setState({ yesSelected: true })}
               />
               はい
             </label>

@@ -19,10 +19,7 @@ const {
 export const searchOwner = keyword =>
   (dispatch, getStatus) => {
     const status = getStatus();
-    const { isSearching } = status.ownersFound;
-    if (isSearching) {
-      return Promise.resolve();
-    }
+    if (status.ownersFound.isSearching) return Promise.resolve();
     dispatch(requestSearchOwner());
     return getJson('/owners/search.json', status)({ q: keyword })
       .then(json => dispatch(finishSearchOwner('ownersFound', json)))

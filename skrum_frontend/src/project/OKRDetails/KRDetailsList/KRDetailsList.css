@@ -38,4 +38,10 @@
   margin-right: 10px;
 }
 .alignC {
-  text-align: center; }
+  text-align: center;
+}
+.addOkr {
+  background: none;
+  border: none;
+  padding: 0;
+}

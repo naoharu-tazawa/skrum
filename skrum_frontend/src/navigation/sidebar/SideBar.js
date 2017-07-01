@@ -17,7 +17,7 @@ class SectionItem extends Component {
   getStyles() {
     const { section, id } = this.props;
     const { subject, id: currentId } = explodePath();
-    const isActive = subject === section && `${id}` === currentId;
+    const isActive = subject === section && id === currentId;
     return `${styles.sectionItem} ${isActive ? styles.isActive : ''}`;
   }
 

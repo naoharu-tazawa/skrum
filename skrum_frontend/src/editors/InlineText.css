@@ -20,7 +20,6 @@
   line-height: inherit;
   min-width: calc(100% + 3px);
   width: 100%;
-  z-index: 2;
 }
 .editor input {
   padding: 0 0 0 3px;
@@ -57,7 +56,7 @@
 }
 .editing .inputArea {
   opacity: 1;
-  z-index: 2;
+  z-index: 3;
 }
 .editing.multiline .inputArea {
   padding-right: 20px;
@@ -87,7 +86,7 @@
   text-indent: -999em;
   word-wrap: break-word;
   word-break: break-all;
-  z-index: 3;
+  z-index: 2;
 }
 .editButton:before {
   content: " ";
@@ -124,7 +123,7 @@
   margin: 0;
   position: absolute;
   right: -2px;
-  top: 100%;
+  top: calc(100% + 2px);
   z-index: 1;
 }
 .multiline .saveOptions {

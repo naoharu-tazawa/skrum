@@ -25,10 +25,7 @@ const {
 export function fetchCompany(companyId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isFetching } = status.companySetting;
-    if (isFetching) {
-      return Promise.resolve();
-    }
+    if (status.companySetting.isFetching) return Promise.resolve();
     dispatch(requestFetchCompany());
     return getJson(`/companies/${companyId}.json`, status)()
       .then(json => dispatch(finishFetchCompany('data', json)))
@@ -42,10 +39,7 @@ export function fetchCompany(companyId) {
 export function putCompany(id, data) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isPutting } = status.companySetting;
-    if (isPutting) {
-      return Promise.resolve();
-    }
+    if (status.companySetting.isPutting) return Promise.resolve();
     dispatch(requestPutCompany('data', { id: Number(id), ...data }));
     return putJson(`/companies/${id}.json`, status)(null, data)
       .then(json => dispatch(finishPutCompany('data', json)))

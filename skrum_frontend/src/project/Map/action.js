@@ -31,10 +31,7 @@ const {
 const fetchMap = (subject, node, request, finish) => (id, timeframeId) =>
   (dispatch, getStatus) => {
     const status = getStatus();
-    const { isFetching } = status.map;
-    if (isFetching) {
-      return Promise.resolve();
-    }
+    if (status.map.isFetching) return Promise.resolve();
     dispatch(request());
     return getJson(`/${subject}/${id}/okrs.json`, status)({ tfid: timeframeId })
       .then(json => dispatch(finish(node, json)))

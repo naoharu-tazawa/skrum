@@ -5,7 +5,7 @@ import { userPropTypes } from './propTypes';
 import styles from './UserInfoEdit.css';
 import InlineTextInput from '../../../editors/InlineTextInput';
 import { replacePath } from '../../../util/RouteUtil';
-import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
+import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 
 export default class UserInfoEdit extends Component {
 
@@ -30,7 +30,7 @@ export default class UserInfoEdit extends Component {
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <div className={styles.profile_img}>
             <div><img src="/img/profile/img_profile.jpg" alt="" /></div>
-            <p>最終更新: {convertToRelativeTimeText(lastUpdate)}</p>
+            <p>最終更新: {toRelativeTimeText(lastUpdate)}</p>
           </div>
           <div className={styles.profile_txt}>
             <h2 className={styles.user_name}>

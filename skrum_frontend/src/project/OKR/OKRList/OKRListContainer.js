@@ -1,25 +1,40 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { okrsPropTypes } from './propTypes';
-import { mapOKR } from '../../../util/OKRUtil';
 import OKRList from './OKRList';
+import NewOKR from '../NewOKR/NewOKR';
+import { withBasicModalDialog } from '../../../util/FormUtil';
+import { mapOKR } from '../../../util/OKRUtil';
 
 class OKRListContainer extends Component {
 
   static propTypes = {
     okrs: okrsPropTypes,
+    ownerName: PropTypes.string,
   };
 
   render() {
-    const { okrs = [] } = this.props;
-    return <OKRList okrs={okrs} />;
+    const { okrs = [], ownerName } = this.props;
+    const { addOkrModal = null } = this.state || {};
+    return (
+      <div>
+        <OKRList
+          okrs={okrs}
+          onAdd={() => this.setState({ addOkrModal:
+            withBasicModalDialog(NewOKR, () => this.setState({ addOkrModal: null }), { type: 'Okr', ownerName }) })}
+        />
+        {addOkrModal}
+      </div>);
   }
 }
 
 const mapBasicsStateToProps = (subject, ownerType) => (state) => {
   const { [subject]: basics = {} } = state.basics || {};
   const { okrs = [] } = basics || {};
-  return { okrs: okrs.map(okr => mapOKR({ ...okr, ownerType })) };
+  const { name, firstName, lastName } = basics[subject] || {};
+  return { okrs: okrs.map(okr => mapOKR({ ...okr, ownerType })),
+    ownerName: name || `${lastName} ${firstName}` };
 };
 
 export const UserOKRListContainer = connect(

@@ -1,6 +1,6 @@
 import { createActions } from 'redux-actions';
-import { keyValueIdentity } from '../../../util/ActionUtil';
-import { getJson } from '../../../util/ApiUtil';
+import { keyValueIdentity } from '../../util/ActionUtil';
+import { getJson } from '../../util/ApiUtil';
 
 export const Action = {
   REQUEST_SEARCH_OKR: 'REQUEST_SEARCH_OKR',
@@ -19,10 +19,7 @@ const {
 export const searchOkr = (timeframeId, keyword) =>
   (dispatch, getStatus) => {
     const status = getStatus();
-    const { isSearching } = status.okrsFound;
-    if (isSearching) {
-      return Promise.resolve();
-    }
+    if (status.okrsFound.isSearching) return Promise.resolve();
     dispatch(requestSearchOkr());
     return getJson('/okrs/search.json', status)({ tfid: timeframeId, q: keyword })
       .then(json => dispatch(finishSearchOkr('okrsFound', json)))

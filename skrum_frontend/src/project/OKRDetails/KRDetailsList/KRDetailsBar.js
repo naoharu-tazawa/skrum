@@ -13,25 +13,14 @@ export default class KRDetailsBar extends Component {
     header: PropTypes.bool,
     keyResult: keyResultPropTypes,
     dispatchPutOKR: PropTypes.func,
-  };
-
-  state = {
-    isDeleteKRModalOpen: false,
+    dispatchDeleteKR: PropTypes.func,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
-  handleDeleteKROpen() {
-    this.setState({ isDeleteKRModalOpen: true });
-  }
-
-  handleDeleteKRClose() {
-    this.setState({ isDeleteKRModalOpen: false });
-  }
-
   render() {
-    const { header, keyResult, dispatchPutOKR } = this.props;
+    const { header, keyResult, dispatchPutOKR, dispatchDeleteKR } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -43,7 +32,7 @@ export default class KRDetailsBar extends Component {
     }
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
       owner } = keyResult;
-    const { isDeleteKRModalOpen } = this.state;
+    const { isDeleteKRModalOpen = false, isDeletingKR = false } = this.state || {};
     return (
       <div className={styles.component}>
         <div className={styles.name}>
@@ -91,16 +80,22 @@ export default class KRDetailsBar extends Component {
               { caption: '紐付け先設定' },
               { caption: '公開範囲設定' },
               { caption: '影響度設定' },
-              { caption: '削除', onClick: this.handleDeleteKROpen.bind(this) },
+              { caption: '削除', onClick: () => this.setState({ isDeleteKRModalOpen: true }) },
             ]}
           />
         </div>
         {isDeleteKRModalOpen && (
           <DeletionPrompt
-            title="OKRの削除"
-            prompt="こちらのOKRを削除しますか?"
-            onDelete={() => true}
-            onClose={this.handleDeleteKRClose.bind(this)}
+            title="サブ目標の削除"
+            prompt="こちらのサブ目標を削除しますか?"
+            onDelete={() =>
+              this.setState({ isDeletingKR: true }, () =>
+                dispatchDeleteKR(id, ({ error }) =>
+                  error && this.setState({ isDeletingKR: false })),
+              )
+            }
+            isDeleting={isDeletingKR}
+            onClose={() => this.setState({ isDeleteKRModalOpen: false })}
           >
             <div>
               <div>

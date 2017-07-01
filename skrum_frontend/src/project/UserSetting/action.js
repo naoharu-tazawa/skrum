@@ -25,10 +25,7 @@ const {
 export function fetchCompanyRoles(companyId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isFetching } = status.userSetting;
-    if (isFetching) {
-      return Promise.resolve();
-    }
+    if (status.userSetting.isFetching) return Promise.resolve();
     dispatch(requestFetchCompanyRoles());
     return getJson(`/companies/${companyId}/roles.json`, status)()
       .then(json => dispatch(finishFetchCompanyRoles('roles', json)))
@@ -42,10 +39,7 @@ export function fetchCompanyRoles(companyId) {
 export function postInvite(emailAddress, roleAssignmentId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isPosting } = status.userSetting;
-    if (isPosting) {
-      return Promise.resolve();
-    }
+    if (status.userSetting.isPosting) return Promise.resolve();
     dispatch(requestPostInvite());
     return postJson('/invite.json', status)(null, { emailAddress, roleAssignmentId })
       .then(json => dispatch(finishPostInvite('data', json)))

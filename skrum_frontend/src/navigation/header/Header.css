@@ -43,11 +43,6 @@
 .subMenu button:focus {
   outline: 0;
 }
-.timePeriod {
-  /* margin-right: 10px; */
-  min-width: 12.5em;
-  font-size: 14px;
-}
 .userIcon {
   width: 20px;
   height: 20px;
@@ -74,4 +69,9 @@
 }
 .timeframeCurrent {
   font-weight: bold;
+}
+.timePeriod {
+  /* margin-right: 10px; */
+  min-width: 11em;
+  font-size: 14px;
 }

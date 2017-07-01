@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { toNumber } from 'lodash';
 
 export const TimeUnit = {
   SECOND: 'second',
@@ -14,6 +15,16 @@ export const DateFormat = {
   YMDHMD: 'LLLL', // YearMonthDateHourMinuteD 2016年3月10日午後4時37分 水曜日
 };
 
+// export const convertToTimestamp = date =>
+// toNumber(moment(date, 'YYYY-MM-DD HH:mm:ss').format('X'));
+
+export const toTimestamp = date => toNumber(moment(date).format('X'));
+
+export const toDate = dateString => moment(dateString).locale('ja');
+
+export const formatDate = (date, { format = DateFormat.YMDHM } = {}) =>
+  date.format(format);
+
 const businessHour = 8;
 
 /*
@@ -25,11 +36,9 @@ const businessHour = 8;
 * ~ 8時間 : N時間前
 * それ以外 : 2016年3月10日午後4時37分
 */
-export const convertToRelativeTimeText = (date, options = {}) => {
-  const { format = DateFormat.YMDHM } = options;
+export const toRelativeTimeText = (date, options = {}) => {
   const dateMoment = moment(date).locale('ja');
   const nowMoment = moment();
-
   // seconds
   const secDiff = nowMoment.diff(dateMoment, TimeUnit.SECOND);
   if (secDiff < 0) {
@@ -52,8 +61,11 @@ export const convertToRelativeTimeText = (date, options = {}) => {
     return dateMoment.startOf(TimeUnit.HOUR).fromNow();
   }
   // over day
-  return dateMoment.format(format);
+  return formatDate(date, options);
 };
 
-export const convertToUtc = date =>
+export const toUtcDate = date =>
   moment(new Date(date)).local().format();
+
+export const isValidDate = date =>
+  date && new Date(date) !== 'Invalid Date' && !isNaN(new Date(date));

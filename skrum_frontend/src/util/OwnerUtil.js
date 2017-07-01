@@ -1,10 +1,19 @@
 
+export const getOwnerTypeId = (ownerType) => {
+  switch (ownerType) {
+    case 'user': return '1';
+    case 'group': return '2';
+    case 'company': return '3';
+    default: return undefined;
+  }
+};
+
 export const getOwnerTypeSubject = (ownerType) => {
   switch (ownerType) {
     case '1': return 'User';
     case '2': return 'Group';
     case '3': return 'Company';
-    default: return '';
+    default: return undefined;
   }
 };
 

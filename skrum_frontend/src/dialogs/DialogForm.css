@@ -33,6 +33,16 @@
   background-color: #094f97;
   margin-left: 2em;
 }
+.submitting .submitButton {
+  background: #094f97 url(/img/rolling.svg) center no-repeat;
+  background-size: contain;
+  color: transparent !important;
+}
+.error {
+  font-weight: bold;
+  margin-top: 2em;
+  color: #c5352e;
+}
 .form input, .form textarea {
   border: 1px solid #bfbfbf;
   padding: 4px;

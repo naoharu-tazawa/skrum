@@ -25,10 +25,7 @@ const {
 export function fetchCompanyTimeframes(companyId) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isFetching } = status.timeframeSetting;
-    if (isFetching) {
-      return Promise.resolve();
-    }
+    if (status.timeframeSetting.isFetching) return Promise.resolve();
     dispatch(requestFetchCompanyTimeframes());
     return getJson(`/companies/${companyId}/timeframedetails.json`, status)()
       .then(json => dispatch(finishFetchCompanyTimeframes('data', json)))
@@ -42,10 +39,7 @@ export function fetchCompanyTimeframes(companyId) {
 export const putTimeframe = (id, data) =>
   (dispatch, getStatus) => {
     const status = getStatus();
-    const { isPutting } = status.timeframeSetting;
-    if (isPutting) {
-      return Promise.resolve();
-    }
+    if (status.timeframeSetting.isPutting) return Promise.resolve();
     dispatch(requestPutTimeframe('data', { id: Number(id), ...data }));
     return putJson(`/timeframes/${id}.json`, status)(null, data)
       .then(json => dispatch(finishPutTimeframe('data', json)))
