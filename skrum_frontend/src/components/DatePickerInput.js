@@ -40,6 +40,7 @@ export default class DatePickerInput extends Component {
           localeUtils,
           // disabledDays: { daysOfWeek: [0] },
           renderDay: day => day.getDate().toLocaleString(locale),
+          // onDayClick: (day, modifiers, e) => onChange(e),
         }}
         {...{ value, onChange, onFocus, onBlur }}
       />

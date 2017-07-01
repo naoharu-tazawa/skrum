@@ -31,7 +31,7 @@ export default class KRDetailsBar extends Component {
         </div>);
     }
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
-      owner } = keyResult;
+      startDate, endDate, owner } = keyResult;
     const { isDeleteKRModalOpen = false, isDeletingKR = false } = this.state || {};
     return (
       <div className={styles.component}>
@@ -63,8 +63,8 @@ export default class KRDetailsBar extends Component {
             {achievedValue}／{targetValue}{unit}
           </div>
           <div className={styles.txt_date}>
-            <p>開始日：2017/01/01</p>
-            <p>期限日：2017/01/01</p>
+            <p>開始日：{startDate}</p>
+            <p>期限日：{endDate}</p>
           </div>
         </div>
         <div className={styles.ownerBox}>

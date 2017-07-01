@@ -3,7 +3,7 @@ import { mapOwner } from './OwnerUtil';
 
 export const mapKeyResult = (kr) => {
   const { okrId, okrName, okrDetail, unit, targetValue, achievedValue, achievementRate,
-    status, ratioLockedFlg } = kr;
+    startDate, endDate, status, ratioLockedFlg } = kr;
   return {
     id: okrId,
     name: okrName,
@@ -12,6 +12,8 @@ export const mapKeyResult = (kr) => {
     targetValue,
     achievedValue,
     achievementRate,
+    startDate,
+    endDate,
     owner: mapOwner(kr),
     status,
     ratioLockedFlg,

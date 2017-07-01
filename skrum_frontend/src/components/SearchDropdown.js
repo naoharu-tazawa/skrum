@@ -35,7 +35,7 @@ export default class SearchDropdown extends PureComponent {
         renderItem={({ [labelPropName]: label }, isHighlighted, renderStyles) =>
           <div
             style={{
-              background: isHighlighted ? 'lightgray' : 'white',
+              background: isHighlighted ? '#ebf5ff' : 'white',
               padding: '2px 4px',
               ...renderStyles,
             }}
@@ -55,7 +55,7 @@ export default class SearchDropdown extends PureComponent {
         onChange={(e) => {
           const { target } = e;
           this.setState({ currentInput: target.value });
-          onSelect(undefined);
+          onSelect({});
           if (onChange) onChange(e);
           this.handleSearch(target.value);
         }}

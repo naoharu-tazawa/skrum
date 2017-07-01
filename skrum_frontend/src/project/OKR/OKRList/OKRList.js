@@ -14,7 +14,7 @@ export default class OKRList extends Component {
   };
 
   toggleKeyResults(id) {
-    const { expandedKeyResults } = this.state;
+    const { expandedKeyResults = {} } = this.state || {};
     const { [id]: expanded = false } = expandedKeyResults;
     this.setState({ expandedKeyResults: { ...expandedKeyResults, [id]: !expanded } });
   }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, getFormValues, SubmissionError } from 'redux-form';
-import { toNumber, toLower, partial } from 'lodash';
+import { isEmpty, toNumber, toLower, partial } from 'lodash';
 import { okrPropTypes } from '../../OKRDetails/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
 import OwnerSearch from '../../OwnerSearch/OwnerSearch';
@@ -19,26 +19,40 @@ import styles from './NewOKR.css';
 
 const formName = 'newOKR';
 
-const validate = ({ okrName, startDate, endDate } = {}) => {
+const validate = ({ owner, okrName, startDate, endDate } = {}) => {
   return {
-    // owner: !owner && '担当者を入力してください',
+    owner: isEmpty(owner) && '担当者を入力してください',
     okrName: !okrName && '目標名を入力してください',
     startDate: !isValidDate(startDate) && '開始日を入力してください',
     endDate: !isValidDate(endDate) && '終了日を入力してください',
   };
 };
 
-const OKRDialogForm = withLoadedReduxForm(
+const topOKRDialogInitialValues = (state) => {
+  const { company = {} } = state.top.data || {};
+  const { defaultDisclosureType } = company.policy || {};
+  const { locationBeforeTransitions } = state.routing || {};
+  const { pathname } = locationBeforeTransitions || {};
+  const { timeframeId } = explodePath(pathname);
+  return { disclosureType: defaultDisclosureType, timeframeId };
+};
+
+const OkrDialogForm = withLoadedReduxForm(
+  DialogForm,
+  formName,
+  topOKRDialogInitialValues,
+  { validate },
+);
+
+const KRDialogForm = withLoadedReduxForm(
   DialogForm,
   formName,
   (state) => {
-    const { company = {} } = state.top.data || {};
-    const { defaultDisclosureType } = company.policy || {};
     const { locationBeforeTransitions } = state.routing || {};
     const { pathname } = locationBeforeTransitions || {};
-    const { subject, id, timeframeId } = explodePath(pathname);
+    const { subject, id } = explodePath(pathname);
     const owner = { type: getOwnerTypeId(subject), id };
-    return { owner, disclosureType: defaultDisclosureType, timeframeId };
+    return { owner, ...topOKRDialogInitialValues(state) };
   },
   { validate },
 );
@@ -74,7 +88,7 @@ class NewOKR extends Component {
     const okr = {
       okrType,
       timeframeId,
-      parentOkrId: parentOkr ? parentOkr.id : alignment.id,
+      parentOkrId: parentOkr.id || alignment.id,
       ownerType: owner.type,
       [`${ownerSubject}Id`]: owner.id,
       disclosureType,
@@ -103,8 +117,8 @@ class NewOKR extends Component {
       { value: '4', label: 'グループ管理者' },
       { value: '5', label: '本人のみ' },
     ];
-    return (
-      <OKRDialogForm
+    const okrForm = Form => (
+      <Form
         title={type === 'Okr' ? '目標新規登録' : 'サブ目標新規登録'}
         submitButton="目標作成"
         onSubmit={this.submit.bind(this)}
@@ -172,8 +186,8 @@ class NewOKR extends Component {
             {withItemisedReduxField(OKRSearch, 'alignment', { timeframeId })}
           </div>}
         </div>
-      </OKRDialogForm>
-    );
+      </Form>);
+    return okrForm(type === 'Okr' ? OkrDialogForm : KRDialogForm);
   }
 }
 

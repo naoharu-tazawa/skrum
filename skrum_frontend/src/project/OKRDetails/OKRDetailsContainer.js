@@ -105,8 +105,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchOKRDetails = id =>
     dispatch(fetchOKRDetails(id));
-  const dispatchPutOKR = (id, data) =>
-    dispatch(putOKR(id, data));
+  const dispatchPutOKR = (id, data, completion) =>
+    dispatch(putOKR(id, data, completion));
   const dispatchDeleteKR = (id, completion) =>
     dispatch(deleteKR(id, completion));
   return {

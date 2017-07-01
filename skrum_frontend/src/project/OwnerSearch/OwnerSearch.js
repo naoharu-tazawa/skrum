@@ -17,7 +17,7 @@ class OwnerSearch extends PureComponent {
   static propTypes = {
     defaultOwners: PropTypes.arrayOf(ownerPropType),
     ownersFound: PropTypes.arrayOf(ownerPropType),
-    value: ownerPropType,
+    value: PropTypes.oneOfType([ownerPropType, PropTypes.shape({}), PropTypes.string]),
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -28,8 +28,8 @@ class OwnerSearch extends PureComponent {
   render() {
     const { defaultOwners, ownersFound, value, onChange, onFocus, onBlur,
       dispatchSearchOwner, isSearching } = this.props;
-    const currentOwnerName = (value || {}).name || (find(defaultOwners, value) || {}).name;
-    const { currentInput = currentOwnerName || '' } = this.state || {};
+    const currentName = (value || {}).name || (find(defaultOwners, value) || {}).name;
+    const { currentInput = currentName || '' } = this.state || {};
     return (
       <SearchDropdown
         items={(isEmpty(currentInput) ? defaultOwners : ownersFound) || []}
@@ -37,7 +37,8 @@ class OwnerSearch extends PureComponent {
         onChange={({ target }) => this.setState({ currentInput: target.value })}
         onSearch={val => !isEmpty(val) && dispatchSearchOwner(val)}
         onSelect={onChange}
-        {...{ value: { name: currentOwnerName, ...value }, onFocus, onBlur }}
+        {...(!isEmpty(currentInput) && { value: { name: currentName, ...value } })}
+        {...{ onFocus, onBlur }}
         isSearching={isSearching}
       />
     );

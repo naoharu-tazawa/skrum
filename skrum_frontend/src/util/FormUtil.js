@@ -4,13 +4,13 @@ import { reduxForm, Field } from 'redux-form';
 import { isObject } from 'lodash';
 import BasicModalDialog from '../dialogs/BasicModalDialog';
 
-export const withReduxForm = (WrappedForm, form, formProps = {}) =>
-  reduxForm({ form, ...formProps })(WrappedForm);
+export const withReduxForm = (WrappedForm, form, reduxFormProps = {}) =>
+  reduxForm({ form, ...reduxFormProps })(WrappedForm);
 
-export const withLoadedReduxForm = (WrappedForm, form, mapStateToInitialValues, formProps = {}) =>
+export const withLoadedReduxForm = (WrappedForm, form, stateToInitialValues, reduxFormProps = {}) =>
   connect(
-    state => ({ initialValues: mapStateToInitialValues(state) }),
-  )(withReduxForm(WrappedForm, form, formProps));
+    state => ({ initialValues: stateToInitialValues(state) }),
+  )(withReduxForm(WrappedForm, form, reduxFormProps));
 
 export const withBasicModalDialog = (WrappedForm, onClose, formProps = {}, dialogProps = {}) =>
   <BasicModalDialog {...{ onClose, ...dialogProps }}>

@@ -44,14 +44,20 @@ export const fetchOKRDetails = id =>
       .catch(({ message }) => dispatch(finishFetchOkrDetails(new Error(message))));
   };
 
-export const putOKR = (id, data) =>
+export const putOKR = (id, data, completion) =>
   (dispatch, getStatus) => {
     const status = getStatus();
     if (status.okr.isPutting) return Promise.resolve();
     dispatch(requestPutOkrDetails('data', { id: Number(id), ...data }));
     return putJson(`/okrs/${id}.json`, status)(null, data)
-      .then(json => dispatch(finishPutOkrDetails('data', json)))
-      .catch(({ message }) => dispatch(finishPutOkrDetails(new Error(message))));
+      .then((json) => {
+        dispatch(finishPutOkrDetails('data', json));
+        if (completion) completion({});
+      })
+      .catch(({ message }) => {
+        dispatch(finishPutOkrDetails(new Error(message)));
+        if (completion) completion({ error: message });
+      });
   };
 
 export function postKR(kr, completion) {

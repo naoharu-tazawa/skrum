@@ -22,7 +22,7 @@ class OKRSearch extends PureComponent {
   static propTypes = {
     timeframeId: PropTypes.number,
     okrs: PropTypes.arrayOf(okrPropType),
-    value: PropTypes.oneOfType([okrPropType, PropTypes.string]),
+    value: PropTypes.oneOfType([okrPropType, PropTypes.shape({}), PropTypes.string]),
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -41,7 +41,8 @@ class OKRSearch extends PureComponent {
         onChange={({ target }) => this.setState({ currentInput: target.value })}
         onSearch={val => !isEmpty(val) && dispatchSearchOkr(timeframeId, val)}
         onSelect={onChange}
-        {...{ value, onFocus, onBlur }}
+        {...(!isEmpty(currentInput) && value)}
+        {...{ onFocus, onBlur }}
         isSearching={isSearching}
       />
     );

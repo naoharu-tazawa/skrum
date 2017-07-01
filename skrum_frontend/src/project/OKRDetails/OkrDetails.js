@@ -28,7 +28,8 @@ export default class OkrDetails extends Component {
   render() {
     const { parentOkr = {}, okr, dispatchPutOKR, dispatchDeleteOkr } = this.props;
     const { isDeleteOkrModalOpen = false, isDeletingOkr = false } = this.state || {};
-    const { id, name, detail, unit, targetValue, achievedValue, achievementRate, owner } = okr;
+    const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
+      startDate, endDate, owner } = okr;
     return (
       <div>
         <div className={`${styles.content} ${styles.txt_top} ${styles.cf}`}>
@@ -78,8 +79,8 @@ export default class OkrDetails extends Component {
                 {achievedValue}／{targetValue}{unit}
               </div>
               <div className={`${styles.txt_date} ${styles.floatR}`}>
-                <span>開始日：<span>2017/01/01</span></span>
-                <span>期限日：<span>2017/03/31</span></span>
+                <span>開始日：<span>{startDate}</span></span>
+                <span>期限日：<span>{endDate}</span></span>
               </div>
             </div>
             <div className={`${styles.nav_info} ${styles.cf}`}>
