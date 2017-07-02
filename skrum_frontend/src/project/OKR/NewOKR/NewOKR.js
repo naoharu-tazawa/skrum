@@ -5,7 +5,7 @@ import { Field, getFormValues, SubmissionError } from 'redux-form';
 import { isEmpty, toNumber, toLower, partial } from 'lodash';
 import { okrPropTypes } from '../../OKRDetails/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
-import OwnerSearch from '../../OwnerSearch/OwnerSearch';
+import OwnerSearch, { ownerPropType } from '../../OwnerSearch/OwnerSearch';
 import TimeframesDropdown from '../../../components/TimeframesDropdown';
 import DatePickerInput from '../../../components/DatePickerInput';
 import OKRSearch from '../../OKRSearch/OKRSearch';
@@ -28,7 +28,7 @@ const validate = ({ owner, okrName, startDate, endDate } = {}) => {
   };
 };
 
-const topOKRDialogInitialValues = (state) => {
+const okrDialogInitialValues = (state) => {
   const { company = {} } = state.top.data || {};
   const { defaultDisclosureType } = company.policy || {};
   const { locationBeforeTransitions } = state.routing || {};
@@ -40,7 +40,7 @@ const topOKRDialogInitialValues = (state) => {
 const OkrDialogForm = withLoadedReduxForm(
   DialogForm,
   formName,
-  topOKRDialogInitialValues,
+  okrDialogInitialValues,
   { validate },
 );
 
@@ -52,10 +52,12 @@ const KRDialogForm = withLoadedReduxForm(
     const { pathname } = locationBeforeTransitions || {};
     const { subject, id } = explodePath(pathname);
     const owner = { type: getOwnerTypeId(subject), id };
-    return { owner, ...topOKRDialogInitialValues(state) };
+    return { owner, ...okrDialogInitialValues(state) };
   },
   { validate },
 );
+
+const ownerSearch = withItemisedReduxField(OwnerSearch, 'owner');
 
 class NewOKR extends Component {
 
@@ -66,6 +68,7 @@ class NewOKR extends Component {
     onClose: PropTypes.func,
     subject: PropTypes.string,
     id: PropTypes.number,
+    owner: ownerPropType,
     timeframeId: PropTypes.number,
     dispatchPostOkr: PropTypes.func,
     dispatchPostKR: PropTypes.func,
@@ -108,7 +111,7 @@ class NewOKR extends Component {
   }
 
   render() {
-    const { type, ownerName, parentOkr, timeframeId, onClose } = this.props;
+    const { type, owner, ownerName, parentOkr, timeframeId, onClose } = this.props;
     const { isSubmitting = false } = this.state || {};
     const disclosureTypes = [
       { value: '1', label: '全体' },
@@ -140,8 +143,7 @@ class NewOKR extends Component {
           <div className={styles.ownerTimeframesBox}>
             <div className={styles.ownerBox}>
               <span className={styles.label}>担当者</span>
-              {ownerName ? <span className={styles.label}>{ownerName}</span> :
-                withItemisedReduxField(OwnerSearch, 'owner')}
+              {ownerName ? <span className={styles.label}>{ownerName}</span> : ownerSearch}
               {type === 'Okr' && <span className={styles.label}>目標の時間枠</span>}
               {type === 'Okr' && withSelectReduxField(TimeframesDropdown, 'timeframeId',
                 { styleNames: {
@@ -181,9 +183,9 @@ class NewOKR extends Component {
             <span className={styles.label}>期限日</span>
             {withReduxField(DatePickerInput, 'endDate')}
           </div>
-          {type === 'Okr' && <div className={styles.alignmentBox}>
+          {type === 'Okr' && timeframeId && <div className={styles.alignmentBox}>
             <span className={styles.label}>紐づけ先検索</span>
-            {withItemisedReduxField(OKRSearch, 'alignment', { timeframeId })}
+            {withItemisedReduxField(OKRSearch, 'alignment', { owner, timeframeId, disabled: isEmpty(owner) })}
           </div>}
         </div>
       </Form>);
@@ -195,8 +197,8 @@ const mapStateToProps = (state) => {
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
   const { subject, id } = explodePath(pathname);
-  const { timeframeId } = getFormValues(formName)(state) || {};
-  return { subject, id, timeframeId };
+  const { owner, timeframeId } = getFormValues(formName)(state) || {};
+  return { subject, id, owner, timeframeId };
 };
 
 const mapDispatchToProps = (dispatch) => {
