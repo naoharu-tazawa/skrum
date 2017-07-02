@@ -6,10 +6,10 @@ import SearchDropdown from '../../components/SearchDropdown';
 import { mapOwner } from '../../util/OwnerUtil';
 import { searchOwner } from './action';
 
-const ownerPropType = PropTypes.shape({
-  id: PropTypes.number.isRequired,
+export const ownerPropType = PropTypes.shape({
+  id: PropTypes.number, // fixme .isRequired,
   name: PropTypes.string,
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string, // fixme .isRequired,
 });
 
 class OwnerSearch extends PureComponent {

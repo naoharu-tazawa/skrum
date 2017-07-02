@@ -25,3 +25,14 @@ export const searchOkr = (timeframeId, keyword) =>
       .then(json => dispatch(finishSearchOkr('okrsFound', json)))
       .catch(({ message }) => dispatch(finishSearchOkr(new Error(message))));
   };
+
+export const searchParentOkr = (ownerType, ownerId, timeframeId, keyword) =>
+  (dispatch, getStatus) => {
+    const status = getStatus();
+    if (status.okrsFound.isSearching) return Promise.resolve();
+    dispatch(requestSearchOkr());
+    const parameters = { wtype: ownerType, wid: ownerId, tfid: timeframeId, q: keyword };
+    return getJson('/parentokrs/search.json', status)(parameters)
+      .then(json => dispatch(finishSearchOkr('okrsFound', json)))
+      .catch(({ message }) => dispatch(finishSearchOkr(new Error(message))));
+  };

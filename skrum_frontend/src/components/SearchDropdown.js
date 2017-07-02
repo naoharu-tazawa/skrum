@@ -15,6 +15,7 @@ export default class SearchDropdown extends PureComponent {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
+    disabled: PropTypes.bool,
     isSearching: PropTypes.bool,
   };
 
@@ -23,7 +24,7 @@ export default class SearchDropdown extends PureComponent {
   }
 
   render() {
-    const { items, labelPropName, onSelect, value, onChange, onFocus, onBlur,
+    const { items, labelPropName, onSelect, value, onChange, onFocus, onBlur, disabled,
       isSearching } = this.props;
     const { currentInput = isObject(value) ? value[labelPropName] : value,
       isFocused = false } = this.state || {};
@@ -51,6 +52,7 @@ export default class SearchDropdown extends PureComponent {
           className: styles.input,
           onFocus: (e) => { this.setState({ isFocused: true }); onFocus(e); },
           onBlur: (e) => { this.setState({ isFocused: false }); onBlur(e); },
+          disabled,
         }}
         onChange={(e) => {
           const { target } = e;

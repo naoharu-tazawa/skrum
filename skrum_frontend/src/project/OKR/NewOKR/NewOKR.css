@@ -94,3 +94,13 @@
 }
 .timeframeCurrent {
 }
+input:disabled {
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 5px,
+      transparent 1px,
+      lightgray 6px /* determines size */
+    );
+}
