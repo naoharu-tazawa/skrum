@@ -44,6 +44,35 @@ class SearchController extends BaseController
     }
 
     /**
+     * 参加ユーザ検索
+     *
+     * @Rest\Get("/v1/joiningusers/search.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @return array
+     */
+    public function searchJoiningusersAction(Request $request): array
+    {
+        // リクエストパラメータを取得
+        $groupId = $request->get('gid');
+        $keyword = $request->get('q');
+
+        // リクエストパラメータのバリデーション
+        $groupIdErrors = $this->checkIntID($groupId);
+        if($groupIdErrors) throw new InvalidParameterException("グループIDが不正です", $groupIdErrors);
+        $keywordErrors = $this->checkSearchKeyword($keyword);
+        if($keywordErrors) throw new InvalidParameterException("検索キーワードが不正です", $keywordErrors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // ユーザ検索処理
+        $searchService = $this->getSearchService();
+        $userSearchDTOArray = $searchService->searchJoiningUser($auth, $groupId, $keyword);
+
+        return $userSearchDTOArray;
+    }
+
+    /**
      * ユーザ検索（ページング）
      *
      * @Rest\Get("/v1/users/pagesearch.{_format}")

@@ -52,6 +52,36 @@ class SearchService extends BaseService
     }
 
     /**
+     * 参加ユーザ検索
+     *
+     * @param Auth $auth 認証情報
+     * @param integer $groupId グループID
+     * @param string $keyword 検索ワード
+     * @return array
+     */
+    public function searchJoiningUser(Auth $auth, int $groupId, string $keyword): array
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // ユーザ検索
+        $mUserRepos = $this->getMUserRepository();
+        $mUserArray = $mUserRepos->searchJoiningUser($groupId, $escapedKeyword, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        $userSearchDTOArray = array();
+        foreach ($mUserArray as $mUser) {
+            $userSearchDTO = new UserSearchDTO();
+            $userSearchDTO->setUserId($mUser['userId']);
+            $userSearchDTO->setUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
+
+            $userSearchDTOArray[] = $userSearchDTO;
+        }
+
+        return $userSearchDTOArray;
+    }
+
+    /**
      * ユーザ検索（ページング）
      *
      * @param Auth $auth 認証情報

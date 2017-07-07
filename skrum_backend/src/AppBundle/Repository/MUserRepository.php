@@ -68,6 +68,41 @@ SQL;
     }
 
     /**
+     * 参加ユーザ検索
+     *
+     * @param integer $groupId グループID
+     * @param string $keyword 検索ワード
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function searchJoiningUser(int $groupId, string $keyword, int $companyId): array
+    {
+        $sql = <<<SQL
+        SELECT m1_.userId, m1_.lastName, m1_.firstName
+        FROM (
+            SELECT m0_.user_id AS userId, m0_.last_name AS lastName, m0_.first_name AS firstName, CONCAT(m0_.last_name, m0_.first_name) AS name
+            FROM m_user m0_
+            WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
+            ) AS m1_
+        LEFT OUTER JOIN (
+            SELECT DISTINCT t0_.user_id, t0_.deleted_at
+            FROM t_group_member t0_
+            WHERE t0_.group_id = 13
+            ) t1_ ON (m1_.userId = t1_.user_id) AND (t1_.deleted_at IS NULL)
+        WHERE t1_.user_id is NULL AND m1_.name LIKE :userName;
+SQL;
+
+        $params['companyId'] = $companyId;
+        $params['archivedFlg'] = DBConstant::FLG_FALSE;
+        $params['userName'] = $keyword . '%';
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * ユーザ検索（ページング）検索結果数を取得
      *
      * @param string $keyword 検索ワード

@@ -10,32 +10,32 @@ produces:
 basePath: /v1
 
 paths:
-  /joiningusers/search.json?{gid}&{q}:
-    get:
-      description: 参加ユーザ検索
+  /groups/{groupId}/leaders/{userId}.json:
+    put:
+      description: グループリーダー変更
       parameters:
         -
-          name: gid
+          name: groupId
           in: path
           type: string
-          description: グループID（このグループに所属するメンバー以外を検索）
+          description: グループID
           required: true
         -
-          name: q
+          name: userId
           in: path
           type: string
-          description: 検索ワード
+          description: ユーザID
           required: true
       responses:
         200:
-          description: 検索結果
+          description: 成功
           schema:
             type: object
             properties:
-              userId:
-                type: integer
-              userName:
+              result:
                 type: string
+            required:
+              - result
         400:
           description: JSONスキーマ不正
         409:
