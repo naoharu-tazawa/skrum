@@ -44,13 +44,13 @@ class SearchController extends BaseController
     }
 
     /**
-     * 参加ユーザ検索
+     * 追加ユーザ検索
      *
-     * @Rest\Get("/v1/joiningusers/search.{_format}")
+     * @Rest\Get("/v1/additionalusers/search.{_format}")
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function searchJoiningusersAction(Request $request): array
+    public function searchAdditionalusersAction(Request $request): array
     {
         // リクエストパラメータを取得
         $groupId = $request->get('gid');
@@ -67,7 +67,7 @@ class SearchController extends BaseController
 
         // ユーザ検索処理
         $searchService = $this->getSearchService();
-        $userSearchDTOArray = $searchService->searchJoiningUser($auth, $groupId, $keyword);
+        $userSearchDTOArray = $searchService->searchAdditionalUser($auth, $groupId, $keyword);
 
         return $userSearchDTOArray;
     }
@@ -128,13 +128,13 @@ class SearchController extends BaseController
     }
 
     /**
-     * 参加グループ検索
+     * 追加グループ検索
      *
-     * @Rest\Get("/v1/joininggroups/search.{_format}")
+     * @Rest\Get("/v1/additionalgroups/search.{_format}")
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    public function searchJoinningroupAction(Request $request): array
+    public function searchAdditionalgroupAction(Request $request): array
     {
         // リクエストパラメータを取得
         $userId = $request->get('uid');
@@ -151,7 +151,7 @@ class SearchController extends BaseController
 
         // グループ検索処理
         $searchService = $this->getSearchService();
-        $groupSearchDTOArray = $searchService->searchJoiningGroup($auth, $userId, $keyword);
+        $groupSearchDTOArray = $searchService->searchAdditionalGroup($auth, $userId, $keyword);
 
         return $groupSearchDTOArray;
     }
@@ -233,6 +233,35 @@ class SearchController extends BaseController
         // グループ検索処理
         $searchService = $this->getSearchService();
         $groupTreeSearchDTOArray = $searchService->searchGroupTree($auth, $keyword);
+
+        return $groupTreeSearchDTOArray;
+    }
+
+    /**
+     * 追加所属先グループ検索
+     *
+     * @Rest\Get("/v1/additionalpaths/search.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @return array
+     */
+    public function searchAdditionalpathsAction(Request $request): array
+    {
+        // リクエストパラメータを取得
+        $groupId = $request->get('gid');
+        $keyword = $request->get('q');
+
+        // リクエストパラメータのバリデーション
+        $groupIdErrors = $this->checkIntID($groupId);
+        if($groupIdErrors) throw new InvalidParameterException("グループIDが不正です", $groupIdErrors);
+        $keywordErrors = $this->checkSearchKeyword($keyword);
+        if($keywordErrors) throw new InvalidParameterException("検索キーワードが不正です", $keywordErrors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ検索処理
+        $searchService = $this->getSearchService();
+        $groupTreeSearchDTOArray = $searchService->searchAdditionalGroupTree($auth, $groupId, $keyword);
 
         return $groupTreeSearchDTOArray;
     }

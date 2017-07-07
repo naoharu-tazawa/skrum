@@ -89,14 +89,14 @@ class MGroupRepository extends BaseRepository
     }
 
     /**
-     * 参加グループ検索
+     * 追加グループ検索
      *
      * @param integer $userId ユーザID
      * @param string $keyword 検索ワード
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function searchJoiningGroup(int $userId, string $keyword, int $companyId): array
+    public function searchAdditionalGroup(int $userId, string $keyword, int $companyId): array
     {
         $sql = <<<SQL
         SELECT m0_.group_id AS groupId, m0_.group_name AS groupName
@@ -198,6 +198,33 @@ SQL;
             ->setParameter('companyId', $companyId)
             ->setParameter('companyFlg', DBConstant::FLG_FALSE)
             ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
+            ->setParameter('groupName', $keyword . '%');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 追加グループツリーパス検索
+     *
+     * @param integer $groupId グループID
+     * @param string $keyword 検索ワード
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function searchAdditionalGroupTree(int $groupId, string $keyword, int $companyId): array
+    {
+        $qb = $this->createQueryBuilder('mg');
+        $qb->select('tgt.id', 'tgt.groupTreePathName')
+            ->innerJoin('AppBundle:TGroupTree', 'tgt', 'WITH', 'mg.groupId = tgt.group')
+            ->where('mg.company = :companyId')
+            ->andWhere('mg.companyFlg = :companyFlg')
+            ->andWhere('mg.archivedFlg = :archivedFlg')
+            ->andWhere('mg.groupId <> :groupId')
+            ->andWhere('mg.groupName LIKE :groupName')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('companyFlg', DBConstant::FLG_FALSE)
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
+            ->setParameter('groupId', $groupId)
             ->setParameter('groupName', $keyword . '%');
 
         return $qb->getQuery()->getResult();

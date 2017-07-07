@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /joininggroups/search.json?{uid}&{q}:
+  /additionalgroups/search.json?{uid}&{q}:
     get:
-      description: 参加グループ検索
+      description: 追加グループ検索
       parameters:
         -
           name: uid

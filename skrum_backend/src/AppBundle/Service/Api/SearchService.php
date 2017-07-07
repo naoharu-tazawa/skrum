@@ -52,21 +52,21 @@ class SearchService extends BaseService
     }
 
     /**
-     * 参加ユーザ検索
+     * 追加ユーザ検索
      *
      * @param Auth $auth 認証情報
      * @param integer $groupId グループID
      * @param string $keyword 検索ワード
      * @return array
      */
-    public function searchJoiningUser(Auth $auth, int $groupId, string $keyword): array
+    public function searchAdditionalUser(Auth $auth, int $groupId, string $keyword): array
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
 
         // ユーザ検索
         $mUserRepos = $this->getMUserRepository();
-        $mUserArray = $mUserRepos->searchJoiningUser($groupId, $escapedKeyword, $auth->getCompanyId());
+        $mUserArray = $mUserRepos->searchAdditionalUser($groupId, $escapedKeyword, $auth->getCompanyId());
 
         // DTOに詰め替える
         $userSearchDTOArray = array();
@@ -149,21 +149,21 @@ class SearchService extends BaseService
     }
 
     /**
-     * 参加グループ検索
+     * 追加グループ検索
      *
      * @param Auth $auth 認証情報
      * @param integer $userId ユーザID
      * @param string $keyword 検索ワード
      * @return array
      */
-    public function searchJoiningGroup(Auth $auth, int $userId, string $keyword): array
+    public function searchAdditionalGroup(Auth $auth, int $userId, string $keyword): array
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
 
         // 参加グループ検索
         $mGroupRepos = $this->getMGroupRepository();
-        $groupInfoArray = $mGroupRepos->searchJoiningGroup($userId, $escapedKeyword, $auth->getCompanyId());
+        $groupInfoArray = $mGroupRepos->searchAdditionalGroup($userId, $escapedKeyword, $auth->getCompanyId());
 
         // DTOに詰め替える
         $groupSearchDTOArray = array();
@@ -288,6 +288,36 @@ class SearchService extends BaseService
         // グループ検索
         $mGroupRepos = $this->getMGroupRepository();
         $tGroupTreeArray = $mGroupRepos->searchGroupTree($escapedKeyword, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        $groupTreeSearchDTOArray = array();
+        foreach ($tGroupTreeArray as $tGroupTree) {
+            $groupTreeSearchDTO = new GroupTreeSearchDTO();
+            $groupTreeSearchDTO->setGroupPathId($tGroupTree['id']);
+            $groupTreeSearchDTO->setGroupPathName($tGroupTree['groupTreePathName']);
+
+            $groupTreeSearchDTOArray[] = $groupTreeSearchDTO;
+        }
+
+        return $groupTreeSearchDTOArray;
+    }
+
+    /**
+     * 追加グループツリーパス検索
+     *
+     * @param Auth $auth 認証情報
+     * @param integer $groupId グループID
+     * @param string $keyword 検索ワード
+     * @return array
+     */
+    public function searchAdditionalGroupTree(Auth $auth, int $groupId, string $keyword): array
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // 追加グループ検索
+        $mGroupRepos = $this->getMGroupRepository();
+        $tGroupTreeArray = $mGroupRepos->searchAdditionalGroupTree($groupId, $escapedKeyword, $auth->getCompanyId());
 
         // DTOに詰め替える
         $groupTreeSearchDTOArray = array();

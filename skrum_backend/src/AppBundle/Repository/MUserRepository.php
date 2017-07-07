@@ -68,14 +68,14 @@ SQL;
     }
 
     /**
-     * 参加ユーザ検索
+     * 追加ユーザ検索
      *
      * @param integer $groupId グループID
      * @param string $keyword 検索ワード
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function searchJoiningUser(int $groupId, string $keyword, int $companyId): array
+    public function searchAdditionalUser(int $groupId, string $keyword, int $companyId): array
     {
         $sql = <<<SQL
         SELECT m1_.userId, m1_.lastName, m1_.firstName
