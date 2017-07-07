@@ -6,7 +6,6 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\InvalidParameterException;
-use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Api\ResponseDTO\GroupPageSearchDTO;
 use AppBundle\Api\ResponseDTO\UserPageSearchDTO;
 use AppBundle\Utils\DBConstant;
@@ -95,6 +94,35 @@ class SearchController extends BaseController
         // グループ検索処理
         $searchService = $this->getSearchService();
         $groupSearchDTOArray = $searchService->searchGroup($auth, $keyword);
+
+        return $groupSearchDTOArray;
+    }
+
+    /**
+     * 参加グループ検索
+     *
+     * @Rest\Get("/v1/joininggroups/search.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @return array
+     */
+    public function searchJoinningroupAction(Request $request): array
+    {
+        // リクエストパラメータを取得
+        $userId = $request->get('uid');
+        $keyword = $request->get('q');
+
+        // リクエストパラメータのバリデーション
+        $userIdErrors = $this->checkIntID($userId);
+        if($userIdErrors) throw new InvalidParameterException("ユーザIDが不正です", $userIdErrors);
+        $keywordErrors = $this->checkSearchKeyword($keyword);
+        if($keywordErrors) throw new InvalidParameterException("検索キーワードが不正です", $keywordErrors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ検索処理
+        $searchService = $this->getSearchService();
+        $groupSearchDTOArray = $searchService->searchJoiningGroup($auth, $userId, $keyword);
 
         return $groupSearchDTOArray;
     }

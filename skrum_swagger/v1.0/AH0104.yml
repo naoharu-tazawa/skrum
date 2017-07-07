@@ -10,49 +10,31 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/members.json?{tfid}:
-    post:
-      description: グループメンバー追加
+  /joininggroups/search.json?{uid}&{q}:
+    get:
+      description: 参加グループ検索
       parameters:
         -
-          name: groupId
+          name: uid
           in: path
           type: string
-          description: グループID
+          description: ユーザID（このユーザが所属するグループ以外を検索）
           required: true
         -
-          name: timeframeId
+          name: q
           in: path
           type: string
-          description: タイムフレームID
+          description: 検索ワード
           required: true
-        -
-          name: JsonRequest
-          in: body
-          description: ユーザID
-          required: true
-          schema:
-            type: object
-            properties:
-              userId:
-                type: integer
-            required:
-              - userId
       responses:
         200:
-          description: 成功
+          description: 検索結果
           schema:
             type: object
             properties:
-              userId:
+              groupId:
                 type: integer
-              name:
-                type: string
-              position:
-                type: string
-              achievementRate:
-                type: number
-              lastLogin:
+              groupName:
                 type: string
         400:
           description: JSONスキーマ不正

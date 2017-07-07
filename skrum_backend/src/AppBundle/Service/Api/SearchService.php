@@ -103,14 +103,44 @@ class SearchService extends BaseService
 
         // グループ検索
         $mGroupRepos = $this->getMGroupRepository();
-        $mGroupArray = $mGroupRepos->searchGroup($escapedKeyword, $auth->getCompanyId());
+        $groupInfoArray = $mGroupRepos->searchGroup($escapedKeyword, $auth->getCompanyId());
 
         // DTOに詰め替える
         $groupSearchDTOArray = array();
-        foreach ($mGroupArray as $mGroup) {
+        foreach ($groupInfoArray as $groupInfo) {
             $groupSearchDTO = new GroupSearchDTO();
-            $groupSearchDTO->setGroupId($mGroup['groupId']);
-            $groupSearchDTO->setGroupName($mGroup['groupName']);
+            $groupSearchDTO->setGroupId($groupInfo['groupId']);
+            $groupSearchDTO->setGroupName($groupInfo['groupName']);
+
+            $groupSearchDTOArray[] = $groupSearchDTO;
+        }
+
+        return $groupSearchDTOArray;
+    }
+
+    /**
+     * 参加グループ検索
+     *
+     * @param Auth $auth 認証情報
+     * @param integer $userId ユーザID
+     * @param string $keyword 検索ワード
+     * @return array
+     */
+    public function searchJoiningGroup(Auth $auth, int $userId, string $keyword): array
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // 参加グループ検索
+        $mGroupRepos = $this->getMGroupRepository();
+        $groupInfoArray = $mGroupRepos->searchJoiningGroup($userId, $escapedKeyword, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        $groupSearchDTOArray = array();
+        foreach ($groupInfoArray as $groupInfo) {
+            $groupSearchDTO = new GroupSearchDTO();
+            $groupSearchDTO->setGroupId($groupInfo['groupId']);
+            $groupSearchDTO->setGroupName($groupInfo['groupName']);
 
             $groupSearchDTOArray[] = $groupSearchDTO;
         }
