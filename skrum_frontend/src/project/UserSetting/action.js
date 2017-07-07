@@ -22,30 +22,22 @@ const {
   Action.REQUEST_POST_INVITE,
 );
 
-export function fetchCompanyRoles(companyId) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.userSetting.isFetching) return Promise.resolve();
+export const fetchCompanyRoles = companyId =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.userSetting.isFetching) return Promise.resolve();
     dispatch(requestFetchCompanyRoles());
-    return getJson(`/companies/${companyId}/roles.json`, status)()
+    return getJson(`/companies/${companyId}/roles.json`, state)()
       .then(json => dispatch(finishFetchCompanyRoles('roles', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishFetchCompanyRoles(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finishFetchCompanyRoles(new Error(message))));
   };
-}
 
-export function postInvite(emailAddress, roleAssignmentId) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.userSetting.isPosting) return Promise.resolve();
+export const postInvite = (emailAddress, roleAssignmentId) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.userSetting.isPosting) return Promise.resolve();
     dispatch(requestPostInvite());
-    return postJson('/invite.json', status)(null, { emailAddress, roleAssignmentId })
+    return postJson('/invite.json', state)(null, { emailAddress, roleAssignmentId })
       .then(json => dispatch(finishPostInvite('data', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishPostInvite(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finishPostInvite(new Error(message))));
   };
-}

@@ -56,6 +56,7 @@
   "dependencies": {
     "aphrodite": "^1.1.0",
     "d3": "^4.9.1",
+    "focus-trap-react": "^3.0.3",
     "lodash": "^4.17.2",
     "moment": "^2.17.1",
     "prop-types": "^15.5.8",

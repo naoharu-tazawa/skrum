@@ -104,7 +104,7 @@ class NewOKR extends Component {
     };
     const dispatcher = okrType === '1' ? partial(dispatchPostOkr, subject, isOwnerCurrent) : dispatchPostKR;
     this.setState({ isSubmitting: true }, () =>
-      dispatcher(okr, ({ error }) =>
+      dispatcher(okr).then(({ error }) =>
         this.setState({ isSubmitting: false }, () => !error && onClose()),
       ),
     );
@@ -185,7 +185,8 @@ class NewOKR extends Component {
           </div>
           {type === 'Okr' && timeframeId && <div className={styles.alignmentBox}>
             <span className={styles.label}>紐づけ先検索</span>
-            {withItemisedReduxField(OKRSearch, 'alignment', { owner, timeframeId, disabled: isEmpty(owner) })}
+            {withItemisedReduxField(OKRSearch, 'alignment',
+              { owner, timeframeId, disabled: !ownerName && isEmpty(owner) })}
           </div>}
         </div>
       </Form>);
@@ -202,10 +203,10 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const dispatchPostOkr = (subject, id, entry, completion) =>
-    dispatch(postOkr(subject, id, entry, completion));
-  const dispatchPostKR = (entry, completion) =>
-    dispatch(postKR(entry, completion));
+  const dispatchPostOkr = (subject, id, entry) =>
+    dispatch(postOkr(subject, id, entry));
+  const dispatchPostKR = entry =>
+    dispatch(postKR(entry));
   return { dispatchPostOkr, dispatchPostKR };
 };
 

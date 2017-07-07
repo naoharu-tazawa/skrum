@@ -79,11 +79,8 @@ export const handleResponse = (data) => {
     });
 };
 
-export const handleError = (error) => {
-  const exception = {
-    message: error.message,
-    detail: error.stack,
-  };
+export const handleError = ({ message, stack }) => {
+  const exception = { message, detail: stack };
   throw exception;
 };
 

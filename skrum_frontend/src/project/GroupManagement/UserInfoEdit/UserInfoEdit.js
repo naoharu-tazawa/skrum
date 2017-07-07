@@ -37,13 +37,15 @@ export default class UserInfoEdit extends Component {
               <span className={styles.user_name_l}>
                 <InlineTextInput
                   value={lastName}
-                  onSubmit={value => dispatchPutUser(userId, { lastName: value })}
+                  onSubmit={(value, completion) =>
+                    dispatchPutUser(userId, { lastName: value }).then(completion)}
                 />
               </span>
               <span className={styles.user_name_f}>
                 <InlineTextInput
                   value={firstName}
-                  onSubmit={value => dispatchPutUser(userId, { firstName: value })}
+                  onSubmit={(value, completion) =>
+                    dispatchPutUser(userId, { firstName: value }).then(completion)}
                 />
               </span>
             </h2>
@@ -58,7 +60,8 @@ export default class UserInfoEdit extends Component {
                     <div className={styles.info_data}>
                       <InlineTextInput
                         value={position}
-                        onSubmit={value => dispatchPutUser(userId, { position: value })}
+                        onSubmit={(value, completion) =>
+                          dispatchPutUser(userId, { position: value }).then(completion)}
                       />
                     </div>
                   </td>
@@ -69,7 +72,8 @@ export default class UserInfoEdit extends Component {
                     <div className={styles.info_data}>
                       <InlineTextInput
                         value={phoneNumber}
-                        onSubmit={value => dispatchPutUser(userId, { phoneNumber: value })}
+                        onSubmit={(value, completion) =>
+                          dispatchPutUser(userId, { phoneNumber: value }).then(completion)}
                       />
                     </div>
                   </td>
@@ -80,7 +84,8 @@ export default class UserInfoEdit extends Component {
                     <div className={styles.info_data}>
                       <InlineTextInput
                         value={emailAddress}
-                        onSubmit={value => dispatchPutUser(userId, { emailAddress: value })}
+                        onSubmit={(value, completion) =>
+                          dispatchPutUser(userId, { emailAddress: value }).then(completion)}
                       />
                     </div>
                   </td>

@@ -34,7 +34,8 @@ export default class TimeframeBar extends Component {
           <div className={styles.td}>
             <InlineTextInput
               value={name}
-              onSubmit={value => dispatchPutTimeframe(id, { timeframeName: value })}
+              onSubmit={(value, completion) =>
+                dispatchPutTimeframe(id, { timeframeName: value }).then(completion)}
             />
           </div>
         </td>

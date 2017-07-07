@@ -16,16 +16,12 @@ const {
   Action.REQUEST_PUT_USER_CHANGEPASSWORD,
 );
 
-export function putUserChangepassword(userId, currentPassword, newPassword) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.setting.isProcessing) return Promise.resolve();
+export const putUserChangepassword = (userId, currentPassword, newPassword) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.setting.isProcessing) return Promise.resolve();
     dispatch(requestPutUserChangepassword());
-    return putJson(`/users/${userId}/changepassword.json`, status)(null, { currentPassword, newPassword })
+    return putJson(`/users/${userId}/changepassword.json`, state)(null, { currentPassword, newPassword })
       .then(json => dispatch(finishPutUserChangepassword('data', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishPutUserChangepassword(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finishPutUserChangepassword(new Error(message))));
   };
-}

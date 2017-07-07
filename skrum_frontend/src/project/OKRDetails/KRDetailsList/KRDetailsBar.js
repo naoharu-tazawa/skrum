@@ -39,13 +39,15 @@ export default class KRDetailsBar extends Component {
           <InlineTextArea
             value={name}
             maxLength={120}
-            onSubmit={value => dispatchPutOKR(id, { okrName: value })}
+            onSubmit={(value, completion) =>
+              dispatchPutOKR(id, { okrName: value }).then(completion)}
           />
           <div className={styles.detail}>
             <InlineTextArea
               value={detail}
               maxLength={250}
-              onSubmit={value => dispatchPutOKR(id, { okrDetail: value })}
+              onSubmit={(value, completion) =>
+                dispatchPutOKR(id, { okrDetail: value }).then(completion)}
             />
           </div>
         </div>
@@ -90,7 +92,7 @@ export default class KRDetailsBar extends Component {
             prompt="こちらのサブ目標を削除しますか?"
             onDelete={() =>
               this.setState({ isDeletingKR: true }, () =>
-                dispatchDeleteKR(id, ({ error }) =>
+                dispatchDeleteKR(id).then(({ error }) =>
                   error && this.setState({ isDeletingKR: false })),
               )
             }

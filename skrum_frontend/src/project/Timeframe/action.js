@@ -22,26 +22,22 @@ const {
   Action.REQUEST_FETCH_COMPANY_TIMEFRAMES,
 );
 
-export function fetchCompanyTimeframes(companyId) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.timeframeSetting.isFetching) return Promise.resolve();
+export const fetchCompanyTimeframes = companyId =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.timeframeSetting.isFetching) return Promise.resolve();
     dispatch(requestFetchCompanyTimeframes());
-    return getJson(`/companies/${companyId}/timeframedetails.json`, status)()
+    return getJson(`/companies/${companyId}/timeframedetails.json`, state)()
       .then(json => dispatch(finishFetchCompanyTimeframes('data', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishFetchCompanyTimeframes(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finishFetchCompanyTimeframes(new Error(message))));
   };
-}
 
 export const putTimeframe = (id, data) =>
-  (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.timeframeSetting.isPutting) return Promise.resolve();
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.timeframeSetting.isPutting) return Promise.resolve();
     dispatch(requestPutTimeframe('data', { id: Number(id), ...data }));
-    return putJson(`/timeframes/${id}.json`, status)(null, data)
+    return putJson(`/timeframes/${id}.json`, state)(null, data)
       .then(json => dispatch(finishPutTimeframe('data', json)))
       .catch(({ message }) => dispatch(finishPutTimeframe(new Error(message))));
   };

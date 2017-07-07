@@ -16,16 +16,12 @@ const {
   Action.REQUEST_FETCH_COMPANY_ROLES,
 );
 
-export function fetchCompanyRoles(companyId) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.userSetting.isFetching) return Promise.resolve();
+export const fetchCompanyRoles = companyId =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.userSetting.isFetching) return Promise.resolve();
     dispatch(requestFetchCompanyRoles());
-    return getJson(`/companies/${companyId}/roles.json`, status)()
+    return getJson(`/companies/${companyId}/roles.json`, state)()
       .then(json => dispatch(finishFetchCompanyRoles('roles', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishFetchCompanyRoles(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finishFetchCompanyRoles(new Error(message))));
   };
-}

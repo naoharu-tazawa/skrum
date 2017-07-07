@@ -1,4 +1,5 @@
 import { Action } from './action';
+import { mergeUpdateById } from '../../util/ActionUtil';
 
 export default (state = {
   user: {},
@@ -50,6 +51,17 @@ export default (state = {
       const { [subject]: basics } = state;
       const okrs = basics.okrs.filter(({ okrId }) => id !== okrId);
       return { ...state, [subject]: { ...basics, okrs }, isDeletingOkr: false, error: null };
+    }
+
+    case Action.SYNC_OKR_DETAILS: {
+      const { payload, error } = action;
+      if (error) {
+        return state;
+      }
+      const { subject, id, ...data } = payload.syncOkr;
+      const { [subject]: basics } = state;
+      const okrs = basics.okrs.map(okr => mergeUpdateById(okr, 'okrId', data, id));
+      return { ...state, [subject]: { ...basics, okrs } };
     }
 
     default:

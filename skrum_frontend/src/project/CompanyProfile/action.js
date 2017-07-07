@@ -22,30 +22,22 @@ const {
   Action.REQUEST_FETCH_COMPANY,
 );
 
-export function fetchCompany(companyId) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.companySetting.isFetching) return Promise.resolve();
+export const fetchCompany = companyId =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.companySetting.isFetching) return Promise.resolve();
     dispatch(requestFetchCompany());
-    return getJson(`/companies/${companyId}.json`, status)()
+    return getJson(`/companies/${companyId}.json`, state)()
       .then(json => dispatch(finishFetchCompany('data', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishFetchCompany(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finishFetchCompany(new Error(message))));
   };
-}
 
-export function putCompany(id, data) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.companySetting.isPutting) return Promise.resolve();
+export const putCompany = (id, data) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.companySetting.isPutting) return Promise.resolve();
     dispatch(requestPutCompany('data', { id: Number(id), ...data }));
-    return putJson(`/companies/${id}.json`, status)(null, data)
+    return putJson(`/companies/${id}.json`, state)(null, data)
       .then(json => dispatch(finishPutCompany('data', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishPutCompany(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finishPutCompany(new Error(message))));
   };
-}

@@ -8,6 +8,7 @@ import OkrProgressChart from './OkrProgressChart';
 import NewOKR from '../OKR/NewOKR/NewOKR';
 import { withBasicModalDialog } from '../../util/FormUtil';
 import { fetchOKRDetails, putOKR, deleteKR } from './action';
+import { syncOkr } from '../OKR/action';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
 import { mapOKR, mapKeyResult } from '../../util/OKRUtil';
 import styles from './OKRDetailsContainer.css';
@@ -15,6 +16,7 @@ import styles from './OKRDetailsContainer.css';
 class OKRDetailsContainer extends Component {
 
   static propTypes = {
+    subject: PropTypes.string.isRequired,
     isFetching: PropTypes.bool,
     error: PropTypes.shape({ message: PropTypes.string.isRequired }),
     parentOkr: okrPropTypes,
@@ -51,12 +53,13 @@ class OKRDetailsContainer extends Component {
   }
 
   render() {
-    const { isFetching, error, parentOkr, okr, keyResults = [], progressSeries = [],
+    const { isFetching, /* error, */ parentOkr, okr, keyResults = [], progressSeries = [],
       dispatchPutOKR, dispatchDeleteOkr, dispatchDeleteKR } = this.props;
     const { addKRModal = null } = this.state || {};
-    if (error) {
-      return <div className={`${styles.container} ${styles.error}`} >{error.message}</div>;
-    }
+    // TODO use toastr
+    // if (error) {
+    //   return <div className={`${styles.container} ${styles.error}`} >{error.message}</div>;
+    // }
     if (isFetching || !okr) {
       return null; // <div className={`${styles.container} ${styles.spinner}`} />;
     }
@@ -102,13 +105,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, { subject }) => {
   const dispatchFetchOKRDetails = id =>
     dispatch(fetchOKRDetails(id));
-  const dispatchPutOKR = (id, data, completion) =>
-    dispatch(putOKR(id, data, completion));
-  const dispatchDeleteKR = (id, completion) =>
-    dispatch(deleteKR(id, completion));
+  const dispatchPutOKR = (id, data) =>
+    dispatch(putOKR(id, data)).then(result => dispatch(syncOkr(subject, result)));
+  const dispatchDeleteKR = id =>
+    dispatch(deleteKR(id));
   return {
     dispatchFetchOKRDetails,
     dispatchPutOKR,

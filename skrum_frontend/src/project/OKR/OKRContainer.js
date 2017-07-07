@@ -148,7 +148,7 @@ class OKRContainer extends Component {
               前のOKR
             </Link>
           </div>
-          <OKRDetailsContainer {...{ dispatchDeleteOkr }} />
+          <OKRDetailsContainer {...{ subject, dispatchDeleteOkr }} />
         </div>
         <article style={showDetails ? { display: 'none' } : {}}>
           <section className={`${styles.overall_info} ${styles.cf}`}>
@@ -218,8 +218,8 @@ const mapDispatchToProps = (dispatch, { subject }) => {
     dispatch(fetchGroupBasics(groupId, timeframeId));
   const dispatchFetchCompanyBasics = (companyId, timeframeId) =>
     dispatch(fetchCompanyBasics(companyId, timeframeId));
-  const dispatchDeleteOkr = (id, completion) =>
-    dispatch(deleteOkr(subject, id, completion));
+  const dispatchDeleteOkr = id =>
+    dispatch(deleteOkr(subject, id));
   return {
     dispatchFetchUserBasics,
     dispatchFetchGroupBasics,

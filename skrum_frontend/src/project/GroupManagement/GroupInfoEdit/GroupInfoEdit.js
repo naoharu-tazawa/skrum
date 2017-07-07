@@ -44,7 +44,8 @@ export default class GroupInfoEdit extends Component {
             <h2 className={styles.team_name}>
               <InlineTextInput
                 value={name}
-                onSubmit={value => dispatchPutGroup(groupId, { name: value })}
+                onSubmit={(value, completion) =>
+                  dispatchPutGroup(groupId, { name: value }).then(completion)}
               />
             </h2>
             <nav className={styles.breads}>
@@ -56,7 +57,8 @@ export default class GroupInfoEdit extends Component {
               <div className={styles.txt}>
                 <InlineTextArea
                   value={mission}
-                  onSubmit={value => dispatchPutGroup(groupId, { mission: value })}
+                  onSubmit={(value, completion) =>
+                    dispatchPutGroup(groupId, { mission: value }).then(completion)}
                 />
               </div>
             </div>

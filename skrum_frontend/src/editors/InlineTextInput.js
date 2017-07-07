@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import FocusTrap from 'focus-trap-react';
 import styles from './InlineText.css';
 
 export default class InlineTextInput extends PureComponent {
@@ -13,58 +14,77 @@ export default class InlineTextInput extends PureComponent {
     onSubmit: PropTypes.func,
   };
 
-  state = {};
-
   componentWillReceiveProps() {
-    this.setState({ value: undefined });
+    // this.setState({ value: undefined });
   }
 
-  setEditingState(editing) {
-    this.setState({ editing });
+  setEditing() {
+    this.setState({ isEditing: true, submitValue: undefined, submitError: undefined });
   }
 
-  submitChange() {
+  submit() {
     const { onSubmit, value: defaultValue = '' } = this.props;
-    const { value } = this.state;
-    this.setEditingState(false);
-    return value !== undefined && value !== defaultValue && onSubmit && onSubmit(value);
+    const { value } = this.state || {};
+    if (value !== undefined && value !== defaultValue && onSubmit) {
+      this.setState({ isEditing: false, submitValue: value, submitError: undefined }, () =>
+        onSubmit(value, ({ error, payload }) =>
+          this.setState({ submitValue: error ? value : undefined, submitError: payload.message })));
+    } else {
+      this.setState({ isEditing: false });
+    }
   }
 
-  cancelChange() {
-    const { value = '' } = this.props;
-    this.input.value = value;
-    this.setEditingState(false);
-    this.setState({ value: undefined });
+  cancel() {
+    this.setState({ isEditing: false, value: undefined });
   }
 
   render() {
     const { type = 'text', value = '', readonly = false, maxLength } = this.props;
-    const { editing = false } = this.state;
+    const { isEditing = false, submitValue, submitError } = this.state || {};
+    const displayValue = submitValue !== undefined ? submitValue : value;
     return (
       <span
-        className={`${styles.editor} ${readonly && styles.readonly} ${editing && styles.editing}`}
-        onMouseDown={() => !readonly && this.setEditingState(true)}
+        className={`
+          ${styles.editor}
+          ${readonly && styles.readonly}
+          ${isEditing && styles.editing}
+          ${submitValue !== undefined && !submitError && styles.submitting}
+          ${submitError && styles.error}
+        `}
+        onMouseUp={() => !readonly && !submitValue && this.setEditing()}
+        title={submitError}
       >
-        <span className={styles.value}>{value === '' ? <span>&nbsp;</span> : value}</span>
-        {!readonly && !editing &&
-          <span className={styles.editButton} onMouseDown={() => this.setEditingState(true)} />}
-        {!readonly && <div className={styles.inputArea}>
-          <input
-            ref={(ref) => { this.input = ref; }}
-            type={type}
-            defaultValue={value}
-            {...{ maxLength }}
-            onChange={e => this.setState({ value: e.target.value })}
-            onBlur={() => this.submitChange()}
-            onKeyDown={e => e.key === 'Escape' && this.cancelChange()}
-            onKeyPress={e => e.key === 'Enter' && this.submitChange()}
-          />
-          {editing && (
-            <div className={styles.saveOptions}>
-              <button className={styles.submit} onClick={() => this.submitChange()}>&nbsp;</button>
-              <button className={styles.cancel} onClick={() => this.cancelChange()}>&nbsp;</button>
-            </div>)}
-        </div>}
+        <span className={styles.value}>
+          {displayValue === '' ? <span>&nbsp;</span> : displayValue}
+        </span>
+        {!readonly && !isEditing &&
+          <span
+            className={styles.editButton}
+            onMouseUp={() => !submitValue && this.setEditing()}
+          />}
+        {isEditing && (
+          <FocusTrap
+            focusTrapOptions={{
+              onActivate: () => this.input.select(),
+              onDeactivate: this.cancel.bind(this),
+              clickOutsideDeactivates: true,
+            }}
+            className={styles.inputArea}
+          >
+            <input
+              ref={(ref) => { this.input = ref; }}
+              type={type}
+              defaultValue={value}
+              {...{ maxLength }}
+              onChange={e => this.setState({ value: e.target.value })}
+              onKeyPress={e => e.key === 'Enter' && this.submit()}
+            />
+            {isEditing && (
+              <div className={styles.saveOptions}>
+                <button className={styles.submit} onClick={this.submit.bind(this)}>&nbsp;</button>
+                <button className={styles.cancel} onClick={this.cancel.bind(this)}>&nbsp;</button>
+              </div>)}
+          </FocusTrap>)}
       </span>
     );
   }

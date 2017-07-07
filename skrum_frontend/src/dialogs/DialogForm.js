@@ -31,7 +31,7 @@ export default class DialogForm extends Component {
         {message && <div className={styles.message}>{message}</div>}
         <div className={styles.content}>
           {children}
-          {error && <div className={styles.error}>{error}</div>}
+          <div className={styles.error}>{error || <span>&nbsp;</span>}</div>
         </div>
         <div className={styles.buttons}>
           <button

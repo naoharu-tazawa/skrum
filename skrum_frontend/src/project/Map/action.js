@@ -29,16 +29,13 @@ const {
 );
 
 const fetchMap = (subject, node, request, finish) => (id, timeframeId) =>
-  (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.map.isFetching) return Promise.resolve();
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.map.isFetching) return Promise.resolve();
     dispatch(request());
-    return getJson(`/${subject}/${id}/okrs.json`, status)({ tfid: timeframeId })
+    return getJson(`/${subject}/${id}/okrs.json`, state)({ tfid: timeframeId })
       .then(json => dispatch(finish(node, json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finish(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finish(new Error(message))));
   };
 
 export const fetchUserOkrs = (id, timeframeId) =>

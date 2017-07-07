@@ -53,14 +53,16 @@ export default class OkrDetails extends Component {
               <InlineTextArea
                 value={name}
                 maxLength={120}
-                onSubmit={value => dispatchPutOKR(id, { okrName: value })}
+                onSubmit={(value, completion) =>
+                  dispatchPutOKR(id, { okrName: value }).then(completion)}
               />
             </div>
             <div className={styles.txt}>
               <InlineTextArea
                 value={detail}
                 maxLength={250}
-                onSubmit={value => dispatchPutOKR(id, { okrDetail: value })}
+                onSubmit={(value, completion) =>
+                  dispatchPutOKR(id, { okrDetail: value }).then(completion)}
               />
             </div>
             <div className={`${styles.bar_top} ${styles.cf}`}>
@@ -115,7 +117,7 @@ export default class OkrDetails extends Component {
             prompt="こちらのOKRを削除しますか?"
             onDelete={() => {
               this.setState({ isDeletingOkr: true }, () =>
-                dispatchDeleteOkr(id, ({ error }) => {
+                dispatchDeleteOkr(id).then(({ error }) => {
                   this.setState({ isDeletingOkr: false, isDeleteOkrModalOpen: !!error });
                   if (!error) browserHistory.push(toBasicPath());
                 }),

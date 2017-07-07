@@ -17,11 +17,11 @@ const {
 );
 
 export const searchOwner = keyword =>
-  (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.ownersFound.isSearching) return Promise.resolve();
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.ownersFound.isSearching) return Promise.resolve();
     dispatch(requestSearchOwner());
-    return getJson('/owners/search.json', status)({ q: keyword })
+    return getJson('/owners/search.json', state)({ q: keyword })
       .then(json => dispatch(finishSearchOwner('ownersFound', json)))
       .catch(({ message }) => dispatch(finishSearchOwner(new Error(message))));
   };

@@ -22,30 +22,22 @@ const {
   Action.REQUEST_POST_GROUP_POSTS,
 );
 
-export function fetchGroupPosts(groupId) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.timeline.isFetching) return Promise.resolve();
+export const fetchGroupPosts = groupId =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.timeline.isFetching) return Promise.resolve();
     dispatch(requestFetchGroupPosts());
-    return getJson(`/groups/${groupId}/posts.json`, status)()
+    return getJson(`/groups/${groupId}/posts.json`, state)()
       .then(json => dispatch(finishFetchGroupPosts('data', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishFetchGroupPosts(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finishFetchGroupPosts(new Error(message))));
   };
-}
 
-export function postGroupPosts(groupId, post, disclosureType = '1') {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.timeline.isPosting) return Promise.resolve();
+export const postGroupPosts = (groupId, post, disclosureType = '1') =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.timeline.isPosting) return Promise.resolve();
     dispatch(requestPostGroupPosts());
-    return postJson(`/groups/${groupId}/posts.json`, status)(null, { post, disclosureType })
+    return postJson(`/groups/${groupId}/posts.json`, state)(null, { post, disclosureType })
       .then(json => dispatch(finishPostGroupPosts('data', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishPostGroupPosts(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finishPostGroupPosts(new Error(message))));
   };
-}

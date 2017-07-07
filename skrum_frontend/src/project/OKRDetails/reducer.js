@@ -21,20 +21,18 @@ export default (state = {
       return { ...state, isFetching: false, ...newOkr, error: null };
     }
 
-    case Action.REQUEST_PUT_OKR_DETAILS: {
-      const { payload } = action;
-      const { id, ...data } = payload.data;
-      const objective = mergeUpdateById(state.objective, 'okrId', data, id);
-      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', data, id));
-      return { ...state, objective, keyResults, isPutting: true };
-    }
+    case Action.REQUEST_PUT_OKR_DETAILS:
+      return { ...state, isPutting: true };
 
     case Action.FINISH_PUT_OKR_DETAILS: {
       const { payload, error } = action;
       if (error) {
         return { ...state, isPutting: false, error: { message: payload.message } };
       }
-      return { ...state, isPutting: false, error: null };
+      const { id, ...data } = payload.data;
+      const objective = mergeUpdateById(state.objective, 'okrId', data, id);
+      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', data, id));
+      return { ...state, objective, keyResults, isPutting: false };
     }
 
     case Action.REQUEST_POST_KR:

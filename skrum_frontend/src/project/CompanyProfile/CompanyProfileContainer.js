@@ -67,7 +67,8 @@ class CompanyProfileContainer extends Component {
             <span className={styles.data}>
               <InlineTextInput
                 value={name}
-                onSubmit={value => dispatchPutCompany(companyId, { name: value })}
+                onSubmit={(value, completion) =>
+                  dispatchPutCompany(companyId, { name: value }).then(completion)}
               />
             </span>
           </div>
@@ -76,7 +77,8 @@ class CompanyProfileContainer extends Component {
             <span className={styles.data}>
               <InlineTextArea
                 value={vision}
-                onSubmit={value => dispatchPutCompany(companyId, { vision: value })}
+                onSubmit={(value, completion) =>
+                  dispatchPutCompany(companyId, { vision: value }).then(completion)}
               />
             </span>
           </div>
@@ -85,7 +87,8 @@ class CompanyProfileContainer extends Component {
             <span className={styles.data}>
               <InlineTextArea
                 value={mission}
-                onSubmit={value => dispatchPutCompany(companyId, { mission: value })}
+                onSubmit={(value, completion) =>
+                  dispatchPutCompany(companyId, { mission: value }).then(completion)}
               />
             </span>
           </div>
@@ -106,8 +109,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchCompany = companyId => dispatch(fetchCompany(companyId));
-  const dispatchPutCompany = (companyId, name, vision, mission) =>
-    dispatch(putCompany(companyId, name, vision, mission));
+  const dispatchPutCompany = (companyId, data) =>
+    dispatch(putCompany(companyId, data));
   return { dispatchFetchCompany, dispatchPutCompany };
 };
 

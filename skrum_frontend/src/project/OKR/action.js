@@ -13,6 +13,7 @@ export const Action = {
   FINISH_POST_OKR: 'FINISH_POST_OKR',
   REQUEST_DELETE_OKR: 'REQUEST_DELETE_OKR',
   FINISH_DELETE_OKR: 'FINISH_DELETE_OKR',
+  SYNC_OKR_DETAILS: 'SYNC_OKR_DETAILS',
 };
 
 const {
@@ -26,12 +27,14 @@ const {
   finishPostOkr,
   requestDeleteOkr,
   finishDeleteOkr,
+  syncOkrDetails,
 } = createActions({
   [Action.FINISH_FETCH_USER_BASICS]: keyValueIdentity,
   [Action.FINISH_FETCH_GROUP_BASICS]: keyValueIdentity,
   [Action.FINISH_FETCH_COMPANY_BASICS]: keyValueIdentity,
   [Action.FINISH_POST_OKR]: keyValueIdentity,
   [Action.FINISH_DELETE_OKR]: keyValueIdentity,
+  [Action.SYNC_OKR_DETAILS]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_USER_BASICS,
   Action.REQUEST_FETCH_GROUP_BASICS,
@@ -41,16 +44,13 @@ const {
 );
 
 const fetchBasics = (subject, node, request, finish) => (id, timeframeId) =>
-  (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.basics.isFetching) return Promise.resolve();
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.basics.isFetching) return Promise.resolve();
     dispatch(request());
-    return getJson(`/${subject}/${id}/basics.json`, status)({ tfid: timeframeId })
+    return getJson(`/${subject}/${id}/basics.json`, state)({ tfid: timeframeId })
       .then(json => dispatch(finish(node, json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finish(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finish(new Error(message))));
   };
 
 export const fetchUserBasics = (id, timeframeId) =>
@@ -62,35 +62,27 @@ export const fetchGroupBasics = (id, timeframeId) =>
 export const fetchCompanyBasics = (id, timeframeId) =>
   fetchBasics('companies', 'company', requestFetchCompanyBasics, finishFetchCompanyBasics)(id, timeframeId);
 
-export function postOkr(subject, isOwnerCurrent, okr, completion) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.basics.isPostingOkr) return Promise.resolve();
+export const postOkr = (subject, isOwnerCurrent, okr) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.basics.isPostingOkr) return Promise.resolve();
     dispatch(requestPostOkr());
-    return postJson('/okrs.json', status)(null, okr)
-      .then((json) => {
-        dispatch(finishPostOkr('newOkr', { subject, isOwnerCurrent, data: json }));
-        if (completion) completion({});
-      })
-      .catch(({ message }) => {
-        dispatch(finishPostOkr(new Error(message)));
-        if (completion) completion({ error: message });
-      });
+    return postJson('/okrs.json', state)(null, okr)
+      .then(json => dispatch(finishPostOkr('newOkr', { subject, isOwnerCurrent, data: json })))
+      .catch(({ message }) => dispatch(finishPostOkr(new Error(message))));
   };
-}
 
-export const deleteOkr = (subject, id, completion) =>
-  (dispatch, getStatus) => {
-    const status = getStatus();
-    if (status.basics.isDeletingOkr) return Promise.resolve();
+export const deleteOkr = (subject, id) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.basics.isDeletingOkr) return Promise.resolve();
     dispatch(requestDeleteOkr());
-    return deleteJson(`/okrs/${id}.json`, status)()
-      .then(() => {
-        dispatch(finishDeleteOkr('deletedOkr', { subject, id }));
-        if (completion) completion({});
-      })
-      .catch(({ message }) => {
-        dispatch(finishDeleteOkr(new Error(message)));
-        if (completion) completion({ error: message });
-      });
+    return deleteJson(`/okrs/${id}.json`, state)()
+      .then(() => dispatch(finishDeleteOkr('deletedOkr', { subject, id })))
+      .catch(({ message }) => dispatch(finishDeleteOkr(new Error(message))));
   };
+
+export const syncOkr = (subject, { payload, error }) =>
+  dispatch => (!error ?
+    dispatch(syncOkrDetails('syncOkr', { subject, ...payload.data })) :
+    dispatch(syncOkrDetails(new Error(payload.message))));
