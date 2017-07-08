@@ -10,32 +10,20 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/leaders/{userId}.json:
-    put:
-      description: グループリーダー変更
-      parameters:
-        -
-          name: groupId
-          in: path
-          type: string
-          description: グループID
-          required: true
-        -
-          name: userId
-          in: path
-          type: string
-          description: ユーザID
-          required: true
+  /groups/{groupId}/possibleleaders.json:
+    get:
+      description: グループメンバー取得（リーダー用）
       responses:
         200:
-          description: 成功
+          description: グループメンバー取得（リーダー用）
           schema:
-            type: object
-            properties:
-              result:
-                type: string
-            required:
-              - result
+            type: array
+            items:
+              properties:
+                userId:
+                  type: integer
+                name:
+                  type: string
         400:
           description: JSONスキーマ不正
         409:

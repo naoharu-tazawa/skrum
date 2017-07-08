@@ -130,6 +130,28 @@ class GroupMemberService extends BaseService
     }
 
     /**
+     * グループメンバー取得（リーダー用）
+     *
+     * @param integer $groupId グループID
+     * @return array
+     */
+    public function getPossibleleaders(int $groupId): array
+    {
+        $tGroupMemberRepos = $this->getTGroupMemberRepository();
+        $possibleLeaderArray = $tGroupMemberRepos->getAllGroupMembers($groupId);
+
+        $possibleLeaders = array();
+        foreach ($possibleLeaderArray as $possibleLeader) {
+            $memberDTO = new MemberDTO();
+            $memberDTO->setUserId($possibleLeader->getUserId());
+            $memberDTO->setName($possibleLeader->getLastName() . ' ' . $possibleLeader->getFirstName());
+            $possibleLeaders[] = $memberDTO;
+        }
+
+        return $possibleLeaders;
+    }
+
+    /**
      * ユーザ（グループメンバー）エンティティ配列取得
      *
      * @param integer $groupId グループID

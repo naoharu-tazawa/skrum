@@ -110,6 +110,29 @@ class GroupMemberController extends BaseController
     }
 
     /**
+     * グループメンバー取得（リーダー用）
+     *
+     * @Rest\Get("/v1/groups/{groupId}/possibleleaders.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
+     * @return array
+     */
+    public function getGroupPossibleleadersAction(Request $request, string $groupId): array
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ存在チェック
+        $this->getDBExistanceLogic()->checkGroupExistanceIncludingArchivedGroups($groupId, $auth->getCompanyId());
+
+        // グループメンバー取得
+        $groupMemberService = $this->getGroupMemberService();
+        $memberDTOArray = $groupMemberService->getPossibleleaders($groupId);
+
+        return $memberDTOArray;
+    }
+
+    /**
      * グループメンバー削除
      *
      * @Rest\Delete("/v1/groups/{groupId}/members/{userId}.{_format}")
