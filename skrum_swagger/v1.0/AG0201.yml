@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/posts:
+  /groups/{groupId}/posts.json?{before}:
     get:
       description: タイムライン取得（グループ）
       parameters:
@@ -19,6 +19,12 @@ paths:
           in: path
           type: integer
           description: グループID
+          required: true
+        -
+          name: before
+          in: path
+          type: string
+          description: 取得基準日時
           required: true
       responses:
         200:
@@ -44,10 +50,33 @@ paths:
                   type: string
                 postedDatetime:
                   type: string
-                okrId:
-                  type: integer
-                okrName:
-                  type: string
+                autoShare:
+                  type: object
+                  properties:
+                    autoPost:
+                      type: string
+                    okrId:
+                      type: integer
+                    okrName:
+                      type: string
+                    ownerType:
+                      type: string
+                    ownerUserId:
+                      type: integer
+                    ownerUserName:
+                      type: string
+                    ownerGroupId:
+                      type: integer
+                    ownerGroupName:
+                      type: string
+                    ownerCompanyId:
+                      type: integer
+                    ownerCompanyName:
+                      type: string
+                  required:
+                    - okrId
+                    - okrName
+                    - ownerType
                 likesCount:
                   type: integer
                 likedFlg:

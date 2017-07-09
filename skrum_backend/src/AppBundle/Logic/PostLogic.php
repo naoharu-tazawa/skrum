@@ -33,15 +33,34 @@ class PostLogic extends BaseLogic
             $groupIdArray = array();
             $tOkrRepos = $this->getTOkrRepository();
 
+            // 自動投稿内容の主語
+            $subject = null;
+
             if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
                 // 操作対象OKRのオーナーが会社の場合、会社IDに対応するグループIDを投稿先グループに入れる
                 $mGroupRepos = $this->getMGroupRepository();
                 $mGroup = $mGroupRepos->findBy(array('company' => $auth->getCompanyId(), 'groupType' => DBConstant::GROUP_TYPE_COMPANY));
                 $groupIdArray[] = $mGroup[0]->getGroupId();
+
+                // 自動投稿内容の主語を取得
+                $subject = $mGroup[0]->getGroupName();
+            } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+                // 操作対象OKRのオーナーがユーザの場合、ユーザ所属グループ（共有設定しているグループのみ）を投稿先グループに入れる
+                $tGroupMemberRepos = $this->getTGroupMemberRepository();
+                $tGroupMemberArray = $tGroupMemberRepos->findBy(array('user' => $tOkr->getOwnerUser()->getUserId(), 'postShareFlg' => DBConstant::FLG_TRUE));
+                foreach ($tGroupMemberArray as $tGroupMember) {
+                    $groupIdArray[] = $tGroupMember->getGroup()->getGroupId();
+                }
+
+                // 自動投稿内容の主語を取得
+                $subject = $tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName();
             } else {
                 // 操作対象OKRのオーナーがグループの場合、投稿先グループに入れる
                 if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $groupIdArray[] = $tOkr->getOwnerGroup()->getGroupId();
+
+                    // 自動投稿内容の主語を取得
+                    $subject = $tOkr->getOwnerGroup()->getGroupName();
                 }
 
                 // 親OKRまたは祖父母OKRのオーナーがグループの場合、そのグループを投稿先グループに入れる
@@ -77,7 +96,7 @@ class PostLogic extends BaseLogic
                 $tPost->setPosterType(DBConstant::POSTER_TYPE_USER);
                 $tPost->setPosterUserId($auth->getUserId());
                 $tPost->setPost($manualPost);
-                if ($autoPost !== null) $tPost->setAutoPost($autoPost);
+                if ($autoPost !== null) $tPost->setAutoPost($subject . $autoPost);
                 $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
                 $tPost->setOkrActivity($tOkrActivity);
                 $tPost->setDisclosureType($tOkr->getDisclosureType());
@@ -104,11 +123,17 @@ class PostLogic extends BaseLogic
             $groupIdArray = array();
             $tOkrRepos = $this->getTOkrRepository();
 
+            // 自動投稿内容の主語
+            $subject = null;
+
             if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
                 // 操作対象OKRのオーナーが会社の場合、会社IDに対応するグループIDを投稿先グループに入れる
                 $mGroupRepos = $this->getMGroupRepository();
                 $mGroup = $mGroupRepos->findBy(array('company' => $auth->getCompanyId(), 'groupType' => DBConstant::GROUP_TYPE_COMPANY));
                 $groupIdArray[] = $mGroup[0]->getGroupId();
+
+                // 自動投稿内容の主語を取得
+                $subject = $mGroup[0]->getGroupName();
             } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                 // 操作対象OKRのオーナーがユーザの場合、ユーザ所属グループ（共有設定しているグループのみ）を投稿先グループに入れる
                 $tGroupMemberRepos = $this->getTGroupMemberRepository();
@@ -116,10 +141,16 @@ class PostLogic extends BaseLogic
                 foreach ($tGroupMemberArray as $tGroupMember) {
                     $groupIdArray[] = $tGroupMember->getGroup()->getGroupId();
                 }
+
+                // 自動投稿内容の主語を取得
+                $subject = $tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName();
             } else {
                 // 操作対象OKRのオーナーがグループの場合、投稿先グループに入れる
                 if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $groupIdArray[] = $tOkr->getOwnerGroup()->getGroupId();
+
+                    // 自動投稿内容の主語を取得
+                    $subject = $tOkr->getOwnerGroup()->getGroupName();
                 }
 
                 // 親OKRまたは祖父母OKRのオーナーがグループの場合、そのグループを投稿先グループに入れる
@@ -158,7 +189,7 @@ class PostLogic extends BaseLogic
                     $tPost->setPosterType(DBConstant::POSTER_TYPE_COMPANY);
                     $tPost->setPosterCompanyId($auth->getCompanyId());
                 }
-                $tPost->setAutoPost($autoPost);
+                $tPost->setAutoPost($subject . $autoPost);
                 $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
                 $tPost->setOkrActivity($tOkrActivity);
                 $tPost->setDisclosureType($tOkr->getDisclosureType());
@@ -182,6 +213,9 @@ class PostLogic extends BaseLogic
      */
     public function autoPostAboutAchievement(Auth $auth, int $achievementRate, int $previousAchievementRate, TOkr $tOkr, TOkrActivity $tOkrActivity)
     {
+        // 自動投稿内容の主語
+        $subject = null;
+
         // 自動投稿文面作成
         $autoPost = null;
         if ($achievementRate >= 100 && $previousAchievementRate < 100) {
@@ -203,6 +237,9 @@ class PostLogic extends BaseLogic
                 $mGroupRepos = $this->getMGroupRepository();
                 $mGroup = $mGroupRepos->findBy(array('company' => $auth->getCompanyId(), 'groupType' => DBConstant::GROUP_TYPE_COMPANY));
                 $groupIdArray[] = $mGroup[0]->getGroupId();
+
+                // 自動投稿内容の主語を取得
+                $subject = $mGroup[0]->getGroupName();
             } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                 // 操作対象OKRのオーナーがユーザの場合、ユーザ所属グループ（共有設定しているグループのみ）を投稿先グループに入れる
                 $tGroupMemberRepos = $this->getTGroupMemberRepository();
@@ -210,10 +247,16 @@ class PostLogic extends BaseLogic
                 foreach ($tGroupMemberArray as $tGroupMember) {
                     $groupIdArray[] = $tGroupMember->getGroup()->getGroupId();
                 }
+
+                // 自動投稿内容の主語を取得
+                $subject = $tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName();
             } else {
                 // 操作対象OKRのオーナーがグループの場合、投稿先グループに入れる
                 if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $groupIdArray[] = $tOkr->getOwnerGroup()->getGroupId();
+
+                    // 自動投稿内容の主語を取得
+                    $subject = $tOkr->getOwnerGroup()->getGroupName();
                 }
 
                 // 親OKRまたは祖父母OKRのオーナーがグループの場合、そのグループを投稿先グループに入れる
@@ -252,7 +295,7 @@ class PostLogic extends BaseLogic
                     $tPost->setPosterType(DBConstant::POSTER_TYPE_COMPANY);
                     $tPost->setPosterCompanyId($auth->getCompanyId());
                 }
-                $tPost->setAutoPost($autoPost);
+                $tPost->setAutoPost($subject . $autoPost);
                 $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
                 $tPost->setOkrActivity($tOkrActivity);
                 $tPost->setDisclosureType($tOkr->getDisclosureType());

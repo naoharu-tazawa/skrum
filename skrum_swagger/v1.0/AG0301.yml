@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /companies/{companyId}/posts:
+  /companies/{companyId}/posts.json?{before}:
     get:
       description: タイムライン取得（会社）
       parameters:
@@ -19,6 +19,12 @@ paths:
           in: path
           type: integer
           description: 会社ID
+          required: true
+        -
+          name: before
+          in: path
+          type: string
+          description: 取得基準日時
           required: true
       responses:
         200:

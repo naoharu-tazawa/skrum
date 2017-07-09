@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Api\ResponseDTO\PostDTO;
 
@@ -26,6 +27,13 @@ class TimelineController extends BaseController
      */
     public function getGroupPostsAction(Request $request, string $groupId): array
     {
+        // リクエストパラメータを取得
+        $before = $request->get('before'); // ex.) 2017-07-09 20:14:45
+
+        // リクエストパラメータのバリデーション
+        $beforeErrors = $this->validateDatetime($before);
+        if($beforeErrors) throw new InvalidParameterException("タイムライン取得基準日時が不正です", $beforeErrors);
+
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
@@ -34,7 +42,7 @@ class TimelineController extends BaseController
 
         // タイムライン取得処理
         $timelineService = $this->getTimelineService();
-        $postDTOArray = $timelineService->getTimeline($auth, $groupId);
+        $postDTOArray = $timelineService->getTimeline($auth, $groupId, $before);
 
         return $postDTOArray;
     }
@@ -49,6 +57,13 @@ class TimelineController extends BaseController
      */
     public function getCompanyPostsAction(Request $request, string $companyId): array
     {
+        // リクエストパラメータを取得
+        $before = $request->get('before'); // ex.) 2017-07-09 20:14:45
+
+        // リクエストパラメータのバリデーション
+        $beforeErrors = $this->validateDatetime($before);
+        if($beforeErrors) throw new InvalidParameterException("タイムライン取得基準日時が不正です", $beforeErrors);
+
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
@@ -59,7 +74,7 @@ class TimelineController extends BaseController
 
         // タイムライン取得処理
         $timelineService = $this->getTimelineService();
-        $postDTOArray = $timelineService->getCompanyTimeline($auth, $companyId);
+        $postDTOArray = $timelineService->getCompanyTimeline($auth, $companyId, $before);
 
         return $postDTOArray;
     }

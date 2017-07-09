@@ -82,11 +82,11 @@ class PostDTO
     private $postedDatetime;
 
     /**
-     * @var integer
+     * @var \AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO
      *
-     * @JSON\Type("integer")
+     * @JSON\Type("AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO")
      */
-    private $okrId;
+    private $autoShare;
 
     /**
      * @var integer
@@ -350,27 +350,27 @@ class PostDTO
     }
 
     /**
-     * Set okrId
+     * Set autoShare
      *
-     * @param integer $okrId
+     * @param \AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO $autoShare
      *
      * @return PostDTO
      */
-    public function setOkrId($okrId)
+    public function setAutoShare($autoShare)
     {
-        $this->okrId = $okrId;
+        $this->autoShare = $autoShare;
 
         return $this;
     }
 
     /**
-     * Get okrId
+     * Get autoShare
      *
-     * @return integer
+     * @return \AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO
      */
-    public function getOkrId()
+    public function getAutoShare()
     {
-        return $this->okrId;
+        return $this->autoShare;
     }
 
     /**

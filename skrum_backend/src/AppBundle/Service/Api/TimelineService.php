@@ -12,6 +12,7 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TLike;
 use AppBundle\Entity\TPost;
 use AppBundle\Api\ResponseDTO\PostDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO;
 
 /**
  * タイムラインサービスクラス
@@ -25,18 +26,20 @@ class TimelineService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param integer $groupId グループID
+     * @param string $before 取得基準日時
      * @return array
      */
-    public function getTimeline(Auth $auth, int $groupId): array
+    public function getTimeline(Auth $auth, int $groupId, string $before): array
     {
         $tPostRepos = $this->getTPostRepository();
-        $tPostArray = $tPostRepos->getTimeline($groupId);
+        $tPostArray = $tPostRepos->getTimeline($groupId, $before);
 
         // DTOに詰め替える
         $disclosureLogic = $this->getDisclosureLogic();
         $tPostArrayCount = count($tPostArray);
         $postDTOArray = array();
         $flg = false;
+        $companyName = null;
         for ($i = 0; $i < $tPostArrayCount; ++$i) {
             if (array_key_exists('post', $tPostArray[$i])) {
                 // 2回目のループ以降、前回ループ分のDTOを配列に入れる
@@ -78,6 +81,31 @@ class TimelineService extends BaseService
                 }
                 $postDTOPost->setPost($tPostArray[$i]['post']->getPost());
                 $postDTOPost->setPostedDatetime($tPostArray[$i]['post']->getPostedDatetime());
+                if ($tPostArray[$i]['post']->getOkrActivity() !== null) {
+                    $tOkr = $tPostArray[$i]['post']->getOkrActivity()->getOkr();
+
+                    $autoShare = new AutoShareDTO();
+                    $autoShare->setAutoPost($tPostArray[$i]['post']->getAutoPost());
+                    $autoShare->setOkrId($tOkr->getOkrId());
+                    $autoShare->setOkrName($tOkr->getName());
+                    $autoShare->setOwnerType($tOkr->getOwnerType());
+                    if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+                        $autoShare->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
+                        $autoShare->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+                    } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                        $autoShare->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+                        $autoShare->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+                    } else {
+                        $autoShare->setOwnerCompanyId($tOkr->getOwnerCompanyId());
+                        if ($companyName === null) {
+                            $mCompanyRepos = $this->getMCompanyRepository();
+                            $mCompany = $mCompanyRepos->find($auth->getCompanyId());
+                            $companyName = $mCompany->getCompanyName();
+                        }
+                        $autoShare->setOwnerCompanyName($companyName);
+                    }
+                    $postDTOPost->setAutoShare($autoShare);
+                }
                 $postDTOPost->setLikesCount($likesCount);
                 if (empty($tLike)) {
                     $postDTOPost->setLikedFlg(DBConstant::FLG_FALSE);
@@ -86,21 +114,6 @@ class TimelineService extends BaseService
                 }
 
                 $postDTOReplyArray = array();
-                $flg = false;
-            } elseif (array_key_exists('okrActivity', $tPostArray[$i])) {
-                // 非公開の場合、スキップ
-                if ($outOfDisclosureFlg) continue;
-
-                // OKRアクティビティがnullの場合、スキップ
-                if ($tPostArray[$i]['okrActivity'] === null) {
-                    // 最終ループ
-                    if ($i === ($tPostArrayCount - 1)) {
-                        $postDTOArray[] = $postDTOPost;
-                    }
-                    continue;
-                }
-
-                $postDTOPost->setOkrId($tPostArray[$i]['okrActivity']->getOkr()->getOkrId());
                 $flg = false;
             } else {
                 // 非公開の場合、スキップ
@@ -154,15 +167,16 @@ class TimelineService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param integer $companyId 会社ID
+     * @param string $before 取得基準日時
      * @return array
      */
-    public function getCompanyTimeline(Auth $auth, int $companyId): array
+    public function getCompanyTimeline(Auth $auth, int $companyId, string $before): array
     {
         // 会社IDに対応するグループIDを取得
         $mGroupRepos = $this->getMGroupRepository();
         $mGroup = $mGroupRepos->findBy(array('company' => $companyId, 'groupType' => DBConstant::GROUP_TYPE_COMPANY));
 
-        return $this->getTimeline($auth, $mGroup[0]->getGroupId());
+        return $this->getTimeline($auth, $mGroup[0]->getGroupId(), $before);
     }
 
     /**
