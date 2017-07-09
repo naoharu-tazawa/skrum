@@ -30,32 +30,10 @@ paths:
             properties:
               timeframeName:
                 type: string
-              start:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
-              end:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
+              startDate:
+                type: string
+              endDate:
+                type: string
       responses:
         200:
           description: 成功

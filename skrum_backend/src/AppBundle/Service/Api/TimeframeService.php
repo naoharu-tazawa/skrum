@@ -114,26 +114,8 @@ class TimeframeService extends BaseService
      */
     public function registerTimeframe(Auth $auth, array $data): TimeframeDetailDTO
     {
-        // 開始日妥当性チェック
-        if (!checkdate($data['start']['month'], $data['start']['date'], $data['start']['year'])) {
-            throw new ApplicationException('開始日が不正です');
-        }
-
-        // 終了日妥当性チェック
-        if (!checkdate($data['end']['month'], $data['end']['date'], $data['end']['year'])) {
-            throw new ApplicationException('終了日が不正です');
-        }
-
-        // 月日をゼロ埋め
-        $data['start']['month'] = sprintf("%02d", $data['start']['month']);
-        $data['start']['date'] = sprintf("%02d", $data['start']['date']);
-        $data['end']['month'] = sprintf("%02d", $data['end']['month']);
-        $data['end']['date'] = sprintf("%02d", $data['end']['date']);
-
         // 開始日と終了日を大小比較
-        $startDate = DateUtility::transIntoDatetime($data['start']['year'] . $data['start']['month'] . $data['start']['date']);
-        $endDate = DateUtility::transIntoDatetime($data['end']['year'] . $data['end']['month'] . $data['end']['date']);
-        if ($startDate > $endDate) {
+        if ($data['startDate'] > $data['endDate']) {
             throw new ApplicationException('終了日は開始日以降に設定してください');
         }
 
@@ -145,8 +127,8 @@ class TimeframeService extends BaseService
         $tTimeframe = new TTimeframe();
         $tTimeframe->setCompany($mCompany);
         $tTimeframe->setTimeframeName($data['timeframeName']);
-        $tTimeframe->setStartDate($startDate);
-        $tTimeframe->setEndDate($endDate);
+        $tTimeframe->setStartDate(DateUtility::transIntoDatetime($data['startDate']));
+        $tTimeframe->setEndDate(DateUtility::transIntoDatetime($data['endDate']));
 
         try {
             $this->persist($tTimeframe);
@@ -175,30 +157,18 @@ class TimeframeService extends BaseService
      */
     public function updateTimeframe(array $data, TTimeframe $tTimeframe)
     {
-        // 開始日と終了日の妥当性チェック
-        if (array_key_exists('start', $data) || array_key_exists('end', $data)) {
-            // 開始日妥当性チェック
-            if (array_key_exists('start', $data)) {
-                if (!checkdate($data['start']['month'], $data['start']['date'], $data['start']['year'])) {
-                    throw new ApplicationException('開始日が不正です');
-                }
-                // 月日をゼロ埋め
-                $data['start']['month'] = sprintf("%02d", $data['start']['month']);
-                $data['start']['date'] = sprintf("%02d", $data['start']['date']);
-                $startDate = DateUtility::transIntoDatetime($data['start']['year'] . $data['start']['month'] . $data['start']['date']);
+        // // 開始日または終了日に変更がある場合、大小比較
+        if (array_key_exists('startDate', $data) || array_key_exists('endDate', $data)) {
+            // 開始日
+            if (array_key_exists('startDate', $data)) {
+                $startDate = DateUtility::transIntoDatetime($data['startDate']);
             } else {
                 $startDate = $tTimeframe->getStartDate();
             }
 
-            // 終了日妥当性チェック
-            if (array_key_exists('end', $data)) {
-                if (!checkdate($data['end']['month'], $data['end']['date'], $data['end']['year'])) {
-                    throw new ApplicationException('終了日が不正です');
-                }
-                // 月日をゼロ埋め
-                $data['end']['month'] = sprintf("%02d", $data['end']['month']);
-                $data['end']['date'] = sprintf("%02d", $data['end']['date']);
-                $endDate = DateUtility::transIntoDatetime($data['end']['year'] . $data['end']['month'] . $data['end']['date']);
+            // 終了日
+            if (array_key_exists('endDate', $data)) {
+                $endDate = DateUtility::transIntoDatetime($data['endDate']);
             } else {
                 $endDate = $tTimeframe->getEndDate();
             }
@@ -213,10 +183,10 @@ class TimeframeService extends BaseService
         if (array_key_exists('timeframeName', $data) && !empty($data['timeframeName'])) {
             $tTimeframe->setTimeframeName($data['timeframeName']);
         }
-        if (array_key_exists('start', $data) && !empty($data['start'])) {
+        if (array_key_exists('startDate', $data) && !empty($data['startDate'])) {
             $tTimeframe->setStartDate($startDate);
         }
-        if (array_key_exists('end', $data) && !empty($data['end'])) {
+        if (array_key_exists('endDate', $data) && !empty($data['endDate'])) {
             $tTimeframe->setEndDate($endDate);
         }
 

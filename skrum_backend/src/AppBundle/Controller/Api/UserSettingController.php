@@ -74,7 +74,7 @@ class UserSettingController extends BaseController
 
         // カスタムフラグがTRUEの場合に必要なJsonSchemaのプロパティをチェック
         if ($data['timeframe']['customFlg']) {
-            if (empty($data['timeframe']['end']) || empty($data['timeframe']['timeframeName'])) {
+            if (empty($data['timeframe']['endDate']) || empty($data['timeframe']['timeframeName'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }
         }

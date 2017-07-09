@@ -53,18 +53,13 @@ paths:
                     type: string
                   mission:
                     type: string
-                  policy:
-                    type: object
-                    properties:
-                      defaultDisclosureType:
-                        type: string
-                    required:
-                      - defaultDisclosureType
+                  defaultDisclosureType:
+                    type: string
                 required:
                   - name
                   - vision
                   - mission
-                  - policy
+                  - defaultDisclosureType
               timeframe:
                 type: object
                 properties:
@@ -72,33 +67,15 @@ paths:
                     type: boolean
                   cycleType:
                     type: string
-                  start:
-                    type: object
-                    properties:
-                      year:
-                        type: string
-                      month:
-                        type: string
-                      date:
-                        type: string
-                    required:
-                      - year
-                      - month
-                      - date
-                  end:
-                    type: object
-                    properties:
-                      year:
-                        type: string
-                      month:
-                        type: string
-                      date:
-                        type: string
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
                   timeframeName:
                     type: string
                 required:
                   - customFlg
-                  - start
+                  - startDate
             required:
               - user
               - company

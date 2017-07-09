@@ -24,36 +24,14 @@ paths:
             properties:
               timeframeName:
                 type: string
-              start:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
-              end:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
+              startDate:
+                type: string
+              endDate:
+                type: string
             required:
               - timeframeName
-              - start
-              - end
+              - startDate
+              - endDate
       responses:
         200:
           description: 成功
@@ -62,36 +40,14 @@ paths:
             properties:
               timeframeName:
                 type: string
-              start:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
-              end:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
+              startDate:
+                type: string
+              endDate:
+                type: string
             required:
               - timeframeName
-              - start
-              - end
+              - startDate
+              - endDate
         400:
           description: JSONスキーマ不正
         409:
