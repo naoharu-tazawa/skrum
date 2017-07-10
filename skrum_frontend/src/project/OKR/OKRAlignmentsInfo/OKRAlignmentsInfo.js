@@ -68,8 +68,8 @@ export default class OKRAlignmentsInfo extends Component {
             />
           </Surface>
           <div className={styles.list}>
-            {details.map(({ companyId, userId, groupId, name, numberOfOkrs }) => (
-              <div key={`${companyId}-${userId || groupId}`} className={styles.detail}>
+            {details.map(({ name, numberOfOkrs }, index) => (
+              <div key={index} className={styles.detail}>
                 <div className={styles.group}>
                   <div className={`${styles.user_info} ${styles.cf}`}>
                     <div className={`${styles.avatar} ${styles.circle} ${styles.circle_gray} ${styles.floatL}`}>
