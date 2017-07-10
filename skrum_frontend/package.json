@@ -73,6 +73,7 @@
     "react-router-redux": "^4.0.7",
     "react-select": "^1.0.0-rc.3",
     "react-simple-dropdown": "^3.0.0",
+    "react-vis": "^1.6.7",
     "recharts": "^0.22.4",
     "redux": "latest",
     "redux-actions": "^1.2.0",

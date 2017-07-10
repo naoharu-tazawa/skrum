@@ -23,7 +23,7 @@ export const toTimestamp = date => toNumber(moment(date).format('X'));
 export const toDate = dateString => moment(dateString).locale('ja');
 
 export const formatDate = (date, { format = DateFormat.YMDHM } = {}) =>
-  date.format(format);
+  moment(date).format(format);
 
 const businessHour = 8;
 

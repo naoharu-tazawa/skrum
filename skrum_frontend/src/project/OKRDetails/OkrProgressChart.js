@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line } from 'recharts';
-import _ from 'lodash';
+import { XYPlot, XAxis, YAxis, HorizontalGridLines, makeWidthFlexible, LineMarkSeries, Hint } from 'react-vis';
+import { toNumber } from 'lodash';
 import { ProgressSeriesPropTypes } from './propTypes';
-import { toDate, formatDate, DateFormat } from '../../util/DatetimeUtil';
+import ChartHighlightOverlay from '../../components/ChartHighlightOverlay';
+import { formatDate, DateFormat } from '../../util/DatetimeUtil';
 import styles from './OkrProgressChart.css';
+
+const FlexibleXYPlot = makeWidthFlexible(XYPlot);
 
 export default class OkrProgressChart extends Component {
 
@@ -14,47 +17,44 @@ export default class OkrProgressChart extends Component {
   render() {
     const { progressSeries = [] } = this.props;
     const progressData = progressSeries.map(({ datetime, achievementRate }) =>
-      ({ datetime, progress: _.toNumber(achievementRate) }));
-    const percentFormatter = percent => (percent ? `${percent}%` : '');
-    const dateFormatter = date => `${formatDate(toDate(date), { format: DateFormat.YMD })}`;
-    const renderTooltip = ([{ payload } = {}]) => (payload && (
-      <div className={styles.tooltip} key={`tooltip-item-${payload.datetime}`}>
-        <li>{dateFormatter(payload.datetime)}</li>
-        <li>達成値: {payload.progress}%</li>
-      </div>));
+      ({ x: new Date(datetime), y: toNumber(achievementRate) }));
+    const { lastDrawLocation, hint } = this.state || {};
     return (
       <div className={styles.component}>
-        <ResponsiveContainer width="100%" aspect={300 / 280}>
-          <LineChart
-            className={styles.progressChart}
+        <FlexibleXYPlot
+          className={styles.chart}
+          animation
+          xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
+          xType="time"
+          height={330}
+          margin={{ bottom: 70, left: 60, right: 20 }}
+          onMouseLeave={() => this.setState({ hint: null })}
+        >
+          <HorizontalGridLines />
+          <YAxis
+            tickFormat={value => `${value}%`}
+            tickSizeOuter={0}
+          />
+          <XAxis
+            tickFormat={value => formatDate(value, { format: DateFormat.YMD })}
+            tickLabelAngle={-45}
+            tickTotal={8}
+          />
+          <LineMarkSeries
             data={progressData}
-            margin={{ top: 40, right: 40, bottom: 20, left: 0 }}
-          >
-            <CartesianGrid vertical={false} stroke="#ECF0F3" />
-            <XAxis
-              dataKey="datetime"
-              axisLine={false}
-              stroke="#626A7E"
-              tickFormatter={dateFormatter}
-            />
-            <YAxis
-              domain={['auto', 'auto']}
-              axisLine={false}
-              tickLine={false}
-              stroke="#626A7E"
-              tickFormatter={percentFormatter}
-            />
-            <Tooltip content={({ payload }) => renderTooltip(payload)} />
-            <Line
-              type="monotone"
-              dataKey="progress"
-              /* isAnimationActive={false} */
-              stroke="#626A7E"
-              strokeWidth={0.7}
-              /* dot={false} */
-            />
-          </LineChart>
-        </ResponsiveContainer>
+            curve={'curveMonotoneX'}
+            onNearestXY={value => this.setState({ hint: value })}
+          />
+          {hint && (
+            <Hint
+              value={hint}
+              format={({x, y}) => [
+                { title: '登録日', value: formatDate(x) },
+                { title: '達成値', value: `${y}%` },
+              ]}
+            />)}
+          <ChartHighlightOverlay onBrushEnd={area => this.setState({ lastDrawLocation: area })} />
+        </FlexibleXYPlot>
       </div>);
   }
 }
