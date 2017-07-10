@@ -8,6 +8,19 @@ const replyPropTypes = PropTypes.shape({
   postedDatetime: PropTypes.string.isRequired,
 });
 
+const autoSharePropTypes = PropTypes.shape({
+  autoPost: PropTypes.string,
+  okrId: PropTypes.number.isRequired,
+  okrName: PropTypes.string.isRequired,
+  ownerType: PropTypes.string.isRequired,
+  ownerUserId: PropTypes.number,
+  ownerUserName: PropTypes.string,
+  ownerGroupId: PropTypes.number,
+  ownerGroupName: PropTypes.string,
+  ownerCompanyId: PropTypes.number,
+  ownerCompanyName: PropTypes.string,
+});
+
 export const postPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
   posterType: PropTypes.string.isRequired,
@@ -17,9 +30,9 @@ export const postPropTypes = PropTypes.shape({
   posterGroupName: PropTypes.string,
   posterCompanyId: PropTypes.number,
   posterCompanyName: PropTypes.string,
-  post: PropTypes.string.isRequired,
+  post: PropTypes.string,
   postedDatetime: PropTypes.string.isRequired,
-  okrId: PropTypes.number,
+  autoShare: autoSharePropTypes,
   likesCount: PropTypes.number.isRequired,
   likedFlg: PropTypes.number,
   replies: PropTypes.arrayOf(replyPropTypes),

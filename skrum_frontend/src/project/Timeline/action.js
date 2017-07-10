@@ -22,12 +22,12 @@ const {
   Action.REQUEST_POST_GROUP_POSTS,
 );
 
-export const fetchGroupPosts = groupId =>
+export const fetchGroupPosts = (groupId, before = '2018-03-03+00:00:00') =>
   (dispatch, getState) => {
     const state = getState();
     if (state.timeline.isFetching) return Promise.resolve();
     dispatch(requestFetchGroupPosts());
-    return getJson(`/groups/${groupId}/posts.json`, state)()
+    return getJson(`/groups/${groupId}/posts.json`, state)({ before })
       .then(json => dispatch(finishFetchGroupPosts('data', json)))
       .catch(({ message }) => dispatch(finishFetchGroupPosts(new Error(message))));
   };

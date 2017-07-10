@@ -34,7 +34,7 @@ const mapStateToProps = (state) => {
   const items = data.map((item) => {
     const { postId, posterType, posterUserId, posterUserName,
       posterGroupId, posterGroupName, posterCompanyId, posterCompanyName,
-      post, postedDatetime, okrId, likesCount, likedFlg, replies = [] } = item;
+      post, postedDatetime, autoShare, likesCount, likedFlg, replies = [] } = item;
     return {
       id: postId,
       posterType,
@@ -46,7 +46,7 @@ const mapStateToProps = (state) => {
       posterCompanyName,
       post,
       postedDatetime,
-      okrId,
+      autoShare,
       likesCount,
       likedFlg,
       replies: replies.map(mapReplies),
