@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import FocusTrap from 'focus-trap-react';
+import DatePickerInput from '../components/DatePickerInput';
+import { formatUtcDate, toUtcDate, isValidDate } from '../util/DatetimeUtil';
 import styles from './InlineEditors.css';
 
-export default class InlineTextInput extends PureComponent {
+export default class InlineDateInput extends PureComponent {
 
   static propTypes = {
-    type: PropTypes.string,
-    maxLength: PropTypes.number,
     value: PropTypes.string,
     readonly: PropTypes.bool,
     required: PropTypes.bool,
@@ -44,14 +44,14 @@ export default class InlineTextInput extends PureComponent {
   }
 
   render() {
-    const { type = 'text', value: defaultValue = '', readonly = false, maxLength } = this.props;
+    const { value: defaultValue = '', readonly = false } = this.props;
     const { isEditing = false, value = defaultValue, submitValue, error } = this.state || {};
-    const displayValue = submitValue !== undefined ? submitValue : value;
+    const displayValue = formatUtcDate(submitValue !== undefined ? submitValue : value);
     return (
       <span
         className={`
           ${styles.editor}
-          ${styles.fluid}
+          ${styles.dropdown}
           ${readonly && styles.readonly}
           ${isEditing && styles.editing}
           ${submitValue !== undefined && !error && styles.submitting}
@@ -71,18 +71,21 @@ export default class InlineTextInput extends PureComponent {
         {isEditing && (
           <FocusTrap
             focusTrapOptions={{
-              onActivate: () => this.input.select(),
+              // onActivate: () => this.input.select(),
               onDeactivate: this.cancel.bind(this),
               clickOutsideDeactivates: true,
             }}
             className={styles.inputArea}
           >
-            <input
+            <DatePickerInput
               ref={(ref) => { this.input = ref; }}
-              type={type}
-              defaultValue={displayValue}
-              {...{ maxLength }}
-              onChange={e => this.setState({ value: e.target.value })}
+              containerClass={styles.datePicker}
+              wrapperClass={styles.datePickerWrapper}
+              value={displayValue}
+              onChange={({ target }) =>
+                isValidDate(target.value) && this.setState({ value: toUtcDate(target.value) })
+              }
+              onDayClick={day => this.setState({ value: toUtcDate(day) })}
               onKeyPress={e => e.key === 'Enter' && this.submit()}
             />
             {isEditing && (

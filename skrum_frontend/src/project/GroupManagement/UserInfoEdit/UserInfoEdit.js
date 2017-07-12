@@ -84,6 +84,7 @@ export default class UserInfoEdit extends Component {
                     <div className={styles.info_data}>
                       <InlineTextInput
                         value={emailAddress}
+                        required
                         onSubmit={(value, completion) =>
                           dispatchPutUser(userId, { emailAddress: value }).then(completion)}
                       />

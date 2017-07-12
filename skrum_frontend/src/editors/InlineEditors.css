@@ -1,6 +1,6 @@
 .editor {
   border: 1px solid transparent;
-  margin: 0 0 0 -4px;
+  margin: -3px 0 0 -4px;
   padding: 2px 20px 2px 4px;
   display: inline-block;
   max-width: 100%;
@@ -13,6 +13,8 @@
   box-shadow: 0 0 0 0 transparent;
   white-space: pre-line;
 }
+.editor.dropdown {
+}
 .editor:not(.readonly):not(.editing):not(.error):hover, .submitting {
   border-color: #ccc;
 }
@@ -20,43 +22,46 @@
   color: #888;
   background-color: #f0f0f0;
 }
-.editor input, .editor textarea {
+.inputArea input, .inputArea textarea {
   line-height: inherit;
   min-width: calc(100% + 3px);
   width: 100%;
 }
-.editor input {
+.inputArea input {
   padding: 0 0 0 3px;
   margin: -2px 0 -2px -1px
 }
-.editor textarea {
+.inputArea textarea {
   padding: 2px 2px 0 4px;
   margin: -1px 0 -1px -1px;
   min-height: 100%;
 }
-.editor.editing {
-  width: 100%;
-}
-.editor .inputArea {
+.inputArea {
   display: flex;
   opacity: 0;
   position: absolute;
   top: 0;
   left: 0;
   min-height: 100%;
+}
+.editing.fluid {
+  width: 100%;
+}
+.fluid .inputArea {
   min-width: 100%;
 }
 .value {
   display: block;
   padding: 0 2px 0 0;
 }
-.editor.multiline .value {
-  word-break: break-word;
-}
-.editor:not(.multiline) .value {
+.editor:not(.multiline):not(.dropdown) .value {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: initial;
+}
+.multiline .value {
+  word-break: break-word;
 }
 .editing .inputArea {
   opacity: 1;
@@ -128,19 +133,32 @@
   display: flex;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
-  border-top: none;
-  border-radius: 0 0 3px 3px;
   box-shadow: 0 3px 6px rgba(111,111,111,0.2);
   outline: none;
   padding: 3px;
   margin: 0;
   position: absolute;
-  right: -2px;
-  top: calc(100% + 2px);
   z-index: 1;
+}
+.editor:not(.dropdown) .saveOptions {
+  border-top: none;
+  border-radius: 0 0 3px 3px;
+  top: calc(100% + 2px);
+}
+.editor:not(.dropdown):not(.multiline) .saveOptions {
+  right: -2px;
 }
 .multiline .saveOptions {
   right: calc(20px - 2px);
+}
+.dropdown .saveOptions {
+  border-left: none;
+  border-radius: 0 3px 3px 0;
+  right: -48px;
+  bottom: -1px;
+}
+.datePickerCalendarHidden {
+  background-color: #2eb9fe;
 }
 .submit:before {
   content: " ";

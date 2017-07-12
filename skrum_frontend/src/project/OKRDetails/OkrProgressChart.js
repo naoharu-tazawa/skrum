@@ -3,7 +3,7 @@ import { XYPlot, XAxis, YAxis, HorizontalGridLines, makeWidthFlexible, LineMarkS
 import { toNumber } from 'lodash';
 import { ProgressSeriesPropTypes } from './propTypes';
 import ChartHighlightOverlay from '../../components/ChartHighlightOverlay';
-import { formatDate, DateFormat } from '../../util/DatetimeUtil';
+import { formatDate, formatDateTime } from '../../util/DatetimeUtil';
 import styles from './OkrProgressChart.css';
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot);
@@ -36,7 +36,7 @@ export default class OkrProgressChart extends Component {
             tickSizeOuter={0}
           />
           <XAxis
-            tickFormat={value => formatDate(value, { format: DateFormat.YMD })}
+            tickFormat={value => formatDate(value)}
             tickLabelAngle={-45}
             tickTotal={8}
           />
@@ -48,8 +48,8 @@ export default class OkrProgressChart extends Component {
           {hint && (
             <Hint
               value={hint}
-              format={({x, y}) => [
-                { title: '登録日', value: formatDate(x) },
+              format={({ x, y }) => [
+                { title: '登録日', value: formatDateTime(x) },
                 { title: '達成値', value: `${y}%` },
               ]}
             />)}

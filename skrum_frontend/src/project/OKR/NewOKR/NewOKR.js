@@ -12,7 +12,7 @@ import OKRSearch from '../../OKRSearch/OKRSearch';
 import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, withReduxField } from '../../../util/FormUtil';
 import { getOwnerTypeId, getOwnerTypeSubject } from '../../../util/OwnerUtil';
 import { explodePath } from '../../../util/RouteUtil';
-import { isValidDate, toTimestamp, toUtcDate } from '../../../util/DatetimeUtil';
+import { isValidDate, compareDates, toUtcDate } from '../../../util/DatetimeUtil';
 import { postOkr } from '../action';
 import { postKR } from '../../OKRDetails/action';
 import styles from './NewOKR.css';
@@ -83,7 +83,7 @@ class NewOKR extends Component {
     const ownerTypeSubject = getOwnerTypeSubject(owner.type);
     const ownerSubject = `owner${ownerTypeSubject}`;
     const isOwnerCurrent = toLower(ownerTypeSubject) === subject && owner.id === id;
-    if (toTimestamp(new Date(startDate)) > toTimestamp(new Date(endDate))) {
+    if (compareDates(startDate, endDate) > 0) {
       throw new SubmissionError({ _error: '終了日は開始日以降に設定してください' });
     }
     const { type: parentOwnerType, id: parentOwnerId } = parentOkr.owner || {};

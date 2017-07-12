@@ -44,6 +44,7 @@ export default class GroupInfoEdit extends Component {
             <h2 className={styles.team_name}>
               <InlineTextInput
                 value={name}
+                required
                 onSubmit={(value, completion) =>
                   dispatchPutGroup(groupId, { name: value }).then(completion)}
               />
