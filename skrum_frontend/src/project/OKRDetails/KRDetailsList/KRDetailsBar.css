@@ -133,3 +133,34 @@
   background-color: #8e9aa6;
   color: #fff;
 }
+.floatL {
+  float: left; }
+.user_info .avatar {
+  margin-right: 10px; }
+.user_info .info {
+  display: table-cell;
+  vertical-align: middle; }
+.user_info .user_name {
+  margin-top: 14px;
+  color: #626a7f;
+  font-size: 14px; }
+.deletionPrompt {
+  margin-bottom: 1em;
+  padding: 0.5em 1em;
+  border: 1px solid #bfbfbf;
+  border-radius: 1em;
+}
+.okrToDelete {
+  display: flex;
+  font-size: smaller;
+}
+.okrToDelete .user_name {
+  font-size: inherit;
+  margin-right: 1em;
+}
+.okrToDelete .okrName {
+  margin: auto 1em;
+  white-space: nowrap;
+  /*overflow: hidden;*/
+  text-overflow: ellipsis;
+}

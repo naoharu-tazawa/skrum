@@ -1,36 +1,41 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import FocusTrap from 'focus-trap-react';
-import styles from './InlineText.css';
+import styles from './InlineEditors.css';
 
 export default class InlineTextArea extends PureComponent {
 
   static propTypes = {
-    // name: PropTypes.string.isRequired,
+    maxLength: PropTypes.number,
     value: PropTypes.string,
     readonly: PropTypes.bool,
-    maxLength: PropTypes.number,
+    required: PropTypes.bool,
+    validate: PropTypes.func,
     onSubmit: PropTypes.func,
   };
 
-  componentWillReceiveProps() {
-    // this.setState({ value: undefined });
-  }
-
   setEditing() {
-    this.setState({ isEditing: true, submitValue: undefined, submitError: undefined });
+    this.setState({ isEditing: true, error: undefined });
   }
 
   submit() {
-    const { onSubmit, value: defaultValue = '' } = this.props;
+    const { value: defaultValue = '', required, validate, onSubmit } = this.props;
     const { value } = this.state || {};
-    if (value !== undefined && value !== defaultValue && onSubmit) {
-      this.setState({ isEditing: false, submitValue: value, submitError: undefined }, () =>
-        onSubmit(value, ({ error, payload }) =>
-          this.setState({ submitValue: error ? value : undefined, submitError: payload.message })));
-    } else {
-      this.setState({ isEditing: false });
+    let unsetEditingCompanions = {};
+    let unsetEditingCompletion = () => {};
+    if (required && value === '') {
+      unsetEditingCompletion = () => this.setState({ value, error: '入力してください' });
+    } else if (value !== undefined && value !== defaultValue && onSubmit) {
+      const validationError = validate && validate(value);
+      if (validationError) {
+        unsetEditingCompletion = () => this.setState({ value, error: validationError });
+      } else {
+        unsetEditingCompanions = { submitValue: value, error: undefined };
+        unsetEditingCompletion = () => onSubmit(value, ({ error, payload: { message } }) =>
+          this.setState({ value, submitValue: undefined, error: error && message }));
+      }
     }
+    this.setState({ isEditing: false, ...unsetEditingCompanions }, unsetEditingCompletion);
   }
 
   cancel() {
@@ -38,21 +43,22 @@ export default class InlineTextArea extends PureComponent {
   }
 
   render() {
-    const { value = '', readonly = false, maxLength } = this.props;
-    const { isEditing = false, submitValue, submitError } = this.state || {};
+    const { value: defaultValue = '', readonly = false, maxLength } = this.props;
+    const { isEditing = false, value = defaultValue, submitValue, error } = this.state || {};
     const displayValue = submitValue !== undefined ? submitValue : value;
     return (
       <span
         className={`
           ${styles.editor}
+          ${styles.fluid}
           ${styles.multiline}
           ${readonly && styles.readonly}
           ${isEditing && styles.editing}
-          ${submitValue !== undefined && !submitError && styles.submitting}
-          ${submitError && styles.error}
+          ${submitValue !== undefined && !error && styles.submitting}
+          ${error && styles.error}
         `}
-        onMouseUp={() => !readonly && !submitValue && this.setEditing()}
-        title={submitError}
+        onMouseUp={() => !readonly && submitValue === undefined && this.setEditing()}
+        title={error}
       >
         <span className={styles.value}>
           {displayValue === '' ? <span>&nbsp;</span> : displayValue}
@@ -60,7 +66,7 @@ export default class InlineTextArea extends PureComponent {
         {!readonly && !isEditing &&
           <span
             className={styles.editButton}
-            onMouseUp={() => !submitValue && this.setEditing()}
+            onMouseUp={() => submitValue === undefined && this.setEditing()}
           />}
         {isEditing && (
           <FocusTrap
@@ -73,7 +79,7 @@ export default class InlineTextArea extends PureComponent {
           >
             <textarea
               ref={(ref) => { this.input = ref; }}
-              defaultValue={value}
+              defaultValue={displayValue}
               {...{ maxLength }}
               onChange={e => this.setState({ value: e.target.value })}
             />

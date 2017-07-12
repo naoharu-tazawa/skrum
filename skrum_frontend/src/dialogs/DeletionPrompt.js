@@ -13,10 +13,11 @@ export default class DeletionPrompt extends Component {
     isDeleting: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
+    warning: PropTypes.node.isRequired,
   };
 
   render() {
-    const { title, prompt, onDelete, isDeleting, onClose, children } = this.props;
+    const { title, prompt, onDelete, isDeleting, onClose, children, warning } = this.props;
     const { yesSelected = false } = this.state || {};
     return (
       <BasicModalDialog onClose={onClose}>
@@ -30,6 +31,7 @@ export default class DeletionPrompt extends Component {
           onClose={onClose}
         >
           <div className={styles.content}>{children}</div>
+          <div className={styles.warning}>{warning}</div>
           <div className={styles.choice}>
             <label>
               <input

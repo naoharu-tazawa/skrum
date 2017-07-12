@@ -4,9 +4,10 @@ import { Link, browserHistory } from 'react-router';
 import { okrPropTypes } from './propTypes';
 import { replacePath, toBasicPath } from '../../util/RouteUtil';
 import InlineTextArea from '../../editors/InlineTextArea';
-import InlineTextInput from '../../editors/InlineTextInput';
+import InlineDateInput from '../../editors/InlineDateInput';
 import DeletionPrompt from '../../dialogs/DeletionPrompt';
 import DropdownMenu from '../../components/DropdownMenu';
+import { compareDates } from '../../util/DatetimeUtil';
 import styles from './OkrDetails.css';
 
 export default class OkrDetails extends Component {
@@ -16,10 +17,6 @@ export default class OkrDetails extends Component {
     okr: okrPropTypes.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired,
-  };
-
-  state = {
-    isDeleteOkrModalOpen: false,
   };
 
   getProgressStyles = rate =>
@@ -52,6 +49,7 @@ export default class OkrDetails extends Component {
             <div className={styles.ttl_team}>
               <InlineTextArea
                 value={name}
+                required
                 maxLength={120}
                 onSubmit={(value, completion) =>
                   dispatchPutOKR(id, { okrName: value }).then(completion)}
@@ -81,8 +79,24 @@ export default class OkrDetails extends Component {
                 {achievedValue}／{targetValue}{unit}
               </div>
               <div className={`${styles.txt_date} ${styles.floatR}`}>
-                <span>開始日：<span>{startDate}</span></span>
-                <span>期限日：<span>{endDate}</span></span>
+                <span>開始日：
+                  <InlineDateInput
+                    value={startDate}
+                    required
+                    validate={value => (compareDates(value, endDate) > 0 ? '終了日は開始日以降に設定してください' : null)}
+                    onSubmit={(value, completion) =>
+                      dispatchPutOKR(id, { startDate: value }).then(completion)}
+                  />
+                </span>
+                <span>期限日：
+                  <InlineDateInput
+                    value={endDate}
+                    required
+                    validate={value => (compareDates(startDate, value) > 0 ? '終了日は開始日以降に設定してください' : null)}
+                    onSubmit={(value, completion) =>
+                      dispatchPutOKR(id, { endDate: value }).then(completion)}
+                  />
+                </span>
               </div>
             </div>
             <div className={`${styles.nav_info} ${styles.cf}`}>
@@ -113,8 +127,14 @@ export default class OkrDetails extends Component {
         </div>
         {isDeleteOkrModalOpen && (
           <DeletionPrompt
-            title="OKRの削除"
-            prompt="こちらのOKRを削除しますか?"
+            title="目標の削除"
+            prompt="こちらの目標を削除しますか？"
+            warning={(
+              <ul>
+                <li>一度削除した目標は復元できません。</li>
+                <li>上記の目標に直接紐づいている全ての目標/サブ目標、およびその下に紐づいている全ての目標/サブ目標も同時に削除されます。</li>
+              </ul>
+            )}
             onDelete={() => {
               this.setState({ isDeletingOkr: true }, () =>
                 dispatchDeleteOkr(id).then(({ error }) => {
@@ -126,15 +146,9 @@ export default class OkrDetails extends Component {
             isDeleting={isDeletingOkr}
             onClose={() => this.setState({ isDeleteOkrModalOpen: false })}
           >
-            <div className={styles.boxInfo}>
-              <div className={styles.ttl_team}>
-                <InlineTextInput readonly value={name} />
-              </div>
-              <div className={styles.txt}>
-                <InlineTextInput readonly value={detail} />
-              </div>
-              <div className={`${styles.nav_info} ${styles.cf}`}>
-                <div className={`${styles.user_info} ${styles.floatL} ${styles.cf}`}>
+            <div className={styles.deletionPrompt}>
+              <div className={styles.okrToDelete}>
+                <div className={`${styles.user_info} ${styles.floatL}`}>
                   <div className={`${styles.avatar} ${styles.floatL}`}>
                     <img src="/img/common/icn_user.png" alt="User Name" />
                   </div>
@@ -142,6 +156,7 @@ export default class OkrDetails extends Component {
                     <p className={styles.user_name}>{owner.name}</p>
                   </div>
                 </div>
+                <div className={styles.okrName}>{name}</div>
               </div>
             </div>
           </DeletionPrompt>)}
