@@ -27,7 +27,7 @@
           "maxLength": 45
         }
       },
-      "required": ["lastName", "firstName", "position", "phoneNumber"],
+      "required": ["lastName", "firstName", "position"],
       "additionalProperties": false
     },
     "company": {
@@ -54,7 +54,7 @@
           "enum": ["1", "2", "3", "4"]
         }
       },
-      "required": ["name", "vision", "mission", "defaultDisclosureType"],
+      "required": ["name", "defaultDisclosureType"],
       "additionalProperties": false
     },
     "timeframe": {

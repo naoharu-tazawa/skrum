@@ -204,15 +204,15 @@ class UserSettingService extends BaseService
             $mUser->setLastName($userInfo['lastName']);
             $mUser->setFirstName($userInfo['firstName']);
             $mUser->setPosition($userInfo['position']);
-            $mUser->setPhoneNumber($userInfo['phoneNumber']);
+            if (array_key_exists('phoneNumber', $userInfo)) $mUser->setPhoneNumber($userInfo['phoneNumber']);
             $this->persist($mUser);
 
             // 会社情報を登録
             $mCompanyRepos = $this->getMCompanyRepository();
             $mCompany = $mCompanyRepos->findOneBy(array('companyId' => $auth->getCompanyId()));
             $mCompany->setCompanyName($companyInfo['name']);
-            $mCompany->setVision($companyInfo['vision']);
-            $mCompany->setMission($companyInfo['mission']);
+            if (array_key_exists('vision', $companyInfo)) $mCompany->setVision($companyInfo['vision']);
+            if (array_key_exists('mission', $companyInfo)) $mCompany->setMission($companyInfo['mission']);
             $mCompany->setDefaultDisclosureType($companyInfo['defaultDisclosureType']);
             $this->persist($mCompany);
 
