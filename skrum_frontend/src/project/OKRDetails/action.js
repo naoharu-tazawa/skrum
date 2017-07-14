@@ -5,33 +5,39 @@ import { getJson, putJson, postJson, deleteJson } from '../../util/ApiUtil';
 export const Action = {
   REQUEST_FETCH_OKR_DETAILS: 'REQUEST_FETCH_OKR_DETAILS',
   FINISH_FETCH_OKR_DETAILS: 'FINISH_FETCH_OKR_DETAILS',
-  REQUEST_PUT_OKR_DETAILS: 'REQUEST_PUT_OKR_DETAILS',
-  FINISH_PUT_OKR_DETAILS: 'FINISH_PUT_OKR_DETAILS',
   REQUEST_POST_KR: 'REQUEST_POST_KR',
   FINISH_POST_KR: 'FINISH_POST_KR',
+  REQUEST_PUT_OKR_DETAILS: 'REQUEST_PUT_OKR_DETAILS',
+  FINISH_PUT_OKR_DETAILS: 'FINISH_PUT_OKR_DETAILS',
   REQUEST_DELETE_KR: 'REQUEST_DELETE_KR',
   FINISH_DELETE_KR: 'FINISH_DELETE_KR',
+  REQUEST_POST_ACHIEVEMENT: 'REQUEST_POST_ACHIEVEMENT',
+  FINISH_POST_ACHIEVEMENT: 'FINISH_POST_ACHIEVEMENT',
 };
 
 const {
   requestFetchOkrDetails,
   finishFetchOkrDetails,
-  requestPutOkrDetails,
-  finishPutOkrDetails,
   requestPostKr,
   finishPostKr,
+  requestPutOkrDetails,
+  finishPutOkrDetails,
   requestDeleteKr,
   finishDeleteKr,
+  requestPostAchievement,
+  finishPostAchievement,
 } = createActions({
   [Action.FINISH_FETCH_OKR_DETAILS]: keyValueIdentity,
-  [Action.FINISH_PUT_OKR_DETAILS]: keyValueIdentity,
   [Action.FINISH_POST_KR]: keyValueIdentity,
+  [Action.FINISH_PUT_OKR_DETAILS]: keyValueIdentity,
   [Action.FINISH_DELETE_KR]: keyValueIdentity,
+  [Action.FINISH_POST_ACHIEVEMENT]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_OKR_DETAILS,
-  Action.REQUEST_PUT_OKR_DETAILS,
   Action.REQUEST_POST_KR,
+  Action.REQUEST_PUT_OKR_DETAILS,
   Action.REQUEST_DELETE_KR,
+  Action.REQUEST_POST_ACHIEVEMENT,
 );
 
 export const fetchOKRDetails = id =>
@@ -44,16 +50,6 @@ export const fetchOKRDetails = id =>
       .catch(({ message }) => dispatch(finishFetchOkrDetails(new Error(message))));
   };
 
-export const putOKR = (id, data) =>
-  (dispatch, getState) => {
-    const state = getState();
-    if (state.okr.isPutting) return Promise.resolve();
-    dispatch(requestPutOkrDetails());
-    return putJson(`/okrs/${id}.json`, state)(null, data)
-      .then(() => dispatch(finishPutOkrDetails('data', { id, ...data })))
-      .catch(({ message }) => dispatch(finishPutOkrDetails(new Error(message))));
-  };
-
 export const postKR = kr =>
   (dispatch, getState) => {
     const state = getState();
@@ -64,6 +60,16 @@ export const postKR = kr =>
       .catch(({ message }) => dispatch(finishPostKr(new Error(message))));
   };
 
+export const putOKR = (id, data) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.okr.isPutting) return Promise.resolve();
+    dispatch(requestPutOkrDetails());
+    return putJson(`/okrs/${id}.json`, state)(null, data)
+      .then(() => dispatch(finishPutOkrDetails('data', { id, ...data })))
+      .catch(({ message }) => dispatch(finishPutOkrDetails(new Error(message))));
+  };
+
 export const deleteKR = id =>
   (dispatch, getState) => {
     const state = getState();
@@ -72,4 +78,14 @@ export const deleteKR = id =>
     return deleteJson(`/okrs/${id}.json`, state)()
       .then(() => dispatch(finishDeleteKr('deletedKR', { id })))
       .catch(({ message }) => dispatch(finishDeleteKr(new Error(message))));
+  };
+
+export const postAchievement = (id, data) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.okr.isPostingAchievement) return Promise.resolve();
+    dispatch(requestPostAchievement());
+    return postJson(`/okrs/${id}/achievements.json`, state)(null, data)
+      .then(json => dispatch(finishPostAchievement('newAchievement', { data: json })))
+      .catch(({ message }) => dispatch(finishPostAchievement(new Error(message))));
   };

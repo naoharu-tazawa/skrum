@@ -1,3 +1,6 @@
+.form {
+  font-size: 13px;
+}
 .title {
   padding: 2em 2em 1em 2em;
   border-bottom: 1px solid #d8dfe5;
@@ -25,9 +28,12 @@
 .buttons button:disabled {
   color: gray;
 }
+.buttonsFillter {
+  margin-right: auto;
+}
 .cancelButton {
   background-color: #8e9aa5;
-  margin-left: auto;
+  margin-left: 2em;
 }
 .submitButton {
   background-color: #094f97;

@@ -28,7 +28,7 @@ const validate = ({ owner, okrName, startDate, endDate } = {}) => {
   };
 };
 
-const okrDialogInitialValues = (state) => {
+const dialogInitialValues = (state) => {
   const { company = {} } = state.top.data || {};
   const { defaultDisclosureType } = company.policy || {};
   const { locationBeforeTransitions } = state.routing || {};
@@ -40,7 +40,7 @@ const okrDialogInitialValues = (state) => {
 const OkrDialogForm = withLoadedReduxForm(
   DialogForm,
   formName,
-  okrDialogInitialValues,
+  dialogInitialValues,
   { validate },
 );
 
@@ -52,7 +52,7 @@ const KRDialogForm = withLoadedReduxForm(
     const { pathname } = locationBeforeTransitions || {};
     const { subject, id } = explodePath(pathname);
     const owner = { type: getOwnerTypeId(subject), id };
-    return { owner, ...okrDialogInitialValues(state) };
+    return { owner, ...dialogInitialValues(state) };
   },
   { validate },
 );

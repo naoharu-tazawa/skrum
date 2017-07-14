@@ -5,6 +5,8 @@ import InlineTextArea from '../../../editors/InlineTextArea';
 import InlineDateInput from '../../../editors/InlineDateInput';
 import DeletionPrompt from '../../../dialogs/DeletionPrompt';
 import DropdownMenu from '../../../components/DropdownMenu';
+import Dropdown from '../../../components/Dropdown';
+import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
 import { compareDates } from '../../../util/DatetimeUtil';
 import styles from './KRDetailsBar.css';
 
@@ -31,7 +33,7 @@ export default class KRDetailsBar extends Component {
           <div className={styles.action}>アクション</div>
         </div>);
     }
-    const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
+    const { id, type, name, detail, unit, targetValue, achievedValue, achievementRate,
       startDate, endDate, owner } = keyResult;
     const { isDeleteKRModalOpen = false, isDeletingKR = false } = this.state || {};
     return (
@@ -71,7 +73,7 @@ export default class KRDetailsBar extends Component {
               <InlineDateInput
                 value={startDate}
                 required
-                validate={value => (compareDates(value, endDate) > 0 ? '終了日は開始日以降に設定してください' : null)}
+                validate={value => compareDates(value, endDate) > 0 && '終了日は開始日以降に設定してください'}
                 onSubmit={(value, completion) =>
                   dispatchPutOKR(id, { startDate: value }).then(completion)}
               />
@@ -80,7 +82,7 @@ export default class KRDetailsBar extends Component {
               <InlineDateInput
                 value={endDate}
                 required
-                validate={value => (compareDates(startDate, value) > 0 ? '終了日は開始日以降に設定してください' : null)}
+                validate={value => compareDates(startDate, value) > 0 && '終了日は開始日以降に設定してください'}
                 onSubmit={(value, completion) =>
                   dispatchPutOKR(id, { endDate: value }).then(completion)}
               />
@@ -92,9 +94,16 @@ export default class KRDetailsBar extends Component {
           <div className={styles.ownerName}>{owner.name}</div>
         </div>
         <div className={styles.krCount}>
-          <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
+          {type === '2' && (
+            <Dropdown
+              trigger={<button className={styles.tool}><img src="/img/checkin.png" alt="Achievement" /></button>}
+              content={props =>
+                <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
+              arrow="right"
+            />)}
+          <a className={styles.tool} href=""><img src="/img/common/inc_organization.png" alt="Map" /></a>
           <DropdownMenu
-            trigger={<a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>}
+            trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
             options={[
               { caption: '担当者変更' },
               { caption: '紐付け先設定' },

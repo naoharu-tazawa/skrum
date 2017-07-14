@@ -7,6 +7,8 @@ import InlineTextArea from '../../editors/InlineTextArea';
 import InlineDateInput from '../../editors/InlineDateInput';
 import DeletionPrompt from '../../dialogs/DeletionPrompt';
 import DropdownMenu from '../../components/DropdownMenu';
+import Dropdown from '../../components/Dropdown';
+import NewAchievement from '../OKR/NewAchievement/NewAchievement';
 import { compareDates } from '../../util/DatetimeUtil';
 import styles from './OkrDetails.css';
 
@@ -26,7 +28,7 @@ export default class OkrDetails extends Component {
     const { parentOkr = {}, okr, dispatchPutOKR, dispatchDeleteOkr } = this.props;
     const { isDeleteOkrModalOpen = false, isDeletingOkr = false } = this.state || {};
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
-      startDate, endDate, owner } = okr;
+      startDate, endDate, owner, keyResults = [] } = okr;
     return (
       <div>
         <div className={`${styles.content} ${styles.txt_top} ${styles.cf}`}>
@@ -83,7 +85,7 @@ export default class OkrDetails extends Component {
                   <InlineDateInput
                     value={startDate}
                     required
-                    validate={value => (compareDates(value, endDate) > 0 ? '終了日は開始日以降に設定してください' : null)}
+                    validate={value => compareDates(value, endDate) > 0 && '終了日は開始日以降に設定してください'}
                     onSubmit={(value, completion) =>
                       dispatchPutOKR(id, { startDate: value }).then(completion)}
                   />
@@ -92,7 +94,7 @@ export default class OkrDetails extends Component {
                   <InlineDateInput
                     value={endDate}
                     required
-                    validate={value => (compareDates(startDate, value) > 0 ? '終了日は開始日以降に設定してください' : null)}
+                    validate={value => compareDates(startDate, value) > 0 && '終了日は開始日以降に設定してください'}
                     onSubmit={(value, completion) =>
                       dispatchPutOKR(id, { endDate: value }).then(completion)}
                   />
@@ -109,8 +111,18 @@ export default class OkrDetails extends Component {
                 </div>
               </div>
               <div className={styles.member_list}>
+                {keyResults.length === 0 && (
+                  <Dropdown
+                    trigger={(
+                      <button className={styles.tool}><img src="/img/checkin.png" alt="Achievement" /></button>)}
+                    content={props =>
+                      <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
+                    arrow="center"
+                  />)}
+                <a className={styles.tool} href=""><img src="/img/common/inc_organization.png" alt="Map" /></a>
                 <DropdownMenu
-                  trigger={<button><img src="/img/common/inc_link.png" alt="" width="25" /></button>}
+                  trigger={(
+                    <button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>)}
                   options={[
                     { caption: '担当者変更' },
                     { caption: '紐付け先設定' },
@@ -118,9 +130,6 @@ export default class OkrDetails extends Component {
                     { caption: '削除', onClick: () => this.setState({ isDeleteOkrModalOpen: true }) },
                   ]}
                 />
-                <button className={styles.tool}>
-                  <img src="/img/common/inc_organization.png" alt="" width="23" />
-                </button>
               </div>
             </div>
           </div>

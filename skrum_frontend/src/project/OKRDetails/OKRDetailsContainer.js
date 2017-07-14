@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { okrPropTypes, keyResultsPropTypes, ProgressSeriesPropTypes } from './propTypes';
+import { okrPropTypes, ProgressSeriesPropTypes } from './propTypes';
 import OkrDetails from './OkrDetails';
 import KRDetailsList from './KRDetailsList/KRDetailsList';
 import OkrProgressChart from './OkrProgressChart';
@@ -10,7 +10,7 @@ import { withBasicModalDialog } from '../../util/FormUtil';
 import { fetchOKRDetails, putOKR, deleteKR } from './action';
 import { syncOkr } from '../OKR/action';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
-import { mapOKR, mapKeyResult } from '../../util/OKRUtil';
+import { mapOKR } from '../../util/OKRUtil';
 import styles from './OKRDetailsContainer.css';
 
 class OKRDetailsContainer extends Component {
@@ -21,7 +21,6 @@ class OKRDetailsContainer extends Component {
     error: PropTypes.shape({ message: PropTypes.string.isRequired }),
     parentOkr: okrPropTypes,
     okr: okrPropTypes,
-    keyResults: keyResultsPropTypes,
     progressSeries: ProgressSeriesPropTypes,
     dispatchFetchOKRDetails: PropTypes.func,
     dispatchPutOKR: PropTypes.func,
@@ -53,7 +52,7 @@ class OKRDetailsContainer extends Component {
   }
 
   render() {
-    const { isFetching, /* error, */ parentOkr, okr, keyResults = [], progressSeries = [],
+    const { isFetching, /* error, */ parentOkr, okr, progressSeries = [],
       dispatchPutOKR, dispatchDeleteOkr, dispatchDeleteKR } = this.props;
     const { addKRModal = null } = this.state || {};
     // TODO use toastr
@@ -78,7 +77,7 @@ class OKRDetailsContainer extends Component {
         <section className={styles.list}>
           <div className={styles.ttl_list}><h2>上記目標に紐づくサブ目標</h2></div>
           <KRDetailsList
-            keyResults={keyResults}
+            keyResults={okr.keyResults}
             onAdd={() => this.setState({ addKRModal:
               withBasicModalDialog(NewOKR, () => this.setState({ addKRModal: null }),
                 { type: 'KR', parentOkr: okr }) })}
@@ -99,8 +98,7 @@ const mapStateToProps = (state) => {
   return !objective ? basicProps : {
     ...basicProps,
     parentOkr: parentOkr && mapOKR(parentOkr, []),
-    okr: mapOKR(objective, []),
-    keyResults: keyResults.map(mapKeyResult),
+    okr: mapOKR(objective, keyResults),
     progressSeries: chart,
   };
 };

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 export const keyResultPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
+  type: PropTypes.oneOf(['1', '2']).isRequired,
   name: PropTypes.string.isRequired,
   detail: PropTypes.string,
   unit: PropTypes.string.isRequired,
