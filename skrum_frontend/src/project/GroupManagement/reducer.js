@@ -1,7 +1,9 @@
 import { Action } from './action';
+import { mergeUpdateById } from '../../util/ActionUtil';
 
 export default (state = {
   isFetching: false,
+  isPutting: false,
   user: {},
   group: {},
 }, action) => {
@@ -26,6 +28,31 @@ export default (state = {
         ...payload,
         error: null,
       });
+    }
+
+    case Action.REQUEST_PUT_USER: {
+      const { payload } = action;
+      const { id, ...data } = payload.data;
+      const { user, groups } = state.user;
+      const newUser = mergeUpdateById(user, 'userId', data, id);
+      return { ...state, user: { user: newUser, groups }, isPutting: true };
+    }
+
+    case Action.REQUEST_PUT_GROUP: {
+      const { payload } = action;
+      const { id, ...data } = payload.data;
+      const { group, members } = state.group;
+      const newGroup = mergeUpdateById(group, 'groupId', data, id);
+      return { ...state, group: { group: newGroup, members }, isPutting: true };
+    }
+
+    case Action.FINISH_PUT_USER:
+    case Action.FINISH_PUT_GROUP: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isPutting: false, error: { message: payload.message } };
+      }
+      return { ...state, isPutting: false, error: null };
     }
 
     default:

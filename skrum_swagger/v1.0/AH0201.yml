@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/members.json:
+  /groups/{groupId}/members.json?{tfid}:
     get:
       description: グループメンバー取得
       parameters:
@@ -19,6 +19,12 @@ paths:
           in: path
           type: string
           description: グループID
+          required: true
+        -
+          name: tfid
+          in: path
+          type: string
+          description: タイムフレームID
           required: true
       responses:
         200:
@@ -59,6 +65,8 @@ paths:
                       type: string
                     position:
                       type: string
+                    achievementRate:
+                      type: number
                     lastLogin:
                       type: string
         400:

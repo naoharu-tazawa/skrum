@@ -5,14 +5,6 @@ http://company1.localhost:8000/v1/timeframes.json
 [Request Json Schema]
 {
   "timeframeName": "タイムフレーム名",
-  "start": {
-    "year": "2017",
-    "month": "04",
-    "date": "01"
-  },
-  "end": {
-    "year": "2017",
-    "month": "04",
-    "date": "30"
-  }
+  "startDate": "2017-04-01T00:00:00Z",
+  "endDate": "2017-04-30T00:00:00Z"
 }

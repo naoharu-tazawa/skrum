@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\JsonSchemaException;
+use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
 
 /**
  * グループツリーコントローラ
@@ -22,7 +23,7 @@ class GroupTreeController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function postGroupPathsAction(Request $request, string $groupId): array
+    public function postGroupPathsAction(Request $request, string $groupId): GroupPathDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostGroupPathsPdu');
@@ -49,9 +50,9 @@ class GroupTreeController extends BaseController
 
         // グループ新規登録処理
         $groupTreeService = $this->getGroupTreeService();
-        $groupTreeService->createGroupPath($mGroup, $tGroupTree->getGroupTreePath(), $tGroupTree->getGroupTreePathName());
+        $groupPathDTO = $groupTreeService->createGroupPath($auth, $mGroup, $tGroupTree->getGroupTreePath(), $tGroupTree->getGroupTreePathName());
 
-        return array('result' => 'OK');
+        return $groupPathDTO;
     }
 
     /**

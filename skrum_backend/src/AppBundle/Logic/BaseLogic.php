@@ -241,6 +241,45 @@ class BaseLogic
     }
 
     //----------------------------------------------
+    //ここからロジッククラスの取得メソッド
+    //----------------------------------------------
+
+    protected function getDBExistanceLogic()
+    {
+        return $this->getContainer()->get('api.db_existance_logic');
+    }
+
+    protected function getDisclosureLogic()
+    {
+        return $this->getContainer()->get('api.disclosure_logic');
+    }
+
+    protected function getOkrAchievementRateLogic()
+    {
+        return $this->getContainer()->get('api.okr_achievement_rate_logic');
+    }
+
+    protected function getOkrNestedIntervalsLogic()
+    {
+        return $this->getContainer()->get('api.okr_nested_intervals_logic');
+    }
+
+    protected function getOkrOperationLogic()
+    {
+        return $this->getContainer()->get('api.okr_operation_logic');
+    }
+
+    protected function getPermissionLogic()
+    {
+        return $this->getContainer()->get('api.permission_logic');
+    }
+
+    protected function getPostLogic()
+    {
+        return $this->getContainer()->get('api.post_logic');
+    }
+
+    //----------------------------------------------
     //ここからリポジトリクラスの取得メソッド
     //----------------------------------------------
 

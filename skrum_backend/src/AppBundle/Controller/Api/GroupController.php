@@ -10,6 +10,7 @@ use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Api\ResponseDTO\UserGroupDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO;
 
 /**
  * グループコントローラ
@@ -23,9 +24,9 @@ class GroupController extends BaseController
      *
      * @Rest\Post("/v1/groups.{_format}")
      * @param Request $request リクエストオブジェクト
-     * @return array
+     * @return BasicGroupInfoDTO
      */
-    public function postGroupsAction(Request $request): array
+    public function postGroupsAction(Request $request): BasicGroupInfoDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostGroupsPdu');
@@ -50,9 +51,9 @@ class GroupController extends BaseController
 
         // グループ新規登録処理
         $groupService = $this->getGroupService();
-        $groupService->createGroup($auth, $data, $tGroupTree);
+        $basicGroupInfoDTO = $groupService->createGroup($auth, $data, $tGroupTree);
 
-        return array('result' => 'OK');
+        return $basicGroupInfoDTO;
     }
 
     /**

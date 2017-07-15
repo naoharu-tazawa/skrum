@@ -33,21 +33,27 @@ class TPostRepository extends BaseRepository
      * 指定グループIDのタイムラインを取得
      *
      * @param integer $groupId グループID
+     * @param string $before 取得基準日時
      * @return array
      */
-    public function getTimeline(int $groupId): array
+    public function getTimeline(int $groupId, string $before): array
     {
         $qb = $this->createQueryBuilder('tp1');
-        $qb->select('tp1 AS post', 'mu1.lastName AS lastNamePost', 'mu1.firstName AS firstNamePost', 'toa AS okrActivity', 'tp2 AS reply', 'mu2.lastName AS lastNameReply', 'mu2.firstName AS firstNameReply')
-            ->innerJoin('AppBundle:MUser', 'mu1', 'WITH', 'tp1.posterId = mu1.userId')
-            ->leftJoin('AppBundle:TOkrActivity', 'toa', 'WITH', 'tp1.okrActivity = toa.id')
+        $qb->select('tp1 AS post', 'mu1.lastName AS lastNamePost', 'mu1.firstName AS firstNamePost', 'mg1.groupName', 'mc1.companyName', 'tp2 AS reply', 'mu2.lastName AS lastNameReply', 'mu2.firstName AS firstNameReply')
+            ->leftJoin('AppBundle:MUser', 'mu1', 'WITH', 'tp1.posterUserId = mu1.userId')
+            ->leftJoin('AppBundle:MGroup', 'mg1', 'WITH', 'tp1.posterGroupId = mg1.groupId')
+            ->leftJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tp1.posterCompanyId = mc1.companyId')
             ->leftJoin('AppBundle:TPost', 'tp2', 'WITH', 'tp1.id = tp2.parent')
-            ->leftJoin('AppBundle:MUser', 'mu2', 'WITH', 'tp2.posterId = mu2.userId')
+            ->leftJoin('AppBundle:MUser', 'mu2', 'WITH', 'tp2.posterUserId = mu2.userId')
             ->where('tp1.timelineOwnerGroupId = :timelineOwnerGroupId')
             ->andWhere('tp1.parent IS NULL')
+            ->andWhere('tp1.postedDatetime < :postedDatetime')
             ->setParameter('timelineOwnerGroupId', $groupId)
+            ->setParameter('postedDatetime', $before)
             ->orderBy('tp1.postedDatetime', 'DESC')
-            ->addOrderBy('tp2.postedDatetime', 'DESC');
+            ->orderBy('tp1.id', 'DESC')
+            ->addOrderBy('tp2.postedDatetime', 'DESC')
+            ->setMaxResults(5);
 
         return $qb->getQuery()->getResult();
     }

@@ -5,12 +5,14 @@
     "lastName": {
       "title": "姓",
       "type": "string",
-      "maxLength": 255
+      "maxLength": 255,
+      "minLength": 1
     },
     "firstName": {
       "title": "名",
       "type": "string",
-      "maxLength": 255
+      "maxLength": 255,
+      "minLength": 1
     },
     "emailAddress": {
       "title": "Eメールアドレス",
@@ -29,6 +31,5 @@
       "maxLength": 45
     }
   },
-  "required": ["lastName", "firstName", "emailAddress", "position", "phoneNumber"],
   "additionalProperties": false
 }

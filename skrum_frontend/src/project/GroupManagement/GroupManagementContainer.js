@@ -38,13 +38,13 @@ class GroupManagementContainer extends Component {
       dispatchFetchUserGroups,
       dispatchFetchGroupMembers,
     } = this.props;
-    const { section, id, timeframeId } = explodePath(pathname);
-    switch (section) {
+    const { subject, id, timeframeId } = explodePath(pathname);
+    switch (subject) {
       case 'user':
         dispatchFetchUserGroups(id, timeframeId);
         break;
       case 'group':
-        dispatchFetchGroupMembers(id);
+        dispatchFetchGroupMembers(id, timeframeId);
         break;
       default:
         break;
@@ -79,12 +79,8 @@ class GroupManagementContainer extends Component {
     }
     return (
       <div className={styles.container}>
-        <div className={styles.userInfo}>
-          {this.renderInfoEditContainer()}
-        </div>
-        <div className={styles.okrList}>
-          {this.renderGroupManagementListContainer()}
-        </div>
+        {this.renderInfoEditContainer()}
+        {this.renderGroupManagementListContainer()}
       </div>);
   }
 }
@@ -99,8 +95,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchUserGroups = (userId, timeframeId) =>
     dispatch(fetchUserGroups(userId, timeframeId));
-  const dispatchFetchGroupMembers = groupId =>
-    dispatch(fetchGroupMembers(groupId));
+  const dispatchFetchGroupMembers = (groupId, timeframeId) =>
+    dispatch(fetchGroupMembers(groupId, timeframeId));
   return {
     dispatchFetchUserGroups,
     dispatchFetchGroupMembers,

@@ -138,6 +138,13 @@ class BasicOkrDTO
     private $status;
 
     /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $parentOkrId;
+
+    /**
      * @var string
      *
      * @JSON\Type("string")
@@ -588,6 +595,30 @@ class BasicOkrDTO
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set parentOkrId
+     *
+     * @param integer $parentOkrId
+     *
+     * @return BasicOkrDTO
+     */
+    public function setParentOkrId($parentOkrId)
+    {
+        $this->parentOkrId = $parentOkrId;
+
+        return $this;
+    }
+
+    /**
+     * Get parentOkrId
+     *
+     * @return integer
+     */
+    public function getParentOkrId()
+    {
+        return $this->parentOkrId;
     }
 
     /**

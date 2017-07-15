@@ -10,16 +10,22 @@ produces:
 basePath: /v1
 
 paths:
-  /okrs/search.json?{okrid}&{q}:
+  /okrs/search.json?{tfid}&{oid}&{q}:
     get:
       description: OKR検索
       parameters:
+        -
+          name: tfid
+          in: path
+          type: string
+          description: タイムフレームID
+          required: false
         -
           name: oid
           in: path
           type: string
           description: 紐付け先変更対象のOKRID
-          required: true
+          required: false
         -
           name: q
           in: path
@@ -38,17 +44,17 @@ paths:
                 type: string
               ownerType:
                 type: string
-              userId:
+              ownerUserId:
                 type: integer
-              userName:
+              ownerUserName:
                 type: string
-              groupId:
+              ownerGroupId:
                 type: integer
-              groupName:
+              ownerGroupName:
                 type: string
-              companyId:
+              ownerCompanyId:
                 type: integer
-              companyName:
+              ownerCompanyName:
                 type: string
         400:
           description: JSONスキーマ不正

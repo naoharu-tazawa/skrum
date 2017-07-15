@@ -10,15 +10,15 @@ produces:
 basePath: /v1
 
 paths:
-  /companies/{companyId}/roles/{roleAssignmentId}.json:
+  /users/{userId}/roles/{roleAssignmentId}.json:
     put:
       description: ユーザ権限変更
       parameters:
         -
-          name: companyId
+          name: userId
           in: path
           type: string
-          description: 会社ID
+          description: ユーザID
           required: true
         -
           name: roleAssignmentId

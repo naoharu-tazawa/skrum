@@ -1,0 +1,50 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /owners/search.json?{q}:
+    get:
+      description: オーナー検索
+      parameters:
+        -
+          name: q
+          in: path
+          type: string
+          description: 検索ワード
+          required: true
+      responses:
+        200:
+          description: 検索結果
+          schema:
+            type: object
+            properties:
+              ownerType:
+                type: string
+              ownerUserId:
+                type: integer
+              ownerUserName:
+                type: string
+              ownerGroupId:
+                type: integer
+              ownerGroupName:
+                type: string
+              ownerCompanyId:
+                type: integer
+              ownerCompanyName:
+                type: string
+            required:
+              - ownerType
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/posts:
+  /groups/{groupId}/posts.json?{before}:
     get:
-      description: タイムライン取得
+      description: タイムライン取得（グループ）
       parameters:
         -
           name: groupId
@@ -20,9 +20,15 @@ paths:
           type: integer
           description: グループID
           required: true
+        -
+          name: before
+          in: path
+          type: string
+          description: 取得基準日時
+          required: true
       responses:
         200:
-          description: タイムライン
+          description: タイムライン（グループ）
           schema:
             type: array
             items:
@@ -30,16 +36,47 @@ paths:
               properties:
                 postId:
                   type: integer
-                posterId:
+                posterType:
+                  type: string
+                posterUserId:
                   type: integer
-                posterName:
+                posterUserName:
+                  type: string
+                posterGroupId:
+                  type: integer
+                posterGroupName:
                   type: string
                 post:
                   type: string
                 postedDatetime:
                   type: string
-                okrId:
-                  type: integer
+                autoShare:
+                  type: object
+                  properties:
+                    autoPost:
+                      type: string
+                    okrId:
+                      type: integer
+                    okrName:
+                      type: string
+                    ownerType:
+                      type: string
+                    ownerUserId:
+                      type: integer
+                    ownerUserName:
+                      type: string
+                    ownerGroupId:
+                      type: integer
+                    ownerGroupName:
+                      type: string
+                    ownerCompanyId:
+                      type: integer
+                    ownerCompanyName:
+                      type: string
+                  required:
+                    - okrId
+                    - okrName
+                    - ownerType
                 likesCount:
                   type: integer
                 likedFlg:
@@ -51,9 +88,9 @@ paths:
                     properties:
                       postId:
                         type: integer
-                      posterId:
+                      posterUserId:
                         type: integer
-                      posterName:
+                      posterUserName:
                         type: string
                       post:
                         type: string
@@ -61,14 +98,17 @@ paths:
                         type: string
                     required:
                       - postId
-                      - posterId
-                      - posterName
+                      - posterUserId
+                      - posterUserName
                       - post
                       - postedDatetime
               required:
                 - postId
-                - posterId
-                - posterName
+                - posterType
+                - posterUserId
+                - posterUserName
+                - posterGroupId
+                - posterGroupName
                 - post
                 - postedDatetime
                 - likesCount

@@ -1,44 +1,104 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { Link } from 'react-router';
 import { userPropTypes } from './propTypes';
 import styles from './UserInfoEdit.css';
-import { convertToRelativeTimeText } from '../../../util/DatetimeUtil';
+import InlineTextInput from '../../../editors/InlineTextInput';
+import { replacePath } from '../../../util/RouteUtil';
+import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 
 export default class UserInfoEdit extends Component {
 
   static propTypes = {
     user: userPropTypes.isRequired,
     infoLink: PropTypes.string,
+    dispatchPutUser: PropTypes.func.isRequired,
   };
 
   render() {
-    const { user, infoLink } = this.props;
-    const { name, departments, position, phoneNumber, emailAddress, lastUpdate } = user;
+    const { user, dispatchPutUser } = this.props;
+    const { userId, lastName, firstName, departments,
+      position, phoneNumber, emailAddress, lastUpdate } = user;
+    const groupsLink = departments.map(({ groupId, groupName }, index) =>
+      <span key={groupId}>
+        {index ? '・' : ''}
+        <Link to={replacePath({ subject: 'group', id: groupId })} className={styles.groupLink}>{groupName}</Link>
+      </span>);
     return (
-      <div className={styles.component}>
-        <div className={styles.userBox}>
-          <div className={styles.userImage} />
-          <div className={styles.lastUpdate}>最終更新: {convertToRelativeTimeText(lastUpdate)}</div>
+      <section className={styles.profile_box}>
+        <h1 className={styles.ttl_setion}>基本情報</h1>
+        <div className={`${styles.cont_box} ${styles.cf}`}>
+          <div className={styles.profile_img}>
+            <div><img src="/img/profile/img_profile.jpg" alt="" /></div>
+            <p>最終更新: {toRelativeTimeText(lastUpdate)}</p>
+          </div>
+          <div className={styles.profile_txt}>
+            <h2 className={styles.user_name}>
+              <span className={styles.user_name_l}>
+                <InlineTextInput
+                  value={lastName}
+                  required
+                  onSubmit={(value, completion) =>
+                    dispatchPutUser(userId, { lastName: value }).then(completion)}
+                />
+              </span>
+              <span className={styles.user_name_f}>
+                <InlineTextInput
+                  value={firstName}
+                  required
+                  onSubmit={(value, completion) =>
+                    dispatchPutUser(userId, { firstName: value }).then(completion)}
+                />
+              </span>
+            </h2>
+            <div className={styles.groups}>
+              {groupsLink}
+            </div>
+            <table className={`${styles.user_info} ${styles.floatL}`}>
+              <tbody>
+                <tr>
+                  <td><div className={styles.info}>役　職:</div></td>
+                  <td className={styles.td}>
+                    <div className={styles.info_data}>
+                      <InlineTextInput
+                        value={position}
+                        required
+                        onSubmit={(value, completion) =>
+                          dispatchPutUser(userId, { position: value }).then(completion)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><div className={styles.info}>電　話:</div></td>
+                  <td>
+                    <div className={styles.info_data}>
+                      <InlineTextInput
+                        value={phoneNumber}
+                        placeholder="電話番号を入力してください"
+                        onSubmit={(value, completion) =>
+                          dispatchPutUser(userId, { phoneNumber: value }).then(completion)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><div className={styles.info}>メール:</div></td>
+                  <td>
+                    <div className={styles.info_data}>
+                      <InlineTextInput
+                        value={emailAddress}
+                        required
+                        onSubmit={(value, completion) =>
+                          dispatchPutUser(userId, { emailAddress: value }).then(completion)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div className={styles.userInfo}>
-          <div className={styles.userName}>{name}</div>
-          <div className={styles.userDept}>所属部署: {(_.head(departments) || {}).groupName}</div>
-          <table>
-            <tbody>
-              <tr className={styles.userRank}>
-                <td className={styles.userLabel}>役 職:</td><td>{position}</td>
-              </tr>
-              <tr className={styles.userPart}>
-                <td className={styles.userLabel}>Tel:</td><td>{phoneNumber}</td>
-              </tr>
-              <tr className={styles.userPart}>
-                <td className={styles.userLabel}>Email:</td><td>{emailAddress}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <a className={styles.moreLink} href={infoLink}>詳細 ➔</a>
-      </div>);
+      </section>);
   }
 }

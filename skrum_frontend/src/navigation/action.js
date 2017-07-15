@@ -16,19 +16,12 @@ const {
   Action.REQUEST_FETCH_USER_TOP,
 );
 
-export function fetchUserTop(userId) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-    const { isFetching } = status.top;
-    if (isFetching) {
-      return Promise.resolve();
-    }
+export const fetchUserTop = userId =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.top.isFetching) return Promise.resolve();
     dispatch(requestFetchUserTop());
-    return getJson(`/users/${userId}/top.json`, status)()
+    return getJson(`/users/${userId}/top.json`, state)()
       .then(json => dispatch(finishFetchUserTop('data', json)))
-      .catch((err) => {
-        const { message } = err;
-        return dispatch(finishFetchUserTop(new Error(message)));
-      });
+      .catch(({ message }) => dispatch(finishFetchUserTop(new Error(message))));
   };
-}

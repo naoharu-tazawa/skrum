@@ -1,0 +1,23 @@
+{
+  "title": "タイムフレーム編集",
+  "type": "object",
+  "properties": {
+    "timeframeName": {
+      "title": "タイムフレーム名",
+      "type": "string",
+      "maxLength": 255,
+      "minLength": 1
+    },
+    "startDate": {
+      "title": "開始日",
+      "type": "string",
+      "format": "date-time"
+    },
+    "endDate": {
+      "title": "終了日",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

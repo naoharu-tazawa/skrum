@@ -260,15 +260,15 @@ class DateUtility
     /**
      * 開始日と終了日の妥当性チェック
      *
-     * @param string $startDate 年月日時分秒（yyyy-MM-ddThh:mm:ssZ）
-     * @param string $endDate 年月日時分秒（yyyy-MM-ddThh:mm:ssZ）
+     * @param string $startDate 年月日時分秒（yyyy-MM-ddThh:mm:ssZ または yyyy-MM-dd hh:mm:ss）
+     * @param string $endDate 年月日時分秒（yyyy-MM-ddThh:mm:ssZ または yyyy-MM-dd hh:mm:ss）
      * @return void
      */
     public static function checkStartDateAndEndDate(string $startDate, string $endDate)
     {
         // 開始日と終了日を分解し配列に格納
-        $startDateArray = preg_split("(-|T)", $startDate);
-        $endDateArray = preg_split("(-|T)", $endDate);
+        $startDateArray = preg_split("(-|T| )", $startDate);
+        $endDateArray = preg_split("(-|T| )", $endDate);
 
         // 開始日妥当性チェック
         if (!checkdate($startDateArray[1], $startDateArray[2], $startDateArray[0])) {

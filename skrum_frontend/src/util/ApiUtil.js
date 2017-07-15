@@ -22,7 +22,6 @@ const createUrl = (path, param, status) => {
   const domain = extractDomain(status);
   const url = getBaseUrl(domain);
   const urlParam = getUrlParam(param);
-  console.log({ param, urlParam });
   return url + path + urlParam;
 };
 
@@ -43,28 +42,45 @@ const createOption = (method, status, body) => {
   };
 };
 
+const getErrorMessage = (code) => {
+  switch (code) {
+    case 400:
+      return '不正なリクエストです。';
+    case 401:
+      return 'ログインしてください。';
+    case 403:
+      return 'アクセス権限がありません。';
+    case 404:
+      return 'ページがありません。';
+    case 405:
+      return '不正なリクエストです。';
+    case 409:
+      return '他のユーザーが編集中のため、編集できません。';
+    case 500:
+      return 'エラーが発生しました。';
+    case 503:
+      return 'サービスが一時的に停止しています。';
+    default:
+      return `エラー${code}`;
+  }
+};
+
 export const handleResponse = (data) => {
   const status = data.status;
   if (status === 200) {
     return data.json();
   }
-
   return data.json()
     .then((json) => {
-      const exception = {
-        status,
-        message: json.message,
-        errors: json.errors,
-      };
+      const { code, reason, message, errors } = json;
+      const finalMessage = message && message !== '' ? message : getErrorMessage(code);
+      const exception = { code, status, reason, errors, message: finalMessage };
       throw exception;
     });
 };
 
-export const handleError = (error) => {
-  const exception = {
-    message: error.message,
-    detail: error.stack,
-  };
+export const handleError = ({ message, stack }) => {
+  const exception = { message, detail: stack };
   throw exception;
 };
 

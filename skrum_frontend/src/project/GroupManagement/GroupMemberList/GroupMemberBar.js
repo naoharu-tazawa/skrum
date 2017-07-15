@@ -1,58 +1,90 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { groupMemberPropTypes } from './propTypes';
+import { replacePath } from '../../../util/RouteUtil';
 import styles from './GroupMemberBar.css';
-
-const gap = 1;
-const imageDim = 2.25;
-const progressBarWidth = 10;
-const ownerBoxWidth = 10;
-
-const colStyle = {
-  mapImage: {
-    minWidth: `${imageDim}em`,
-//    height: `${imageDim}em`,
-  },
-  name: {
-    width: '100%',
-  },
-  progressBar: {
-    minWidth: `${progressBarWidth}em`,
-  },
-  ownerBox: {
-    minWidth: `${ownerBoxWidth}em`,
-  },
-  tool: {
-    minWidth: `${imageDim}em`,
-    height: `${imageDim}em`,
-  },
-};
 
 export default class GroupMemberBar extends Component {
 
   static propTypes = {
     header: PropTypes.bool,
     member: groupMemberPropTypes,
+    roleLevel: PropTypes.number.isRequired,
   };
 
+  getProgressStyles = rate =>
+    `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
+
   render() {
-    const { header, member } = this.props;
+    const { header, member, roleLevel } = this.props;
+
+    const getHeader = () => (
+      <tr>
+        <th className={styles.name}>名前</th>
+        <th className={styles.position}>役職</th>
+        <th className={styles.update}>最終ログイン</th>
+        <th />
+      </tr>);
+
+    const getHeaderAdmin = () => (
+      <tr>
+        <th className={styles.nameAdmin}>名前</th>
+        <th className={styles.positionAdmin}>役職</th>
+        <th className={styles.progressAdmin}>進捗状況</th>
+        <th className={styles.updateAdmin}>最終ログイン</th>
+        <th />
+      </tr>);
+
     if (header) {
-      return (
-        <div className={styles.header}>
-          <div style={{ ...colStyle.name, margin: 'auto 0' }}>名前</div>
-          <div style={{ ...colStyle.progressBar, margin: `auto ${gap}em auto 0` }}>役職</div>
-          <div style={{ ...colStyle.progressBar, margin: `auto ${gap}em auto 0` }}>最終ログイン日時</div>
-          <div style={{ ...colStyle.deleteButton, margin: `auto ${gap}em auto 0` }} />
-        </div>);
+      const retHeader = roleLevel < 4 ? getHeader() : getHeaderAdmin();
+      return retHeader;
     }
-    const { name, position, lastLogin } = member;
-    return (
-      <div className={styles.component}>
-        <div className={styles.name} style={colStyle.name}>{name}</div>
-        <div className={styles.name} style={colStyle.name}>{position}</div>
-        <div className={styles.name} style={colStyle.name}>{lastLogin}</div>
-        <div className={styles.name} style={colStyle.name}>×</div>
-      </div>);
+
+    const { id, name, position, achievementRate, lastLogin } = member;
+
+    const getRow = () => (
+      <tr>
+        <td>
+          <span>
+            <img src="/img/profile/img_leader.jpg" alt="" />
+          </span>
+          <span key={id}>
+            <Link to={replacePath({ subject: 'user', id })}>{name}</Link>
+          </span>
+        </td>
+        <td>{position}</td>
+        <td>{lastLogin}</td>
+        <td><div className={styles.delete}><img src="/img/delete.svg" alt="" /></div></td>
+      </tr>);
+
+    const getRowAdmin = () => (
+      <tr>
+        <td>
+          <span>
+            <img src="/img/profile/img_leader.jpg" alt="" />
+          </span>
+          <span key={id}>
+            <Link to={replacePath({ subject: 'user', id })}>{name}</Link>
+          </span>
+        </td>
+        <td>{position}</td>
+        <td>
+          <div className={styles.progressBox}>
+            <span className={styles.progressPercent}>{achievementRate}%</span>
+            <div className={styles.progressBar}>
+              <div
+                className={this.getProgressStyles(achievementRate)}
+                style={{ width: `${achievementRate}%` }}
+              />
+            </div>
+          </div>
+        </td>
+        <td>{lastLogin}</td>
+        <td><div className={styles.delete}><img src="/img/delete.svg" alt="" /></div></td>
+      </tr>);
+
+    const retRow = roleLevel < 4 ? getRow() : getRowAdmin();
+    return retRow;
   }
 }

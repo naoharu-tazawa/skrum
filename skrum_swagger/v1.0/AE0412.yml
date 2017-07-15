@@ -10,38 +10,64 @@ produces:
 basePath: /v1
 
 paths:
-  /okrs/{okrId}/changeparent.json:
-    put:
-      description: 紐付け先OKR変更
+  /parentokrs/search.json?{tfid}&{oid}&{q}:
+    get:
+      description: 紐付け先OKR検索（新規目標登録時・紐付け先変更時(対象:Objective)兼用）
       parameters:
         -
-          name: okrId
+          name: tfid
           in: path
           type: string
-          description: 紐付け先変更対象のOKRID
-          required: true
+          description: タイムフレームID（新規目標登録時のみ指定）
+          required: false
         -
-          name: JsonRequest
-          in: body
-          description: 新紐付け先OKRID
+          name: oid
+          in: path
+          type: string
+          description: 紐付け先変更対象のOKRID（紐付け先変更時(対象:Objective)のみ指定）
+          required: false
+        -
+          name: wtype
+          in: path
+          type: string
+          description: 紐付け先変更対象のオーナー種別（新規目標登録時のみ指定）
+          required: false
+        -
+          name: wid
+          in: path
+          type: string
+          description: 紐付け先変更対象のオーナーID（新規目標登録時のみ指定）
+          required: false
+        -
+          name: q
+          in: path
+          type: string
+          description: 検索ワード
           required: true
-          schema:
-            type: object
-            properties:
-              newParentOkrId:
-                type: integer
-            required:
-              - newParentOkrId
       responses:
         200:
-          description: 成功
+          description: 検索結果
           schema:
             type: object
             properties:
-              result:
+              okrId:
+                type: integer
+              okrName:
                 type: string
-            required:
-              - result
+              ownerType:
+                type: string
+              ownerUserId:
+                type: integer
+              ownerUserName:
+                type: string
+              ownerGroupId:
+                type: integer
+              ownerGroupName:
+                type: string
+              ownerCompanyId:
+                type: integer
+              ownerCompanyName:
+                type: string
         400:
           description: JSONスキーマ不正
         409:

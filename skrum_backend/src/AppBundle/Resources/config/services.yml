@@ -54,6 +54,10 @@ services:
         class: AppBundle\Logic\PermissionLogic
         arguments: ['@service_container']
 
+    api.post_logic:
+        class: AppBundle\Logic\PostLogic
+        arguments: ['@service_container']
+
     api.company_service:
         class: AppBundle\Service\Api\CompanyService
         arguments: ['@service_container']

@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { reset } from 'redux-form';
 import PostListContainer from './PostList/PostListContainer';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
+import { errorType } from '../../util/PropUtil';
 import styles from './TimelineContainer.css';
-import { fetchGroupPosts } from './action';
+import { fetchGroupPosts, postGroupPosts } from './action';
+import Form from './Form';
 
 class TimelineContainer extends Component {
 
   static propTypes = {
     isFetching: PropTypes.bool,
+    isPosting: PropTypes.bool,
     pathname: PropTypes.string,
     dispatchFetchGroupPosts: PropTypes.func,
+    dispatchPostGroupPosts: PropTypes.func,
+    dispatchResetForm: PropTypes.func,
+    error: errorType,
   };
+
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
   componentWillMount() {
     const { pathname } = this.props;
@@ -30,40 +42,62 @@ class TimelineContainer extends Component {
       const { id } = explodePath(pathname);
       dispatchFetchGroupPosts(id);
     }
+    this.result(next);
+  }
+
+  result(props = this.props) {
+    const { isPosting, error, dispatchResetForm } = props;
+    if (!isPosting && !error) {
+      dispatchResetForm();
+    }
+  }
+
+  handleSubmit(data) {
+    if (data.post !== undefined) {
+      const { pathname } = this.props;
+      const { id } = explodePath(pathname);
+      this.props.dispatchPostGroupPosts(
+        id,
+        data.post,
+        '1',
+      );
+    }
   }
 
   render() {
     if (this.props.isFetching) {
       return <div className={styles.spinner} />;
     }
-    const { pathname } = this.props;
+    const { isPosting, error, pathname } = this.props;
     return (
       <div className={styles.container}>
-        <div className={styles.userInfo}>
-          <div className={styles.postHeader}>新規投稿作成</div>
-          <div className={styles.postBody}>
-            <div className={styles.ownerImage} />
-            <textarea className={styles.postInput} />
-            <button className={styles.postButton}>投稿</button>
-          </div>
-        </div>
-        <main className={styles.okrList}>
+        <div className={`${styles.inner} ${styles.timeline}`}>
+          <section className={styles.new_post_box}>
+            <Form
+              isPosting={isPosting}
+              error={error}
+              onSubmit={this.handleSubmit}
+            />
+          </section>
           <PostListContainer pathname={pathname} />
-        </main>
+        </div>
       </div>);
   }
 }
 
 const mapStateToProps = (state) => {
-  const { isFetching = false } = state.timeline || {};
+  const { isFetching = false, isPosting = false, error } = state.timeline || {};
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
-  return { isFetching, pathname };
+  return { isFetching, isPosting, error, pathname };
 };
 
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchGroupPosts = groupId => dispatch(fetchGroupPosts(groupId));
-  return { dispatchFetchGroupPosts };
+  const dispatchPostGroupPosts = (groupId, post, disclosureType) =>
+    dispatch(postGroupPosts(groupId, post, disclosureType));
+  const dispatchResetForm = () => dispatch(reset('form'));
+  return { dispatchFetchGroupPosts, dispatchPostGroupPosts, dispatchResetForm };
 };
 
 export default connect(

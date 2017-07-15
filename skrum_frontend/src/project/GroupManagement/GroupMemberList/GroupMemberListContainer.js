@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { groupMembersPropTypes } from './propTypes';
 import GroupMemberList from './GroupMemberList';
@@ -7,28 +8,33 @@ class GroupMemberListContainer extends Component {
 
   static propTypes = {
     items: groupMembersPropTypes,
+    roleLevel: PropTypes.number.isRequired,
   };
 
   render() {
+    const { items, roleLevel } = this.props;
     return (
       <GroupMemberList
-        items={this.props.items}
+        items={items}
+        roleLevel={roleLevel}
       />);
   }
 }
 
 const mapStateToProps = (state) => {
+  const { roleLevel = 1 } = state.auth || {};
   const { members = [] } = state.groupManagement.group || {};
   const items = members.map((member) => {
-    const { userId, name, position, lastLogin } = member;
+    const { userId, name, position, achievementRate, lastLogin } = member;
     return {
       id: userId,
       name,
       position,
+      achievementRate,
       lastLogin,
     };
   });
-  return { items };
+  return { roleLevel, items };
 };
 
 export default connect(

@@ -1,0 +1,62 @@
+@charset "UTF-8";
+  /* ====================================================
+  共通
+  ==================================================== */
+.floatL {
+  float: left; }
+
+.title {
+  font-size: 18px;
+}
+.td {
+  margin: 30px 0px 0px 20px;
+}
+.label {
+  margin-top: 3px;
+  display: block;
+  float: left;
+  width: 220px;
+}
+
+.btn_area {
+  margin: 138px 0px 0px 200px;
+}
+.btn {
+  vertical-align: bottom;
+  padding: 0;
+  background: none;
+  border: 0px;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  width: 150px;
+  height: 38px;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 19px;
+  background-color: #2562b2;}
+  .btn button:hover {
+    opacity: .7; }
+.disable_btn {
+    height: 50px;
+    width: 150px;
+    background: url(/img/rolling.svg) center no-repeat; }
+.warning {
+  color: #FA5858;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 30px 60px;
+  overflow: scroll;
+}
+.spinner {
+  height: 100%;
+  width: 100%;
+  background: url(/img/rolling.svg) center no-repeat;
+}

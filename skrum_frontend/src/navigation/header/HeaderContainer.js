@@ -2,32 +2,31 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from './Header';
-import { timeframesPropTypes } from './propTypes';
+import NewOKR from '../../project/OKR/NewOKR/NewOKR';
+import { withBasicModalDialog } from '../../util/FormUtil';
 import { logout } from '../../auth/action';
 
 class HeaderContainer extends Component {
 
   static propTypes = {
-    timeframes: timeframesPropTypes,
     dispatchLogout: PropTypes.func,
-    pathname: PropTypes.string,
   };
 
   render() {
-    const { timeframes = [] } = this.props;
+    const { dispatchLogout } = this.props;
+    const { addOkrModal = null } = this.state || {};
     return (
-      <Header
-        timeframes={timeframes}
-        handleLogoutSubmit={this.props.dispatchLogout}
-      />
+      <div>
+        <Header
+          onAdd={() => this.setState({ addOkrModal:
+            withBasicModalDialog(NewOKR, () => this.setState({ addOkrModal: null }), { type: 'Okr' }) })}
+          handleLogoutSubmit={dispatchLogout}
+        />
+        {addOkrModal}
+      </div>
     );
   }
 }
-
-const mapStateToProps = (state) => {
-  const { timeframes = [] } = state.top.data || {};
-  return { timeframes };
-};
 
 const mapDispatchToProps = (dispatch) => {
   const dispatchLogout = () => dispatch(logout());
@@ -35,6 +34,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
 )(HeaderContainer);

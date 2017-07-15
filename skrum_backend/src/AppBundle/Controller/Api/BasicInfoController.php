@@ -55,7 +55,7 @@ class BasicInfoController extends BaseController
 
         // 会社情報取得
         $companyService = $this->getCompanyService();
-        $basicCompanyInfoDTO = $companyService->getCompanyName($auth->getCompanyId());
+        $basicCompanyInfoDTO = $companyService->getSideBarCompany($auth->getCompanyId());
 
         // ユーザリスト取得
         $userService = $this->getUserService();

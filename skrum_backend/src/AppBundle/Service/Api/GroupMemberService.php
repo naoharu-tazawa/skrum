@@ -9,8 +9,8 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\TGroupMember;
-use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
 
 /**
  * グループメンバーサービスクラス
@@ -24,9 +24,10 @@ class GroupMemberService extends BaseService
      *
      * @param MUser $mUser ユーザエンティティ
      * @param MGroup $mGroup グループエンティティ
-     * @return void
+     * @param array $okrsArray 当該メンバー所有OKR配列
+     * @return MemberDTO
      */
-    public function addMember(MUser $mUser, MGroup $mGroup)
+    public function addMember(MUser $mUser, MGroup $mGroup, array $okrsArray): MemberDTO
     {
         // グループメンバー排他チェック
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
@@ -45,44 +46,123 @@ class GroupMemberService extends BaseService
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
+
+
+        $memberDTO = new MemberDTO();
+        $memberDTO->setUserId($mUser->getUserId());
+        $memberDTO->setName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $memberDTO->setPosition($mUser->getPosition());
+        $achievementRateArray = array();
+        foreach ($okrsArray as $tOkr) {
+            $achievementRateArray[] = $tOkr->getAchievementRate();
+        }
+        $memberDTO->setAchievementRate(floor((array_sum($achievementRateArray) / count($achievementRateArray)) * 10) / 10);
+        $tLoginRepos = $this->getTLoginRepository();
+        $memberDTO->setLastLogin($tLoginRepos->getLastLogin($mUser->getUserId()));
+
+        return $memberDTO;
     }
 
     /**
      * グループメンバー取得
      *
      * @param integer $groupId グループID
+     * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function getMembers(int $groupId): array
+    public function getMembers(int $groupId, int $timeframeId): array
     {
-        $mUserArray = $this->getMUserArray($groupId);
+        $userInfoArray = $this->getUserInfoArray($groupId, $timeframeId);
 
+        // グループ情報配列を整形してDTOに詰め替える
         $members = array();
         $tLoginRepos = $this->getTLoginRepository();
-        foreach ($mUserArray as $mUser) {
-            $memberDTO = new MemberDTO();
-            $memberDTO->setUserId($mUser->getUserId());
-            $memberDTO->setName($mUser->getLastName() . ' ' . $mUser->getFirstName());
-            $memberDTO->setPosition($mUser->getPosition());
-            $memberDTO->setLastLogin($tLoginRepos->getLastLogin($mUser->getUserId()));
+        $userInfoArrayCount = count($userInfoArray);;
+        for ($i = 0; $i < $userInfoArrayCount; ++$i) {
+            if ($i === 0) {
+                // 初回ループ
 
-            $members[] = $memberDTO;
+                $memberDTO = new MemberDTO();
+                $memberDTO->setUserId($userInfoArray[$i]['userId']);
+                $memberDTO->setName($userInfoArray[$i]['lastName'] . ' ' . $userInfoArray[$i]['firstName']);
+                $memberDTO->setPosition($userInfoArray[$i]['position']);
+                $memberDTO->setLastLogin($tLoginRepos->getLastLogin($userInfoArray[$i]['userId']));
+
+                $achievementRateArray = array();
+                $achievementRateArray[] = $userInfoArray[$i]['achievementRate'];
+            } else {
+                // 初回と最終以外のループ
+
+                if ($userInfoArray[$i]['userId'] == $userId) {
+                    // ユーザIDが前回ループ時と同じ場合
+
+                    $achievementRateArray[] = $userInfoArray[$i]['achievementRate'];
+                } else {
+                    // グループIDが前回ループ時と異なる場合
+
+                    // 達成率には平均値を入れる
+                    $memberDTO->setAchievementRate(floor((array_sum($achievementRateArray) / count($achievementRateArray)) * 10) / 10);
+                    $members[] = $memberDTO;
+
+                    $memberDTO = new MemberDTO();
+                    $memberDTO->setUserId($userInfoArray[$i]['userId']);
+                    $memberDTO->setName($userInfoArray[$i]['lastName'] . ' ' . $userInfoArray[$i]['firstName']);
+                    $memberDTO->setPosition($userInfoArray[$i]['position']);
+                    $memberDTO->setLastLogin($tLoginRepos->getLastLogin($userInfoArray[$i]['userId']));
+
+                    $achievementRateArray = array();
+                    $achievementRateArray[] = $userInfoArray[$i]['achievementRate'];
+                }
+            }
+
+            // グループID保持
+            $userId = $userInfoArray[$i]['userId'];
+
+            // 最終ループ
+            if ($i === ($userInfoArrayCount - 1)) {
+                // 達成率には平均値を入れる
+                $memberDTO->setAchievementRate(floor((array_sum($achievementRateArray) / count($achievementRateArray)) * 10) / 10);
+                $members[] = $memberDTO;
+            }
         }
 
         return $members;
     }
 
     /**
-     * ユーザ（グループメンバー）エンティティ配列取得
+     * グループメンバー取得（リーダー用）
      *
      * @param integer $groupId グループID
      * @return array
      */
-    public function getMUserArray(int $groupId): array
+    public function getPossibleleaders(int $groupId): array
+    {
+        $tGroupMemberRepos = $this->getTGroupMemberRepository();
+        $possibleLeaderArray = $tGroupMemberRepos->getAllGroupMembers($groupId);
+
+        $possibleLeaders = array();
+        foreach ($possibleLeaderArray as $possibleLeader) {
+            $memberDTO = new MemberDTO();
+            $memberDTO->setUserId($possibleLeader->getUserId());
+            $memberDTO->setName($possibleLeader->getLastName() . ' ' . $possibleLeader->getFirstName());
+            $possibleLeaders[] = $memberDTO;
+        }
+
+        return $possibleLeaders;
+    }
+
+    /**
+     * ユーザ（グループメンバー）エンティティ配列取得
+     *
+     * @param integer $groupId グループID
+     * @param integer $timeframeId タイムフレームID
+     * @return array
+     */
+    public function getUserInfoArray(int $groupId, int $timeframeId): array
     {
          $tGroupMemberRepos = $this->getTGroupMemberRepository();
 
-         return $tGroupMemberRepos->getAllGroupMembers($groupId);
+         return $tGroupMemberRepos->getAllGroupMembersWithAchievementRate($groupId, $timeframeId);
     }
 
     /**

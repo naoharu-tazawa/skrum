@@ -6,7 +6,9 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
+use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
+use AppBundle\Api\ResponseDTO\PostDTO;
 
 /**
  * タイムラインコントローラ
@@ -16,7 +18,7 @@ use AppBundle\Exception\JsonSchemaException;
 class TimelineController extends BaseController
 {
     /**
-     * タイムライン取得
+     * タイムライン取得（グループ）
      *
      * @Rest\Get("/v1/groups/{groupId}/posts.{_format}")
      * @param Request $request リクエストオブジェクト
@@ -25,6 +27,13 @@ class TimelineController extends BaseController
      */
     public function getGroupPostsAction(Request $request, string $groupId): array
     {
+        // リクエストパラメータを取得
+        $before = $request->get('before'); // ex.) 2017-07-09 20:14:45
+
+        // リクエストパラメータのバリデーション
+        $beforeErrors = $this->validateDatetime($before);
+        if($beforeErrors) throw new InvalidParameterException("タイムライン取得基準日時が不正です", $beforeErrors);
+
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
@@ -33,20 +42,52 @@ class TimelineController extends BaseController
 
         // タイムライン取得処理
         $timelineService = $this->getTimelineService();
-        $postDTOArray = $timelineService->getTimeline($auth, $groupId);
+        $postDTOArray = $timelineService->getTimeline($auth, $groupId, $before);
 
         return $postDTOArray;
     }
 
     /**
-     * コメント投稿
+     * タイムライン取得（会社）
+     *
+     * @Rest\Get("/v1/companies/{companyId}/posts.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
+     * @return array
+     */
+    public function getCompanyPostsAction(Request $request, string $companyId): array
+    {
+        // リクエストパラメータを取得
+        $before = $request->get('before'); // ex.) 2017-07-09 20:14:45
+
+        // リクエストパラメータのバリデーション
+        $beforeErrors = $this->validateDatetime($before);
+        if($beforeErrors) throw new InvalidParameterException("タイムライン取得基準日時が不正です", $beforeErrors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 会社IDの一致をチェック
+        if ($companyId != $auth->getCompanyId()) {
+            throw new ApplicationException('会社IDが存在しません');
+        }
+
+        // タイムライン取得処理
+        $timelineService = $this->getTimelineService();
+        $postDTOArray = $timelineService->getCompanyTimeline($auth, $companyId, $before);
+
+        return $postDTOArray;
+    }
+
+    /**
+     * コメント投稿（グループ）
      *
      * @Rest\Post("/v1/groups/{groupId}/posts.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $groupId グループID
-     * @return array
+     * @return PostDTO
      */
-    public function postGroupPostsAction(Request $request, string $groupId): array
+    public function postGroupPostsAction(Request $request, string $groupId): PostDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/CommentPdu');
@@ -63,9 +104,41 @@ class TimelineController extends BaseController
 
         // コメント登録処理
         $timelineService = $this->getTimelineService();
-        $timelineService->postComment($auth, $data, $groupId);
+        $postDTO = $timelineService->postComment($auth, $data, $groupId);
 
-        return array('result' => 'OK');
+        return $postDTO;
+    }
+
+    /**
+     * コメント投稿（会社）
+     *
+     * @Rest\Post("/v1/companies/{companyId}/posts.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $companyId 会社ID
+     * @return PostDTO
+     */
+    public function postCompanyPostsAction(Request $request, string $companyId): PostDTO
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/CommentPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 会社IDの一致をチェック
+        if ($companyId != $auth->getCompanyId()) {
+            throw new ApplicationException('会社IDが存在しません');
+        }
+
+        // コメント登録処理
+        $timelineService = $this->getTimelineService();
+        $postDTO = $timelineService->postCompanyComment($auth, $data, $companyId);
+
+        return $postDTO;
     }
 
     /**
@@ -74,9 +147,9 @@ class TimelineController extends BaseController
      * @Rest\Post("/v1/posts/{postId}/replies.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string postId 投稿ID
-     * @return array
+     * @return $postDTO
      */
-    public function postPostRepliesAction(Request $request, string $postId): array
+    public function postPostRepliesAction(Request $request, string $postId): PostDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/ReplyPdu');
@@ -98,9 +171,9 @@ class TimelineController extends BaseController
 
         // リプライ登録処理
         $timelineService = $this->getTimelineService();
-        $timelineService->postReply($auth, $data, $tPost);
+        $postDTO = $timelineService->postReply($auth, $data, $tPost);
 
-        return array('result' => 'OK');
+        return $postDTO;
     }
 
     /**

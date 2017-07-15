@@ -22,25 +22,19 @@ const {
 
 export const logout = requestLogout;
 
-export function forceLogout() {
-  return (dispatch) => {
+export const forceLogout = () =>
+  (dispatch) => {
     dispatch(forceLogout());
     browserHistory.push('/login');
     return requestLogin();
   };
-}
 
-export function startLogin(emailAddress, password) {
-  return (dispatch, getStatus) => {
-    const status = getStatus();
-
-    if (status.isFetching) {
-      return Promise.resolve();
-    }
-
+export const startLogin = (emailAddress, password) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.isFetching) return Promise.resolve();
     dispatch(requestLogin());
-    return postJson('/login.json', status)(null, { emailAddress, password })
+    return postJson('/login.json', state)(null, { emailAddress, password })
       .then(resp => dispatch(finishLogin('data', resp)))
       .catch(err => dispatch(finishLogin(new Error(err.message))));
   };
-}

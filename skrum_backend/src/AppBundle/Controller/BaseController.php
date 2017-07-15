@@ -237,6 +237,22 @@ class BaseController extends FOSRestController
     }
 
     /**
+     * URLパラメータバリデーション（日付型チェック）
+     *
+     * @param string $item チェック対象
+     * @return array バリデーションエラー情報
+     */
+    protected function validateDatetime(string $item = null): array
+    {
+        $errors = $this->get('validator')->validate($item, array(
+                new Assert\NotNull(),
+                new Assert\DateTime()
+        ));
+
+        return $this->getUrlParameterErrors($errors);
+    }
+
+    /**
      * バリデーションエラー時のレスポンス生成（URLパラメータ用）
      *
      * @param ConstraintViolationListInterface $errors
@@ -347,6 +363,11 @@ class BaseController extends FOSRestController
     protected function getPermissionLogic()
     {
         return $this->get('api.permission_logic');
+    }
+
+    protected function getPostLogic()
+    {
+        return $this->get('api.post_logic');
     }
 
     //----------------------------------------------

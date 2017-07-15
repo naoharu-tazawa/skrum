@@ -2,10 +2,11 @@
   "title": "グループ基本情報変更",
   "type": "object",
   "properties": {
-    "groupName": {
+    "name": {
       "title": "グループ名",
       "type": "string",
-      "maxLength": 255
+      "maxLength": 255,
+      "minLength": 1
     },
     "mission": {
       "title": "ミッション",
@@ -13,6 +14,5 @@
       "maxLength": 255
     }
   },
-  "required": ["groupName", "mission"],
   "additionalProperties": false
 }

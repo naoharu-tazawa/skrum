@@ -33,6 +33,13 @@ class MemberDTO
     private $position;
 
     /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $achievementRate;
+
+    /**
      * @var \DateTime
      *
      * @JSON\Type("DateTime<'Y-m-d H:i:s'>")
@@ -109,6 +116,30 @@ class MemberDTO
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * Set achievementRate
+     *
+     * @param string $achievementRate
+     *
+     * @return MemberDTO
+     */
+    public function setAchievementRate($achievementRate)
+    {
+        $this->achievementRate = $achievementRate;
+
+        return $this;
+    }
+
+    /**
+     * Get achievementRate
+     *
+     * @return string
+     */
+    public function getAchievementRate()
+    {
+        return $this->achievementRate;
     }
 
     /**

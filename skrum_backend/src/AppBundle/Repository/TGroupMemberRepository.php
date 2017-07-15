@@ -48,6 +48,32 @@ class TGroupMemberRepository extends BaseRepository
     }
 
     /**
+     * 指定グループIDに紐付くユーザをそれに紐づくOKR達成率と共に全レコードを取得
+     *
+     * @param integer $groupId グループID
+     * @param integer $timeframeId タイムフレームID
+     * @return array
+     */
+    public function getAllGroupMembersWithAchievementRate(int $groupId, int $timeframeId): array
+    {
+        $qb = $this->createQueryBuilder('tgm');
+        $qb->select('mu.userId', 'mu.lastName', 'mu.firstName', 'mu.position', 'to.achievementRate')
+            ->innerJoin('AppBundle:MUser', 'mu', 'WITH', 'tgm.user = mu.userId')
+            ->leftJoin('AppBundle:TOkr', 'to', 'WITH', 'mu.userId = to.ownerUser')
+            ->where('tgm.group = :groupId')
+            ->andWhere('to.timeframe = :timeframeId')
+            ->andWhere('to.ownerType = :ownerType')
+            ->andWhere('to.type = :type')
+            ->setParameter('groupId', $groupId)
+            ->setParameter('timeframeId', $timeframeId)
+            ->setParameter('ownerType', DBConstant::OKR_OWNER_TYPE_USER)
+            ->setParameter('type', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->orderBy('mu.userId', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * 指定ユーザIDに紐付くグループ（部門のみ）レコードを取得
      *
      * @param integer $userId ユーザID

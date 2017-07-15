@@ -86,11 +86,11 @@ class OkrOperationService extends BaseService
             // 旧紐付け先の達成率を再計算
             $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
             if ($currentParentOkr != null) {
-                $okrAchievementRateLogic->recalculateFromParent($currentParentOkr, $auth->getCompanyId(), true);
+                $okrAchievementRateLogic->recalculateFromParent($auth, $currentParentOkr, true);
             }
 
             // 新紐付け先の達成率を再計算
-            $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), true);
+            $okrAchievementRateLogic->recalculate($auth, $tOkr, true);
 
             // 入れ子集合モデルの右値と左値を再計算
             $okrNestedIntervalsLogic = $this->getOkrNestedIntervalsLogic();

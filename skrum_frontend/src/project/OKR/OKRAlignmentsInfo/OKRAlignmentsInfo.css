@@ -1,0 +1,107 @@
+/* -------- CLEAR -------- */
+.cf:after {
+  clear: both;
+  display: block;
+  content: ""; }
+
+/* -------- CLEAR -------- */
+.floatL {
+  float: left; }
+
+.user_info .avatar {
+  margin-right: 10px;
+}
+.user_info .info {
+  display: table-cell;
+  vertical-align: middle;
+}
+.user_info .user_name {
+  margin-top: 14px;
+  color: #626a7f;
+  font-size: 14px;
+}
+
+.circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.circle {
+  display: inline-block;
+  border-color: #8e9aa6;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.circle {
+  margin-right: 10px;
+}
+
+.circle_gray {
+  border-color: #f0f4f5;
+}
+
+.info {
+  /*width: 100%;*/
+  margin-right: 1.5em;
+}
+.spinner {
+  height: 100%;
+  width: 100%;
+  background: url(/img/rolling.svg) center no-repeat;
+}
+
+.okrAlignChart {
+  fill: #626A7F;
+}
+.okrAlignChart path[fill="none"] {
+  stroke: #626A7F;
+}
+.header {
+  padding: 15px 8px 5px 0px;
+  border-bottom: 1px solid #d8dfe5;
+  background-color: #fff;
+  font-size: 13px;
+}
+.content {
+  background-color: #fff;
+}
+.content .group {
+  width: 100%;
+}
+.detail {
+  padding: 0.75em 0;
+  border-bottom: 1px solid #d8dfe5;
+  display: flex;
+}
+.chart {
+  width: 480px;
+}
+.header > div, .content > div {
+  max-width: calc(480px + 270px + 48px);
+  margin: 0 auto;
+  display: flex;
+}
+.group {
+  /*padding: 15px 0px 5px 0px;*/
+  background-color: #fff;
+  display: flex;
+  width: calc(100% - 480px - 48px);
+  max-width: 270px;
+}
+.list {
+  width: calc(100% - 480px);
+  margin-bottom: 0.75em;
+}
+.numberOfOkrs {
+  width: 48px;
+  text-align: right;
+}
+.list .numberOfOkrs {
+  margin: auto 0;
+  padding-right: 8px;
+}

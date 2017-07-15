@@ -52,6 +52,36 @@ class SearchService extends BaseService
     }
 
     /**
+     * 追加ユーザ検索
+     *
+     * @param Auth $auth 認証情報
+     * @param integer $groupId グループID
+     * @param string $keyword 検索ワード
+     * @return array
+     */
+    public function searchAdditionalUser(Auth $auth, int $groupId, string $keyword): array
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // ユーザ検索
+        $mUserRepos = $this->getMUserRepository();
+        $mUserArray = $mUserRepos->searchAdditionalUser($groupId, $escapedKeyword, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        $userSearchDTOArray = array();
+        foreach ($mUserArray as $mUser) {
+            $userSearchDTO = new UserSearchDTO();
+            $userSearchDTO->setUserId($mUser['userId']);
+            $userSearchDTO->setUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
+
+            $userSearchDTOArray[] = $userSearchDTO;
+        }
+
+        return $userSearchDTOArray;
+    }
+
+    /**
      * ユーザ検索（ページング）
      *
      * @param Auth $auth 認証情報
@@ -103,14 +133,44 @@ class SearchService extends BaseService
 
         // グループ検索
         $mGroupRepos = $this->getMGroupRepository();
-        $mGroupArray = $mGroupRepos->searchGroup($escapedKeyword, $auth->getCompanyId());
+        $groupInfoArray = $mGroupRepos->searchGroup($escapedKeyword, $auth->getCompanyId());
 
         // DTOに詰め替える
         $groupSearchDTOArray = array();
-        foreach ($mGroupArray as $mGroup) {
+        foreach ($groupInfoArray as $groupInfo) {
             $groupSearchDTO = new GroupSearchDTO();
-            $groupSearchDTO->setGroupId($mGroup['groupId']);
-            $groupSearchDTO->setGroupName($mGroup['groupName']);
+            $groupSearchDTO->setGroupId($groupInfo['groupId']);
+            $groupSearchDTO->setGroupName($groupInfo['groupName']);
+
+            $groupSearchDTOArray[] = $groupSearchDTO;
+        }
+
+        return $groupSearchDTOArray;
+    }
+
+    /**
+     * 追加グループ検索
+     *
+     * @param Auth $auth 認証情報
+     * @param integer $userId ユーザID
+     * @param string $keyword 検索ワード
+     * @return array
+     */
+    public function searchAdditionalGroup(Auth $auth, int $userId, string $keyword): array
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // 参加グループ検索
+        $mGroupRepos = $this->getMGroupRepository();
+        $groupInfoArray = $mGroupRepos->searchAdditionalGroup($userId, $escapedKeyword, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        $groupSearchDTOArray = array();
+        foreach ($groupInfoArray as $groupInfo) {
+            $groupSearchDTO = new GroupSearchDTO();
+            $groupSearchDTO->setGroupId($groupInfo['groupId']);
+            $groupSearchDTO->setGroupName($groupInfo['groupName']);
 
             $groupSearchDTOArray[] = $groupSearchDTO;
         }
@@ -176,8 +236,8 @@ class SearchService extends BaseService
         foreach ($mUserArray as $mUser) {
             $ownerSearchDTO = new OwnerSearchDTO();
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
-            $ownerSearchDTO->setUserId($mUser['userId']);
-            $ownerSearchDTO->setUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
+            $ownerSearchDTO->setOwnerUserId($mUser['userId']);
+            $ownerSearchDTO->setOwnerUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
         }
@@ -190,8 +250,8 @@ class SearchService extends BaseService
         foreach ($mGroupArray as $mGroup) {
             $ownerSearchDTO = new OwnerSearchDTO();
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
-            $ownerSearchDTO->setGroupId($mGroup['groupId']);
-            $ownerSearchDTO->setGroupName($mGroup['groupName']);
+            $ownerSearchDTO->setOwnerGroupId($mGroup['groupId']);
+            $ownerSearchDTO->setOwnerGroupName($mGroup['groupName']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
         }
@@ -204,8 +264,8 @@ class SearchService extends BaseService
         foreach ($mCompanyArray as $mCompany) {
             $ownerSearchDTO = new OwnerSearchDTO();
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
-            $ownerSearchDTO->setCompanyId($mCompany['companyId']);
-            $ownerSearchDTO->setCompanyName($mCompany['companyName']);
+            $ownerSearchDTO->setOwnerCompanyId($mCompany['companyId']);
+            $ownerSearchDTO->setOwnerCompanyName($mCompany['companyName']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
         }
@@ -243,21 +303,51 @@ class SearchService extends BaseService
     }
 
     /**
+     * 追加グループツリーパス検索
+     *
+     * @param Auth $auth 認証情報
+     * @param integer $groupId グループID
+     * @param string $keyword 検索ワード
+     * @return array
+     */
+    public function searchAdditionalGroupTree(Auth $auth, int $groupId, string $keyword): array
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // 追加グループ検索
+        $mGroupRepos = $this->getMGroupRepository();
+        $tGroupTreeArray = $mGroupRepos->searchAdditionalGroupTree($groupId, $escapedKeyword, $auth->getCompanyId());
+
+        // DTOに詰め替える
+        $groupTreeSearchDTOArray = array();
+        foreach ($tGroupTreeArray as $tGroupTree) {
+            $groupTreeSearchDTO = new GroupTreeSearchDTO();
+            $groupTreeSearchDTO->setGroupPathId($tGroupTree['id']);
+            $groupTreeSearchDTO->setGroupPathName($tGroupTree['groupTreePathName']);
+
+            $groupTreeSearchDTOArray[] = $groupTreeSearchDTO;
+        }
+
+        return $groupTreeSearchDTOArray;
+    }
+
+    /**
      * OKR検索
      *
      * @param Auth $auth 認証情報
      * @param string $keyword 検索ワード
-     * @param TOkr $okrEntity OKRエンティティ
+     * @param integer $timeframeId タイムフレームID
      * @return array
      */
-    public function searchOkr(Auth $auth, string $keyword, TOkr $okrEntity): array
+    public function searchOkr(Auth $auth, string $keyword, int $timeframeId = null): array
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
 
         // OKR検索
         $tOkrRepos = $this->getTOkrRepository();
-        $tOkrArray = $tOkrRepos->searchOkr($escapedKeyword, $okrEntity, $auth->getCompanyId());
+        $tOkrArray = $tOkrRepos->searchOkr($escapedKeyword, $timeframeId, $auth->getCompanyId());
 
         // DTOに詰め替える
         $okrSearchDTOArray = array();
@@ -267,14 +357,104 @@ class SearchService extends BaseService
             $okrSearchDTO->setOkrName($tOkr['name']);
             $okrSearchDTO->setOwnerType($tOkr['owner_type']);
             if ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_USER) {
-                $okrSearchDTO->setUserId($tOkr['user_id']);
-                $okrSearchDTO->setUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
+                $okrSearchDTO->setOwnerUserId($tOkr['user_id']);
+                $okrSearchDTO->setOwnerUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
             } elseif ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
-                $okrSearchDTO->setGroupId($tOkr['group_id']);
-                $okrSearchDTO->setGroupName($tOkr['group_name']);
+                $okrSearchDTO->setOwnerGroupId($tOkr['group_id']);
+                $okrSearchDTO->setOwnerGroupName($tOkr['group_name']);
             } else {
-                $okrSearchDTO->setCompanyId($tOkr['company_id']);
-                $okrSearchDTO->setCompanyName($tOkr['company_name']);
+                $okrSearchDTO->setOwnerCompanyId($tOkr['company_id']);
+                $okrSearchDTO->setOwnerCompanyName($tOkr['company_name']);
+            }
+
+            $okrSearchDTOArray[] = $okrSearchDTO;
+        }
+
+        return $okrSearchDTOArray;
+    }
+
+    /**
+     * 紐付け先OKR検索（新規目標登録時・紐付け先変更時(対象:Objective)兼用）
+     *
+     * @param Auth $auth 認証情報
+     * @param string $keyword 検索ワード
+     * @param integer $timeframeId タイムフレームID
+     * @param string $ownerType OKRオーナータイプ
+     * @param integer $ownerUserId OKRオーナーユーザーID
+     * @param integer $ownerGroupId OKRオーナーグループID
+     * @param integer $ownerCompanyId OKRオーナー会社ID
+     * @return array
+     */
+    public function searchParentOkr(Auth $auth, string $keyword, int $timeframeId = null, string $ownerType, int $ownerUserId = null, int $ownerGroupId = null, int $ownerCompanyId = null): array
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // OKR検索
+        $tOkrRepos = $this->getTOkrRepository();
+        $tOkrArray = $tOkrRepos->searchParentOkr($escapedKeyword, $timeframeId, $auth->getCompanyId(), $ownerType, $ownerUserId, $ownerGroupId, $ownerCompanyId);
+
+        // DTOに詰め替える
+        $okrSearchDTOArray = array();
+        foreach ($tOkrArray as $tOkr) {
+            $okrSearchDTO = new OkrSearchDTO();
+            $okrSearchDTO->setOkrId($tOkr['okr_id']);
+            $okrSearchDTO->setOkrName($tOkr['name']);
+            $okrSearchDTO->setOwnerType($tOkr['owner_type']);
+            if ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_USER) {
+                $okrSearchDTO->setOwnerUserId($tOkr['user_id']);
+                $okrSearchDTO->setOwnerUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
+            } elseif ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                $okrSearchDTO->setOwnerGroupId($tOkr['group_id']);
+                $okrSearchDTO->setOwnerGroupName($tOkr['group_name']);
+            } else {
+                $okrSearchDTO->setOwnerCompanyId($tOkr['company_id']);
+                $okrSearchDTO->setOwnerCompanyName($tOkr['company_name']);
+            }
+
+            $okrSearchDTOArray[] = $okrSearchDTO;
+        }
+
+        return $okrSearchDTOArray;
+    }
+
+    /**
+     * 紐付け先Objective検索（紐付け先変更時(対象:Key Result)用）
+     *
+     * @param Auth $auth 認証情報
+     * @param string $keyword 検索ワード
+     * @param integer $timeframeId タイムフレームID
+     * @param string $ownerType OKRオーナータイプ
+     * @param integer $ownerUserId OKRオーナーユーザーID
+     * @param integer $ownerGroupId OKRオーナーグループID
+     * @param integer $ownerCompanyId OKRオーナー会社ID
+     * @return array
+     */
+    public function searchParentObjective(Auth $auth, string $keyword, int $timeframeId = null, string $ownerType, int $ownerUserId = null, int $ownerGroupId = null, int $ownerCompanyId = null): array
+    {
+        // 検索ワードエスケープ処理
+        $escapedKeyword = addslashes($keyword);
+
+        // OKR検索
+        $tOkrRepos = $this->getTOkrRepository();
+        $tOkrArray = $tOkrRepos->searchParentObjective($escapedKeyword, $timeframeId, $auth->getCompanyId(), $ownerType, $ownerUserId, $ownerGroupId, $ownerCompanyId);
+
+        // DTOに詰め替える
+        $okrSearchDTOArray = array();
+        foreach ($tOkrArray as $tOkr) {
+            $okrSearchDTO = new OkrSearchDTO();
+            $okrSearchDTO->setOkrId($tOkr['okr_id']);
+            $okrSearchDTO->setOkrName($tOkr['name']);
+            $okrSearchDTO->setOwnerType($tOkr['owner_type']);
+            if ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_USER) {
+                $okrSearchDTO->setOwnerUserId($tOkr['user_id']);
+                $okrSearchDTO->setOwnerUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
+            } elseif ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                $okrSearchDTO->setOwnerGroupId($tOkr['group_id']);
+                $okrSearchDTO->setOwnerGroupName($tOkr['group_name']);
+            } else {
+                $okrSearchDTO->setOwnerCompanyId($tOkr['company_id']);
+                $okrSearchDTO->setOwnerCompanyName($tOkr['company_name']);
             }
 
             $okrSearchDTOArray[] = $okrSearchDTO;

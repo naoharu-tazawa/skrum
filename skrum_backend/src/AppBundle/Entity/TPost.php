@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * TPost
  *
- * @ORM\Table(name="t_post", indexes={@ORM\Index(name="idx_post_01", columns={"okr_activity_id"}), @ORM\Index(name="idx_post_02", columns={"parent_id"})})
+ * @ORM\Table(name="t_post", indexes={@ORM\Index(name="idx_post_01", columns={"okr_activity_id"}), @ORM\Index(name="idx_post_02", columns={"parent_id"}), @ORM\Index(name="idx_post_03", columns={"timeline_owner_group_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TPostRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
@@ -17,16 +17,37 @@ class TPost
     /**
      * @var integer
      *
-     * @ORM\Column(name="timeline_owner_group_id", type="integer", nullable=true)
+     * @ORM\Column(name="timeline_owner_group_id", type="integer", nullable=false)
      */
     private $timelineOwnerGroupId;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="poster_type", type="string", length=2, nullable=false)
+     */
+    private $posterType;
+
+    /**
      * @var integer
      *
-     * @ORM\Column(name="poster_id", type="integer", nullable=true)
+     * @ORM\Column(name="poster_user_id", type="integer", nullable=true)
      */
-    private $posterId;
+    private $posterUserId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="poster_group_id", type="integer", nullable=true)
+     */
+    private $posterGroupId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="poster_company_id", type="integer", nullable=true)
+     */
+    private $posterCompanyId;
 
     /**
      * @var string
@@ -34,6 +55,13 @@ class TPost
      * @ORM\Column(name="post", type="string", length=3072, nullable=true)
      */
     private $post;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="auto_post", type="string", length=3072, nullable=true)
+     */
+    private $autoPost;
 
     /**
      * @var \DateTime
@@ -128,27 +156,99 @@ class TPost
     }
 
     /**
-     * Set posterId
+     * Set posterType
      *
-     * @param integer $posterId
+     * @param string $posterType
      *
      * @return TPost
      */
-    public function setPosterId($posterId)
+    public function setPosterType($posterType)
     {
-        $this->posterId = $posterId;
+        $this->posterType = $posterType;
 
         return $this;
     }
 
     /**
-     * Get posterId
+     * Get posterType
+     *
+     * @return string
+     */
+    public function getPosterType()
+    {
+        return $this->posterType;
+    }
+
+    /**
+     * Set posterUserId
+     *
+     * @param integer $posterUserId
+     *
+     * @return TPost
+     */
+    public function setPosterUserId($posterUserId)
+    {
+        $this->posterUserId = $posterUserId;
+
+        return $this;
+    }
+
+    /**
+     * Get posterUserId
      *
      * @return integer
      */
-    public function getPosterId()
+    public function getPosterUserId()
     {
-        return $this->posterId;
+        return $this->posterUserId;
+    }
+
+    /**
+     * Set posterGroupId
+     *
+     * @param integer $posterGroupId
+     *
+     * @return TPost
+     */
+    public function setPosterGroupId($posterGroupId)
+    {
+        $this->posterGroupId = $posterGroupId;
+
+        return $this;
+    }
+
+    /**
+     * Get posterGroupId
+     *
+     * @return integer
+     */
+    public function getPosterGroupId()
+    {
+        return $this->posterGroupId;
+    }
+
+    /**
+     * Set posterCompanyId
+     *
+     * @param integer $posterCompanyId
+     *
+     * @return TPost
+     */
+    public function setPosterCompanyId($posterCompanyId)
+    {
+        $this->posterCompanyId = $posterCompanyId;
+
+        return $this;
+    }
+
+    /**
+     * Get posterCompanyId
+     *
+     * @return integer
+     */
+    public function getPosterCompanyId()
+    {
+        return $this->posterCompanyId;
     }
 
     /**
@@ -173,6 +273,30 @@ class TPost
     public function getPost()
     {
         return $this->post;
+    }
+
+    /**
+     * Set autoPost
+     *
+     * @param string $autoPost
+     *
+     * @return TPost
+     */
+    public function setAutoPost($autoPost)
+    {
+        $this->autoPost = $autoPost;
+
+        return $this;
+    }
+
+    /**
+     * Get autoPost
+     *
+     * @return string
+     */
+    public function getAutoPost()
+    {
+        return $this->autoPost;
     }
 
     /**

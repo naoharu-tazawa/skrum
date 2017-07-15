@@ -1,0 +1,44 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /groups/{groupId}/leaders/{userId}.json:
+    put:
+      description: グループリーダー変更
+      parameters:
+        -
+          name: groupId
+          in: path
+          type: string
+          description: グループID
+          required: true
+        -
+          name: userId
+          in: path
+          type: string
+          description: ユーザID
+          required: true
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

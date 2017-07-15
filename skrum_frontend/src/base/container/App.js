@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { GatewayProvider, GatewayDest } from 'react-gateway';
 
 export default class App extends Component {
   static propTypes = {
@@ -8,9 +9,14 @@ export default class App extends Component {
 
   render() {
     return (
-      <div>
-        {this.props.children}
-      </div>
+      <GatewayProvider>
+        <div>
+          <div>
+            {this.props.children}
+          </div>
+          <GatewayDest name="modal" className="modal-container" />
+        </div>
+      </GatewayProvider>
     );
   }
 }

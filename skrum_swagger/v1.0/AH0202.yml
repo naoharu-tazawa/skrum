@@ -32,9 +32,6 @@ paths:
                 type: string
               mission:
                 type: string
-            required:
-              - groupName
-              - mission
       responses:
         200:
           description: 成功

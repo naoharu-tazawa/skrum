@@ -9,6 +9,7 @@ use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 
 /**
  * OKRコントローラ
@@ -22,30 +23,30 @@ class OkrController extends BaseController
      *
      * @Rest\Post("/v1/okrs.{_format}")
      * @param Request $request リクエストオブジェクト
-     * @return array
+     * @return BasicOkrDTO
      */
-    public function postOkrsAction(Request $request): array
+    public function postOkrsAction(Request $request): BasicOkrDTO
     {
         // JsonSchemaバリデーション
-        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostObjectivesPdu');
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostOkrsPdu');
         if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
 
         // リクエストJSONを取得
         $data = $this->getRequestJsonAsArray($request);
 
         // OKR種別に応じて必要なJsonSchemaのプロパティをチェック
-        if ($data['okrType'] == DBConstant::OKR_TYPE_KEY_RESULT) {
+        if ($data['okrType'] === DBConstant::OKR_TYPE_KEY_RESULT) {
             if (empty($data['parentOkrId'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }
         }
 
         // オーナー種別に応じて必要なJsonSchemaのプロパティをチェック
-        if ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_USER) {
+        if ($data['ownerType'] === DBConstant::OKR_OWNER_TYPE_USER) {
             if (empty($data['ownerUserId'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }
-        } elseif ($data['ownerType'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
+        } elseif ($data['ownerType'] === DBConstant::OKR_OWNER_TYPE_GROUP) {
             if (empty($data['ownerGroupId'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }
@@ -77,25 +78,42 @@ class OkrController extends BaseController
             }
         }
 
-        // タイムフレーム存在チェック
-        $tTimeframe = $this->getDBExistanceLogic()->checkTimeframeExistance($data['timeframeId'], $auth->getCompanyId());
-
-        // 紐付け先OKR存在チェック
         $alignmentFlg = false;
         $tOkr = null;
         if (array_key_exists('parentOkrId', $data)) {
+            /* 紐付け先ありの場合 */
+
+            // 紐付け先OKR存在チェック
             $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($data['parentOkrId'], $auth->getCompanyId());
-            if ($tOkr->getTimeframe()->getTimeframeId() != $data['timeframeId']) {
-                throw new ApplicationException('登録OKRと紐付け先OKRのタイムフレームIDが一致しません');
+
+            // 紐付け先OKRのタイムフレームエンティティを取得
+            $tTimeframe = $tOkr->getTimeframe();
+
+            if ($data['okrType'] === DBConstant::OKR_TYPE_OBJECTIVE) {
+                if (!empty($data['timeframeId'])) {
+                    // 新規登録対象OKRと紐付け先OKRのタイムフレームの一致をチェック
+                    if ($tOkr->getTimeframe()->getTimeframeId() != $data['timeframeId']) {
+                        throw new ApplicationException('登録OKRと紐付け先OKRのタイムフレームIDが一致しません');
+                    }
+                }
             }
             $alignmentFlg = true;
+        } else {
+            /* 紐付け先なしの場合 */
+
+            // タイムフレームエンティティ取得
+            if (!empty($data['timeframeId'])) {
+                $tTimeframe = $this->getDBExistanceLogic()->checkTimeframeExistance($data['timeframeId'], $auth->getCompanyId());
+            } else {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
         }
 
         // 目標新規登録処理
         $okrService = $this->getOkrService();
-        $okrService->createOkr($data['ownerType'], $data, $tTimeframe, $mUser, $mGroup, $auth->getCompanyId(), $alignmentFlg, $tOkr);
+        $basicOkrDTO = $okrService->createOkr($auth, $data['ownerType'], $data, $tTimeframe, $mUser, $mGroup, $auth->getCompanyId(), $alignmentFlg, $tOkr);
 
-        return array('result' => 'OK');
+        return $basicOkrDTO;
     }
 
     /**
@@ -143,9 +161,9 @@ class OkrController extends BaseController
      * @Rest\Post("/v1/okrs/{okrId}/achievements.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $okrId OKRID
-     * @return array
+     * @return BasicOkrDTO
      */
-    public function postOkrAchievementsAction(Request $request, string $okrId): array
+    public function postOkrAchievementsAction(Request $request, string $okrId): BasicOkrDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostOkrAchievementsPdu');
@@ -171,9 +189,9 @@ class OkrController extends BaseController
 
         // OKR進捗登録処理
         $okrService = $this->getOkrService();
-        $okrService->registerAchievement($auth, $data, $tOkr);
+        $basicOkrDTO = $okrService->registerAchievement($auth, $data, $tOkr);
 
-        return array('result' => 'OK');
+        return $basicOkrDTO;
     }
 
     /**

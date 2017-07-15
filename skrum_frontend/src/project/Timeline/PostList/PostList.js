@@ -11,14 +11,10 @@ export default class PostList extends Component {
 
   render() {
     const { items } = this.props;
+
     return (
-      <div className={styles.component}>
-        <div className={styles.okrBars}>
-          {items.map(post =>
-            <div key={post.id} className={styles.okrBar}>
-              <PostBar timeline={post} />
-            </div>)}
-        </div>
-      </div>);
+      <section className={styles.timeline_box}>
+        {items.map(post => <PostBar key={post.id} timeline={post} />)}
+      </section>);
   }
 }

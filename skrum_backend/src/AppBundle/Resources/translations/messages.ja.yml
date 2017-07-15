@@ -5,3 +5,15 @@ parameters:
     email_subject_additional_user_registration: '【Skrum】ユーザ招待のお知らせ'
 
     password_reset: '【Skrum】パスワードリセットのお知らせ'
+
+    auto_post_type_generate: 'さんが目標を作成しました。'
+
+    auto_post_type_achievement: 'さんの達成値が%%d%%sから%%d%%sに進捗しました。（%%s%%d%%s）'
+
+    auto_post_type_achievement_30: 'さんが目標進捗率30%を達成しました。'
+
+    auto_post_type_achievement_50: 'さんが目標進捗率50%を達成しました。'
+
+    auto_post_type_achievement_70: 'さんが目標進捗率70%を達成しました。'
+
+    auto_post_type_achievement_100: 'さんが目標進捗率100%を達成しました。'

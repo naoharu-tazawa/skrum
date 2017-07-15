@@ -51,6 +51,7 @@ paths:
               disclosureType:
                 type: string
             required:
+              - okrType
               - ownerType
               - startDate
               - endDate
@@ -60,14 +61,62 @@ paths:
               - unit
       responses:
         200:
-          description: 成功
+          description: 登録結果
           schema:
             type: object
             properties:
-              result:
+              okrId:
+                type: integer
+              okrType:
                 type: string
+              ownerType:
+                type: string
+              ownerUserId:
+                type: integer
+              ownerGroupId:
+                type: integer
+              ownerCompanyId:
+                type: integer
+              startDate:
+                type: string
+              endDate:
+                type: string
+              okrName:
+                type: string
+              okrDetail:
+                type: string
+              targetValue:
+                type: integer
+              achievedValue:
+                type: integer
+              achievementRate:
+                type: number
+              unit:
+                type: string
+              parentOkrId:
+                type: integer
+              disclosureType:
+                type: string
+              status:
+                type: string
+              weightedAverageRatio:
+                type: number
+              ratioLockedFlg:
+                type: integer
             required:
-              - result
+              - ownerType
+              - startDate
+              - endDate
+              - okrName
+              - okrDetail
+              - targetValue
+              - achievedValue
+              - achievementRate
+              - unit
+              - disclosureType
+              - status
+              - weightedAverageRatio
+              - ratioLockedFlg
         400:
           description: JSONスキーマ不正
         409:

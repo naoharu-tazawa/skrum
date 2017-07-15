@@ -40,6 +40,13 @@ class BasicCompanyInfoDTO
     private $mission;
 
     /**
+     * @var \AppBundle\Api\ResponseDTO\NestedObject\PolicyDTO
+     *
+     * @JSON\Type("AppBundle\Api\ResponseDTO\NestedObject\PolicyDTO")
+     */
+    private $policy;
+
+    /**
      * Set companyId
      *
      * @param integer $companyId
@@ -133,5 +140,29 @@ class BasicCompanyInfoDTO
     public function getMission()
     {
         return $this->mission;
+    }
+
+    /**
+     * Set policy
+     *
+     * @param \AppBundle\Api\ResponseDTO\NestedObject\PolicyDTO $policy
+     *
+     * @return BasicCompanyInfoDTO
+     */
+    public function setPolicy($policy)
+    {
+        $this->policy = $policy;
+
+        return $this;
+    }
+
+    /**
+     * Get policy
+     *
+     * @return \AppBundle\Api\ResponseDTO\NestedObject\PolicyDTO
+     */
+    public function getPolicy()
+    {
+        return $this->policy;
     }
 }

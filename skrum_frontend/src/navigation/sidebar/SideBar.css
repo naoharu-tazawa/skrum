@@ -5,9 +5,13 @@
   height: 100vh;
   overflow: hidden;
   color: #fff;
-  box-shadow: 0px 0px 10px 0px #000;
+  font-size: 0.9rem;
+  box-shadow: 1px 0px 1px rgba(0,0,0,0.40); /* box-shadow: 0px 0px 10px 0px #000; */
+  position:relative;
+  z-index:2;
   background-color: #626A7F;
   box-sizing: border-box;
+  transition: 0.3s width;
 }
 .sideNavTitle {
   position: relative;
@@ -20,8 +24,11 @@
   left: 42px;
   display: block;
 }
-.isOpen {
-  width: 100%;
+.isExpanded {
+  width: 200px;
+}
+.isCollapsed {
+  width: 54px;
 }
 .isHide {
   display: none;
@@ -30,7 +37,7 @@
   background-color: slategray;
 }
 .toggleArea {
-  padding: 10px 20px;
+  padding: 10px 15px;
   display: flex;
   justify-content: flex-end;
 }
@@ -40,6 +47,9 @@
   background-color: transparent;
   border: none;
   font-size: 20px;
+}
+.toggleButton:focus {
+  outline: 0;
 }
 .userName {
   padding: 20px;
@@ -52,12 +62,13 @@
  *  ----------------------------------- */
 .header {
   background-color: #27588F;
-  padding: 14px 30px;
-  height: 64px;
+  padding: 9px 20px;
+  height: 43px;
   box-sizing: border-box;
 }
 .headerLogo {
   box-sizing: border-box;
+  width: 90px;
 }
 /* -----------------------------------
  *  Section
@@ -68,6 +79,8 @@
 .sectionTitle {
   padding: 5px 20px;
   color: #818C9A;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 /* -----------------------------------
  *  Section Item
@@ -81,6 +94,8 @@
 .sectionItemLink {
   color: inherit;
   width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .sectionItemImg {
   width: 20px;

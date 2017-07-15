@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import _ from 'lodash';
+import { find } from 'lodash';
 import NavigationContainer from '../../navigation/NavigationContainer';
 import { implodePath } from '../../util/RouteUtil';
 
@@ -25,10 +25,11 @@ class Authenticated extends Component {
 
   transfer(props = this.props) {
     const { login, isAuthorized, userId, timeframeId } = props;
+    const path = location.pathname;
     if (!isAuthorized) {
       browserHistory.push(login);
-    } else if (userId && timeframeId && window.location.pathname === '/user') {
-      browserHistory.push(implodePath({ section: 'user', id: userId, timeframeId, tab: 'objective' }));
+    } else if (userId && timeframeId && (path === '/user' || path === '/u')) {
+      browserHistory.push(implodePath({ subject: 'user', id: userId, timeframeId, tab: 'objective' }));
     }
   }
 
@@ -43,7 +44,7 @@ class Authenticated extends Component {
 const mapStateToProps = (state) => {
   const { isAuthorized, userId } = state.auth;
   const { timeframes = [] } = state.top.data || {};
-  const timeframeId = (_.find(timeframes, { defaultFlg: 1 }) || {}).timeframeId;
+  const { timeframeId } = find(timeframes, { defaultFlg: 1 }) || {};
   return { isAuthorized, userId, timeframeId };
 };
 

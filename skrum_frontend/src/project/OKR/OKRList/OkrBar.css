@@ -1,0 +1,133 @@
+.component {
+  display: flex;
+  font-size: small;
+  padding: 5px 40px;
+  background-color: #fff;
+  color: #626A7F;
+  max-height: 500px;
+  border-bottom: 1px solid #d8dfe5;
+  border-collapse: collapse;
+}
+.header {
+  display: flex;
+  width: 100%;
+  padding: 10px 40px;
+  background-color: #fff;
+  border-bottom: 1px solid #d8dfe5;
+}
+.okr {
+  width: 40%;
+}
+.progress {
+  width: 25%;
+}
+.owner {
+  width: 18%;
+}
+.name {
+  position: relative;
+  width: 40%;
+  /*white-space: nowrap;*/
+  /*text-overflow: ellipsis;*/
+  margin: auto 0;
+}
+.name a {
+  display: block;
+}
+.progressColumn {
+  width: 25%;
+  margin: 10px 0px;
+}
+.progressBox {
+  display: flex;
+  /*width: 150px;*/
+}
+.progressPercent {
+  margin-right: 8px;
+  width: 3.2em;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: right;
+}
+.progressBar {
+  height: 15px; /* height: 8px; */
+  width: 120px;
+  border-radius: 0px; /* border-radius: 10px; */
+  background-color: #D8DFE5;
+}
+.progress {
+  height: 100%;
+  max-width: 100%;
+  border-radius: 0px; /* border-radius: 4px; */
+}
+.progress.high {
+  background-color: #42BBF8;
+}
+.progress.mid {
+  background-color: #AFDB56;
+}
+.progress.low {
+  background-color: #EFB04C;
+}
+.progressConstituents {
+  font-size: 12px;
+  margin-top: 0.75em;
+  margin-left: 0.5em;
+  color: #BDBDBD;
+}
+.ownerBox {
+  display: flex;
+  margin: auto 0;
+  width: 18%;
+}
+.ownerImage {
+  width: 3em;
+  height: 3em;
+  border: 2px solid #fff;
+  background-color: #626A7F;
+  border-radius: 50%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.ownerName {
+  margin: auto 1em;
+  white-space: nowrap;
+  /*overflow: hidden;*/
+  text-overflow: ellipsis;
+}
+.krCount {
+  display: flex;
+  margin: auto 0;
+}
+.krCount a {
+  cursor: pointer;
+}
+.krCount a:focus {
+  outline: none;
+}
+.circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  /*overflow: hidden;*/
+}
+.circle {
+  display: inline-block;
+  border-color: #8e9aa6;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  margin-right: 15px;
+}
+.circle_small {
+  width: 27px;
+  height: 27px;
+  font-size: 10px;
+  line-height: 25px;
+  margin-top: 7px;
+}
+.circle_plus {
+  background-color: #8e9aa6;
+  color: #fff;
+}

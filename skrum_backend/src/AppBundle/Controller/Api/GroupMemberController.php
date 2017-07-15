@@ -5,9 +5,12 @@ namespace AppBundle\Controller\Api;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
+use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
+use AppBundle\Utils\Constant;
 use AppBundle\Api\ResponseDTO\GroupMemberDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
 
 /**
  * グループメンバーコントローラ
@@ -22,10 +25,17 @@ class GroupMemberController extends BaseController
      * @Rest\Post("/v1/groups/{groupId}/members.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $groupId グループID
-     * @return array
+     * @return MemberDTO
      */
-    public function postGroupMembersAction(Request $request, string $groupId): array
+    public function postGroupMembersAction(Request $request, string $groupId): MemberDTO
     {
+        // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkIntID($timeframeId);
+        if($errors) throw new InvalidParameterException("タイムフレームIDが不正です", $errors);
+
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostGroupMembersPdu');
         if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
@@ -49,11 +59,15 @@ class GroupMemberController extends BaseController
             throw new PermissionException('グループ操作権限がありません');
         }
 
+        // OKR一覧取得
+        $okrService = $this->getOkrService();
+        $okrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_USER, $auth, $data['userId'], null, $timeframeId, $auth->getCompanyId());
+
         // グループメンバー追加登録処理
         $groupMemberService = $this->getGroupMemberService();
-        $groupMemberService->addMember($mUser, $mGroup);
+        $memberDTO = $groupMemberService->addMember($mUser, $mGroup, $okrsArray);
 
-        return array('result' => 'OK');
+        return $memberDTO;
     }
 
     /**
@@ -66,6 +80,13 @@ class GroupMemberController extends BaseController
      */
     public function getGroupMembersAction(Request $request, string $groupId): GroupMemberDTO
     {
+        // リクエストパラメータを取得
+        $timeframeId = $request->get('tfid');
+
+        // リクエストパラメータのバリデーション
+        $errors = $this->checkIntID($timeframeId);
+        if($errors) throw new InvalidParameterException("タイムフレームIDが不正です", $errors);
+
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
@@ -78,7 +99,7 @@ class GroupMemberController extends BaseController
 
         // グループメンバー取得
         $groupMemberService = $this->getGroupMemberService();
-        $memberDTOArray = $groupMemberService->getMembers($groupId);
+        $memberDTOArray = $groupMemberService->getMembers($groupId, $timeframeId);
 
         // 返却DTOをセット
         $groupMemberDTO = new GroupMemberDTO();
@@ -86,6 +107,29 @@ class GroupMemberController extends BaseController
         $groupMemberDTO->setMembers($memberDTOArray);
 
         return $groupMemberDTO;
+    }
+
+    /**
+     * グループメンバー取得（リーダー用）
+     *
+     * @Rest\Get("/v1/groups/{groupId}/possibleleaders.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $groupId グループID
+     * @return array
+     */
+    public function getGroupPossibleleadersAction(Request $request, string $groupId): array
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // グループ存在チェック
+        $this->getDBExistanceLogic()->checkGroupExistanceIncludingArchivedGroups($groupId, $auth->getCompanyId());
+
+        // グループメンバー取得
+        $groupMemberService = $this->getGroupMemberService();
+        $memberDTOArray = $groupMemberService->getPossibleleaders($groupId);
+
+        return $memberDTOArray;
     }
 
     /**

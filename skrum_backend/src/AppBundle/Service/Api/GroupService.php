@@ -14,6 +14,7 @@ use AppBundle\Entity\TGroupTree;
 use AppBundle\Entity\TOkr;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicGroupInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupPathDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\GroupPathElementDTO;
 
 /**
  * グループサービスクラス
@@ -28,10 +29,13 @@ class GroupService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param TGroupTree $tGroupTree グループツリーエンティティ
-     * @return void
+     * @return BasicGroupInfoDTO
      */
-    public function createGroup(Auth $auth, array $data, TGroupTree $groupTreeEntity = null)
+    public function createGroup(Auth $auth, array $data, TGroupTree $groupTreeEntity = null): BasicGroupInfoDTO
     {
+        // グループ名に'/'(スラッシュ)が入っている場合除外する
+        $data['groupName'] = str_replace('/', '', $data['groupName']);
+
         // トランザクション開始
         $this->beginTransaction();
 
@@ -59,6 +63,37 @@ class GroupService extends BaseService
 
             $this->flush();
             $this->commit();
+
+            // レスポンスDTOを生成
+            $basicGroupInfoDTO = new BasicGroupInfoDTO;
+            $basicGroupInfoDTO->setGroupId($mGroup->getGroupId());
+            $basicGroupInfoDTO->setName($mGroup->getGroupName());
+            if ($groupTreeEntity !== null) {
+                $groupTreePathArray = explode('/', $tGroupTree->getGroupTreePath(), -1);
+                $groupTreePathNameArray = explode('/', $tGroupTree->getGroupTreePathName(), -1);
+                $count = count($groupTreePathArray);
+                $groupIdAndNameArray = array();
+                for ($i = 0; $i < $count; ++$i) {
+                    $groupPathElementDTO = new GroupPathElementDTO();
+                    if ($i === 0) {
+                        $groupPathElementDTO->setId($auth->getCompanyId());
+                    } else {
+                        $groupPathElementDTO->setId($groupTreePathArray[$i]);
+                    }
+                    $groupPathElementDTO->setName($groupTreePathNameArray[$i]);
+                    $groupIdAndNameArray[] = $groupPathElementDTO;
+                }
+                $basicGroupInfoDTO->setGroupPaths($groupIdAndNameArray);
+            }
+            $basicGroupInfoDTO->setMission($mGroup->getMission());
+            if ($mGroup->getLeaderUserId() !== null) {
+                $basicGroupInfoDTO->setLeaderUserId($mGroup->getLeaderUserId());
+                $mUserRepos = $this->getMUserRepository();
+                $mUser = $mUserRepos->find($mGroup->getLeaderUserId());
+                $basicGroupInfoDTO->setLeaderName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+            }
+
+            return $basicGroupInfoDTO;
         } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
@@ -85,10 +120,24 @@ class GroupService extends BaseService
         $tGroupTreeArray = $tGroupTreeRepos->findBy(array('group' => $groupId));
         $groupPathArray = array();
         foreach ($tGroupTreeArray as $tGroupTree) {
+            $groupTreePathArray = explode('/', $tGroupTree->getGroupTreePath(), -1);
+            $groupTreePathNameArray = explode('/', $tGroupTree->getGroupTreePathName(), -1);
+            $count = count($groupTreePathArray);
+            $groupIdAndNameArray = array();
+            for ($i = 0; $i < $count; ++$i) {
+                $groupPathElementDTO = new GroupPathElementDTO();
+                if ($i === 0) {
+                    $groupPathElementDTO->setId($companyId);
+                } else {
+                    $groupPathElementDTO->setId($groupTreePathArray[$i]);
+                }
+                $groupPathElementDTO->setName($groupTreePathNameArray[$i]);
+                $groupIdAndNameArray[] = $groupPathElementDTO;
+            }
+
             $groupPathDTO = new GroupPathDTO();
             $groupPathDTO->setGroupTreeId($tGroupTree->getId());
-            $groupPathDTO->setGroupPath($tGroupTree->getGroupTreePath());
-            $groupPathDTO->setGroupPathName($tGroupTree->getGroupTreePathName());
+            $groupPathDTO->setGroupPath($groupIdAndNameArray);
             $groupPathArray[] = $groupPathDTO;
         }
 
@@ -97,8 +146,10 @@ class GroupService extends BaseService
         $basicGroupInfoDTO->setName($mGroupArray['mGroup']->getGroupName());
         $basicGroupInfoDTO->setGroupPaths($groupPathArray);
         $basicGroupInfoDTO->setMission($mGroupArray['mGroup']->getMission());
-        $basicGroupInfoDTO->setLeaderUserId($mGroupArray['mGroup']->getLeaderUserId());
-        $basicGroupInfoDTO->setLeaderName($mGroupArray['mUser']->getLastName() . ' ' . $mGroupArray['mUser']->getFirstName());
+        if ($mGroupArray['mGroup']->getLeaderUserId() !== null) {
+            $basicGroupInfoDTO->setLeaderUserId($mGroupArray['mGroup']->getLeaderUserId());
+            $basicGroupInfoDTO->setLeaderName($mGroupArray['mUser']->getLastName() . ' ' . $mGroupArray['mUser']->getFirstName());
+        }
 
         return $basicGroupInfoDTO;
     }
@@ -118,38 +169,46 @@ class GroupService extends BaseService
 
         try {
             // グループ情報更新
-            $mGroup->setGroupName($data['groupName']);
-            $mGroup->setMission($data['mission']);
+            if (array_key_exists('name', $data) && !empty($data['name'])) {
+                $data['name'] = str_replace('/', '', $data['name']);
+                $mGroup->setGroupName($data['name']);
+            }
+            if (array_key_exists('mission', $data)) {
+                $mGroup->setMission($data['mission']);
+            }
             $this->flush();
 
-            // グループIDをグループパスに含むグループパスエンティティを取得
-            $groupId = $mGroup->getGroupId();
-            $tGroupTreeRepos = $this->getTGroupTreeRepository();
-            $tGroupTreeArray = $tGroupTreeRepos->getLikeGroupId($groupId, $companyId);
-
             // グループパス名を更新
-            foreach ($tGroupTreeArray as $tGroupTree) {
-                // グループパスとグループパス名を'/'で分割し配列に格納
-                $groupTreePathItems = explode('/', $tGroupTree->getGroupTreePath(), -1);
-                $groupTreePathNameItems = explode('/', $tGroupTree->getGroupTreePathName(), -1);
-
-                // グループIDが一致する箇所のグループパス名中のグループ名を変更
-                $count = count($groupTreePathItems);
-                for ($i = 0; $i < $count; ++$i) {
-                    if ($groupTreePathItems[$i] == $groupId) {
-                        $groupTreePathNameItems[$i] = $data['groupName'];
-                    }
-                }
-
-                // グループパスを再構成
-                $newGroupTreePathName = '';
-                foreach ($groupTreePathNameItems as $groupTreePathName) {
-                    $newGroupTreePathName .= $groupTreePathName . '/';
-                }
+            if (array_key_exists('name', $data) && !empty($data['name'])) {
+                // グループIDをグループパスに含むグループパスエンティティを取得
+                $groupId = $mGroup->getGroupId();
+                $tGroupTreeRepos = $this->getTGroupTreeRepository();
+                $tGroupTreeArray = $tGroupTreeRepos->getLikeGroupId($groupId, $companyId);
 
                 // グループパス名を更新
-                $tGroupTree->setGroupTreePathName($newGroupTreePathName);
-                $this->flush();
+                foreach ($tGroupTreeArray as $tGroupTree) {
+                    // グループパスとグループパス名を'/'で分割し配列に格納
+                    $groupTreePathItems = explode('/', $tGroupTree->getGroupTreePath(), -1);
+                    $groupTreePathNameItems = explode('/', $tGroupTree->getGroupTreePathName(), -1);
+
+                    // グループIDが一致する箇所のグループパス名中のグループ名を変更
+                    $count = count($groupTreePathItems);
+                    for ($i = 0; $i < $count; ++$i) {
+                        if ($groupTreePathItems[$i] == $groupId) {
+                            $groupTreePathNameItems[$i] = $data['name'];
+                        }
+                    }
+
+                    // グループパスを再構成
+                    $newGroupTreePathName = '';
+                    foreach ($groupTreePathNameItems as $groupTreePathName) {
+                        $newGroupTreePathName .= $groupTreePathName . '/';
+                    }
+
+                    // グループパス名を更新
+                    $tGroupTree->setGroupTreePathName($newGroupTreePathName);
+                    $this->flush();
+                }
             }
 
             $this->commit();
@@ -269,7 +328,7 @@ class GroupService extends BaseService
             $tOkr->setWeightedAverageRatio(0);
             $tOkr->setRatioLockedFlg(DBConstant::FLG_TRUE);
             $this->flush();
-            $okrAchievementRateLogic->recalculate($tOkr, $auth->getCompanyId(), true);
+            $okrAchievementRateLogic->recalculate($auth, $tOkr, true);
 
             // 削除対象OKRとそれに紐づくOKRを全て削除する
             $tOkrRepos->deleteOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());

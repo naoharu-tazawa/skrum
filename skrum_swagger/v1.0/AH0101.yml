@@ -37,7 +37,9 @@ paths:
                 properties:
                   userId:
                     type: integer
-                  name:
+                  lastName:
+                    type: string
+                  firstName:
                     type: string
                   departments:
                     type: array

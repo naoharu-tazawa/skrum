@@ -1,0 +1,60 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /companies/{companyId}/posts:
+    post:
+      description: コメント投稿（会社）
+      parameters:
+        -
+          name: companyId
+          in: path
+          type: integer
+          description: 会社ID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description:
+          required: true
+          schema:
+            type: object
+            properties:
+              post:
+                type: string
+              disclosureType:
+                type: string
+      responses:
+        200:
+          description: 投稿内容（会社）
+          schema:
+            type: object
+            properties:
+              postId:
+                type: integer
+              posterId:
+                type: integer
+              posterName:
+                type: string
+              post:
+                type: string
+              postedDatetime:
+                type: string
+              likesCount:
+                type: integer
+              likedFlg:
+                type: integer
+        400:
+          description: パラメータ不正
+        401:
+          description: 認証エラー
+        500:
+          description: サーバーエラー

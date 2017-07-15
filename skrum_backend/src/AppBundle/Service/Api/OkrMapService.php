@@ -7,6 +7,7 @@ use AppBundle\Utils\Auth;
 use AppBundle\Utils\Constant;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
+use AppBundle\Api\ResponseDTO\OkrMapDTO;
 use AppBundle\Api\ResponseDTO\ThreeGensOkrMapDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 
@@ -61,6 +62,88 @@ class OkrMapService extends BaseService
         }
 
         return $basicOkrDTOArray;
+    }
+
+    /**
+     * 目標一覧マップを取得
+     *
+     * @param string $subjectType 主体種別
+     * @param Auth $auth 認証情報
+     * @param integer $userId 取得対象ユーザID
+     * @param integer $groupId 取得対象グループID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
+     * @return OkrMapDTO
+     */
+    public function getDescendantsOfMultipleParents(string $subjectType, Auth $auth, int $userId = null, int $groupId = null, int $timeframeId, int $companyId): OkrMapDTO
+    {
+        // 目標を取得
+        $tOkrRepos = $this->getTOkrRepository();
+        $companyName = null;
+        if ($subjectType == Constant::SUBJECT_TYPE_USER) {
+            $objectiveArray = $tOkrRepos->getUserObjectives($userId, $timeframeId, $companyId);
+        } elseif ($subjectType == Constant::SUBJECT_TYPE_GROUP) {
+            $objectiveArray = $tOkrRepos->getGroupObjectives($groupId, $timeframeId, $companyId);
+        } else {
+            $objectiveArray = $tOkrRepos->getCompanyObjectives($companyId, $timeframeId);
+
+            // 会社名を取得
+            $mCompanyRepos = $this->getMCompanyRepository();
+            $mCompany = $mCompanyRepos->find($companyId);
+            $companyName = $mCompany->getCompanyName();
+        }
+
+        $okrOperationLogic = $this->getOkrOperationLogic();
+        $children = array();
+        foreach ($objectiveArray as $objective) {
+            // OKRマップを取得
+            $tOkrArray = $tOkrRepos->getOkrAndAllAlignmentOkrs($objective->getTreeLeft(), $objective->getTreeRight(), $timeframeId, $auth->getCompanyId());
+
+            // OKRの左値・右値が存在しない場合、直接取得
+            if (empty($tOkrArray)) {
+                $tOkrArray[] = $objective;
+            }
+
+            // 階層構造に変換
+            $okrMapDTO = $okrOperationLogic->tree($auth, $tOkrArray, $companyName);
+
+            $children[] = $okrMapDTO;
+        }
+
+        $retOkrMapDTO = new OkrMapDTO();
+        $retOkrMapDTO->setOkrId(1);
+        $retOkrMapDTO->setAchievementRate(1);
+        $retOkrMapDTO->setStatus('0');
+        $retOkrMapDTO->setChildren($children);
+        $retOkrMapDTO->setHidden(true);
+
+        return $retOkrMapDTO;
+    }
+
+    /**
+     * 単一OKRマップ取得
+     *
+     * @param Auth $auth 認証情報
+     * @param TOkr $tOkr 取得対象OKRエンティティ
+     * @param integer $timeframeId タイムフレームID
+     * @return ThreeGensOkrMapDTO
+     */
+    public function getDescendants(Auth $auth, TOkr $tOkr, int $timeframeId): OkrMapDTO
+    {
+        // OKRマップを取得
+        $tOkrRepos = $this->getTOkrRepository();
+        $tOkrArray = $tOkrRepos->getOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $timeframeId, $auth->getCompanyId());
+
+        // 会社名を取得
+        $mCompanyRepos = $this->getMCompanyRepository();
+        $mCompany = $mCompanyRepos->find($auth->getCompanyId());
+        $companyName = $mCompany->getCompanyName();
+
+        // 階層構造に変換
+        $okrOperationLogic = $this->getOkrOperationLogic();
+        $okrMapDTO = $okrOperationLogic->tree($auth, $tOkrArray, $companyName);
+
+        return $okrMapDTO;
     }
 
     /**

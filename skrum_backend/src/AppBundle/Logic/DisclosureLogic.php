@@ -133,7 +133,7 @@ class DisclosureLogic extends BaseLogic
 
         // 本人のみ公開の場合
         if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_SELF) {
-            if ($subjectUserId === $tPost->getPosterId()) {
+            if ($subjectUserId === $tPost->getPosterUserId()) {
                 return true;
             } else {
                 return false;

@@ -1,37 +1,65 @@
-.component {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+@charset "UTF-8";
+
+/* -------- CLEAR -------- */
+.cf:after {
+  clear: both;
+  display: block;
+  content: ""; }
+
+.alignC {
+  text-align: center; }
+
+/* ====================================================
+共通
+==================================================== */
+.ttl_setion {
+  padding: 10px 70px;
+  background: #d8dfe5;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: .5px;
+  box-shadow: 1px 0px 1px 1px rgba(0,0,0,0.12); }
+
+/* ====================================================
+プロファイル画面
+==================================================== */
+.cont_box {
+  background: #fff; }
+
+.member_list .cont_box {
+  margin-bottom: 80px;
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12); }
+
+.member_list table {
+  width: 100%;
+  font-size: 14px; }
+  .member_list table th {
+    padding: 15px 0 12px;
+    border-bottom: 1px solid #d8dfe5; }
+  .member_list table td {
+    padding: 10px 0;
+    border-bottom: 1px solid #d8dfe5; }
+    .member_list table td:first-of-type {
+      padding-left: 70px; }
+    .member_list table td span {
+      margin-right: 10px; }
+
+.add_okr {
+  background-color: #fff;
+  padding-right: 70px;
+}
+.circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #fff;
+  border-radius: 50%;
   overflow: hidden;
-  font-size: small;
-  color: #626A7F;
 }
-.okrHeader {
-  display: flex;
-  /*
-  height: 2em;
-  border-width: thin;
-  border-style: solid;
-  position: relative;
-  */
-  margin-bottom: 1px;
-  z-index: 2;
-}
-.okrBars {
-  max-height: 100%;
-  overflow-y: auto;
-  /*
-  border-width: thin;
-  border-left-style: solid;
-  border-right-style: solid;
-  border-bottom-style: solid;
-  */
-  position: relative;
-  top: -1px;
-}
-.okrBar {
-  /*
-  border-width: thin;
-  border-top-style: solid;
-  */
+.circle {
+  display: inline-block;
+  border-color: #8e9aa6;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  margin-right: 10px;
 }

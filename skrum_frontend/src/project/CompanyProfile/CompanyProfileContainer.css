@@ -1,0 +1,68 @@
+@charset "UTF-8";
+  /* ====================================================
+  共通
+  ==================================================== */
+.floatL {
+  float: left; }
+
+.packet {
+  margin-top: 50px;
+}
+.title {
+  margin-right: 30px;
+}
+.data {
+  position: relative;
+  top: -3px;
+}
+
+.btn {
+  vertical-align: bottom;
+  padding: 0;
+  background: none;
+  border: 0px;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  width: 150px;
+  height: 38px;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 19px;
+  background-color: #2562b2; }
+  .btn button:hover {
+    opacity: .7; }
+.disable_btn {
+    height: 50px;
+    width: 150px;
+    background: url(/img/rolling.svg) center no-repeat; }
+
+.company_img {
+  margin-top: 30px;
+}
+.img {
+  height: 180px;
+  margin-right: 50px;
+  border-radius: 50%;
+}
+.textarea {
+  margin-top: 50px;
+  width: 500px;
+  height: 100px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 30px 60px;
+  overflow: scroll;
+}
+.spinner {
+  height: 100%;
+  width: 100%;
+  background: url(/img/rolling.svg) center no-repeat;
+}

@@ -8,8 +8,13 @@ import RootRedirect from './auth/container/RootRedirect';
 import UserRouter from './project/UserRouter';
 import GroupRouter from './project/GroupRouter';
 import CompanyRouter from './project/CompanyRouter';
+import UserSettingContainer from './project/UserSetting/UserSettingContainer';
+import GroupSettingContainer from './project/GroupSetting/GroupSettingContainer';
+import CompanyProfileContainer from './project/CompanyProfile/CompanyProfileContainer';
+import TimeframeContainer from './project/Timeframe/TimeframeContainer';
+import PasswordChangeContainer from './project/PasswordChange/PasswordChangeContainer';
 
-const topPage = '/user';
+const topPage = '/u';
 const loginPage = '/login';
 
 const children = { children: PropTypes.oneOfType([
@@ -40,10 +45,25 @@ const RedirectRoute = () => (<RootRedirect top={topPage} login={loginPage} />);
 
 export default <Route path="/" component={App} >
   <Route path="" component={AuthenticatedRegion}>
+    <Route path="/u" component={UserRouter} />
     <Route path="/user" component={UserRouter} />
+    <Route path="/u/:userId/:timeframeId/:tab" component={UserRouter} />
     <Route path="/user/:userId/:timeframeId/:tab" component={UserRouter} />
+    <Route path="/g/:groupId/:timeframeId/:tab" component={GroupRouter} />
     <Route path="/group/:groupId/:timeframeId/:tab" component={GroupRouter} />
+    <Route path="/c/:companyId/:timeframeId/:tab" component={CompanyRouter} />
     <Route path="/company/:companyId/:timeframeId/:tab" component={CompanyRouter} />
+    <Route path="/u/:userId/:timeframeId/:tab/o/:okrId" component={UserRouter} />
+    <Route path="/user/:userId/:timeframeId/:tab/o/:okrId" component={UserRouter} />
+    <Route path="/g/:groupId/:timeframeId/:tab/o/:okrId" component={GroupRouter} />
+    <Route path="/group/:groupId/:timeframeId/:tab/o/:okrId" component={GroupRouter} />
+    <Route path="/c/:companyId/:timeframeId/:tab/o/:okrId" component={CompanyRouter} />
+    <Route path="/company/:companyId/:timeframeId/:tab/o/:okrId" component={CompanyRouter} />
+    <Route path="/setting/user" component={UserSettingContainer} />
+    <Route path="/setting/group" component={GroupSettingContainer} />
+    <Route path="/setting/company" component={CompanyProfileContainer} />
+    <Route path="/setting/timeframe" component={TimeframeContainer} />
+    <Route path="/setting/password" component={PasswordChangeContainer} />
   </Route>
   <Route path="/login" component={AnonymousRegion} />
   <IndexRoute component={RedirectRoute} />

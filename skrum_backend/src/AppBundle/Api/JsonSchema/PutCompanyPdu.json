@@ -2,10 +2,11 @@
   "title": "会社基本情報変更",
   "type": "object",
   "properties": {
-    "companyName": {
+    "name": {
       "title": "会社名",
       "type": "string",
-      "maxLength": 255
+      "maxLength": 255,
+      "minLength": 1
     },
     "vision": {
       "title": "ヴィジョン",
@@ -18,6 +19,5 @@
       "maxLength": 255
     }
   },
-  "required": ["companyName", "vision", "mission"],
   "additionalProperties": false
 }

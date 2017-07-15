@@ -24,46 +24,30 @@ paths:
             properties:
               timeframeName:
                 type: string
-              start:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
-              end:
-                type: object
-                properties:
-                  year:
-                    type: string
-                  month:
-                    type: string
-                  date:
-                    type: string
-                required:
-                  - year
-                  - month
-                  - date
+              startDate:
+                type: string
+              endDate:
+                type: string
             required:
               - timeframeName
-              - start
-              - end
+              - startDate
+              - endDate
       responses:
         200:
           description: 成功
           schema:
             type: object
             properties:
-              result:
+              timeframeName:
+                type: string
+              startDate:
+                type: string
+              endDate:
                 type: string
             required:
-              - result
+              - timeframeName
+              - startDate
+              - endDate
         400:
           description: JSONスキーマ不正
         409:

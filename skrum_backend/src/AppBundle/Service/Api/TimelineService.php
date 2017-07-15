@@ -12,6 +12,7 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TLike;
 use AppBundle\Entity\TPost;
 use AppBundle\Api\ResponseDTO\PostDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO;
 
 /**
  * タイムラインサービスクラス
@@ -21,22 +22,24 @@ use AppBundle\Api\ResponseDTO\PostDTO;
 class TimelineService extends BaseService
 {
     /**
-     * タイムライン取得
+     * タイムライン取得（グループ）
      *
      * @param Auth $auth 認証情報
      * @param integer $groupId グループID
+     * @param string $before 取得基準日時
      * @return array
      */
-    public function getTimeline(Auth $auth, int $groupId): array
+    public function getTimeline(Auth $auth, int $groupId, string $before): array
     {
         $tPostRepos = $this->getTPostRepository();
-        $tPostArray = $tPostRepos->getTimeline($groupId);
+        $tPostArray = $tPostRepos->getTimeline($groupId, $before);
 
         // DTOに詰め替える
         $disclosureLogic = $this->getDisclosureLogic();
         $tPostArrayCount = count($tPostArray);
         $postDTOArray = array();
         $flg = false;
+        $companyName = null;
         for ($i = 0; $i < $tPostArrayCount; ++$i) {
             if (array_key_exists('post', $tPostArray[$i])) {
                 // 2回目のループ以降、前回ループ分のDTOを配列に入れる
@@ -68,9 +71,41 @@ class TimelineService extends BaseService
 
                 $postDTOPost = new PostDTO();
                 $postDTOPost->setPostId($tPostArray[$i]['post']->getId());
-                $postDTOPost->setPosterId($tPostArray[$i]['post']->getPosterId());
+                $postDTOPost->setPosterType($tPostArray[$i]['post']->getPosterType());
+                if ($tPostArray[$i]['post']->getPosterType() === DBConstant::POSTER_TYPE_USER) {
+                    $postDTOPost->setPosterUserId($tPostArray[$i]['post']->getPosterUserId());
+                } elseif ($tPostArray[$i]['post']->getPosterType() === DBConstant::POSTER_TYPE_GROUP) {
+                    $postDTOPost->setPosterGroupId($tPostArray[$i]['post']->getPosterGroupId());
+                } else {
+                    $postDTOPost->setPosterCompanyId($tPostArray[$i]['post']->getPosterCompanyId());
+                }
                 $postDTOPost->setPost($tPostArray[$i]['post']->getPost());
                 $postDTOPost->setPostedDatetime($tPostArray[$i]['post']->getPostedDatetime());
+                if ($tPostArray[$i]['post']->getOkrActivity() !== null) {
+                    $tOkr = $tPostArray[$i]['post']->getOkrActivity()->getOkr();
+
+                    $autoShare = new AutoShareDTO();
+                    $autoShare->setAutoPost($tPostArray[$i]['post']->getAutoPost());
+                    $autoShare->setOkrId($tOkr->getOkrId());
+                    $autoShare->setOkrName($tOkr->getName());
+                    $autoShare->setOwnerType($tOkr->getOwnerType());
+                    if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+                        $autoShare->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
+                        $autoShare->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+                    } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                        $autoShare->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+                        $autoShare->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+                    } else {
+                        $autoShare->setOwnerCompanyId($tOkr->getOwnerCompanyId());
+                        if ($companyName === null) {
+                            $mCompanyRepos = $this->getMCompanyRepository();
+                            $mCompany = $mCompanyRepos->find($auth->getCompanyId());
+                            $companyName = $mCompany->getCompanyName();
+                        }
+                        $autoShare->setOwnerCompanyName($companyName);
+                    }
+                    $postDTOPost->setAutoShare($autoShare);
+                }
                 $postDTOPost->setLikesCount($likesCount);
                 if (empty($tLike)) {
                     $postDTOPost->setLikedFlg(DBConstant::FLG_FALSE);
@@ -80,27 +115,18 @@ class TimelineService extends BaseService
 
                 $postDTOReplyArray = array();
                 $flg = false;
-            } elseif (array_key_exists('okrActivity', $tPostArray[$i])) {
-                // 非公開の場合、スキップ
-                if ($outOfDisclosureFlg) continue;
-
-                // OKRアクティビティがnullの場合、スキップ
-                if ($tPostArray[$i]['okrActivity'] === null) {
-                    // 最終ループ
-                    if ($i === ($tPostArrayCount - 1)) {
-                        $postDTOArray[] = $postDTOPost;
-                    }
-                    continue;
-                }
-
-                $postDTOPost->setOkrId($tPostArray[$i]['okrActivity']->getOkr()->getOkrId());
-                $flg = false;
             } else {
                 // 非公開の場合、スキップ
                 if ($outOfDisclosureFlg) continue;
 
                 // 投稿者名をセット
-                $postDTOPost->setPosterName($tPostArray[$i]['lastNamePost'] . ' ' . $tPostArray[$i]['firstNamePost']);
+                if ($postDTOPost->getPosterType() === DBConstant::POSTER_TYPE_USER) {
+                    $postDTOPost->setPosterUserName($tPostArray[$i]['lastNamePost'] . ' ' . $tPostArray[$i]['firstNamePost']);
+                } elseif ($postDTOPost->getPosterType() === DBConstant::POSTER_TYPE_GROUP) {
+                    $postDTOPost->setPosterGroupName($tPostArray[$i]['groupName']);
+                } else {
+                    $postDTOPost->setPosterCompanyName($tPostArray[$i]['companyName']);
+                }
 
                 // リプライがnullの場合、スキップ
                 if ($tPostArray[$i]['reply'] === null) {
@@ -113,8 +139,8 @@ class TimelineService extends BaseService
 
                 $postDTOReply = new PostDTO();
                 $postDTOReply->setPostId($tPostArray[$i]['reply']->getId());
-                $postDTOReply->setPosterId($tPostArray[$i]['reply']->getPosterId());
-                $postDTOReply->setPosterName($tPostArray[$i]['lastNameReply'] . ' ' . $tPostArray[$i]['firstNameReply']);
+                $postDTOReply->setPosterUserId($tPostArray[$i]['reply']->getPosterUserId());
+                $postDTOReply->setPosterUserName($tPostArray[$i]['lastNameReply'] . ' ' . $tPostArray[$i]['firstNameReply']);
                 $postDTOReply->setPost($tPostArray[$i]['reply']->getPost());
                 $postDTOReply->setPostedDatetime($tPostArray[$i]['reply']->getPostedDatetime());
 
@@ -137,19 +163,37 @@ class TimelineService extends BaseService
     }
 
     /**
-     * コメント投稿
+     * タイムライン取得（会社）
+     *
+     * @param Auth $auth 認証情報
+     * @param integer $companyId 会社ID
+     * @param string $before 取得基準日時
+     * @return array
+     */
+    public function getCompanyTimeline(Auth $auth, int $companyId, string $before): array
+    {
+        // 会社IDに対応するグループIDを取得
+        $mGroupRepos = $this->getMGroupRepository();
+        $mGroup = $mGroupRepos->findBy(array('company' => $companyId, 'groupType' => DBConstant::GROUP_TYPE_COMPANY));
+
+        return $this->getTimeline($auth, $mGroup[0]->getGroupId(), $before);
+    }
+
+    /**
+     * コメント投稿（グループ）
      *
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param integer $groupId グループID
-     * @return void
+     * @return PostDTO
      */
-    public function postComment(Auth $auth, array $data, int $groupId)
+    public function postComment(Auth $auth, array $data, int $groupId): PostDTO
     {
         // コメント登録
         $tPost = new TPost();
         $tPost->setTimelineOwnerGroupId($groupId);
-        $tPost->setPosterId($auth->getUserId());
+        $tPost->setPosterType(DBConstant::POSTER_TYPE_USER);
+        $tPost->setPosterUserId($auth->getUserId());
         $tPost->setPost($data['post']);
         $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
         $tPost->setDisclosureType($data['disclosureType']);
@@ -160,6 +204,38 @@ class TimelineService extends BaseService
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンスデータ生成
+        $mUserRepos = $this->getMUserRepository();
+        $mUser = $mUserRepos->find($tPost->getPosterUserId());
+
+        $postDTO = new PostDTO();
+        $postDTO->setPostId($tPost->getId());
+        $postDTO->setPosterUserId($tPost->getPosterUserId());
+        $postDTO->setPosterUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $postDTO->setPost($tPost->getPost());
+        $postDTO->setPostedDatetime($tPost->getPostedDatetime());
+        $postDTO->setLikesCount(0);
+        $postDTO->setLikedFlg(0);
+
+        return $postDTO;
+    }
+
+    /**
+     * コメント投稿（会社）
+     *
+     * @param Auth $auth 認証情報
+     * @param array $data リクエストJSON連想配列
+     * @param integer $companyId 会社ID
+     * @return PostDTO
+     */
+    public function postCompanyComment(Auth $auth, array $data, int $companyId): PostDTO
+    {
+        // 会社IDに対応するグループIDを取得
+        $mGroupRepos = $this->getMGroupRepository();
+        $mGroup = $mGroupRepos->findBy(array('company' => $companyId, 'groupType' => DBConstant::GROUP_TYPE_COMPANY));
+
+        return $this->postComment($auth, $data, $mGroup[0]->getGroupId());
     }
 
     /**
@@ -168,9 +244,9 @@ class TimelineService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param TPost $tPost 投稿エンティティ
-     * @return void
+     * @return PostDTO
      */
-    public function postReply(Auth $auth, array $data, TPost $tPost)
+    public function postReply(Auth $auth, array $data, TPost $tPost): PostDTO
     {
         // リプライ登録
         $tPostReply = new TPost();
@@ -187,6 +263,19 @@ class TimelineService extends BaseService
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンスデータ生成
+        $mUserRepos = $this->getMUserRepository();
+        $mUser = $mUserRepos->find($tPostReply->getPosterId());
+
+        $postDTO = new PostDTO();
+        $postDTO->setPostId($tPost->getId());
+        $postDTO->setPosterId($tPost->getPosterId());
+        $postDTO->setPosterName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $postDTO->setPost($tPost->getPost());
+        $postDTO->setPostedDatetime($tPost->getPostedDatetime());
+
+        return $postDTO;
     }
 
     /**

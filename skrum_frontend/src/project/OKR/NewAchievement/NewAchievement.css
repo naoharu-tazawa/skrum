@@ -1,0 +1,28 @@
+.label {
+  margin: auto 1em 6px 1em;
+  white-space: nowrap;
+  cursor: default;
+}
+.label:first-child {
+  margin-left: 0;
+}
+.dialog textarea {
+  display: block;
+  width: 30em;
+  max-width: 30em;
+  margin-top: 1em;
+}
+.dialog input[type=number] {
+  text-align: right;
+}
+.progressBox, .dateRangeBox, .alignmentBox {
+  display: flex;
+  margin: 1em 0 0 0;
+}
+.inputWithTitle {
+  display: grid;
+}
+.title {
+  margin: 0 auto 4px auto;
+  font-size: small;
+}

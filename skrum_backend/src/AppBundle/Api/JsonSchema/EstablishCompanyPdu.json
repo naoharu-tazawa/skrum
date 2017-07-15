@@ -27,7 +27,7 @@
           "maxLength": 45
         }
       },
-      "required": ["lastName", "firstName", "position", "phoneNumber"],
+      "required": ["lastName", "firstName", "position"],
       "additionalProperties": false
     },
     "company": {
@@ -48,9 +48,13 @@
           "title": "ミッション",
           "type": "string",
           "maxLength": 255
+        },
+        "defaultDisclosureType": {
+          "title": "デフォルト公開種別",
+          "enum": ["1", "2", "3", "4"]
         }
       },
-      "required": ["name", "vision", "mission"],
+      "required": ["name", "defaultDisclosureType"],
       "additionalProperties": false
     },
     "timeframe": {
@@ -65,51 +69,15 @@
           "title": "サイクル種別",
           "enum": ["1", "2", "3", "4"]
         },
-        "start": {
+        "startDate": {
           "title": "開始日",
-          "type": "object",
-          "properties": {
-            "year": {
-              "title": "年",
-              "type": "string",
-              "maxLength": 4
-            },
-            "month": {
-              "title": "月",
-              "type": "string",
-              "maxLength": 2
-            },
-            "date": {
-              "title": "日",
-              "type": "string",
-              "maxLength": 2
-            }
-          },
-          "required": ["year", "month", "date"],
-          "additionalProperties": false
+          "type": "string",
+          "format": "date-time"
         },
-        "end": {
+        "endDate": {
           "title": "終了日",
-          "type": "object",
-          "properties": {
-            "year": {
-              "title": "年",
-              "type": "string",
-              "maxLength": 4
-            },
-            "month": {
-              "title": "月",
-              "type": "string",
-              "maxLength": 2
-            },
-            "date": {
-              "title": "日",
-              "type": "string",
-              "maxLength": 2
-            }
-          },
-          "required": ["year", "month", "date"],
-          "additionalProperties": false
+          "type": "string",
+          "format": "date-time"
         },
         "timeframeName": {
           "title": "タイムフレーム名",
@@ -117,7 +85,7 @@
           "maxLength": 255
         }
       },
-      "required": ["customFlg", "start"],
+      "required": ["customFlg", "startDate"],
       "additionalProperties": false
     }
   },

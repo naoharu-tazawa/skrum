@@ -318,7 +318,7 @@ class OkrSettingService extends BaseService
 
             // 達成率を再計算
             $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
-            $okrAchievementRateLogic->recalculateFromParent($okrEntity, $auth->getCompanyId(), true);
+            $okrAchievementRateLogic->recalculateFromParent($auth, $okrEntity, true);
 
             $this->flush();
             $this->commit();

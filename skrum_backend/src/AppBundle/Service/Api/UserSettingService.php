@@ -191,6 +191,9 @@ class UserSettingService extends BaseService
             throw new DoubleOperationException('既に初期設定登録されています');
         }
 
+        // 会社名に'/'(スラッシュ)が入っている場合除外する
+        $companyInfo['name'] = str_replace('/', '', $companyInfo['name']);
+
         // トランザクション開始
         $this->beginTransaction();
 
@@ -201,16 +204,16 @@ class UserSettingService extends BaseService
             $mUser->setLastName($userInfo['lastName']);
             $mUser->setFirstName($userInfo['firstName']);
             $mUser->setPosition($userInfo['position']);
-            $mUser->setPhoneNumber($userInfo['phoneNumber']);
+            if (array_key_exists('phoneNumber', $userInfo)) $mUser->setPhoneNumber($userInfo['phoneNumber']);
             $this->persist($mUser);
 
             // 会社情報を登録
             $mCompanyRepos = $this->getMCompanyRepository();
             $mCompany = $mCompanyRepos->findOneBy(array('companyId' => $auth->getCompanyId()));
             $mCompany->setCompanyName($companyInfo['name']);
-            $mCompany->setVision($companyInfo['vision']);
-            $mCompany->setMission($companyInfo['mission']);
-            $mCompany->setDefaultDisclosureType(DBConstant::OKR_DISCLOSURE_TYPE_OVERALL);
+            if (array_key_exists('vision', $companyInfo)) $mCompany->setVision($companyInfo['vision']);
+            if (array_key_exists('mission', $companyInfo)) $mCompany->setMission($companyInfo['mission']);
+            $mCompany->setDefaultDisclosureType($companyInfo['defaultDisclosureType']);
             $this->persist($mCompany);
 
             // グループマスタに登録されている会社レコードの会社名を変更
@@ -227,20 +230,10 @@ class UserSettingService extends BaseService
             if ($timeframeInfo['customFlg']) {
                 /* カスタム設定の場合 */
 
-                // 開始日妥当性チェック
-                if (!checkdate($timeframeInfo['start']['month'], $timeframeInfo['start']['date'], $timeframeInfo['start']['year'])) {
-                    throw new ApplicationException('開始日が不正です');
-                }
-
-                // 終了日妥当性チェック
-                if (!checkdate($timeframeInfo['end']['month'], $timeframeInfo['end']['date'], $timeframeInfo['end']['year'])) {
-                    throw new ApplicationException('終了日が不正です');
-                }
-
                 // 開始年月日を生成
-                $startYearMonthDate = $timeframeInfo['start']['year'] . '-' . $timeframeInfo['start']['month'] . '-' . $timeframeInfo['start']['date'];
+                $startYearMonthDate = $timeframeInfo['startDate'];
                 // 終了年月日を生成
-                $endYearMonthDate = $timeframeInfo['end']['year'] . '-' . $timeframeInfo['end']['month'] . '-' . $timeframeInfo['end']['date'];
+                $endYearMonthDate = $timeframeInfo['endDate'];
 
                 // 「開始日 <= 終了日」であるかチェック
                 if ($startYearMonthDate > $endYearMonthDate) {
@@ -276,7 +269,7 @@ class UserSettingService extends BaseService
                 for ($i = 0; $i < $cycleType['i']; ++$i) {
                     // 開始日
                     if ($i === 0) {
-                        $startYearMonthDate = $timeframeInfo['start']['year'] . '-' . $timeframeInfo['start']['month'] . '-' . $timeframeInfo['start']['date'];
+                        $startYearMonthDate = $timeframeInfo['startDate'];
                     } else {
                         $startYearMonthDate = DateUtility::get1stOfXMonthDateString($startDateArray[0], $startDateArray[1], $cycleType['months']);
                     }

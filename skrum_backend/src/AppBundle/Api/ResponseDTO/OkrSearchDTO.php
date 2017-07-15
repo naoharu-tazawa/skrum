@@ -37,42 +37,42 @@ class OkrSearchDTO
      *
      * @JSON\Type("integer")
      */
-    private $userId;
+    private $ownerUserId;
 
     /**
      * @var string
      *
      * @JSON\Type("string")
      */
-    private $userName;
+    private $ownerUserName;
 
     /**
      * @var integer
      *
      * @JSON\Type("integer")
      */
-    private $groupId;
+    private $ownerGroupId;
 
     /**
      * @var string
      *
      * @JSON\Type("string")
      */
-    private $groupName;
+    private $ownerGroupName;
 
     /**
      * @var integer
      *
      * @JSON\Type("integer")
      */
-    private $companyId;
+    private $ownerCompanyId;
 
     /**
      * @var string
      *
      * @JSON\Type("string")
      */
-    private $companyName;
+    private $ownerCompanyName;
 
     /**
      * Set okrId
@@ -147,146 +147,146 @@ class OkrSearchDTO
     }
 
     /**
-     * Set userId
+     * Set ownerUserId
      *
-     * @param integer $userId
+     * @param integer $ownerUserId
      *
      * @return OkrSearchDTO
      */
-    public function setUserId($userId)
+    public function setOwnerUserId($ownerUserId)
     {
-        $this->userId = $userId;
+        $this->ownerUserId = $ownerUserId;
 
         return $this;
     }
 
     /**
-     * Get userId
+     * Get ownerUserId
      *
      * @return integer
      */
-    public function getUserId()
+    public function getOwnerUserId()
     {
-        return $this->userId;
+        return $this->ownerUserId;
     }
 
     /**
-     * Set userName
+     * Set ownerUserName
      *
-     * @param string $userName
+     * @param string $ownerUserName
      *
      * @return OkrSearchDTO
      */
-    public function setUserName($userName)
+    public function setOwnerUserName($ownerUserName)
     {
-        $this->userName = $userName;
+        $this->ownerUserName = $ownerUserName;
 
         return $this;
     }
 
     /**
-     * Get userName
+     * Get ownerUserName
      *
      * @return string
      */
-    public function getUserName()
+    public function getOwnerUserName()
     {
-        return $this->userName;
+        return $this->ownerUserName;
     }
 
     /**
-     * Set groupId
+     * Set ownerGroupId
      *
-     * @param integer $groupId
+     * @param integer $ownerGroupId
      *
      * @return OkrSearchDTO
      */
-    public function setGroupId($groupId)
+    public function setOwnerGroupId($ownerGroupId)
     {
-        $this->groupId = $groupId;
+        $this->ownerGroupId = $ownerGroupId;
 
         return $this;
     }
 
     /**
-     * Get groupId
+     * Get ownerGroupId
      *
      * @return integer
      */
-    public function getGroupId()
+    public function getOwnerGroupId()
     {
-        return $this->groupId;
+        return $this->ownerGroupId;
     }
 
     /**
-     * Set groupName
+     * Set ownerGroupName
      *
-     * @param string $groupName
+     * @param string $ownerGroupName
      *
      * @return OkrSearchDTO
      */
-    public function setGroupName($groupName)
+    public function setOwnerGroupName($ownerGroupName)
     {
-        $this->groupName = $groupName;
+        $this->ownerGroupName = $ownerGroupName;
 
         return $this;
     }
 
     /**
-     * Get groupName
+     * Get ownerGroupName
      *
      * @return string
      */
-    public function getGroupName()
+    public function getOwnerGroupName()
     {
-        return $this->groupName;
+        return $this->ownerGroupName;
     }
 
     /**
-     * Set companyId
+     * Set ownerCompanyId
      *
-     * @param integer $companyId
+     * @param integer $ownerCompanyId
      *
      * @return OkrSearchDTO
      */
-    public function setCompanyId($companyId)
+    public function setOwnerCompanyId($ownerCompanyId)
     {
-        $this->companyId = $companyId;
+        $this->ownerCompanyId = $ownerCompanyId;
 
         return $this;
     }
 
     /**
-     * Get companyId
+     * Get ownerCompanyId
      *
      * @return integer
      */
-    public function getCompanyId()
+    public function getOwnerCompanyId()
     {
-        return $this->companyId;
+        return $this->ownerCompanyId;
     }
 
     /**
-     * Set companyName
+     * Set ownerCompanyName
      *
-     * @param string $companyName
+     * @param string $ownerCompanyName
      *
      * @return OkrSearchDTO
      */
-    public function setCompanyName($companyName)
+    public function setOwnerCompanyName($ownerCompanyName)
     {
-        $this->companyName = $companyName;
+        $this->ownerCompanyName = $ownerCompanyName;
 
         return $this;
     }
 
     /**
-     * Get companyName
+     * Get ownerCompanyName
      *
      * @return string
      */
-    public function getCompanyName()
+    public function getOwnerCompanyName()
     {
-        return $this->companyName;
+        return $this->ownerCompanyName;
     }
 }

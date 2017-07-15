@@ -1,38 +1,37 @@
-.component {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 90%;
-  overflow: hidden;
-  font-size: small;
-  color: #626A7F;
-}
-.okrHeader {
-  display: flex;
-  /*
-  height: 2em;
-  border-width: thin;
-  border-style: solid;
-  position: relative;
-  */
-  margin-bottom: 1px;
-  z-index: 2;
-}
-.okrBars {
-  max-height: 100%;
-  overflow-y: auto;
-  /*
-  border-width: thin;
-  border-left-style: solid;
-  border-right-style: solid;
-  border-bottom-style: solid;
-  */
-  position: relative;
-  top: -1px;
-}
-.okrBar {
-  /*
-  border-width: thin;
-  border-top-style: solid;
-  */
-}
+@charset "UTF-8";
+  /* ====================================================
+  共通
+  ==================================================== */
+  .ttl_section {
+    padding: 14px 70px 12px;
+    background: #d8dfe5;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: .5px; }
+
+  .cont_box {
+    background: #fff; }
+
+  /* ====================================================
+  タイムライン画面
+  ==================================================== */
+  .timeline_box {
+    position: relative; }
+    .timeline_box:before {
+      content: '';
+      position: absolute;
+      top: 82px;
+      left: 0;
+      height: 100%;
+      width: 1px;
+      background: #8e9aa6; }
+    .timeline_box .icn_circle {
+      position: absolute;
+      top: 50%;
+      left: -5px;
+      margin-top: -6px;
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border: 3px solid #8e9aa6;
+      border-radius: 50%; }

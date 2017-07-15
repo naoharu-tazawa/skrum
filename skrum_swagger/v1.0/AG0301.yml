@@ -1,0 +1,98 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /companies/{companyId}/posts.json?{before}:
+    get:
+      description: タイムライン取得（会社）
+      parameters:
+        -
+          name: companyId
+          in: path
+          type: integer
+          description: 会社ID
+          required: true
+        -
+          name: before
+          in: path
+          type: string
+          description: 取得基準日時
+          required: true
+      responses:
+        200:
+          description: タイムライン（会社）
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                postId:
+                  type: integer
+                posterType:
+                  type: string
+                posterUserId:
+                  type: integer
+                posterUserName:
+                  type: string
+                posterCompanyId:
+                  type: integer
+                posterCompanyName:
+                  type: string
+                post:
+                  type: string
+                postedDatetime:
+                  type: string
+                okrId:
+                  type: integer
+                okrName:
+                  type: string
+                likesCount:
+                  type: integer
+                likedFlg:
+                  type: integer
+                replies:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      postId:
+                        type: integer
+                      posterUserId:
+                        type: integer
+                      posterUserName:
+                        type: string
+                      post:
+                        type: string
+                      postedDatetime:
+                        type: string
+                    required:
+                      - postId
+                      - posterUserId
+                      - posterUserName
+                      - post
+                      - postedDatetime
+              required:
+                - postId
+                - posterType
+                - posterUserId
+                - posterUserName
+                - posterCompanyId
+                - posterCompanyName
+                - post
+                - postedDatetime
+                - likesCount
+                - likedFlg
+        400:
+          description: パラメータ不正
+        401:
+          description: 認証エラー
+        500:
+          description: サーバーエラー

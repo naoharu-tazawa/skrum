@@ -12,7 +12,7 @@ basePath: /v1
 paths:
   /groups/{groupId}/posts:
     post:
-      description: コメント投稿
+      description: コメント投稿（グループ）
       parameters:
         -
           name: groupId
@@ -34,14 +34,24 @@ paths:
                 type: string
       responses:
         200:
-          description: 成功
+          description: 投稿内容（グループ）
           schema:
             type: object
             properties:
-              result:
+              postId:
+                type: integer
+              posterId:
+                type: integer
+              posterName:
                 type: string
-            required:
-              - result
+              post:
+                type: string
+              postedDatetime:
+                type: string
+              likesCount:
+                type: integer
+              likedFlg:
+                type: integer
         400:
           description: パラメータ不正
         401:

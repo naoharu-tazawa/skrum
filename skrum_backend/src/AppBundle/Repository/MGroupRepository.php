@@ -89,6 +89,45 @@ class MGroupRepository extends BaseRepository
     }
 
     /**
+     * 追加グループ検索
+     *
+     * @param integer $userId ユーザID
+     * @param string $keyword 検索ワード
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function searchAdditionalGroup(int $userId, string $keyword, int $companyId): array
+    {
+        $sql = <<<SQL
+        SELECT m0_.group_id AS groupId, m0_.group_name AS groupName
+        FROM m_group m0_
+        LEFT OUTER JOIN (
+            SELECT DISTINCT t0_.group_id, t0_.deleted_at
+            FROM t_group_member t0_
+            WHERE t0_.user_id = :userId
+            ) t1_ ON (m0_.group_id = t1_.group_id) AND (t1_.deleted_at IS NULL)
+        WHERE (
+                m0_.company_id = :companyId
+                AND m0_.company_flg = :companyFlg
+                AND m0_.archived_flg = :archivedFlg
+                AND t1_.group_id is NULL
+                AND m0_.group_name LIKE :groupName
+              ) AND (m0_.deleted_at IS NULL);
+SQL;
+
+        $params['userId'] = $userId;
+        $params['companyId'] = $companyId;
+        $params['companyFlg'] = DBConstant::FLG_FALSE;
+        $params['archivedFlg'] = DBConstant::FLG_FALSE;
+        $params['groupName'] = $keyword . '%';
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * グループ検索（ページング）検索結果数を取得
      *
      * @param string $keyword 検索ワード
@@ -159,6 +198,33 @@ class MGroupRepository extends BaseRepository
             ->setParameter('companyId', $companyId)
             ->setParameter('companyFlg', DBConstant::FLG_FALSE)
             ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
+            ->setParameter('groupName', $keyword . '%');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 追加グループツリーパス検索
+     *
+     * @param integer $groupId グループID
+     * @param string $keyword 検索ワード
+     * @param integer $companyId 会社ID
+     * @return array
+     */
+    public function searchAdditionalGroupTree(int $groupId, string $keyword, int $companyId): array
+    {
+        $qb = $this->createQueryBuilder('mg');
+        $qb->select('tgt.id', 'tgt.groupTreePathName')
+            ->innerJoin('AppBundle:TGroupTree', 'tgt', 'WITH', 'mg.groupId = tgt.group')
+            ->where('mg.company = :companyId')
+            ->andWhere('mg.companyFlg = :companyFlg')
+            ->andWhere('mg.archivedFlg = :archivedFlg')
+            ->andWhere('mg.groupId <> :groupId')
+            ->andWhere('mg.groupName LIKE :groupName')
+            ->setParameter('companyId', $companyId)
+            ->setParameter('companyFlg', DBConstant::FLG_FALSE)
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
+            ->setParameter('groupId', $groupId)
             ->setParameter('groupName', $keyword . '%');
 
         return $qb->getQuery()->getResult();

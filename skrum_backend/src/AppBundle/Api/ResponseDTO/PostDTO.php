@@ -19,18 +19,53 @@ class PostDTO
     private $postId;
 
     /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $posterType;
+
+    /**
      * @var integer
      *
      * @JSON\Type("integer")
      */
-    private $posterId;
+    private $posterUserId;
 
     /**
      * @var string
      *
      * @JSON\Type("string")
      */
-    private $posterName;
+    private $posterUserName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $posterGroupId;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $posterGroupName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $posterCompanyId;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $posterCompanyName;
 
     /**
      * @var string
@@ -47,11 +82,11 @@ class PostDTO
     private $postedDatetime;
 
     /**
-     * @var integer
+     * @var \AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO
      *
-     * @JSON\Type("integer")
+     * @JSON\Type("AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO")
      */
-    private $okrId;
+    private $autoShare;
 
     /**
      * @var integer
@@ -99,51 +134,171 @@ class PostDTO
     }
 
     /**
-     * Set posterId
+     * Set posterType
      *
-     * @param integer $posterId
+     * @param string $posterType
      *
      * @return PostDTO
      */
-    public function setPosterId($posterId)
+    public function setPosterType($posterType)
     {
-        $this->posterId = $posterId;
+        $this->posterType = $posterType;
 
         return $this;
     }
 
     /**
-     * Get posterId
-     *
-     * @return integer
-     */
-    public function getPosterId()
-    {
-        return $this->posterId;
-    }
-
-    /**
-     * Set posterName
-     *
-     * @param string $posterName
-     *
-     * @return PostDTO
-     */
-    public function setPosterName($posterName)
-    {
-        $this->posterName = $posterName;
-
-        return $this;
-    }
-
-    /**
-     * Get posterName
+     * Get posterType
      *
      * @return string
      */
-    public function getPosterName()
+    public function getPosterType()
     {
-        return $this->posterName;
+        return $this->posterType;
+    }
+
+    /**
+     * Set posterUserId
+     *
+     * @param integer $posterUserId
+     *
+     * @return PostDTO
+     */
+    public function setPosterUserId($posterUserId)
+    {
+        $this->posterUserId = $posterUserId;
+
+        return $this;
+    }
+
+    /**
+     * Get posterUserId
+     *
+     * @return integer
+     */
+    public function getPosterUserId()
+    {
+        return $this->posterUserId;
+    }
+
+    /**
+     * Set posterUserName
+     *
+     * @param string $posterUserName
+     *
+     * @return PostDTO
+     */
+    public function setPosterUserName($posterUserName)
+    {
+        $this->posterUserName = $posterUserName;
+
+        return $this;
+    }
+
+    /**
+     * Get posterUserName
+     *
+     * @return string
+     */
+    public function getPosterUserName()
+    {
+        return $this->posterUserName;
+    }
+
+    /**
+     * Set posterGroupId
+     *
+     * @param integer $posterGroupId
+     *
+     * @return PostDTO
+     */
+    public function setPosterGroupId($posterGroupId)
+    {
+        $this->posterGroupId = $posterGroupId;
+
+        return $this;
+    }
+
+    /**
+     * Get posterGroupId
+     *
+     * @return integer
+     */
+    public function getPosterGroupId()
+    {
+        return $this->posterGroupId;
+    }
+
+    /**
+     * Set posterGroupName
+     *
+     * @param string $posterGroupName
+     *
+     * @return PostDTO
+     */
+    public function setPosterGroupName($posterGroupName)
+    {
+        $this->posterGroupName = $posterGroupName;
+
+        return $this;
+    }
+
+    /**
+     * Get posterGroupName
+     *
+     * @return string
+     */
+    public function getPosterGroupName()
+    {
+        return $this->posterGroupName;
+    }
+
+    /**
+     * Set posterCompanyId
+     *
+     * @param integer $posterCompanyId
+     *
+     * @return PostDTO
+     */
+    public function setPosterCompanyId($posterCompanyId)
+    {
+        $this->posterCompanyId = $posterCompanyId;
+
+        return $this;
+    }
+
+    /**
+     * Get posterCompanyId
+     *
+     * @return integer
+     */
+    public function getPosterCompanyId()
+    {
+        return $this->posterCompanyId;
+    }
+
+    /**
+     * Set posterCompanyName
+     *
+     * @param string $posterCompanyName
+     *
+     * @return PostDTO
+     */
+    public function setPosterCompanyName($posterCompanyName)
+    {
+        $this->posterCompanyName = $posterCompanyName;
+
+        return $this;
+    }
+
+    /**
+     * Get posterGroupName
+     *
+     * @return string
+     */
+    public function getPosterCompanyName()
+    {
+        return $this->posterCompanyName;
     }
 
     /**
@@ -195,27 +350,27 @@ class PostDTO
     }
 
     /**
-     * Set okrId
+     * Set autoShare
      *
-     * @param integer $okrId
+     * @param \AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO $autoShare
      *
      * @return PostDTO
      */
-    public function setOkrId($okrId)
+    public function setAutoShare($autoShare)
     {
-        $this->okrId = $okrId;
+        $this->autoShare = $autoShare;
 
         return $this;
     }
 
     /**
-     * Get okrId
+     * Get autoShare
      *
-     * @return integer
+     * @return \AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO
      */
-    public function getOkrId()
+    public function getAutoShare()
     {
-        return $this->okrId;
+        return $this->autoShare;
     }
 
     /**

@@ -55,18 +55,29 @@
   },
   "dependencies": {
     "aphrodite": "^1.1.0",
+    "d3": "^4.9.1",
+    "focus-trap-react": "^3.0.3",
     "lodash": "^4.17.2",
     "moment": "^2.17.1",
     "prop-types": "^15.5.8",
     "qs": "^6.3.0",
     "react": "^15.4.1",
+    "react-autocomplete": "^1.5.9",
+    "react-day-picker": "^6.0.0",
     "react-dom": "^15.4.1",
+    "react-gateway": "^2.7.0",
+    "react-modal2": "^4.0.0",
     "react-redux": "^4.4.6",
+    "react-redux-toastr": "^6.2.7",
     "react-router": "^3.0.0",
     "react-router-redux": "^4.0.7",
     "react-select": "^1.0.0-rc.3",
+    "react-simple-dropdown": "^3.0.0",
+    "react-vis": "^1.6.7",
+    "recharts": "^0.22.4",
     "redux": "latest",
     "redux-actions": "^1.2.0",
+    "redux-form": "^6.7.0",
     "redux-localstorage": "^0.4.1",
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.1.0",
@@ -101,7 +112,11 @@
       "object-curly-spacing": 1,
       "class-methods-use-this": 0,
       "arrow-body-style": 0,
-      "react/no-unused-prop-types": 0
+      "react/no-unused-prop-types": 0,
+      "no-underscore-dangle": 0,
+      "no-param-reassign": 0,
+      "jsx-a11y/label-has-for": 0,
+      "react/jsx-no-bind": 0
     }
   }
 }

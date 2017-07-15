@@ -1,63 +1,78 @@
-.component {
-  display: flex;
-  background-color: #fff;
-  /*background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`*/
-  overflow: hidden;
-  color: #626A7F;
-  padding: 40px 20px 20px 40px;
-}
-.userBox {
-  margin: auto 0;
-  /*min-width: 160px;*/
-  width: 70px;
-}
-.userImage {
+@charset "UTF-8";
+
+/* -------- CLEAR -------- */
+.cf:after {
+  clear: both;
   display: block;
-  margin: auto;
-  width: 70px;
-  min-height: 70px;
-  margin: auto;
-  border: 2px solid #95989A;
-  border-radius: 50%;
-  overflow: hidden;
-  box-sizing: border-box;
+  content: ""; }
+
+/* ====================================================
+共通
+==================================================== */
+.ttl_setion {
+  padding: 10px 70px;
+  background: #d8dfe5;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: .5px;
+  box-shadow: 1px 0px 1px rgba(0,0,0,0.20); }
+
+/* ====================================================
+プロファイル画面
+==================================================== */
+.cont_box {
+  background: #fff;
+  margin-bottom: 10px;
+  padding-bottom: 66px;
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.20); }
+
+.profile_box {
+  margin-bottom: 10px; }
+  .profile_box .cont_box {
+    padding: 30px 70px; }
+  .profile_box .profile_img {
+    width: 70px;
+    float: left;
+    text-align: center; }
+    .profile_box .profile_img div {
+      margin: 0 auto 10px;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%; }
+    .profile_box .profile_img p {
+      font-size: 12px; }
+  .profile_box .profile_txt {
+    margin-left: 34px;
+    float: left; }
+    .profile_box .profile_txt .user_name {
+      margin-bottom: 10px;
+      font-size: 20px; }
+      .profile_box .profile_txt .user_name .user_name_f {
+        position: relative;
+        left: -22px;
+      }
+
+.user_info {
+  margin-top: 10px;
+  font-size: 14px;
 }
-.lastUpdate {
-  font-size: x-small;
-  text-align: center;
-  margin: 0.5em 0;
+.user_info .info {
+  position: relative;
+  top: 2px;
+  margin-bottom: 7px;
+  font-size: 10px;
 }
-.userInfo {
-  width: 100%;
-  margin: 0 1em 0 40px;
+.user_info .info_data {
+  margin-left: 8px;
 }
-.userName {
-  font-size: x-large;
-  margin-bottom: 0.5em;
+.groupLink {
+  display: inline-block;
+  color: #d8dfe5;
+  text-decoration: underline !important;
 }
-.userDept {
-  font-size: x-small;
-  color: darkgray;
+.groups {
+  font-size: 14px;
 }
-.userRank {
-  font-size: small;
-  vertical-align: top;
-}
-.userPart {
-  font-size: x-small;
-  vertical-align: top;
-}
-.userLabel {
-  white-space: nowrap;
-  padding-right: 20px;
-  padding-bottom: 2px;
-}
-.moreLink {
-  font-size: small;
-  align-self: flex-end;
-  padding: 8px;
-  border: solid 1px #D8DFE5;
-  background-color: #F0F4F5;
-  color: #8E9AA6;
-  white-space: nowrap;
+.td {
+  width: 400px;
 }

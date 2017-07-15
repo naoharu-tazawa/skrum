@@ -26,6 +26,20 @@ class BasicUserInfoDTO
     private $name;
 
     /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $firstName;
+
+    /**
      * @var array
      *
      * @JSON\Type("array")
@@ -99,6 +113,54 @@ class BasicUserInfoDTO
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set lastName
+     *
+     * @param string $lastName
+     *
+     * @return BasicUserInfoDTO
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * Get lastName
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * Set firstName
+     *
+     * @param string $firstName
+     *
+     * @return BasicUserInfoDTO
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    /**
+     * Get firstName
+     *
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
     }
 
     /**
