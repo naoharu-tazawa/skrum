@@ -9,6 +9,7 @@ export default class InlineTextInput extends PureComponent {
     type: PropTypes.string,
     maxLength: PropTypes.number,
     value: PropTypes.string,
+    placeholder: PropTypes.string,
     readonly: PropTypes.bool,
     required: PropTypes.bool,
     validate: PropTypes.func,
@@ -44,7 +45,7 @@ export default class InlineTextInput extends PureComponent {
   }
 
   render() {
-    const { type = 'text', value: defaultValue = '', readonly = false, maxLength } = this.props;
+    const { type = 'text', value: defaultValue = '', placeholder = '\u00A0', readonly = false, maxLength } = this.props;
     const { isEditing = false, value = defaultValue, submitValue, error } = this.state || {};
     const displayValue = submitValue !== undefined ? submitValue : value;
     return (
@@ -61,7 +62,7 @@ export default class InlineTextInput extends PureComponent {
         title={error}
       >
         <span className={styles.value}>
-          {displayValue === '' ? <span>&nbsp;</span> : displayValue}
+          {displayValue === '' ? <span className={styles.placeholder}>{placeholder}</span> : displayValue}
         </span>
         {!readonly && !isEditing &&
           <span

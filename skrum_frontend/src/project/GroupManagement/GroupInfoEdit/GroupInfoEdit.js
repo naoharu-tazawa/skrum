@@ -58,6 +58,8 @@ export default class GroupInfoEdit extends Component {
               <div className={styles.txt}>
                 <InlineTextArea
                   value={mission}
+                  placeholder="ミッションを入力してください"
+                  maxLength={250}
                   onSubmit={(value, completion) =>
                     dispatchPutGroup(groupId, { mission: value }).then(completion)}
                 />

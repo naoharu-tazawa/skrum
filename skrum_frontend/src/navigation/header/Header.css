@@ -64,6 +64,7 @@
   border: none;
   width: 16px;
   padding: 0;
+  cursor: pointer;
 }
 .timeframe {
 }
@@ -74,4 +75,7 @@
   /* margin-right: 10px; */
   min-width: 11em;
   font-size: 14px;
+}
+.timePeriod :global(.Select-control) {
+  cursor: pointer;
 }

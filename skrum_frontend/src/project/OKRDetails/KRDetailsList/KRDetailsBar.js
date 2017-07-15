@@ -49,6 +49,7 @@ export default class KRDetailsBar extends Component {
           <div className={styles.detail}>
             <InlineTextArea
               value={detail}
+              placeholder="目標詳細を入力してください"
               maxLength={250}
               onSubmit={(value, completion) =>
                 dispatchPutOKR(id, { okrDetail: value }).then(completion)}

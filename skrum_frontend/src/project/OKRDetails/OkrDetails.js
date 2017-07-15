@@ -60,6 +60,7 @@ export default class OkrDetails extends Component {
             <div className={styles.txt}>
               <InlineTextArea
                 value={detail}
+                placeholder="目標詳細を入力してください"
                 maxLength={250}
                 onSubmit={(value, completion) =>
                   dispatchPutOKR(id, { okrDetail: value }).then(completion)}

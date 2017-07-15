@@ -37,6 +37,7 @@ export default class UserInfoEdit extends Component {
               <span className={styles.user_name_l}>
                 <InlineTextInput
                   value={lastName}
+                  required
                   onSubmit={(value, completion) =>
                     dispatchPutUser(userId, { lastName: value }).then(completion)}
                 />
@@ -44,6 +45,7 @@ export default class UserInfoEdit extends Component {
               <span className={styles.user_name_f}>
                 <InlineTextInput
                   value={firstName}
+                  required
                   onSubmit={(value, completion) =>
                     dispatchPutUser(userId, { firstName: value }).then(completion)}
                 />
@@ -60,6 +62,7 @@ export default class UserInfoEdit extends Component {
                     <div className={styles.info_data}>
                       <InlineTextInput
                         value={position}
+                        required
                         onSubmit={(value, completion) =>
                           dispatchPutUser(userId, { position: value }).then(completion)}
                       />
@@ -72,6 +75,7 @@ export default class UserInfoEdit extends Component {
                     <div className={styles.info_data}>
                       <InlineTextInput
                         value={phoneNumber}
+                        placeholder="電話番号を入力してください"
                         onSubmit={(value, completion) =>
                           dispatchPutUser(userId, { phoneNumber: value }).then(completion)}
                       />

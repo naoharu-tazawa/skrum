@@ -67,6 +67,7 @@ class CompanyProfileContainer extends Component {
             <span className={styles.data}>
               <InlineTextInput
                 value={name}
+                required
                 onSubmit={(value, completion) =>
                   dispatchPutCompany(companyId, { name: value }).then(completion)}
               />
@@ -77,6 +78,8 @@ class CompanyProfileContainer extends Component {
             <span className={styles.data}>
               <InlineTextArea
                 value={vision}
+                placeholder="ヴィジョンを入力してください"
+                maxLength={250}
                 onSubmit={(value, completion) =>
                   dispatchPutCompany(companyId, { vision: value }).then(completion)}
               />
@@ -87,6 +90,8 @@ class CompanyProfileContainer extends Component {
             <span className={styles.data}>
               <InlineTextArea
                 value={mission}
+                placeholder="ミッションを入力してください"
+                maxLength={250}
                 onSubmit={(value, completion) =>
                   dispatchPutCompany(companyId, { mission: value }).then(completion)}
               />

@@ -54,6 +54,9 @@
   display: block;
   padding: 0 2px 0 0;
 }
+.placeholder {
+  color: #ccc;
+}
 .editor:not(.multiline):not(.dropdown) .value {
   overflow: hidden;
   text-overflow: ellipsis;
