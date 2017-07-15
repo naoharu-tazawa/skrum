@@ -32,8 +32,8 @@ export default class OkrDetails extends Component {
     return (
       <div>
         <div className={`${styles.content} ${styles.txt_top} ${styles.cf}`}>
-          <p className={styles.alignment}>紐付け先目標</p>
-          <div className={`${styles.txt_content_top} ${styles.floatL}`}>
+          <p className={`${styles.alignment} ${styles.floatL}`}>紐付け先目標</p>
+          <div className={`${styles.txt_content_top} ${styles.floatL} ${styles.clear}`}>
             {parentOkr && (
               <Link to={replacePath({ aspect: 'o', aspectId: `${parentOkr.id}` })}>
                 {parentOkr.name}
@@ -41,7 +41,7 @@ export default class OkrDetails extends Component {
             {!parentOkr && <span>➖</span>}
           </div>
           {parentOkr && (
-            <div className={`${styles.img_content_top} ${styles.floatL}`}>
+            <div className={`${styles.img_content_top} ${styles.floatR}`}>
               <img src="/img/common/icn_user.png" alt="User Name" />
               <span>{parentOkr.owner.name}</span>
             </div>)}

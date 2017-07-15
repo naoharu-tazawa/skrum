@@ -153,11 +153,11 @@ class OKRContainer extends Component {
         <article style={showDetails ? { display: 'none' } : {}}>
           <section className={`${styles.overall_info} ${styles.cf}`}>
             <div className={`${styles.basic_info} ${styles.h_line} ${styles.floatL}`}>
-              <div className={styles.ttl}><h2 className={styles.ttl_bi}>基本情報</h2></div>
+              <div className={styles.ttl}><h2>基本情報</h2></div>
               {this.renderInfoContainer()}
             </div>
             <div className={`${styles.overall_situation} ${styles.h_line} ${styles.floatR}`}>
-              <div className={styles.ttl}><h2 className={styles.ttl_os}>全体の状況</h2></div>
+              <div className={styles.ttl}><h2>全体の状況</h2></div>
               {this.renderChartContainer()}
             </div>
           </section>

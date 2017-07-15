@@ -1,4 +1,7 @@
 /* -------- CLEAR -------- */
+.clear {
+  clear: both; }
+
 .cf:after {
   clear: both;
   display: block;
@@ -19,6 +22,7 @@
 .alignment {
   font-size: 12px;
   margin-bottom: 4px;
+  color: #848484;
 }
 .txt {
   font-size: 14px;
@@ -73,17 +77,20 @@ button.tool:focus {
 
 .txt_top {
   background: #F0F4F5;
-  padding: 24px 70px !important; }
+  padding: 14px 70px !important; }
   .txt_top .txt_content_top {
     font-size: 12px;
     line-height: 1.4;
     width: 72%; }
   .txt_top .img_content_top {
+    position: relative;
+    top: -10px;
     padding-left: 10px;
-    font-size: 14px;
+    font-size: 12px;
     width: 28%; }
     .txt_top .img_content_top img {
-      padding-right: 10px; }
+      padding-right: 10px;
+      width: 40px; }
 
 .boxInfo {
   width: 100% !important; }

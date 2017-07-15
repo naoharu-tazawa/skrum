@@ -3,7 +3,7 @@
   共通
   ==================================================== */
   .ttl_section {
-    padding: 14px 70px 12px;
+    padding: 10px 70px;
     background: #d8dfe5;
     font-size: 14px;
     font-weight: 300;
@@ -22,7 +22,7 @@
     .cont_box > div {
       display: table-cell; }
       .cont_box > div.user_name {
-        width: 155px;
+        width: 80px;
         vertical-align: top; }
       .cont_box > div dl {
         display: table; }

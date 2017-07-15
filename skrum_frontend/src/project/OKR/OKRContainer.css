@@ -12,7 +12,7 @@
   float: right; }
 
 .ttl {
-  padding: 14px 0 12px 70px;
+  padding: 10px 70px;
   background-color: #d8dfe5;
 }
 
@@ -78,7 +78,7 @@
 }
 .list .ttl nav ul li {
   display: inline-block;
-  margin-right: 70px;
+  margin-right: 25px;
   font-size: 14px;
 }
 .list .ttl nav ul li a {

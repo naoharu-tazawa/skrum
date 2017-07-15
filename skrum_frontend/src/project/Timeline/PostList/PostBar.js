@@ -74,11 +74,8 @@ export default class PostBar extends Component {
       <div className={`${styles.timeline_block_sub} ${styles.timeline_block_last}`}>
         <div className={styles.timeline_content}>
           <div className={styles.content_inner}>
-            <div className={styles.user_name}>
-              <dl>
-                <dt><img src="/img/common/icn_user.png" alt="" /></dt>
-                <dd />
-              </dl>
+            <div className={`${styles.user_image} ${styles.floatR}`}>
+              <img src="/img/common/icn_user.png" alt="" />
             </div>
             <div className={styles.text}>
               <textarea placeholder="コメントする" />

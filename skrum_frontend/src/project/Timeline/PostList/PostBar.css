@@ -2,6 +2,9 @@
   /* ====================================================
   共通
   ==================================================== */
+  .floatR {
+    float: right; }
+
   .ttl_section {
     padding: 14px 70px 12px;
     background: #d8dfe5;
@@ -70,6 +73,9 @@
             .timeline_content .content_inner .user_name dl dt, .timeline_content .content_inner .user_name dl dd {
               display: table-cell;
               vertical-align: middle; }
+        .timeline_content .content_inner .user_image {
+          display: table-cell;
+          margin: 0 30px 0 85px; }
         .timeline_content .content_inner .text {
           display: table-cell;
           width: 56%;
@@ -79,7 +85,7 @@
             font-size: 16px;
             white-space: pre-line; }
           .timeline_content .content_inner .text .comments {
-            margin: 5px 0 0;
+            margin: 10px 0 0;
             color: #8e9aa6; }
             .timeline_content .content_inner .text .comments > span {
               display: inline-block;
