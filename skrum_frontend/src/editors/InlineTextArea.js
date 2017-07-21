@@ -1,96 +1,31 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import FocusTrap from 'focus-trap-react';
-import styles from './InlineEditors.css';
+import InlineEditor, { inlineEditorPublicPropTypes } from './InlineEditor';
 
 export default class InlineTextArea extends PureComponent {
 
   static propTypes = {
     maxLength: PropTypes.number,
     value: PropTypes.string,
-    placeholder: PropTypes.string,
-    readonly: PropTypes.bool,
-    required: PropTypes.bool,
-    validate: PropTypes.func,
-    onSubmit: PropTypes.func,
+    ...inlineEditorPublicPropTypes,
   };
 
-  setEditing() {
-    this.setState({ isEditing: true, error: undefined });
-  }
-
-  submit() {
-    const { value: defaultValue = '', required, validate, onSubmit } = this.props;
-    const { value } = this.state || {};
-    let unsetEditingCompanions = {};
-    let unsetEditingCompletion = () => {};
-    if (required && value === '') {
-      unsetEditingCompletion = () => this.setState({ value, error: '入力してください' });
-    } else if (value !== undefined && value !== defaultValue && onSubmit) {
-      const validationError = validate && validate(value);
-      if (validationError) {
-        unsetEditingCompletion = () => this.setState({ value, error: validationError });
-      } else {
-        unsetEditingCompanions = { submitValue: value, error: undefined };
-        unsetEditingCompletion = () => onSubmit(value, ({ error, payload: { message } }) =>
-          this.setState({ value, submitValue: undefined, error: error && message }));
-      }
-    }
-    this.setState({ isEditing: false, ...unsetEditingCompanions }, unsetEditingCompletion);
-  }
-
-  cancel() {
-    this.setState({ isEditing: false, value: undefined });
-  }
-
   render() {
-    const { value: defaultValue = '', placeholder = '\u00A0', readonly = false, maxLength } = this.props;
-    const { isEditing = false, value = defaultValue, submitValue, error } = this.state || {};
-    const displayValue = submitValue !== undefined ? submitValue : value;
+    const { maxLength, value = '', ...inlineEditorProps } = this.props;
     return (
-      <span
-        className={`
-          ${styles.editor}
-          ${styles.fluid}
-          ${styles.multiline}
-          ${readonly && styles.readonly}
-          ${isEditing && styles.editing}
-          ${submitValue !== undefined && !error && styles.submitting}
-          ${error && styles.error}
-        `}
-        onMouseUp={() => !readonly && submitValue === undefined && this.setEditing()}
-        title={error}
+      <InlineEditor
+        fluid
+        multiline
+        {...{ value, ...inlineEditorProps }}
       >
-        <span className={styles.value}>
-          {displayValue === '' ? <span className={styles.placeholder}>{placeholder}</span> : displayValue}
-        </span>
-        {!readonly && !isEditing &&
-          <span
-            className={styles.editButton}
-            onMouseUp={() => submitValue === undefined && this.setEditing()}
+        {({ setRef, setValue }) =>
+          <textarea
+            ref={setRef}
+            defaultValue={value}
+            {...{ maxLength }}
+            onChange={e => setValue(e.target.value)}
           />}
-        {isEditing && (
-          <FocusTrap
-            focusTrapOptions={{
-              onActivate: () => this.input.select(),
-              onDeactivate: this.cancel.bind(this),
-              clickOutsideDeactivates: true,
-            }}
-            className={styles.inputArea}
-          >
-            <textarea
-              ref={(ref) => { this.input = ref; }}
-              defaultValue={displayValue}
-              {...{ maxLength }}
-              onChange={e => this.setState({ value: e.target.value })}
-            />
-            {isEditing && (
-              <div className={styles.saveOptions}>
-                <button className={styles.submit} onClick={this.submit.bind(this)}>&nbsp;</button>
-                <button className={styles.cancel} onClick={this.cancel.bind(this)}>&nbsp;</button>
-              </div>)}
-          </FocusTrap>)}
-      </span>
+      </InlineEditor>
     );
   }
 }

@@ -50,8 +50,8 @@ export default class SearchDropdown extends PureComponent {
         ` }}
         inputProps={{
           className: styles.input,
-          onFocus: (e) => { this.setState({ isFocused: true }); onFocus(e); },
-          onBlur: (e) => { this.setState({ isFocused: false }); onBlur(e); },
+          onFocus: (e) => { this.setState({ isFocused: true }); if (onFocus) onFocus(e); },
+          onBlur: (e) => { this.setState({ isFocused: false }); if (onBlur) onBlur(e); },
           disabled,
         }}
         onChange={(e) => {

@@ -56,9 +56,10 @@
   border-radius: 50px;
   color: #8e9aa6;
   font-size: 14px;
+  display: inline-table;
 }
 .btn_arrow_r {
-  padding: 6px 10px 6px 15px;
+  padding: 6px 10px 3px 15px;
 }
 .btn_arrow_r:after {
   display: inline-block;
@@ -144,6 +145,10 @@
   margin-top: 10px;
   font-size: 12px;
 }
+
+.nav_info {
+  display: flex;
+}
 .boxInfo {
   width: calc(100% - 103px);
 }
@@ -178,6 +183,14 @@
 }
 .boxInfo .user_info .ttl_user {
   margin-top: 7px;
+}
+.boxInfo .leader_info {
+  display: flex;
+  width: 100%;
+  margin-right: auto;
+}
+.boxInfo .leader_info .info {
+  width: 100%;
 }
 .boxInfo .user_info .user_name {
   margin-top: 0;
