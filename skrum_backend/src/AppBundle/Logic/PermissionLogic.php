@@ -43,7 +43,7 @@ class PermissionLogic extends BaseLogic
     {
         // 同一ユーザはチェックNG
         if ($auth->getUserId() == $targetUserId) {
-            return true;
+            return false;
         }
 
         // 権限チェック

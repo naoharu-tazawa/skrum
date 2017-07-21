@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: skm
 -- ------------------------------------------------------
--- Server version	5.7.17
+-- Server version	5.7.18
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -21,7 +21,7 @@
 
 LOCK TABLES `m_role_permission` WRITE;
 /*!40000 ALTER TABLE `m_role_permission` DISABLE KEYS */;
-INSERT INTO `m_role_permission` VALUES (1,'A001','0001','user','2017-04-03 12:04:32','2017-04-03 12:04:32',NULL),(2,'A002','0002','user','2017-04-03 12:04:32','2017-04-03 12:04:32',NULL),(3,'A002','0003','user_permission','2017-04-03 12:04:32','2017-04-03 12:04:32',NULL),(4,'A002','0004','password','2017-04-03 12:04:32','2017-04-03 12:04:32',NULL),(5,'A003','0005','company_profile','2017-04-03 12:04:32','2017-04-03 12:04:32',NULL),(6,'A003','0006','user','2017-04-03 12:04:32','2017-04-03 12:04:32',NULL),(7,'A003','0007','user_permission','2017-04-03 12:04:32','2017-04-03 12:04:32',NULL),(8,'A003','0008','password','2017-04-03 12:04:32','2017-04-03 12:04:32',NULL),(9,'A003','0009','timeframe','2017-04-03 12:04:32','2017-04-03 12:04:32',NULL),(10,'A003','0010','plan','2017-04-03 12:04:32','2017-04-03 12:04:32',NULL);
+INSERT INTO `m_role_permission` VALUES (1,'A002','0001','user','2017-04-03 12:04:32','2017-07-21 22:08:50',NULL),(2,'A002','0002','user_permission','2017-04-03 12:04:32','2017-07-21 22:08:50',NULL),(3,'A002','0003','password','2017-04-03 12:04:32','2017-07-21 22:08:50',NULL),(4,'A003','0004','user','2017-04-03 12:04:32','2017-07-21 22:08:50',NULL),(5,'A003','0005','user_permission','2017-04-03 12:04:32','2017-07-21 22:08:50',NULL),(6,'A003','0006','password','2017-04-03 12:04:32','2017-07-21 22:08:50',NULL),(7,'A003','0007','company_profile','2017-04-03 12:04:32','2017-07-21 22:08:50',NULL),(8,'A003','0008','timeframe','2017-04-03 12:04:32','2017-07-21 22:08:50',NULL),(9,'A003','0009','plan','2017-04-03 12:04:32','2017-07-21 22:08:50',NULL);
 /*!40000 ALTER TABLE `m_role_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -34,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-14 15:36:26
+-- Dump completed on 2017-07-21 22:11:05

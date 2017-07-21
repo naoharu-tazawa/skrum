@@ -72,19 +72,10 @@ class UserController extends BaseController
         $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
 
         // 操作権限チェック
-        // 自ユーザ削除か他ユーザ削除で権限チェックロジックを分岐
-        if ($auth->getUserId() == $userId) {
-            // スーパー管理者ユーザは自ユーザ削除できない
-            if ($auth->getRoleLevel() >= DBConstant::ROLE_LEVEL_SUPERADMIN) {
-                throw new PermissionException('スーパー管理者ユーザは自ユーザを削除できません');
-            }
-        } else {
-            // 権限ロジックでチェック
-            $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $userId);
-            if (!$checkResult) {
-                throw new PermissionException('ユーザ操作権限がありません');
-            }
+        $permissionLogic = $this->getPermissionLogic();
+        $checkResult = $permissionLogic->checkUserOperationSelfNG($auth, $userId);
+        if (!$checkResult) {
+            throw new PermissionException('ユーザ操作権限がありません');
         }
 
         // ユーザ削除処理
