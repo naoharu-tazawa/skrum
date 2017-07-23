@@ -8,9 +8,10 @@ import DialogForm from '../../../dialogs/DialogForm';
 import OwnerSearch, { ownerPropType } from '../../OwnerSearch/OwnerSearch';
 import TimeframesDropdown from '../../../components/TimeframesDropdown';
 import DatePickerInput from '../../../components/DatePickerInput';
+import OwnerSubject from '../../../components/OwnerSubject';
 import OKRSearch from '../../OKRSearch/OKRSearch';
 import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, withReduxField } from '../../../util/FormUtil';
-import { getOwnerTypeId, getOwnerTypeSubject } from '../../../util/OwnerUtil';
+import { getOwnerTypeId, getOwnerTypeSubject, mapOwnerOutbound } from '../../../util/OwnerUtil';
 import { explodePath } from '../../../util/RouteUtil';
 import { isValidDate, compareDates, toUtcDate } from '../../../util/DatetimeUtil';
 import { postOkr } from '../action';
@@ -81,7 +82,6 @@ class NewOKR extends Component {
     const { owner = defaultOwner, timeframeId, disclosureType, okrName, okrDetail,
       targetValue, unit, startDate, endDate, alignment = {} } = entry;
     const ownerTypeSubject = getOwnerTypeSubject(owner.type);
-    const ownerSubject = `owner${ownerTypeSubject}`;
     const isOwnerCurrent = toLower(ownerTypeSubject) === subject && owner.id === id;
     if (compareDates(startDate, endDate) > 0) {
       throw new SubmissionError({ _error: '終了日は開始日以降に設定してください' });
@@ -92,8 +92,7 @@ class NewOKR extends Component {
       okrType,
       timeframeId,
       parentOkrId: parentOkr.id || alignment.id,
-      ownerType: owner.type,
-      [`${ownerSubject}Id`]: owner.id,
+      ...mapOwnerOutbound(owner),
       disclosureType,
       okrName,
       okrDetail: okrDetail || '',
@@ -103,16 +102,11 @@ class NewOKR extends Component {
       endDate: toUtcDate(endDate),
     };
     const dispatcher = okrType === '1' ? partial(dispatchPostOkr, subject, isOwnerCurrent) : dispatchPostKR;
-    this.setState({ isSubmitting: true }, () =>
-      dispatcher(okr).then(({ error }) =>
-        this.setState({ isSubmitting: false }, () => !error && onClose()),
-      ),
-    );
+    return dispatcher(okr).then(({ error }) => !error && onClose());
   }
 
   render() {
     const { type, owner, ownerName, parentOkr, timeframeId, onClose } = this.props;
-    const { isSubmitting = false } = this.state || {};
     const disclosureTypes = [
       { value: '1', label: '全体' },
       { value: '2', label: 'グループ' },
@@ -125,69 +119,60 @@ class NewOKR extends Component {
         title={type === 'Okr' ? '目標新規登録' : 'サブ目標新規登録'}
         submitButton="目標作成"
         onSubmit={this.submit.bind(this)}
-        isSubmitting={isSubmitting}
         onClose={onClose}
       >
         <div className={styles.dialog}>
-          {parentOkr && (
-            <div className={styles.parentOkrBox}>
-              紐付け先目標
-              <div className={styles.parentOkr}>
-                <div className={styles.parentOkrOwnerBox}>
-                  <div className={styles.parentOkrOwnerImage} />
-                  <div className={styles.parentOkrOwnerName}>{parentOkr.owner.name}</div>
-                </div>
-                <div className={styles.parentOkrName}>{parentOkr.name}</div>
-              </div>
-            </div>)}
-          <div className={styles.ownerTimeframesBox}>
-            <div className={styles.ownerBox}>
-              <span className={styles.label}>担当者</span>
-              {ownerName ? <span className={styles.label}>{ownerName}</span> : ownerSearch}
-              {type === 'Okr' && <span className={styles.label}>目標の時間枠</span>}
-              {type === 'Okr' && withSelectReduxField(TimeframesDropdown, 'timeframeId',
-                { styleNames: {
-                  base: styles.timePeriod,
-                  item: styles.timeframe,
-                  current: styles.timeframeCurrent,
-                } },
-              )}
-            </div>
-          </div>
-          <div className={styles.disclosureType}>
-            <span className={styles.label}>公開範囲</span>
+          {parentOkr && <OwnerSubject owner={parentOkr.owner} heading="紐付け先目標" subject={name} />}
+          <section className={styles.ownerTimeframesBox}>
+            <label>担当者</label>
+            {ownerName ? <label>{ownerName}</label> : ownerSearch}
+            {type === 'Okr' && <label>目標の時間枠</label>}
+            {type === 'Okr' && withSelectReduxField(TimeframesDropdown, 'timeframeId',
+              { styleNames: {
+                base: styles.timePeriod,
+                item: styles.timeframe,
+                current: styles.timeframeCurrent,
+              } },
+            )}
+          </section>
+          <section className={styles.disclosureType}>
+            <label>公開範囲</label>
             {disclosureTypes.map(({ value, label }) => (
               <label key={value}>
                 <Field name="disclosureType" component="input" type="radio" value={value} />
                 {label}
               </label>
             ))}
-          </div>
-          <Field component="textarea" name="okrName" placeholder="目標120字以内" maxLength={120} />
-          <Field component="textarea" name="okrDetail" placeholder="詳細250字以内" maxLength={250} />
-          <div className={styles.progressBox}>
-            <span className={styles.label}>目標値</span>
-            <div className={styles.inputWithHint}>
+          </section>
+          <section>
+            <Field component="textarea" name="okrName" placeholder="目標120字以内" maxLength={120} />
+          </section>
+          <section>
+            <Field component="textarea" name="okrDetail" placeholder="詳細250字以内" maxLength={250} />
+          </section>
+          <section>
+            <label>目標値</label>
+            <div>
               <Field component="input" type="number" name="targetValue" />
-              <span className={styles.hint}>※空欄の場合は100</span>
+              <small>※空欄の場合は100</small>
             </div>
-            <span className={styles.label}>単位</span>
-            <div className={styles.inputWithHint}>
+            <label>単位</label>
+            <div>
               <Field component="input" name="unit" placeholder="例)時間、回、件、枚" />
-              <span className={styles.hint}>※途中で変更不可。空欄の場合は%</span>
+              <small>※途中で変更不可。空欄の場合は%</small>
             </div>
-          </div>
-          <div className={styles.dateRangeBox}>
-            <span className={styles.label}>開始日</span>
+          </section>
+          <section>
+            <label>開始日</label>
             {withReduxField(DatePickerInput, 'startDate')}
-            <span className={styles.label}>期限日</span>
+            <label>期限日</label>
             {withReduxField(DatePickerInput, 'endDate')}
-          </div>
-          {type === 'Okr' && timeframeId && <div className={styles.alignmentBox}>
-            <span className={styles.label}>紐づけ先検索</span>
+          </section>
+          {type === 'Okr' && timeframeId && <section>
+            <label>紐づけ先検索</label>
             {withItemisedReduxField(OKRSearch, 'alignment',
               { owner, timeframeId, disabled: !ownerName && isEmpty(owner) })}
-          </div>}
+          </section>}
         </div>
       </Form>);
     return okrForm(type === 'Okr' ? OkrDialogForm : KRDialogForm);

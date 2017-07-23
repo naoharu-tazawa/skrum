@@ -12,7 +12,7 @@ export default (state = {
       if (error) {
         return { ...state, isSearching: false, error: { message: payload.message } };
       }
-      return { ...state, isSearching: false, data: payload.ownersFound, error: null };
+      return { ...state, isSearching: false, ...payload.ownersFound, error: null };
     }
 
     default:

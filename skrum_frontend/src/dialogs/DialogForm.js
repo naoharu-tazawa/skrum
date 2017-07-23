@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { isFunction } from 'lodash';
 import styles from './DialogForm.css';
 
 export default class DialogForm extends Component {
@@ -9,28 +10,42 @@ export default class DialogForm extends Component {
     message: PropTypes.string,
     cancelButton: PropTypes.string,
     submitButton: PropTypes.string,
-    isSubmitting: PropTypes.bool,
     handleSubmit: PropTypes.func, // for redux-form
     onSubmit: PropTypes.func.isRequired,
     onClose: PropTypes.func,
-    children: PropTypes.node,
-    valid: PropTypes.bool,
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+    valid: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     error: PropTypes.string,
   };
 
+  setFieldData(data = {}) {
+    const { data: oldData = {} } = this.state || {};
+    this.setState({ data: { ...oldData, ...data } });
+  }
+
+  submissionHandler() {
+    const { handleSubmit, onSubmit } = this.props;
+    const submitter = data => this.setState({ isSubmitting: true }, () =>
+      onSubmit(data).then(() => this.setState({ isSubmitting: false })));
+    return handleSubmit ? handleSubmit(submitter) :
+      (e) => { e.preventDefault(); submitter((this.state || {}).data); };
+  }
+
   render() {
     const { title, message, cancelButton = 'キャンセル', submitButton = 'OK',
-      isSubmitting, handleSubmit, onSubmit, onClose, children, valid = true, error } = this.props;
+      onClose, children, valid = true, error } = this.props;
+    const { data = {}, isSubmitting = false } = this.state || {};
     return (
       <form
         className={`${styles.form} ${isSubmitting ? styles.submitting : ''}`}
-        onSubmit={handleSubmit ? handleSubmit(onSubmit) : onSubmit}
+        onSubmit={this.submissionHandler()}
         disabled={isSubmitting}
       >
         {title && <div className={styles.title}>{title}</div>}
         {message && <div className={styles.message}>{message}</div>}
         <div className={styles.content}>
-          {children}
+          {isFunction(children) ? children({ setFieldData: this.setFieldData.bind(this) }) :
+            children}
           <div className={styles.error}>{error || <span>&nbsp;</span>}</div>
         </div>
         <div className={styles.buttons}>
@@ -46,7 +61,7 @@ export default class DialogForm extends Component {
           <button
             type="submit"
             className={styles.submitButton}
-            disabled={!valid}
+            disabled={isFunction(valid) ? !valid(data) : !valid}
           >
             {submitButton}
           </button>

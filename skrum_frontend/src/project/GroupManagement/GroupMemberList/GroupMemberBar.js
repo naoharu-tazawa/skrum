@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { groupMemberPropTypes } from './propTypes';
 import { replacePath } from '../../../util/RouteUtil';
+import { isBasicRole } from '../../../util/UserUtil';
 import styles from './GroupMemberBar.css';
 
 export default class GroupMemberBar extends Component {
@@ -37,8 +38,7 @@ export default class GroupMemberBar extends Component {
       </tr>);
 
     if (header) {
-      const retHeader = roleLevel < 4 ? getHeader() : getHeaderAdmin();
-      return retHeader;
+      return isBasicRole(roleLevel) ? getHeader() : getHeaderAdmin();
     }
 
     const { id, name, position, achievementRate, lastLogin } = member;
@@ -84,7 +84,6 @@ export default class GroupMemberBar extends Component {
         <td><div className={styles.delete}><img src="/img/delete.svg" alt="" /></div></td>
       </tr>);
 
-    const retRow = roleLevel < 4 ? getRow() : getRowAdmin();
-    return retRow;
+    return isBasicRole(roleLevel) ? getRow() : getRowAdmin();
   }
 }

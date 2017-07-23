@@ -1,6 +1,6 @@
 import { createActions } from 'redux-actions';
 import { keyValueIdentity } from '../../util/ActionUtil';
-import { getJson, postJson, deleteJson, putJson } from '../../util/ApiUtil';
+import { getJson, postJson, deleteJson } from '../../util/ApiUtil';
 
 export const Action = {
   REQUEST_FETCH_USER_BASICS: 'REQUEST_FETCH_USER_BASICS',
@@ -13,8 +13,6 @@ export const Action = {
   FINISH_POST_OKR: 'FINISH_POST_OKR',
   REQUEST_DELETE_OKR: 'REQUEST_DELETE_OKR',
   FINISH_DELETE_OKR: 'FINISH_DELETE_OKR',
-  REQUEST_CHANGE_GROUP_LEADER: 'REQUEST_CHANGE_GROUP_LEADER',
-  FINISH_CHANGE_GROUP_LEADER: 'FINISH_CHANGE_GROUP_LEADER',
   SYNC_OKR_DETAILS: 'SYNC_OKR_DETAILS',
 };
 
@@ -29,8 +27,6 @@ const {
   finishPostOkr,
   requestDeleteOkr,
   finishDeleteOkr,
-  requestChangeGroupLeader,
-  finishChangeGroupLeader,
   syncOkrDetails,
 } = createActions({
   [Action.FINISH_FETCH_USER_BASICS]: keyValueIdentity,
@@ -38,7 +34,6 @@ const {
   [Action.FINISH_FETCH_COMPANY_BASICS]: keyValueIdentity,
   [Action.FINISH_POST_OKR]: keyValueIdentity,
   [Action.FINISH_DELETE_OKR]: keyValueIdentity,
-  [Action.FINISH_CHANGE_GROUP_LEADER]: keyValueIdentity,
   [Action.SYNC_OKR_DETAILS]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_USER_BASICS,
@@ -46,7 +41,6 @@ const {
   Action.REQUEST_FETCH_COMPANY_BASICS,
   Action.REQUEST_POST_OKR,
   Action.REQUEST_DELETE_OKR,
-  Action.REQUEST_CHANGE_GROUP_LEADER,
 );
 
 const fetchBasics = (subject, node, request, finish) => (id, timeframeId) =>
@@ -86,16 +80,6 @@ export const deleteOkr = (subject, id) =>
     return deleteJson(`/okrs/${id}.json`, state)()
       .then(() => dispatch(finishDeleteOkr('deletedOkr', { subject, id })))
       .catch(({ message }) => dispatch(finishDeleteOkr(new Error(message))));
-  };
-
-export const changeGroupLeader = (groupId, userId, userName) =>
-  (dispatch, getState) => {
-    const state = getState();
-    if (state.basics.isChangingGroupLeader) return Promise.resolve();
-    dispatch(requestChangeGroupLeader());
-    return putJson(`/groups/${groupId}/leaders/${userId}.json`, state)()
-      .then(() => dispatch(finishChangeGroupLeader('changeGroupLeader', { groupId, userId, userName })))
-      .catch(({ message }) => dispatch(finishChangeGroupLeader(new Error(message))));
   };
 
 export const syncOkr = (subject, { payload, error }) =>

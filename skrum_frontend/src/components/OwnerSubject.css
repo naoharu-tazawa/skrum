@@ -1,0 +1,40 @@
+.component {
+  margin-bottom: 1em;
+  padding: 1em 1em 1em 3em;
+  border: 1px solid #bfbfbf;
+  border-radius: 1em;
+  font-size: 12px;
+}
+.heading {
+  margin-bottom: 0.5em;
+}
+.subjectArea {
+  display: flex;
+}
+.owner_info {
+  float: left;
+}
+.owner_name {
+  margin-right: 1em;
+}
+.subject {
+  margin: auto 1em;
+  white-space: nowrap;
+  /*overflow: hidden;*/
+  text-overflow: ellipsis;
+  max-width: 40em;
+  overflow-x: auto;
+}
+.avatar {
+  margin-right: 10px;
+  float: left;
+}
+.info {
+  display: table-cell;
+  vertical-align: middle;
+  float: left;
+}
+.owner_name {
+  margin-top: 14px;
+  color: #626a7f;
+}

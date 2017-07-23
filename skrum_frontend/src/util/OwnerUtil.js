@@ -23,3 +23,9 @@ export const mapOwner = (data) => {
   const { [`${ownerSubject}Id`]: ownerId, [`${ownerSubject}Name`]: ownerName } = data;
   return { id: ownerId, name: ownerName, type: ownerType };
 };
+
+export const mapOwnerOutbound = ({ type, id, name }) => ({
+  ownerType: type,
+  [`owner${getOwnerTypeSubject(type)}Id`]: id,
+  [`owner${getOwnerTypeSubject(type)}Name`]: name,
+});

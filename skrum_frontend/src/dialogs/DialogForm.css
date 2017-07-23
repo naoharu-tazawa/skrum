@@ -83,3 +83,20 @@
   /* IE 10+ */
   color: #dddddd;
 }
+.form section {
+  display: flex;
+  margin-bottom: 1em;
+}
+.form label {
+  margin: 8px 1em auto 1em;
+  white-space: nowrap;
+  cursor: default;
+}
+.form label:first-child {
+  margin-left: 0;
+}
+.form small {
+  display: block;
+  margin: 2px 0 0 0;
+  font-size: xx-small;
+}

@@ -20,7 +20,7 @@ export default class InlinePotentialLeaders extends PureComponent {
         fluid
         dropdown
         {...{ value: leaderName, ...inlineEditorProps }}
-        onSubmit={(_, completion) => leaderSelected && onSubmit(leaderSelected, completion)}
+        onSubmit={() => (leaderSelected ? onSubmit(leaderSelected) : Promise.resolve())}
       >
         {({ setRef, setValue, submit }) =>
           <PotentialLeaders

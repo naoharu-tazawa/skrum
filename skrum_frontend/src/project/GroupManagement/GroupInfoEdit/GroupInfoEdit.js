@@ -5,6 +5,7 @@ import { groupPropTypes } from './propTypes';
 import styles from './GroupInfoEdit.css';
 import InlineTextInput from '../../../editors/InlineTextInput';
 import InlineTextArea from '../../../editors/InlineTextArea';
+import InlinePotentialLeaders from '../../PotentialLeaders/InlinePotentialLeaders';
 import { replacePath } from '../../../util/RouteUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 
@@ -13,12 +14,14 @@ export default class GroupInfoEdit extends Component {
   static propTypes = {
     group: groupPropTypes.isRequired,
     infoLink: PropTypes.string.isRequired,
+    roleLevel: PropTypes.number.isRequired,
     dispatchPutGroup: PropTypes.func.isRequired,
+    dispatchChangeGroupLeader: PropTypes.func.isRequired,
   };
 
   render() {
-    const { group, dispatchPutGroup } = this.props;
-    const { groupId, name, groupPaths, mission, leaderName, lastUpdate } = group;
+    const { group, dispatchPutGroup, dispatchChangeGroupLeader } = this.props;
+    const { groupId, name, groupPaths, mission, leaderUserId, leaderName, lastUpdate } = group;
     const groupPathsLink = groupPaths.map(({ groupTreeId, groupPath }) =>
       <ul key={groupTreeId}>
         {groupPath.map(({ id, name: groupName }, index) =>
@@ -45,8 +48,7 @@ export default class GroupInfoEdit extends Component {
               <InlineTextInput
                 value={name}
                 required
-                onSubmit={(value, completion) =>
-                  dispatchPutGroup(groupId, { name: value }).then(completion)}
+                onSubmit={value => dispatchPutGroup(groupId, { name: value })}
               />
             </h2>
             <nav className={styles.breads}>
@@ -60,8 +62,7 @@ export default class GroupInfoEdit extends Component {
                   value={mission}
                   placeholder="ミッションを入力してください"
                   maxLength={250}
-                  onSubmit={(value, completion) =>
-                    dispatchPutGroup(groupId, { mission: value }).then(completion)}
+                  onSubmit={value => dispatchPutGroup(groupId, { mission: value })}
                 />
               </div>
             </div>
@@ -70,12 +71,13 @@ export default class GroupInfoEdit extends Component {
               <dl>
                 <dt>リーダー</dt>
                 <dd>
-                  {leaderName}
-                  <span className={styles.btn}>
-                    <button className={styles.hover}>
-                      <img src="/img/profile/icn_write.png" alt="" width="25" />
-                    </button>
-                  </span>
+                  <InlinePotentialLeaders
+                    groupId={groupId}
+                    leaderUserId={leaderUserId}
+                    leaderName={leaderName}
+                    onSubmit={({ userId, name: userName }) =>
+                      dispatchChangeGroupLeader(userId, userName)}
+                  />
                 </dd>
               </dl>
             </div>

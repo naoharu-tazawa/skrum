@@ -1,6 +1,8 @@
 import { createActions } from 'redux-actions';
+import { omit } from 'lodash';
 import { keyValueIdentity } from '../../util/ActionUtil';
 import { getJson, putJson, postJson, deleteJson } from '../../util/ApiUtil';
+import { mapOwnerOutbound } from '../../util/OwnerUtil';
 
 export const Action = {
   REQUEST_FETCH_OKR_DETAILS: 'REQUEST_FETCH_OKR_DETAILS',
@@ -13,6 +15,8 @@ export const Action = {
   FINISH_DELETE_KR: 'FINISH_DELETE_KR',
   REQUEST_POST_ACHIEVEMENT: 'REQUEST_POST_ACHIEVEMENT',
   FINISH_POST_ACHIEVEMENT: 'FINISH_POST_ACHIEVEMENT',
+  REQUEST_CHANGE_OWNER: 'REQUEST_CHANGE_OWNER',
+  FINISH_CHANGE_OWNER: 'FINISH_CHANGE_OWNER',
 };
 
 const {
@@ -26,18 +30,22 @@ const {
   finishDeleteKr,
   requestPostAchievement,
   finishPostAchievement,
+  requestChangeOwner,
+  finishChangeOwner,
 } = createActions({
   [Action.FINISH_FETCH_OKR_DETAILS]: keyValueIdentity,
   [Action.FINISH_POST_KR]: keyValueIdentity,
   [Action.FINISH_PUT_OKR_DETAILS]: keyValueIdentity,
   [Action.FINISH_DELETE_KR]: keyValueIdentity,
   [Action.FINISH_POST_ACHIEVEMENT]: keyValueIdentity,
+  [Action.FINISH_CHANGE_OWNER]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_OKR_DETAILS,
   Action.REQUEST_POST_KR,
   Action.REQUEST_PUT_OKR_DETAILS,
   Action.REQUEST_DELETE_KR,
   Action.REQUEST_POST_ACHIEVEMENT,
+  Action.REQUEST_CHANGE_OWNER,
 );
 
 export const fetchOKRDetails = id =>
@@ -68,6 +76,16 @@ export const putOKR = (id, data) =>
     return putJson(`/okrs/${id}.json`, state)(null, data)
       .then(() => dispatch(finishPutOkrDetails('data', { id, ...data })))
       .catch(({ message }) => dispatch(finishPutOkrDetails(new Error(message))));
+  };
+
+export const changeOwner = (id, owner) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.okr.isChangingOwner) return Promise.resolve();
+    dispatch(requestChangeOwner());
+    return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound(omit(owner, 'name')))
+      .then(() => dispatch(finishChangeOwner('changeOwner', { id, ...mapOwnerOutbound(owner) })))
+      .catch(({ message }) => dispatch(finishChangeOwner(new Error(message))));
   };
 
 export const deleteKR = id =>

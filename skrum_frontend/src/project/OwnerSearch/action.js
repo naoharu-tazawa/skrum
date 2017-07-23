@@ -22,6 +22,6 @@ export const searchOwner = keyword =>
     if (state.ownersFound.isSearching) return Promise.resolve();
     dispatch(requestSearchOwner());
     return getJson('/owners/search.json', state)({ q: keyword })
-      .then(json => dispatch(finishSearchOwner('ownersFound', json)))
+      .then(json => dispatch(finishSearchOwner('ownersFound', { keyword, data: json })))
       .catch(({ message }) => dispatch(finishSearchOwner(new Error(message))));
   };

@@ -46,7 +46,7 @@
   overflow: hidden;
 }
 .tool {
-  display: inline-block;
+  display: inline-table;
   border-color: #8e9aa6;
   line-height: 35px;
   text-align: center;
@@ -68,6 +68,12 @@ button.tool:focus {
       font-size: 24px; }
     .boxInfo .txt {
       margin: 10px 0 12px; }
+    .boxInfo .owner_info {
+      display: flex;
+      width: 100%;
+      margin-right: auto; }
+    .boxInfo .owner_info .info {
+      width: 100%; }
     .boxInfo .user_info .user_name {
       margin-top: 0; }
     .boxInfo .member_list {
@@ -124,6 +130,9 @@ button.tool:focus {
     /*cursor: pointer; }*/
   /*.boxInfo .tool, .boxInfo :global(.dropdown) {*/
     /*float: right; }*/
+  .boxInfo .nav_info {
+    display: flex;
+  }
   .boxInfo .nav_info .user_name {
     margin-top: 12px !important; }
 
@@ -158,24 +167,4 @@ button.tool:focus {
 }
 .progress.low {
   background-color: #EFB04C;
-}
-.deletionPrompt {
-  margin-bottom: 1em;
-  padding: 0.5em 1em;
-  border: 1px solid #bfbfbf;
-  border-radius: 1em;
-}
-.okrToDelete {
-  display: flex;
-  font-size: smaller;
-}
-.okrToDelete .user_name {
-  font-size: inherit;
-  margin-right: 1em;
-}
-.okrToDelete .okrName {
-  margin: auto 1em;
-  white-space: nowrap;
-  /*overflow: hidden;*/
-  text-overflow: ellipsis;
 }

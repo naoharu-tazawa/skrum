@@ -38,16 +38,14 @@ export default class UserInfoEdit extends Component {
                 <InlineTextInput
                   value={lastName}
                   required
-                  onSubmit={(value, completion) =>
-                    dispatchPutUser(userId, { lastName: value }).then(completion)}
+                  onSubmit={value => dispatchPutUser(userId, { lastName: value })}
                 />
               </span>
               <span className={styles.user_name_f}>
                 <InlineTextInput
                   value={firstName}
                   required
-                  onSubmit={(value, completion) =>
-                    dispatchPutUser(userId, { firstName: value }).then(completion)}
+                  onSubmit={value => dispatchPutUser(userId, { firstName: value })}
                 />
               </span>
             </h2>
@@ -63,8 +61,7 @@ export default class UserInfoEdit extends Component {
                       <InlineTextInput
                         value={position}
                         required
-                        onSubmit={(value, completion) =>
-                          dispatchPutUser(userId, { position: value }).then(completion)}
+                        onSubmit={value => dispatchPutUser(userId, { position: value })}
                       />
                     </div>
                   </td>
@@ -76,8 +73,7 @@ export default class UserInfoEdit extends Component {
                       <InlineTextInput
                         value={phoneNumber}
                         placeholder="電話番号を入力してください"
-                        onSubmit={(value, completion) =>
-                          dispatchPutUser(userId, { phoneNumber: value }).then(completion)}
+                        onSubmit={value => dispatchPutUser(userId, { phoneNumber: value })}
                       />
                     </div>
                   </td>
@@ -89,8 +85,7 @@ export default class UserInfoEdit extends Component {
                       <InlineTextInput
                         value={emailAddress}
                         required
-                        onSubmit={(value, completion) =>
-                          dispatchPutUser(userId, { emailAddress: value }).then(completion)}
+                        onSubmit={value => dispatchPutUser(userId, { emailAddress: value })}
                       />
                     </div>
                   </td>

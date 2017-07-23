@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { groupMembersPropTypes } from './propTypes';
 import GroupMemberList from './GroupMemberList';
+import { RoleLevel } from '../../../util/UserUtil';
 
 class GroupMemberListContainer extends Component {
 
@@ -22,7 +23,7 @@ class GroupMemberListContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { roleLevel = 1 } = state.auth || {};
+  const { roleLevel = RoleLevel.BASIC } = state.auth || {};
   const { members = [] } = state.groupManagement.group || {};
   const items = members.map((member) => {
     const { userId, name, position, achievementRate, lastLogin } = member;

@@ -1,58 +1,7 @@
-.label {
-  margin: 8px 1em auto 1em;
-  white-space: nowrap;
-  cursor: default;
-}
-.label:first-child {
-  margin-left: 0;
-}
-.parentOkrBox {
-  margin-bottom: 1em;
-  padding: 1em;
-  border: 1px solid #bfbfbf;
-  border-radius: 1em;
-}
-.parentOkr {
-  display: flex;
-  margin-top: 0.5em;
-}
-.parentOkrOwnerBox {
-  display: flex;
-  margin: auto 0;
-  width: 18%;
-}
-.parentOkrOwnerImage {
-  width: 3em;
-  height: 3em;
-  border: 2px solid #fff;
-  background-color: #626A7F;
-  border-radius: 50%;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-.parentOkrOwnerName {
-  margin: auto 1em;
-  white-space: nowrap;
-  /*overflow: hidden;*/
-  text-overflow: ellipsis;
-}
-.parentOkrName {
-  margin: auto 1em;
-  white-space: nowrap;
-  /*overflow: hidden;*/
-  text-overflow: ellipsis;
-}
 .ownerTimeframesBox {
-  display: flex;
-}
-.ownerBox {
-  display: inline-flex;
   margin-right: auto;
 }
 .dateRange {
-}
-.disclosureType {
-  margin: 1em 0 0 0;
 }
 .disclosureType input {
   margin: 0 .5em 0 1.5em;
@@ -61,21 +10,9 @@
   display: block;
   width: 52em;
   max-width: 52em;
-  margin-top: 1em;
 }
 .dialog input[type=number] {
   text-align: right;
-}
-.progressBox, .dateRangeBox, .alignmentBox {
-  display: flex;
-  margin: 1em 0 0 0;
-}
-.inputWithHint {
-  display: grid;
-}
-.hint {
-  margin: 2px 0 0 0;
-  font-size: xx-small;
 }
 .timePeriod {
   min-width: 11.5em;

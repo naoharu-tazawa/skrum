@@ -152,23 +152,3 @@ button.tool:focus {
   margin-top: 14px;
   color: #626a7f;
   font-size: 14px; }
-.deletionPrompt {
-  margin-bottom: 1em;
-  padding: 0.5em 1em;
-  border: 1px solid #bfbfbf;
-  border-radius: 1em;
-}
-.okrToDelete {
-  display: flex;
-  font-size: smaller;
-}
-.okrToDelete .user_name {
-  font-size: inherit;
-  margin-right: 1em;
-}
-.okrToDelete .okrName {
-  margin: auto 1em;
-  white-space: nowrap;
-  /*overflow: hidden;*/
-  text-overflow: ellipsis;
-}

@@ -10,14 +10,13 @@ export default class DeletionPrompt extends Component {
     title: PropTypes.string.isRequired,
     prompt: PropTypes.string.isRequired,
     onDelete: PropTypes.func.isRequired,
-    isDeleting: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
     warning: PropTypes.node.isRequired,
   };
 
   render() {
-    const { title, prompt, onDelete, isDeleting, onClose, children, warning } = this.props;
+    const { title, prompt, onDelete, onClose, children, warning } = this.props;
     const { yesSelected = false } = this.state || {};
     return (
       <BasicModalDialog onClose={onClose}>
@@ -26,8 +25,7 @@ export default class DeletionPrompt extends Component {
           message={prompt}
           submitButton="削除"
           valid={yesSelected}
-          onSubmit={(e) => { e.preventDefault(); onDelete(); }}
-          isSubmitting={isDeleting}
+          onSubmit={onDelete}
           onClose={onClose}
         >
           <div className={styles.content}>{children}</div>

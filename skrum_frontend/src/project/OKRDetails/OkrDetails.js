@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
+import { isEmpty } from 'lodash';
 import { okrPropTypes } from './propTypes';
 import { replacePath, toBasicPath } from '../../util/RouteUtil';
 import InlineTextArea from '../../editors/InlineTextArea';
 import InlineDateInput from '../../editors/InlineDateInput';
 import DeletionPrompt from '../../dialogs/DeletionPrompt';
+import DialogForm from '../../dialogs/DialogForm';
+import OwnerSubject from '../../components/OwnerSubject';
 import DropdownMenu from '../../components/DropdownMenu';
 import Dropdown from '../../components/Dropdown';
+import OwnerSearch from '../OwnerSearch/OwnerSearch';
 import NewAchievement from '../OKR/NewAchievement/NewAchievement';
+import { withBasicModalDialog } from '../../util/FormUtil';
 import { compareDates } from '../../util/DatetimeUtil';
 import styles from './OkrDetails.css';
 
@@ -18,15 +23,57 @@ export default class OkrDetails extends Component {
     parentOkr: okrPropTypes,
     okr: okrPropTypes.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
+    dispatchChangeOwner: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
+  changeOwnerPrompt = ({ id, name, owner, onClose }) => (
+    <DialogForm
+      title="担当者の変更"
+      submitButton="変更"
+      onSubmit={({ changedOwner } = {}) =>
+        this.props.dispatchChangeOwner(id, changedOwner).then(({ error }) =>
+          !error && this.setState({ changeOwnerPrompt: null }),
+        )}
+      valid={({ changedOwner }) => !isEmpty(changedOwner) &&
+        (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
+      onClose={onClose}
+    >
+      {({ setFieldData }) =>
+        <div>
+          <OwnerSubject owner={owner} heading="担当者を変更する目標" subject={name} />
+          <section>
+            <label>担当者検索</label>
+            <OwnerSearch onChange={value => setFieldData({ changedOwner: value })} />
+          </section>
+        </div>}
+    </DialogForm>);
+
+  deleteOkrPrompt = ({ id, name, owner }) => (
+    <DeletionPrompt
+      title="目標の削除"
+      prompt="こちらの目標を削除しますか？"
+      warning={(
+        <ul>
+          <li>一度削除した目標は復元できません。</li>
+          <li>上記の目標に直接紐づいている全ての目標/サブ目標、およびその下に紐づいている全ての目標/サブ目標も同時に削除されます。</li>
+        </ul>
+      )}
+      onDelete={() => this.props.dispatchDeleteOkr(id).then(({ error }) => {
+        if (!error) this.setState({ deleteOkrPrompt: null });
+        if (!error) browserHistory.push(toBasicPath());
+      })}
+      onClose={() => this.setState({ deleteOkrPrompt: null })}
+    >
+      <OwnerSubject owner={owner} subject={name} />
+    </DeletionPrompt>);
+
   render() {
-    const { parentOkr = {}, okr, dispatchPutOKR, dispatchDeleteOkr } = this.props;
-    const { isDeleteOkrModalOpen = false, isDeletingOkr = false } = this.state || {};
+    const { parentOkr = {}, okr, dispatchPutOKR } = this.props;
+    const { changeOwnerPrompt, deleteOkrPrompt } = this.state || {};
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
       startDate, endDate, owner, keyResults = [] } = okr;
     return (
@@ -53,8 +100,7 @@ export default class OkrDetails extends Component {
                 value={name}
                 required
                 maxLength={120}
-                onSubmit={(value, completion) =>
-                  dispatchPutOKR(id, { okrName: value }).then(completion)}
+                onSubmit={value => dispatchPutOKR(id, { okrName: value })}
               />
             </div>
             <div className={styles.txt}>
@@ -62,8 +108,7 @@ export default class OkrDetails extends Component {
                 value={detail}
                 placeholder="目標詳細を入力してください"
                 maxLength={250}
-                onSubmit={(value, completion) =>
-                  dispatchPutOKR(id, { okrDetail: value }).then(completion)}
+                onSubmit={value => dispatchPutOKR(id, { okrDetail: value })}
               />
             </div>
             <div className={`${styles.bar_top} ${styles.cf}`}>
@@ -87,8 +132,7 @@ export default class OkrDetails extends Component {
                     value={startDate}
                     required
                     validate={value => compareDates(value, endDate) > 0 && '終了日は開始日以降に設定してください'}
-                    onSubmit={(value, completion) =>
-                      dispatchPutOKR(id, { startDate: value }).then(completion)}
+                    onSubmit={value => dispatchPutOKR(id, { startDate: value })}
                   />
                 </span>
                 <span>期限日：
@@ -96,80 +140,51 @@ export default class OkrDetails extends Component {
                     value={endDate}
                     required
                     validate={value => compareDates(startDate, value) > 0 && '終了日は開始日以降に設定してください'}
-                    onSubmit={(value, completion) =>
-                      dispatchPutOKR(id, { endDate: value }).then(completion)}
+                    onSubmit={value => dispatchPutOKR(id, { endDate: value })}
                   />
                 </span>
               </div>
             </div>
             <div className={`${styles.nav_info} ${styles.cf}`}>
-              <div className={`${styles.user_info} ${styles.floatL} ${styles.cf}`}>
+              <div className={`${styles.owner_info} ${styles.user_info} ${styles.floatL} ${styles.cf}`}>
                 <div className={`${styles.avatar} ${styles.floatL}`}>
                   <img src="/img/common/icn_user.png" alt="User Name" />
                 </div>
                 <div className={`${styles.info} ${styles.floatL}`}>
-                  <p className={styles.user_name}>{owner.name}</p>
+                  <div className={styles.user_name}>{owner.name}</div>
                 </div>
               </div>
-              <div className={styles.member_list}>
-                {keyResults.length === 0 && (
-                  <Dropdown
-                    trigger={(
-                      <button className={styles.tool}><img src="/img/checkin.png" alt="Achievement" /></button>)}
-                    content={props =>
-                      <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
-                    arrow="center"
-                  />)}
-                <a className={styles.tool} href=""><img src="/img/common/inc_organization.png" alt="Map" /></a>
-                <DropdownMenu
+              {keyResults.length === 0 && (
+                <Dropdown
                   trigger={(
-                    <button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>)}
-                  options={[
-                    { caption: '担当者変更' },
-                    { caption: '紐付け先設定' },
-                    { caption: '公開範囲設定' },
-                    { caption: '削除', onClick: () => this.setState({ isDeleteOkrModalOpen: true }) },
-                  ]}
-                />
-              </div>
+                    <button className={styles.tool}><img src="/img/checkin.png" alt="Achievement" /></button>)}
+                  content={props =>
+                    <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
+                  arrow="center"
+                />)}
+              <a className={styles.tool} href=""><img src="/img/common/inc_organization.png" alt="Map" /></a>
+              <DropdownMenu
+                trigger={(
+                  <button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>)}
+                options={[
+                  { caption: '担当者変更',
+                    onClick: () => this.setState({ changeOwnerPrompt:
+                      withBasicModalDialog(
+                        this.changeOwnerPrompt,
+                        () => this.setState({ changeOwnerPrompt: null }),
+                        { id, name, owner }) }) },
+                  { caption: '紐付け先設定' },
+                  { caption: '公開範囲設定' },
+                  { caption: '削除',
+                    onClick: () => this.setState({ deleteOkrPrompt:
+                      this.deleteOkrPrompt({ id, name, owner }) }) },
+                ]}
+              />
             </div>
           </div>
         </div>
-        {isDeleteOkrModalOpen && (
-          <DeletionPrompt
-            title="目標の削除"
-            prompt="こちらの目標を削除しますか？"
-            warning={(
-              <ul>
-                <li>一度削除した目標は復元できません。</li>
-                <li>上記の目標に直接紐づいている全ての目標/サブ目標、およびその下に紐づいている全ての目標/サブ目標も同時に削除されます。</li>
-              </ul>
-            )}
-            onDelete={() => {
-              this.setState({ isDeletingOkr: true }, () =>
-                dispatchDeleteOkr(id).then(({ error }) => {
-                  this.setState({ isDeletingOkr: false, isDeleteOkrModalOpen: !!error });
-                  if (!error) browserHistory.push(toBasicPath());
-                }),
-              );
-            }}
-            isDeleting={isDeletingOkr}
-            onClose={() => this.setState({ isDeleteOkrModalOpen: false })}
-          >
-            <div className={styles.deletionPrompt}>
-              <div className={styles.okrToDelete}>
-                <div className={`${styles.user_info} ${styles.floatL}`}>
-                  <div className={`${styles.avatar} ${styles.floatL}`}>
-                    <img src="/img/common/icn_user.png" alt="User Name" />
-                  </div>
-                  <div className={`${styles.info} ${styles.floatL}`}>
-                    <p className={styles.user_name}>{owner.name}</p>
-                  </div>
-                </div>
-                <div className={styles.okrName}>{name}</div>
-              </div>
-            </div>
-          </DeletionPrompt>)}
+        {changeOwnerPrompt}
+        {deleteOkrPrompt}
       </div>);
   }
 }

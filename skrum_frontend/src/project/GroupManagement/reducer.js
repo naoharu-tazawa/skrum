@@ -2,10 +2,11 @@ import { Action } from './action';
 import { mergeUpdateById } from '../../util/ActionUtil';
 
 export default (state = {
-  isFetching: false,
-  isPutting: false,
   user: {},
   group: {},
+  isFetching: false,
+  isPutting: false,
+  isChangingLeader: false,
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_USER_GROUPS:
@@ -53,6 +54,21 @@ export default (state = {
         return { ...state, isPutting: false, error: { message: payload.message } };
       }
       return { ...state, isPutting: false, error: null };
+    }
+
+    case Action.REQUEST_CHANGE_GROUP_LEADER:
+      return { ...state, isChangingLeader: true };
+
+    case Action.FINISH_CHANGE_GROUP_LEADER: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isChangingLeader: false, error: { message: payload.message } };
+      }
+      const { userId: leaderUserId, userName: leaderName } = payload.changeGroupLeader;
+      const { group: groupRoot } = state;
+      const { group: groupInfo } = groupRoot;
+      const group = { ...groupRoot, group: { ...groupInfo, leaderUserId, leaderName } };
+      return { ...state, group, isChangingLeader: false, error: null };
     }
 
     default:

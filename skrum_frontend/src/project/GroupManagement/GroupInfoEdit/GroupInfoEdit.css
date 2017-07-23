@@ -76,17 +76,18 @@
       font-size: 14px;
       line-height: 1.3; }
     .profile_box .profile_txt .leader {
-      display: table;
+      display: flex;
       width: 100%; }
-      .profile_box .profile_txt .leader div {
+      /*.profile_box .profile_txt .leader div {
         display: table-cell;
         width: 38px;
         height: 38px;
-        vertical-align: middle; }
+        vertical-align: middle; }*/
         .profile_box .profile_txt .leader div img {
           border-radius: 50%; }
       .profile_box .profile_txt .leader dl {
-        display: table-cell;
+        /*display: table-cell;*/
+        width: 100%;
         padding-left: 10px;
         vertical-align: middle; }
         .profile_box .profile_txt .leader dl dt {

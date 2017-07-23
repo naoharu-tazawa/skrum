@@ -68,8 +68,7 @@ class CompanyProfileContainer extends Component {
               <InlineTextInput
                 value={name}
                 required
-                onSubmit={(value, completion) =>
-                  dispatchPutCompany(companyId, { name: value }).then(completion)}
+                onSubmit={value => dispatchPutCompany(companyId, { name: value })}
               />
             </span>
           </div>
@@ -80,8 +79,7 @@ class CompanyProfileContainer extends Component {
                 value={vision}
                 placeholder="ヴィジョンを入力してください"
                 maxLength={250}
-                onSubmit={(value, completion) =>
-                  dispatchPutCompany(companyId, { vision: value }).then(completion)}
+                onSubmit={value => dispatchPutCompany(companyId, { vision: value })}
               />
             </span>
           </div>
@@ -92,8 +90,7 @@ class CompanyProfileContainer extends Component {
                 value={mission}
                 placeholder="ミッションを入力してください"
                 maxLength={250}
-                onSubmit={(value, completion) =>
-                  dispatchPutCompany(companyId, { mission: value }).then(completion)}
+                onSubmit={value => dispatchPutCompany(companyId, { mission: value })}
               />
             </span>
           </div>

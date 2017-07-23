@@ -8,7 +8,6 @@ export default (state = {
   isFetching: false,
   isPostingOkr: false,
   isDeletingOkr: false,
-  isChangingGroupLeader: false,
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_USER_BASICS:
@@ -52,21 +51,6 @@ export default (state = {
       const { [subject]: basics } = state;
       const okrs = basics.okrs.filter(({ okrId }) => id !== okrId);
       return { ...state, [subject]: { ...basics, okrs }, isDeletingOkr: false, error: null };
-    }
-
-    case Action.REQUEST_CHANGE_GROUP_LEADER:
-      return { ...state, isChangingGroupLeader: true };
-
-    case Action.FINISH_CHANGE_GROUP_LEADER: {
-      const { payload, error } = action;
-      if (error) {
-        return { ...state, isChangingGroupLeader: false, error: { message: payload.message } };
-      }
-      const { userId: leaderUserId, userName: leaderName } = payload.changeGroupLeader;
-      const { group: groupBasics } = state;
-      const { group: groupInfo } = groupBasics;
-      const group = { ...groupBasics, group: { ...groupInfo, leaderUserId, leaderName } };
-      return { ...state, group, isChangingGroupLeader: false, error: null };
     }
 
     case Action.SYNC_OKR_DETAILS: {

@@ -40,8 +40,9 @@ export default class InlineEditor extends PureComponent {
         unsetEditingCompletion = () => this.setState({ value, error: validationError });
       } else {
         unsetEditingCompanions = { submitValue: value, error: undefined };
-        unsetEditingCompletion = () => onSubmit(value, ({ error, payload: { message } }) =>
-          this.setState({ value, submitValue: undefined, error: error && message }));
+        unsetEditingCompletion = () =>
+          onSubmit(value).then(({ error, payload: { message } = {} } = {}) =>
+            this.setState({ value, submitValue: undefined, error: error && message }));
       }
     }
     this.setState({ isEditing: false, ...unsetEditingCompanions }, unsetEditingCompletion);
