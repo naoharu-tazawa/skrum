@@ -3,7 +3,7 @@
   /*overflow: hidden;*/
   font-size: small;
   margin: 1px auto 0 auto;
-  padding: 5px 40px;
+  padding: 5px 65px;
   background-color: #fff;
   color: #626A7F;
   max-height: 500px;
@@ -12,22 +12,22 @@
 .header {
   display: flex;
   width: 100%;
-  padding: 10px 40px;
+  padding: 10px 65px;
   background-color: #fff;
   border-bottom: 1px solid #d8dfe5;
 }
 .okr {
-  width: 40%;
+  width: 38%;
 }
 .progress {
   width: 25%;
 }
 .owner {
-  width: 18%;
+  width: 19%;
 }
 .name {
   position: relative;
-  width: 40%;
+  width: 38%;
   /*white-space: nowrap;*/
   /*overflow: hidden;*/
   /*text-overflow: ellipsis;*/
@@ -74,9 +74,11 @@
 }
 .progressConstituents {
   margin-top: 0.75em;
+  margin-left: 4.2em;
 }
 .txt_date {
   margin-top: 1.25em;
+  margin-left: 4.2em;
 }
 .txt_date p {
   margin-top: 0.75em;
@@ -84,7 +86,7 @@
 .ownerBox {
   display: flex;
   margin: auto 0;
-  width: 18%;
+  width: 19%;
 }
 .ownerImage {
   width: 3em;
@@ -118,7 +120,7 @@
   line-height: 35px;
   text-align: center;
   vertical-align: middle;
-  margin-left: 15px;
+  margin-right: 15px;
   cursor: pointer;
 }
 button.tool {
@@ -130,6 +132,9 @@ button.tool:focus {
 }
 .list table tfoot tr td .tool {
   margin-right: 10px;
+}
+.checkinSpace {
+  width: 55px;
 }
 .circle_small {
   width: 27px;

@@ -70,7 +70,7 @@ button.tool:focus {
       margin: 10px 0 12px; }
     .boxInfo .owner_info {
       display: flex;
-      width: 100%;
+      width: 300px;
       margin-right: auto; }
     .boxInfo .owner_info .info {
       width: 100%; }
@@ -84,7 +84,7 @@ button.tool:focus {
 
 .txt_top {
   background: #F0F4F5;
-  padding: 14px 70px !important; }
+  padding: 14px 65px !important; }
   .txt_top .txt_content_top {
     font-size: 12px;
     line-height: 1.4;
@@ -111,6 +111,9 @@ button.tool:focus {
   .boxInfo .bar_top_bottom {
     font-size: 14px;
     margin-bottom: 18px; }
+    .boxInfo .bar_top_bottom .txt_percent {
+      margin-left: 68px;
+      color: #BDBDBD }
     .boxInfo .bar_top_bottom .txt_date {
       font-size: 12px; }
       .boxInfo .bar_top_bottom .txt_date > span {

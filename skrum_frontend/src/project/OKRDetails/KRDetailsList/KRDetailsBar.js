@@ -142,6 +142,7 @@ export default class KRDetailsBar extends Component {
                 <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
               arrow="right"
             />)}
+          {type === '1' && <div className={styles.checkinSpace} />}
           <a className={styles.tool} href=""><img src="/img/common/inc_organization.png" alt="Map" /></a>
           <DropdownMenu
             trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}

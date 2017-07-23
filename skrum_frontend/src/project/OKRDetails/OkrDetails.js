@@ -154,32 +154,34 @@ export default class OkrDetails extends Component {
                   <div className={styles.user_name}>{owner.name}</div>
                 </div>
               </div>
-              {keyResults.length === 0 && (
-                <Dropdown
+              <div className={styles.floatR}>
+                {keyResults.length === 0 && (
+                  <Dropdown
+                    trigger={(
+                      <button className={styles.tool}><img src="/img/checkin.png" alt="Achievement" /></button>)}
+                    content={props =>
+                      <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
+                    arrow="center"
+                  />)}
+                <a className={styles.tool} href=""><img src="/img/common/inc_organization.png" alt="Map" /></a>
+                <DropdownMenu
                   trigger={(
-                    <button className={styles.tool}><img src="/img/checkin.png" alt="Achievement" /></button>)}
-                  content={props =>
-                    <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
-                  arrow="center"
-                />)}
-              <a className={styles.tool} href=""><img src="/img/common/inc_organization.png" alt="Map" /></a>
-              <DropdownMenu
-                trigger={(
-                  <button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>)}
-                options={[
-                  { caption: '担当者変更',
-                    onClick: () => this.setState({ changeOwnerPrompt:
-                      withBasicModalDialog(
-                        this.changeOwnerPrompt,
-                        () => this.setState({ changeOwnerPrompt: null }),
-                        { id, name, owner }) }) },
-                  { caption: '紐付け先設定' },
-                  { caption: '公開範囲設定' },
-                  { caption: '削除',
-                    onClick: () => this.setState({ deleteOkrPrompt:
-                      this.deleteOkrPrompt({ id, name, owner }) }) },
-                ]}
-              />
+                    <button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>)}
+                  options={[
+                    { caption: '担当者変更',
+                      onClick: () => this.setState({ changeOwnerPrompt:
+                        withBasicModalDialog(
+                          this.changeOwnerPrompt,
+                          () => this.setState({ changeOwnerPrompt: null }),
+                          { id, name, owner }) }) },
+                    { caption: '紐付け先設定' },
+                    { caption: '公開範囲設定' },
+                    { caption: '削除',
+                      onClick: () => this.setState({ deleteOkrPrompt:
+                        this.deleteOkrPrompt({ id, name, owner }) }) },
+                  ]}
+                />
+              </div>
             </div>
           </div>
         </div>
