@@ -1,0 +1,19 @@
+# This file is a "template" of what your parameters.yml file should look like
+# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
+# http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+parameters:
+    database_host:     skrum-prod-01.c09z2hrjpzi3.ap-northeast-1.rds.amazonaws.com
+    database_port:     3306
+    database_name:     skm
+    database_user:     nohr
+    database_password: skmpassword
+
+    redis_dsn_default: redis://localhost
+    redis_dsn_cache:   redis://localhost/1
+
+    mailer_transport:  gmail
+    mailer_host:       ~
+    mailer_user:       skrum.development@gmail.com
+    mailer_password:   skrumskrum
+
+    secret:            fbb4e323da412eefca6e1630246bf8b249912b0e
