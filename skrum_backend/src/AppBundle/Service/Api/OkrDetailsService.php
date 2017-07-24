@@ -54,6 +54,7 @@ class OkrDetailsService extends BaseService
         $disclosureLogic = $this->getDisclosureLogic();
         $okrDetailsDTO = new OkrDetailsDTO();
         $childrenOkrs = array();
+        $chartSetFlg = true;
         foreach ($tOkrArray as $tOkr) {
             if (array_key_exists('childrenOkr', $tOkr)) {
                 if (!empty($tOkr['childrenOkr'])) {
@@ -77,6 +78,7 @@ class OkrDetailsService extends BaseService
                 if (!empty($tOkr['selectedOkr'])) {
                     // 閲覧権限をチェック
                     if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkr['selectedOkr'])) {
+                        $chartSetFlg = false;
                         continue;
                     }
                     $basicOkrDTO = $this->repackDTOWithOkrEntity($tOkr['selectedOkr'], $companyName);
@@ -87,15 +89,17 @@ class OkrDetailsService extends BaseService
         $okrDetailsDTO->setKeyResults($childrenOkrs);
 
         // 達成率チャートを取得
-        $tOkrActivityRepos = $this->getTOkrActivityRepository();
-        $tOkrActivityArray = $tOkrActivityRepos->getAchievementRateChart($okrId);
         $chart = array();
-        foreach ($tOkrActivityArray as $tOkrActivity) {
-            $achievementRateChartDTO = new AchievementRateChartDTO();
-            $achievementRateChartDTO->setDatetime($tOkrActivity['datetime']);
-            $achievementRateChartDTO->setAchievementRate($tOkrActivity['achievementRate']);
+        if ($chartSetFlg) {
+            $tOkrActivityRepos = $this->getTOkrActivityRepository();
+            $tOkrActivityArray = $tOkrActivityRepos->getAchievementRateChart($okrId);
+            foreach ($tOkrActivityArray as $tOkrActivity) {
+                $achievementRateChartDTO = new AchievementRateChartDTO();
+                $achievementRateChartDTO->setDatetime($tOkrActivity['datetime']);
+                $achievementRateChartDTO->setAchievementRate($tOkrActivity['achievementRate']);
 
-            $chart[] = $achievementRateChartDTO;
+                $chart[] = $achievementRateChartDTO;
+            }
         }
 
         $okrDetailsDTO->setChart($chart);

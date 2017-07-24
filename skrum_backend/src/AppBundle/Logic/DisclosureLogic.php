@@ -94,8 +94,33 @@ class DisclosureLogic extends BaseLogic
                 return true;
             }
 
+            // 管理者公開の場合
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_ADMIN) {
+                if ($subjectUserRoleLevel >= DBConstant::ROLE_LEVEL_ADMIN) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
             // グループ公開の場合
-            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_GROUP) {
+                // オーナーグループに操作主体ユーザが所属しているかチェック
+                $tGroupMemberRepos = $this->getTGroupMemberRepository();
+                $groupMemberArray = $tGroupMemberRepos->getGroupMember($tOkr->getOwnerGroup()->getGroupId(), $subjectUserId);
+                if (count($groupMemberArray) === 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            // グループ管理者公開の場合
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_GROUP_ADMIN) {
+                if ($subjectUserRoleLevel < DBConstant::ROLE_LEVEL_ADMIN) {
+                    return false;
+                }
+
                 // オーナーグループに操作主体ユーザが所属しているかチェック
                 $tGroupMemberRepos = $this->getTGroupMemberRepository();
                 $groupMemberArray = $tGroupMemberRepos->getGroupMember($tOkr->getOwnerGroup()->getGroupId(), $subjectUserId);
@@ -106,7 +131,19 @@ class DisclosureLogic extends BaseLogic
                 }
             }
         } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
-            return true;
+            // 全体公開の場合
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
+                return true;
+            }
+
+            // 管理者公開の場合
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_ADMIN) {
+                if ($subjectUserRoleLevel >= DBConstant::ROLE_LEVEL_ADMIN) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_ROOT) {
             return false;
         }
