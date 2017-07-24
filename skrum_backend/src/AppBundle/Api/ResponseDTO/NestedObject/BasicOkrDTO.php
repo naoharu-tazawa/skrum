@@ -138,6 +138,13 @@ class BasicOkrDTO
     private $status;
 
     /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $disclosureType;
+
+    /**
      * @var integer
      *
      * @JSON\Type("integer")
@@ -595,6 +602,30 @@ class BasicOkrDTO
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set disclosureType
+     *
+     * @param string $disclosureType
+     *
+     * @return BasicOkrDTO
+     */
+    public function setDisclosureType($disclosureType)
+    {
+        $this->disclosureType = $disclosureType;
+
+        return $this;
+    }
+
+    /**
+     * Get disclosureType
+     *
+     * @return string
+     */
+    public function getDisclosureType()
+    {
+        return $this->disclosureType;
     }
 
     /**
