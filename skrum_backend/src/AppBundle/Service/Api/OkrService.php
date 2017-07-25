@@ -395,6 +395,7 @@ class OkrService extends BaseService
             $basicOkrDTO->setStartDate($tOkr->getStartDate());
             $basicOkrDTO->setEndDate($tOkr->getEndDate());
             $basicOkrDTO->setStatus($tOkr->getStatus());
+            $basicOkrDTO->setDisclosureType($tOkr->getDisclosureType());
             $basicOkrDTO->setWeightedAverageRatio($tOkr->getWeightedAverageRatio());
             $basicOkrDTO->setRatioLockedFlg($tOkr->getRatioLockedFlg());
 

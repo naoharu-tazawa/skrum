@@ -56,6 +56,13 @@ class OkrController extends BaseController
             }
         }
 
+        // オーナー種別に応じてJsonSchemaのOKR公開種別をチェック
+        if ($data['ownerType'] === DBConstant::OKR_OWNER_TYPE_COMPANY) {
+            if ($data['disclosureType'] !== DBConstant::OKR_DISCLOSURE_TYPE_OVERALL && $data['disclosureType'] !== DBConstant::OKR_DISCLOSURE_TYPE_ADMIN) {
+                throw new JsonSchemaException("オーナー種別が会社の場合、公開種別は'全体公開'または'管理者公開'しか選択できません");
+            }
+        }
+
         // 認証情報を取得
         $auth = $request->get('auth_token');
 

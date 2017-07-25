@@ -67,7 +67,7 @@
     },
     "disclosureType": {
       "title": "OKR公開種別",
-      "enum": ["1", "2", "3", "4", "5"]
+      "enum": ["1", "2", "3", "4"]
     }
   },
   "required": ["okrType", "ownerType", "startDate", "endDate", "okrName", "okrDetail", "targetValue", "unit", "disclosureType"],
