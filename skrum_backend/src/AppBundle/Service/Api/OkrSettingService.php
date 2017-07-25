@@ -174,6 +174,7 @@ class OkrSettingService extends BaseService
                 $tOkr->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
                 $tOkr->setOwnerUser(null);
                 $tOkr->setOwnerCompanyId($companyId);
+                $tOkr->setDisclosureType(DBConstant::OKR_DISCLOSURE_TYPE_OVERALL); // 公開種別を強制的に全体公開にする
 
             }
 
@@ -218,6 +219,7 @@ class OkrSettingService extends BaseService
                 $tOkr->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
                 $tOkr->setOwnerGroup(null);
                 $tOkr->setOwnerCompanyId($companyId);
+                $tOkr->setDisclosureType(DBConstant::OKR_DISCLOSURE_TYPE_OVERALL); // 公開種別を強制的に全体公開にする
 
             }
 
