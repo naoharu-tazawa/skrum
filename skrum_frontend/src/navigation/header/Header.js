@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
 import { explodePath, implodePath, replacePath } from '../../util/RouteUtil';
-import TimestampsDropdown from '../../components/TimeframesDropdown';
+import TimeframesDropdown from '../../components/TimeframesDropdown';
 import styles from './Header.css';
 
 class Tab extends Component {
@@ -47,12 +47,8 @@ class SubMenu extends Component {
     const { onAdd, handleLogoutSubmit } = this.props;
     return (
       <div className={styles.subMenu}>
-        <TimestampsDropdown
-          styleNames={{
-            base: styles.timePeriod,
-            item: styles.timeframe,
-            current: styles.timeframeCurrent,
-          }}
+        <TimeframesDropdown
+          plain
           onChange={({ value: timeframeId }) => browserHistory.push(replacePath({ timeframeId }))}
         />
         <button onClick={onAdd}>

@@ -1,0 +1,27 @@
+.component {
+  margin: auto 0 0 0;
+}
+.component input[type="radio"] {
+  margin: 0 0.5em;
+}
+.select {
+  min-width: 10em;
+  border: 1px solid #bfbfbf;
+}
+.select :global(.Select-control) {
+  height: 24px;
+  cursor: pointer;
+}
+.select :global(.Select-value-label) {
+  color: #626A7F !important;
+}
+.select:not(:global(.is-open)) :global(.Select-arrow), .select :global(.Select-arrow):hover {
+  border-color: #626A7F transparent transparent !important;
+}
+.select:global(.is-open) :global(.Select-arrow) {
+  border-color: transparent transparent #626A7F !important;
+}
+.option {
+}
+.current {
+}

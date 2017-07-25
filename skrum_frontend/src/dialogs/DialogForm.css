@@ -28,7 +28,7 @@
 .buttons button:disabled {
   color: gray;
 }
-.buttonsFillter {
+.filler {
   margin-right: auto;
 }
 .cancelButton {
@@ -53,20 +53,8 @@
   border: 1px solid #bfbfbf;
   padding: 4px;
 }
-.form textarea::-webkit-input-placeholder {
-  color: #dddddd;
-}
-.form textarea:-moz-placeholder {
-  /* FF 4-18 */
-  color: #dddddd;
-}
-.form textarea::-moz-placeholder {
-  /* FF 19+ */
-  color: #dddddd;
-}
-.form textarea:-ms-input-placeholder {
-  /* IE 10+ */
-  color: #dddddd;
+.form input[type=number] {
+  text-align: right;
 }
 .form input::-webkit-input-placeholder {
   color: #dddddd;
@@ -82,6 +70,31 @@
 .form input:-ms-input-placeholder {
   /* IE 10+ */
   color: #dddddd;
+}
+.form textarea::-webkit-input-placeholder {
+  color: #dddddd;
+}
+.form textarea:-moz-placeholder {
+  /* FF 4-18 */
+  color: #dddddd;
+}
+.form textarea::-moz-placeholder {
+  /* FF 19+ */
+  color: #dddddd;
+}
+.form textarea:-ms-input-placeholder {
+  /* IE 10+ */
+  color: #dddddd;
+}
+.form input:disabled, .form textarea:disabled, .form option:disabled {
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 5px,
+      transparent 1px,
+      lightgray 6px /* determines size */
+    );
 }
 .form section {
   display: flex;

@@ -25,10 +25,22 @@ export default class DialogForm extends Component {
 
   submissionHandler() {
     const { handleSubmit, onSubmit } = this.props;
-    const submitter = data => this.setState({ isSubmitting: true }, () =>
-      onSubmit(data).then(() => this.setState({ isSubmitting: false })));
-    return handleSubmit ? handleSubmit(submitter) :
-      (e) => { e.preventDefault(); submitter((this.state || {}).data); };
+    return handleSubmit ?
+      handleSubmit((data) => {
+        this.setState({ isSubmitting: true });
+        try {
+          return onSubmit(data).then(() => this.setState({ isSubmitting: false }));
+        } catch (e) {
+          this.setState({ isSubmitting: false });
+          throw e;
+        }
+      }) :
+      (e) => {
+        e.preventDefault();
+        this.setState({ isSubmitting: true });
+        return onSubmit((this.state || {}).data).then(() =>
+          this.setState({ isSubmitting: false }));
+      };
   }
 
   render() {
@@ -49,7 +61,7 @@ export default class DialogForm extends Component {
           <div className={styles.error}>{error || <span>&nbsp;</span>}</div>
         </div>
         <div className={styles.buttons}>
-          <div className={styles.buttonsFillter} />
+          <div className={styles.filler} />
           {cancelButton && (
             <button
               type="button"

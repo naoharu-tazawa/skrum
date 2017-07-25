@@ -11,6 +11,7 @@ import DialogForm from '../../dialogs/DialogForm';
 import OwnerSubject from '../../components/OwnerSubject';
 import DropdownMenu from '../../components/DropdownMenu';
 import Dropdown from '../../components/Dropdown';
+import DisclosureTypeOptions from '../../components/DisclosureTypeOptions';
 import OwnerSearch from '../OwnerSearch/OwnerSearch';
 import NewAchievement from '../OKR/NewAchievement/NewAchievement';
 import { withBasicModalDialog } from '../../util/FormUtil';
@@ -24,6 +25,7 @@ export default class OkrDetails extends Component {
     okr: okrPropTypes.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
     dispatchChangeOwner: PropTypes.func.isRequired,
+    dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired,
   };
 
@@ -52,6 +54,40 @@ export default class OkrDetails extends Component {
         </div>}
     </DialogForm>);
 
+  changeDisclosureType = ({ id, name, owner, disclosureType, onClose }) => (
+    <DialogForm
+      title="公開範囲設定変更"
+      submitButton="設定"
+      onSubmit={({ changedDisclosureType } = {}) =>
+        (!changedDisclosureType || changedDisclosureType === disclosureType ?
+          Promise.resolve(this.setState({ changeDisclosureType: null })) :
+          this.props.dispatchChangeDisclosureType(id, changedDisclosureType).then(({ error }) =>
+            !error && this.setState({ changeDisclosureType: null }),
+          ))}
+      onClose={onClose}
+    >
+      {({ setFieldData }) =>
+        <div>
+          <OwnerSubject owner={owner} heading="対象目標" subject={name} />
+          <section>
+            <label>公開範囲</label>
+            <DisclosureTypeOptions
+              ownerType={owner.type}
+              renderer={({ value, label }) => (
+                <label key={value}>
+                  <input
+                    name="disclosureType"
+                    type="radio"
+                    defaultChecked={value === disclosureType}
+                    onClick={() => setFieldData({ changedDisclosureType: value })}
+                  />
+                  {label}
+                </label>)}
+            />
+          </section>
+        </div>}
+    </DialogForm>);
+
   deleteOkrPrompt = ({ id, name, owner }) => (
     <DeletionPrompt
       title="目標の削除"
@@ -73,9 +109,9 @@ export default class OkrDetails extends Component {
 
   render() {
     const { parentOkr = {}, okr, dispatchPutOKR } = this.props;
-    const { changeOwnerPrompt, deleteOkrPrompt } = this.state || {};
+    const { changeOwnerPrompt, changeDisclosureType, deleteOkrPrompt } = this.state || {};
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
-      startDate, endDate, owner, keyResults = [] } = okr;
+      startDate, endDate, owner, disclosureType, keyResults = [] } = okr;
     return (
       <div>
         <div className={`${styles.content} ${styles.txt_top} ${styles.cf}`}>
@@ -175,7 +211,12 @@ export default class OkrDetails extends Component {
                           () => this.setState({ changeOwnerPrompt: null }),
                           { id, name, owner }) }) },
                     { caption: '紐付け先設定' },
-                    { caption: '公開範囲設定' },
+                    { caption: '公開範囲設定',
+                      onClick: () => this.setState({ changeDisclosureType:
+                        withBasicModalDialog(
+                          this.changeDisclosureType,
+                          () => this.setState({ changeDisclosureType: null }),
+                          { id, name, owner, disclosureType }) }) },
                     { caption: '削除',
                       onClick: () => this.setState({ deleteOkrPrompt:
                         this.deleteOkrPrompt({ id, name, owner }) }) },
@@ -186,6 +227,7 @@ export default class OkrDetails extends Component {
           </div>
         </div>
         {changeOwnerPrompt}
+        {changeDisclosureType}
         {deleteOkrPrompt}
       </div>);
   }

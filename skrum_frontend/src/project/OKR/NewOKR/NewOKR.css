@@ -1,46 +1,4 @@
-.ownerTimeframesBox {
-  margin-right: auto;
-}
-.dateRange {
-}
-.disclosureType input {
-  margin: 0 .5em 0 1.5em;
-}
 .dialog textarea {
-  display: block;
   width: 52em;
   max-width: 52em;
-}
-.dialog input[type=number] {
-  text-align: right;
-}
-.timePeriod {
-  min-width: 11.5em;
-  border: 1px solid #bfbfbf;
-}
-.timePeriod :global(.Select-control) {
-  height: 24px;
-}
-.timePeriod :global(.Select-value-label) {
-  color: #626A7F !important;
-}
-.timePeriod:not(:global(.is-open)) :global(.Select-arrow), .timePeriod :global(.Select-arrow):hover {
-  border-color: #626A7F transparent transparent !important;
-}
-.timePeriod:global(.is-open) :global(.Select-arrow) {
-  border-color: transparent transparent #626A7F !important;
-}
-.timeframe {
-}
-.timeframeCurrent {
-}
-input:disabled {
-  background-image:
-    repeating-linear-gradient(
-      135deg,
-      transparent,
-      transparent 5px,
-      transparent 1px,
-      lightgray 6px /* determines size */
-    );
 }

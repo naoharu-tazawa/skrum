@@ -11,12 +11,13 @@ export default class KRDetailsList extends Component {
     onAdd: PropTypes.func.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
     dispatchChangeOwner: PropTypes.func.isRequired,
+    dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeleteKR: PropTypes.func.isRequired,
   };
 
   render() {
-    const { keyResults = [], onAdd,
-      dispatchPutOKR, dispatchChangeOwner, dispatchDeleteKR } = this.props;
+    const { keyResults = [], onAdd, dispatchPutOKR, dispatchChangeOwner,
+      dispatchChangeDisclosureType, dispatchDeleteKR } = this.props;
     return (
       <div className={styles.component}>
         <div className={styles.header}>
@@ -25,8 +26,14 @@ export default class KRDetailsList extends Component {
         <div className={styles.bars}>
           {keyResults.map(keyResult =>
             <KRDetailsBar
-              key={keyResult.id}
-              {...{ keyResult, dispatchPutOKR, dispatchChangeOwner, dispatchDeleteKR }}
+              key={`kr-details-${keyResult.id}`}
+              {...{
+                keyResult,
+                dispatchPutOKR,
+                dispatchChangeOwner,
+                dispatchChangeDisclosureType,
+                dispatchDeleteKR,
+              }}
             />)}
         </div>
         <div className={`${styles.add_okr} ${styles.alignC}`}>

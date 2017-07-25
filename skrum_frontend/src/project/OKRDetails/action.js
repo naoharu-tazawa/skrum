@@ -17,6 +17,8 @@ export const Action = {
   FINISH_POST_ACHIEVEMENT: 'FINISH_POST_ACHIEVEMENT',
   REQUEST_CHANGE_OWNER: 'REQUEST_CHANGE_OWNER',
   FINISH_CHANGE_OWNER: 'FINISH_CHANGE_OWNER',
+  REQUEST_CHANGE_DISCLOSURE_TYPE: 'REQUEST_CHANGE_DISCLOSURE_TYPE',
+  FINISH_CHANGE_DISCLOSURE_TYPE: 'FINISH_CHANGE_DISCLOSURE_TYPE',
 };
 
 const {
@@ -32,6 +34,8 @@ const {
   finishPostAchievement,
   requestChangeOwner,
   finishChangeOwner,
+  requestChangeDisclosureType,
+  finishChangeDisclosureType,
 } = createActions({
   [Action.FINISH_FETCH_OKR_DETAILS]: keyValueIdentity,
   [Action.FINISH_POST_KR]: keyValueIdentity,
@@ -39,6 +43,7 @@ const {
   [Action.FINISH_DELETE_KR]: keyValueIdentity,
   [Action.FINISH_POST_ACHIEVEMENT]: keyValueIdentity,
   [Action.FINISH_CHANGE_OWNER]: keyValueIdentity,
+  [Action.FINISH_CHANGE_DISCLOSURE_TYPE]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_OKR_DETAILS,
   Action.REQUEST_POST_KR,
@@ -46,6 +51,7 @@ const {
   Action.REQUEST_DELETE_KR,
   Action.REQUEST_POST_ACHIEVEMENT,
   Action.REQUEST_CHANGE_OWNER,
+  Action.REQUEST_CHANGE_DISCLOSURE_TYPE,
 );
 
 export const fetchOKRDetails = id =>
@@ -86,6 +92,16 @@ export const changeOwner = (id, owner) =>
     return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound(omit(owner, 'name')))
       .then(() => dispatch(finishChangeOwner('changeOwner', { id, ...mapOwnerOutbound(owner) })))
       .catch(({ message }) => dispatch(finishChangeOwner(new Error(message))));
+  };
+
+export const changeDisclosureType = (id, disclosureType) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.okr.isChangingDisclosureType) return Promise.resolve();
+    dispatch(requestChangeDisclosureType());
+    return putJson(`/okrs/${id}/changedisclosure.json`, state)(null, { disclosureType })
+      .then(() => dispatch(finishChangeDisclosureType('changeOwner', { id, disclosureType })))
+      .catch(({ message }) => dispatch(finishChangeDisclosureType(new Error(message))));
   };
 
 export const deleteKR = id =>

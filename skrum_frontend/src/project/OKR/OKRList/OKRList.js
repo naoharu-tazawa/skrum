@@ -32,14 +32,14 @@ export default class OKRList extends Component {
             const { id, keyResults } = okr;
             const display = expandedKeyResults[id] ? 'expanded' : 'collapsed';
             return [
-              (<div key={id}>
+              (<div key={`okr-${id}`}>
                 <OkrBar
                   okr={okr}
                   onKRClicked={() => keyResults.length && this.toggleKeyResults(id)}
                 />
               </div>),
               ...keyResults.map(keyResult =>
-                <KRBar key={keyResult.id} {...{ display, keyResult }} />),
+                <KRBar key={`kr-${keyResult.id}`} {...{ display, keyResult }} />),
             ];
           }))}
         </div>

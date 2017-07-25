@@ -66,16 +66,3 @@
   padding: 0;
   cursor: pointer;
 }
-.timeframe {
-}
-.timeframeCurrent {
-  font-weight: bold;
-}
-.timePeriod {
-  /* margin-right: 10px; */
-  min-width: 11em;
-  font-size: 14px;
-}
-.timePeriod :global(.Select-control) {
-  cursor: pointer;
-}

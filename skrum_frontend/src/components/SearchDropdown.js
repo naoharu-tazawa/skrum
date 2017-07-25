@@ -68,13 +68,14 @@ export default class SearchDropdown extends PureComponent {
         menuStyle={{
           boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
           background: 'rgba(255, 255, 255, 0.9)',
-          padding: '0',
           marginTop: '2px',
           fontSize: '13px',
           position: 'fixed',
           overflow: 'auto',
           maxHeight: '33%',
-          maxWidth: '0',
+          maxWidth: 0,
+          padding: 0,
+          zIndex: 1,
         }}
       />
     );

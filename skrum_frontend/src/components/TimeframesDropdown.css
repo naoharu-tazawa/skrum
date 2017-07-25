@@ -1,0 +1,27 @@
+.select {
+  min-width: 11em;
+}
+.select:not(.plain) {
+  border: 1px solid #bfbfbf;
+}
+.select :global(.Select-control) {
+  height: 24px;
+  cursor: pointer;
+}
+.select :global(.Select-value) {
+  padding-right: 0 !important;
+}
+.select:not(.plain) :global(.Select-value-label) {
+  color: #626A7F !important;
+}
+.select:not(.plain):not(:global(.is-open)) :global(.Select-arrow),
+.select:not(.plain) :global(.Select-arrow):hover {
+  border-color: #626A7F transparent transparent !important;
+}
+.select:not(.plain):global(.is-open) :global(.Select-arrow) {
+  border-color: transparent transparent #626A7F !important;
+}
+.option {
+}
+.current {
+}

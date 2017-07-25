@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, getFormValues, SubmissionError } from 'redux-form';
-import { isEmpty, toNumber, toLower, partial } from 'lodash';
+import { isEmpty, omit, toNumber, toLower, partial } from 'lodash';
 import { okrPropTypes } from '../../OKRDetails/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
 import OwnerSearch, { ownerPropType } from '../../OwnerSearch/OwnerSearch';
 import TimeframesDropdown from '../../../components/TimeframesDropdown';
 import DatePickerInput from '../../../components/DatePickerInput';
 import OwnerSubject from '../../../components/OwnerSubject';
+import DisclosureTypeOptions, { getDisclosureTypeName } from '../../../components/DisclosureTypeOptions';
 import OKRSearch from '../../OKRSearch/OKRSearch';
 import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, withReduxField } from '../../../util/FormUtil';
 import { getOwnerTypeId, getOwnerTypeSubject, mapOwnerOutbound } from '../../../util/OwnerUtil';
@@ -20,14 +21,13 @@ import styles from './NewOKR.css';
 
 const formName = 'newOKR';
 
-const validate = ({ owner, okrName, startDate, endDate } = {}) => {
-  return {
-    owner: isEmpty(owner) && '担当者を入力してください',
-    okrName: !okrName && '目標名を入力してください',
-    startDate: !isValidDate(startDate) && '開始日を入力してください',
-    endDate: !isValidDate(endDate) && '終了日を入力してください',
-  };
-};
+const validate = ({ owner, disclosureType, okrName, startDate, endDate } = {}) => ({
+  owner: isEmpty(owner) && '担当者を入力してください',
+  disclosureType: owner && !getDisclosureTypeName(owner.type, disclosureType) && '公開範囲を入力してください',
+  okrName: !okrName && '目標名を入力してください',
+  startDate: !isValidDate(startDate) && '開始日を入力してください',
+  endDate: !isValidDate(endDate) && '終了日を入力してください',
+});
 
 const dialogInitialValues = (state) => {
   const { company = {} } = state.top.data || {};
@@ -92,7 +92,7 @@ class NewOKR extends Component {
       okrType,
       timeframeId,
       parentOkrId: parentOkr.id || alignment.id,
-      ...mapOwnerOutbound(owner),
+      ...mapOwnerOutbound(omit(owner, 'name')),
       disclosureType,
       okrName,
       okrDetail: okrDetail || '',
@@ -106,14 +106,7 @@ class NewOKR extends Component {
   }
 
   render() {
-    const { type, owner, ownerName, parentOkr, timeframeId, onClose } = this.props;
-    const disclosureTypes = [
-      { value: '1', label: '全体' },
-      { value: '2', label: 'グループ' },
-      { value: '3', label: '管理者' },
-      { value: '4', label: 'グループ管理者' },
-      { value: '5', label: '本人のみ' },
-    ];
+    const { type, owner, ownerName, parentOkr, timeframeId, onClose, subject } = this.props;
     const okrForm = Form => (
       <Form
         title={type === 'Okr' ? '目標新規登録' : 'サブ目標新規登録'}
@@ -123,26 +116,23 @@ class NewOKR extends Component {
       >
         <div className={styles.dialog}>
           {parentOkr && <OwnerSubject owner={parentOkr.owner} heading="紐付け先目標" subject={name} />}
-          <section className={styles.ownerTimeframesBox}>
+          <section>
             <label>担当者</label>
             {ownerName ? <label>{ownerName}</label> : ownerSearch}
             {type === 'Okr' && <label>目標の時間枠</label>}
-            {type === 'Okr' && withSelectReduxField(TimeframesDropdown, 'timeframeId',
-              { styleNames: {
-                base: styles.timePeriod,
-                item: styles.timeframe,
-                current: styles.timeframeCurrent,
-              } },
-            )}
+            {type === 'Okr' && withSelectReduxField(TimeframesDropdown, 'timeframeId')}
           </section>
-          <section className={styles.disclosureType}>
+          <section>
             <label>公開範囲</label>
-            {disclosureTypes.map(({ value, label }) => (
-              <label key={value}>
-                <Field name="disclosureType" component="input" type="radio" value={value} />
-                {label}
-              </label>
-            ))}
+            {withSelectReduxField(DisclosureTypeOptions,
+              'disclosureType',
+              { ownerType: (owner || {}).type || getOwnerTypeId(subject),
+                renderer: ({ value, label }) => (
+                  <label key={value}>
+                    <Field name="disclosureType" component="input" type="radio" value={value} />
+                    {label}
+                  </label>) },
+            )}
           </section>
           <section>
             <Field component="textarea" name="okrName" placeholder="目標120字以内" maxLength={120} />

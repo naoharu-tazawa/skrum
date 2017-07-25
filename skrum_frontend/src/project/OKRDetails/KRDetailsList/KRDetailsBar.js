@@ -9,6 +9,7 @@ import DialogForm from '../../../dialogs/DialogForm';
 import OwnerSubject from '../../../components/OwnerSubject';
 import DropdownMenu from '../../../components/DropdownMenu';
 import Dropdown from '../../../components/Dropdown';
+import DisclosureTypeOptions from '../../../components/DisclosureTypeOptions';
 import OwnerSearch from '../../OwnerSearch/OwnerSearch';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
 import { withBasicModalDialog } from '../../../util/FormUtil';
@@ -22,6 +23,7 @@ export default class KRDetailsBar extends Component {
     keyResult: keyResultPropTypes,
     dispatchPutOKR: PropTypes.func,
     dispatchChangeOwner: PropTypes.func,
+    dispatchChangeDisclosureType: PropTypes.func,
     dispatchDeleteKR: PropTypes.func,
   };
 
@@ -42,10 +44,44 @@ export default class KRDetailsBar extends Component {
     >
       {({ setFieldData }) =>
         <div>
-          <OwnerSubject owner={owner} heading="担当者を変更する目標" subject={name} />
+          <OwnerSubject owner={owner} heading="担当者を変更するサブ目標" subject={name} />
           <section>
             <label>担当者検索</label>
             <OwnerSearch onChange={value => setFieldData({ changedOwner: value })} />
+          </section>
+        </div>}
+    </DialogForm>);
+
+  changeDisclosureType = ({ id, name, owner, disclosureType, onClose }) => (
+    <DialogForm
+      title="公開範囲設定変更"
+      submitButton="設定"
+      onSubmit={({ changedDisclosureType } = {}) =>
+        (!changedDisclosureType || changedDisclosureType === disclosureType ?
+          Promise.resolve(this.setState({ changeDisclosureType: null })) :
+          this.props.dispatchChangeDisclosureType(id, changedDisclosureType).then(({ error }) =>
+            !error && this.setState({ changeDisclosureType: null }),
+          ))}
+      onClose={onClose}
+    >
+      {({ setFieldData }) =>
+        <div>
+          <OwnerSubject owner={owner} heading="対象サブ目標" subject={name} />
+          <section>
+            <label>公開範囲</label>
+            <DisclosureTypeOptions
+              ownerType={owner.type}
+              renderer={({ value, label }) => (
+                <label key={value}>
+                  <input
+                    name="disclosureType"
+                    type="radio"
+                    defaultChecked={value === disclosureType}
+                    onClick={() => setFieldData({ changedDisclosureType: value })}
+                  />
+                  {label}
+                </label>)}
+            />
           </section>
         </div>}
     </DialogForm>);
@@ -78,8 +114,8 @@ export default class KRDetailsBar extends Component {
         </div>);
     }
     const { id, type, name, detail, unit, targetValue, achievedValue, achievementRate,
-      startDate, endDate, owner } = keyResult;
-    const { changeOwnerPrompt, deleteKRPrompt } = this.state || {};
+      startDate, endDate, owner, disclosureType } = keyResult;
+    const { changeOwnerPrompt, changeDisclosureType, deleteKRPrompt } = this.state || {};
     return (
       <div className={styles.component}>
         <div className={styles.name}>
@@ -154,7 +190,12 @@ export default class KRDetailsBar extends Component {
                     () => this.setState({ changeOwnerPrompt: null }),
                     { id, name, owner }) }) },
               { caption: '紐付け先設定' },
-              { caption: '公開範囲設定' },
+              { caption: '公開範囲設定',
+                onClick: () => this.setState({ changeDisclosureType:
+                  withBasicModalDialog(
+                    this.changeDisclosureType,
+                    () => this.setState({ changeDisclosureType: null }),
+                    { id, name, owner, disclosureType }) }) },
               { caption: '影響度設定' },
               { caption: '削除',
                 onClick: () => this.setState({ deleteKRPrompt:
@@ -163,6 +204,7 @@ export default class KRDetailsBar extends Component {
           />
         </div>
         {changeOwnerPrompt}
+        {changeDisclosureType}
         {deleteKRPrompt}
       </div>);
   }
