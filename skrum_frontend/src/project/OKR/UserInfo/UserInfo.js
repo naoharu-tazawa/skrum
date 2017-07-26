@@ -35,24 +35,26 @@ export default class UserInfo extends Component {
           <div className={styles.groups}>
             {groupsLink}
           </div>
-          <table className={`${styles.user_info} ${styles.floatL}`}>
-            <tbody>
-              <tr>
-                <td><div className={styles.info}>役　職:</div></td>
-                <td><div className={styles.info_data}>{position}</div></td>
-              </tr>
-              <tr>
-                <td><div className={styles.info}>電　話:</div></td>
-                <td><div className={styles.info_data}>{phoneNumber}</div></td>
-              </tr>
-              <tr>
-                <td><div className={styles.info}>メール:</div></td>
-                <td><div className={styles.info_data}>{emailAddress}</div></td>
-              </tr>
-            </tbody>
-          </table>
-          <div className={styles.member_list}>
-            <a className={`${styles.btn} ${styles.btn_arrow_r}`} href={infoLink}>グループ一覧</a>
+          <div className={styles.infoList}>
+            <table className={`${styles.user_info} ${styles.floatL}`}>
+              <tbody>
+                <tr>
+                  <td><div className={styles.info}>役　職:</div></td>
+                  <td><div className={styles.info_data}>{position}</div></td>
+                </tr>
+                <tr>
+                  <td><div className={styles.info}>電　話:</div></td>
+                  <td><div className={styles.info_data}>{phoneNumber}</div></td>
+                </tr>
+                <tr>
+                  <td><div className={styles.info}>メール:</div></td>
+                  <td><div className={styles.info_data}>{emailAddress}</div></td>
+                </tr>
+              </tbody>
+            </table>
+            <div className={styles.member_list}>
+              <a className={`${styles.btn} ${styles.btn_arrow_r}`} href={infoLink}>グループ一覧</a>
+            </div>
           </div>
         </div>
       </div>);

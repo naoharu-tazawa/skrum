@@ -1,4 +1,5 @@
 import { toNumber, isEmpty, pickBy, isUndefined } from 'lodash';
+import { EntityType } from './EntityUtil';
 
 export const explodeSubject = (section) => {
   switch (section && section[0]) {
@@ -11,9 +12,9 @@ export const explodeSubject = (section) => {
 
 export const implodeSubject = (section) => {
   switch (section) {
-    case 'user': return 'u';
-    case 'group': return 'g';
-    case 'company': return 'c';
+    case 'user': case EntityType.USER: return 'u';
+    case 'group': case EntityType.GROUP: return 'g';
+    case 'company': case EntityType.COMPANY: return 'c';
     default: return undefined;
   }
 };

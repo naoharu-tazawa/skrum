@@ -14,9 +14,6 @@
 .owner_info {
   float: left;
 }
-.owner_name {
-  margin-right: 1em;
-}
 .subject {
   margin: auto 1em;
   white-space: nowrap;
@@ -24,17 +21,4 @@
   text-overflow: ellipsis;
   max-width: 40em;
   overflow-x: auto;
-}
-.avatar {
-  margin-right: 10px;
-  float: left;
-}
-.info {
-  display: table-cell;
-  vertical-align: middle;
-  float: left;
-}
-.owner_name {
-  margin-top: 14px;
-  color: #626a7f;
 }

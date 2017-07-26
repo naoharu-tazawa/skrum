@@ -1,5 +1,14 @@
+import PropTypes from 'prop-types';
 import { omitBy, isUndefined } from 'lodash';
 import { mapOwner } from './OwnerUtil';
+
+export const OKRType = {
+  OKR: '1',
+  KR: '2',
+};
+
+export const okrTypePropType =
+  PropTypes.oneOf([OKRType.OKR, OKRType.KR]);
 
 export const mapKeyResult = (kr) => {
   const { okrId, okrType, okrName, okrDetail, unit, targetValue, achievedValue, achievementRate,

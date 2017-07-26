@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Surface, Pie } from 'recharts';
 import { AlignmentsInfoPropTypes } from './propTypes';
+import EntityLink from '../../../components/EntityLink';
 import styles from './OKRAlignmentsInfo.css';
 
 const chartRadius = 60;
@@ -33,7 +34,8 @@ export default class OKRAlignmentsInfo extends Component {
         </div>
       );
     }
-    const details = alignments.map(({ user, group, company }) => user || group || company);
+    const details = alignments.map(({ ownerType, user, group, company }) =>
+      ({ ownerType, ...(user || group || company) }));
     const fills = ['#626A7E', '#D8DFE5', '#F0F4F5', 'gray', 'silver'];
     const data = details.map(({ name, numberOfOkrs: value }, index) => ({
       name,
@@ -68,18 +70,12 @@ export default class OKRAlignmentsInfo extends Component {
             />
           </Surface>
           <div className={styles.list}>
-            {details.map(({ name, numberOfOkrs }, index) => (
+            {details.map(({ ownerType, name, userId, groupId, companyId, numberOfOkrs }, index) => (
               <div key={index} className={styles.detail}>
-                <div className={styles.group}>
-                  <div className={`${styles.user_info} ${styles.cf}`}>
-                    <div className={`${styles.avatar} ${styles.circle} ${styles.circle_gray} ${styles.floatL}`}>
-                      <img src="/img/common/icn_user.png" alt="User Name" />
-                    </div>
-                    <div className={`${styles.info} ${styles.floatL}`}>
-                      <p className={styles.user_name}>{name}</p>
-                    </div>
-                  </div>
-                </div>
+                <EntityLink
+                  componentClassName={styles.group}
+                  entity={{ id: userId || groupId || companyId, name, type: ownerType }}
+                />
                 <div className={styles.numberOfOkrs}>{numberOfOkrs}</div>
               </div>))}
           </div>

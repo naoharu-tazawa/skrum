@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { toPairs } from 'lodash';
 import Select from 'react-select';
+import { entityTypePropType, EntityType } from '../util/EntityUtil';
 import styles from './DisclosureTypeOptions.css';
 
 export const disclosureTypesForUserAndGroup = {
@@ -19,7 +20,7 @@ export const disclosureTypesForCompany = {
 export default class DisclosureTypeOptions extends PureComponent {
 
   static propTypes = {
-    ownerType: PropTypes.oneOf(['1', '2', '3']).isRequired,
+    ownerType: entityTypePropType.isRequired,
     renderer: PropTypes.func,
     disclosureType: PropTypes.string,
     value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -33,7 +34,8 @@ export default class DisclosureTypeOptions extends PureComponent {
       `${styles.item} ${id === currentId ? styles.current : ''}`;
     const { ownerType, renderer, disclosureType,
       value: dirtyValue, onChange, onFocus, onBlur } = this.props;
-    const options = toPairs(ownerType === '3' ? disclosureTypesForCompany : disclosureTypesForUserAndGroup)
+    const options = toPairs(ownerType === EntityType.COMPANY ?
+      disclosureTypesForCompany : disclosureTypesForUserAndGroup)
       .map(([id, label]) => ({ value: `${id}`, label }));
     if (renderer) {
       return <div className={styles.component}>{options.map(renderer)}</div>;
@@ -54,4 +56,5 @@ export default class DisclosureTypeOptions extends PureComponent {
 }
 
 export const getDisclosureTypeName = (ownerType, disclosureType) =>
-  (ownerType === '3' ? disclosureTypesForCompany : disclosureTypesForUserAndGroup)[disclosureType];
+  (ownerType === EntityType.COMPANY ? disclosureTypesForCompany :
+    disclosureTypesForUserAndGroup)[disclosureType];

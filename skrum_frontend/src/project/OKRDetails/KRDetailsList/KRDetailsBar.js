@@ -10,10 +10,12 @@ import OwnerSubject from '../../../components/OwnerSubject';
 import DropdownMenu from '../../../components/DropdownMenu';
 import Dropdown from '../../../components/Dropdown';
 import DisclosureTypeOptions from '../../../components/DisclosureTypeOptions';
+import EntityLink from '../../../components/EntityLink';
 import OwnerSearch from '../../OwnerSearch/OwnerSearch';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
 import { withBasicModalDialog } from '../../../util/FormUtil';
 import { compareDates } from '../../../util/DatetimeUtil';
+import { OKRType } from '../../../util/OKRUtil';
 import styles from './KRDetailsBar.css';
 
 export default class KRDetailsBar extends Component {
@@ -166,12 +168,9 @@ export default class KRDetailsBar extends Component {
             </div>
           </div>
         </div>
-        <div className={styles.ownerBox}>
-          <div className={styles.ownerImage} />
-          <div className={styles.ownerName}>{owner.name}</div>
-        </div>
+        <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.krCount}>
-          {type === '2' && (
+          {type === OKRType.KR && (
             <Dropdown
               trigger={<button className={styles.tool}><img src="/img/checkin.png" alt="Achievement" /></button>}
               content={props =>

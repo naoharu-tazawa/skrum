@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, getFormValues, SubmissionError } from 'redux-form';
-import { isEmpty, omit, toNumber, toLower, partial } from 'lodash';
+import { isEmpty, omit, toNumber, partial } from 'lodash';
 import { okrPropTypes } from '../../OKRDetails/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
 import OwnerSearch, { ownerPropType } from '../../OwnerSearch/OwnerSearch';
@@ -15,6 +15,7 @@ import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, with
 import { getOwnerTypeId, getOwnerTypeSubject, mapOwnerOutbound } from '../../../util/OwnerUtil';
 import { explodePath } from '../../../util/RouteUtil';
 import { isValidDate, compareDates, toUtcDate } from '../../../util/DatetimeUtil';
+import { OKRType } from '../../../util/OKRUtil';
 import { postOkr } from '../action';
 import { postKR } from '../../OKRDetails/action';
 import styles from './NewOKR.css';
@@ -81,13 +82,13 @@ class NewOKR extends Component {
     const defaultOwner = { type: getOwnerTypeId(subject), id };
     const { owner = defaultOwner, timeframeId, disclosureType, okrName, okrDetail,
       targetValue, unit, startDate, endDate, alignment = {} } = entry;
-    const ownerTypeSubject = getOwnerTypeSubject(owner.type);
-    const isOwnerCurrent = toLower(ownerTypeSubject) === subject && owner.id === id;
+    const isOwnerCurrent = getOwnerTypeSubject(owner.type) === subject && owner.id === id;
     if (compareDates(startDate, endDate) > 0) {
       throw new SubmissionError({ _error: '終了日は開始日以降に設定してください' });
     }
     const { type: parentOwnerType, id: parentOwnerId } = parentOkr.owner || {};
-    const okrType = type === 'Okr' || owner.type !== parentOwnerType || owner.id !== parentOwnerId ? '1' : '2';
+    const okrType = type === 'Okr' || owner.type !== parentOwnerType ||
+      owner.id !== parentOwnerId ? OKRType.OKR : OKRType.KR;
     const okr = {
       okrType,
       timeframeId,

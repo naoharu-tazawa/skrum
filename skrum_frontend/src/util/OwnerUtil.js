@@ -1,31 +1,26 @@
+import { capitalize } from 'lodash';
+import { EntityType, EntityTypeName } from './EntityUtil';
 
 export const getOwnerTypeId = (ownerType) => {
   switch (ownerType) {
-    case 'user': return '1';
-    case 'group': return '2';
-    case 'company': return '3';
+    case 'user': return EntityType.USER;
+    case 'group': return EntityType.GROUP;
+    case 'company': return EntityType.COMPANY;
     default: return undefined;
   }
 };
 
-export const getOwnerTypeSubject = (ownerType) => {
-  switch (ownerType) {
-    case '1': return 'User';
-    case '2': return 'Group';
-    case '3': return 'Company';
-    default: return undefined;
-  }
-};
+export const getOwnerTypeSubject = ownerType => EntityTypeName[ownerType];
 
 export const mapOwner = (data) => {
   const { ownerType } = data;
-  const ownerSubject = `owner${getOwnerTypeSubject(ownerType)}`;
+  const ownerSubject = `owner${capitalize(getOwnerTypeSubject(ownerType))}`;
   const { [`${ownerSubject}Id`]: ownerId, [`${ownerSubject}Name`]: ownerName } = data;
   return { id: ownerId, name: ownerName, type: ownerType };
 };
 
 export const mapOwnerOutbound = ({ type, id, name }) => ({
   ownerType: type,
-  [`owner${getOwnerTypeSubject(type)}Id`]: id,
-  [`owner${getOwnerTypeSubject(type)}Name`]: name,
+  [`owner${capitalize(getOwnerTypeSubject(type))}Id`]: id,
+  [`owner${capitalize(getOwnerTypeSubject(type))}Name`]: name,
 });

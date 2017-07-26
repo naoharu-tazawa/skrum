@@ -6,6 +6,7 @@ import OKRList from './OKRList';
 import NewOKR from '../NewOKR/NewOKR';
 import { withBasicModalDialog } from '../../../util/FormUtil';
 import { mapOKR } from '../../../util/OKRUtil';
+import { EntityType } from '../../../util/EntityUtil';
 
 class OKRListContainer extends Component {
 
@@ -38,13 +39,13 @@ const mapBasicsStateToProps = (subject, ownerType) => (state) => {
 };
 
 export const UserOKRListContainer = connect(
-  mapBasicsStateToProps('user', '1'),
+  mapBasicsStateToProps('user', EntityType.USER),
 )(OKRListContainer);
 
 export const GroupOKRListContainer = connect(
-  mapBasicsStateToProps('group', '2'),
+  mapBasicsStateToProps('group', EntityType.GROUP),
 )(OKRListContainer);
 
 export const CompanyOKRListContainer = connect(
-  mapBasicsStateToProps('company', '3'),
+  mapBasicsStateToProps('company', EntityType.COMPANY),
 )(OKRListContainer);

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import { groupMemberPropTypes } from './propTypes';
-import { replacePath } from '../../../util/RouteUtil';
+import EntityLink from '../../../components/EntityLink';
+import { EntityType } from '../../../util/EntityUtil';
 import { isBasicRole } from '../../../util/UserUtil';
 import styles from './GroupMemberBar.css';
 
@@ -45,14 +45,7 @@ export default class GroupMemberBar extends Component {
 
     const getRow = () => (
       <tr>
-        <td>
-          <span>
-            <img src="/img/profile/img_leader.jpg" alt="" />
-          </span>
-          <span key={id}>
-            <Link to={replacePath({ subject: 'user', id })}>{name}</Link>
-          </span>
-        </td>
+        <td><EntityLink entity={{ id, name, type: EntityType.USER }} /></td>
         <td>{position}</td>
         <td>{lastLogin}</td>
         <td><div className={styles.delete}><img src="/img/delete.svg" alt="" /></div></td>
@@ -60,14 +53,7 @@ export default class GroupMemberBar extends Component {
 
     const getRowAdmin = () => (
       <tr>
-        <td>
-          <span>
-            <img src="/img/profile/img_leader.jpg" alt="" />
-          </span>
-          <span key={id}>
-            <Link to={replacePath({ subject: 'user', id })}>{name}</Link>
-          </span>
-        </td>
+        <td><EntityLink entity={{ id, name, type: EntityType.USER }} /></td>
         <td>{position}</td>
         <td>
           <div className={styles.progressBox}>

@@ -49,9 +49,11 @@
   border-radius: 50px;
   color: #8e9aa6;
   font-size: 14px;
+  display: inline-table;
+  margin: auto 0 4px auto;
 }
 .btn_arrow_r {
-  padding: 6px 10px 6px 15px;
+  padding: 6px 10px 3px 15px;
 }
 .btn_arrow_r:after {
   display: inline-block;
@@ -169,9 +171,12 @@
 .boxInfo .txt {
   margin: 10px 0 12px;
 }
+.boxInfo .infoList {
+  display: flex;
+}
 .boxInfo .member_list {
-  padding-top: 40px;
-  text-align: right;
+  width: 100%;
+  display: flex;
 }
 .content {
   padding: 30px 65px;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import EntityLink from './EntityLink';
 import styles from './OwnerSubject.css';
 
 export const ownerPropType = PropTypes.shape({
@@ -22,14 +23,7 @@ export default class OwnerSubject extends Component {
       <div className={styles.component}>
         {heading && <div className={styles.heading}>{heading}</div>}
         <div className={styles.subjectArea}>
-          <div className={styles.owner_info}>
-            <div className={styles.avatar}>
-              <img src="/img/common/icn_user.png" alt="User" />
-            </div>
-            <div className={styles.info}>
-              <p className={styles.owner_name}>{owner.name}</p>
-            </div>
-          </div>
+          <EntityLink componentClassName={styles.owner_info} entity={owner} local />
           {subject && <div className={styles.subject}>{subject}</div>}
         </div>
       </div>);

@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
+import { entityTypePropType } from '../../../util/EntityUtil';
 
 export const AlignmentPropTypes = PropTypes.shape({
-  ownerType: PropTypes.oneOf(['1', '2', '3']).isRequired,
+  ownerType: entityTypePropType.isRequired,
   group: PropTypes.shape({
     groupId: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,

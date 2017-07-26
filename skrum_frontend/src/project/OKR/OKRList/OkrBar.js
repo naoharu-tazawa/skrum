@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { okrPropTypes } from './propTypes';
+import EntityLink from '../../../components/EntityLink';
 import { replacePath } from '../../../util/RouteUtil';
 import styles from './OkrBar.css';
 
@@ -53,10 +54,7 @@ export default class OkrBar extends Component {
             {achievedValue}／{targetValue}{unit}
           </div>
         </div>
-        <div className={styles.ownerBox}>
-          <div className={styles.ownerImage} />
-          <div className={styles.ownerName}>{owner.name}</div>
-        </div>
+        <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.krCount}>
           <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
           <a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>

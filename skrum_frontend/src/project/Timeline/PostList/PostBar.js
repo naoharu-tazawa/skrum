@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { postPropTypes } from './propTypes';
+import { EntityType } from '../../../util/EntityUtil';
 import styles from './PostBar.css';
 
 export default class PostBar extends Component {
@@ -24,9 +25,9 @@ export default class PostBar extends Component {
                 <dt><img src="/img/common/icn_user.png" alt="" /></dt>
                 <dd>
                   {(() => {
-                    if (posterType === '1') {
+                    if (posterType === EntityType.USER) {
                       return posterUserName;
-                    } else if (posterType === '2') {
+                    } else if (posterType === EntityType.GROUP) {
                       return posterGroupName;
                     }
                     return posterCompanyName;

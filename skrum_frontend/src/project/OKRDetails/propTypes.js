@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
+import { okrTypePropType } from '../../util/OKRUtil';
+import { entityTypePropType } from '../../util/EntityUtil';
 
 export const keyResultPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
-  type: PropTypes.oneOf(['1', '2']).isRequired,
+  type: okrTypePropType.isRequired,
   name: PropTypes.string.isRequired,
   detail: PropTypes.string,
   unit: PropTypes.string.isRequired,
@@ -12,7 +14,7 @@ export const keyResultPropTypes = PropTypes.shape({
   owner: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['1', '2', '3']).isRequired,
+    type: entityTypePropType.isRequired,
   }).isRequired,
   status: PropTypes.string.isRequired,
   ratioLockedFlg: PropTypes.number.isRequired,

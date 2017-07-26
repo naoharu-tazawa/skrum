@@ -6,6 +6,8 @@ import styles from './GroupInfoEdit.css';
 import InlineTextInput from '../../../editors/InlineTextInput';
 import InlineTextArea from '../../../editors/InlineTextArea';
 import InlinePotentialLeaders from '../../PotentialLeaders/InlinePotentialLeaders';
+import EntityLink from '../../../components/EntityLink';
+import { EntityType } from '../../../util/EntityUtil';
 import { replacePath } from '../../../util/RouteUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 
@@ -66,21 +68,20 @@ export default class GroupInfoEdit extends Component {
                 />
               </div>
             </div>
-            <div className={`${styles.leader} ${styles.cf}`}>
-              <div><img src="/img/profile/img_leader.jpg" alt="" /></div>
-              <dl>
-                <dt>リーダー</dt>
-                <dd>
-                  <InlinePotentialLeaders
-                    groupId={groupId}
-                    leaderUserId={leaderUserId}
-                    leaderName={leaderName}
-                    onSubmit={({ userId, name: userName }) =>
-                      dispatchChangeGroupLeader(userId, userName)}
-                  />
-                </dd>
-              </dl>
-            </div>
+            <EntityLink
+              componentClassName={styles.leader}
+              entity={{ id: leaderUserId, type: EntityType.GROUP }}
+              title="リーダー"
+              editor={
+                <InlinePotentialLeaders
+                  groupId={groupId}
+                  leaderUserId={leaderUserId}
+                  leaderName={leaderName}
+                  onSubmit={({ userId, name: userName }) =>
+                    dispatchChangeGroupLeader(userId, userName)}
+                />}
+              local
+            />
           </div>
         </div>
       </section>

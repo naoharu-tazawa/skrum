@@ -12,6 +12,7 @@ import OwnerSubject from '../../components/OwnerSubject';
 import DropdownMenu from '../../components/DropdownMenu';
 import Dropdown from '../../components/Dropdown';
 import DisclosureTypeOptions from '../../components/DisclosureTypeOptions';
+import EntityLink from '../../components/EntityLink';
 import OwnerSearch from '../OwnerSearch/OwnerSearch';
 import NewAchievement from '../OKR/NewAchievement/NewAchievement';
 import { withBasicModalDialog } from '../../util/FormUtil';
@@ -124,10 +125,10 @@ export default class OkrDetails extends Component {
             {!parentOkr && <span>➖</span>}
           </div>
           {parentOkr && (
-            <div className={`${styles.img_content_top} ${styles.floatR}`}>
-              <img src="/img/common/icn_user.png" alt="User Name" />
-              <span>{parentOkr.owner.name}</span>
-            </div>)}
+            <EntityLink
+              componentClassName={`${styles.parent_owner_info} ${styles.floatR}`}
+              entity={parentOkr.owner}
+            />)}
         </div>
         <div className={`${styles.content} ${styles.cf}`}>
           <div className={styles.boxInfo}>
@@ -182,14 +183,7 @@ export default class OkrDetails extends Component {
               </div>
             </div>
             <div className={`${styles.nav_info} ${styles.cf}`}>
-              <div className={`${styles.owner_info} ${styles.user_info} ${styles.floatL} ${styles.cf}`}>
-                <div className={`${styles.avatar} ${styles.floatL}`}>
-                  <img src="/img/common/icn_user.png" alt="User Name" />
-                </div>
-                <div className={`${styles.info} ${styles.floatL}`}>
-                  <div className={styles.user_name}>{owner.name}</div>
-                </div>
-              </div>
+              <EntityLink componentClassName={styles.owner_info} entity={owner} />
               <div className={styles.floatR}>
                 {keyResults.length === 0 && (
                   <Dropdown

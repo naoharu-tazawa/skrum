@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { okrsPropTypes } from './propTypes';
 import { mapOKR } from '../../../util/OKRUtil';
+import { EntityType } from '../../../util/EntityUtil';
 import OKROverallCharts from './OKROverallCharts';
 
 class OKROverallChartsContainer extends Component {
@@ -23,13 +24,13 @@ const mapBasicsStateToProps = (subject, ownerType) => (state) => {
 };
 
 export const UserOKROverallChartsContainer = connect(
-  mapBasicsStateToProps('user', '1'),
+  mapBasicsStateToProps('user', EntityType.USER),
 )(OKROverallChartsContainer);
 
 export const GroupOKROverallChartsContainer = connect(
-  mapBasicsStateToProps('group', '2'),
+  mapBasicsStateToProps('group', EntityType.GROUP),
 )(OKROverallChartsContainer);
 
 export const CompanyOKROverallChartsContainer = connect(
-  mapBasicsStateToProps('company', '3'),
+  mapBasicsStateToProps('company', EntityType.COMPANY),
 )(OKROverallChartsContainer);

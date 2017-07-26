@@ -1,0 +1,28 @@
+.component, .component a {
+  display: flex;
+  margin: auto 0;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+}
+.title {
+  margin-bottom: 4px;
+  color: #8e9aa6;
+  font-size: x-small;
+}
+.name {
+  margin: auto 1em;
+  white-space: nowrap;
+  /*overflow: hidden;*/
+  text-overflow: ellipsis;
+  width: 100%;
+}

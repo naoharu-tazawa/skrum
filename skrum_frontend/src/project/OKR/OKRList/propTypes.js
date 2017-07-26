@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { entityTypePropType } from '../../../util/EntityUtil';
 
 export const keyResultPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
@@ -10,7 +11,7 @@ export const keyResultPropTypes = PropTypes.shape({
   owner: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['1', '2', '3']).isRequired,
+    type: entityTypePropType.isRequired,
   }).isRequired,
   status: PropTypes.string.isRequired,
   ratioLockedFlg: PropTypes.number.isRequired,

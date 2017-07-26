@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
 import SearchDropdown from '../../components/SearchDropdown';
 import { mapOwner } from '../../util/OwnerUtil';
+import { EntityType } from '../../util/EntityUtil';
 import { searchOwner } from './action';
 
 export const ownerPropType = PropTypes.shape({
@@ -47,12 +48,12 @@ class OwnerSearch extends PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const { users = [], teams = [], departments = [], company = {} } = state.top.data || {};
+  const { users = [], teams = [], departments: depts = [], company = {} } = state.top.data || {};
   const defaultOwners = [
-    ...users.map(({ userId: id, name }) => ({ id, name, type: '1' })),
-    ...teams.map(({ groupId: id, groupName: name }) => ({ id, name, type: '2' })),
-    ...departments.map(({ groupId: id, groupName: name }) => ({ id, name, type: '2' })),
-    ...[{ id: company.companyId, name: company.name, type: '3' }],
+    ...users.map(({ userId: id, name }) => ({ id, name, type: EntityType.USER })),
+    ...teams.map(({ groupId: id, groupName: name }) => ({ id, name, type: EntityType.GROUP })),
+    ...depts.map(({ groupId: id, groupName: name }) => ({ id, name, type: EntityType.GROUP })),
+    ...[{ id: company.companyId, name: company.name, type: EntityType.COMPANY }],
   ];
   const { isSearching, keyword, data = [] } = state.ownersFound || {};
   return { defaultOwners, keyword, ownersFound: data.map(mapOwner), isSearching };
