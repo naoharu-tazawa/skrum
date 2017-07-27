@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
-use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\Permission;
 
 /**
