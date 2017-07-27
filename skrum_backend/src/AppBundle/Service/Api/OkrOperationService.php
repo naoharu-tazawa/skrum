@@ -10,6 +10,8 @@ use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkrActivity;
 use AppBundle\Entity\TOkr;
+use AppBundle\Api\ResponseDTO\OkrDetailsDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 
 /**
  * OKR操作サービスクラス
@@ -26,7 +28,7 @@ class OkrOperationService extends BaseService
      * @param TOkr $newParentOkr 紐付け先OKRエンティティ
      * @return void
      */
-    public function changeParent(Auth $auth, TOkr $tOkr, TOkr $newParentOkr)
+    public function changeParent(Auth $auth, TOkr $tOkr, TOkr $newParentOkr): OkrDetailsDTO
     {
         // 紐付け先変更対象OKRがキーリザルトの場合、紐付け先変更不可
         if ($tOkr->getType() === DBConstant::OKR_TYPE_KEY_RESULT) {
@@ -102,5 +104,61 @@ class OkrOperationService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // 会社名を取得
+        $companyName = null;
+        if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY || $newParentOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
+            $mCompanyRepos = $this->getMCompanyRepository();
+            $mCompany = $mCompanyRepos->find($auth->getCompanyId());
+            $companyName = $mCompany->getCompanyName();
+        }
+
+        // レスポンス用DTO生成
+        $targetOkr = $this->repackDTOWithOkrEntity($tOkr, $companyName);
+        $parentOkr = $this->repackDTOWithOkrEntity($newParentOkr, $companyName);
+        $okrDetailsDTO = new OkrDetailsDTO();
+        $okrDetailsDTO->setObjective($targetOkr);
+        $okrDetailsDTO->setParentOkr($parentOkr);
+
+        return $okrDetailsDTO;
+    }
+
+    /**
+     * OKRエンティティをDTOに詰め替える
+     *
+     * @param TOkr $tOkr OKRエンティティ
+     * @param string $companyName 会社名
+     * @return BasicOkrDTO
+     */
+    private function repackDTOWithOkrEntity(TOkr $tOkr, string $companyName = null): BasicOkrDTO
+    {
+        $basicOkrDTO = new BasicOkrDTO();
+        $basicOkrDTO->setOkrId($tOkr->getOkrId());
+        $basicOkrDTO->setOkrType($tOkr->getType());
+        $basicOkrDTO->setOkrName($tOkr->getName());
+        $basicOkrDTO->setOkrDetail($tOkr->getDetail());
+        $basicOkrDTO->setTargetValue($tOkr->getTargetValue());
+        $basicOkrDTO->setAchievedValue($tOkr->getAchievedValue());
+        $basicOkrDTO->setAchievementRate($tOkr->getAchievementRate());
+        $basicOkrDTO->setUnit($tOkr->getUnit());
+        $basicOkrDTO->setOwnerType($tOkr->getOwnerType());
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            $basicOkrDTO->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
+            $basicOkrDTO->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+        } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            $basicOkrDTO->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+            $basicOkrDTO->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+        } else {
+            $basicOkrDTO->setOwnerCompanyId($tOkr->getOwnerCompanyId());
+            $basicOkrDTO->setOwnerCompanyName($companyName);
+        }
+        $basicOkrDTO->setStartDate($tOkr->getStartDate());
+        $basicOkrDTO->setEndDate($tOkr->getEndDate());
+        $basicOkrDTO->setStatus($tOkr->getStatus());
+        $basicOkrDTO->setDisclosureType($tOkr->getDisclosureType());
+        $basicOkrDTO->setWeightedAverageRatio($tOkr->getWeightedAverageRatio());
+        $basicOkrDTO->setRatioLockedFlg($tOkr->getRatioLockedFlg());
+
+        return $basicOkrDTO;
     }
 }

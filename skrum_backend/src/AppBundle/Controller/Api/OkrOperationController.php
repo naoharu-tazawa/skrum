@@ -8,6 +8,7 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\OkrDetailsDTO;
 
 /**
  * OKR操作コントローラ
@@ -24,7 +25,7 @@ class OkrOperationController extends BaseController
      * @param string $okrId OKRID
      * @return array
      */
-    public function changeOkrParentAction(Request $request, string $okrId): array
+    public function changeOkrParentAction(Request $request, string $okrId): OkrDetailsDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/ChangeOkrParentPdu');
@@ -51,8 +52,8 @@ class OkrOperationController extends BaseController
 
         // 紐付け先OKR変更処理
         $okrOperationService = $this->getOkrOperationService();
-        $okrOperationService->changeParent($auth, $tOkr, $newParentOkr);
+        $okrDetailsDTO = $okrOperationService->changeParent($auth, $tOkr, $newParentOkr);
 
-        return array('result' => 'OK');
+        return $okrDetailsDTO;
     }
 }
