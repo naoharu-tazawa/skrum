@@ -14,13 +14,14 @@ export default class OwnerSubject extends Component {
   static propTypes = {
     owner: ownerPropType,
     heading: PropTypes.string,
-    subject: PropTypes.string.isRequired,
+    subject: PropTypes.string,
+    componentClassName: PropTypes.string,
   };
 
   render() {
-    const { owner, heading, subject } = this.props;
+    const { owner, heading, subject, componentClassName } = this.props;
     return (
-      <div className={styles.component}>
+      <div className={`${styles.component} ${componentClassName || ''}`}>
         {heading && <div className={styles.heading}>{heading}</div>}
         <div className={styles.subjectArea}>
           <EntityLink componentClassName={styles.owner_info} entity={owner} local />

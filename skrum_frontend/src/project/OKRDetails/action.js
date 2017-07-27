@@ -17,6 +17,8 @@ export const Action = {
   FINISH_POST_ACHIEVEMENT: 'FINISH_POST_ACHIEVEMENT',
   REQUEST_CHANGE_OWNER: 'REQUEST_CHANGE_OWNER',
   FINISH_CHANGE_OWNER: 'FINISH_CHANGE_OWNER',
+  REQUEST_CHANGE_PARENT_OKR: 'REQUEST_CHANGE_PARENT_OKR',
+  FINISH_CHANGE_PARENT_OKR: 'FINISH_CHANGE_PARENT_OKR',
   REQUEST_CHANGE_DISCLOSURE_TYPE: 'REQUEST_CHANGE_DISCLOSURE_TYPE',
   FINISH_CHANGE_DISCLOSURE_TYPE: 'FINISH_CHANGE_DISCLOSURE_TYPE',
 };
@@ -34,6 +36,8 @@ const {
   finishPostAchievement,
   requestChangeOwner,
   finishChangeOwner,
+  requestChangeParentOkr,
+  finishChangeParentOkr,
   requestChangeDisclosureType,
   finishChangeDisclosureType,
 } = createActions({
@@ -43,6 +47,7 @@ const {
   [Action.FINISH_DELETE_KR]: keyValueIdentity,
   [Action.FINISH_POST_ACHIEVEMENT]: keyValueIdentity,
   [Action.FINISH_CHANGE_OWNER]: keyValueIdentity,
+  [Action.FINISH_CHANGE_PARENT_OKR]: keyValueIdentity,
   [Action.FINISH_CHANGE_DISCLOSURE_TYPE]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_OKR_DETAILS,
@@ -51,6 +56,7 @@ const {
   Action.REQUEST_DELETE_KR,
   Action.REQUEST_POST_ACHIEVEMENT,
   Action.REQUEST_CHANGE_OWNER,
+  Action.REQUEST_CHANGE_PARENT_OKR,
   Action.REQUEST_CHANGE_DISCLOSURE_TYPE,
 );
 
@@ -92,6 +98,16 @@ export const changeOwner = (id, owner) =>
     return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound(omit(owner, 'name')))
       .then(() => dispatch(finishChangeOwner('changeOwner', { id, ...mapOwnerOutbound(owner) })))
       .catch(({ message }) => dispatch(finishChangeOwner(new Error(message))));
+  };
+
+export const changeParentOkr = (id, newParentOkr) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.okr.isChangingParentOkr) return Promise.resolve();
+    dispatch(requestChangeParentOkr());
+    return putJson(`/okrs/${id}/changeparent.json`, state)(null, { newParentOkrId: newParentOkr.id })
+      .then(() => dispatch(finishChangeParentOkr('changeParentOkr', { id, newParentOkr })))
+      .catch(({ message }) => dispatch(finishChangeParentOkr(new Error(message))));
   };
 
 export const changeDisclosureType = (id, disclosureType) =>

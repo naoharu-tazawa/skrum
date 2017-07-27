@@ -150,3 +150,18 @@ button.tool:focus {
 .progress.low {
   background-color: #EFB04C;
 }
+
+.parentOkrToChange {
+  display: flex;
+}
+.parentOkrToChange:before {
+  content: " ";
+  width: 26px;
+  height: calc(50px + 1em);
+  border-width: 2px;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  margin-left: calc(3em + 40px/2);
+  margin-right: 0;
+  margin-top: -1em;
+}

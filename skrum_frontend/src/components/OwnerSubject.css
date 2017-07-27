@@ -17,8 +17,6 @@
 .subject {
   margin: auto 1em;
   white-space: nowrap;
-  /*overflow: hidden;*/
   text-overflow: ellipsis;
   max-width: 40em;
-  overflow-x: auto;
 }

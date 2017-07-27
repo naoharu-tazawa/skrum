@@ -16,7 +16,7 @@ export const entityPropType = PropTypes.shape({
 class EntityLink extends Component {
 
   static propTypes = {
-    entity: entityPropType.isRequired,
+    entity: entityPropType,
     title: PropTypes.string,
     editor: PropTypes.node,
     local: PropTypes.bool,
@@ -24,22 +24,22 @@ class EntityLink extends Component {
   };
 
   render() {
-    const { entity, title, editor, local, componentClassName } = this.props;
+    const { entity = {}, title, editor, local, componentClassName } = this.props;
     const { id, name, type } = entity;
     const avatarContent = (
       <div className={styles.avatar}>
-        <img src="/img/common/icn_user.png" alt="Owner" />
+        {id && <img src="/img/common/icn_user.png" alt="Owner" />}
       </div>);
     const nameContent = (
       <div className={styles.name}>
         {title && <p className={styles.title}>{title}</p>}
-        {editor || name}
+        {editor || name || <span>➖</span>}
       </div>);
     return (
-      <div className={`${styles.component} ${componentClassName || ''}`}>
-        {local && avatarContent}
-        {local && nameContent}
-        {!local && <Link to={replacePath({ subject: type, id }, { basicOnly: true })}>
+      <div className={`${styles.component} ${id && styles.hasEntity} ${componentClassName || ''}`}>
+        {(local || !id) && avatarContent}
+        {(local || !id) && nameContent}
+        {!local && id && <Link to={replacePath({ subject: type, id }, { basicOnly: true })}>
           {avatarContent}
           {nameContent}
         </Link>}
@@ -47,9 +47,8 @@ class EntityLink extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  const { local, entity } = props;
-  if (local) return { local };
+const mapStateToProps = (state, { local, entity = {} }) => {
+  if (local) return {};
   const { id: entityId, type } = entity;
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};

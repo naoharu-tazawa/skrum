@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { isEmpty, partial } from 'lodash';
 import SearchDropdown from '../../components/SearchDropdown';
 import { mapOKR } from '../../util/OKRUtil';
+import { explodePath } from '../../util/RouteUtil';
 import { searchOkr, searchParentOkr } from './action';
 
 const ownerPropType = PropTypes.shape({
@@ -58,9 +59,13 @@ class OKRSearch extends PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, { timeframeId }) => {
   const { isSearching, data = [] } = state.okrsFound || {};
-  return { okrs: data.map(okr => mapOKR(okr)), isSearching };
+  const stateProps = { okrs: data.map(okr => mapOKR(okr)), isSearching };
+  if (timeframeId) return stateProps;
+  const { locationBeforeTransitions } = state.routing || {};
+  const { pathname } = locationBeforeTransitions || {};
+  return { ...stateProps, timeframeId: explodePath(pathname).timeframeId };
 };
 
 const mapDispatchToProps = (dispatch) => {

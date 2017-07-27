@@ -7,6 +7,7 @@ export default (state = {
   isPutting: false,
   isPostingKR: false,
   isChangingOwner: false,
+  isChangingParentOkr: false,
   isChangingDisclosureType: false,
   isDeletingKR: false,
   isPostingAchievement: false,
@@ -62,6 +63,18 @@ export default (state = {
       const objective = mergeUpdateById(state.objective, 'okrId', data, id);
       const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', data, id));
       return { ...state, objective, keyResults, isChangingOwner: false, error: null };
+    }
+
+    case Action.REQUEST_CHANGE_PARENT_OKR:
+      return { ...state, isChangingParentOkr: true };
+
+    case Action.FINISH_CHANGE_PARENT_OKR: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isChangingParentOkr: false, error: { message: payload.message } };
+      }
+      // TODO: update parent okr
+      return { ...state, isChangingParentOkr: false, error: null };
     }
 
     case Action.REQUEST_CHANGE_DISCLOSURE_TYPE:

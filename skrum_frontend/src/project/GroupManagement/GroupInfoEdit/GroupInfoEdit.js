@@ -70,7 +70,7 @@ export default class GroupInfoEdit extends Component {
             </div>
             <EntityLink
               componentClassName={styles.leader}
-              entity={{ id: leaderUserId, type: EntityType.GROUP }}
+              entity={{ id: leaderUserId, type: EntityType.USER }}
               title="リーダー"
               editor={
                 <InlinePotentialLeaders

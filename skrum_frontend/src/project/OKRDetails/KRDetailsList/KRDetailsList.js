@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { keyResultsPropTypes } from '../propTypes';
+import { okrPropTypes, keyResultsPropTypes } from '../propTypes';
 import KRDetailsBar from './KRDetailsBar';
 import styles from './KRDetailsList.css';
 
 export default class KRDetailsList extends Component {
 
   static propTypes = {
+    parentOkr: okrPropTypes,
     keyResults: keyResultsPropTypes,
     onAdd: PropTypes.func.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
     dispatchChangeOwner: PropTypes.func.isRequired,
+    dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeleteKR: PropTypes.func.isRequired,
   };
 
   render() {
-    const { keyResults = [], onAdd, dispatchPutOKR, dispatchChangeOwner,
-      dispatchChangeDisclosureType, dispatchDeleteKR } = this.props;
+    const { parentOkr, keyResults = [], onAdd, dispatchPutOKR, dispatchChangeOwner,
+      dispatchChangeParentOkr, dispatchChangeDisclosureType, dispatchDeleteKR } = this.props;
     return (
       <div className={styles.component}>
         <div className={styles.header}>
@@ -28,9 +30,11 @@ export default class KRDetailsList extends Component {
             <KRDetailsBar
               key={`kr-details-${keyResult.id}`}
               {...{
+                parentOkr,
                 keyResult,
                 dispatchPutOKR,
                 dispatchChangeOwner,
+                dispatchChangeParentOkr,
                 dispatchChangeDisclosureType,
                 dispatchDeleteKR,
               }}
