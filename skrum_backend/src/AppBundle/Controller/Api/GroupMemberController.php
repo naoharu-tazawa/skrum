@@ -9,6 +9,7 @@ use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\Constant;
+use AppBundle\Api\ResponseDTO\AdditionalGroupMemberDTO;
 use AppBundle\Api\ResponseDTO\GroupMemberDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
 
@@ -27,7 +28,7 @@ class GroupMemberController extends BaseController
      * @param string $groupId グループID
      * @return MemberDTO
      */
-    public function postGroupMembersAction(Request $request, string $groupId): MemberDTO
+    public function postGroupMembersAction(Request $request, string $groupId): AdditionalGroupMemberDTO
     {
         // リクエストパラメータを取得
         $timeframeId = $request->get('tfid');
@@ -59,15 +60,18 @@ class GroupMemberController extends BaseController
             throw new PermissionException('グループ操作権限がありません');
         }
 
-        // OKR一覧取得
+        // ユーザOKR一覧取得
         $okrService = $this->getOkrService();
-        $okrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_USER, $auth, $data['userId'], null, $timeframeId, $auth->getCompanyId());
+        $userOkrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_USER, $auth, $data['userId'], null, $timeframeId, $auth->getCompanyId());
+
+        // グループOKR一覧取得
+        $groupOkrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_GROUP, $auth, null, $groupId, $timeframeId, $auth->getCompanyId());
 
         // グループメンバー追加登録処理
         $groupMemberService = $this->getGroupMemberService();
-        $memberDTO = $groupMemberService->addMember($mUser, $mGroup, $okrsArray);
+        $additionalGroupMemberDTO = $groupMemberService->addMember($mUser, $mGroup, $userOkrsArray, $groupOkrsArray);
 
-        return $memberDTO;
+        return $additionalGroupMemberDTO;
     }
 
     /**

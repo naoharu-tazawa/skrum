@@ -9,6 +9,7 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\TGroupMember;
+use AppBundle\Api\ResponseDTO\AdditionalGroupMemberDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\MemberDTO;
 
@@ -24,10 +25,11 @@ class GroupMemberService extends BaseService
      *
      * @param MUser $mUser ユーザエンティティ
      * @param MGroup $mGroup グループエンティティ
-     * @param array $okrsArray 当該メンバー所有OKR配列
+     * @param array $userOkrsArray 当該メンバー所有OKR配列
+     * @param array $groupOkrsArray 当該グループ所有OKR配列
      * @return MemberDTO
      */
-    public function addMember(MUser $mUser, MGroup $mGroup, array $okrsArray): MemberDTO
+    public function addMember(MUser $mUser, MGroup $mGroup, array $userOkrsArray, array $groupOkrsArray): AdditionalGroupMemberDTO
     {
         // グループメンバー排他チェック
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
@@ -47,20 +49,43 @@ class GroupMemberService extends BaseService
             throw new SystemException($e->getMessage());
         }
 
-
+        // MemberDTOの生成
         $memberDTO = new MemberDTO();
         $memberDTO->setUserId($mUser->getUserId());
         $memberDTO->setName($mUser->getLastName() . ' ' . $mUser->getFirstName());
         $memberDTO->setPosition($mUser->getPosition());
-        $achievementRateArray = array();
-        foreach ($okrsArray as $tOkr) {
-            $achievementRateArray[] = $tOkr->getAchievementRate();
+        $userAchievementRateArray = array();
+        foreach ($userOkrsArray as $userOkr) {
+            $userAchievementRateArray[] = $userOkr->getAchievementRate();
         }
-        $memberDTO->setAchievementRate(floor((array_sum($achievementRateArray) / count($achievementRateArray)) * 10) / 10);
+        if (count($userAchievementRateArray) !== 0) {
+            $memberDTO->setAchievementRate(floor((array_sum($userAchievementRateArray) / count($userAchievementRateArray)) * 10) / 10);
+        } else {
+            $memberDTO->setAchievementRate(0);
+        }
         $tLoginRepos = $this->getTLoginRepository();
         $memberDTO->setLastLogin($tLoginRepos->getLastLogin($mUser->getUserId()));
 
-        return $memberDTO;
+        // GroupDTOの生成
+        $groupDTO = new GroupDTO();
+        $groupDTO->setGroupId($mGroup->getGroupId());
+        $groupDTO->setGroupName($mGroup->getGroupName());
+        $groupAchievementRateArray = array();
+        foreach ($groupOkrsArray as $groupOkr) {
+            $groupAchievementRateArray[] = $groupOkr->getAchievementRate();
+        }
+        if (count($groupAchievementRateArray) !== 0) {
+            $groupDTO->setAchievementRate(floor((array_sum($groupAchievementRateArray) / count($groupAchievementRateArray)) * 10) / 10);
+        } else {
+            $groupDTO->setAchievementRate(0);
+        }
+
+        // AdditionalGroupMemberDTOの生成
+        $additionalGroupMemberDTO = new AdditionalGroupMemberDTO();
+        $additionalGroupMemberDTO->setUser($memberDTO);
+        $additionalGroupMemberDTO->setGroup($groupDTO);
+
+        return $additionalGroupMemberDTO;
     }
 
     /**
