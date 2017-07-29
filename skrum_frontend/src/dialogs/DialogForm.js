@@ -18,6 +18,10 @@ export default class DialogForm extends Component {
     error: PropTypes.string,
   };
 
+  componentWillUnmount() {
+    this.isUnmounting = true; // FIXME
+  }
+
   setFieldData(data = {}) {
     const { data: oldData = {} } = this.state || {};
     this.setState({ data: { ...oldData, ...data } });
@@ -29,9 +33,10 @@ export default class DialogForm extends Component {
       handleSubmit((data) => {
         this.setState({ isSubmitting: true });
         try {
-          return onSubmit(data).then(() => this.setState({ isSubmitting: false }));
+          return onSubmit(data).then(() =>
+            !this.isUnmounting && this.setState({ isSubmitting: false }));
         } catch (e) {
-          this.setState({ isSubmitting: false });
+          if (!this.isUnmounting) this.setState({ isSubmitting: false });
           throw e;
         }
       }) :
@@ -39,7 +44,7 @@ export default class DialogForm extends Component {
         e.preventDefault();
         this.setState({ isSubmitting: true });
         return onSubmit((this.state || {}).data).then(() =>
-          this.setState({ isSubmitting: false }));
+          !this.isUnmounting && this.setState({ isSubmitting: false }));
       };
   }
 

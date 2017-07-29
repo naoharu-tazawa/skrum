@@ -3,26 +3,24 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from './Header';
 import NewOKR from '../../project/OKR/NewOKR/NewOKR';
-import { withBasicModalDialog } from '../../util/FormUtil';
 import { logout } from '../../auth/action';
+import { withModal } from '../../util/ModalUtil';
 
 class HeaderContainer extends Component {
 
   static propTypes = {
-    dispatchLogout: PropTypes.func,
+    openModal: PropTypes.func.isRequired,
+    dispatchLogout: PropTypes.func.isRequired,
   };
 
   render() {
-    const { dispatchLogout } = this.props;
-    const { addOkrModal = null } = this.state || {};
+    const { openModal, dispatchLogout } = this.props;
     return (
       <div>
         <Header
-          onAdd={() => this.setState({ addOkrModal:
-            withBasicModalDialog(NewOKR, () => this.setState({ addOkrModal: null }), { type: 'Okr' }) })}
+          onAdd={() => openModal(NewOKR, { type: 'Okr' })}
           handleLogoutSubmit={dispatchLogout}
         />
-        {addOkrModal}
       </div>
     );
   }
@@ -36,4 +34,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   null,
   mapDispatchToProps,
-)(HeaderContainer);
+)(withModal(HeaderContainer));

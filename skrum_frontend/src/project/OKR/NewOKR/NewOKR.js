@@ -8,7 +8,7 @@ import DialogForm from '../../../dialogs/DialogForm';
 import OwnerSearch, { ownerPropType } from '../../OwnerSearch/OwnerSearch';
 import TimeframesDropdown from '../../../components/TimeframesDropdown';
 import DatePickerInput from '../../../components/DatePickerInput';
-import OwnerSubject from '../../../components/OwnerSubject';
+import EntitySubject from '../../../components/EntitySubject';
 import DisclosureTypeOptions, { getDisclosureTypeName } from '../../../components/DisclosureTypeOptions';
 import OKRSearch from '../../OKRSearch/OKRSearch';
 import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, withReduxField } from '../../../util/FormUtil';
@@ -116,7 +116,7 @@ class NewOKR extends Component {
         onClose={onClose}
       >
         <div className={styles.dialog}>
-          {parentOkr && <OwnerSubject owner={parentOkr.owner} heading="紐付け先目標" subject={name} />}
+          {parentOkr && <EntitySubject entity={parentOkr.owner} heading="紐付け先目標" subject={name} />}
           <section>
             <label>担当者</label>
             {ownerName ? <label>{ownerName}</label> : ownerSearch}

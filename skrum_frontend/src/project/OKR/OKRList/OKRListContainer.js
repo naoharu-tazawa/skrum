@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { okrsPropTypes } from './propTypes';
 import OKRList from './OKRList';
 import NewOKR from '../NewOKR/NewOKR';
-import { withBasicModalDialog } from '../../../util/FormUtil';
+import { withModal } from '../../../util/ModalUtil';
 import { mapOKR } from '../../../util/OKRUtil';
 import { EntityType } from '../../../util/EntityUtil';
 
@@ -13,19 +13,17 @@ class OKRListContainer extends Component {
   static propTypes = {
     okrs: okrsPropTypes,
     ownerName: PropTypes.string,
+    openModal: PropTypes.func.isRequired,
   };
 
   render() {
-    const { okrs = [], ownerName } = this.props;
-    const { addOkrModal = null } = this.state || {};
+    const { okrs = [], ownerName, openModal } = this.props;
     return (
       <div>
         <OKRList
           okrs={okrs}
-          onAdd={() => this.setState({ addOkrModal:
-            withBasicModalDialog(NewOKR, () => this.setState({ addOkrModal: null }), { type: 'Okr', ownerName }) })}
+          onAdd={() => openModal(NewOKR, { type: 'Okr', ownerName })}
         />
-        {addOkrModal}
       </div>);
   }
 }
@@ -40,12 +38,12 @@ const mapBasicsStateToProps = (subject, ownerType) => (state) => {
 
 export const UserOKRListContainer = connect(
   mapBasicsStateToProps('user', EntityType.USER),
-)(OKRListContainer);
+)(withModal(OKRListContainer));
 
 export const GroupOKRListContainer = connect(
   mapBasicsStateToProps('group', EntityType.GROUP),
-)(OKRListContainer);
+)(withModal(OKRListContainer));
 
 export const CompanyOKRListContainer = connect(
   mapBasicsStateToProps('company', EntityType.COMPANY),
-)(OKRListContainer);
+)(withModal(OKRListContainer));

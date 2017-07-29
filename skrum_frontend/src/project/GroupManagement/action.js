@@ -1,6 +1,6 @@
 import { createActions } from 'redux-actions';
 import { keyValueIdentity } from '../../util/ActionUtil';
-import { getJson, putJson } from '../../util/ApiUtil';
+import { getJson, putJson, postJson, deleteJson } from '../../util/ApiUtil';
 
 export const Action = {
   REQUEST_FETCH_USER_GROUPS: 'REQUEST_FETCH_USER_GROUPS',
@@ -13,6 +13,14 @@ export const Action = {
   FINISH_PUT_GROUP: 'FINISH_PUT_GROUP',
   REQUEST_CHANGE_GROUP_LEADER: 'REQUEST_CHANGE_GROUP_LEADER',
   FINISH_CHANGE_GROUP_LEADER: 'FINISH_CHANGE_GROUP_LEADER',
+  REQUEST_ADD_GROUP_MEMBER: 'REQUEST_ADD_GROUP_MEMBER',
+  FINISH_ADD_GROUP_MEMBER: 'FINISH_ADD_GROUP_MEMBER',
+  REQUEST_DELETE_GROUP_MEMBER: 'REQUEST_DELETE_GROUP_MEMBER',
+  FINISH_DELETE_GROUP_MEMBER: 'FINISH_DELETE_GROUP_MEMBER',
+  REQUEST_JOIN_GROUP: 'REQUEST_JOIN_GROUP',
+  FINISH_JOIN_GROUP: 'FINISH_JOIN_GROUP',
+  REQUEST_LEAVE_GROUP: 'REQUEST_LEAVE_GROUP',
+  FINISH_LEAVE_GROUP: 'FINISH_LEAVE_GROUP',
 };
 
 const {
@@ -26,18 +34,34 @@ const {
   finishPutGroup,
   requestChangeGroupLeader,
   finishChangeGroupLeader,
+  requestAddGroupMember,
+  finishAddGroupMember,
+  requestDeleteGroupMember,
+  finishDeleteGroupMember,
+  requestJoinGroup,
+  finishJoinGroup,
+  requestLeaveGroup,
+  finishLeaveGroup,
 } = createActions({
   [Action.FINISH_FETCH_USER_GROUPS]: keyValueIdentity,
   [Action.FINISH_FETCH_GROUP_MEMBERS]: keyValueIdentity,
   [Action.FINISH_PUT_USER]: keyValueIdentity,
-  [Action.REQUEST_PUT_USER]: keyValueIdentity,
   [Action.FINISH_PUT_GROUP]: keyValueIdentity,
-  [Action.REQUEST_PUT_GROUP]: keyValueIdentity,
   [Action.FINISH_CHANGE_GROUP_LEADER]: keyValueIdentity,
+  [Action.FINISH_ADD_GROUP_MEMBER]: keyValueIdentity,
+  [Action.FINISH_DELETE_GROUP_MEMBER]: keyValueIdentity,
+  [Action.FINISH_JOIN_GROUP]: keyValueIdentity,
+  [Action.FINISH_LEAVE_GROUP]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_USER_GROUPS,
   Action.REQUEST_FETCH_GROUP_MEMBERS,
+  Action.REQUEST_PUT_USER,
+  Action.REQUEST_PUT_GROUP,
   Action.REQUEST_CHANGE_GROUP_LEADER,
+  Action.REQUEST_ADD_GROUP_MEMBER,
+  Action.REQUEST_DELETE_GROUP_MEMBER,
+  Action.REQUEST_JOIN_GROUP,
+  Action.REQUEST_LEAVE_GROUP,
 );
 
 export const fetchUserGroups = (userId, timeframeId) =>
@@ -64,9 +88,9 @@ export const putUser = (id, data) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.groupManagement.isPutting) return Promise.resolve();
-    dispatch(requestPutUser('data', { id: Number(id), ...data }));
+    dispatch(requestPutUser());
     return putJson(`/users/${id}.json`, state)(null, data)
-      .then(json => dispatch(finishPutUser('data', json)))
+      .then(() => dispatch(finishPutUser('data', { id, ...data })))
       .catch(({ message }) => dispatch(finishPutUser(new Error(message))));
   };
 
@@ -74,9 +98,9 @@ export const putGroup = (id, data) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.groupManagement.isPutting) return Promise.resolve();
-    dispatch(requestPutGroup('data', { id: Number(id), ...data }));
+    dispatch(requestPutGroup());
     return putJson(`/groups/${id}.json`, state)(null, data)
-      .then(json => dispatch(finishPutGroup('data', json)))
+      .then(() => dispatch(finishPutGroup('data', { id, ...data })))
       .catch(({ message }) => dispatch(finishPutGroup(new Error(message))));
   };
 
@@ -88,4 +112,44 @@ export const changeGroupLeader = (groupId, userId, userName) =>
     return putJson(`/groups/${groupId}/leaders/${userId}.json`, state)()
       .then(() => dispatch(finishChangeGroupLeader('changeGroupLeader', { groupId, userId, userName })))
       .catch(({ message }) => dispatch(finishChangeGroupLeader(new Error(message))));
+  };
+
+export const addGroupMember = (/* TODO timeframeId, */groupId, userId) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.groupManagement.isAddingGroupMember) return Promise.resolve();
+    dispatch(requestAddGroupMember());
+    return postJson(`/groups/${groupId}/members.json`, state)({ tfid: 1 }, { userId })
+      .then(json => dispatch(finishAddGroupMember('addGroupMember', json)))
+      .catch(({ message }) => dispatch(finishAddGroupMember(new Error(message))));
+  };
+
+export const deleteGroupMember = (groupId, userId) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.groupManagement.isDeletingGroupMember) return Promise.resolve();
+    dispatch(requestDeleteGroupMember());
+    return deleteJson(`/groups/${groupId}/members/${userId}.json`, state)()
+      .then(() => dispatch(finishDeleteGroupMember('deleteGroupMember', { groupId, userId })))
+      .catch(({ message }) => dispatch(finishDeleteGroupMember(new Error(message))));
+  };
+
+export const joinGroup = (/* TODO timeframeId, */userId, groupId) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.groupManagement.isJoiningGroup) return Promise.resolve();
+    dispatch(requestJoinGroup());
+    return postJson(`/groups/${groupId}/members.json`, state)({ tfid: 1 }, { userId })
+      .then(json => dispatch(finishJoinGroup('joinGroup', json)))
+      .catch(({ message }) => dispatch(finishJoinGroup(new Error(message))));
+  };
+
+export const leaveGroup = (userId, groupId) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.groupManagement.isLeavingGroup) return Promise.resolve();
+    dispatch(requestLeaveGroup());
+    return deleteJson(`/groups/${groupId}/members/${userId}.json`, state)()
+      .then(() => dispatch(finishLeaveGroup('leaveGroup', { userId, groupId })))
+      .catch(({ message }) => dispatch(finishLeaveGroup(new Error(message))));
   };

@@ -1,46 +1,71 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { userGroupPropTypes } from './propTypes';
+import DeletionPrompt from '../../../dialogs/DeletionPrompt';
+import EntitySubject from '../../../components/EntitySubject';
 import EntityLink from '../../../components/EntityLink';
 import { EntityType } from '../../../util/EntityUtil';
+import { withModal } from '../../../util/ModalUtil';
 import styles from './UserGroupBar.css';
 
-export default class UserGroupBar extends Component {
+class UserGroupBar extends Component {
 
   static propTypes = {
     header: PropTypes.bool,
+    userId: PropTypes.number,
+    userName: PropTypes.string,
     group: userGroupPropTypes,
+    dispatchLeaveGroup: PropTypes.func,
+    openModal: PropTypes.func.isRequired,
+    closeActiveModal: PropTypes.func.isRequired,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
+  leaveGroupPrompt = ({ userId, userName, id, name }) => (
+    <DeletionPrompt
+      title="所属グループからの退出"
+      prompt={`${userName} さんをこちらのグループから退出させますか？`}
+      onDelete={() => this.props.dispatchLeaveGroup(userId, id)}
+      onClose={() => this.props.closeActiveModal()}
+    >
+      <EntitySubject entity={{ id, name, type: EntityType.USER }} />
+    </DeletionPrompt>);
+
   render() {
-    const { header, group } = this.props;
+    const { header, userId, userName, group, openModal } = this.props;
     if (header) {
       return (
-        <tr>
-          <th className={styles.name}>名前</th>
-          <th className={styles.position}>進捗状況</th>
-          <th />
-        </tr>);
+        <div className={styles.header}>
+          <div className={styles.name}>名前</div>
+          <div className={styles.progress}>進捗状況</div>
+          <div className={styles.delete} />
+        </div>);
     }
     const { id, name, achievementRate } = group;
     return (
-      <tr>
-        <td><EntityLink entity={{ id, name, type: EntityType.GROUP }} /></td>
-        <td>
-          <div className={styles.progressBox}>
-            <span className={styles.progressPercent}>{achievementRate}%</span>
-            <div className={styles.progressBar}>
-              <div
-                className={this.getProgressStyles(achievementRate)}
-                style={{ width: `${achievementRate}%` }}
-              />
-            </div>
+      <div className={styles.row}>
+        <div className={styles.name}>
+          <EntityLink entity={{ id, name, type: EntityType.GROUP }} />
+        </div>
+        <div className={styles.progressBox}>
+          <span className={styles.progressPercent}>{achievementRate}%</span>
+          <div className={styles.progressBar}>
+            <div
+              className={this.getProgressStyles(achievementRate)}
+              style={{ width: `${achievementRate}%` }}
+            />
           </div>
-        </td>
-        <td><div className={styles.delete}><img src="/img/delete.svg" alt="" /></div></td>
-      </tr>);
+        </div>
+        <button
+          className={styles.delete}
+          onClick={() => openModal(this.leaveGroupPrompt({ userId, userName, id, name }))}
+        >
+          <img src="/img/delete.svg" alt="" />
+        </button>
+      </div>);
   }
 }
+
+export default withModal(UserGroupBar);

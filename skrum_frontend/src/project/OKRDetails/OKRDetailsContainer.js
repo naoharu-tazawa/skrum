@@ -6,11 +6,11 @@ import OkrDetails from './OkrDetails';
 import KRDetailsList from './KRDetailsList/KRDetailsList';
 import OkrProgressChart from './OkrProgressChart';
 import NewOKR from '../OKR/NewOKR/NewOKR';
-import { withBasicModalDialog } from '../../util/FormUtil';
 import { fetchOKRDetails, putOKR, changeOwner, changeParentOkr, changeDisclosureType, deleteKR } from './action';
 import { syncOkr } from '../OKR/action';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
 import { mapOKR } from '../../util/OKRUtil';
+import { withModal } from '../../util/ModalUtil';
 import styles from './OKRDetailsContainer.css';
 
 class OKRDetailsContainer extends Component {
@@ -29,6 +29,7 @@ class OKRDetailsContainer extends Component {
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired, // passed from OKRContainer
     dispatchDeleteKR: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
     pathname: PropTypes.string,
   };
 
@@ -57,8 +58,7 @@ class OKRDetailsContainer extends Component {
   render() {
     const { isFetching, /* error, */ parentOkr, okr, progressSeries = [],
       dispatchPutOKR, dispatchChangeOwner, dispatchChangeParentOkr, dispatchDeleteOkr,
-      dispatchChangeDisclosureType, dispatchDeleteKR } = this.props;
-    const { addKRModal = null } = this.state || {};
+      dispatchChangeDisclosureType, dispatchDeleteKR, openModal } = this.props;
     // TODO use toastr
     // if (error) {
     //   return <div className={`${styles.container} ${styles.error}`} >{error.message}</div>;
@@ -93,9 +93,7 @@ class OKRDetailsContainer extends Component {
           <KRDetailsList
             parentOkr={okr}
             keyResults={okr.keyResults}
-            onAdd={() => this.setState({ addKRModal:
-              withBasicModalDialog(NewOKR, () => this.setState({ addKRModal: null }),
-                { type: 'KR', parentOkr: okr }) })}
+            onAdd={() => openModal(NewOKR, { type: 'KR', parentOkr: okr })}
             {...{
               dispatchPutOKR,
               dispatchChangeOwner,
@@ -104,7 +102,6 @@ class OKRDetailsContainer extends Component {
               dispatchDeleteKR,
             }}
           />
-          {addKRModal}
         </section>
       </div>);
   }
@@ -131,8 +128,8 @@ const mapDispatchToProps = (dispatch, { subject }) => {
     dispatch(putOKR(id, data)).then(result => dispatch(syncOkr(subject, result)));
   const dispatchChangeOwner = (id, owner) =>
     dispatch(changeOwner(id, owner));
-  const dispatchChangeParentOkr = (id, owner) =>
-    dispatch(changeParentOkr(id, owner));
+  const dispatchChangeParentOkr = (id, newParentOkrId) =>
+    dispatch(changeParentOkr(id, newParentOkrId));
   const dispatchChangeDisclosureType = (id, disclosureType) =>
     dispatch(changeDisclosureType(id, disclosureType));
   const dispatchDeleteKR = id =>
@@ -150,4 +147,4 @@ const mapDispatchToProps = (dispatch, { subject }) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(OKRDetailsContainer);
+)(withModal(OKRDetailsContainer));

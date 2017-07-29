@@ -10,6 +10,8 @@ import timelineReducer from '../../project/Timeline/reducer';
 import groupManagementReducer from '../../project/GroupManagement/reducer';
 import okrDetailsReducer from '../../project/OKRDetails/reducer';
 import okrSearchReducer from '../../project/OKRSearch/reducer';
+import userGroupSearchReducer from '../../project/UserGroupSearch/reducer';
+import groupUserSearchReducer from '../../project/GroupUserSearch/reducer';
 import potentialLeadersReducer from '../../project/PotentialLeaders/reducer';
 import ownerSearchReducer from '../../project/OwnerSearch/reducer';
 import userSettingReducer from '../../project/UserSetting/reducer';
@@ -28,6 +30,8 @@ const rootReducer = combineReducers({
   timeline: timelineReducer,
   okr: okrDetailsReducer,
   okrsFound: okrSearchReducer,
+  userGroupsFound: userGroupSearchReducer,
+  groupUsersFound: groupUserSearchReducer,
   potentialLeaders: potentialLeadersReducer,
   ownersFound: ownerSearchReducer,
   userSetting: userSettingReducer,

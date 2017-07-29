@@ -100,13 +100,13 @@ export const changeOwner = (id, owner) =>
       .catch(({ message }) => dispatch(finishChangeOwner(new Error(message))));
   };
 
-export const changeParentOkr = (id, newParentOkr) =>
+export const changeParentOkr = (id, newParentOkrId) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.okr.isChangingParentOkr) return Promise.resolve();
     dispatch(requestChangeParentOkr());
-    return putJson(`/okrs/${id}/changeparent.json`, state)(null, { newParentOkrId: newParentOkr.id })
-      .then(() => dispatch(finishChangeParentOkr('changeParentOkr', { id, newParentOkr })))
+    return putJson(`/okrs/${id}/changeparent.json`, state)(null, { newParentOkrId })
+      .then(json => dispatch(finishChangeParentOkr('changeParentOkr', json)))
       .catch(({ message }) => dispatch(finishChangeParentOkr(new Error(message))));
   };
 

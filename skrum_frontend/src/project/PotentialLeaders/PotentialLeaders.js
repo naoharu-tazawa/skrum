@@ -14,7 +14,7 @@ class PotentialLeaders extends PureComponent {
 
   static propTypes = {
     groupId: PropTypes.number.isRequired,
-    leaderUserId: PropTypes.number.isRequired,
+    leaderUserId: PropTypes.number,
     leaderName: PropTypes.string,
     potentialLeadersFound: PropTypes.arrayOf(leaderPropType),
     onChange: PropTypes.func,

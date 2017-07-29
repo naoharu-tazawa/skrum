@@ -73,8 +73,7 @@ export default (state = {
       if (error) {
         return { ...state, isChangingParentOkr: false, error: { message: payload.message } };
       }
-      // TODO: update parent okr
-      return { ...state, isChangingParentOkr: false, error: null };
+      return { ...state, ...payload.changeParentOkr, isChangingParentOkr: false, error: null };
     }
 
     case Action.REQUEST_CHANGE_DISCLOSURE_TYPE:

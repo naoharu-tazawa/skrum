@@ -8,8 +8,8 @@ import { explodePath, replacePath } from '../util/RouteUtil';
 import styles from './EntityLink.css';
 
 export const entityPropType = PropTypes.shape({
-  id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
+  id: PropTypes.number,
+  name: PropTypes.string,
   type: entityTypePropType.isRequired,
 });
 

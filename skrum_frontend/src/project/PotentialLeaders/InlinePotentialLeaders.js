@@ -7,8 +7,8 @@ export default class InlinePotentialLeaders extends PureComponent {
 
   static propTypes = {
     groupId: PropTypes.number.isRequired,
-    leaderUserId: PropTypes.number.isRequired,
-    leaderName: PropTypes.string.isRequired,
+    leaderUserId: PropTypes.number,
+    leaderName: PropTypes.string,
     ...inlineEditorPublicPropTypes,
   };
 

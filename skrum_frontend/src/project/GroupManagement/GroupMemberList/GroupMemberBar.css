@@ -2,31 +2,52 @@
 /* ====================================================
 プロファイル画面
 ==================================================== */
+.header, .row {
+  display: flex;
+  border-bottom: 1px solid #d8dfe5;
+}
+.header {
+  padding: 15px 2em 12px 70px;
+}
+.row {
+  padding: 10px 2em 10px 70px;
+}
+.row > span {
+  margin: auto 0;
+}
 .name {
-  border-bottom: 1px solid #d8dfe5;
-  padding-left: 70px !important;
-  width: 40%; }
-.position {
-  width: 20%; }
-.update {
-  width: 35%; }
+  width: 40%;
+}
 .nameAdmin {
-  border-bottom: 1px solid #d8dfe5;
-  padding-left: 70px !important;
-  width: 30%; }
-.positionAdmin {
-  width: 20%; }
-.progressAdmin {
-  width: 25%; }
+  width: 30%;
+}
+.position {
+  width: 20%;
+}
+.progress, .progressBox {
+  width: 30%;
+}
+.update {
+  width: 30%;
+}
 .updateAdmin {
-  width: 20%; }
+  width: 20%;
+}
 .delete {
   width: 10px;
-  text-align: right;
   cursor: pointer;
+  border: none;
+  background-color: inherit;
+  padding: 0;
+  vertical-align: text-top;
+  margin-left: auto;
+}
+.delete:focus {
+  outline: 0;
 }
 .progressBox {
   display: flex;
+  margin: auto 0;
 }
 .progressPercent {
   margin-right: 4px;

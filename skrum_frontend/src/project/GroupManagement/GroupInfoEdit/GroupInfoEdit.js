@@ -77,6 +77,7 @@ export default class GroupInfoEdit extends Component {
                   groupId={groupId}
                   leaderUserId={leaderUserId}
                   leaderName={leaderName}
+                  placeholder="リーダーが決まっていません"
                   onSubmit={({ userId, name: userName }) =>
                     dispatchChangeGroupLeader(userId, userName)}
                 />}

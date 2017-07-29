@@ -49,7 +49,7 @@ class OKRSearch extends PureComponent {
         items={isEmpty(currentInput) ? [] : okrs}
         labelPropName="name"
         onChange={({ target }) => this.setState({ currentInput: target.value })}
-        onSearch={val => !isEmpty(val) && dispatcher(timeframeId, val)}
+        onSearch={keyword => !isEmpty(keyword) && dispatcher(timeframeId, keyword)}
         onSelect={onChange}
         {...(!isEmpty(currentInput) && value)}
         {...{ onFocus, onBlur, disabled }}

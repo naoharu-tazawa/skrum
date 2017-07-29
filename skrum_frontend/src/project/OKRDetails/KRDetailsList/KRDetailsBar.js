@@ -6,20 +6,20 @@ import InlineTextArea from '../../../editors/InlineTextArea';
 import InlineDateInput from '../../../editors/InlineDateInput';
 import DeletionPrompt from '../../../dialogs/DeletionPrompt';
 import DialogForm from '../../../dialogs/DialogForm';
-import OwnerSubject from '../../../components/OwnerSubject';
+import EntitySubject from '../../../components/EntitySubject';
 import DropdownMenu from '../../../components/DropdownMenu';
 import Dropdown from '../../../components/Dropdown';
 import DisclosureTypeOptions from '../../../components/DisclosureTypeOptions';
 import EntityLink from '../../../components/EntityLink';
 import OwnerSearch from '../../OwnerSearch/OwnerSearch';
-import OKRSearch from '../../OKRSearch/OKRSearch';
+// import OKRSearch from '../../OKRSearch/OKRSearch';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
-import { withBasicModalDialog } from '../../../util/FormUtil';
+import { withModal } from '../../../util/ModalUtil';
 import { compareDates } from '../../../util/DatetimeUtil';
 import { OKRType } from '../../../util/OKRUtil';
 import styles from './KRDetailsBar.css';
 
-export default class KRDetailsBar extends Component {
+class KRDetailsBar extends Component {
 
   static propTypes = {
     header: PropTypes.bool,
@@ -30,16 +30,12 @@ export default class KRDetailsBar extends Component {
     dispatchChangeParentOkr: PropTypes.func,
     dispatchChangeDisclosureType: PropTypes.func,
     dispatchDeleteKR: PropTypes.func,
+    openModal: PropTypes.func.isRequired,
+    closeActiveModal: PropTypes.func.isRequired,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
-
-  openModal = (modal, props) =>
-    this.setState({ activeModal:
-      props ? withBasicModalDialog(modal, () => this.closeActiveModal(), props) : modal });
-
-  closeActiveModal = () => this.setState({ activeModal: null });
 
   changeOwnerDialog = ({ id, name, owner, onClose }) => (
     <DialogForm
@@ -47,7 +43,7 @@ export default class KRDetailsBar extends Component {
       submitButton="変更"
       onSubmit={({ changedOwner } = {}) =>
         this.props.dispatchChangeOwner(id, changedOwner).then(({ error }) =>
-          !error && this.closeActiveModal(),
+          !error && this.props.closeActiveModal(),
         )}
       valid={({ changedOwner }) => !isEmpty(changedOwner) &&
         (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
@@ -55,7 +51,7 @@ export default class KRDetailsBar extends Component {
     >
       {({ setFieldData }) =>
         <div>
-          <OwnerSubject owner={owner} heading="担当者を変更するサブ目標" subject={name} />
+          <EntitySubject entity={owner} heading="担当者を変更するサブ目標" subject={name} />
           <section>
             <label>担当者検索</label>
             <OwnerSearch onChange={value => setFieldData({ changedOwner: value })} />
@@ -63,27 +59,27 @@ export default class KRDetailsBar extends Component {
         </div>}
     </DialogForm>);
 
-  changeParentOkrDialog = ({ id, parentOkr = {}, keyResult, onClose }) => (
+  /* changeParentOkrDialog = ({ id, parentOkr = {}, keyResult, onClose }) => (
     <DialogForm
       title="サブ目標の紐付け先変更"
       submitButton="変更"
       onSubmit={({ changedParent } = {}) =>
-        this.props.dispatchChangeParentOkr(id, changedParent).then(({ error }) =>
-          !error && this.closeActiveModal(),
+        this.props.dispatchChangeParentOkr(id, changedParent.id).then(({ error }) =>
+          !error && this.props.closeActiveModal(),
         )}
       valid={({ changedParent }) => !isEmpty(changedParent) && changedParent.id !== parentOkr.id}
       onClose={onClose}
     >
       {({ setFieldData }) =>
         <div>
-          <OwnerSubject
-            owner={keyResult.owner}
+          <EntitySubject
+            entity={keyResult.owner}
             heading="紐付け先目標を変更するサブ目標（子目標）"
             subject={keyResult.name}
           />
           <div className={styles.parentOkrToChange}>
-            <OwnerSubject
-              owner={parentOkr.owner}
+            <EntitySubject
+              entity={parentOkr.owner}
               heading="現在の紐付け先目標（親目標）"
               subject={parentOkr.name}
             />
@@ -96,7 +92,7 @@ export default class KRDetailsBar extends Component {
             />
           </section>
         </div>}
-    </DialogForm>);
+    </DialogForm>); */
 
   changeDisclosureTypeDialog = ({ id, name, owner, disclosureType, onClose }) => (
     <DialogForm
@@ -104,15 +100,15 @@ export default class KRDetailsBar extends Component {
       submitButton="設定"
       onSubmit={({ changedDisclosureType } = {}) =>
         (!changedDisclosureType || changedDisclosureType === disclosureType ?
-          Promise.resolve(this.closeActiveModal()) :
+          Promise.resolve(this.props.closeActiveModal()) :
           this.props.dispatchChangeDisclosureType(id, changedDisclosureType).then(({ error }) =>
-            !error && this.closeActiveModal(),
+            !error && this.props.closeActiveModal(),
           ))}
       onClose={onClose}
     >
       {({ setFieldData }) =>
         <div>
-          <OwnerSubject owner={owner} heading="対象サブ目標" subject={name} />
+          <EntitySubject entity={owner} heading="対象サブ目標" subject={name} />
           <section>
             <label>公開範囲</label>
             <DisclosureTypeOptions
@@ -143,13 +139,13 @@ export default class KRDetailsBar extends Component {
         </ul>
       )}
       onDelete={() => this.props.dispatchDeleteKR(id)}
-      onClose={() => this.closeActiveModal()}
+      onClose={() => this.props.closeActiveModal()}
     >
-      <OwnerSubject owner={owner} subject={name} />
+      <EntitySubject entity={owner} subject={name} />
     </DeletionPrompt>);
 
   render() {
-    const { header, parentOkr, keyResult, dispatchPutOKR } = this.props;
+    const { header, /* parentOkr, */ keyResult, dispatchPutOKR, openModal } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -161,7 +157,6 @@ export default class KRDetailsBar extends Component {
     }
     const { id, type, name, detail, unit, targetValue, achievedValue, achievementRate,
       startDate, endDate, owner, disclosureType } = keyResult;
-    const { activeModal } = this.state || {};
     return (
       <div className={styles.component}>
         <div className={styles.name}>
@@ -227,21 +222,22 @@ export default class KRDetailsBar extends Component {
             trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
             options={[
               { caption: '担当者変更',
-                onClick: () => this.openModal(this.changeOwnerDialog,
+                onClick: () => openModal(this.changeOwnerDialog,
                   { id, name, owner }) },
-              { caption: '紐付け先設定',
-                onClick: () => this.openModal(this.changeParentOkrDialog,
-                  { id, parentOkr, keyResult }) },
+              // { caption: '紐付け先設定',
+              //   onClick: () => openModal(this.changeParentOkrDialog,
+              //     { id, parentOkr, keyResult }) },
               { caption: '公開範囲設定',
-                onClick: () => this.openModal(this.changeDisclosureTypeDialog,
+                onClick: () => openModal(this.changeDisclosureTypeDialog,
                   { id, name, owner, disclosureType }) },
               { caption: '影響度設定' },
               { caption: '削除',
-                onClick: () => this.openModal(this.deleteKRPrompt({ id, name, owner })) },
+                onClick: () => openModal(this.deleteKRPrompt({ id, name, owner })) },
             ]}
           />
         </div>
-        {activeModal}
       </div>);
   }
 }
+
+export default withModal(KRDetailsBar);

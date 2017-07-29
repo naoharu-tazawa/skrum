@@ -8,7 +8,7 @@ import InlineTextArea from '../../editors/InlineTextArea';
 import InlineDateInput from '../../editors/InlineDateInput';
 import DeletionPrompt from '../../dialogs/DeletionPrompt';
 import DialogForm from '../../dialogs/DialogForm';
-import OwnerSubject from '../../components/OwnerSubject';
+import EntitySubject from '../../components/EntitySubject';
 import DropdownMenu from '../../components/DropdownMenu';
 import Dropdown from '../../components/Dropdown';
 import DisclosureTypeOptions from '../../components/DisclosureTypeOptions';
@@ -16,11 +16,11 @@ import EntityLink from '../../components/EntityLink';
 import OwnerSearch from '../OwnerSearch/OwnerSearch';
 import OKRSearch from '../OKRSearch/OKRSearch';
 import NewAchievement from '../OKR/NewAchievement/NewAchievement';
-import { withBasicModalDialog } from '../../util/FormUtil';
+import { withModal } from '../../util/ModalUtil';
 import { compareDates } from '../../util/DatetimeUtil';
 import styles from './OkrDetails.css';
 
-export default class OkrDetails extends Component {
+class OkrDetails extends Component {
 
   static propTypes = {
     parentOkr: okrPropTypes,
@@ -30,16 +30,12 @@ export default class OkrDetails extends Component {
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
+    closeActiveModal: PropTypes.func.isRequired,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
-
-  openModal = (modal, props) =>
-    this.setState({ activeModal:
-      props ? withBasicModalDialog(modal, () => this.closeActiveModal(), props) : modal });
-
-  closeActiveModal = () => this.setState({ activeModal: null });
 
   changeOwnerDialog = ({ id, name, owner, onClose }) => (
     <DialogForm
@@ -47,7 +43,7 @@ export default class OkrDetails extends Component {
       submitButton="変更"
       onSubmit={({ changedOwner } = {}) =>
         this.props.dispatchChangeOwner(id, changedOwner).then(({ error }) =>
-          !error && this.closeActiveModal(),
+          !error && this.props.closeActiveModal(),
         )}
       valid={({ changedOwner }) => !isEmpty(changedOwner) &&
         (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
@@ -55,7 +51,7 @@ export default class OkrDetails extends Component {
     >
       {({ setFieldData }) =>
         <div>
-          <OwnerSubject owner={owner} heading="担当者を変更する目標" subject={name} />
+          <EntitySubject entity={owner} heading="担当者を変更する目標" subject={name} />
           <section>
             <label>担当者検索</label>
             <OwnerSearch onChange={value => setFieldData({ changedOwner: value })} />
@@ -68,22 +64,22 @@ export default class OkrDetails extends Component {
       title="目標の紐付け先設定/変更"
       submitButton="変更"
       onSubmit={({ changedParent } = {}) =>
-        this.props.dispatchChangeParentOkr(id, changedParent).then(({ error }) =>
-          !error && this.closeActiveModal(),
+        this.props.dispatchChangeParentOkr(id, changedParent.id).then(({ error }) =>
+          !error && this.props.closeActiveModal(),
         )}
       valid={({ changedParent }) => !isEmpty(changedParent) && changedParent.id !== parentOkr.id}
       onClose={onClose}
     >
       {({ setFieldData }) =>
         <div>
-          <OwnerSubject
-            owner={okr.owner}
+          <EntitySubject
+            entity={okr.owner}
             heading="紐付け先目標を設定または変更する目標（子目標）"
             subject={okr.name}
           />
           <div className={styles.parentOkrToChange}>
-            <OwnerSubject
-              owner={parentOkr.owner}
+            <EntitySubject
+              entity={parentOkr.owner}
               heading="現在の紐付け先目標/サブ目標（親目標）"
               subject={parentOkr.name}
             />
@@ -104,15 +100,15 @@ export default class OkrDetails extends Component {
       submitButton="設定"
       onSubmit={({ changedDisclosureType } = {}) =>
         (!changedDisclosureType || changedDisclosureType === disclosureType ?
-          Promise.resolve(this.closeActiveModal()) :
+          Promise.resolve(this.props.closeActiveModal()) :
           this.props.dispatchChangeDisclosureType(id, changedDisclosureType).then(({ error }) =>
-            !error && this.closeActiveModal(),
+            !error && this.props.closeActiveModal(),
           ))}
       onClose={onClose}
     >
       {({ setFieldData }) =>
         <div>
-          <OwnerSubject owner={owner} heading="対象目標" subject={name} />
+          <EntitySubject entity={owner} heading="対象目標" subject={name} />
           <section>
             <label>公開範囲</label>
             <DisclosureTypeOptions
@@ -143,19 +139,18 @@ export default class OkrDetails extends Component {
         </ul>
       )}
       onDelete={() => this.props.dispatchDeleteOkr(id).then(({ error }) => {
-        if (!error) this.closeActiveModal();
+        if (!error) this.props.closeActiveModal();
         if (!error) browserHistory.push(toBasicPath());
       })}
-      onClose={() => this.closeActiveModal()}
+      onClose={() => this.props.closeActiveModal()}
     >
-      <OwnerSubject owner={owner} subject={name} />
+      <EntitySubject entity={owner} subject={name} />
     </DeletionPrompt>);
 
   render() {
-    const { parentOkr, okr, dispatchPutOKR } = this.props;
+    const { parentOkr, okr, dispatchPutOKR, openModal } = this.props;
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
       startDate, endDate, owner, disclosureType, keyResults = [] } = okr;
-    const { activeModal } = this.state || {};
     return (
       <div>
         <div className={`${styles.content} ${styles.txt_top} ${styles.cf}`}>
@@ -242,23 +237,24 @@ export default class OkrDetails extends Component {
                     <button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>)}
                   options={[
                     { caption: '担当者変更',
-                      onClick: () => this.openModal(this.changeOwnerDialog,
+                      onClick: () => openModal(this.changeOwnerDialog,
                         { id, name, owner }) },
                     { caption: '紐付け先設定',
-                      onClick: () => this.openModal(this.changeParentOkrDialog,
+                      onClick: () => openModal(this.changeParentOkrDialog,
                         { id, parentOkr, okr }) },
                     { caption: '公開範囲設定',
-                      onClick: () => this.openModal(this.changeDisclosureTypeDialog,
+                      onClick: () => openModal(this.changeDisclosureTypeDialog,
                         { id, name, owner, disclosureType }) },
                     { caption: '削除',
-                      onClick: () => this.openModal(this.deleteOkrPrompt({ id, name, owner })) },
+                      onClick: () => openModal(this.deleteOkrPrompt({ id, name, owner })) },
                   ]}
                 />
               </div>
             </div>
           </div>
         </div>
-        {activeModal}
       </div>);
   }
 }
+
+export default withModal(OkrDetails);

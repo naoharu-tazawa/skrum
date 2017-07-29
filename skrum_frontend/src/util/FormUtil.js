@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import { isObject } from 'lodash';
-import BasicModalDialog from '../dialogs/BasicModalDialog';
 
 export const withReduxForm = (WrappedForm, form, reduxFormProps = {}) =>
   reduxForm({ form, ...reduxFormProps })(WrappedForm);
@@ -11,11 +10,6 @@ export const withLoadedReduxForm = (WrappedForm, form, stateToInitialValues, red
   connect(
     state => ({ initialValues: stateToInitialValues(state) }),
   )(withReduxForm(WrappedForm, form, reduxFormProps));
-
-export const withBasicModalDialog = (WrappedForm, onClose, formProps = {}, dialogProps = {}) =>
-  <BasicModalDialog {...{ onClose, ...dialogProps }}>
-    <WrappedForm {...{ onClose, ...formProps }} />
-  </BasicModalDialog>;
 
 export const withReduxField = (WrappedComponent, name, fieldProps = {}) =>
   <Field

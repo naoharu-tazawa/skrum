@@ -43,7 +43,7 @@ export default class OKRList extends Component {
             ];
           }))}
         </div>
-        <div className={`${styles.add_okr} ${styles.alignC}`}>
+        <div className={`${styles.footer} ${styles.alignC}`}>
           <button className={styles.addOkr} onClick={onAdd}>
             <span className={styles.circle}>
               <img src="/img/common/icn_plus.png" alt="Add" />

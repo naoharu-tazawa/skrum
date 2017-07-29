@@ -37,7 +37,7 @@ class OwnerSearch extends PureComponent {
         items={(keyword !== currentInput ? defaultOwners : ownersFound) || []}
         labelPropName="name"
         onChange={({ target }) => this.setState({ currentInput: target.value })}
-        onSearch={val => !isEmpty(val) && dispatchSearchOwner(val)}
+        onSearch={q => !isEmpty(q) && dispatchSearchOwner(q)}
         onSelect={onChange}
         {...(!isEmpty(currentInput) && { value: { name: currentName, ...value } })}
         {...{ onFocus, onBlur }}

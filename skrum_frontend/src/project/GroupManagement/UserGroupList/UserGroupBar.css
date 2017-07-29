@@ -2,22 +2,40 @@
 /* ====================================================
 プロファイル画面
 ==================================================== */
-.name {
+.header, .row {
+  display: flex;
   border-bottom: 1px solid #d8dfe5;
-  padding-left: 70px !important;
-  width: 45%; }
-.position {
-  width: 50%; }
+}
+.header {
+  padding: 15px 2em 12px 70px;
+}
+.row {
+  padding: 10px 2em 10px 70px;
+}
+.name {
+  width: 45%;
+}
+.progress, .progressBox {
+  width: 50%;
+}
 .delete {
   width: 10px;
-  text-align: right;
   cursor: pointer;
+  border: none;
+  background-color: inherit;
+  padding: 0;
+  vertical-align: text-top;
+  margin-left: auto;
+}
+.delete:focus {
+  outline: 0;
 }
 .progressBox {
   display: flex;
+  margin: auto 0;
 }
 .progressPercent {
-  margin-right: 4px;
+  margin-right: 8px;
   width: 3.5em;
   font-weight: bold;
   text-align: right;

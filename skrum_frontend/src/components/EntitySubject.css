@@ -11,7 +11,7 @@
 .subjectArea {
   display: flex;
 }
-.owner_info {
+.entity {
   float: left;
 }
 .subject {

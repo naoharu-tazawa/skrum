@@ -1,61 +1,73 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { groupMemberPropTypes } from './propTypes';
+import DeletionPrompt from '../../../dialogs/DeletionPrompt';
+import EntitySubject from '../../../components/EntitySubject';
 import EntityLink from '../../../components/EntityLink';
 import { EntityType } from '../../../util/EntityUtil';
 import { isBasicRole } from '../../../util/UserUtil';
+import { withModal } from '../../../util/ModalUtil';
+import { formatDate, DateFormat } from '../../../util/DatetimeUtil';
 import styles from './GroupMemberBar.css';
 
-export default class GroupMemberBar extends Component {
+class GroupMemberBar extends Component {
 
   static propTypes = {
     header: PropTypes.bool,
-    member: groupMemberPropTypes,
     roleLevel: PropTypes.number.isRequired,
+    groupId: PropTypes.number,
+    groupName: PropTypes.string,
+    member: groupMemberPropTypes,
+    dispatchDeleteGroupMember: PropTypes.func,
+    openModal: PropTypes.func.isRequired,
+    closeActiveModal: PropTypes.func.isRequired,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
+  getHeaderBasic = () => (
+    <div className={styles.header}>
+      <div className={styles.name}>名前</div>
+      <div className={styles.position}>役職</div>
+      <div className={styles.update}>最終ログイン</div>
+      <div className={styles.delete} />
+    </div>);
+
+  getHeaderAdmin = () => (
+    <div className={styles.header}>
+      <div className={styles.nameAdmin}>名前</div>
+      <div className={styles.position}>役職</div>
+      <div className={styles.progress}>進捗状況</div>
+      <div className={styles.updateAdmin}>最終ログイン</div>
+      <div className={styles.delete} />
+    </div>);
+
+  deleteMemberPrompt = ({ groupId, groupName, id, name }) => (
+    <DeletionPrompt
+      title="グループメンバーの削除"
+      prompt={`${groupName}からこちらのメンバーを削除しますか？`}
+      onDelete={() => this.props.dispatchDeleteGroupMember(groupId, id)}
+      onClose={() => this.props.closeActiveModal()}
+    >
+      <EntitySubject entity={{ id, name, type: EntityType.USER }} />
+    </DeletionPrompt>);
+
   render() {
-    const { header, member, roleLevel } = this.props;
-
-    const getHeader = () => (
-      <tr>
-        <th className={styles.name}>名前</th>
-        <th className={styles.position}>役職</th>
-        <th className={styles.update}>最終ログイン</th>
-        <th />
-      </tr>);
-
-    const getHeaderAdmin = () => (
-      <tr>
-        <th className={styles.nameAdmin}>名前</th>
-        <th className={styles.positionAdmin}>役職</th>
-        <th className={styles.progressAdmin}>進捗状況</th>
-        <th className={styles.updateAdmin}>最終ログイン</th>
-        <th />
-      </tr>);
-
+    const { header, groupId, groupName, member, roleLevel, openModal } = this.props;
+    const isBasic = isBasicRole(roleLevel);
     if (header) {
-      return isBasicRole(roleLevel) ? getHeader() : getHeaderAdmin();
+      return isBasic ? this.getHeaderBasic() : this.getHeaderAdmin();
     }
-
     const { id, name, position, achievementRate, lastLogin } = member;
-
-    const getRow = () => (
-      <tr>
-        <td><EntityLink entity={{ id, name, type: EntityType.USER }} /></td>
-        <td>{position}</td>
-        <td>{lastLogin}</td>
-        <td><div className={styles.delete}><img src="/img/delete.svg" alt="" /></div></td>
-      </tr>);
-
-    const getRowAdmin = () => (
-      <tr>
-        <td><EntityLink entity={{ id, name, type: EntityType.USER }} /></td>
-        <td>{position}</td>
-        <td>
+    const lastLoginFormatted = formatDate(lastLogin, { format: DateFormat.YMDHM });
+    return (
+      <div className={styles.row}>
+        <div className={isBasic ? styles.name : styles.nameAdmin}>
+          <EntityLink entity={{ id, name, type: EntityType.USER }} />
+        </div>
+        <span className={styles.position}>{position}</span>
+        {!isBasic && (
           <div className={styles.progressBox}>
             <span className={styles.progressPercent}>{achievementRate}%</span>
             <div className={styles.progressBar}>
@@ -64,12 +76,16 @@ export default class GroupMemberBar extends Component {
                 style={{ width: `${achievementRate}%` }}
               />
             </div>
-          </div>
-        </td>
-        <td>{lastLogin}</td>
-        <td><div className={styles.delete}><img src="/img/delete.svg" alt="" /></div></td>
-      </tr>);
-
-    return isBasicRole(roleLevel) ? getRow() : getRowAdmin();
+          </div>)}
+        <span className={isBasic ? styles.update : styles.updateAdmin}>{lastLoginFormatted}</span>
+        <button
+          className={styles.delete}
+          onClick={() => openModal(this.deleteMemberPrompt({ groupId, groupName, id, name }))}
+        >
+          <img src="/img/delete.svg" alt="" />
+        </button>
+      </div>);
   }
 }
+
+export default withModal(GroupMemberBar);

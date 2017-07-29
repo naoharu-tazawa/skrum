@@ -12,7 +12,7 @@ export default class DeletionPrompt extends Component {
     onDelete: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
-    warning: PropTypes.node.isRequired,
+    warning: PropTypes.node,
   };
 
   render() {
