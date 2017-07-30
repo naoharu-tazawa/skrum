@@ -1,0 +1,38 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /posts/{postId}.json:
+    delete:
+      description: 投稿削除
+      parameters:
+        -
+          name: postId
+          in: path
+          type: string
+          description: 投稿ID
+          required: true
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

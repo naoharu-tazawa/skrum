@@ -8,6 +8,8 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
+use AppBundle\Exception\PermissionException;
+use AppBundle\Utils\DBConstant;
 use AppBundle\Api\ResponseDTO\PostDTO;
 
 /**
@@ -220,6 +222,38 @@ class TimelineController extends BaseController
         // いいね削除処理
         $timelineService = $this->getTimelineService();
         $timelineService->detachLike($auth->getUserId(), $tPost->getId());
+
+        return array('result' => 'OK');
+    }
+
+    /**
+     * 投稿削除
+     *
+     * @Rest\Delete("/v1/posts/{postId}.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string postId 投稿ID
+     * @return array
+     */
+    public function deletePostAction(Request $request, string $postId): array
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 投稿存在チェック
+        $tPost = $this->getDBExistanceLogic()->checkPostExistance($postId, $auth->getCompanyId());
+
+        // 操作権限チェック
+        if ($tPost->getPosterType() === DBConstant::OKR_OWNER_TYPE_USER) {
+            $permissionLogic = $this->getPermissionLogic();
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tPost->getPosterUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
+        }
+
+        // 投稿削除処理
+        $timelineService = $this->getTimelineService();
+        $timelineService->deletePost($tPost);
 
         return array('result' => 'OK');
     }

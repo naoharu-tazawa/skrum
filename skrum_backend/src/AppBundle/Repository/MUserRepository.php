@@ -85,15 +85,16 @@ SQL;
             WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
             ) AS m1_
         LEFT OUTER JOIN (
-            SELECT DISTINCT t0_.user_id, t0_.deleted_at
+            SELECT t0_.user_id, t0_.deleted_at
             FROM t_group_member t0_
-            WHERE t0_.group_id = 13
+            WHERE t0_.group_id = :groupId
             ) t1_ ON (m1_.userId = t1_.user_id) AND (t1_.deleted_at IS NULL)
         WHERE t1_.user_id is NULL AND m1_.name LIKE :userName;
 SQL;
 
         $params['companyId'] = $companyId;
         $params['archivedFlg'] = DBConstant::FLG_FALSE;
+        $params['groupId'] = $groupId;
         $params['userName'] = $keyword . '%';
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);

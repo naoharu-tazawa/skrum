@@ -339,4 +339,21 @@ class TimelineService extends BaseService
             throw new SystemException($e->getMessage());
         }
     }
+
+    /**
+     * 投稿削除
+     *
+     * @param TPost $tPost 削除対象投稿エンティティ
+     * @return void
+     */
+    public function deletePost(TPost $tPost)
+    {
+        // 投稿削除
+        try {
+            $this->remove($tPost);
+            $this->flush();
+        } catch (\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
 }
