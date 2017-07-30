@@ -169,7 +169,7 @@ class TimelineController extends BaseController
         $tPost = $this->getDBExistanceLogic()->checkPostExistance($postId, $auth->getCompanyId());
 
         // リプライ対象投稿がリプライの場合、リプライ不可
-        if ($tPost->getParent() != null) {
+        if ($tPost->getParent() !== null) {
             throw new ApplicationException('リプライ投稿に対してリプライはできません');
         }
 
@@ -254,6 +254,50 @@ class TimelineController extends BaseController
         // 投稿削除処理
         $timelineService = $this->getTimelineService();
         $timelineService->deletePost($tPost);
+
+        return array('result' => 'OK');
+    }
+
+    /**
+     * 投稿公開設定変更
+     *
+     * @Rest\Put("/v1/posts/{postId}/changedisclosure.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string postId 投稿ID
+     * @return array
+     */
+    public function changePostDisclosureAction(Request $request, string $postId): array
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/ChangeOkrDisclosurePdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 投稿存在チェック
+        $tPost = $this->getDBExistanceLogic()->checkPostExistance($postId, $auth->getCompanyId());
+
+        // リプライの公開設定変更は不可
+        if ($tPost->getParent() !== null) {
+            throw new ApplicationException('リプライ投稿に対しての公開設定変更はできません');
+        }
+
+        // 操作権限チェック
+        if ($tPost->getPosterType() === DBConstant::OKR_OWNER_TYPE_USER) {
+            $permissionLogic = $this->getPermissionLogic();
+            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tPost->getPosterUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
+        }
+
+        // 投稿公開設定変更処理
+        $timelineService = $this->getTimelineService();
+        $timelineService->changeDisclosure($tPost, $data['disclosureType']);
 
         return array('result' => 'OK');
     }

@@ -73,7 +73,7 @@ class TPost
     /**
      * @var string
      *
-     * @ORM\Column(name="disclosure_type", type="string", length=2, nullable=false)
+     * @ORM\Column(name="disclosure_type", type="string", length=2, nullable=true)
      */
     private $disclosureType;
 

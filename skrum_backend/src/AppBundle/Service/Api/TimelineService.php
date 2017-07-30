@@ -258,7 +258,6 @@ class TimelineService extends BaseService
         $tPostReply->setPost($data['post']);
         $tPostReply->setPostedDatetime(DateUtility::getCurrentDatetime());
         $tPostReply->setParent($tPost);
-        $tPostReply->setDisclosureType($tPost->getDisclosureType());
 
         try {
             $this->persist($tPostReply);
@@ -351,6 +350,30 @@ class TimelineService extends BaseService
         // 投稿削除
         try {
             $this->remove($tPost);
+            $this->flush();
+        } catch (\Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * 投稿公開設定変更
+     *
+     * @param TPost $tPost 投稿エンティティ
+     * @param string $disclosureType 公開種別
+     * @return void
+     */
+    public function changeDisclosure(TPost $tPost, string $disclosureType)
+    {
+        // 更新対象投稿の公開種別とリクエストJSONで指定された公開種別が一致する場合、更新処理を行わない
+        if ($tPost->getDisclosureType() === $disclosureType) {
+            return;
+        }
+
+        // 投稿エンティティ更新
+        $tPost->setDisclosureType($disclosureType);
+
+        try {
             $this->flush();
         } catch (\Exception $e) {
             throw new SystemException($e->getMessage());
