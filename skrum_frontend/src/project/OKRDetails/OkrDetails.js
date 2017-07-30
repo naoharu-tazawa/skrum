@@ -31,7 +31,6 @@ class OkrDetails extends Component {
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
-    closeActiveModal: PropTypes.func.isRequired,
   };
 
   getProgressStyles = rate =>
@@ -41,10 +40,7 @@ class OkrDetails extends Component {
     <DialogForm
       title="担当者の変更"
       submitButton="変更"
-      onSubmit={({ changedOwner } = {}) =>
-        this.props.dispatchChangeOwner(id, changedOwner).then(({ error }) =>
-          !error && this.props.closeActiveModal(),
-        )}
+      onSubmit={({ changedOwner } = {}) => this.props.dispatchChangeOwner(id, changedOwner)}
       valid={({ changedOwner }) => !isEmpty(changedOwner) &&
         (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
       onClose={onClose}
@@ -64,9 +60,7 @@ class OkrDetails extends Component {
       title="目標の紐付け先設定/変更"
       submitButton="変更"
       onSubmit={({ changedParent } = {}) =>
-        this.props.dispatchChangeParentOkr(id, changedParent.id).then(({ error }) =>
-          !error && this.props.closeActiveModal(),
-        )}
+        this.props.dispatchChangeParentOkr(id, changedParent.id)}
       valid={({ changedParent }) => !isEmpty(changedParent) && changedParent.id !== parentOkr.id}
       onClose={onClose}
     >
@@ -99,11 +93,8 @@ class OkrDetails extends Component {
       title="公開範囲設定変更"
       submitButton="設定"
       onSubmit={({ changedDisclosureType } = {}) =>
-        (!changedDisclosureType || changedDisclosureType === disclosureType ?
-          Promise.resolve(this.props.closeActiveModal()) :
-          this.props.dispatchChangeDisclosureType(id, changedDisclosureType).then(({ error }) =>
-            !error && this.props.closeActiveModal(),
-          ))}
+        (!changedDisclosureType || changedDisclosureType === disclosureType ? Promise.resolve() :
+          this.props.dispatchChangeDisclosureType(id, changedDisclosureType))}
       onClose={onClose}
     >
       {({ setFieldData }) =>
@@ -128,7 +119,7 @@ class OkrDetails extends Component {
         </div>}
     </DialogForm>);
 
-  deleteOkrPrompt = ({ id, name, owner }) => (
+  deleteOkrPrompt = ({ id, name, owner, onClose }) => (
     <DeletionPrompt
       title="目標の削除"
       prompt="こちらの目標を削除しますか？"
@@ -139,10 +130,10 @@ class OkrDetails extends Component {
         </ul>
       )}
       onDelete={() => this.props.dispatchDeleteOkr(id).then(({ error }) => {
-        if (!error) this.props.closeActiveModal();
         if (!error) browserHistory.push(toBasicPath());
+        return Promise.resolve();
       })}
-      onClose={() => this.props.closeActiveModal()}
+      onClose={onClose}
     >
       <EntitySubject entity={owner} subject={name} />
     </DeletionPrompt>);
@@ -246,7 +237,7 @@ class OkrDetails extends Component {
                       onClick: () => openModal(this.changeDisclosureTypeDialog,
                         { id, name, owner, disclosureType }) },
                     { caption: '削除',
-                      onClick: () => openModal(this.deleteOkrPrompt({ id, name, owner })) },
+                      onClick: () => openModal(this.deleteOkrPrompt, { id, name, owner }) },
                   ]}
                 />
               </div>

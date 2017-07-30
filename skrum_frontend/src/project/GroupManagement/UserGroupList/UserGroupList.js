@@ -19,7 +19,6 @@ class UserGroupList extends Component {
     dispatchJoinGroup: PropTypes.func.isRequired,
     dispatchLeaveGroup: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
-    closeActiveModal: PropTypes.func.isRequired,
   };
 
   joinGroupDialog = ({ user, onClose }) => (
@@ -27,10 +26,7 @@ class UserGroupList extends Component {
       title="所属グループの追加"
       message="以下のユーザが新しく所属するグループを検索し、追加ボタンを押してください。"
       submitButton="追加"
-      onSubmit={({ newGroup } = {}) =>
-        this.props.dispatchJoinGroup(user.id, newGroup.groupId).then(({ error }) =>
-          !error && this.props.closeActiveModal(),
-        )}
+      onSubmit={({ newGroup } = {}) => this.props.dispatchJoinGroup(user.id, newGroup.groupId)}
       valid={({ newGroup }) => !isEmpty(newGroup)}
       onClose={onClose}
     >

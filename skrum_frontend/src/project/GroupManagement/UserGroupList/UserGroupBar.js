@@ -17,18 +17,17 @@ class UserGroupBar extends Component {
     group: userGroupPropTypes,
     dispatchLeaveGroup: PropTypes.func,
     openModal: PropTypes.func.isRequired,
-    closeActiveModal: PropTypes.func.isRequired,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
-  leaveGroupPrompt = ({ userId, userName, id, name }) => (
+  leaveGroupPrompt = ({ userId, userName, id, name, onClose }) => (
     <DeletionPrompt
       title="所属グループからの退出"
       prompt={`${userName} さんをこちらのグループから退出させますか？`}
       onDelete={() => this.props.dispatchLeaveGroup(userId, id)}
-      onClose={() => this.props.closeActiveModal()}
+      onClose={onClose}
     >
       <EntitySubject entity={{ id, name, type: EntityType.USER }} />
     </DeletionPrompt>);
@@ -60,7 +59,7 @@ class UserGroupBar extends Component {
         </div>
         <button
           className={styles.delete}
-          onClick={() => openModal(this.leaveGroupPrompt({ userId, userName, id, name }))}
+          onClick={() => openModal(this.leaveGroupPrompt, { userId, userName, id, name })}
         >
           <img src="/img/delete.svg" alt="" />
         </button>

@@ -31,7 +31,6 @@ class KRDetailsBar extends Component {
     dispatchChangeDisclosureType: PropTypes.func,
     dispatchDeleteKR: PropTypes.func,
     openModal: PropTypes.func.isRequired,
-    closeActiveModal: PropTypes.func.isRequired,
   };
 
   getProgressStyles = rate =>
@@ -41,10 +40,7 @@ class KRDetailsBar extends Component {
     <DialogForm
       title="担当者の変更"
       submitButton="変更"
-      onSubmit={({ changedOwner } = {}) =>
-        this.props.dispatchChangeOwner(id, changedOwner).then(({ error }) =>
-          !error && this.props.closeActiveModal(),
-        )}
+      onSubmit={({ changedOwner } = {}) => this.props.dispatchChangeOwner(id, changedOwner)}
       valid={({ changedOwner }) => !isEmpty(changedOwner) &&
         (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
       onClose={onClose}
@@ -64,9 +60,7 @@ class KRDetailsBar extends Component {
       title="サブ目標の紐付け先変更"
       submitButton="変更"
       onSubmit={({ changedParent } = {}) =>
-        this.props.dispatchChangeParentOkr(id, changedParent.id).then(({ error }) =>
-          !error && this.props.closeActiveModal(),
-        )}
+        this.props.dispatchChangeParentOkr(id, changedParent.id)}
       valid={({ changedParent }) => !isEmpty(changedParent) && changedParent.id !== parentOkr.id}
       onClose={onClose}
     >
@@ -99,11 +93,8 @@ class KRDetailsBar extends Component {
       title="公開範囲設定変更"
       submitButton="設定"
       onSubmit={({ changedDisclosureType } = {}) =>
-        (!changedDisclosureType || changedDisclosureType === disclosureType ?
-          Promise.resolve(this.props.closeActiveModal()) :
-          this.props.dispatchChangeDisclosureType(id, changedDisclosureType).then(({ error }) =>
-            !error && this.props.closeActiveModal(),
-          ))}
+        (!changedDisclosureType || changedDisclosureType === disclosureType ? Promise.resolve() :
+          this.props.dispatchChangeDisclosureType(id, changedDisclosureType))}
       onClose={onClose}
     >
       {({ setFieldData }) =>
@@ -128,7 +119,7 @@ class KRDetailsBar extends Component {
         </div>}
     </DialogForm>);
 
-  deleteKRPrompt = ({ id, name, owner }) => (
+  deleteKRPrompt = ({ id, name, owner, onClose }) => (
     <DeletionPrompt
       title="サブ目標の削除"
       prompt="こちらのサブ目標を削除しますか？"
@@ -139,7 +130,7 @@ class KRDetailsBar extends Component {
         </ul>
       )}
       onDelete={() => this.props.dispatchDeleteKR(id)}
-      onClose={() => this.props.closeActiveModal()}
+      onClose={onClose}
     >
       <EntitySubject entity={owner} subject={name} />
     </DeletionPrompt>);
@@ -232,7 +223,7 @@ class KRDetailsBar extends Component {
                   { id, name, owner, disclosureType }) },
               { caption: '影響度設定' },
               { caption: '削除',
-                onClick: () => openModal(this.deleteKRPrompt({ id, name, owner })) },
+                onClick: () => openModal(this.deleteKRPrompt, { id, name, owner }) },
             ]}
           />
         </div>

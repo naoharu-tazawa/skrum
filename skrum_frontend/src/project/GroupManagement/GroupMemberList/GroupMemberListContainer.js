@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { groupMembersPropTypes } from './propTypes';
 import GroupMemberList from './GroupMemberList';
-import { RoleLevel } from '../../../util/UserUtil';
 import { addGroupMember, deleteGroupMember } from '../action';
+import { RoleLevel } from '../../../util/UserUtil';
+import { explodePath } from '../../../util/RouteUtil';
 
 class GroupMemberListContainer extends Component {
 
@@ -52,14 +53,28 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const dispatchAddGroupMember = (groupId, userId) =>
-    dispatch(addGroupMember(groupId, userId));
+  const dispatchAddGroupMember = (timeframeId, groupId, userId) =>
+    dispatch(addGroupMember(timeframeId, groupId, userId));
   const dispatchDeleteGroupMember = (groupId, userId) =>
     dispatch(deleteGroupMember(groupId, userId));
   return { dispatchAddGroupMember, dispatchDeleteGroupMember };
 };
 
+const mergeProps = (state, { dispatchAddGroupMember, dispatchDeleteGroupMember }, props) => {
+  const { locationBeforeTransitions } = state.routing || {};
+  const { pathname } = locationBeforeTransitions || {};
+  const { timeframeId } = explodePath(pathname);
+  return {
+    ...state,
+    ...props,
+    dispatchAddGroupMember: (groupId, userId) =>
+      dispatchAddGroupMember(timeframeId, groupId, userId),
+    dispatchDeleteGroupMember,
+  };
+};
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
+  mergeProps,
 )(GroupMemberListContainer);

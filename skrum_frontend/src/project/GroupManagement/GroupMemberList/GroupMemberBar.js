@@ -20,7 +20,6 @@ class GroupMemberBar extends Component {
     member: groupMemberPropTypes,
     dispatchDeleteGroupMember: PropTypes.func,
     openModal: PropTypes.func.isRequired,
-    closeActiveModal: PropTypes.func.isRequired,
   };
 
   getProgressStyles = rate =>
@@ -43,12 +42,12 @@ class GroupMemberBar extends Component {
       <div className={styles.delete} />
     </div>);
 
-  deleteMemberPrompt = ({ groupId, groupName, id, name }) => (
+  deleteMemberPrompt = ({ groupId, groupName, id, name, onClose }) => (
     <DeletionPrompt
       title="グループメンバーの削除"
       prompt={`${groupName}からこちらのメンバーを削除しますか？`}
       onDelete={() => this.props.dispatchDeleteGroupMember(groupId, id)}
-      onClose={() => this.props.closeActiveModal()}
+      onClose={onClose}
     >
       <EntitySubject entity={{ id, name, type: EntityType.USER }} />
     </DeletionPrompt>);
@@ -80,7 +79,7 @@ class GroupMemberBar extends Component {
         <span className={isBasic ? styles.update : styles.updateAdmin}>{lastLoginFormatted}</span>
         <button
           className={styles.delete}
-          onClick={() => openModal(this.deleteMemberPrompt({ groupId, groupName, id, name }))}
+          onClick={() => openModal(this.deleteMemberPrompt, { groupId, groupName, id, name })}
         >
           <img src="/img/delete.svg" alt="" />
         </button>

@@ -20,7 +20,6 @@ class GroupMemberList extends Component {
     dispatchAddGroupMember: PropTypes.func.isRequired,
     dispatchDeleteGroupMember: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
-    closeActiveModal: PropTypes.func.isRequired,
   };
 
   addMemberDialog = ({ group, onClose }) => (
@@ -29,9 +28,7 @@ class GroupMemberList extends Component {
       message="以下のグループに追加するメンバーを検索し、追加ボタンを押してください。"
       submitButton="追加"
       onSubmit={({ newMember } = {}) =>
-        this.props.dispatchAddGroupMember(group.id, newMember.userId).then(({ error }) =>
-          !error && this.props.closeActiveModal(),
-        )}
+        this.props.dispatchAddGroupMember(group.id, newMember.userId)}
       valid={({ newMember }) => !isEmpty(newMember)}
       onClose={onClose}
     >

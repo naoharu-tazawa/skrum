@@ -28,7 +28,7 @@ export default class DialogForm extends Component {
   }
 
   submissionHandler() {
-    const { handleSubmit, onSubmit } = this.props;
+    const { handleSubmit, onSubmit, onClose } = this.props;
     return handleSubmit ?
       handleSubmit((data) => {
         this.setState({ isSubmitting: true });
@@ -43,15 +43,20 @@ export default class DialogForm extends Component {
       (e) => {
         e.preventDefault();
         this.setState({ isSubmitting: true });
-        return onSubmit((this.state || {}).data).then(() =>
-          !this.isUnmounting && this.setState({ isSubmitting: false }));
+        return onSubmit((this.state || {}).data)
+          .then(({ error, payload: { message } = {} } = {}) => {
+            if (!this.isUnmounting) {
+              this.setState({ isSubmitting: false, submissionError: error && message });
+              if (!error && onClose) onClose();
+            }
+          });
       };
   }
 
   render() {
     const { title, message, cancelButton = 'キャンセル', submitButton = 'OK',
       onClose, children, valid = true, error } = this.props;
-    const { data = {}, isSubmitting = false } = this.state || {};
+    const { data = {}, isSubmitting = false, submissionError } = this.state || {};
     return (
       <form
         className={`${styles.form} ${isSubmitting ? styles.submitting : ''}`}
@@ -63,7 +68,7 @@ export default class DialogForm extends Component {
         <div className={styles.content}>
           {isFunction(children) ? children({ setFieldData: this.setFieldData.bind(this) }) :
             children}
-          <div className={styles.error}>{error || <span>&nbsp;</span>}</div>
+          <div className={styles.error}>{error || submissionError || <span>&nbsp;</span>}</div>
         </div>
         <div className={styles.buttons}>
           <div className={styles.filler} />

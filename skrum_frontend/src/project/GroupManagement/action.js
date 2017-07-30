@@ -114,12 +114,12 @@ export const changeGroupLeader = (groupId, userId, userName) =>
       .catch(({ message }) => dispatch(finishChangeGroupLeader(new Error(message))));
   };
 
-export const addGroupMember = (/* TODO timeframeId, */groupId, userId) =>
+export const addGroupMember = (timeframeId, groupId, userId) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.groupManagement.isAddingGroupMember) return Promise.resolve();
     dispatch(requestAddGroupMember());
-    return postJson(`/groups/${groupId}/members.json`, state)({ tfid: 1 }, { userId })
+    return postJson(`/groups/${groupId}/members.json`, state)({ tfid: timeframeId }, { userId })
       .then(json => dispatch(finishAddGroupMember('addGroupMember', json)))
       .catch(({ message }) => dispatch(finishAddGroupMember(new Error(message))));
   };
@@ -134,12 +134,12 @@ export const deleteGroupMember = (groupId, userId) =>
       .catch(({ message }) => dispatch(finishDeleteGroupMember(new Error(message))));
   };
 
-export const joinGroup = (/* TODO timeframeId, */userId, groupId) =>
+export const joinGroup = (timeframeId, userId, groupId) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.groupManagement.isJoiningGroup) return Promise.resolve();
     dispatch(requestJoinGroup());
-    return postJson(`/groups/${groupId}/members.json`, state)({ tfid: 1 }, { userId })
+    return postJson(`/groups/${groupId}/members.json`, state)({ tfid: timeframeId }, { userId })
       .then(json => dispatch(finishJoinGroup('joinGroup', json)))
       .catch(({ message }) => dispatch(finishJoinGroup(new Error(message))));
   };
