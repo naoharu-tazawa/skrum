@@ -10,10 +10,16 @@ produces:
 basePath: /v1
 
 paths:
-  /users/search.json?{q}:
+  /additionalusers/search.json?{gid}&{q}:
     get:
-      description: ユーザ検索
+      description: 追加ユーザ検索
       parameters:
+        -
+          name: gid
+          in: path
+          type: string
+          description: グループID（このグループに所属するメンバー以外を検索）
+          required: true
         -
           name: q
           in: path

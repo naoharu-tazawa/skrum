@@ -26,10 +26,10 @@ class TimelineService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param integer $groupId グループID
-     * @param string $before 取得基準日時
+     * @param string $before 取得基準投稿ID
      * @return array
      */
-    public function getTimeline(Auth $auth, int $groupId, string $before): array
+    public function getTimeline(Auth $auth, int $groupId, int $before = null): array
     {
         $tPostRepos = $this->getTPostRepository();
         $tPostArray = $tPostRepos->getTimeline($groupId, $before);
@@ -219,6 +219,7 @@ class TimelineService extends BaseService
         $postDTO->setPostedDatetime($tPost->getPostedDatetime());
         $postDTO->setLikesCount(0);
         $postDTO->setLikedFlg(0);
+        $postDTO->setDisclosureType($tPost->getDisclosureType());
 
         return $postDTO;
     }

@@ -24,7 +24,7 @@ paths:
           name: before
           in: path
           type: string
-          description: 取得基準日時
+          description: 取得基準投稿Id
           required: true
       responses:
         200:
@@ -81,6 +81,8 @@ paths:
                   type: integer
                 likedFlg:
                   type: integer
+                disclosureType:
+                  type: string
                 replies:
                   type: array
                   items:
@@ -113,6 +115,7 @@ paths:
                 - postedDatetime
                 - likesCount
                 - likedFlg
+                - disclosureType
         400:
           description: パラメータ不正
         401:

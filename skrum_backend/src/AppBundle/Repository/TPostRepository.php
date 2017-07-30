@@ -33,10 +33,10 @@ class TPostRepository extends BaseRepository
      * 指定グループIDのタイムラインを取得
      *
      * @param integer $groupId グループID
-     * @param string $before 取得基準日時
+     * @param string $before 取得基準投稿ID
      * @return array
      */
-    public function getTimeline(int $groupId, string $before): array
+    public function getTimeline(int $groupId, int $before = null): array
     {
         $qb = $this->createQueryBuilder('tp1');
         $qb->select('tp1 AS post', 'mu1.lastName AS lastNamePost', 'mu1.firstName AS firstNamePost', 'mg1.groupName', 'mc1.companyName', 'tp2 AS reply', 'mu2.lastName AS lastNameReply', 'mu2.firstName AS firstNameReply')
@@ -47,12 +47,15 @@ class TPostRepository extends BaseRepository
             ->leftJoin('AppBundle:MUser', 'mu2', 'WITH', 'tp2.posterUserId = mu2.userId')
             ->where('tp1.timelineOwnerGroupId = :timelineOwnerGroupId')
             ->andWhere('tp1.parent IS NULL')
-            ->andWhere('tp1.postedDatetime < :postedDatetime')
-            ->setParameter('timelineOwnerGroupId', $groupId)
-            ->setParameter('postedDatetime', $before)
-            ->orderBy('tp1.postedDatetime', 'DESC')
-            ->orderBy('tp1.id', 'DESC')
-            ->addOrderBy('tp2.postedDatetime', 'DESC')
+            ->setParameter('timelineOwnerGroupId', $groupId);
+
+        if ($before !== null) {
+            $qb->andWhere('tp1.id < :id')
+                ->setParameter('id', $before);
+        }
+
+        $qb->orderBy('tp1.id', 'DESC')
+            ->addOrderBy('tp2.id', 'DESC')
             ->setMaxResults(5);
 
         return $qb->getQuery()->getResult();

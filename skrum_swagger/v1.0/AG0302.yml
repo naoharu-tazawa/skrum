@@ -52,6 +52,8 @@ paths:
                 type: integer
               likedFlg:
                 type: integer
+              disclosureType:
+                type: string
         400:
           description: パラメータ不正
         401:
