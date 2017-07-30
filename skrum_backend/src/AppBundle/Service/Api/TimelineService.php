@@ -112,6 +112,7 @@ class TimelineService extends BaseService
                 } else {
                     $postDTOPost->setLikedFlg(DBConstant::FLG_TRUE);
                 }
+                $postDTOPost->setDisclosureType($tPostArray[$i]['post']->getDisclosureType());
 
                 $postDTOReplyArray = array();
                 $flg = false;
@@ -211,6 +212,7 @@ class TimelineService extends BaseService
 
         $postDTO = new PostDTO();
         $postDTO->setPostId($tPost->getId());
+        $postDTO->setPosterType($tPost->getPosterType());
         $postDTO->setPosterUserId($tPost->getPosterUserId());
         $postDTO->setPosterUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
         $postDTO->setPost($tPost->getPost());

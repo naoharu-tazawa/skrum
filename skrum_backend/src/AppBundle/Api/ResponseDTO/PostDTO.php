@@ -103,6 +103,13 @@ class PostDTO
     private $likedFlg;
 
     /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $disclosureType;
+
+    /**
      * @var array
      *
      * @JSON\Type("array")
@@ -419,6 +426,30 @@ class PostDTO
     public function getLikedFlg()
     {
         return $this->likedFlg;
+    }
+
+    /**
+     * Set disclosureType
+     *
+     * @param string $disclosureType
+     *
+     * @return PostDTO
+     */
+    public function setDisclosureType($disclosureType)
+    {
+        $this->disclosureType = $disclosureType;
+
+        return $this;
+    }
+
+    /**
+     * Get disclosureType
+     *
+     * @return string
+     */
+    public function getDisclosureType()
+    {
+        return $this->disclosureType;
     }
 
     /**
