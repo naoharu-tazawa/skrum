@@ -19,8 +19,8 @@ export const Action = {
   FINISH_CHANGE_OWNER: 'FINISH_CHANGE_OWNER',
   REQUEST_CHANGE_PARENT_OKR: 'REQUEST_CHANGE_PARENT_OKR',
   FINISH_CHANGE_PARENT_OKR: 'FINISH_CHANGE_PARENT_OKR',
-  REQUEST_CHANGE_DISCLOSURE_TYPE: 'REQUEST_CHANGE_DISCLOSURE_TYPE',
-  FINISH_CHANGE_DISCLOSURE_TYPE: 'FINISH_CHANGE_DISCLOSURE_TYPE',
+  REQUEST_CHANGE_OKR_DISCLOSURE_TYPE: 'REQUEST_CHANGE_OKR_DISCLOSURE_TYPE',
+  FINISH_CHANGE_OKR_DISCLOSURE_TYPE: 'FINISH_CHANGE_OKR_DISCLOSURE_TYPE',
 };
 
 const {
@@ -38,8 +38,8 @@ const {
   finishChangeOwner,
   requestChangeParentOkr,
   finishChangeParentOkr,
-  requestChangeDisclosureType,
-  finishChangeDisclosureType,
+  requestChangeOkrDisclosureType,
+  finishChangeOkrDisclosureType,
 } = createActions({
   [Action.FINISH_FETCH_OKR_DETAILS]: keyValueIdentity,
   [Action.FINISH_POST_KR]: keyValueIdentity,
@@ -48,7 +48,7 @@ const {
   [Action.FINISH_POST_ACHIEVEMENT]: keyValueIdentity,
   [Action.FINISH_CHANGE_OWNER]: keyValueIdentity,
   [Action.FINISH_CHANGE_PARENT_OKR]: keyValueIdentity,
-  [Action.FINISH_CHANGE_DISCLOSURE_TYPE]: keyValueIdentity,
+  [Action.FINISH_CHANGE_OKR_DISCLOSURE_TYPE]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_OKR_DETAILS,
   Action.REQUEST_POST_KR,
@@ -57,7 +57,7 @@ const {
   Action.REQUEST_POST_ACHIEVEMENT,
   Action.REQUEST_CHANGE_OWNER,
   Action.REQUEST_CHANGE_PARENT_OKR,
-  Action.REQUEST_CHANGE_DISCLOSURE_TYPE,
+  Action.REQUEST_CHANGE_OKR_DISCLOSURE_TYPE,
 );
 
 export const fetchOKRDetails = id =>
@@ -66,7 +66,7 @@ export const fetchOKRDetails = id =>
     if (state.okr.isFetching) return Promise.resolve();
     dispatch(requestFetchOkrDetails());
     return getJson(`/okrs/${id}/details.json`, state)()
-      .then(json => dispatch(finishFetchOkrDetails('okr', json)))
+      .then(json => dispatch(finishFetchOkrDetails('data', json)))
       .catch(({ message }) => dispatch(finishFetchOkrDetails(new Error(message))));
   };
 
@@ -76,7 +76,7 @@ export const postKR = kr =>
     if (state.okr.isPostingKR) return Promise.resolve();
     dispatch(requestPostKr());
     return postJson('/okrs.json', state)(null, kr)
-      .then(json => dispatch(finishPostKr('newKR', { data: json })))
+      .then(json => dispatch(finishPostKr('data', { data: json })))
       .catch(({ message }) => dispatch(finishPostKr(new Error(message))));
   };
 
@@ -96,7 +96,7 @@ export const changeOwner = (id, owner) =>
     if (state.okr.isChangingOwner) return Promise.resolve();
     dispatch(requestChangeOwner());
     return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound(omit(owner, 'name')))
-      .then(() => dispatch(finishChangeOwner('changeOwner', { id, ...mapOwnerOutbound(owner) })))
+      .then(() => dispatch(finishChangeOwner('data', { id, ...mapOwnerOutbound(owner) })))
       .catch(({ message }) => dispatch(finishChangeOwner(new Error(message))));
   };
 
@@ -106,7 +106,7 @@ export const changeParentOkr = (id, newParentOkrId) =>
     if (state.okr.isChangingParentOkr) return Promise.resolve();
     dispatch(requestChangeParentOkr());
     return putJson(`/okrs/${id}/changeparent.json`, state)(null, { newParentOkrId })
-      .then(json => dispatch(finishChangeParentOkr('changeParentOkr', json)))
+      .then(json => dispatch(finishChangeParentOkr('data', json)))
       .catch(({ message }) => dispatch(finishChangeParentOkr(new Error(message))));
   };
 
@@ -114,10 +114,10 @@ export const changeDisclosureType = (id, disclosureType) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.okr.isChangingDisclosureType) return Promise.resolve();
-    dispatch(requestChangeDisclosureType());
+    dispatch(requestChangeOkrDisclosureType());
     return putJson(`/okrs/${id}/changedisclosure.json`, state)(null, { disclosureType })
-      .then(() => dispatch(finishChangeDisclosureType('changeOwner', { id, disclosureType })))
-      .catch(({ message }) => dispatch(finishChangeDisclosureType(new Error(message))));
+      .then(() => dispatch(finishChangeOkrDisclosureType('data', { id, disclosureType })))
+      .catch(({ message }) => dispatch(finishChangeOkrDisclosureType(new Error(message))));
   };
 
 export const deleteKR = id =>
@@ -126,7 +126,7 @@ export const deleteKR = id =>
     if (state.okr.isDeletingKR) return Promise.resolve();
     dispatch(requestDeleteKr());
     return deleteJson(`/okrs/${id}.json`, state)()
-      .then(() => dispatch(finishDeleteKr('deletedKR', { id })))
+      .then(() => dispatch(finishDeleteKr('data', { id })))
       .catch(({ message }) => dispatch(finishDeleteKr(new Error(message))));
   };
 
@@ -136,6 +136,6 @@ export const postAchievement = (id, data) =>
     if (state.okr.isPostingAchievement) return Promise.resolve();
     dispatch(requestPostAchievement());
     return postJson(`/okrs/${id}/achievements.json`, state)(null, data)
-      .then(json => dispatch(finishPostAchievement('newAchievement', { data: json })))
+      .then(json => dispatch(finishPostAchievement('data', { data: json })))
       .catch(({ message }) => dispatch(finishPostAchievement(new Error(message))));
   };

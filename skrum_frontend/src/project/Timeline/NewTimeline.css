@@ -16,22 +16,9 @@
   タイムライン画面
   ==================================================== */
   .cont_box {
-    display: table;
+    display: flex;
     padding: 30px 70px;
     width: 100%; }
-    .cont_box > div {
-      display: table-cell; }
-      .cont_box > div.user_name {
-        width: 80px;
-        vertical-align: top; }
-      .cont_box > div dl {
-        display: table; }
-        .cont_box > div dl dt, .cont_box > div dl dd {
-          display: table-cell;
-          vertical-align: middle; }
-        .cont_box > div dl dd {
-          padding-left: 10px;
-          font-size: 14px; }
       .cont_box > div.text_area {
         width: 866px; }
         .cont_box > div.text_area textarea {
@@ -42,7 +29,7 @@
           line-height: 1.2;
           border: 1px solid #d8dfe5;
           resize: none;
-          height: 80px; }
+          height: 100%; /*80px;*/ }
         .cont_box > div.text_area textarea:focus {
           outline: 0;
         }
@@ -55,10 +42,13 @@
           .cont_box > div.text_area textarea::-ms-input-placeholder {
             color: #d8dfe5;
             font-weight: 300; }
-      .cont_box > div.btn {
+      .cont_box > section  {
+        font-size: small;
+        margin-left: 1em; }
+      .cont_box > section > div.btn {
         vertical-align: bottom;
-        padding-left: 70px; }
-        .cont_box > div.btn button {
+        margin-top: 0.5em; }
+        .cont_box > section > div.btn button {
           padding: 0;
           background: none;
           border: 1px solid #8e9aa6;
@@ -72,10 +62,15 @@
           font-size: 14px;
           color: #8e9aa6;
           border-radius: 19px; }
-          .cont_box > div.btn button:hover {
+          .cont_box > section > div.btn button:hover {
             opacity: .7; }
 
-.disable_btn {
-    height: 50px;
-    width: 150px;
-    background: url(/img/rolling.svg) center no-repeat; }
+.current_user {
+  margin: 0;
+}
+.busy_btn {
+  height: 38px;
+  width: 150px;
+  background: url(/img/rolling.svg) center no-repeat;
+  background-size: contain;
+}

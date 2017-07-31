@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { userGroupPropTypes } from './propTypes';
 import DeletionPrompt from '../../../dialogs/DeletionPrompt';
 import EntitySubject from '../../../components/EntitySubject';
-import EntityLink from '../../../components/EntityLink';
-import { EntityType } from '../../../util/EntityUtil';
+import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { withModal } from '../../../util/ModalUtil';
 import styles from './UserGroupBar.css';
 

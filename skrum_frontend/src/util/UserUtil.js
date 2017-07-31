@@ -5,5 +5,5 @@ export const RoleLevel = {
 };
 
 export const isBasicRole = level => level < RoleLevel.ADMIN;
-export const isAdminRole = level => level < RoleLevel.SUPER;
-export const isSuperRole = level => level <= RoleLevel.SUPER;
+export const isAdminRole = level => level >= RoleLevel.ADMIN;
+export const isSuperRole = level => level >= RoleLevel.SUPER;

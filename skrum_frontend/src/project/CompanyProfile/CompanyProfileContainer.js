@@ -52,7 +52,7 @@ class CompanyProfileContainer extends Component {
   render() {
     const { companyId, name, vision, mission, dispatchPutCompany, isFetching } = this.props;
     if (isFetching) {
-      return <div className={styles.spinner} />;
+      return <span className={styles.spinner} />;
     }
     return (
       <div className={styles.container}>

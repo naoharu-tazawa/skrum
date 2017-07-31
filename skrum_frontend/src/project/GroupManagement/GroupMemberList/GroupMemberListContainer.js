@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { groupMembersPropTypes } from './propTypes';
 import GroupMemberList from './GroupMemberList';
 import { addGroupMember, deleteGroupMember } from '../action';
-import { RoleLevel } from '../../../util/UserUtil';
 import { explodePath } from '../../../util/RouteUtil';
 
 class GroupMemberListContainer extends Component {
@@ -36,7 +35,7 @@ class GroupMemberListContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { roleLevel = RoleLevel.BASIC } = state.auth || {};
+  const { roleLevel } = state.auth || {};
   const { group, members = [] } = state.groupManagement.group || {};
   const { groupId, name: groupName } = group || {};
   const items = members.map((member) => {

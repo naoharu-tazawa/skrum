@@ -15,16 +15,17 @@ export default class EntitySubject extends Component {
     entity: entityPropType,
     heading: PropTypes.string,
     subject: PropTypes.string,
+    local: PropTypes.bool,
     componentClassName: PropTypes.string,
   };
 
   render() {
-    const { entity, heading, subject, componentClassName } = this.props;
+    const { entity, heading, subject, local = true, componentClassName } = this.props;
     return (
       <div className={`${styles.component} ${componentClassName || ''}`}>
         {heading && <div className={styles.heading}>{heading}</div>}
         <div className={styles.subjectArea}>
-          <EntityLink componentClassName={styles.entity} entity={entity} local />
+          <EntityLink componentClassName={styles.entity} entity={entity} local={local} />
           {subject && <div className={styles.subject}>{subject}</div>}
         </div>
       </div>);

@@ -13,7 +13,7 @@ const getUrlParam = (param) => {
       if (value instanceof Array && value.length > 0) {
         return value.map(el => toQuery(key, el)).join('&');
       }
-      return toQuery(key, value);
+      return value ? toQuery(key, value) : '';
     });
   return `?${params.join('&')}`;
 };

@@ -103,7 +103,7 @@ class OkrDetails extends Component {
           <section>
             <label>公開範囲</label>
             <DisclosureTypeOptions
-              ownerType={owner.type}
+              entityType={owner.type}
               renderer={({ value, label }) => (
                 <label key={value}>
                   <input

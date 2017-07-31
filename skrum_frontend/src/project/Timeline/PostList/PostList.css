@@ -35,3 +35,9 @@
       background: #fff;
       border: 3px solid #8e9aa6;
       border-radius: 50%; }
+.spinner {
+  margin: 0 auto;
+  height: 38px;
+  background: url(/img/rolling.svg) center no-repeat;
+  background-size: contain;
+}

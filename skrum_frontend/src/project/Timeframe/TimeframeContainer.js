@@ -23,7 +23,7 @@ class TimeframeContainer extends Component {
 
   render() {
     if (this.props.isFetching) {
-      return <div className={styles.spinner} />;
+      return <span className={styles.spinner} />;
     }
     return (
       <div className={styles.container}>

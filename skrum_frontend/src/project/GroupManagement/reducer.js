@@ -14,16 +14,25 @@ export default (state = {
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_USER_GROUPS:
+      return { ...state, isFetching: true };
+
+    case Action.FINISH_FETCH_USER_GROUPS: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isFetching: false, error: { message: payload.message } };
+      }
+      return { ...state, isFetching: false, user: payload.data, error: null };
+    }
+
     case Action.REQUEST_FETCH_GROUP_MEMBERS:
       return { ...state, isFetching: true };
 
-    case Action.FINISH_FETCH_USER_GROUPS:
     case Action.FINISH_FETCH_GROUP_MEMBERS: {
       const { payload, error } = action;
       if (error) {
         return { ...state, isFetching: false, error: { message: payload.message } };
       }
-      return { ...state, isFetching: false, ...payload, error: null };
+      return { ...state, isFetching: false, group: payload.data, error: null };
     }
 
     case Action.REQUEST_PUT_USER:
@@ -62,7 +71,7 @@ export default (state = {
       if (error) {
         return { ...state, isChangingLeader: false, error: { message: payload.message } };
       }
-      const { userId: leaderUserId, userName: leaderName } = payload.changeGroupLeader;
+      const { userId: leaderUserId, userName: leaderName } = payload.data;
       const { group: groupRoot } = state;
       const { group: groupInfo } = groupRoot;
       const group = { ...groupRoot, group: { ...groupInfo, leaderUserId, leaderName } };
@@ -78,7 +87,7 @@ export default (state = {
         return { ...state, isAddingGroupMember: false, error: { message: payload.message } };
       }
       const { group, members } = state.group;
-      const newMembers = [...members, payload.addGroupMember.user];
+      const newMembers = [...members, payload.data.user];
       const newGroup = { group, members: newMembers };
       return { ...state, group: newGroup, isAddingGroupMember: false, error: null };
     }
@@ -93,7 +102,7 @@ export default (state = {
       }
       const { group, members } = state.group;
       const newMembers = members.filter(({ userId }) =>
-        userId !== payload.deleteGroupMember.userId);
+        userId !== payload.data.userId);
       const newGroup = { group, members: newMembers };
       return { ...state, group: newGroup, isDeletingGroupMember: false, error: null };
     }
@@ -107,7 +116,7 @@ export default (state = {
         return { ...state, isJoiningGroup: false, error: { message: payload.message } };
       }
       const { user, groups } = state.user;
-      const newGroups = [...groups, payload.joinGroup.group];
+      const newGroups = [...groups, payload.data.group];
       const newUser = { user, groups: newGroups };
       return { ...state, user: newUser, isJoiningGroup: false, error: null };
     }
@@ -122,7 +131,7 @@ export default (state = {
       }
       const { user, groups } = state.user;
       const newGroups = groups.filter(({ groupId }) =>
-        groupId !== payload.leaveGroup.groupId);
+        groupId !== payload.data.groupId);
       const newUser = { user, groups: newGroups };
       return { ...state, user: newUser, isLeavingGroup: false, error: null };
     }

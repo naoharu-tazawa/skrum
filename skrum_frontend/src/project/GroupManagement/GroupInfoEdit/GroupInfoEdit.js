@@ -6,8 +6,7 @@ import styles from './GroupInfoEdit.css';
 import InlineTextInput from '../../../editors/InlineTextInput';
 import InlineTextArea from '../../../editors/InlineTextArea';
 import InlinePotentialLeaders from '../../PotentialLeaders/InlinePotentialLeaders';
-import EntityLink from '../../../components/EntityLink';
-import { EntityType } from '../../../util/EntityUtil';
+import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { replacePath } from '../../../util/RouteUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 

@@ -68,7 +68,7 @@ export const postOkr = (subject, isOwnerCurrent, okr) =>
     if (state.basics.isPostingOkr) return Promise.resolve();
     dispatch(requestPostOkr());
     return postJson('/okrs.json', state)(null, okr)
-      .then(json => dispatch(finishPostOkr('newOkr', { subject, isOwnerCurrent, data: json })))
+      .then(json => dispatch(finishPostOkr('data', { subject, isOwnerCurrent, data: json })))
       .catch(({ message }) => dispatch(finishPostOkr(new Error(message))));
   };
 
@@ -78,7 +78,7 @@ export const deleteOkr = (subject, id) =>
     if (state.basics.isDeletingOkr) return Promise.resolve();
     dispatch(requestDeleteOkr());
     return deleteJson(`/okrs/${id}.json`, state)()
-      .then(() => dispatch(finishDeleteOkr('deletedOkr', { subject, id })))
+      .then(() => dispatch(finishDeleteOkr('data', { subject, id })))
       .catch(({ message }) => dispatch(finishDeleteOkr(new Error(message))));
   };
 

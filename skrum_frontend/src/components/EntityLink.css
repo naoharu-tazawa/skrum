@@ -20,7 +20,7 @@
 .name {
   margin: auto 1em auto 0;
   white-space: nowrap;
-  /*overflow: hidden;*/
+  overflow-x: hidden;
   text-overflow: ellipsis;
   width: 100%;
 }

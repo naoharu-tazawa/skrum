@@ -33,7 +33,7 @@ export default (state = {
       if (error) {
         return { ...state, isPostingKR: false, error: { message: payload.message } };
       }
-      const keyResults = [...state.keyResults, payload.newKR.data];
+      const keyResults = [...state.keyResults, payload.data.data];
       return { ...state, keyResults, isPostingKR: false, error: null };
     }
 
@@ -45,9 +45,9 @@ export default (state = {
       if (error) {
         return { ...state, isPutting: false, error: { message: payload.message } };
       }
-      const { id, ...data } = payload.data;
-      const objective = mergeUpdateById(state.objective, 'okrId', data, id);
-      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', data, id));
+      const { id, ...update } = payload.data;
+      const objective = mergeUpdateById(state.objective, 'okrId', update, id);
+      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, id));
       return { ...state, objective, keyResults, isPutting: false, error: null };
     }
 
@@ -59,9 +59,9 @@ export default (state = {
       if (error) {
         return { ...state, isChangingOwner: false, error: { message: payload.message } };
       }
-      const { id, ...data } = payload.changeOwner;
-      const objective = mergeUpdateById(state.objective, 'okrId', data, id);
-      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', data, id));
+      const { id, ...update } = payload.data;
+      const objective = mergeUpdateById(state.objective, 'okrId', update, id);
+      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, id));
       return { ...state, objective, keyResults, isChangingOwner: false, error: null };
     }
 
@@ -73,20 +73,20 @@ export default (state = {
       if (error) {
         return { ...state, isChangingParentOkr: false, error: { message: payload.message } };
       }
-      return { ...state, ...payload.changeParentOkr, isChangingParentOkr: false, error: null };
+      return { ...state, ...payload.data, isChangingParentOkr: false, error: null };
     }
 
-    case Action.REQUEST_CHANGE_DISCLOSURE_TYPE:
+    case Action.REQUEST_CHANGE_OKR_DISCLOSURE_TYPE:
       return { ...state, isChangingDisclosureType: true };
 
-    case Action.FINISH_CHANGE_DISCLOSURE_TYPE: {
+    case Action.FINISH_CHANGE_OKR_DISCLOSURE_TYPE: {
       const { payload, error } = action;
       if (error) {
         return { ...state, isChangingDisclosureType: false, error: { message: payload.message } };
       }
-      const { id, ...data } = payload.changeOwner;
-      const objective = mergeUpdateById(state.objective, 'okrId', data, id);
-      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', data, id));
+      const { id, ...update } = payload.data;
+      const objective = mergeUpdateById(state.objective, 'okrId', update, id);
+      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, id));
       return { ...state, objective, keyResults, isChangingDisclosureType: false, error: null };
     }
 
@@ -98,7 +98,7 @@ export default (state = {
       if (error) {
         return { ...state, isDeletingKR: false, error: { message: payload.message } };
       }
-      const { id } = payload.deletedKR;
+      const { id } = payload.data;
       const keyResults = state.keyResults.filter(({ okrId }) => id !== okrId);
       return { ...state, keyResults, isDeletingKR: false, error: null };
     }
@@ -111,9 +111,9 @@ export default (state = {
       if (error) {
         return { ...state, isPostingAchievement: false, error: { message: payload.message } };
       }
-      const { okrId, ...data } = payload.newAchievement.data;
-      const objective = mergeUpdateById(state.objective, 'okrId', data, okrId);
-      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', data, okrId));
+      const { okrId, ...update } = payload.data.data;
+      const objective = mergeUpdateById(state.objective, 'okrId', update, okrId);
+      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, okrId));
       return { ...state, objective, keyResults, isPostingAchievement: false, error: null };
     }
 

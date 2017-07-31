@@ -20,7 +20,7 @@ export default (state = {
       }
       return Object.assign({}, state, {
         isFetching: false,
-        roles: payload.roles,
+        roles: payload.data,
         error: null,
       });
     }

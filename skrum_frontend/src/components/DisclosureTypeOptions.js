@@ -20,7 +20,7 @@ export const disclosureTypesForCompany = {
 export default class DisclosureTypeOptions extends PureComponent {
 
   static propTypes = {
-    ownerType: entityTypePropType.isRequired,
+    entityType: entityTypePropType.isRequired,
     renderer: PropTypes.func,
     disclosureType: PropTypes.string,
     value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -32,9 +32,9 @@ export default class DisclosureTypeOptions extends PureComponent {
   render() {
     const getOptionStyle = (id, currentId) =>
       `${styles.item} ${id === currentId ? styles.current : ''}`;
-    const { ownerType, renderer, disclosureType,
+    const { entityType, renderer, disclosureType,
       value: dirtyValue, onChange, onFocus, onBlur } = this.props;
-    const options = toPairs(ownerType === EntityType.COMPANY ?
+    const options = toPairs(entityType === EntityType.COMPANY ?
       disclosureTypesForCompany : disclosureTypesForUserAndGroup)
       .map(([id, label]) => ({ value: `${id}`, label }));
     if (renderer) {
@@ -55,6 +55,6 @@ export default class DisclosureTypeOptions extends PureComponent {
   }
 }
 
-export const getDisclosureTypeName = (ownerType, disclosureType) =>
-  (ownerType === EntityType.COMPANY ? disclosureTypesForCompany :
+export const getDisclosureTypeName = (entityType, disclosureType) =>
+  (entityType === EntityType.COMPANY ? disclosureTypesForCompany :
     disclosureTypesForUserAndGroup)[disclosureType];

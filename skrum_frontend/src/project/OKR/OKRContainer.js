@@ -121,7 +121,7 @@ class OKRContainer extends Component {
   render() {
     const { isFetching, pathname, okrIds, dispatchDeleteOkr } = this.props;
     if (isFetching) {
-      return <div className={styles.spinner} />;
+      return <span className={styles.spinner} />;
     }
     const { showAlignmentsInfo } = this.state;
     const { aspect, aspectId: okrId, ...basicPath } = explodePath(pathname);

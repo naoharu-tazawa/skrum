@@ -54,49 +54,35 @@
       box-shadow: 1px 0px 1px 1px rgba(0,0,0,0.12); }
       .timeline_content .time {
         margin-bottom: 10px;
-        margin-left: 170px;
         font-size: 14px; }
         .timeline_content .time span {
           margin-left: 2rem; }
       .timeline_content .content_inner {
-        display: table;
-        width: 100%;
         font-size: 14px; }
         .timeline_content .content_inner + .time {
           margin: 5px 0 0 170px; }
-        .timeline_content .content_inner .user_name {
-          display: table-cell;
-          width: 170px; }
-          .timeline_content .content_inner .user_name dl {
-            display: table;
-            width: 100%; }
-            .timeline_content .content_inner .user_name dl dt, .timeline_content .content_inner .user_name dl dd {
-              display: table-cell;
-              vertical-align: middle; }
         .timeline_content .content_inner .user_image {
           display: table-cell;
           margin: 0 30px 0 85px; }
-        .timeline_content .content_inner .text {
-          display: table-cell;
+        .timeline_content .text {
           width: 56%;
-          line-height: 1.3;
-          vertical-align: top; }
-          .timeline_content .content_inner .text p {
+          line-height: 1.3; }
+          .timeline_content .text p {
             font-size: 16px;
             white-space: pre-line; }
-          .timeline_content .content_inner .text .comments {
+          .timeline_content .text .comments {
             margin: 10px 0 0;
             color: #8e9aa6; }
-            .timeline_content .content_inner .text .comments > span {
+            .timeline_content .text .comments > span {
               display: inline-block;
               line-height: 20px; }
-            .timeline_content .content_inner .text .comments .fb_comment {
+            .timeline_content .text .comments .fb_comment {
               margin-right: 25px; }
-              .timeline_content .content_inner .text .comments .fb_comment img {
+              .timeline_content .text .comments .fb_comment img {
                 margin-right: 5px;
                 border-radius: 50%;
                 border: 1px solid #8e9aa6; }
-          .timeline_content .content_inner .text textarea {
+          .timeline_content textarea {
             padding: 12px;
             width: 100%;
             color: #626a7f;
@@ -106,30 +92,26 @@
             resize: none;
             height: 40px;
             overflow: auto; }
-          .timeline_content .content_inner .text textarea {
+          .timeline_content textarea {
             outline: 0;
           }
-            .timeline_content .content_inner .text textarea::-webkit-input-placeholder {
+            .timeline_content textarea::-webkit-input-placeholder {
               color: #d8dfe5;
               font-weight: 300; }
-            .timeline_content .content_inner .text textarea::-moz-placeholder {
+            .timeline_content textarea::-moz-placeholder {
               color: #d8dfe5;
               font-weight: 300; }
-            .timeline_content .content_inner .text textarea::-ms-input-placeholder {
+            .timeline_content textarea::-ms-input-placeholder {
               color: #d8dfe5;
               font-weight: 300; }
         .timeline_content .content_inner .btn_more {
           display: table-cell;
           padding-left: 10px;
           vertical-align: bottom; }
-        .timeline_content .content_inner .btn_area {
-          display: table-cell;
-          padding-left: 70px;
-          vertical-align: bottom; }
-          .timeline_content .content_inner .btn_area .btn {
+          .timeline_content .btn_area .btn {
             display: inline-block;
             margin-right: 5px; }
-            .timeline_content .content_inner .btn_area .btn button {
+            .timeline_content .btn_area .btn button {
               width: 38px;
               height: 38px;
               padding: 0;
@@ -141,9 +123,9 @@
               appearance: none;
               cursor: pointer;
               border: 0; }
-              .timeline_content .content_inner .btn_area .btn button:hover {
+              .timeline_content .btn_area .btn button:hover {
                 opacity: .7; }
-              .timeline_content .content_inner .btn_area .btn button img {
+              .timeline_content .btn_area .btn button img {
                 display: block;
                 margin: 0 auto;
                 width: 38px;
@@ -157,12 +139,12 @@
                 appearance: none;
                 cursor: pointer;
                 border-radius: 50%; }
-                .timeline_content .content_inner .btn_area .btn button img:hover {
+                .timeline_content .btn_area .btn button img:hover {
                   opacity: .7; }
-            .timeline_content .content_inner .btn_area .btn.btn_balloon_wh img {
+            .timeline_content .btn_area .btn.btn_balloon_wh img {
               background: #8e9aa6;
               border-radius: 50%; }
-            .timeline_content .content_inner .btn_area .btn.btn_comment button {
+            .timeline_content .btn_area .btn.btn_comment button {
               padding: 0;
               background: none;
               border: 1px solid #8e9aa6;
@@ -176,10 +158,49 @@
               font-size: 14px;
               color: #8e9aa6;
               border-radius: 19px; }
-              .timeline_content .content_inner .btn_area .btn.btn_comment button:hover {
+              .timeline_content .btn_area .btn.btn_comment button:hover {
                 opacity: .7; }
     .timeline_block_last .timeline_content {
       margin-bottom: 30px;
       border-bottom: 0;
-      padding: 10px 70px 10px 60px;
+      padding: 10px 60px;
       box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12); }
+
+.content_inner {
+  display: flex;
+}
+.poster {
+  width: 20%;
+}
+.content_inner .btn_area {
+  display: flex;
+  margin-top: auto;
+  padding-left: 70px;
+}
+.like {
+  background-image: url(/img/common/icn_good.png) !important;
+  background-size: contain !important;
+  margin-right: 5px;
+  border-radius: 50%;
+  border: 1px solid #8e9aa6 !important;
+}
+.liked {
+  background-blend-mode: difference;
+  background-color: lightblue !important;
+}
+.reply_area {
+  display: flex;
+}
+.reply_area .poster {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.reply_area .text {
+  padding-right: 1em;
+}
+.busy_btn {
+  height: 38px;
+  width: 150px;
+  background: url(/img/rolling.svg) center no-repeat;
+  background-size: contain;
+}

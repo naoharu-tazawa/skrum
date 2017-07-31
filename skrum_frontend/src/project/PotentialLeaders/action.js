@@ -19,9 +19,9 @@ const {
 export const getPotentialLeaders = groupId =>
   (dispatch, getState) => {
     const state = getState();
-    if (state.ownersFound.isSearching) return Promise.resolve();
+    if (state.potentialLeaders.isSearching) return Promise.resolve();
     dispatch(requestGetPotentialLeaders());
     return getJson(`/groups/${groupId}/possibleleaders.json`, state)()
-      .then(json => dispatch(finishGetPotentialLeaders('potentialLeaders', { groupId, data: json })))
+      .then(json => dispatch(finishGetPotentialLeaders('data', { groupId, data: json })))
       .catch(({ message }) => dispatch(finishGetPotentialLeaders(new Error(message))));
   };

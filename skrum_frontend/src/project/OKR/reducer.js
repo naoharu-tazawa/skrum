@@ -33,7 +33,7 @@ export default (state = {
       if (error) {
         return { ...state, isPostingOkr: false, error: { message: payload.message } };
       }
-      const { subject, isOwnerCurrent, data } = payload.newOkr;
+      const { subject, isOwnerCurrent, data } = payload.data;
       const { [subject]: basics } = state;
       const okrs = isOwnerCurrent ? [...basics.okrs, data] : basics.okrs;
       return { ...state, [subject]: { ...basics, okrs }, isPostingOkr: false, error: null };
@@ -47,7 +47,7 @@ export default (state = {
       if (error) {
         return { ...state, isDeletingOkr: false, error: { message: payload.message } };
       }
-      const { subject, id } = payload.deletedOkr;
+      const { subject, id } = payload.data;
       const { [subject]: basics } = state;
       const okrs = basics.okrs.filter(({ okrId }) => id !== okrId);
       return { ...state, [subject]: { ...basics, okrs }, isDeletingOkr: false, error: null };

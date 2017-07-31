@@ -103,7 +103,7 @@ class KRDetailsBar extends Component {
           <section>
             <label>公開範囲</label>
             <DisclosureTypeOptions
-              ownerType={owner.type}
+              entityType={owner.type}
               renderer={({ value, label }) => (
                 <label key={value}>
                   <input
@@ -207,7 +207,7 @@ class KRDetailsBar extends Component {
                 <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
               arrow="right"
             />)}
-          {type === '1' && <div className={styles.checkinSpace} />}
+          {type === OKRType.OKR && <div className={styles.checkinSpace} />}
           <a className={styles.tool} href=""><img src="/img/common/inc_organization.png" alt="Map" /></a>
           <DropdownMenu
             trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}

@@ -18,5 +18,5 @@
   margin: auto 1em;
   white-space: nowrap;
   text-overflow: ellipsis;
-  max-width: 40em;
+  overflow-x: auto;
 }

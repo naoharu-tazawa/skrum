@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { entityTypePropType } from '../util/EntityUtil';
+import { entityTypePropType, EntityType } from '../util/EntityUtil';
 import { getOwnerTypeSubject } from '../util/OwnerUtil';
 import { explodePath, replacePath } from '../util/RouteUtil';
 import styles from './EntityLink.css';
@@ -27,13 +27,13 @@ class EntityLink extends Component {
     const { entity = {}, title, editor, local, componentClassName } = this.props;
     const { id, name, type } = entity;
     const avatarContent = (
-      <div className={styles.avatar}>
+      <div className={styles.avatar} title={name}>
         {id && <img src="/img/common/icn_user.png" alt="Owner" />}
       </div>);
-    const nameContent = (
-      <div className={styles.name}>
+    const nameContent = (title || editor || name || !id) && (
+      <div className={styles.name} title={name}>
         {title && <p className={styles.title}>{title}</p>}
-        {editor || name || <span>➖</span>}
+        {editor || name || (!id && <span>➖</span>)}
       </div>);
     return (
       <div className={`${styles.component} ${id && styles.hasEntity} ${componentClassName || ''}`}>
@@ -47,9 +47,9 @@ class EntityLink extends Component {
   }
 }
 
-const mapStateToProps = (state, { local, entity = {} }) => {
-  if (local) return {};
-  const { id: entityId, type } = entity;
+const mapStateToProps = (state, { local, entity }) => {
+  if (local !== undefined) return { local };
+  const { id: entityId, type } = entity || {};
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
   const { subject, id } = explodePath(pathname);
@@ -59,3 +59,5 @@ const mapStateToProps = (state, { local, entity = {} }) => {
 export default connect(
   mapStateToProps,
 )(EntityLink);
+
+export { EntityType };

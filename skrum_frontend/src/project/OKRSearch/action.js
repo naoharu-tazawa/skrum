@@ -22,7 +22,7 @@ export const searchOkr = (timeframeId, keyword) =>
     if (state.okrsFound.isSearching) return Promise.resolve();
     dispatch(requestSearchOkr());
     return getJson('/okrs/search.json', state)({ tfid: timeframeId, q: keyword })
-      .then(json => dispatch(finishSearchOkr('okrsFound', json)))
+      .then(json => dispatch(finishSearchOkr('data', json)))
       .catch(({ message }) => dispatch(finishSearchOkr(new Error(message))));
   };
 
@@ -33,6 +33,6 @@ export const searchParentOkr = (ownerType, ownerId, timeframeId, keyword) =>
     dispatch(requestSearchOkr());
     const parameters = { wtype: ownerType, wid: ownerId, tfid: timeframeId, q: keyword };
     return getJson('/parentokrs/search.json', state)(parameters)
-      .then(json => dispatch(finishSearchOkr('okrsFound', json)))
+      .then(json => dispatch(finishSearchOkr('data', json)))
       .catch(({ message }) => dispatch(finishSearchOkr(new Error(message))));
   };

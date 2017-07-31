@@ -1,88 +1,182 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { postPropTypes } from './propTypes';
-import { EntityType } from '../../../util/EntityUtil';
+import DeletionPrompt from '../../../dialogs/DeletionPrompt';
+import DialogForm from '../../../dialogs/DialogForm';
+import EntitySubject from '../../../components/EntitySubject';
+import EntityLink, { EntityType } from '../../../components/EntityLink';
+import DisclosureTypeOptions from '../../../components/DisclosureTypeOptions';
+import DropdownMenu from '../../../components/DropdownMenu';
+import { formatDate, DateFormat, toRelativeTimeText } from '../../../util/DatetimeUtil';
+import { isSuperRole } from '../../../util/UserUtil';
+import { withModal } from '../../../util/ModalUtil';
 import styles from './PostBar.css';
 
-export default class PostBar extends Component {
+class PostBar extends Component {
 
   static propTypes = {
-    timeline: postPropTypes,
+    post: postPropTypes.isRequired,
+    roleLevel: PropTypes.number.isRequired,
+    currentUserId: PropTypes.number.isRequired,
+    dispatchChangeDisclosureType: PropTypes.func.isRequired,
+    dispatchDeleteGroupPosts: PropTypes.func.isRequired,
+    dispatchPostLike: PropTypes.func.isRequired,
+    dispatchDeleteLike: PropTypes.func.isRequired,
+    dispatchPostReply: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
   };
 
-  render() {
-    const { posterType, posterUserId, posterUserName, posterGroupId, posterGroupName,
-      posterCompanyId, posterCompanyName, post, postedDatetime, likesCount,
-      likedFlg, replies = [] } = this.props.timeline;
+  changeDisclosureTypeDialog = ({ id, post, poster, disclosureType, onClose }) => (
+    <DialogForm
+      title="公開範囲設定変更"
+      submitButton="設定"
+      onSubmit={({ changedDisclosureType } = {}) =>
+        (!changedDisclosureType || changedDisclosureType === disclosureType ? Promise.resolve() :
+          this.props.dispatchChangeDisclosureType(id, changedDisclosureType))}
+      onClose={onClose}
+    >
+      {({ setFieldData }) =>
+        <div>
+          <EntitySubject entity={poster} heading="対象投稿" subject={post} />
+          <section>
+            <label>公開範囲</label>
+            <DisclosureTypeOptions
+              entityType={poster.type}
+              renderer={({ value, label }) => (
+                <label key={value}>
+                  <input
+                    name="disclosureType"
+                    type="radio"
+                    defaultChecked={value === disclosureType}
+                    onClick={() => setFieldData({ changedDisclosureType: value })}
+                  />
+                  {label}
+                </label>)}
+            />
+          </section>
+        </div>}
+    </DialogForm>);
 
-    const main = () => (
-      <div className={styles.timeline_block}>
-        <div className={styles.icn_circle} />
-        <div className={styles.timeline_content}>
-          <p className={styles.time}>{postedDatetime}<span>◯時間前</span></p>
-          <div className={styles.content_inner}>
-            <div className={styles.user_name}>
-              <dl>
-                <dt><img src="/img/common/icn_user.png" alt="" /></dt>
-                <dd>
-                  {(() => {
-                    if (posterType === EntityType.USER) {
-                      return posterUserName;
-                    } else if (posterType === EntityType.GROUP) {
-                      return posterGroupName;
-                    }
-                    return posterCompanyName;
-                  })()}
-                </dd>
-              </dl>
-            </div>
-            <div className={styles.text}>
-              <p>{post}</p>
-              <div className={styles.comments}>
-                <span className={styles.fb_comment}><img src="/img/common/icn_good.png" alt="" width="20" />{likesCount}件{posterUserId}{posterGroupId}{posterCompanyId}{likedFlg}</span>
-                <span>コメント {replies.length}件</span>
+  deletePostPrompt = ({ id, post, poster, onClose }) => (
+    <DeletionPrompt
+      title="投稿の削除"
+      prompt="こちらの投稿を削除しますか？"
+      warning={<ul><li>一度削除した投稿は復元できません。</li></ul>}
+      onDelete={() => this.props.dispatchDeleteGroupPosts(id)}
+      onClose={onClose}
+    >
+      <EntitySubject entity={poster} subject={post} />
+    </DeletionPrompt>);
+
+  render() {
+    const { post: timeline, roleLevel, currentUserId,
+      dispatchPostLike, dispatchDeleteLike, dispatchPostReply, openModal } = this.props;
+    const { replyPost, isPostingReply } = this.state || {};
+
+    const main = ({ id, post, poster, postedDatetime, disclosureType, autoShare,
+      likesCount, likedFlg, replies = [] }) => (
+        <div className={styles.timeline_block}>
+          <div className={styles.icn_circle} />
+          <div className={styles.timeline_content}>
+            <div className={styles.content_inner}>
+              <div className={styles.poster}>
+                <EntityLink entity={poster} />
+              </div>
+              <div className={styles.text}>
+                <p className={styles.time}>
+                  {formatDate(postedDatetime, { format: DateFormat.YMDHM })}
+                  <span>{toRelativeTimeText(postedDatetime)}</span>
+                </p>
+                {post && <p>{post}</p>}
+                {autoShare && (
+                  <EntitySubject
+                    entity={autoShare.owner}
+                    heading={autoShare.autoPost}
+                    subject={autoShare.okrName}
+                  />
+                )}
+                <div className={styles.comments}>
+                  <span className={styles.fb_comment}>
+                    <img src="/img/common/icn_good.png" alt="" width="20" />
+                    {likesCount}件
+                  </span>
+                  <span>コメント {replies.length}件</span>
+                </div>
+              </div>
+              <div className={styles.btn_area}>
+                <div className={styles.btn}>
+                  <button
+                    className={`${styles.like} ${likedFlg && styles.liked}`}
+                    onClick={() => (!likedFlg ? dispatchPostLike(id) : dispatchDeleteLike(id))}
+                  />
+                </div>
+                {((poster.type === EntityType.USER && poster.id === currentUserId) ||
+                  isSuperRole(roleLevel)) && (
+                  <DropdownMenu
+                    trigger={(
+                      <div className={styles.btn}>
+                        <button><img src="/img/common/icn_more.png" alt="" width="36" /></button>
+                      </div>)}
+                    options={[
+                      { caption: '公開範囲設定',
+                        onClick: () => openModal(this.changeDisclosureTypeDialog,
+                          { id, post, poster, disclosureType }) },
+                      { caption: '削除',
+                        onClick: () => openModal(this.deletePostPrompt, { id, post, poster }) },
+                    ]}
+                  />)}
               </div>
             </div>
-            <div className={styles.btn_area}>
-              <div className={styles.btn}><button><img src="/img/common/icn_good.png" alt="" width="36" /></button></div>
-              <div className={styles.btn}><button><img src="/img/common/icn_balloon.png" alt="" width="36" /></button></div>
-              <div className={styles.btn}><button><img src="/img/common/icn_more.png" alt="" width="36" /></button></div>
-            </div>
           </div>
-        </div>
-      </div>);
+        </div>);
 
-    const reply = item => (
-      <div key={item.postId} className={styles.timeline_block_sub}>
+    const reply = ({ id, post, poster, postedDatetime }) => (
+      <div key={id} className={styles.timeline_block_sub}>
         <div className={styles.timeline_content}>
           <div className={styles.content_inner}>
-            <div className={styles.user_name}>
-              <dl>
-                <dt><img src="/img/common/icn_user.png" alt="" /></dt>
-                <dd>{item.posterUserName}</dd>
-              </dl>
+            <div className={styles.poster}>
+              <EntityLink entity={poster} />
             </div>
             <div className={styles.text}>
-              <p>{item.post}</p>
+              <p className={styles.time}>
+                {formatDate(postedDatetime, { format: DateFormat.YMDHM })}
+                <span>{toRelativeTimeText(postedDatetime)}</span>
+              </p>
+              <p>{post}</p>
               <div className={styles.comments} />
             </div>
             <div className={styles.btn_area} />
           </div>
-          <p className={styles.time}>{item.postedDatetime}<span>◯時間前</span></p>
         </div>
       </div>);
 
-    const replyArea = () => (
+    const replyArea = ({ id }) => (
       <div className={`${styles.timeline_block_sub} ${styles.timeline_block_last}`}>
         <div className={styles.timeline_content}>
-          <div className={styles.content_inner}>
-            <div className={`${styles.user_image} ${styles.floatR}`}>
-              <img src="/img/common/icn_user.png" alt="" />
+          <div className={styles.reply_area}>
+            <div className={styles.poster}>
+              <EntityLink entity={{ id: currentUserId, type: EntityType.USER }} local />
             </div>
             <div className={styles.text}>
-              <textarea placeholder="コメントする" />
+              <textarea
+                placeholder="コメントする"
+                onChange={e => this.setState({ replyPost: e.target.value })}
+                value={replyPost || ''}
+              />
             </div>
             <div className={styles.btn_area}>
-              <div className={`${styles.btn} ${styles.btn_comment}`}><button>投稿する</button></div>
+              <div className={`${styles.btn} ${styles.btn_comment}`}>
+                {isPostingReply ?
+                  <div className={styles.busy_btn} /> :
+                  <button
+                    onClick={() => replyPost && this.setState({ isPostingReply: true },
+                      () => dispatchPostReply(id, replyPost).then(({ error }) =>
+                        this.setState({ isPostingReply: false }, () =>
+                          !error && this.setState({ replyPost: '' }))))}
+                  >
+                    投稿する
+                  </button>}
+              </div>
             </div>
           </div>
         </div>
@@ -90,9 +184,11 @@ export default class PostBar extends Component {
 
     return (
       <div>
-        {main()}
-        {replies.reverse().map(reply)}
-        {replyArea()}
+        {main(timeline)}
+        {timeline.replies.map(reply)}
+        {replyArea(timeline)}
       </div>);
   }
 }
+
+export default withModal(PostBar);

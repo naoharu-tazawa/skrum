@@ -12,7 +12,8 @@ import EntitySubject from '../../../components/EntitySubject';
 import DisclosureTypeOptions, { getDisclosureTypeName } from '../../../components/DisclosureTypeOptions';
 import OKRSearch from '../../OKRSearch/OKRSearch';
 import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, withReduxField } from '../../../util/FormUtil';
-import { getOwnerTypeId, getOwnerTypeSubject, mapOwnerOutbound } from '../../../util/OwnerUtil';
+import { getEntityTypeId } from '../../../util/EntityUtil';
+import { getOwnerTypeSubject, mapOwnerOutbound } from '../../../util/OwnerUtil';
 import { explodePath } from '../../../util/RouteUtil';
 import { isValidDate, compareDates, toUtcDate } from '../../../util/DatetimeUtil';
 import { OKRType } from '../../../util/OKRUtil';
@@ -20,7 +21,7 @@ import { postOkr } from '../action';
 import { postKR } from '../../OKRDetails/action';
 import styles from './NewOKR.css';
 
-const formName = 'newOKR';
+const formName = 'NewOKR';
 
 const validate = ({ owner, disclosureType, okrName, startDate, endDate } = {}) => ({
   owner: isEmpty(owner) && '担当者を入力してください',
@@ -53,7 +54,7 @@ const KRDialogForm = withLoadedReduxForm(
     const { locationBeforeTransitions } = state.routing || {};
     const { pathname } = locationBeforeTransitions || {};
     const { subject, id } = explodePath(pathname);
-    const owner = { type: getOwnerTypeId(subject), id };
+    const owner = { type: getEntityTypeId(subject), id };
     return { owner, ...dialogInitialValues(state) };
   },
   { validate },
@@ -79,7 +80,7 @@ class NewOKR extends Component {
   submit(entry) {
     const { type, parentOkr = {}, onClose, subject, id,
       dispatchPostOkr, dispatchPostKR } = this.props;
-    const defaultOwner = { type: getOwnerTypeId(subject), id };
+    const defaultOwner = { type: getEntityTypeId(subject), id };
     const { owner = defaultOwner, timeframeId, disclosureType, okrName, okrDetail,
       targetValue, unit, startDate, endDate, alignment = {} } = entry;
     const isOwnerCurrent = getOwnerTypeSubject(owner.type) === subject && owner.id === id;
@@ -102,7 +103,8 @@ class NewOKR extends Component {
       startDate: toUtcDate(startDate),
       endDate: toUtcDate(endDate),
     };
-    const dispatcher = okrType === '1' ? partial(dispatchPostOkr, subject, isOwnerCurrent) : dispatchPostKR;
+    const dispatcher = okrType === OKRType.OKR ?
+      partial(dispatchPostOkr, subject, isOwnerCurrent) : dispatchPostKR;
     return dispatcher(okr).then(({ error }) => !error && onClose());
   }
 
@@ -127,7 +129,7 @@ class NewOKR extends Component {
             <label>公開範囲</label>
             {withSelectReduxField(DisclosureTypeOptions,
               'disclosureType',
-              { ownerType: (owner || {}).type || getOwnerTypeId(subject),
+              { entityType: (owner || {}).type || getEntityTypeId(subject),
                 renderer: ({ value, label }) => (
                   <label key={value}>
                     <Field name="disclosureType" component="input" type="radio" value={value} />

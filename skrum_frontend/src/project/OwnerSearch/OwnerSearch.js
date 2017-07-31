@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
 import SearchDropdown from '../../components/SearchDropdown';
-import { mapOwner } from '../../util/OwnerUtil';
 import { EntityType } from '../../util/EntityUtil';
+import { mapOwner } from '../../util/OwnerUtil';
 import { searchOwner } from './action';
 
 export const ownerPropType = PropTypes.shape({

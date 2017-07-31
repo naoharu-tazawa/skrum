@@ -22,6 +22,6 @@ export const searchGroupUsers = (groupId, keyword) =>
     if (state.groupUsersFound.isSearching) return Promise.resolve();
     dispatch(requestSearchGroupUsers());
     return getJson('/additionalusers/search.json', state)({ gid: groupId, q: keyword })
-      .then(json => dispatch(finishSearchGroupUsers('groupUsersFound', json)))
+      .then(json => dispatch(finishSearchGroupUsers('data', json)))
       .catch(({ message }) => dispatch(finishSearchGroupUsers(new Error(message))));
   };
