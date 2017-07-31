@@ -36,27 +36,77 @@ class TPostRepository extends BaseRepository
      * @param string $before 取得基準投稿ID
      * @return array
      */
-    public function getTimeline(int $groupId, int $before = null): array
+//     public function getTimeline(int $groupId, int $before = null): array
+//     {
+//         $qb = $this->createQueryBuilder('tp1');
+//         $qb->select('tp1 AS post', 'mu1.lastName AS lastNamePost', 'mu1.firstName AS firstNamePost', 'mg1.groupName', 'mc1.companyName', 'tp2 AS reply', 'mu2.lastName AS lastNameReply', 'mu2.firstName AS firstNameReply')
+//             ->leftJoin('AppBundle:MUser', 'mu1', 'WITH', 'tp1.posterUserId = mu1.userId')
+//             ->leftJoin('AppBundle:MGroup', 'mg1', 'WITH', 'tp1.posterGroupId = mg1.groupId')
+//             ->leftJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tp1.posterCompanyId = mc1.companyId')
+//             ->leftJoin('AppBundle:TPost', 'tp2', 'WITH', 'tp1.id = tp2.parent')
+//             ->leftJoin('AppBundle:MUser', 'mu2', 'WITH', 'tp2.posterUserId = mu2.userId')
+//             ->where('tp1.timelineOwnerGroupId = :timelineOwnerGroupId')
+//             ->andWhere('tp1.parent IS NULL')
+//             ->setParameter('timelineOwnerGroupId', $groupId);
+
+//         if ($before !== null) {
+//             $qb->andWhere('tp1.id < :id')
+//                 ->setParameter('id', $before);
+//         }
+
+//         $qb->orderBy('tp1.id', 'DESC')
+//             ->addOrderBy('tp2.id', 'ASC')
+//             ->setMaxResults(5);
+
+//         return $qb->getQuery()->getResult();
+//     }
+
+    /**
+     * 指定グループIDのタイムライン（コメント投稿のみ）を取得
+     *
+     * @param integer $groupId グループID
+     * @param string $before 取得基準投稿ID
+     * @return array
+     */
+    public function getPosts(int $groupId, int $before = null): array
     {
-        $qb = $this->createQueryBuilder('tp1');
-        $qb->select('tp1 AS post', 'mu1.lastName AS lastNamePost', 'mu1.firstName AS firstNamePost', 'mg1.groupName', 'mc1.companyName', 'tp2 AS reply', 'mu2.lastName AS lastNameReply', 'mu2.firstName AS firstNameReply')
-            ->leftJoin('AppBundle:MUser', 'mu1', 'WITH', 'tp1.posterUserId = mu1.userId')
-            ->leftJoin('AppBundle:MGroup', 'mg1', 'WITH', 'tp1.posterGroupId = mg1.groupId')
-            ->leftJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tp1.posterCompanyId = mc1.companyId')
-            ->leftJoin('AppBundle:TPost', 'tp2', 'WITH', 'tp1.id = tp2.parent')
-            ->leftJoin('AppBundle:MUser', 'mu2', 'WITH', 'tp2.posterUserId = mu2.userId')
-            ->where('tp1.timelineOwnerGroupId = :timelineOwnerGroupId')
-            ->andWhere('tp1.parent IS NULL')
+        $qb = $this->createQueryBuilder('tp');
+        $qb->select('tp AS post', 'mu.lastName', 'mu.firstName', 'mg.groupName', 'mc.companyName')
+            ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
+            ->leftJoin('AppBundle:MGroup', 'mg', 'WITH', 'tp.posterGroupId = mg.groupId')
+            ->leftJoin('AppBundle:MCompany', 'mc', 'WITH', 'tp.posterCompanyId = mc.companyId')
+            ->where('tp.timelineOwnerGroupId = :timelineOwnerGroupId')
+            ->andWhere('tp.parent IS NULL')
             ->setParameter('timelineOwnerGroupId', $groupId);
 
         if ($before !== null) {
-            $qb->andWhere('tp1.id < :id')
+            $qb->andWhere('tp.id < :id')
                 ->setParameter('id', $before);
         }
 
-        $qb->orderBy('tp1.id', 'DESC')
-            ->addOrderBy('tp2.id', 'ASC')
+        $qb->orderBy('tp.id', 'DESC')
             ->setMaxResults(5);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 指定グループIDのタイムライン（リプライ投稿のみ）を取得
+     *
+     * @param integer $groupId グループID
+     * @param integer $postId 投稿ID
+     * @return array
+     */
+    public function getReplies(int $groupId, int $postId): array
+    {
+        $qb = $this->createQueryBuilder('tp');
+        $qb->select('tp AS reply', 'mu.lastName', 'mu.firstName')
+            ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
+            ->where('tp.timelineOwnerGroupId = :timelineOwnerGroupId')
+            ->andWhere('tp.parent = :parentId')
+            ->setParameter('timelineOwnerGroupId', $groupId)
+            ->setParameter('parentId', $postId)
+            ->addOrderBy('tp.id', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
