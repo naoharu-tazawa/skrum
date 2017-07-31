@@ -55,7 +55,7 @@ class TPostRepository extends BaseRepository
         }
 
         $qb->orderBy('tp1.id', 'DESC')
-            ->addOrderBy('tp2.id', 'DESC')
+            ->addOrderBy('tp2.id', 'ASC')
             ->setMaxResults(5);
 
         return $qb->getQuery()->getResult();
