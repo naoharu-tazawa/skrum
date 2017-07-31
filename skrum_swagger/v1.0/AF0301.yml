@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /companies/{companyId}/objectives?{tfid}:
+  /companies/{companyId}/objectives.json?{tfid}:
     get:
       description: 会社目標取得
       parameters:

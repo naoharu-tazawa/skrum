@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /posts/{postId}/replies:
+  /posts/{postId}/replies.json:
     post:
       description: リプライ投稿
       parameters:

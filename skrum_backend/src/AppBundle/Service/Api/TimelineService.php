@@ -254,7 +254,8 @@ class TimelineService extends BaseService
         // リプライ登録
         $tPostReply = new TPost();
         $tPostReply->setTimelineOwnerGroupId($tPost->getTimelineOwnerGroupId());
-        $tPostReply->setPosterId($auth->getUserId());
+        $tPostReply->setPosterType(DBConstant::OKR_OWNER_TYPE_USER);
+        $tPostReply->setPosterUserId($auth->getUserId());
         $tPostReply->setPost($data['post']);
         $tPostReply->setPostedDatetime(DateUtility::getCurrentDatetime());
         $tPostReply->setParent($tPost);
@@ -268,14 +269,14 @@ class TimelineService extends BaseService
 
         // レスポンスデータ生成
         $mUserRepos = $this->getMUserRepository();
-        $mUser = $mUserRepos->find($tPostReply->getPosterId());
+        $mUser = $mUserRepos->find($tPostReply->getPosterUserId());
 
         $postDTO = new PostDTO();
-        $postDTO->setPostId($tPost->getId());
-        $postDTO->setPosterId($tPost->getPosterId());
-        $postDTO->setPosterName($mUser->getLastName() . ' ' . $mUser->getFirstName());
-        $postDTO->setPost($tPost->getPost());
-        $postDTO->setPostedDatetime($tPost->getPostedDatetime());
+        $postDTO->setPostId($tPostReply->getId());
+        $postDTO->setPosterUserId($tPostReply->getPosterUserId());
+        $postDTO->setPosterUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $postDTO->setPost($tPostReply->getPost());
+        $postDTO->setPostedDatetime($tPostReply->getPostedDatetime());
 
         return $postDTO;
     }

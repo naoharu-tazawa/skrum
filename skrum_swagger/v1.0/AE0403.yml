@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /okrs/{okrId}/achievements:
+  /okrs/{okrId}/achievements.json:
     post:
       description: OKR進捗登録
       parameters:

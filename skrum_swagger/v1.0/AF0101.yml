@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /users/{userId}/objectives?{tfid}:
+  /users/{userId}/objectives.json?{tfid}:
     get:
       description: ユーザ目標取得
       parameters:

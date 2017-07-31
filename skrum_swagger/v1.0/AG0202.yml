@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/{groupId}/posts:
+  /groups/{groupId}/posts.json:
     post:
       description: コメント投稿（グループ）
       parameters:

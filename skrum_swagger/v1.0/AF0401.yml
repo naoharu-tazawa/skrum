@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /okrs/{okrId}/familyokrs?{tfid}:
+  /okrs/{okrId}/familyokrs.json?{tfid}:
     get:
       description: 3世代OKR取得
       parameters:

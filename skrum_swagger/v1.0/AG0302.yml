@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /companies/{companyId}/posts:
+  /companies/{companyId}/posts.json:
     post:
       description: コメント投稿（会社）
       parameters:
