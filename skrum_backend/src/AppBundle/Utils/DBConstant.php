@@ -248,4 +248,44 @@ class DBConstant
      * タイムフレームサイクル種別（１年毎）
      */
     const TIMEFRAME_CYCLE_TYPE_YEAR = '4';
+
+    /**
+     * メール通知設定オフ
+     */
+    const MAIL_OFF = '0';
+
+    /**
+     * メール通知設定オン（達成率通知メール）
+     */
+    const MAIL_OKR_ACHIEVEMENT = '1';
+
+    /**
+     * メール通知設定オン（投稿通知メール）
+     */
+    const MAIL_OKR_TIMELINE = '1';
+
+    /**
+     * メール通知設定オン（進捗登録リマインドメール）
+     */
+    const MAIL_OKR_REMINDER = '1';
+
+    /**
+     * メール通知設定オン（メンバー進捗状況レポートメール）
+     */
+    const MAIL_REPORT_MEMBER_ACHIEVEMENT = '1';
+
+    /**
+     * メール通知設定オン（グループ進捗状況レポートメール）
+     */
+    const MAIL_REPORT_GROUP_ACHIEVEMENT = '1';
+
+    /**
+     * メール通知設定オン（フィードバック対象者通知メール）
+     */
+    const MAIL_REPORT_FEEDBACK_TARGET = '1';
+
+    /**
+     * メール通知設定オン（サービスお知らせメール）
+     */
+    const MAIL_SERVICE_NOTIFICATION = '1';
 }

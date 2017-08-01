@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\Api;
 
+use \Firebase\JWT\JWT;
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\AuthenticationException;
@@ -17,8 +18,8 @@ use AppBundle\Entity\MUser;
 use AppBundle\Entity\TAuthorization;
 use AppBundle\Entity\TGroupTree;
 use AppBundle\Entity\TPreUser;
-use \Firebase\JWT\JWT;
 use AppBundle\Entity\TLogin;
+use AppBundle\Entity\TMailSettings;
 
 /**
  * ログインサービスクラス
@@ -190,14 +191,19 @@ class LoginService extends BaseService
             // 仮登録ユーザテーブルのURLトークンを無効にする
             $tPreUser->setInvalidFlg(DBConstant::FLG_TRUE);
 
-            if ($planId === DBConstant::PLAN_ID_TRIAL_PLAN) {
-                $tAuthorization = new TAuthorization();
-                $tAuthorization->setCompanyId($mCompany->getCompanyId());
-                $tAuthorization->setPlanId($planId);
-                $tAuthorization->setAuthorizationStartDatetime(DateUtility::getCurrentDatetime());
-                $tAuthorization->setAuthorizationEndDatetime(DateUtility::getXDaysAfter($this->getParameter('trial_plan_period')));
-                $this->persist($tAuthorization);
-            }
+            // 認可テーブルにレコード追加
+            $tAuthorization = new TAuthorization();
+            $tAuthorization->setCompanyId($mCompany->getCompanyId());
+            $tAuthorization->setPlanId($planId);
+            $tAuthorization->setAuthorizationStartDatetime(DateUtility::getCurrentDatetime());
+            $tAuthorization->setAuthorizationEndDatetime(DateUtility::getXDaysAfter($this->getParameter('trial_plan_period')));
+            $this->persist($tAuthorization);
+
+            // メール通知設定テーブルにレコード追加
+            $tMailSettings = new TMailSettings();
+            $tMailSettings->setUserId($mUser->getUserId());
+            $tMailSettings->setReportGroupAchievement(DBConstant::MAIL_OFF);
+            $this->persist($tMailSettings);
 
             $this->flush();
             $this->commit();
@@ -282,6 +288,17 @@ class LoginService extends BaseService
 
             // 仮登録ユーザテーブルのURLトークンを無効にする
             $tPreUser->setInvalidFlg(DBConstant::FLG_TRUE);
+
+            // メール通知設定テーブルにレコード追加
+            $tMailSettings = new TMailSettings();
+            $tMailSettings->setUserId($mUser->getUserId());
+            if ($mRoleAssignment->getRoleLevel() >= DBConstant::ROLE_LEVEL_ADMIN) {
+                $tMailSettings->setReportGroupAchievement(DBConstant::MAIL_OFF);
+            } else {
+                $tMailSettings->setReportMemberAchievement(DBConstant::MAIL_OFF);
+                $tMailSettings->setReportFeedbackTarget(DBConstant::MAIL_OFF);
+            }
+            $this->persist($tMailSettings);
 
             $this->flush();
             $this->commit();
