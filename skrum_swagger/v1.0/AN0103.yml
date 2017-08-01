@@ -1,0 +1,48 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /companies/{companyId}/images.json:
+    post:
+      description: 会社画像アップロード
+      parameters:
+        -
+          name: companyId
+          in: path
+          type: integer
+          description: 会社ID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description: アップロード画像（BASE64）
+          required: true
+          schema:
+            type: object
+            properties:
+              image:
+                type: string
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

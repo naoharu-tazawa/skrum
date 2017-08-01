@@ -24,7 +24,8 @@
         "justinrainbow/json-schema": "^5.2",
         "firebase/php-jwt": "^4.0",
         "nelmio/cors-bundle": "^1.5",
-        "snc/redis-bundle": "^2.0"
+        "snc/redis-bundle": "^2.0",
+        "seferov/aws-bundle": "^2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

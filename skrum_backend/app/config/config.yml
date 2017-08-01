@@ -117,3 +117,17 @@ snc_redis:
         query_cache:
             client: cache
             entity_manager: default
+
+# SeferovAwsBundle Configuration
+seferov_aws:
+    credentials:
+        key: AWS_KEY
+        secret: AWS_SECRET
+    region: ap-northeast-1
+    services:
+        s3:
+            credentials:
+                key: AKIAJ6E4IW257QWV3Z4Q
+                secret: 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
+            region: ap-northeast-1
+            version: latest

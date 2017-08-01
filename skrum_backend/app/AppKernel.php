@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new Snc\RedisBundle\SncRedisBundle(),
+            new Seferov\AwsBundle\SeferovAwsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
