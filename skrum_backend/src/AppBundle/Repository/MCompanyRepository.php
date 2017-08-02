@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Utils\DBConstant;
+
 /**
  * MCompanyリポジトリクラス
  *
@@ -24,6 +26,27 @@ class MCompanyRepository extends BaseRepository
             ->andWhere('mc.companyName LIKE :companyName')
             ->setParameter('companyId', $companyId)
             ->setParameter('companyName', $keyword . '%');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 全ての会社をそれに紐づくOKR達成率と共に全レコードを取得
+     *
+     * @return array
+     */
+    public function getAllCompaniesWithAchievementRate(): array
+    {
+        $qb = $this->createQueryBuilder('mc');
+        $qb->select('mc.companyId', 'IDENTITY(to.timeframe) AS timeframeId', 'to.achievementRate')
+        ->innerJoin('AppBundle:TTimeframe', 'tt', 'WITH', 'mc.companyId = tt.company AND tt.defaultFlg = :defaultFlg')
+        ->innerJoin('AppBundle:TOkr', 'to', 'WITH', 'mc.companyId = to.ownerCompanyId AND tt.timeframeId = to.timeframe')
+        ->where('to.ownerType = :ownerType')
+        ->andWhere('to.type = :type')
+        ->setParameter('defaultFlg', DBConstant::FLG_TRUE)
+        ->setParameter('ownerType', DBConstant::OKR_OWNER_TYPE_COMPANY)
+        ->setParameter('type', DBConstant::OKR_TYPE_OBJECTIVE)
+        ->orderBy('mc.companyId', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

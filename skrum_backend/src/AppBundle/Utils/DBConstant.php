@@ -288,4 +288,19 @@ class DBConstant
      * メール通知設定オン（サービスお知らせメール）
      */
     const MAIL_SERVICE_NOTIFICATION = '1';
+
+    /**
+     * バッチEXITコード（正常終了）
+     */
+    const EXIT_CODE_SUCCESS = 0;
+
+    /**
+     * バッチEXITコード（リトライ終了）
+     */
+    const EXIT_CODE_RETRY = 3;
+
+    /**
+     * バッチEXITコード（異常終了）
+     */
+    const EXIT_CODE_ERROR = 9;
 }

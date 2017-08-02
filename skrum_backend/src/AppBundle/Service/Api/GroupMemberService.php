@@ -102,7 +102,7 @@ class GroupMemberService extends BaseService
         // グループ情報配列を整形してDTOに詰め替える
         $members = array();
         $tLoginRepos = $this->getTLoginRepository();
-        $userInfoArrayCount = count($userInfoArray);;
+        $userInfoArrayCount = count($userInfoArray);
         for ($i = 0; $i < $userInfoArrayCount; ++$i) {
             if ($i === 0) {
                 // 初回ループ

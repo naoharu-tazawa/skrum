@@ -241,6 +241,25 @@ class BaseService
     }
 
     /**
+     * エンティティマネージャ管理下にある全てのエンティティをクリア
+     *
+     * @param string|null $entityName if given, only entities of this type will get detached
+     * @return void
+     */
+    public function clear($entityName = null)
+    {
+        $this->entityManager->clear($entityName);
+    }
+
+    /**
+     * エンンティティマネージャのクローズ
+     */
+    public function close()
+    {
+        $this->entityManager->close();
+    }
+
+    /**
      * Returns a rendered view.
      *
      * @param string $view       The view name

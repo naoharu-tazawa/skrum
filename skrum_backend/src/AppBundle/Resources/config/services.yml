@@ -125,3 +125,7 @@ services:
     api.user_setting_service:
         class: AppBundle\Service\Api\UserSettingService
         arguments: ['@service_container']
+
+    batch.achievement_rate_log_service:
+        class: AppBundle\Service\Batch\AchievementRateLogService
+        arguments: ['@service_container']

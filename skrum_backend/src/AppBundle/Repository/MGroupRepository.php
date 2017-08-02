@@ -251,4 +251,25 @@ SQL;
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->execute($params);
     }
+
+    /**
+     * 全てのグループをそれに紐づくOKR達成率と共に全レコードを取得
+     *
+     * @return array
+     */
+    public function getAllGroupsWithAchievementRate(): array
+    {
+        $qb = $this->createQueryBuilder('mg');
+        $qb->select('mg.groupId', 'IDENTITY(to.timeframe) AS timeframeId', 'to.achievementRate')
+            ->innerJoin('AppBundle:TOkr', 'to', 'WITH', 'mg.groupId = to.ownerGroup')
+            ->innerJoin('AppBundle:TTimeframe', 'tt', 'WITH', 'to.timeframe = tt.timeframeId AND tt.defaultFlg = :defaultFlg')
+            ->where('to.ownerType = :ownerType')
+            ->andWhere('to.type = :type')
+            ->setParameter('defaultFlg', DBConstant::FLG_TRUE)
+            ->setParameter('ownerType', DBConstant::OKR_OWNER_TYPE_GROUP)
+            ->setParameter('type', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->orderBy('mg.groupId', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
 }

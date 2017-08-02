@@ -10,14 +10,14 @@ namespace AppBundle\Utils;
 class Constant
 {
     /**
-     * ログ出力ファイルパス（アプリケーション）
+     * APIログ出力ファイルパス（アプリケーション）
      */
-    const LOG_FILE_PATH_APPLICATION = '../app/logs/application.log';
+    const LOG_FILE_PATH_APPLICATION = __DIR__ . '/../../../app/logs/application.log';
 
     /**
-     * ログ出力ファイルパス（アラート）
+     * APIログ出力ファイルパス（アラート）
      */
-    const LOG_FILE_PATH_ALERT = '../app/logs/alert.log';
+    const LOG_FILE_PATH_ALERT = __DIR__ . '/../../../app/logs/alert.log';
 
     /**
      * 主体種別（ユーザ）

@@ -210,4 +210,27 @@ SQL;
 
         return $qb->getQuery()->getSingleScalarResult();
     }
+
+    /**
+     * 全てのユーザをそれに紐づくOKR達成率と共に全レコードを取得
+     *
+     * @return array
+     */
+    public function getAllUsersWithAchievementRate(): array
+    {
+        $qb = $this->createQueryBuilder('mu');
+        $qb->select('mu.userId', 'IDENTITY(to.timeframe) AS timeframeId', 'to.achievementRate')
+            ->innerJoin('AppBundle:TOkr', 'to', 'WITH', 'mu.userId = to.ownerUser')
+            ->innerJoin('AppBundle:TTimeframe', 'tt', 'WITH', 'to.timeframe = tt.timeframeId AND tt.defaultFlg = :defaultFlg')
+            ->where('mu.archivedFlg = :archivedFlg')
+            ->andWhere('to.ownerType = :ownerType')
+            ->andWhere('to.type = :type')
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
+            ->setParameter('defaultFlg', DBConstant::FLG_TRUE)
+            ->setParameter('ownerType', DBConstant::OKR_OWNER_TYPE_USER)
+            ->setParameter('type', DBConstant::OKR_TYPE_OBJECTIVE)
+            ->orderBy('mu.userId', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
 }
