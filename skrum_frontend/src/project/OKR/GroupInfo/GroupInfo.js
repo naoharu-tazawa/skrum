@@ -16,7 +16,7 @@ export default class GroupInfo extends Component {
 
   render() {
     const { group, infoLink } = this.props;
-    const { name, groupPaths, mission, leaderUserId, leaderName, lastUpdate } = group;
+    const { groupId, name, groupPaths, mission, leaderUserId, leaderName, lastUpdate } = group;
     const groupPathsLink = groupPaths.map(({ groupTreeId, groupPath }) =>
       <ul key={groupTreeId}>
         {groupPath.map(({ id, name: groupName }, index) =>
@@ -31,8 +31,8 @@ export default class GroupInfo extends Component {
       </ul>);
     return (
       <div className={`${styles.content} ${styles.cf}`}>
-        <figure className={`${styles.avatar} ${styles.floatL}`}>
-          <img src="/img/time_management/icn_team.png" alt="Team Name" />
+        <figure className={styles.floatL}>
+          <EntityLink entity={{ id: groupId, type: EntityType.GROUP }} fluid avatarOnly />
           <figcaption className={styles.alignC}>
             最終更新: {toRelativeTimeText(lastUpdate)}
           </figcaption>

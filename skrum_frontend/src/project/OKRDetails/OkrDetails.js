@@ -130,7 +130,7 @@ class OkrDetails extends Component {
         </ul>
       )}
       onDelete={() => this.props.dispatchDeleteOkr(id).then(({ error }) => {
-        if (!error) browserHistory.push(toBasicPath());
+        if (!error) browserHistory.push(toBasicPath(location.pathname));
         return Promise.resolve();
       })}
       onClose={onClose}

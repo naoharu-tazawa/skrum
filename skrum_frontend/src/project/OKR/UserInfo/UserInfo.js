@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { userPropTypes } from './propTypes';
-import styles from './UserInfo.css';
+import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { replacePath } from '../../../util/RouteUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
+import styles from './UserInfo.css';
 
 export default class UserInfo extends Component {
 
@@ -15,7 +16,7 @@ export default class UserInfo extends Component {
 
   render() {
     const { user, infoLink } = this.props;
-    const { lastName, firstName, departments, position,
+    const { userId, lastName, firstName, departments, position,
       phoneNumber, emailAddress, lastUpdate } = user;
     const groupsLink = departments.map(({ groupId, groupName }, index) =>
       <span key={groupId}>
@@ -24,8 +25,8 @@ export default class UserInfo extends Component {
       </span>);
     return (
       <div className={`${styles.content} ${styles.cf}`}>
-        <figure className={`${styles.avatar} ${styles.floatL}`}>
-          <img src="/img/time_management/icn_team.png" alt="User Name" />
+        <figure className={styles.floatL}>
+          <EntityLink entity={{ id: userId, type: EntityType.USER }} fluid avatarOnly />
           <figcaption className={styles.alignC}>
             最終更新: {toRelativeTimeText(lastUpdate)}
           </figcaption>

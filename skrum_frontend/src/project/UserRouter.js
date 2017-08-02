@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { tabPropType } from '../navigation/header/propTypes';
 import OKRContainer from './OKR/OKRContainer';
 import MapContainer from './Map/MapContainer';
 import GroupManagementContainer from './GroupManagement/GroupManagementContainer';
-import { explodeTab } from '../util/RouteUtil';
+import { tabPropType, explodeTab } from '../util/RouteUtil';
 import styles from './GroupRouter.css';
 
 export default class UserRouter extends Component {

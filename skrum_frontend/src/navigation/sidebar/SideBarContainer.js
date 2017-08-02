@@ -8,29 +8,23 @@ import { fetchUserBasics } from '../action';
 class SideBarContainer extends Component {
 
   static propTypes = {
+    pathname: PropTypes.string.isRequired,
+    currentUserId: PropTypes.number.isRequired,
+    roleLevel: PropTypes.number.isRequired,
     userSection: sectionPropTypes,
     groupSections: sectionsPropTypes,
     companyId: PropTypes.number,
     companyName: PropTypes.string,
     dispatchLoadEntity: PropTypes.func,
-    pathname: PropTypes.string,
   };
-
-  state = {
-    isExpanded: true,
-  };
-
-  toggleSideBar() {
-    this.setState({ isExpanded: !this.state.isExpanded });
-  }
 
   render() {
-    const { userSection, groupSections, companyId, companyName, dispatchLoadEntity } = this.props;
-    const { isExpanded } = this.state;
+    const { pathname, roleLevel, userSection, groupSections, companyId, companyName,
+      dispatchLoadEntity } = this.props;
     return (
       <SideBar
-        isExpanded={isExpanded}
-        onClickToggle={() => this.toggleSideBar()}
+        pathname={pathname}
+        roleLevel={roleLevel}
         handleClick={dispatchLoadEntity}
         {...{ userSection, groupSections, companyId, companyName }}
       />);

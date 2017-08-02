@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { groupPropTypes } from './propTypes';
-import styles from './GroupInfoEdit.css';
 import InlineTextInput from '../../../editors/InlineTextInput';
 import InlineTextArea from '../../../editors/InlineTextArea';
 import InlinePotentialLeaders from '../../PotentialLeaders/InlinePotentialLeaders';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { replacePath } from '../../../util/RouteUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
+import styles from './GroupInfoEdit.css';
 
 export default class GroupInfoEdit extends Component {
 
@@ -41,7 +41,7 @@ export default class GroupInfoEdit extends Component {
         <h1 className={styles.ttl_setion}>基本情報</h1>
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <div className={styles.profile_img}>
-            <div><img src="/img/profile/img_profile.jpg" alt="" /></div>
+            <EntityLink entity={{ id: groupId, type: EntityType.GROUP }} fluid avatarOnly />
             <p>最終更新: {toRelativeTimeText(lastUpdate)}</p>
           </div>
           <div className={styles.profile_txt}>

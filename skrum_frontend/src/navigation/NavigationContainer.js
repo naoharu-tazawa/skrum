@@ -13,23 +13,24 @@ class NavigationContainer extends Component {
       PropTypes.element,
       PropTypes.arrayOf([PropTypes.element]),
     ]),
-    dispatchFetchUserInfo: PropTypes.func,
-    userId: PropTypes.number,
-    pathname: PropTypes.string,
+    pathname: PropTypes.string.isRequired,
+    currentUserId: PropTypes.number.isRequired,
+    roleLevel: PropTypes.number.isRequired,
+    dispatchFetchUserInfo: PropTypes.func.isRequired,
   };
 
   componentWillMount() {
-    const { dispatchFetchUserInfo, userId } = this.props;
-    dispatchFetchUserInfo(userId);
+    const { dispatchFetchUserInfo, currentUserId } = this.props;
+    dispatchFetchUserInfo(currentUserId);
   }
 
   render() {
-    const { pathname } = this.props;
+    const { pathname, currentUserId, roleLevel } = this.props;
     return (
       <div className={styles.layoutBase}>
-        <SideBarContainer pathname={pathname} />
+        <SideBarContainer {...{ pathname, currentUserId, roleLevel }} />
         <main className={styles.layoutMain}>
-          <HeaderContainer pathname={pathname} />
+          <HeaderContainer {...{ pathname, currentUserId, roleLevel }} />
           {this.props.children}
         </main>
       </div>);
@@ -37,10 +38,10 @@ class NavigationContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { userId } = state.auth;
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
-  return { state, userId, pathname };
+  const { userId: currentUserId, roleLevel } = state.auth;
+  return { state, pathname, currentUserId, roleLevel };
 };
 
 const mapDispatchToProps = (dispatch) => {

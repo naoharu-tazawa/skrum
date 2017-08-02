@@ -37,3 +37,5 @@ export const mapEntityOutbound = ({ type, id, name }, prefix) => ({
   [`${prefix}${capitalize(EntityTypeName[type])}Id`]: id,
   [`${prefix}${capitalize(EntityTypeName[type])}Name`]: name,
 });
+
+export const getEntityTypeSubject = type => EntityTypeName[type];

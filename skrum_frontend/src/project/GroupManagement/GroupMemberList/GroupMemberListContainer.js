@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { groupMembersPropTypes } from './propTypes';
 import GroupMemberList from './GroupMemberList';
 import { addGroupMember, deleteGroupMember } from '../action';
-import { explodePath } from '../../../util/RouteUtil';
 
 class GroupMemberListContainer extends Component {
 
@@ -59,18 +58,13 @@ const mapDispatchToProps = (dispatch) => {
   return { dispatchAddGroupMember, dispatchDeleteGroupMember };
 };
 
-const mergeProps = (state, { dispatchAddGroupMember, dispatchDeleteGroupMember }, props) => {
-  const { locationBeforeTransitions } = state.routing || {};
-  const { pathname } = locationBeforeTransitions || {};
-  const { timeframeId } = explodePath(pathname);
-  return {
-    ...state,
-    ...props,
-    dispatchAddGroupMember: (groupId, userId) =>
-      dispatchAddGroupMember(timeframeId, groupId, userId),
-    dispatchDeleteGroupMember,
-  };
-};
+const mergeProps = (state, { dispatchAddGroupMember, dispatchDeleteGroupMember }, props) => ({
+  ...state,
+  ...props,
+  dispatchAddGroupMember: (groupId, userId) =>
+    dispatchAddGroupMember(props.timeframeId, groupId, userId),
+  dispatchDeleteGroupMember,
+});
 
 export default connect(
   mapStateToProps,

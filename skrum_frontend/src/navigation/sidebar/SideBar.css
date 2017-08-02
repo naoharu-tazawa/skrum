@@ -13,28 +13,11 @@
   box-sizing: border-box;
   transition: 0.3s width;
 }
-.sideNavTitle {
-  position: relative;
-  padding: 10px 13px;
-  border-bottom: 1px solid #666;
-}
-.sideNavTitleText {
-  position: absolute;
-  top: 14px;
-  left: 42px;
-  display: block;
-}
-.isExpanded {
+.component.isExpanded {
   width: 200px;
 }
-.isCollapsed {
+.component:not(.isExpanded) {
   width: 54px;
-}
-.isHide {
-  display: none;
-}
-.isActive {
-  background-color: slategray;
 }
 .toggleArea {
   padding: 10px 15px;
@@ -50,12 +33,6 @@
 }
 .toggleButton:focus {
   outline: 0;
-}
-.userName {
-  padding: 20px;
-}
-.companyName {
-  padding: 20px;
 }
 /* -----------------------------------
  *  Header
@@ -77,7 +54,8 @@
   margin-bottom: 30px;
 }
 .sectionTitle {
-  padding: 5px 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   color: #818C9A;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -85,57 +63,33 @@
 /* -----------------------------------
  *  Section Item
  *  ----------------------------------- */
-.sectionItem {
-  padding: 10px 20px;
-  display: flex;
+.sectionItem, .settingItem {
+  height: 44px;
   align-items: center;
   justify-content: space-between;
 }
-.sectionItemLink {
-  color: inherit;
-  width: 100%;
+.sectionTitle.isExpanded, .sectionItem.isExpanded, .settingItem.isExpanded {
+  padding-left: 20px;
+}
+.sectionTitle:not(.isExpanded) {
+  text-align: center;
+}
+.sectionItem:not(.isExpanded) {
+  padding-left: 8px;
+}
+.sectionItem.isActive, .settingItem.isActive {
+  background-color: slategray;
+}
+.settingItem {
+  display: flex;
+}
+.settingItem:not(.isExpanded) {
+  padding-left: 14px;
+}
+.settingItem label {
+  margin: auto 1em;
+  white-space: nowrap;
   text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.sectionItemImg {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid #fff;
-}
-.sideNavMainItemLink {
-  display: block;
-  padding: 10px 13px;
-  background-position: 13px center;
-  background-repeat: no-repeat;
+  width: 100%;
   cursor: pointer;
-  color: #fff;
-  text-decoration: none;
-  white-space: nowrap;
-  margin-left: -40px;
-}
-.sideNavMenuItemLink {
-  display: block;
-  padding: 12px 10px 12px; /* 50px */
-  background-position: 13px center;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  color: #fff;
-  text-decoration: none;
-  white-space: nowrap;
-}
-.sideNavMenuItemLinkHover {
-}
-.sideNavMenuItemLinkHover:hover {
-  background-color: #38b6a5;
-}
-.sideNavMenuItemNotice {
-  display: inline-block;
-  position: relative;
-  top: -8px;
-  width: 6px;
-  height: 6px;
-  margin-left: 5px;
-  background-color: #f66c54;
-  border-radius: 50%;
 }

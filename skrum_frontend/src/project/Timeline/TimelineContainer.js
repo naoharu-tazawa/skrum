@@ -5,7 +5,7 @@ import { reset } from 'redux-form';
 import NewTimeline, { formName } from './NewTimeline';
 import PostListContainer from './PostList/PostListContainer';
 import { errorType } from '../../util/PropUtil';
-import { explodePath, isPathFinal } from '../../util/RouteUtil';
+import { isPathFinal } from '../../util/RouteUtil';
 import { fetchGroupPosts, fetchMoreGroupPosts, postGroupPosts } from './action';
 import styles from './TimelineContainer.css';
 
@@ -96,20 +96,20 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mergeProps = (state, dispatch, props) => {
-  const { pathname, dispatchFetchGroupPosts, dispatchFetchMoreGroupPosts, dispatchPostGroupPosts,
-    dispatchResetForm } = dispatch;
-  const { id } = explodePath(pathname);
-  return {
-    ...state,
-    ...props,
-    dispatchFetchGroupPosts: () => dispatchFetchGroupPosts(id),
-    dispatchFetchMoreGroupPosts: before => dispatchFetchMoreGroupPosts(id, before),
-    dispatchPostGroupPosts: (post, disclosureType) =>
-      dispatchPostGroupPosts(id, post, disclosureType),
-    dispatchResetForm,
-  };
-};
+const mergeProps = (state, {
+  dispatchFetchGroupPosts,
+  dispatchFetchMoreGroupPosts,
+  dispatchPostGroupPosts,
+  dispatchResetForm,
+}, props) => ({
+  ...state,
+  ...props,
+  dispatchFetchGroupPosts: () => dispatchFetchGroupPosts(props.groupId),
+  dispatchFetchMoreGroupPosts: before => dispatchFetchMoreGroupPosts(props.groupId, before),
+  dispatchPostGroupPosts: (post, disclosureType) =>
+    dispatchPostGroupPosts(props.groupId, post, disclosureType),
+  dispatchResetForm,
+});
 
 export default connect(
   mapStateToProps,

@@ -2,14 +2,18 @@
   display: flex;
   margin: auto 0;
 }
-.avatar {
-  height: 40px;
-  min-height: 40px;
+.avatar > img {
   border-radius: 50%;
 }
-.hasEntity .avatar {
-  width: 40px;
-  min-width: 40px;
+.imageError .avatar > img {
+  background-color: #8e9aa6;
+  padding: 5%;
+}
+.hasEntity.fluid .avatar > img {
+  width: 100%;
+  height: 100%;
+}
+.hasName .avatar {
   margin-right: 1em;
 }
 .title {
@@ -20,7 +24,9 @@
 .name {
   margin: auto 1em auto 0;
   white-space: nowrap;
-  overflow-x: hidden;
   text-overflow: ellipsis;
   width: 100%;
+}
+.component:not(.hasEditor) a, .component:not(.hasEditor) .name {
+  overflow: hidden;
 }

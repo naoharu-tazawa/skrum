@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { userGroupsPropTypes } from './propTypes';
 import UserGroupList from './UserGroupList';
 import { joinGroup, leaveGroup } from '../action';
-import { explodePath } from '../../../util/RouteUtil';
 
 class UserGroupListContainer extends Component {
 
@@ -48,18 +47,13 @@ const mapDispatchToProps = (dispatch) => {
   return { dispatchJoinGroup, dispatchLeaveGroup };
 };
 
-const mergeProps = (state, { dispatchJoinGroup, dispatchLeaveGroup }, props) => {
-  const { locationBeforeTransitions } = state.routing || {};
-  const { pathname } = locationBeforeTransitions || {};
-  const { timeframeId } = explodePath(pathname);
-  return {
-    ...state,
-    ...props,
-    dispatchJoinGroup: (userId, groupId) =>
-      dispatchJoinGroup(timeframeId, userId, groupId),
-    dispatchLeaveGroup,
-  };
-};
+const mergeProps = (state, { dispatchJoinGroup, dispatchLeaveGroup }, props) => ({
+  ...state,
+  ...props,
+  dispatchJoinGroup: (userId, groupId) =>
+    dispatchJoinGroup(props.timeframeId, userId, groupId),
+  dispatchLeaveGroup,
+});
 
 export default connect(
   mapStateToProps,

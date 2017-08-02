@@ -43,6 +43,24 @@
 .subMenu button:focus {
   outline: 0;
 }
+.subMenu button {
+  background: none;
+  border: none;
+  padding: 0;
+}
+.subMenu button, .subMenu :global(.dropdown) {
+  margin-left: 8px;
+}
+.circle {
+  border: 1px solid #F0F4F5;
+  border-radius: 50%;
+  display: flex;
+  cursor: pointer;
+}
+.addOKR img {
+  width: 28px;
+  height: 28px;
+}
 .userIcon {
   width: 20px;
   height: 20px;
@@ -50,19 +68,4 @@
   background-color: #fff;
   border-radius: 50%;
   border: 1px solid #fff;
-}
-.addIcon {
-  margin-left: -1em;
-}
-.settingIcon {
-  width: 20px;
-  height: 20px;
-  margin: 0 10px;
-}
-.subMenu button {
-  background: none;
-  border: none;
-  width: 16px;
-  padding: 0;
-  cursor: pointer;
 }

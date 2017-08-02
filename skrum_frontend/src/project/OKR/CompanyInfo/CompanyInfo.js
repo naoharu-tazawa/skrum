@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { companyPropTypes } from './propTypes';
-import styles from './CompanyInfo.css';
+import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
+import styles from './CompanyInfo.css';
 
 export default class CompanyInfo extends Component {
 
@@ -11,11 +12,11 @@ export default class CompanyInfo extends Component {
 
   render() {
     const { company } = this.props;
-    const { name, mission, vision, lastUpdate } = company;
+    const { companyId, name, mission, vision, lastUpdate } = company;
     return (
       <div className={`${styles.content} ${styles.cf}`}>
-        <figure className={`${styles.avatar} ${styles.floatL}`}>
-          <img src="/img/time_management/icn_team.png" alt="Company Name" />
+        <figure className={styles.floatL}>
+          <EntityLink entity={{ id: companyId, type: EntityType.COMPANY }} fluid avatarOnly />
           <figcaption className={styles.alignC}>
             最終更新: {toRelativeTimeText(lastUpdate)}
           </figcaption>

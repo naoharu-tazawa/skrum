@@ -194,6 +194,7 @@
 .reply_area .poster {
   display: flex;
   flex-direction: row-reverse;
+  padding-right: 1em;
 }
 .reply_area .text {
   padding-right: 1em;

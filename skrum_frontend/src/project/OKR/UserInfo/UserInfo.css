@@ -148,6 +148,7 @@
 .boxInfo .groups {
   margin-top: 10px;
   font-size: 14px;
+  line-height: 1.25;
 }
 .boxInfo .breads ul li {
   display: inline-block;

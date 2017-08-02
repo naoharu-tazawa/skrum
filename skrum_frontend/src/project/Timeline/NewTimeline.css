@@ -20,6 +20,7 @@
     padding: 30px 70px;
     width: 100%; }
       .cont_box > div.text_area {
+        margin-left: 1em;
         width: 866px; }
         .cont_box > div.text_area textarea {
           padding: 10px;

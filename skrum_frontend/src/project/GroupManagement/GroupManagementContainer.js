@@ -63,11 +63,13 @@ class GroupManagementContainer extends Component {
   }
 
   renderGroupManagementListContainer() {
-    switch (this.props.subject) {
+    const { subject, pathname } = this.props;
+    const { timeframeId } = explodePath(pathname);
+    switch (subject) {
       case 'user':
-        return <UserGroupListContainer />;
+        return <UserGroupListContainer timeframeId={timeframeId} />;
       case 'group':
-        return <GroupMemberListContainer />;
+        return <GroupMemberListContainer timeframeId={timeframeId} />;
       default:
         return null;
     }

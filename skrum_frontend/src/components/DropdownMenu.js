@@ -12,6 +12,7 @@ export default class DropdownMenu extends PureComponent {
       onClick: PropTypes.func,
       path: PropTypes.string,
     })).isRequired,
+    align: PropTypes.oneOf(['left', 'center', 'right']),
   };
 
   hide() {
@@ -20,16 +21,19 @@ export default class DropdownMenu extends PureComponent {
   }
 
   render() {
-    const { trigger, options } = this.props;
+    const { trigger, options, align = 'left' } = this.props;
+    let style = {}; // left
+    if (align === 'center') style = { left: '50%', transform: 'translate(-50%, 0)' };
+    else if (align === 'right') style = { right: 0 };
     return (
       <Dropdown
         ref={(dropdown) => { this.dropdown = dropdown; }}
         style={{ position: 'relative' }}
       >
-        <DropdownTrigger>
+        <DropdownTrigger style={{ cursor: 'pointer' }}>
           {trigger}
         </DropdownTrigger>
-        <DropdownContent>
+        <DropdownContent style={style}>
           {options.map(({ caption, onClick, path }, index) => (
             onClick
               ? <a key={index} onMouseUp={() => this.hide() && onClick()}>{caption}</a>

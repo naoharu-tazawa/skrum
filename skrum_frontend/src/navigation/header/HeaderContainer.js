@@ -9,15 +9,21 @@ import { withModal } from '../../util/ModalUtil';
 class HeaderContainer extends Component {
 
   static propTypes = {
+    pathname: PropTypes.string.isRequired,
+    currentUserId: PropTypes.number.isRequired,
+    roleLevel: PropTypes.number.isRequired,
     openModal: PropTypes.func.isRequired,
     dispatchLogout: PropTypes.func.isRequired,
   };
 
   render() {
-    const { openModal, dispatchLogout } = this.props;
+    const { pathname, currentUserId, roleLevel, openModal, dispatchLogout } = this.props;
     return (
       <div>
         <Header
+          pathname={pathname}
+          currentUserId={currentUserId}
+          roleLevel={roleLevel}
           onAdd={() => openModal(NewOKR, { type: 'Okr' })}
           handleLogoutSubmit={dispatchLogout}
         />
@@ -26,12 +32,17 @@ class HeaderContainer extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { userId: currentUserId } = state.auth || {};
+  return { currentUserId };
+};
+
 const mapDispatchToProps = (dispatch) => {
   const dispatchLogout = () => dispatch(logout());
   return { dispatchLogout };
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(withModal(HeaderContainer));

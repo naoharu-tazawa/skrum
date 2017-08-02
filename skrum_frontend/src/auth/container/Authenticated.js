@@ -8,6 +8,7 @@ import { implodePath } from '../../util/RouteUtil';
 
 class Authenticated extends Component {
   static propTypes = {
+    top: PropTypes.string.isRequired,
     login: PropTypes.string.isRequired,
     isAuthorized: PropTypes.bool,
     userId: PropTypes.number,
@@ -24,12 +25,12 @@ class Authenticated extends Component {
   }
 
   transfer(props = this.props) {
-    const { login, isAuthorized, userId, timeframeId } = props;
+    const { top, login, isAuthorized, userId, timeframeId } = props;
     const path = location.pathname;
     if (!isAuthorized) {
       browserHistory.push(login);
-    } else if (userId && timeframeId && (path === '/user' || path === '/u')) {
-      browserHistory.push(implodePath({ subject: 'user', id: userId, timeframeId, tab: 'objective' }));
+    } else if (userId && timeframeId && path === top) {
+      browserHistory.push(implodePath({ tab: 'objective', subject: 'user', id: userId, timeframeId }));
     }
   }
 

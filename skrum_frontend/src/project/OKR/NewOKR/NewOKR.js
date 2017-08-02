@@ -12,8 +12,8 @@ import EntitySubject from '../../../components/EntitySubject';
 import DisclosureTypeOptions, { getDisclosureTypeName } from '../../../components/DisclosureTypeOptions';
 import OKRSearch from '../../OKRSearch/OKRSearch';
 import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, withReduxField } from '../../../util/FormUtil';
-import { getEntityTypeId } from '../../../util/EntityUtil';
-import { getOwnerTypeSubject, mapOwnerOutbound } from '../../../util/OwnerUtil';
+import { getEntityTypeId, getEntityTypeSubject } from '../../../util/EntityUtil';
+import { mapOwnerOutbound } from '../../../util/OwnerUtil';
 import { explodePath } from '../../../util/RouteUtil';
 import { isValidDate, compareDates, toUtcDate } from '../../../util/DatetimeUtil';
 import { OKRType } from '../../../util/OKRUtil';
@@ -83,7 +83,7 @@ class NewOKR extends Component {
     const defaultOwner = { type: getEntityTypeId(subject), id };
     const { owner = defaultOwner, timeframeId, disclosureType, okrName, okrDetail,
       targetValue, unit, startDate, endDate, alignment = {} } = entry;
-    const isOwnerCurrent = getOwnerTypeSubject(owner.type) === subject && owner.id === id;
+    const isOwnerCurrent = getEntityTypeSubject(owner.type) === subject && owner.id === id;
     if (compareDates(startDate, endDate) > 0) {
       throw new SubmissionError({ _error: '終了日は開始日以降に設定してください' });
     }

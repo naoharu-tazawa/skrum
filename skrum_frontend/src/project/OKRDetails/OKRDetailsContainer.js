@@ -16,7 +16,7 @@ import styles from './OKRDetailsContainer.css';
 class OKRDetailsContainer extends Component {
 
   static propTypes = {
-    subject: PropTypes.string.isRequired,
+    subject: PropTypes.string,
     isFetching: PropTypes.bool,
     error: PropTypes.shape({ message: PropTypes.string.isRequired }),
     parentOkr: okrPropTypes,
