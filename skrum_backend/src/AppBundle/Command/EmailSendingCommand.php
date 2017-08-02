@@ -8,17 +8,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Utils\DBConstant;
 
+
 /**
- * 目標進捗率ログ作成コマンド
+ * メール送信コマンド
  *
  * @author naoharu.tazawa
  */
-class AchievementRateLogCommand extends BaseCommand
+class EmailSendingCommand extends BaseCommand
 {
     protected function configure()
     {
-        $this->setName('BA0101')
-            ->setDescription('目標進捗率ログ作成バッチ')
+        $this->setName('BB0108')
+            ->setDescription('メール送信バッチ')
             ->setDefinition(array(
                 new InputOption('bulk_size', 1000, InputOption::VALUE_REQUIRED, 'バルクサイズ')
             ));
@@ -26,15 +27,17 @@ class AchievementRateLogCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->logDebug('----------BA0101 目標進捗率ログ作成バッチ 開始----------');
+        $this->logDebug('----------BB0108 メール送信バッチ 開始----------');
 
-        $achievementRateLogService = $this->getAchievementRateLogService();
-        $exitCode = $achievementRateLogService->run($input->getOption('bulk_size'));
+        $mailSendingService = $this->getEmailSendingService();
+        $exitCode = $mailSendingService->run($input->getOption('bulk_size'));
 
         if ($exitCode === DBConstant::EXIT_CODE_SUCCESS) {
-            $this->logDebug('----------BA0101 目標進捗率ログ作成バッチ 正常終了----------');
+            $this->logDebug('----------BB0108 メール送信バッチ 正常終了----------');
+        } elseif ($exitCode === DBConstant::EXIT_CODE_RETRY) {
+            $this->logDebug('----------BB0108 メール送信バッチ リトライ終了----------');
         } elseif ($exitCode === DBConstant::EXIT_CODE_ERROR) {
-            $this->logDebug('----------BA0101 目標進捗率ログ作成バッチ 異常終了----------');
+            $this->logDebug('----------BB0108 メール送信バッチ 異常終了----------');
         }
 
         $output->writeln($exitCode);

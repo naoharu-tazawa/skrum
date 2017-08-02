@@ -6,13 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * TMailSettings
+ * TEmailSettings
  *
- * @ORM\Table(name="t_mail_settings")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TMailSettingsRepository")
+ * @ORM\Table(name="t_email_settings")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TEmailSettingsRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
-class TMailSettings
+class TEmailSettings
 {
     /**
      * @var integer
@@ -109,7 +109,7 @@ class TMailSettings
      *
      * @param integer $userId
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setUserId($userId)
     {
@@ -133,7 +133,7 @@ class TMailSettings
      *
      * @param string $okrAchievement
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setOkrAchievement($okrAchievement)
     {
@@ -157,7 +157,7 @@ class TMailSettings
      *
      * @param string $okrTimeline
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setOkrTimeline($okrTimeline)
     {
@@ -181,7 +181,7 @@ class TMailSettings
      *
      * @param string $okrReminder
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setOkrReminder($okrReminder)
     {
@@ -205,7 +205,7 @@ class TMailSettings
      *
      * @param string $reportMemberAchievement
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setReportMemberAchievement($reportMemberAchievement)
     {
@@ -229,7 +229,7 @@ class TMailSettings
      *
      * @param string $reportGroupAchievement
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setReportGroupAchievement($reportGroupAchievement)
     {
@@ -253,7 +253,7 @@ class TMailSettings
      *
      * @param string $reportFeedbackTarget
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setReportFeedbackTarget($reportFeedbackTarget)
     {
@@ -277,7 +277,7 @@ class TMailSettings
      *
      * @param string $serviceNotification
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setServiceNotification($serviceNotification)
     {
@@ -301,7 +301,7 @@ class TMailSettings
      *
      * @param \DateTime $createdAt
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setCreatedAt($createdAt)
     {
@@ -325,7 +325,7 @@ class TMailSettings
      *
      * @param \DateTime $updatedAt
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -349,7 +349,7 @@ class TMailSettings
      *
      * @param \DateTime $deletedAt
      *
-     * @return TMailSettings
+     * @return TEmailSettings
      */
     public function setDeletedAt($deletedAt)
     {

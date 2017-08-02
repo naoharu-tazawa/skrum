@@ -397,9 +397,9 @@ class BaseService
         return $this->entityManager->getRepository('AppBundle:TLogin');
     }
 
-    protected function getTMailReservationRepository()
+    protected function getTEmailReservationRepository()
     {
-        return $this->entityManager->getRepository('AppBundle:TMailReservation');
+        return $this->entityManager->getRepository('AppBundle:TEmailReservation');
     }
 
     protected function getTOkrActivityRepository()

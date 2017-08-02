@@ -6,62 +6,55 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * TMailReservation
+ * TEmailReservation
  *
- * @ORM\Table(name="t_mail_reservation")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TMailReservationRepository")
+ * @ORM\Table(name="t_email_reservation")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TEmailReservationRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
-class TMailReservation
+class TEmailReservation
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="email_id", type="string", length=10, nullable=true)
-     */
-    private $emailId;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="to_email_address", type="string", length=45, nullable=true)
+     * @ORM\Column(name="to_email_address", type="string", length=255, nullable=false)
      */
     private $toEmailAddress;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255, nullable=true)
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="body", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="body", type="text", length=65535, nullable=false)
      */
     private $body;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="reception_date", type="datetime", nullable=true)
+     * @ORM\Column(name="reception_datetime", type="datetime", nullable=false)
      */
-    private $receptionDate;
+    private $receptionDatetime;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="sending_reservation_time", type="datetime", nullable=true)
+     * @ORM\Column(name="sending_reservation_datetime", type="datetime", nullable=false)
      */
-    private $sendingReservationTime;
+    private $sendingReservationDatetime;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="sending_date", type="datetime", nullable=true)
+     * @ORM\Column(name="sending_datetime", type="datetime", nullable=true)
      */
-    private $sendingDate;
+    private $sendingDatetime;
 
     /**
      * @var \DateTime
@@ -89,7 +82,7 @@ class TMailReservation
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="bigint")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -98,35 +91,11 @@ class TMailReservation
 
 
     /**
-     * Set emailId
-     *
-     * @param string $emailId
-     *
-     * @return TMailReservation
-     */
-    public function setEmailId($emailId)
-    {
-        $this->emailId = $emailId;
-
-        return $this;
-    }
-
-    /**
-     * Get emailId
-     *
-     * @return string
-     */
-    public function getEmailId()
-    {
-        return $this->emailId;
-    }
-
-    /**
      * Set toEmailAddress
      *
      * @param string $toEmailAddress
      *
-     * @return TMailReservation
+     * @return TEmailReservation
      */
     public function setToEmailAddress($toEmailAddress)
     {
@@ -150,7 +119,7 @@ class TMailReservation
      *
      * @param string $title
      *
-     * @return TMailReservation
+     * @return TEmailReservation
      */
     public function setTitle($title)
     {
@@ -174,7 +143,7 @@ class TMailReservation
      *
      * @param string $body
      *
-     * @return TMailReservation
+     * @return TEmailReservation
      */
     public function setBody($body)
     {
@@ -194,75 +163,75 @@ class TMailReservation
     }
 
     /**
-     * Set receptionDate
+     * Set receptionDatetime
      *
-     * @param \DateTime $receptionDate
+     * @param \DateTime $receptionDatetime
      *
-     * @return TMailReservation
+     * @return TEmailReservation
      */
-    public function setReceptionDate($receptionDate)
+    public function setReceptionDatetime($receptionDatetime)
     {
-        $this->receptionDate = $receptionDate;
+        $this->receptionDatetime = $receptionDatetime;
 
         return $this;
     }
 
     /**
-     * Get receptionDate
+     * Get receptionDatetime
      *
      * @return \DateTime
      */
-    public function getReceptionDate()
+    public function getReceptionDatetime()
     {
-        return $this->receptionDate;
+        return $this->receptionDatetime;
     }
 
     /**
-     * Set sendingReservationTime
+     * Set sendingReservationDatetime
      *
-     * @param \DateTime $sendingReservationTime
+     * @param \DateTime $sendingReservationDatetime
      *
-     * @return TMailReservation
+     * @return TEmailReservation
      */
-    public function setSendingReservationTime($sendingReservationTime)
+    public function setSendingReservationDatetime($sendingReservationDatetime)
     {
-        $this->sendingReservationTime = $sendingReservationTime;
+        $this->sendingReservationDatetime = $sendingReservationDatetime;
 
         return $this;
     }
 
     /**
-     * Get sendingReservationTime
+     * Get sendingReservationDatetime
      *
      * @return \DateTime
      */
-    public function getSendingReservationTime()
+    public function getSendingReservationDatetime()
     {
-        return $this->sendingReservationTime;
+        return $this->sendingReservationDatetime;
     }
 
     /**
-     * Set sendingDate
+     * Set sendingDatetime
      *
-     * @param \DateTime $sendingDate
+     * @param \DateTime $sendingDatetime
      *
-     * @return TMailReservation
+     * @return TEmailReservation
      */
-    public function setSendingDate($sendingDate)
+    public function setSendingDatetime($sendingDatetime)
     {
-        $this->sendingDate = $sendingDate;
+        $this->sendingDatetime = $sendingDatetime;
 
         return $this;
     }
 
     /**
-     * Get sendingDate
+     * Get sendingDatetime
      *
      * @return \DateTime
      */
-    public function getSendingDate()
+    public function getSendingDatetime()
     {
-        return $this->sendingDate;
+        return $this->sendingDatetime;
     }
 
     /**
@@ -270,7 +239,7 @@ class TMailReservation
      *
      * @param \DateTime $createdAt
      *
-     * @return TMailReservation
+     * @return TEmailReservation
      */
     public function setCreatedAt($createdAt)
     {
@@ -294,7 +263,7 @@ class TMailReservation
      *
      * @param \DateTime $updatedAt
      *
-     * @return TMailReservation
+     * @return TEmailReservation
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -318,7 +287,7 @@ class TMailReservation
      *
      * @param \DateTime $deletedAt
      *
-     * @return TMailReservation
+     * @return TEmailReservation
      */
     public function setDeletedAt($deletedAt)
     {
