@@ -8,6 +8,8 @@ parameters:
 
     member_achievement_rate_report: '【Skrum】メンバー進捗状況レポート'
 
+    feedback_target_report: '【Skrum】フィードバック対象者自動抽出レポート'
+
     auto_post_type_generate: 'さんが目標を作成しました。'
 
     auto_post_type_achievement: 'さんの達成値が%%d%%sから%%d%%sに進捗しました。（%%s%%d%%s）'
@@ -19,3 +21,9 @@ parameters:
     auto_post_type_achievement_70: 'さんが目標進捗率70%を達成しました。'
 
     auto_post_type_achievement_100: 'さんが目標進捗率100%を達成しました。'
+
+    feedback_target_reason_login: '%%d日以上ログインしていません'
+
+    feedback_target_reason_achievement_registration: '%%d日以上進捗登録がありません'
+
+    feedback_target_reason_low_achievement_rate: '目標進捗率が予定進捗率に対して芳しくありません'

@@ -254,4 +254,25 @@ SQL;
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * フィードバック対象者報告メール対象者を取得（バッチ）
+     *
+     * @return array
+     */
+    public function getUsersForFeedbackTargetReportEmail(): array
+    {
+        $qb = $this->createQueryBuilder('mu');
+        $qb->select('mu')
+            ->innerJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
+            ->innerJoin('AppBundle:TEmailSettings', 'tes', 'WITH', 'mu.userId = tes.userId')
+            ->where('mu.archivedFlg = :archivedFlg')
+            ->andWhere('mra.roleLevel >= :roleLevel')
+            ->andWhere('tes.reportFeedbackTarget = :reportFeedbackTarget')
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
+            ->setParameter('roleLevel', DBConstant::ROLE_LEVEL_ADMIN)
+            ->setParameter('reportFeedbackTarget', DBConstant::EMAIL_REPORT_FEEDBACK_TARGET);
+
+        return $qb->getQuery()->getResult();
+    }
 }

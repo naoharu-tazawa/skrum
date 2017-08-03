@@ -14,3 +14,15 @@ parameters:
 
     #1ページあたり表示データ数
     paging_data_number: 20
+
+    #フィードバック対象者抽出条件（X日以上ログインしていない）
+    feedback_target_condition_login: 8
+
+    #フィードバック対象者抽出条件（X日以上進捗登録していない）
+    feedback_target_condition_achievement_registration: 10
+
+    #フィードバック対象者抽出条件（進捗率が予定進捗率（タイムフレーム経過日数／タイムフレーム全体日数）の(X * 100)%未満）
+    feedback_target_condition_low_achievement_rate: 0.3
+
+    #フィードバック対象者抽出条件（最低進捗率を計算する際の必要日数）
+    feedback_target_condition_low_achievement_rate_required_days: 10

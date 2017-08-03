@@ -18,7 +18,7 @@ class MemberReportEmailService extends BaseService
     /**
      * メール作成・登録
      *
-     * @param integer $bulkSize バルクサイズ
+     * @param MUser $mUser ユーザエンティティ
      * @return void
      */
     private function createEmail(MUser $mUser)

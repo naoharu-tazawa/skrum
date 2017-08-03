@@ -103,12 +103,12 @@ class TGroupMemberRepository extends BaseRepository
     {
         $qb = $this->createQueryBuilder('tgm');
         $qb->select('mg.groupId', 'mg.groupName', 'mg.groupType')
-        ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgm.group = mg.groupId')
-        ->where('tgm.user = :userId')
-        ->andWhere('mg.groupType <> :groupType')
-        ->setParameter('userId', $userId)
-        ->setParameter('groupType', DBConstant::GROUP_TYPE_COMPANY)
-        ->orderBy('mg.groupId', 'ASC');
+            ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgm.group = mg.groupId')
+            ->where('tgm.user = :userId')
+            ->andWhere('mg.groupType <> :groupType')
+            ->setParameter('userId', $userId)
+            ->setParameter('groupType', DBConstant::GROUP_TYPE_COMPANY)
+            ->orderBy('mg.groupId', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
@@ -201,7 +201,7 @@ SQL;
     }
 
     /**
-     * 所属グループの進捗率（前日・前々日）を取得
+     * 所属グループの進捗率（前日・前々日）を取得（バッチ）
      *
      * @param integer $userId ユーザID
      * @param integer $timeframeId タイムフレームID
@@ -215,22 +215,24 @@ SQL;
             ->leftJoin('AppBundle:TAchievementRateLog', 'tarl1', 'WITH', 'tgm.group = tarl1.ownerGroupId AND (tarl1.createdAt >= :startDatetime1 AND tarl1.createdAt < :endDatetime1)')
             ->leftJoin('AppBundle:TAchievementRateLog', 'tarl2', 'WITH', 'tgm.group = tarl2.ownerGroupId AND (tarl2.createdAt >= :startDatetime2 AND tarl2.createdAt < :endDatetime2)')
             ->where('tgm.user = :userId')
+            ->andWhere('mg.groupType <> :groupType')
             ->andWhere('tarl1.timeframeId = :timeframeId1')
             ->andWhere('tarl2.timeframeId = :timeframeId2')
-            ->setParameter('userId', $userId)
-            ->setParameter('timeframeId1', $timeframeId)
-            ->setParameter('timeframeId2', $timeframeId)
             ->setParameter('startDatetime1', DateUtility::getTodayDatetimeString())
             ->setParameter('endDatetime1', DateUtility::getTomorrowDatetimeString())
             ->setParameter('startDatetime2', DateUtility::getYesterdayDatetimeString())
             ->setParameter('endDatetime2', DateUtility::getTodayDatetimeString())
+            ->setParameter('userId', $userId)
+            ->setParameter('groupType', DBConstant::GROUP_TYPE_COMPANY)
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('timeframeId2', $timeframeId)
             ->orderBy('tgm.group', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * 所属メンバーの進捗率（前日・前々日）を取得
+     * 所属メンバーの進捗率（前日・前々日）を取得（バッチ）
      *
      * @param integer $groupId グループID
      * @param integer $timeframeId タイムフレームID
@@ -246,13 +248,37 @@ SQL;
             ->where('tgm.group = :groupId')
             ->andWhere('tarl1.timeframeId = :timeframeId1')
             ->andWhere('tarl2.timeframeId = :timeframeId2')
-            ->setParameter('groupId', $groupId)
-            ->setParameter('timeframeId1', $timeframeId)
-            ->setParameter('timeframeId2', $timeframeId)
             ->setParameter('startDatetime1', DateUtility::getTodayDatetimeString())
             ->setParameter('endDatetime1', DateUtility::getTomorrowDatetimeString())
             ->setParameter('startDatetime2', DateUtility::getYesterdayDatetimeString())
             ->setParameter('endDatetime2', DateUtility::getTodayDatetimeString())
+            ->setParameter('groupId', $groupId)
+            ->setParameter('timeframeId1', $timeframeId)
+            ->setParameter('timeframeId2', $timeframeId)
+            ->orderBy('tgm.user', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 所属メンバーのフィードバック対象者を取得（バッチ）
+     *
+     * @param integer $groupId グループID
+     * @param integer $timeframeId タイムフレームID
+     * @return array
+     */
+    public function getFeedbackTargetMembers(int $groupId, int $timeframeId): array
+    {
+        $qb = $this->createQueryBuilder('tgm');
+        $qb->select('mu.userId', 'mu.lastName', 'mu.firstName', 'tarl.achievementRate')
+            ->innerJoin('AppBundle:MUser', 'mu', 'WITH', 'tgm.user = mu.userId')
+            ->leftJoin('AppBundle:TAchievementRateLog', 'tarl', 'WITH', 'tgm.user = tarl.ownerUserId AND (tarl.createdAt >= :startDatetime AND tarl.createdAt < :endDatetime)')
+            ->where('tgm.group = :groupId')
+            ->andWhere('tarl.timeframeId = :timeframeId')
+            ->setParameter('startDatetime', DateUtility::getTodayDatetimeString())
+            ->setParameter('endDatetime', DateUtility::getTomorrowDatetimeString())
+            ->setParameter('groupId', $groupId)
+            ->setParameter('timeframeId', $timeframeId)
             ->orderBy('tgm.user', 'ASC');
 
         return $qb->getQuery()->getResult();

@@ -134,6 +134,10 @@ services:
         class: AppBundle\Service\Batch\EmailSendingService
         arguments: ['@service_container']
 
+    batch.feedback_target_report_email_service:
+        class: AppBundle\Service\Batch\FeedbackTargetReportEmailService
+        arguments: ['@service_container']
+
     batch.member_report_email_service:
         class: AppBundle\Service\Batch\MemberReportEmailService
         arguments: ['@service_container']

@@ -102,45 +102,6 @@ class BaseCommand extends ContainerAwareCommand
 
 
     //----------------------------------------------
-    //ここからロジッククラスの取得メソッド
-    //----------------------------------------------
-
-    protected function getDBExistanceLogic()
-    {
-        return $this->get('api.db_existance_logic');
-    }
-
-    protected function getDisclosureLogic()
-    {
-        return $this->get('api.disclosure_logic');
-    }
-
-    protected function getOkrAchievementRateLogic()
-    {
-        return $this->get('api.okr_achievement_rate_logic');
-    }
-
-    protected function getOkrNestedIntervalsLogic()
-    {
-        return $this->get('api.okr_nested_intervals_logic');
-    }
-
-    protected function getOkrOperationLogic()
-    {
-        return $this->get('api.okr_operation_logic');
-    }
-
-    protected function getPermissionLogic()
-    {
-        return $this->get('api.permission_logic');
-    }
-
-    protected function getPostLogic()
-    {
-        return $this->get('api.post_logic');
-    }
-
-    //----------------------------------------------
     //ここからサービスクラスの取得メソッド
     //----------------------------------------------
 
@@ -152,6 +113,11 @@ class BaseCommand extends ContainerAwareCommand
     protected function getEmailSendingService()
     {
         return $this->getContainer()->get('batch.email_sending_service');
+    }
+
+    protected function getFeedbackTargetReportEmailService()
+    {
+        return $this->getContainer()->get('batch.feedback_target_report_email_service');
     }
 
     protected function getMemberReportEmailService()

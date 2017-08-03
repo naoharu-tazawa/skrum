@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TOkrActivity;
 
 /**
  * TOkrActivityリポジトリクラス
@@ -29,5 +30,29 @@ class TOkrActivityRepository extends BaseRepository
             ->orderBy('toa.activityDatetime', 'ASC');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 最新の進捗登録時のエンティティを取得（バッチ）
+     *
+     * @param integer $userId ユーザID
+     * @param integer $timeframeId タイムフレームID
+     * @return array
+     */
+    public function getLatestEntityInAchievementRegistration(int $userId, int $timeframeId): array
+    {
+        $qb = $this->createQueryBuilder('toa');
+        $qb->select('toa.activityDatetime')
+            ->innerJoin('AppBundle:TOkr', 'to', 'WITH', 'toa.okr = to.okrId')
+            ->where('toa.type = :type')
+            ->andWhere('to.timeframe = :timeframeId')
+            ->andWhere('to.ownerUser = :ownerUserId')
+            ->setParameter('type', DBConstant::OKR_OPERATION_TYPE_ACHIEVEMENT)
+            ->setParameter('timeframeId', $timeframeId)
+            ->setParameter('ownerUserId', $userId)
+            ->orderBy('toa.activityDatetime', 'DESC')
+            ->setMaxResults(1);
+
+        return $qb->getQuery()->getSingleResult();
     }
 }
