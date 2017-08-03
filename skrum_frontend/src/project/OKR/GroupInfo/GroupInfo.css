@@ -131,6 +131,7 @@
 
 .nav_info {
   display: flex;
+  flex-wrap: wrap;
 }
 .boxInfo {
   width: calc(100% - 103px);

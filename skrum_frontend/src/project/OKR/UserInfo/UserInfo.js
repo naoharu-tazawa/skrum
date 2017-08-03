@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { userPropTypes } from './propTypes';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
@@ -11,11 +10,10 @@ export default class UserInfo extends Component {
 
   static propTypes = {
     user: userPropTypes.isRequired,
-    infoLink: PropTypes.string,
   };
 
   render() {
-    const { user, infoLink } = this.props;
+    const { user } = this.props;
     const { userId, lastName, firstName, departments, position,
       phoneNumber, emailAddress, lastUpdate } = user;
     const groupsLink = departments.map(({ groupId, groupName }, index) =>
@@ -53,9 +51,12 @@ export default class UserInfo extends Component {
                 </tr>
               </tbody>
             </table>
-            <div className={styles.member_list}>
-              <a className={`${styles.btn} ${styles.btn_arrow_r}`} href={infoLink}>グループ一覧</a>
-            </div>
+            <Link
+              className={`${styles.btn} ${styles.btn_arrow_r}`}
+              to={replacePath({ tab: 'control' })}
+            >
+              グループ一覧
+            </Link>
           </div>
         </div>
       </div>);

@@ -12,10 +12,7 @@ class GroupInfoContainer extends Component {
   render() {
     const { group } = this.props;
     return !group ? null : (
-      <GroupInfo
-        group={group}
-        infoLink="./"
-      />);
+      <GroupInfo group={group} />);
   }
 }
 

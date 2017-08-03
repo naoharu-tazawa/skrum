@@ -12,10 +12,7 @@ class CompanyInfoContainer extends Component {
   render() {
     const { company } = this.props;
     return !company ? null : (
-      <CompanyInfo
-        company={company}
-        infoLink="./"
-      />);
+      <CompanyInfo company={company} />);
   }
 }
 

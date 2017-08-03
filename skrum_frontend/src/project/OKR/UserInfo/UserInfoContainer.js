@@ -12,10 +12,7 @@ class UserInfoContainer extends Component {
   render() {
     const { user } = this.props;
     return !user ? null : (
-      <UserInfo
-        user={user}
-        infoLink="./"
-      />);
+      <UserInfo user={user} />);
   }
 }
 

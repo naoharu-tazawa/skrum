@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { groupPropTypes } from './propTypes';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
@@ -11,11 +10,10 @@ export default class GroupInfo extends Component {
 
   static propTypes = {
     group: groupPropTypes.isRequired,
-    infoLink: PropTypes.string.isRequired,
   };
 
   render() {
-    const { group, infoLink } = this.props;
+    const { group } = this.props;
     const { groupId, name, groupPaths, mission, leaderUserId, leaderName, lastUpdate } = group;
     const groupPathsLink = groupPaths.map(({ groupTreeId, groupPath }) =>
       <ul key={groupTreeId}>
@@ -52,7 +50,12 @@ export default class GroupInfo extends Component {
               entity={{ id: leaderUserId, name: leaderName, type: EntityType.USER }}
               title="リーダー"
             />
-            <a className={`${styles.btn} ${styles.btn_arrow_r}`} href={infoLink}>メンバー一覧</a>
+            <Link
+              className={`${styles.btn} ${styles.btn_arrow_r}`}
+              to={replacePath({ tab: 'control' })}
+            >
+              メンバー一覧
+            </Link>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { toNumber, isEmpty, pickBy, isUndefined } from 'lodash';
 import { EntityType } from './EntityUtil';
 
 export const tabPropType =
-  PropTypes.oneOf(['objective', 'map', 'timeline', 'control', 'setting']);
+  PropTypes.oneOf(['o', 'objective', 'm', 'map', 't', 'timeline', 'c', 'control', 's', 'setting']);
 
 export const explodeTab = (tab) => {
   switch (tab && tab[0]) {
