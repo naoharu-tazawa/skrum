@@ -176,6 +176,48 @@ class DateUtility
     }
 
     /**
+     * 翌日の0時0分0秒を取得
+     *
+     * @return string 翌日0時0分0秒
+     */
+    public static function getTomorrowDatetimeString(): string
+    {
+        return date(self::DATETIME_FORMAT, mktime(0, 0, 0, date('m'), date('d') + 1, date('y')));
+    }
+
+    /**
+     * 当日の0時0分0秒を取得
+     *
+     * @return string 当日0時0分0秒
+     */
+    public static function getTodayDatetimeString(): string
+    {
+        return date(self::DATETIME_FORMAT, mktime(0, 0, 0, date('m'), date('d'), date('y')));
+    }
+
+    /**
+     * 前日の0時0分0秒を取得
+     *
+     * @return string 前日0時0分0秒
+     */
+    public static function getYesterdayDatetimeString(): string
+    {
+        return date(self::DATETIME_FORMAT, mktime(0, 0, 0, date('m'), date('d') - 1, date('y')));
+    }
+
+    /**
+     * 当日のX時Y分0秒を取得
+     *
+     * @param integer $hour 指定時
+     * @param integer $minute 指定分
+     * @return string 当日X時Y分0秒
+     */
+    public static function getTodayXYTimeDatetimeString(int $hour, int $minute): string
+    {
+        return date(self::DATETIME_FORMAT, mktime($hour, $minute, 0, date('m'), date('d'), date('y')));
+    }
+
+    /**
      * 指定年月のXヶ月後の１日を取得
      *
      * @param integer $year 指定年

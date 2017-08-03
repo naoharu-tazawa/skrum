@@ -12,7 +12,7 @@ use AppBundle\Utils\DateUtility;
 class TEmailReservationRepository extends BaseRepository
 {
     /**
-     * 送信対象メールを取得
+     * 送信対象メールを取得（バッチ）
      *
      * @param integer $bulkSize バルクサイズ
      * @return array

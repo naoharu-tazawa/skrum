@@ -31,7 +31,7 @@ class MCompanyRepository extends BaseRepository
     }
 
     /**
-     * 全ての会社をそれに紐づくOKR達成率と共に全レコードを取得
+     * 全ての会社をそれに紐づくOKR達成率と共に全レコードを取得（バッチ）
      *
      * @return array
      */

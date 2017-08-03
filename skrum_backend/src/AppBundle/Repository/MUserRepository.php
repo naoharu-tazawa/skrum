@@ -233,4 +233,25 @@ SQL;
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * メンバー進捗状況レポートメール対象者を取得（バッチ）
+     *
+     * @return array
+     */
+    public function getUsersForMemberAchievementReportEmail(): array
+    {
+        $qb = $this->createQueryBuilder('mu');
+        $qb->select('mu')
+            ->innerJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
+            ->innerJoin('AppBundle:TEmailSettings', 'tes', 'WITH', 'mu.userId = tes.userId')
+            ->where('mu.archivedFlg = :archivedFlg')
+            ->andWhere('mra.roleLevel >= :roleLevel')
+            ->andWhere('tes.reportMemberAchievement = :reportMemberAchievement')
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
+            ->setParameter('roleLevel', DBConstant::ROLE_LEVEL_ADMIN)
+            ->setParameter('reportMemberAchievement', DBConstant::EMAIL_REPORT_MEMBER_ACHIEVEMENT);
+
+        return $qb->getQuery()->getResult();
+    }
 }

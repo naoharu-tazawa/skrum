@@ -153,4 +153,9 @@ class BaseCommand extends ContainerAwareCommand
     {
         return $this->getContainer()->get('batch.email_sending_service');
     }
+
+    protected function getMemberReportEmailService()
+    {
+        return $this->getContainer()->get('batch.member_report_email_service');
+    }
 }

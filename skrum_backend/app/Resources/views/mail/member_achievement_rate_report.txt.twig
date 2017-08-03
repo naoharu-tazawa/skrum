@@ -1,0 +1,18 @@
+本日のメンバー進捗状況レポートをお知らせします。
+
+{% for group in data %}
+
+■ {{ group.groupName }}
+    (  前日  )    ( 前々日 )    (前々日比)
+      {{ group.achievementRateToday }}%        {{ group.achievementRateYesterday }}%        {% if (group.achievementRateToday - group.achievementRateYesterday) >= 0 %}+{% else %}-{% endif %}{{ group.achievementRateToday - group.achievementRateYesterday }}%
+
+              (  前日  )    ( 前々日 )    (前々日比)
+  {% for member in group.members %}
+      {{ member.memberName }}
+                {{ member.achievementRateToday }}%        {{ member.achievementRateYesterday }}%        {% if (member.achievementRateToday - member.achievementRateYesterday) >= 0 %}+{% else %}-{% endif %}{{ member.achievementRateToday - member.achievementRateYesterday }}%
+  {% endfor %}
+
+{% endfor %}
+
+
+ ※このメールが不要な方は以下から設定できます

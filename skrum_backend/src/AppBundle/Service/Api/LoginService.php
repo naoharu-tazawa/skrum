@@ -202,7 +202,7 @@ class LoginService extends BaseService
             // メール通知設定テーブルにレコード追加
             $tMailSettings = new TMailSettings();
             $tMailSettings->setUserId($mUser->getUserId());
-            $tMailSettings->setReportGroupAchievement(DBConstant::MAIL_OFF);
+            $tMailSettings->setReportGroupAchievement(DBConstant::EMAIL_OFF);
             $this->persist($tMailSettings);
 
             $this->flush();
@@ -293,10 +293,10 @@ class LoginService extends BaseService
             $tMailSettings = new TMailSettings();
             $tMailSettings->setUserId($mUser->getUserId());
             if ($mRoleAssignment->getRoleLevel() >= DBConstant::ROLE_LEVEL_ADMIN) {
-                $tMailSettings->setReportGroupAchievement(DBConstant::MAIL_OFF);
+                $tMailSettings->setReportGroupAchievement(DBConstant::EMAIL_OFF);
             } else {
-                $tMailSettings->setReportMemberAchievement(DBConstant::MAIL_OFF);
-                $tMailSettings->setReportFeedbackTarget(DBConstant::MAIL_OFF);
+                $tMailSettings->setReportMemberAchievement(DBConstant::EMAIL_OFF);
+                $tMailSettings->setReportFeedbackTarget(DBConstant::EMAIL_OFF);
             }
             $this->persist($tMailSettings);
 

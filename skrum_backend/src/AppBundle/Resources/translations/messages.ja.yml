@@ -6,6 +6,8 @@ parameters:
 
     password_reset: '【Skrum】パスワードリセットのお知らせ'
 
+    member_achievement_rate_report: '【Skrum】メンバー進捗状況レポート'
+
     auto_post_type_generate: 'さんが目標を作成しました。'
 
     auto_post_type_achievement: 'さんの達成値が%%d%%sから%%d%%sに進捗しました。（%%s%%d%%s）'
