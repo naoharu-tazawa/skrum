@@ -27,8 +27,8 @@ class EntityLink extends Component {
   };
 
   render() {
-    const { companyId, entity = {}, title, editor, local, fluid, avatarOnly, avatarSize = '40px',
-      componentClassName } = this.props;
+    const { companyId, entity = {}, title, editor, local, fluid, avatarOnly,
+      avatarSize = fluid ? '100%' : '40px', componentClassName } = this.props;
     const { imageError } = this.state || {};
     const { id, name, type } = entity;
     const skrumBucket = 'https://s3-ap-northeast-1.amazonaws.com/skrum';
@@ -41,7 +41,7 @@ class EntityLink extends Component {
             src={imgSrc}
             alt={name}
             onError={() => this.setState({ imageError: true })}
-            {...{ width: avatarSize, height: avatarSize }}
+            style={{ width: avatarSize, height: avatarSize }}
           />)}
       </div>);
     const nameContent = (title || editor || name || !id) && (

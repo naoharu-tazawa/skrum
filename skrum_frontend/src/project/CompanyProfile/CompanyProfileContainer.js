@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { errorType } from '../../util/PropUtil';
-import styles from './CompanyProfileContainer.css';
+import Dropzone from 'react-dropzone';
+import EntityLink, { EntityType } from '../../components/EntityLink';
 import InlineTextInput from '../../editors/InlineTextInput';
 import InlineTextArea from '../../editors/InlineTextArea';
-import { fetchCompany, putCompany } from './action';
-
-function SubmitButton() {
-  return <button className={styles.btn}>画像アップロード</button>;
-}
-
-function DisabledButton() {
-  return <div className={styles.disable_btn} />;
-}
+import { fetchCompany, putCompany, postCompanyImage } from './action';
+import { errorType } from '../../util/PropUtil';
+import styles from './CompanyProfileContainer.css';
 
 class CompanyProfileContainer extends Component {
 
@@ -27,6 +21,7 @@ class CompanyProfileContainer extends Component {
     isPosting: PropTypes.bool,
     dispatchFetchCompany: PropTypes.func,
     dispatchPutCompany: PropTypes.func,
+    dispatchPostCompanyImage: PropTypes.func,
     error: errorType,
   };
 
@@ -34,6 +29,13 @@ class CompanyProfileContainer extends Component {
     const { dispatchFetchCompany, companyId } = this.props;
     dispatchFetchCompany(companyId);
   }
+
+  uploadPicture = (file) => {
+    const { companyId, dispatchPostCompanyImage } = this.props;
+    const data = new FormData();
+    data.append('image', file);
+    return dispatchPostCompanyImage(companyId, data);
+  };
 
   renderError() {
     if (this.props.error) {
@@ -45,12 +47,9 @@ class CompanyProfileContainer extends Component {
     }
   }
 
-  renderButton() {
-    return this.props.isPosting ? <DisabledButton /> : <SubmitButton />;
-  }
-
   render() {
     const { companyId, name, vision, mission, dispatchPutCompany, isFetching } = this.props;
+    const { file } = this.state || {};
     if (isFetching) {
       return <span className={styles.spinner} />;
     }
@@ -58,9 +57,27 @@ class CompanyProfileContainer extends Component {
       <div className={styles.container}>
         <div className={styles.title}>会社情報設定</div>
         <div className={styles.company_img}>
-          <span><img className={styles.img} src="/img/profile/img_leader.jpg" alt="" /></span>
-          <span>{this.renderButton()}</span>
+          <Dropzone
+            onDrop={files => this.setState({ file: files[0] }, () => console.log(files[0]))}
+            accept="image/*"
+            multiple={false}
+          >
+            {file ?
+              <img src={file.preview} className={styles.img} alt="" /> :
+              <EntityLink
+                entity={{ id: companyId, type: EntityType.COMPANY }}
+                local
+                fluid
+                avatarSize="180px"
+                avatarOnly
+              />}
+            <button className={styles.btn}>画像選択</button>
+          </Dropzone>
         </div>
+        {file && (
+          <button className={styles.btn} onClick={() => this.uploadPicture(file)}>
+            画像アップロード
+          </button>)}
         <div>
           <div className={styles.packet}>
             <span className={styles.title}>会社名：</span>
@@ -113,7 +130,9 @@ const mapDispatchToProps = (dispatch) => {
   const dispatchFetchCompany = companyId => dispatch(fetchCompany(companyId));
   const dispatchPutCompany = (companyId, data) =>
     dispatch(putCompany(companyId, data));
-  return { dispatchFetchCompany, dispatchPutCompany };
+  const dispatchPostCompanyImage = (companyId, data) =>
+    dispatch(postCompanyImage(companyId, data));
+  return { dispatchFetchCompany, dispatchPutCompany, dispatchPostCompanyImage };
 };
 
 export default connect(

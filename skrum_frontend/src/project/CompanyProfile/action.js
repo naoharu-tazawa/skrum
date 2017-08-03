@@ -1,12 +1,14 @@
 import { createActions } from 'redux-actions';
 import { keyValueIdentity } from '../../util/ActionUtil';
-import { getJson, putJson } from '../../util/ApiUtil';
+import { getJson, putJson, postJson } from '../../util/ApiUtil';
 
 export const Action = {
   REQUEST_FETCH_COMPANY: 'REQUEST_FETCH_COMPANY',
   FINISH_FETCH_COMPANY: 'FINISH_FETCH_COMPANY',
   REQUEST_PUT_COMPANY: 'REQUEST_PUT_COMPANY',
   FINISH_PUT_COMPANY: 'FINISH_PUT_COMPANY',
+  REQUEST_POST_COMPANY_IMAGE: 'REQUEST_POST_COMPANY_IMAGE',
+  FINISH_POST_COMPANY_IMAGE: 'FINISH_POST_COMPANY_IMAGE',
 };
 
 const {
@@ -14,12 +16,16 @@ const {
   finishFetchCompany,
   requestPutCompany,
   finishPutCompany,
+  requestPostCompanyImage,
+  finishPostCompanyImage,
 } = createActions({
   [Action.FINISH_FETCH_COMPANY]: keyValueIdentity,
   [Action.FINISH_PUT_COMPANY]: keyValueIdentity,
   [Action.REQUEST_PUT_COMPANY]: keyValueIdentity,
+  [Action.FINISH_POST_COMPANY_IMAGE]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_COMPANY,
+  Action.REQUEST_POST_COMPANY_IMAGE,
 );
 
 export const fetchCompany = companyId =>
@@ -40,4 +46,14 @@ export const putCompany = (id, data) =>
     return putJson(`/companies/${id}.json`, state)(null, data)
       .then(json => dispatch(finishPutCompany('data', json)))
       .catch(({ message }) => dispatch(finishPutCompany(new Error(message))));
+  };
+
+export const postCompanyImage = (id, data) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.companySetting.isPostingImage) return Promise.resolve();
+    dispatch(requestPostCompanyImage());
+    return postJson(`/companies/${id}/images.json`, state)(null, data)
+      .then(json => dispatch(finishPostCompanyImage('data', json)))
+      .catch(({ message }) => dispatch(finishPostCompanyImage(new Error(message))));
   };
