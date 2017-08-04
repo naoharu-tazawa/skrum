@@ -49,6 +49,7 @@ class FeedbackTargetReportEmailService extends BaseService
         foreach ($groupInfoArray as $key1 => $groupInfo) {
             // グループ情報をメール本文記載変数配列に格納
             $data[$key1]['groupName'] = $groupInfo['groupName'];
+            $data[$key1]['members'] = array();
 
             // 所属メンバーのフィードバック対象者を取得
             $userInfoArray = $tGroupMemberRepos->getFeedbackTargetMembers($groupInfo['groupId'], $tTimeframe->getTimeframeId());
@@ -88,6 +89,11 @@ class FeedbackTargetReportEmailService extends BaseService
 
                     continue;
                 }
+            }
+
+            // 対象メンバーがいない場合は、グループの配列を削除
+            if (empty($data[$key1]['members'])) {
+                unset($data[$key1]);
             }
         }
 

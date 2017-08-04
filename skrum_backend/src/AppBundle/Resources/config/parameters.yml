@@ -15,6 +15,9 @@ parameters:
     #1ページあたり表示データ数
     paging_data_number: 20
 
+    #進捗登録リマインダーメール送信条件（X日以上進捗登録していない）
+    achievement_registration_mail_condition: 5
+
     #フィードバック対象者抽出条件（X日以上ログインしていない）
     feedback_target_condition_login: 8
 

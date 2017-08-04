@@ -134,6 +134,10 @@ services:
         class: AppBundle\Service\Batch\AchievementRateLogService
         arguments: ['@service_container']
 
+    batch.achievement_registration_reminder_email_service:
+        class: AppBundle\Service\Batch\AchievementRegistrationReminderEmailService
+        arguments: ['@service_container']
+
     batch.email_sending_service:
         class: AppBundle\Service\Batch\EmailSendingService
         arguments: ['@service_container']

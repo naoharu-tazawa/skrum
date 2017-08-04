@@ -247,6 +247,14 @@ class AchievementRateLogService extends BaseService
      */
     public function run(int $bulkSize): int
     {
+        // 二重登録を防ぐ
+        $tAchievementRateLogRepos = $this->getTAchievementRateLogRepository();
+        $todayLogCount = $tAchievementRateLogRepos->getTodayLogCount();
+        if ($todayLogCount !== 0) {
+            $this->logInfo('BA0101バッチはすでに実行済みです');
+            return DBConstant::EXIT_CODE_SUCCESS;
+        }
+
         // トランザクション開始
         $this->beginTransaction();
 

@@ -110,6 +110,11 @@ class BaseCommand extends ContainerAwareCommand
         return $this->getContainer()->get('batch.achievement_rate_log_service');
     }
 
+    protected function getAchievementRegistrationReminderEmailService()
+    {
+        return $this->getContainer()->get('batch.achievement_registration_reminder_email_service');
+    }
+
     protected function getEmailSendingService()
     {
         return $this->getContainer()->get('batch.email_sending_service');

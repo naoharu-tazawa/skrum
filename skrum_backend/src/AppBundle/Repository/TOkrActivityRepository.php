@@ -3,7 +3,6 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Utils\DBConstant;
-use AppBundle\Entity\TOkrActivity;
 
 /**
  * TOkrActivityリポジトリクラス

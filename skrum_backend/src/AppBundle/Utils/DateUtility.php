@@ -277,6 +277,17 @@ class DateUtility
     }
 
     /**
+     * X日前の0時0分0秒（string型）を取得
+     *
+     * @param $days X日
+     * @return string X日前の年月日0時0分0秒
+     */
+    public static function getXDaysBeforeString(int $days): string
+    {
+        return date(self::DATETIME_FORMAT, mktime(0, 0, 0, date('m'), date('d') - $days, date('y')));
+    }
+
+    /**
      * X日後の23時59分59秒（DateTime型）を取得
      *
      * @param $days X日

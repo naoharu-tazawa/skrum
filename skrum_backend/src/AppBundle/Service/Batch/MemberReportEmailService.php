@@ -39,6 +39,7 @@ class MemberReportEmailService extends BaseService
             $data[$key1]['groupName'] = $groupLogInfo['groupName'];
             $data[$key1]['achievementRateToday'] = $groupLogInfo['achievementRateToday'];
             $data[$key1]['achievementRateYesterday'] = $groupLogInfo['achievementRateYesterday'];
+            $data[$key1]['members'] = array();
 
             // 所属メンバーの進捗率（前日・前々日）を取得
             $memberLogInfoArray = $tGroupMemberRepos->getMemberAchievementRateLog($groupLogInfo['groupId'], $tTimeframe->getTimeframeId());

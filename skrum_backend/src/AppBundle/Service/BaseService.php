@@ -367,6 +367,11 @@ class BaseService
         return $this->entityManager->getRepository('AppBundle:MUser');
     }
 
+    protected function getTAchievementRateLogRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TAchievementRateLog');
+    }
+
     protected function getTAuthorizationRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TAuthorization');

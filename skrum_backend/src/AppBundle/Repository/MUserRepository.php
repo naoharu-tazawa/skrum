@@ -4,6 +4,7 @@ namespace AppBundle\Repository;
 
 use AppBundle\Utils\DBConstant;
 use \PDO;
+use AppBundle\Utils\DateUtility;
 
 /**
  * MUserリポジトリクラス
@@ -274,5 +275,42 @@ SQL;
             ->setParameter('reportFeedbackTarget', DBConstant::EMAIL_REPORT_FEEDBACK_TARGET);
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 進捗登録リマインダーメール対象者を取得（バッチ）
+     *
+     * @return array
+     */
+    public function getUsersForAchievementRegistrationReminderEmail($mailSendingConditionDatetimeString): array
+    {
+        $sql = <<<SQL
+        SELECT m0_.last_name, m0_.first_name, m0_.email_address
+        FROM m_user m0_
+        INNER JOIN t_email_settings t0_
+        ON (m0_.user_id = t0_.user_id) AND (t0_.deleted_at IS NULL)
+        LEFT OUTER JOIN t_okr_activity t1_
+        ON t1_.id = (
+            SELECT t2_.id
+            FROM t_okr_activity t2_
+            INNER JOIN t_okr t3_
+            ON (t2_.okr_id = t3_.okr_id) AND (t3_.deleted_at IS NULL)
+            WHERE (t3_.owner_type = :ownerType AND m0_.user_id = t3_.owner_user_id AND t2_.type = :okrOperationType) AND (t2_.deleted_at IS NULL)
+            ORDER BY t2_.activity_datetime DESC LIMIT 1
+            ) AND (t1_.deleted_at IS NULL)
+        WHERE (m0_.archived_flg = :archivedFlg AND t0_.okr_reminder = :okrReminder
+                AND t1_.activity_datetime < :activityDatetime) AND (m0_.deleted_at IS NULL);
+SQL;
+
+        $params['ownerType'] = DBConstant::OKR_OWNER_TYPE_USER;
+        $params['okrOperationType'] = DBConstant::OKR_OPERATION_TYPE_ACHIEVEMENT;
+        $params['archivedFlg'] = DBConstant::FLG_FALSE;
+        $params['okrReminder'] = DBConstant::EMAIL_OKR_REMINDER;
+        $params['activityDatetime'] = $mailSendingConditionDatetimeString;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
     }
 }
