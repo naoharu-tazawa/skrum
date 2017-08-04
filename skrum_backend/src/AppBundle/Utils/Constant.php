@@ -10,6 +10,16 @@ namespace AppBundle\Utils;
 class Constant
 {
     /**
+     * S3バケット名（開発環境）
+     */
+    const S3_BUCKET_DEV = 'skrumdev';
+
+    /**
+     * S3バケット名（本番環境）
+     */
+    const S3_BUCKET_PROD = 'skrum';
+
+    /**
      * APIログ出力ファイルパス（アプリケーション）
      */
     const LOG_FILE_PATH_APPLICATION = __DIR__ . '/../../../app/logs/application.log';

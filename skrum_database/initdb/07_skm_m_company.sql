@@ -21,7 +21,7 @@
 
 LOCK TABLES `m_company` WRITE;
 /*!40000 ALTER TABLE `m_company` DISABLE KEYS */;
-INSERT INTO `m_company` VALUES (1,'株式会社Skrum','組織で働く全ての人が自己実現できる社会を創る','働く人に喜びを与え、企業の生産性を最大化させる',NULL,'1','company1','2017-04-28 17:32:16','2017-04-28 17:55:54',NULL);
+INSERT INTO `m_company` VALUES (1,'株式会社Skrum','組織で働く全ての人が自己実現できる社会を創る','働く人に喜びを与え、企業の生産性を最大化させる','company1','1',0,'2017-04-28 17:32:16','2017-04-28 17:55:54',NULL);
 /*!40000 ALTER TABLE `m_company` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

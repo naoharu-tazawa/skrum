@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * MCompany
  *
- * @ORM\Table(name="m_company", uniqueConstraints={@ORM\UniqueConstraint(name="subdomain_UNIQUE", columns={"subdomain"})})
+ * @ORM\Table(name="m_company", uniqueConstraints={@ORM\UniqueConstraint(name="ui_company_01", columns={"subdomain"})}, indexes={@ORM\Index(name="idx_company_01", columns={"company_name"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MCompanyRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
@@ -38,9 +38,9 @@ class MCompany
     /**
      * @var string
      *
-     * @ORM\Column(name="image_path", type="string", length=45, nullable=true)
+     * @ORM\Column(name="subdomain", type="string", length=45, nullable=false)
      */
-    private $imagePath;
+    private $subdomain;
 
     /**
      * @var string
@@ -50,11 +50,11 @@ class MCompany
     private $defaultDisclosureType;
 
     /**
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(name="subdomain", type="string", length=45, nullable=false)
+     * @ORM\Column(name="has_image", type="boolean", nullable=false)
      */
-    private $subdomain;
+    private $hasImage = '0';
 
     /**
      * @var \DateTime
@@ -163,27 +163,27 @@ class MCompany
     }
 
     /**
-     * Set imagePath
+     * Set subdomain
      *
-     * @param string $imagePath
+     * @param string $subdomain
      *
      * @return MCompany
      */
-    public function setImagePath($imagePath)
+    public function setSubdomain($subdomain)
     {
-        $this->imagePath = $imagePath;
+        $this->subdomain = $subdomain;
 
         return $this;
     }
 
     /**
-     * Get imagePath
+     * Get subdomain
      *
      * @return string
      */
-    public function getImagePath()
+    public function getSubdomain()
     {
-        return $this->imagePath;
+        return $this->subdomain;
     }
 
     /**
@@ -211,27 +211,27 @@ class MCompany
     }
 
     /**
-     * Set subdomain
+     * Set hasImage
      *
-     * @param string $subdomain
+     * @param boolean $hasImage
      *
      * @return MCompany
      */
-    public function setSubdomain($subdomain)
+    public function setHasImage($hasImage)
     {
-        $this->subdomain = $subdomain;
+        $this->hasImage = $hasImage;
 
         return $this;
     }
 
     /**
-     * Get subdomain
+     * Get hasImage
      *
-     * @return string
+     * @return boolean
      */
-    public function getSubdomain()
+    public function getHasImage()
     {
-        return $this->subdomain;
+        return $this->hasImage;
     }
 
     /**

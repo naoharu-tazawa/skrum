@@ -9,6 +9,7 @@ use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Utils\Constant;
 
 /**
  * 画像アップロードコントローラ
@@ -28,7 +29,7 @@ class ImageUploadController extends BaseController
     public function postUserImagesAction(Request $request, int $userId): array
     {
         // JSONから画像ファイルを取得
-        $imageFile = $this->getImageFromJson($request);
+        $data = $this->getImageFromJson($request);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -47,17 +48,29 @@ class ImageUploadController extends BaseController
         $client = $this->get('aws.s3');
 
         // アップロード先のS3内のファイルパスを指定
-        $filePathInS3 = 'c/' . $auth->getCompanyId() . '/u/' . $userId . '/picture';
+        $filePathInS3 = 'c/' . $auth->getCompanyId() . '/u/' . $userId . '/image';
+
+        // 実行環境によってバケットを選択
+        $bucket = null;
+        if ($this->get('kernel')->getEnvironment() === 'prod') {
+            $bucket = Constant::S3_BUCKET_PROD;
+        } elseif ($this->get('kernel')->getEnvironment() === 'dev' || $this->get('kernel')->getEnvironment() === 'test') {
+            $bucket = Constant::S3_BUCKET_DEV;
+        }
 
         // Upload an object to Amazon S3
         $result = $client->putObject(array(
-                'Bucket'     => 'skrum',
+                'Bucket'     => $bucket,
                 'Key'        => $filePathInS3,
                 'Metadata'   => array(
-                        'mime-type' => 'image/jpeg'
+                        'mime-type' => $data['mimeType']
                 ),
-                'Body'       => $imageFile
+                'Body'       => $data['image']
         ));
+
+        // 画像保存済みフラグを更新
+        $imageUploadService = $this->getImageUploadService();
+        $imageUploadService->updateHasImage(Constant::SUBJECT_TYPE_USER, $userId, null, null);
 
         return array('result' => 'OK');
     }
@@ -73,7 +86,7 @@ class ImageUploadController extends BaseController
     public function postGroupImagesAction(Request $request, int $groupId): array
     {
         // JSONから画像ファイルを取得
-        $imageFile = $this->getImageFromJson($request);
+        $data = $this->getImageFromJson($request);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -92,17 +105,29 @@ class ImageUploadController extends BaseController
         $client = $this->get('aws.s3');
 
         // アップロード先のS3内のファイルパスを指定
-        $filePathInS3 = 'c/' . $auth->getCompanyId() . '/g/' . $groupId . '/picture';
+        $filePathInS3 = 'c/' . $auth->getCompanyId() . '/g/' . $groupId . '/image';
+
+        // 実行環境によってバケットを選択
+        $bucket = null;
+        if ($this->get('kernel')->getEnvironment() === 'prod') {
+            $bucket = Constant::S3_BUCKET_PROD;
+        } elseif ($this->get('kernel')->getEnvironment() === 'dev' || $this->get('kernel')->getEnvironment() === 'test') {
+            $bucket = Constant::S3_BUCKET_DEV;
+        }
 
         // Upload an object to Amazon S3
         $result = $client->putObject(array(
-                'Bucket'     => 'skrum',
+                'Bucket'     => $bucket,
                 'Key'        => $filePathInS3,
                 'Metadata'   => array(
-                        'mime-type' => 'image/jpeg'
+                        'mime-type' => $data['mimeType']
                 ),
-                'Body'       => $imageFile
+                'Body'       => $data['image']
         ));
+
+        // 画像保存済みフラグを更新
+        $imageUploadService = $this->getImageUploadService();
+        $imageUploadService->updateHasImage(Constant::SUBJECT_TYPE_GROUP, null, $groupId, null);
 
         return array('result' => 'OK');
     }
@@ -118,7 +143,7 @@ class ImageUploadController extends BaseController
     public function postCompanyImagesAction(Request $request, int $companyId): array
     {
         // JSONから画像ファイルを取得
-        $imageFile = $this->getImageFromJson($request);
+        $data = $this->getImageFromJson($request);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -137,17 +162,29 @@ class ImageUploadController extends BaseController
         $client = $this->get('aws.s3');
 
         // アップロード先のS3内のファイルパスを指定
-        $filePathInS3 = 'c/' . $companyId . '/picture';
+        $filePathInS3 = 'c/' . $companyId . '/image';
+
+        // 実行環境によってバケットを選択
+        $bucket = null;
+        if ($this->get('kernel')->getEnvironment() === 'prod') {
+            $bucket = Constant::S3_BUCKET_PROD;
+        } elseif ($this->get('kernel')->getEnvironment() === 'dev' || $this->get('kernel')->getEnvironment() === 'test') {
+            $bucket = Constant::S3_BUCKET_DEV;
+        }
 
         // Upload an object to Amazon S3
         $result = $client->putObject(array(
-                'Bucket'     => 'skrum',
+                'Bucket'     => $bucket,
                 'Key'        => $filePathInS3,
                 'Metadata'   => array(
-                        'mime-type' => 'image/jpeg'
+                        'mime-type' => $data['mimeType']
                 ),
-                'Body'       => $imageFile
+                'Body'       => $data['image']
         ));
+
+        // 画像保存済みフラグを更新
+        $imageUploadService = $this->getImageUploadService();
+        $imageUploadService->updateHasImage(Constant::SUBJECT_TYPE_COMPANY, null, null, $companyId);
 
         return array('result' => 'OK');
     }
@@ -158,7 +195,7 @@ class ImageUploadController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @return array
      */
-    private function getImageFromJson(Request $request): string
+    private function getImageFromJson(Request $request): array
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostImagePdu');
@@ -168,6 +205,7 @@ class ImageUploadController extends BaseController
         $data = $this->getRequestJsonAsArray($request);
 
         // BASE64をデコード
-        return base64_decode($data['image']);
+        $data['image'] = base64_decode($data['image']);
+        return $data;
     }
 }

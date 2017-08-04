@@ -57,11 +57,11 @@ class MUser
     private $phoneNumber;
 
     /**
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(name="image_path", type="string", length=45, nullable=true)
+     * @ORM\Column(name="has_image", type="boolean", nullable=false)
      */
-    private $imagePath;
+    private $hasImage = '0';
 
     /**
      * @var boolean
@@ -269,27 +269,27 @@ class MUser
     }
 
     /**
-     * Set imagePath
+     * Set hasImage
      *
-     * @param string $imagePath
+     * @param boolean $hasImage
      *
      * @return MUser
      */
-    public function setImagePath($imagePath)
+    public function setHasImage($hasImage)
     {
-        $this->imagePath = $imagePath;
+        $this->hasImage = $hasImage;
 
         return $this;
     }
 
     /**
-     * Get imagePath
+     * Get hasImage
      *
-     * @return string
+     * @return boolean
      */
-    public function getImagePath()
+    public function getHasImage()
     {
-        return $this->imagePath;
+        return $this->hasImage;
     }
 
     /**

@@ -2,15 +2,18 @@
   "title": "画像アップロード",
   "type": "object",
   "properties": {
+    "mimeType": {
+      "title": "MIMEタイプ",
+      "type": "string"
+    },
     "image": {
       "title": "画像ファイル（BASE64変換）",
       "type": "string",
       "media": {
-        "binaryEncoding": "base64",
-        "type": "image/jpeg"
+        "binaryEncoding": "base64"
       }
     }
   },
-  "required": ["image"],
+  "required": ["mimeType", "image"],
   "additionalProperties": false
 }

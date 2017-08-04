@@ -78,6 +78,10 @@ services:
         class: AppBundle\Service\Api\GroupTreeService
         arguments: ['@service_container']
 
+    api.image_upload_service:
+        class: AppBundle\Service\Api\ImageUploadService
+        arguments: ['@service_container']
+
     api.login_service:
         class: AppBundle\Service\Api\LoginService
         arguments: ['@service_container']

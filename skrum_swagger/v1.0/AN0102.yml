@@ -28,6 +28,8 @@ paths:
           schema:
             type: object
             properties:
+              mimeType:
+                type: string
               image:
                 type: string
       responses:

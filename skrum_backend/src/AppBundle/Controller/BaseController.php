@@ -399,6 +399,11 @@ class BaseController extends FOSRestController
         return $this->get('api.group_tree_service');
     }
 
+    protected function getImageUploadService()
+    {
+        return $this->get('api.image_upload_service');
+    }
+
     protected function getLoginService()
     {
         return $this->get('api.login_service');
