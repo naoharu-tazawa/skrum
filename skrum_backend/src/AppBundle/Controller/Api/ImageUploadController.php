@@ -68,9 +68,10 @@ class ImageUploadController extends BaseController
                 'Body'       => $data['image']
         ));
 
-        // 画像保存済みフラグを更新
-        $imageUploadService = $this->getImageUploadService();
-        $imageUploadService->updateHasImage(Constant::SUBJECT_TYPE_USER, $userId, null, null);
+        // ToDo: リリースVer1.1の時、下記コメントアウトを除去し、画像バージョンを導入
+        // 画像バージョンを更新
+        // $imageUploadService = $this->getImageUploadService();
+        // $imageUploadService->incrementImageVersion(Constant::SUBJECT_TYPE_USER, $userId, null, null);
 
         return array('result' => 'OK');
     }
@@ -125,9 +126,10 @@ class ImageUploadController extends BaseController
                 'Body'       => $data['image']
         ));
 
-        // 画像保存済みフラグを更新
-        $imageUploadService = $this->getImageUploadService();
-        $imageUploadService->updateHasImage(Constant::SUBJECT_TYPE_GROUP, null, $groupId, null);
+        // ToDo: リリースVer1.1の時、下記コメントアウトを除去し、画像バージョンを導入
+        // 画像バージョンを更新
+        // $imageUploadService = $this->getImageUploadService();
+        // $imageUploadService->incrementImageVersion(Constant::SUBJECT_TYPE_GROUP, null, $groupId, null);
 
         return array('result' => 'OK');
     }
@@ -182,9 +184,10 @@ class ImageUploadController extends BaseController
                 'Body'       => $data['image']
         ));
 
+        // ToDo: リリースVer1.1の時、下記コメントアウトを除去し、画像バージョンを導入
         // 画像保存済みフラグを更新
-        $imageUploadService = $this->getImageUploadService();
-        $imageUploadService->updateHasImage(Constant::SUBJECT_TYPE_COMPANY, null, null, $companyId);
+        // $imageUploadService = $this->getImageUploadService();
+        // $imageUploadService->incrementImageVersion(Constant::SUBJECT_TYPE_COMPANY, null, null, $companyId);
 
         return array('result' => 'OK');
     }

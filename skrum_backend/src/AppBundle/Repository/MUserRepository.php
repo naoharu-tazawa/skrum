@@ -4,7 +4,6 @@ namespace AppBundle\Repository;
 
 use AppBundle\Utils\DBConstant;
 use \PDO;
-use AppBundle\Utils\DateUtility;
 
 /**
  * MUserリポジトリクラス

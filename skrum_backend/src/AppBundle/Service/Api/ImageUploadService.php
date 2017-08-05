@@ -15,7 +15,7 @@ use AppBundle\Utils\DBConstant;
 class ImageUploadService extends BaseService
 {
     /**
-     * 画像保存済みフラグ更新
+     * 画像バージョンの更新
      *
      * @param string $subjectType 操作対象主体種別
      * @param integer $userId ユーザID
@@ -23,22 +23,22 @@ class ImageUploadService extends BaseService
      * @param integer $companyId 会社ID
      * @return void
      */
-    public function updateHasImage(string $subjectType, int $userId = null, int $groupId = null, int $companyId = null)
+    public function incrementImageVersion(string $subjectType, int $userId = null, int $groupId = null, int $companyId = null)
     {
         // 画像保存済みフラグを更新
         try {
             if ($subjectType === Constant::SUBJECT_TYPE_USER) {
                 $mUserRepos = $this->getMUserRepository();
                 $mUser = $mUserRepos->find($userId);
-                $mUser->setHasImage(DBConstant::FLG_TRUE);
+                $mUser->setImageVersion($mUser->getImageVersion() + 1);
             } elseif ($subjectType === Constant::SUBJECT_TYPE_GROUP) {
                 $mGroupRepos = $this->getMGroupRepository();
                 $mGroup = $mGroupRepos->find($groupId);
-                $mGroup->setHasImage(DBConstant::FLG_TRUE);
+                $mGroup->setImageVersion($mGroup->getImageVersion() + 1);
             } elseif ($subjectType === Constant::SUBJECT_TYPE_COMPANY) {
                 $mCompanyRepos = $this->getMCompanyRepository();
                 $mCompany = $mCompanyRepos->find($companyId);
-                $mCompany->setHasImage(DBConstant::FLG_TRUE);
+                $mCompany->setImageVersion($mCompany->getImageVersion() + 1);
             }
 
             $this->flush();
