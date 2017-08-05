@@ -1,0 +1,94 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /companies/{companyId}/okrs.json?{tfid}:
+    get:
+      description: 会社目標取得（D3.js用）
+      parameters:
+        -
+          name: companyId
+          in: path
+          type: string
+          description: 会社ID
+          required: true
+        -
+          name: tfid
+          in: path
+          type: string
+          description: タイムフレームID
+          required: true
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              okrId:
+                type: integer
+              achievementRate:
+                type: number
+              status:
+                type: string
+              hidden:
+                type: boolean
+              children:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    okrId:
+                      type: integer
+                    okrName:
+                      type: string
+                    targetValue:
+                      type: integer
+                    unit:
+                      type: string
+                    achievementRate:
+                      type: number
+                    ownerType:
+                      type: string
+                    ownerUserId:
+                      type: integer
+                    ownerUserName:
+                      type: string
+                    ownerGroupId:
+                      type: integer
+                    ownerGroupName:
+                      type: string
+                    ownerCompanyId:
+                      type: integer
+                    ownerCompanyName:
+                      type: string
+                    status:
+                      type: string
+                    children:
+                      type: array
+                  required:
+                    - okrId
+                    - okrName
+                    - targetValue
+                    - unit
+                    - achievementRate
+                    - ownerType
+                    - status
+            required:
+              - okrId
+              - achievementRate
+              - status
+              - hidden
+        400:
+          description: パラメータ不正
+        401:
+          description: 認証エラー
+        500:
+          description: サーバーエラー

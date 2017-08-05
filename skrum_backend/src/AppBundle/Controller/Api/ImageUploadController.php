@@ -48,7 +48,7 @@ class ImageUploadController extends BaseController
         $client = $this->get('aws.s3');
 
         // アップロード先のS3内のファイルパスを指定
-        $filePathInS3 = 'c/' . $auth->getCompanyId() . '/u/' . $userId . '/image';
+        $filePathInS3 = 'c/' . $auth->getCompanyId() . '/u/' . $userId . '/1';
 
         // 実行環境によってバケットを選択
         $bucket = null;
@@ -105,7 +105,7 @@ class ImageUploadController extends BaseController
         $client = $this->get('aws.s3');
 
         // アップロード先のS3内のファイルパスを指定
-        $filePathInS3 = 'c/' . $auth->getCompanyId() . '/g/' . $groupId . '/image';
+        $filePathInS3 = 'c/' . $auth->getCompanyId() . '/g/' . $groupId . '/1';
 
         // 実行環境によってバケットを選択
         $bucket = null;
@@ -162,7 +162,7 @@ class ImageUploadController extends BaseController
         $client = $this->get('aws.s3');
 
         // アップロード先のS3内のファイルパスを指定
-        $filePathInS3 = 'c/' . $companyId . '/image';
+        $filePathInS3 = 'c/' . $companyId . '/1';
 
         // 実行環境によってバケットを選択
         $bucket = null;

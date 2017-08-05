@@ -50,11 +50,11 @@ class MGroup
     private $companyFlg = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="has_image", type="boolean", nullable=false)
+     * @ORM\Column(name="image_version", type="integer", nullable=false)
      */
-    private $hasImage = '0';
+    private $imageVersion = '0';
 
     /**
      * @var boolean
@@ -228,27 +228,27 @@ class MGroup
     }
 
     /**
-     * Set hasImage
+     * Set imageVersion
      *
-     * @param boolean $hasImage
+     * @param integer $imageVersion
      *
      * @return MGroup
      */
-    public function setHasImage($hasImage)
+    public function setImageVersion($imageVersion)
     {
-        $this->hasImage = $hasImage;
+        $this->imageVersion = $imageVersion;
 
         return $this;
     }
 
     /**
-     * Get hasImage
+     * Get imageVersion
      *
-     * @return boolean
+     * @return integer
      */
-    public function getHasImage()
+    public function getImageVersion()
     {
-        return $this->hasImage;
+        return $this->imageVersion;
     }
 
     /**
