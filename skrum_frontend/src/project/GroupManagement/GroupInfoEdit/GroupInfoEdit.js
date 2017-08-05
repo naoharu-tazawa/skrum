@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { isEmpty } from 'lodash';
 import { groupPropTypes } from './propTypes';
 import InlineTextInput from '../../../editors/InlineTextInput';
 import InlineTextArea from '../../../editors/InlineTextArea';
 import InlinePotentialLeaders from '../../PotentialLeaders/InlinePotentialLeaders';
+import GroupPathLinks from '../../../components/GroupPathLinks';
+import DialogForm from '../../../dialogs/DialogForm';
+import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
-import { replacePath } from '../../../util/RouteUtil';
+import PathSearch from '../../PathSearch/PathSearch';
+import { withModal } from '../../../util/ModalUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 import styles from './GroupInfoEdit.css';
 
-export default class GroupInfoEdit extends Component {
+class GroupInfoEdit extends Component {
 
   static propTypes = {
     group: groupPropTypes.isRequired,
@@ -18,24 +22,38 @@ export default class GroupInfoEdit extends Component {
     roleLevel: PropTypes.number.isRequired,
     dispatchPutGroup: PropTypes.func.isRequired,
     dispatchChangeGroupLeader: PropTypes.func.isRequired,
+    dispatchAddGroupPath: PropTypes.func.isRequired,
+    dispatchDeleteGroupPath: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
   };
 
+  addPathDialog = ({ group: { groupId, name }, onClose }) => (
+    <DialogForm
+      title="グループの所属先の追加"
+      message="以下のグループを所属させるグループを検索し、追加ボタンを押してください。"
+      submitButton="追加"
+      onSubmit={({ path } = {}) =>
+        this.props.dispatchAddGroupPath(groupId, path.groupPathId)}
+      valid={({ path }) => !isEmpty(path)}
+      onClose={onClose}
+    >
+      {({ setFieldData }) =>
+        <div>
+          <EntitySubject entity={{ id: groupId, name, type: EntityType.GROUP }} />
+          <section>
+            <label>所属先グループ検索</label>
+            <PathSearch
+              groupId={groupId}
+              onChange={value => setFieldData({ path: value })}
+            />
+          </section>
+        </div>}
+    </DialogForm>);
+
   render() {
-    const { group, dispatchPutGroup, dispatchChangeGroupLeader } = this.props;
+    const { group, dispatchPutGroup, dispatchChangeGroupLeader, dispatchDeleteGroupPath,
+      openModal } = this.props;
     const { groupId, name, groupPaths, mission, leaderUserId, leaderName, lastUpdate } = group;
-    const groupPathsLink = groupPaths.map(({ groupTreeId, groupPath }) =>
-      <ul key={groupTreeId}>
-        {groupPath.map(({ id, name: groupName }, index) =>
-          <li key={id}>
-            <Link
-              to={replacePath({ subject: !index ? 'company' : 'group', id })}
-              className={styles.groupLink}
-            >
-              {groupName}
-            </Link>
-            { index === (groupPath.length - 1) ? <span className={styles.delete}><img src="/img/delete.svg" alt="" width="10px" /></span> : null }
-          </li>)}
-      </ul>);
     return (
       <section className={styles.profile_box}>
         <h1 className={styles.ttl_setion}>基本情報</h1>
@@ -52,10 +70,20 @@ export default class GroupInfoEdit extends Component {
                 onSubmit={value => dispatchPutGroup(groupId, { name: value })}
               />
             </h2>
-            <nav className={styles.breads}>
-              {groupPathsLink}
-            </nav>
-            <div className={styles.add_belonging}>所属先グループを追加</div>
+            {groupPaths.map(path =>
+              <GroupPathLinks
+                key={path.groupTreeId}
+                groupId={groupId}
+                groupName={name}
+                path={path}
+                dispatchDeleteGroupPath={dispatchDeleteGroupPath}
+              />)}
+            <button
+              className={styles.add_belonging}
+              onClick={() => openModal(this.addPathDialog, { group })}
+            >
+              所属先グループを追加
+            </button>
             <div>
               <div className={styles.title}>ミッション</div>
               <div className={styles.txt}>
@@ -88,3 +116,5 @@ export default class GroupInfoEdit extends Component {
     );
   }
 }
+
+export default withModal(GroupInfoEdit);

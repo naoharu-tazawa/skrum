@@ -21,6 +21,10 @@ export const Action = {
   FINISH_JOIN_GROUP: 'FINISH_JOIN_GROUP',
   REQUEST_LEAVE_GROUP: 'REQUEST_LEAVE_GROUP',
   FINISH_LEAVE_GROUP: 'FINISH_LEAVE_GROUP',
+  REQUEST_ADD_GROUP_PATH: 'REQUEST_ADD_GROUP_PATH',
+  FINISH_ADD_GROUP_PATH: 'FINISH_ADD_GROUP_PATH',
+  REQUEST_DELETE_GROUP_PATH: 'REQUEST_DELETE_GROUP_PATH',
+  FINISH_DELETE_GROUP_PATH: 'FINISH_DELETE_GROUP_PATH',
 };
 
 const {
@@ -42,6 +46,10 @@ const {
   finishJoinGroup,
   requestLeaveGroup,
   finishLeaveGroup,
+  requestAddGroupPath,
+  finishAddGroupPath,
+  requestDeleteGroupPath,
+  finishDeleteGroupPath,
 } = createActions({
   [Action.FINISH_FETCH_USER_GROUPS]: keyValueIdentity,
   [Action.FINISH_FETCH_GROUP_MEMBERS]: keyValueIdentity,
@@ -52,6 +60,8 @@ const {
   [Action.FINISH_DELETE_GROUP_MEMBER]: keyValueIdentity,
   [Action.FINISH_JOIN_GROUP]: keyValueIdentity,
   [Action.FINISH_LEAVE_GROUP]: keyValueIdentity,
+  [Action.FINISH_ADD_GROUP_PATH]: keyValueIdentity,
+  [Action.FINISH_DELETE_GROUP_PATH]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_USER_GROUPS,
   Action.REQUEST_FETCH_GROUP_MEMBERS,
@@ -62,6 +72,8 @@ const {
   Action.REQUEST_DELETE_GROUP_MEMBER,
   Action.REQUEST_JOIN_GROUP,
   Action.REQUEST_LEAVE_GROUP,
+  Action.REQUEST_ADD_GROUP_PATH,
+  Action.REQUEST_DELETE_GROUP_PATH,
 );
 
 export const fetchUserGroups = (userId, timeframeId) =>
@@ -152,4 +164,24 @@ export const leaveGroup = (userId, groupId) =>
     return deleteJson(`/groups/${groupId}/members/${userId}.json`, state)()
       .then(() => dispatch(finishLeaveGroup('data', { userId, groupId })))
       .catch(({ message }) => dispatch(finishLeaveGroup(new Error(message))));
+  };
+
+export const addGroupPath = (groupId, groupPathId) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.groupManagement.isAddingGroupPath) return Promise.resolve();
+    dispatch(requestAddGroupPath());
+    return postJson(`/groups/${groupId}/paths.json`, state)(null, { groupPathId })
+      .then(json => dispatch(finishAddGroupPath('data', json)))
+      .catch(({ message }) => dispatch(finishAddGroupPath(new Error(message))));
+  };
+
+export const deleteGroupPath = (groupId, groupPathId) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.groupManagement.isDeletingGroupPath) return Promise.resolve();
+    dispatch(requestDeleteGroupPath());
+    return deleteJson(`/groups/${groupId}/paths/${groupPathId}.json`, state)()
+      .then(() => dispatch(finishDeleteGroupPath('data', { groupId, groupPathId })))
+      .catch(({ message }) => dispatch(finishDeleteGroupPath(new Error(message))));
   };
