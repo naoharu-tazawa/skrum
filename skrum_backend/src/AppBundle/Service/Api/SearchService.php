@@ -315,9 +315,21 @@ class SearchService extends BaseService
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
 
+        // 所属グループツリー取得
+        $tGroupTreeRepos = $this->getTGroupTreeRepository();
+        $tGroupTreeArray = $tGroupTreeRepos->findBy(array('group' => $groupId));
+        $groupTreePathArray = array();
+        foreach ($tGroupTreeArray as $tGroupTree) {
+            // グループパスの末尾の'{$groupId}/'を削除する
+            $groupTreePathWip = rtrim($tGroupTree->getGroupTreePath(), '/');
+            $groupTreePath = rtrim($groupTreePathWip, $groupId);
+
+            $groupTreePathArray[] = $groupTreePath;
+        }
+
         // 追加グループ検索
         $mGroupRepos = $this->getMGroupRepository();
-        $tGroupTreeArray = $mGroupRepos->searchAdditionalGroupTree($groupId, $escapedKeyword, $auth->getCompanyId());
+        $tGroupTreeArray = $mGroupRepos->searchAdditionalGroupTree($groupId, $groupTreePathArray, $escapedKeyword, $auth->getCompanyId());
 
         // DTOに詰め替える
         $groupTreeSearchDTOArray = array();

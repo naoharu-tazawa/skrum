@@ -207,11 +207,12 @@ SQL;
      * 追加グループツリーパス検索
      *
      * @param integer $groupId グループID
+     * @param array $groupTreePathArray グループパス配列
      * @param string $keyword 検索ワード
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function searchAdditionalGroupTree(int $groupId, string $keyword, int $companyId): array
+    public function searchAdditionalGroupTree(int $groupId, array $groupTreePathArray, string $keyword, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mg');
         $qb->select('tgt.id', 'tgt.groupTreePathName')
@@ -220,11 +221,13 @@ SQL;
             ->andWhere('mg.companyFlg = :companyFlg')
             ->andWhere('mg.archivedFlg = :archivedFlg')
             ->andWhere('mg.groupId <> :groupId')
+            ->andWhere('tgt.groupTreePath NOT IN (?1)')
             ->andWhere('mg.groupName LIKE :groupName')
             ->setParameter('companyId', $companyId)
             ->setParameter('companyFlg', DBConstant::FLG_FALSE)
             ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
             ->setParameter('groupId', $groupId)
+            ->setParameter(1, $groupTreePathArray)
             ->setParameter('groupName', $keyword . '%');
 
         return $qb->getQuery()->getResult();
