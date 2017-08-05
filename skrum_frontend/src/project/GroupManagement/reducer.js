@@ -11,6 +11,8 @@ export default (state = {
   isDeletingGroupMember: false,
   isJoiningGroup: false,
   isLeavingGroup: false,
+  isAddingGroupPath: false,
+  isDeletingGroupPath: false,
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_USER_GROUPS:
@@ -134,6 +136,37 @@ export default (state = {
         groupId !== payload.data.groupId);
       const newUser = { user, groups: newGroups };
       return { ...state, user: newUser, isLeavingGroup: false, error: null };
+    }
+
+    case Action.REQUEST_ADD_GROUP_PATH:
+      return { ...state, isAddingGroupPath: true };
+
+    case Action.FINISH_ADD_GROUP_PATH: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isAddingGroupPath: false, error: { message: payload.message } };
+      }
+      const { group } = state.group;
+      const { groupPaths } = group;
+      const newPaths = [...groupPaths, payload.data];
+      const newGroup = { ...state.group, group: { ...group, groupPaths: newPaths } };
+      return { ...state, group: newGroup, isAddingGroupPath: false, error: null };
+    }
+
+    case Action.REQUEST_DELETE_GROUP_PATH:
+      return { ...state, isDeletingGroupPath: true };
+
+    case Action.FINISH_DELETE_GROUP_PATH: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isDeletingGroupPath: false, error: { message: payload.message } };
+      }
+      const { group } = state.group;
+      const { groupPaths } = group;
+      const newPaths = groupPaths.filter(({ groupTreeId }) =>
+        groupTreeId !== payload.data.groupPathId);
+      const newGroup = { ...state.group, group: { ...group, groupPaths: newPaths } };
+      return { ...state, group: newGroup, isDeletingGroupPath: false, error: null };
     }
 
     default:

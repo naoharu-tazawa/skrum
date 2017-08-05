@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { groupPropTypes } from './propTypes';
-import { putGroup, changeGroupLeader } from '../action';
+import { putGroup, changeGroupLeader, addGroupPath, deleteGroupPath } from '../action';
 import GroupInfoEdit from './GroupInfoEdit';
 import { RoleLevel } from '../../../util/UserUtil';
 
@@ -12,11 +12,14 @@ class GroupInfoEditContainer extends Component {
     group: groupPropTypes,
     roleLevel: PropTypes.number.isRequired,
     dispatchPutGroup: PropTypes.func.isRequired,
-    dispatchChangeGroupLeader: PropTypes.func,
+    dispatchChangeGroupLeader: PropTypes.func.isRequired,
+    dispatchAddGroupPath: PropTypes.func.isRequired,
+    dispatchDeleteGroupPath: PropTypes.func.isRequired,
   };
 
   render() {
-    const { group, roleLevel, dispatchPutGroup, dispatchChangeGroupLeader } = this.props;
+    const { group, roleLevel, dispatchPutGroup, dispatchChangeGroupLeader,
+      dispatchAddGroupPath, dispatchDeleteGroupPath } = this.props;
     return !group ? null : (
       <GroupInfoEdit
         group={group}
@@ -24,6 +27,8 @@ class GroupInfoEditContainer extends Component {
         infoLink="./"
         dispatchPutGroup={dispatchPutGroup}
         dispatchChangeGroupLeader={dispatchChangeGroupLeader}
+        dispatchAddGroupPath={dispatchAddGroupPath}
+        dispatchDeleteGroupPath={dispatchDeleteGroupPath}
       />);
   }
 }
@@ -40,15 +45,31 @@ const mapDispatchToProps = (dispatch) => {
     dispatch(putGroup(id, data));
   const dispatchChangeGroupLeader = (groupId, userId, userName) =>
     dispatch(changeGroupLeader(groupId, userId, userName));
-  return { dispatchPutGroup, dispatchChangeGroupLeader };
+  const dispatchAddGroupPath = (groupId, groupPathId) =>
+    dispatch(addGroupPath(groupId, groupPathId));
+  const dispatchDeleteGroupPath = (groupId, groupPathId) =>
+    dispatch(deleteGroupPath(groupId, groupPathId));
+  return {
+    dispatchPutGroup,
+    dispatchChangeGroupLeader,
+    dispatchAddGroupPath,
+    dispatchDeleteGroupPath,
+  };
 };
 
-const mergeProps = (state, { dispatchPutGroup, dispatchChangeGroupLeader }, props) => ({
+const mergeProps = (state, {
+  dispatchPutGroup,
+  dispatchChangeGroupLeader,
+  dispatchAddGroupPath,
+  dispatchDeleteGroupPath,
+}, props) => ({
   ...state,
   ...props,
   dispatchPutGroup,
   dispatchChangeGroupLeader: (userId, userName) =>
     dispatchChangeGroupLeader(state.group.groupId, userId, userName),
+  dispatchAddGroupPath,
+  dispatchDeleteGroupPath,
 });
 
 export default connect(

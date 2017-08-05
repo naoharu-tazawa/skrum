@@ -14,6 +14,7 @@ import userGroupSearchReducer from '../../project/UserGroupSearch/reducer';
 import groupUserSearchReducer from '../../project/GroupUserSearch/reducer';
 import potentialLeadersReducer from '../../project/PotentialLeaders/reducer';
 import ownerSearchReducer from '../../project/OwnerSearch/reducer';
+import pathSearchReducer from '../../project/PathSearch/reducer';
 import userSettingReducer from '../../project/UserSetting/reducer';
 import groupSettingReducer from '../../project/GroupSetting/reducer';
 import companyProfileReducer from '../../project/CompanyProfile/reducer';
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   groupUsersFound: groupUserSearchReducer,
   potentialLeaders: potentialLeadersReducer,
   ownersFound: ownerSearchReducer,
+  pathsFound: pathSearchReducer,
   userSetting: userSettingReducer,
   groupSetting: groupSettingReducer,
   companySetting: companyProfileReducer,

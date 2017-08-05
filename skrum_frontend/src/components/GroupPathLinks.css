@@ -1,0 +1,39 @@
+.component {
+}
+.box {
+  margin-bottom: 1em;
+  padding: 1em 1em 1em 3em;
+  border: 1px solid #bfbfbf;
+  border-radius: 1em;
+  font-size: 12px;
+}
+.component:not(.local) .path {
+  color: #d8dfe5;
+  text-decoration: underline;
+}
+.path {
+  display: inline-block;
+}
+.path:after {
+  display: inline-block;
+  width: 21px;
+  height: 21px;
+  padding-right: 2px;
+  background: transparent url(/img/common/inc_arrow_angle_r.png) no-repeat 2px -1px;
+  vertical-align: middle;
+  content: "";
+}
+.path:last-child:after {
+  padding-right: 0;
+  /* background: transparent url(); */
+  background: transparent;
+}
+.delete {
+  width: 10px;
+  cursor: pointer;
+  border: none;
+  background-color: inherit;
+  padding: 0;
+  vertical-align: text-top;
+  margin-left: 25px;
+}
