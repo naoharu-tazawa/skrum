@@ -72,7 +72,7 @@ class SubMenu extends Component {
             <EntityLink
               entity={{ id: currentUserId, type: EntityType.USER }}
               avatarOnly
-              avatarSize="30"
+              avatarSize="30px"
               local
             />)}
           options={[

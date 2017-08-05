@@ -91,24 +91,7 @@
   color: #BDBDBD;
 }
 .ownerBox {
-  display: flex;
-  margin: auto 0;
   width: 19%;
-}
-.ownerImage {
-  width: 3em;
-  height: 3em;
-  border: 2px solid #fff;
-  background-color: #626A7F;
-  border-radius: 50%;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-.ownerName {
-  margin: auto 1em;
-  white-space: nowrap;
-  /*overflow: hidden;*/
-  text-overflow: ellipsis;
 }
 .krCount {
   display: flex;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { join } from 'lodash';
+import EntityLink from '../../../components/EntityLink';
 import { keyResultPropTypes } from './propTypes';
 import styles from './KRBar.css';
 
@@ -16,7 +17,7 @@ export default class KRBar extends Component {
       styles.component,
       ...[display === 'collapsed' ? [styles.collapsed] : []],
     ];
-    return _.join(baseStyles, ' ');
+    return join(baseStyles, ' ');
   };
 
   getProgressStyles = rate =>
@@ -44,10 +45,7 @@ export default class KRBar extends Component {
             {achievedValue}／{targetValue}{unit}
           </div>
         </div>
-        <div className={styles.ownerBox}>
-          <div className={styles.ownerImage} />
-          <div className={styles.ownerName}>{owner.name}</div>
-        </div>
+        <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.krCount}>
           <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
           <a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>

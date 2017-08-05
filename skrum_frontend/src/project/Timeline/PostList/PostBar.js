@@ -97,7 +97,7 @@ class PostBar extends Component {
                 )}
                 <div className={styles.comments}>
                   <span className={styles.fb_comment}>
-                    <img src="/img/common/icn_good.png" alt="" width="20" />
+                    <img src="/img/common/icn_good.png" alt="" width="20px" />
                     {likesCount}件
                   </span>
                   <span>コメント {replies.length}件</span>
@@ -115,7 +115,7 @@ class PostBar extends Component {
                   <DropdownMenu
                     trigger={(
                       <div className={styles.btn}>
-                        <button><img src="/img/common/icn_more.png" alt="" width="36" /></button>
+                        <button><img src="/img/common/icn_more.png" alt="" width="36px" /></button>
                       </div>)}
                     options={[
                       { caption: '公開範囲設定',

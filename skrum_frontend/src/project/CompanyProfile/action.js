@@ -21,10 +21,10 @@ const {
 } = createActions({
   [Action.FINISH_FETCH_COMPANY]: keyValueIdentity,
   [Action.FINISH_PUT_COMPANY]: keyValueIdentity,
-  [Action.REQUEST_PUT_COMPANY]: keyValueIdentity,
   [Action.FINISH_POST_COMPANY_IMAGE]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_COMPANY,
+  Action.REQUEST_PUT_COMPANY,
   Action.REQUEST_POST_COMPANY_IMAGE,
 );
 
@@ -42,18 +42,18 @@ export const putCompany = (id, data) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.companySetting.isPutting) return Promise.resolve();
-    dispatch(requestPutCompany('data', { id: Number(id), ...data }));
+    dispatch(requestPutCompany());
     return putJson(`/companies/${id}.json`, state)(null, data)
-      .then(json => dispatch(finishPutCompany('data', json)))
+      .then(() => dispatch(finishPutCompany('data', { id: Number(id), ...data })))
       .catch(({ message }) => dispatch(finishPutCompany(new Error(message))));
   };
 
-export const postCompanyImage = (id, data) =>
+export const postCompanyImage = (id, image, mimeType) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.companySetting.isPostingImage) return Promise.resolve();
     dispatch(requestPostCompanyImage());
-    return postJson(`/companies/${id}/images.json`, state)(null, data)
+    return postJson(`/companies/${id}/images.json`, state)(null, { image, mimeType })
       .then(json => dispatch(finishPostCompanyImage('data', json)))
       .catch(({ message }) => dispatch(finishPostCompanyImage(new Error(message))));
   };

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { entityTypePropType, getEntityTypeSubject, EntityType, getEntityTypeId } from '../util/EntityUtil';
-import { explodePath, replacePath, implodeSubject } from '../util/RouteUtil';
+import { explodePath, replacePath } from '../util/RouteUtil';
+import { imagePath, dummyImagePath } from '../util/ImageUtil';
 import styles from './EntityLink.css';
 
 export const entityPropType = PropTypes.shape({
@@ -31,9 +32,7 @@ class EntityLink extends Component {
       avatarSize = fluid ? '100%' : '40px', componentClassName } = this.props;
     const { imageError } = this.state || {};
     const { id, name, type } = entity;
-    const skrumBucket = 'https://s3-ap-northeast-1.amazonaws.com/skrum';
-    const imgSrc = imageError ? `/img/dummy_${getEntityTypeSubject(type)}.svg` :
-      `${skrumBucket}/c/${companyId}/${implodeSubject(type)}/${id}/picture`;
+    const imgSrc = imageError ? dummyImagePath(type) : imagePath(type, companyId, id);
     const avatarContent = (
       <div className={styles.avatar} title={name}>
         {id && (

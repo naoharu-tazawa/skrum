@@ -18,11 +18,11 @@ export default class InlineTextInput extends PureComponent {
         fluid
         {...{ value, ...inlineEditorProps }}
       >
-        {({ setRef, setValue, submit }) =>
+        {({ setRef, currentValue, setValue, submit }) =>
           <input
             ref={setRef}
             {...{ type, maxLength }}
-            defaultValue={value}
+            defaultValue={currentValue}
             onChange={e => setValue(e.target.value)}
             onKeyPress={e => e.key === 'Enter' && submit()}
           />}

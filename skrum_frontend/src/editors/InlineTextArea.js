@@ -18,10 +18,10 @@ export default class InlineTextArea extends PureComponent {
         multiline
         {...{ value, ...inlineEditorProps }}
       >
-        {({ setRef, setValue }) =>
+        {({ setRef, currentValue, setValue }) =>
           <textarea
             ref={setRef}
-            defaultValue={value}
+            defaultValue={currentValue}
             {...{ maxLength }}
             onChange={e => setValue(e.target.value)}
           />}

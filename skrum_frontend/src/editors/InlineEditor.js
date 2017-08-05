@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import FocusTrap from 'focus-trap-react';
+import { isEmpty } from 'lodash';
 import styles from './InlineEditor.css';
 
 export const inlineEditorPublicPropTypes = {
@@ -15,12 +16,13 @@ export default class InlineEditor extends PureComponent {
 
   static propTypes = {
     ...inlineEditorPublicPropTypes,
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
     fluid: PropTypes.bool,
     multiline: PropTypes.bool,
     dropdown: PropTypes.bool,
     formatter: PropTypes.func,
     children: PropTypes.func,
+    componentClassName: PropTypes.string,
   };
 
   setEditing() {
@@ -32,7 +34,7 @@ export default class InlineEditor extends PureComponent {
     const { value } = this.state || {};
     let unsetEditingCompanions = {};
     let unsetEditingCompletion = () => {};
-    if (required && value === '') {
+    if (required && isEmpty(value)) {
       unsetEditingCompletion = () => this.setState({ value, error: '入力してください' });
     } else if (value !== undefined && value !== defaultValue && onSubmit) {
       const validationError = validate && validate(value);
@@ -54,7 +56,7 @@ export default class InlineEditor extends PureComponent {
 
   render() {
     const { value: defaultValue = '', readonly = false, placeholder = '\u00A0',
-      fluid, multiline, dropdown, formatter = v => v, children } = this.props;
+      fluid, multiline, dropdown, formatter = v => v, children, componentClassName } = this.props;
     const { isEditing = false, value = defaultValue, submitValue, error } = this.state || {};
     const displayValue = formatter(submitValue !== undefined ? submitValue : value);
     return (
@@ -68,6 +70,7 @@ export default class InlineEditor extends PureComponent {
           ${isEditing && styles.editing}
           ${submitValue !== undefined && !error && styles.submitting}
           ${error && styles.error}
+          ${componentClassName || ''}
         `}
         onMouseUp={() => !readonly && submitValue === undefined && this.setEditing()}
         title={error}
@@ -91,6 +94,7 @@ export default class InlineEditor extends PureComponent {
           >
             {children({
               setRef: (ref) => { this.input = ref; },
+              currentValue: value,
               displayValue,
               setValue: val => this.setState({ value: val }),
               submit: this.submit.bind(this),

@@ -7,13 +7,15 @@
 
 .packet {
   margin-top: 50px;
+  display: flex;
 }
 .title {
-  margin-right: 30px;
+  flex-basis: 100px;
 }
 .data {
   position: relative;
   top: -3px;
+  flex: 1;
 }
 
 .btn {
@@ -42,28 +44,6 @@
 
 .company_img {
   margin-top: 30px;
-}
-.company_img > div {
-  width: 200px !important;
-  height: auto !important;
-  border-radius: 12% !important;
-  line-height: 1.25;
-  padding: 10px;
-  cursor: pointer;
-}
-.btn {
-  margin-top: 10px;
-  max-width: 200px;
-}
-.dummy_img, .img {
-  width: 180px;
-  height: 180px;
-  /*margin-right: 50px;*/
-  border-radius: 50%;
-}
-.dummy_img {
-  background-color: #8e9aa6;
-  padding: 1%;
 }
 .textarea {
   margin-top: 50px;

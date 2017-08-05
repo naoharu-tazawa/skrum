@@ -1,0 +1,32 @@
+.editor {
+  cursor: pointer;
+}
+.preview {
+  border-radius: 50%;
+}
+.dropzone {
+  margin: -2px 0;
+}
+.dropzone > div {
+  height: calc(100% + 8px) !important;
+  width: calc(100% + 8px) !important;
+  padding: 2px;
+}
+.dropzone > div:before {
+  content: "画像選択";
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  text-align: center;
+  color: black;
+  /*font-size: 200%;*/
+  line-height: 0.5;
+  speak: none;
+  opacity: 0;
+}
+.dropzone > div:hover img {
+  opacity: 0.25;
+}
+.dropzone > div:hover:before {
+  opacity: 1;
+}
