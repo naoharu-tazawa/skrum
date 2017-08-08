@@ -6,6 +6,8 @@ parameters:
 
     password_reset: '【Skrum】パスワードリセットのお知らせ'
 
+    post_notice: '【Skrum】タイムライン投稿通知メール'
+
     achievement_registration_reminder: '【Skrum】進捗登録リマインドメール'
 
     member_achievement_rate_report: '【Skrum】メンバー進捗状況レポート'

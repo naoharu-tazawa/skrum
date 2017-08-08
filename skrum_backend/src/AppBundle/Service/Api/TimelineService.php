@@ -9,6 +9,8 @@ use AppBundle\Exception\SystemException;
 use AppBundle\Utils\Auth;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\MUser;
+use AppBundle\Entity\TEmailReservation;
 use AppBundle\Entity\TLike;
 use AppBundle\Entity\TPost;
 use AppBundle\Api\ResponseDTO\PostDTO;
@@ -422,26 +424,32 @@ class TimelineService extends BaseService
      */
     public function postComment(Auth $auth, array $data, int $groupId): PostDTO
     {
-        // コメント登録
-        $tPost = new TPost();
-        $tPost->setTimelineOwnerGroupId($groupId);
-        $tPost->setPosterType(DBConstant::POSTER_TYPE_USER);
-        $tPost->setPosterUserId($auth->getUserId());
-        $tPost->setPost($data['post']);
-        $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
-        $tPost->setDisclosureType($data['disclosureType']);
+        $this->beginTransaction();
 
         try {
+            // コメント登録
+            $tPost = new TPost();
+            $tPost->setTimelineOwnerGroupId($groupId);
+            $tPost->setPosterType(DBConstant::POSTER_TYPE_USER);
+            $tPost->setPosterUserId($auth->getUserId());
+            $tPost->setPost($data['post']);
+            $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
+            $tPost->setDisclosureType($data['disclosureType']);
             $this->persist($tPost);
+
+            // メール送信予約
+            $mUserRepos = $this->getMUserRepository();
+            $mUser = $mUserRepos->find($tPost->getPosterUserId());
+            $this->reserveEmails($groupId, $mUser);
+
             $this->flush();
+            $this->commit();
         } catch (\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
 
         // レスポンスデータ生成
-        $mUserRepos = $this->getMUserRepository();
-        $mUser = $mUserRepos->find($tPost->getPosterUserId());
-
         $postDTO = new PostDTO();
         $postDTO->setPostId($tPost->getId());
         $postDTO->setPosterType($tPost->getPosterType());
@@ -471,6 +479,43 @@ class TimelineService extends BaseService
         $mGroup = $mGroupRepos->findBy(array('company' => $companyId, 'groupType' => DBConstant::GROUP_TYPE_COMPANY));
 
         return $this->postComment($auth, $data, $mGroup[0]->getGroupId());
+    }
+
+    /**
+     * タイムライン投稿通知メール送信予約
+     *
+     * @param integer $timelineOwnerGroupId タイムラインオーナーグループID
+     * @param MUser $posterEntity 投稿者ユーザエンティティ
+     * @return void
+     */
+    private function reserveEmails(int $timelineOwnerGroupId, MUser $posterEntity)
+    {
+        // 会社IDに対応するグループIDを取得
+        $tGroupMemberRepos = $this->getTGroupMemberRepository();
+        $mUserArray = $tGroupMemberRepos->getAllGroupMembers($timelineOwnerGroupId);
+
+        // タイムラインのグループ名を取得
+        $mGroupRepos = $this->getMGroupRepository();
+        $mGroup = $mGroupRepos->find($timelineOwnerGroupId);
+
+        foreach ($mUserArray as $mUser) {
+            // メール本文記載変数
+            $data = array();
+            $data['groupName'] = $mGroup->getGroupName();
+            $data['userName'] = $mUser->getLastName() . $mUser->getFirstName();
+            $data['posterUserName'] = $posterEntity->getLastName() . $posterEntity->getFirstName();
+
+            // メール送信予約テーブルに登録
+            if ($mUser->getUserId() !== $posterEntity->getUserId()) {
+                $tEmailReservation = new TEmailReservation();
+                $tEmailReservation->setToEmailAddress($mUser->getEmailAddress());
+                $tEmailReservation->setTitle($this->getParameter('post_notice'));
+                $tEmailReservation->setBody($this->renderView('mail/post_notice.txt.twig', ['data' => $data]));
+                $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
+                $tEmailReservation->setSendingReservationDatetime(DateUtility::getCurrentDatetime());
+                $this->persist($tEmailReservation);
+            }
+        }
     }
 
     /**
@@ -580,11 +625,24 @@ class TimelineService extends BaseService
      */
     public function deletePost(TPost $tPost)
     {
+        // 削除対象投稿に紐付くリプライを全て取得
+        $tPostRepos = $this->getTPostRepository();
+        $replyEntityArray = $tPostRepos->findBy(array('parent' => $tPost->getId()));
+
+        $this->beginTransaction();
+
         // 投稿削除
         try {
+            foreach ($replyEntityArray as $replyEntity) {
+                $this->remove($replyEntity);
+            }
+
             $this->remove($tPost);
+
             $this->flush();
+            $this->commit();
         } catch (\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
     }

@@ -62,11 +62,11 @@ class TimelineController extends BaseController
     public function getCompanyPostsAction(Request $request, string $companyId): array
     {
         // リクエストパラメータを取得
-        $before = $request->get('before'); // ex.) 2017-07-09 20:14:45
+        $before = $request->get('before'); // 投稿ID
 
         // リクエストパラメータのバリデーション
-        $beforeErrors = $this->validateDatetime($before);
-        if($beforeErrors) throw new InvalidParameterException("タイムライン取得基準日時が不正です", $beforeErrors);
+        $beforeErrors = $this->checkIntID($before);
+        if($beforeErrors) throw new InvalidParameterException("タイムライン取得基準投稿IDが不正です", $beforeErrors);
 
         // 認証情報を取得
         $auth = $request->get('auth_token');

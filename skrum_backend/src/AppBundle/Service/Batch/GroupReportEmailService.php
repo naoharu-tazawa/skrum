@@ -29,7 +29,7 @@ class GroupReportEmailService extends BaseService
 
         // 所属グループの進捗率（前日・前々日）を取得
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
-        $groupLogInfoArray = $tGroupMemberRepos->getGroupAchievementRateLog($mUser->getUserId(), $tTimeframe->getTimeframeId());var_dump($groupLogInfoArray);
+        $groupLogInfoArray = $tGroupMemberRepos->getGroupAchievementRateLog($mUser->getUserId(), $tTimeframe->getTimeframeId());
 
         // メール本文記載変数
         $data = array();
@@ -47,7 +47,7 @@ class GroupReportEmailService extends BaseService
         $tEmailReservation->setTitle($this->getParameter('group_achievement_rate_report'));
         $tEmailReservation->setBody($this->renderView('mail/group_achievement_rate_report.txt.twig', ['data' => $data]));
         $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
-        $tEmailReservation->setSendingReservationDatetime(DateUtility::transIntoDatetime(DateUtility::getTodayXYTimeDatetimeString(7, 30)));
+        $tEmailReservation->setSendingReservationDatetime(DateUtility::transIntoDatetime(DateUtility::getTodayXYTimeDatetimeString(8, 0)));
         $this->persist($tEmailReservation);
     }
 
