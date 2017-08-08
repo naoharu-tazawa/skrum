@@ -89,7 +89,7 @@ class SearchService extends BaseService
      * @param integer $page 要求ページ
      * @return array
      */
-    public function pagesearchUser(Auth $auth, string $keyword, int $page): UserPageSearchDTO
+    public function pagesearchUser(Auth $auth, int $page, string $keyword = null): UserPageSearchDTO
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -97,7 +97,7 @@ class SearchService extends BaseService
         // ユーザ検索
         $mUserRepos = $this->getMUserRepository();
         $count = $mUserRepos->getPagesearchCount($escapedKeyword, $auth->getCompanyId());
-        $mUserArray = $mUserRepos->pagesearchUser($escapedKeyword, $page, $this->getParameter('paging_data_number'), $auth->getCompanyId());
+        $mUserArray = $mUserRepos->pagesearchUser($page, $escapedKeyword, $this->getParameter('paging_data_number'), $auth->getCompanyId());
 
         // DTOに詰め替える
         $userSearchDTOArray = array();
@@ -107,7 +107,7 @@ class SearchService extends BaseService
             $userSearchDTO->setUserName($mUser['last_name'] . ' ' . $mUser['first_name']);
             $userSearchDTO->setRoleAssignmentId($mUser['role_assignment_id']);
             $userSearchDTO->setRoleLevel($mUser['role_level']);
-            $userSearchDTO->setLastLogin(DateUtility::transIntoDatetime($mUser['last_access_datetime']));
+            $userSearchDTO->setLastLogin(DateUtility::transIntoDatetime($mUser['login_datetime']));
 
             $userSearchDTOArray[] = $userSearchDTO;
         }
@@ -186,7 +186,7 @@ class SearchService extends BaseService
      * @param integer $page 要求ページ
      * @return GroupPageSearchDTO
      */
-    public function pagesearchGroup(Auth $auth, string $keyword, int $page): GroupPageSearchDTO
+    public function pagesearchGroup(Auth $auth, int $page, string $keyword = null): GroupPageSearchDTO
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -194,7 +194,7 @@ class SearchService extends BaseService
         // グループ検索
         $mGroupRepos = $this->getMGroupRepository();
         $count = $mGroupRepos->getPagesearchCount($escapedKeyword, $auth->getCompanyId());
-        $mGroupArray = $mGroupRepos->pagesearchGroup($escapedKeyword, $page, $this->getParameter('paging_data_number'), $auth->getCompanyId());
+        $mGroupArray = $mGroupRepos->pagesearchGroup($page, $escapedKeyword, $this->getParameter('paging_data_number'), $auth->getCompanyId());
 
         // DTOに詰め替える
         $groupSearchDTOArray = array();

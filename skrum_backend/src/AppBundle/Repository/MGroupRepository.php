@@ -161,7 +161,7 @@ SQL;
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function pagesearchGroup(string $keyword, int $page, int $perPage, int $companyId): array
+    public function pagesearchGroup(int $page, string $keyword = null, int $perPage, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mg');
         $qb->select('mg.groupId', 'mg.groupType', 'mg.groupName')
@@ -173,6 +173,7 @@ SQL;
             ->setParameter('companyFlg', DBConstant::FLG_FALSE)
             ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
             ->setParameter('groupName', $keyword . '%')
+            ->addOrderBy('mg.groupId', 'ASC')
             ->setFirstResult(($page - 1) * $perPage)
             ->setMaxResults($perPage);
 

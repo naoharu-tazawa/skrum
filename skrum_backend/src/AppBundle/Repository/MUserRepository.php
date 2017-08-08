@@ -110,7 +110,7 @@ SQL;
      * @param integer $companyId 会社ID
      * @return integer
      */
-    public function getPagesearchCount(string $keyword, int $companyId): int
+    public function getPagesearchCount(string $keyword = null, int $companyId): int
     {
         $sql = <<<SQL
         SELECT m1_.user_id
@@ -141,17 +141,24 @@ SQL;
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function pagesearchUser(string $keyword, int $page, int $perPage, int $companyId): array
+    public function pagesearchUser(int $page, string $keyword = null, int $perPage, int $companyId): array
     {
         $sql = <<<SQL
-        SELECT m1_.user_id, m1_.last_name, m1_.first_name, m1_.role_assignment_id, m2_.role_level, m1_.last_access_datetime
+        SELECT m1_.user_id, m1_.last_name, m1_.first_name, m1_.role_assignment_id, m2_.role_level, t0_.login_datetime
         FROM (
-            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.role_assignment_id, m0_.last_access_datetime
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.role_assignment_id
             FROM m_user m0_
             WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
             ) AS m1_
         INNER JOIN m_role_assignment m2_ ON (m1_.role_assignment_id = m2_.role_assignment_id) AND (m2_.deleted_at IS NULL)
+        LEFT OUTER JOIN t_login t0_
+            ON t0_.id = (
+                SELECT t1_.id
+                FROM t_login t1_
+                WHERE (m1_.user_id = t1_.user_id) AND (t1_.deleted_at IS NULL)
+                ORDER BY t1_.login_datetime DESC LIMIT 1)
         WHERE m1_.name LIKE :keyword
+        ORDER BY m1_.user_id ASC
         LIMIT :offset, :limit;
 SQL;
 

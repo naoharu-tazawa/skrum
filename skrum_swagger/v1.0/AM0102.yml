@@ -10,25 +10,25 @@ produces:
 basePath: /v1
 
 paths:
-  /users/pagesearch.json?{q}&{p}:
+  /users/pagesearch.json?{p}&{q}:
     get:
       description: ユーザ検索（ページング）
       parameters:
-        -
-          name: q
-          in: paths
-          type: string
-          description: 検索ワード
-          required: true
         -
           name: p
           in: paths
           type: string
           description: 要求ページ
           required: true
+        -
+          name: q
+          in: paths
+          type: string
+          description: 検索ワード
+          required: false
       responses:
         200:
-          description: グループ検索結果
+          description: ユーザ検索結果
           schema:
             type: object
             properties:

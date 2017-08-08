@@ -5,7 +5,6 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\Constant;
-use AppBundle\Utils\DBConstant;
 
 /**
  * 画像アップロードサービスクラス

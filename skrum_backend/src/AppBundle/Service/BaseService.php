@@ -407,6 +407,11 @@ class BaseService
         return $this->entityManager->getRepository('AppBundle:TEmailReservation');
     }
 
+    protected function getTEmailSettingsRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TEmailSettings');
+    }
+
     protected function getTOkrActivityRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TOkrActivity');

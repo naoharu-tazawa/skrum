@@ -510,12 +510,29 @@ class UserSettingService extends BaseService
         // 変更後ロールがスーパー管理者ユーザの場合、スーパー管理者ユーザ数をチェック
         $this->checkSuperAdminUserCount($mRoleAssignment->getRoleLevel(), $auth->getCompanyId());
 
-        // ユーザ権限更新
-        $mUser->setRoleAssignment($mRoleAssignment);
+        $this->beginTransaction();
 
         try {
+            // ユーザ権限更新
+            $mUser->setRoleAssignment($mRoleAssignment);
+
+            // メール通知設定を変更
+            $tEmailSettingsRepos = $this->getTEmailSettingsRepository();
+            $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $mUser->getUserId()));
+            if ($mRoleAssignment->getRoleLevel() >= DBConstant::ROLE_LEVEL_ADMIN) {
+                $tEmailSettings->setReportMemberAchievement(DBConstant::EMAIL_REPORT_MEMBER_ACHIEVEMENT);
+                $tEmailSettings->setReportGroupAchievement(DBConstant::EMAIL_OFF);
+                $tEmailSettings->setReportFeedbackTarget(DBConstant::EMAIL_REPORT_FEEDBACK_TARGET);
+            } else {
+                $tEmailSettings->setReportMemberAchievement(DBConstant::EMAIL_OFF);
+                $tEmailSettings->setReportGroupAchievement(DBConstant::EMAIL_REPORT_GROUP_ACHIEVEMENT);
+                $tEmailSettings->setReportFeedbackTarget(DBConstant::EMAIL_OFF);
+            }
+
             $this->flush();
+            $this->commit();
         } catch (\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
     }

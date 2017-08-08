@@ -10,22 +10,22 @@ produces:
 basePath: /v1
 
 paths:
-  /groups/pagesearch.json?{q}&{p}:
+  /groups/pagesearch.json?{p}&{q}:
     get:
       description: グループ検索（ページング）
       parameters:
-        -
-          name: q
-          in: paths
-          type: string
-          description: 検索ワード
-          required: true
         -
           name: p
           in: paths
           type: string
           description: 要求ページ
           required: true
+        -
+          name: q
+          in: paths
+          type: string
+          description: 検索ワード
+          required: false
       responses:
         200:
           description: グループ検索結果
