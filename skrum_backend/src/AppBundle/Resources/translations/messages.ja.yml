@@ -10,6 +10,8 @@ parameters:
 
     member_achievement_rate_report: '【Skrum】メンバー進捗状況レポート'
 
+    group_achievement_rate_report: '【Skrum】所属グループ進捗状況レポート'
+
     feedback_target_report: '【Skrum】フィードバック対象者自動抽出レポート'
 
     auto_post_type_generate: 'さんが目標を作成しました。'
