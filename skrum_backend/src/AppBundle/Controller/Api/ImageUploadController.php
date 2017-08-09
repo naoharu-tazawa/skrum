@@ -209,6 +209,7 @@ class ImageUploadController extends BaseController
 
         // BASE64をデコード
         $data['image'] = base64_decode($data['image']);
+
         return $data;
     }
 }

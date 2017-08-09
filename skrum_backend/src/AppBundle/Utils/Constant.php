@@ -45,6 +45,21 @@ class Constant
     const SUBJECT_TYPE_COMPANY = '3';
 
     /**
+     * ロール（一般ユーザ）（CSV用）
+     */
+    const ROLE_NORMAL = '1';
+
+    /**
+     * ロール（管理者ユーザ）（CSV用）
+     */
+    const ROLE_ADMIN = '2';
+
+    /**
+     * ロール（スーパー管理者ユーザ）（CSV用）
+     */
+    const ROLE_SUPERADMIN = '3';
+
+    /**
      * 標準タイムフレーム名
      */
     const NORMAL_TIMEFRAME_NAME_FORMAT = '%s/%s - %s/%s';

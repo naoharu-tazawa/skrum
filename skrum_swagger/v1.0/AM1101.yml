@@ -10,22 +10,31 @@ produces:
 basePath: /v1
 
 paths:
-  /csv/additionalusers.json:
-    post:
-      description: ユーザ一括追加CSVアップロード
+  /users/{userId}/changepassword.json:
+    put:
+      description: パスワード変更
       parameters:
+        -
+          name: userId
+          in: path
+          type: string
+          description: ユーザID
+          required: true
         -
           name: JsonRequest
           in: body
-          description: アップロードCSV（BASE64）
+          description: 現在のパスワード、新パスワード
           required: true
           schema:
             type: object
             properties:
-              mimeType:
+              currentPassword:
                 type: string
-              content:
+              newPassword:
                 type: string
+            required:
+              - currentPassword
+              - newPassword
       responses:
         200:
           description: 成功

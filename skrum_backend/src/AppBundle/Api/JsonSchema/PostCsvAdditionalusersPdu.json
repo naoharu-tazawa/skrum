@@ -1,0 +1,19 @@
+{
+  "title": "CSVアップロード",
+  "type": "object",
+  "properties": {
+    "mimeType": {
+      "title": "MIMEタイプ",
+      "type": "string"
+    },
+    "content": {
+      "title": "CSVファイル（BASE64変換）",
+      "type": "string",
+      "media": {
+        "binaryEncoding": "base64"
+      }
+    }
+  },
+  "required": ["mimeType", "content"],
+  "additionalProperties": false
+}

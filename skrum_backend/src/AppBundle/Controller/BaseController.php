@@ -384,6 +384,11 @@ class BaseController extends FOSRestController
         return $this->get('api.contract_service');
     }
 
+    protected function getCsvUploadService()
+    {
+        return $this->get('api.csv_upload_service');
+    }
+
     protected function getGroupMemberService()
     {
         return $this->get('api.group_member_service');

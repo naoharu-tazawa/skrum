@@ -66,6 +66,10 @@ services:
         class: AppBundle\Service\Api\ContractService
         arguments: ['@service_container']
 
+    api.csv_upload_service:
+        class: AppBundle\Service\Api\CsvUploadService
+        arguments: ['@service_container']
+
     api.group_member_service:
         class: AppBundle\Service\Api\GroupMemberService
         arguments: ['@service_container']

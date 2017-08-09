@@ -250,6 +250,21 @@ class DBConstant
     const TIMEFRAME_CYCLE_TYPE_YEAR = '4';
 
     /**
+     * アップロード種別（ユーザ追加）
+     */
+    const UPLOAD_TYPE_ADDITIONNAL_USERS = '1';
+
+    /**
+     * アップロード後バッチ実行ステータス（未実行）
+     */
+    const BATCH_EXECUTION_STATUS_NOT_EXECUTED = '0';
+
+    /**
+     * アップロード後バッチ実行ステータス（実行済み）
+     */
+    const BATCH_EXECUTION_STATUS_EXECUTED = '1';
+
+    /**
      * メール通知設定オフ
      */
     const EMAIL_OFF = '0';
