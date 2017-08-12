@@ -10,7 +10,8 @@ export default class OKRList extends Component {
 
   static propTypes = {
     okrs: okrsPropTypes,
-    onAdd: PropTypes.func.isRequired,
+    onAddOkr: PropTypes.func.isRequired,
+    onAddParentedOkr: PropTypes.func.isRequired,
   };
 
   toggleKeyResults(id) {
@@ -20,7 +21,7 @@ export default class OKRList extends Component {
   }
 
   render() {
-    const { okrs = [], onAdd } = this.props;
+    const { okrs = [], onAddOkr, onAddParentedOkr } = this.props;
     const { expandedKeyResults = {} } = this.state || {};
     return (
       <div className={styles.component}>
@@ -35,16 +36,20 @@ export default class OKRList extends Component {
               (<div key={`okr-${id}`}>
                 <OkrBar
                   okr={okr}
+                  onAddParentedOkr={onAddParentedOkr}
                   onKRClicked={() => keyResults.length && this.toggleKeyResults(id)}
                 />
               </div>),
               ...keyResults.map(keyResult =>
-                <KRBar key={`kr-${keyResult.id}`} {...{ display, keyResult }} />),
+                <KRBar
+                  key={`kr-${keyResult.id}`}
+                  {...{ display, keyResult, onAddParentedOkr }}
+                />),
             ];
           }))}
         </div>
         <div className={`${styles.footer} ${styles.alignC}`}>
-          <button className={styles.addOkr} onClick={onAdd}>
+          <button className={styles.addOkr} onClick={onAddOkr}>
             <span className={styles.circle}>
               <img src="/img/common/icn_plus.png" alt="Add" />
             </span>

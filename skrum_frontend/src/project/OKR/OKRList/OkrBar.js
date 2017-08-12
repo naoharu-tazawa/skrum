@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { okrPropTypes } from './propTypes';
 import EntityLink from '../../../components/EntityLink';
+import DropdownMenu from '../../../components/DropdownMenu';
 import { replacePath } from '../../../util/RouteUtil';
 import styles from './OkrBar.css';
 
@@ -12,13 +13,14 @@ export default class OkrBar extends Component {
     header: PropTypes.bool,
     okr: okrPropTypes,
     onKRClicked: PropTypes.func,
+    onAddParentedOkr: PropTypes.func,
   };
 
   getProgressStyles = rate =>
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { header, okr, onKRClicked } = this.props;
+    const { header, okr, onKRClicked, onAddParentedOkr } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -57,7 +59,12 @@ export default class OkrBar extends Component {
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.krCount}>
           <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
-          <a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>
+          <DropdownMenu
+            trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
+            options={[
+              { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(okr) },
+            ]}
+          />
           {keyResults && (
             <a
               className={`${styles.circle} ${styles.circle_small} ${styles.circle_plus}`}

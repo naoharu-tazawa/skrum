@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, getFormValues, SubmissionError } from 'redux-form';
 import { isEmpty, omit, toNumber, partial } from 'lodash';
-import { okrPropTypes } from '../../OKRDetails/propTypes';
+import { objectivePropTypes } from '../../OKRDetails/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
 import OwnerSearch, { ownerPropType } from '../../OwnerSearch/OwnerSearch';
 import TimeframesDropdown from '../../../components/TimeframesDropdown';
@@ -60,22 +60,30 @@ const KRDialogForm = withLoadedReduxForm(
   { validate },
 );
 
-const ownerSearch = withItemisedReduxField(OwnerSearch, 'owner');
-
 class NewOKR extends Component {
 
   static propTypes = {
     type: PropTypes.oneOf(['Okr', 'KR']).isRequired,
+    onClose: PropTypes.func.isRequired,
+    parentOkr: objectivePropTypes,
     ownerName: PropTypes.string,
-    parentOkr: okrPropTypes,
-    onClose: PropTypes.func,
     subject: PropTypes.string,
     id: PropTypes.number,
     owner: ownerPropType,
     timeframeId: PropTypes.number,
+    differingParentOkrOwner: PropTypes.bool,
     dispatchPostOkr: PropTypes.func,
     dispatchPostKR: PropTypes.func,
   };
+
+  constructor(props) {
+    super(props);
+    const { differingParentOkrOwner, parentOkr } = props;
+    // FIXME: moving ownerSearch to mapStateToProps causes infinite loop
+    const ownerSearch = withItemisedReduxField(OwnerSearch, 'owner',
+      differingParentOkrOwner && parentOkr ? { exclude: parentOkr.owner } : {});
+    this.state = { ownerSearch };
+  }
 
   submit(entry) {
     const { type, parentOkr = {}, onClose, subject, id,
@@ -109,7 +117,8 @@ class NewOKR extends Component {
   }
 
   render() {
-    const { type, owner, ownerName, parentOkr, timeframeId, onClose, subject } = this.props;
+    const { type, onClose, parentOkr, owner, ownerName, timeframeId, subject } = this.props;
+    const { ownerSearch } = this.state;
     const okrForm = Form => (
       <Form
         title={type === 'Okr' ? '目標新規登録' : 'サブ目標新規登録'}
@@ -118,12 +127,12 @@ class NewOKR extends Component {
         onClose={onClose}
       >
         <div className={styles.dialog}>
-          {parentOkr && <EntitySubject entity={parentOkr.owner} heading="紐付け先目標" subject={name} />}
+          {parentOkr && <EntitySubject entity={parentOkr.owner} heading="紐付け先目標" subject={parentOkr.name} />}
           <section>
             <label>担当者</label>
             {ownerName ? <label>{ownerName}</label> : ownerSearch}
-            {type === 'Okr' && <label>目標の時間枠</label>}
-            {type === 'Okr' && withSelectReduxField(TimeframesDropdown, 'timeframeId')}
+            {!parentOkr && <label>目標の時間枠</label>}
+            {!parentOkr && withSelectReduxField(TimeframesDropdown, 'timeframeId')}
           </section>
           <section>
             <label>公開範囲</label>
@@ -161,7 +170,7 @@ class NewOKR extends Component {
             <label>期限日</label>
             {withReduxField(DatePickerInput, 'endDate')}
           </section>
-          {type === 'Okr' && timeframeId && <section>
+          {!parentOkr && timeframeId && <section>
             <label>紐づけ先検索</label>
             {withItemisedReduxField(OKRSearch, 'alignment',
               { owner, timeframeId, disabled: !ownerName && isEmpty(owner) })}

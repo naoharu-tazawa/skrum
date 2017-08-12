@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { join } from 'lodash';
 import EntityLink from '../../../components/EntityLink';
+import DropdownMenu from '../../../components/DropdownMenu';
 import { keyResultPropTypes } from './propTypes';
 import styles from './KRBar.css';
 
@@ -10,6 +11,7 @@ export default class KRBar extends Component {
   static propTypes = {
     display: PropTypes.oneOf(['expanded', 'collapsed']).isRequired,
     keyResult: keyResultPropTypes.isRequired,
+    onAddParentedOkr: PropTypes.func.isRequired,
   };
 
   getBaseStyles = (display) => {
@@ -24,7 +26,7 @@ export default class KRBar extends Component {
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   render() {
-    const { display, keyResult } = this.props;
+    const { display, keyResult, onAddParentedOkr } = this.props;
     const { name, unit, targetValue, achievedValue, achievementRate, owner } = keyResult;
     return (
       <div className={this.getBaseStyles(display)}>
@@ -48,7 +50,12 @@ export default class KRBar extends Component {
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.krCount}>
           <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
-          <a className={styles.circle} href=""><img src="/img/common/inc_link.png" alt="Link" /></a>
+          <DropdownMenu
+            trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
+            options={[
+              { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(keyResult) },
+            ]}
+          />
         </div>
       </div>);
   }

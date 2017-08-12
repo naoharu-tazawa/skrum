@@ -22,7 +22,9 @@ class OKRListContainer extends Component {
       <div>
         <OKRList
           okrs={okrs}
-          onAdd={() => openModal(NewOKR, { type: 'Okr', ownerName })}
+          onAddOkr={() => openModal(NewOKR, { type: 'Okr', ownerName })}
+          onAddParentedOkr={okr => openModal(NewOKR,
+            { type: 'Okr', parentOkr: okr, differingParentOkrOwner: true })}
         />
       </div>);
   }

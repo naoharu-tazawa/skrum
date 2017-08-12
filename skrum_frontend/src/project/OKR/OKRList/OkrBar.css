@@ -114,3 +114,23 @@
   background-color: #8e9aa6;
   color: #fff;
 }
+.tool {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #8e9aa6;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-table;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  margin-right: 15px;
+  cursor: pointer;
+}
+button.tool {
+  background-color: inherit;
+  padding: 0;
+}
+button.tool:focus {
+  outline: 0;
+}

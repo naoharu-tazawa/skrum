@@ -18,6 +18,7 @@ class OwnerSearch extends PureComponent {
   static propTypes = {
     defaultOwners: PropTypes.arrayOf(ownerPropType),
     keyword: PropTypes.string,
+    exclude: ownerPropType,
     ownersFound: PropTypes.arrayOf(ownerPropType),
     value: PropTypes.oneOfType([ownerPropType, PropTypes.shape({}), PropTypes.string]),
     onChange: PropTypes.func.isRequired,
@@ -47,16 +48,19 @@ class OwnerSearch extends PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, props) => {
+  const { exclude = {} } = props;
   const { users = [], teams = [], departments: depts = [], company = {} } = state.top.data || {};
   const defaultOwners = [
     ...users.map(({ userId: id, name }) => ({ id, name, type: EntityType.USER })),
     ...teams.map(({ groupId: id, groupName: name }) => ({ id, name, type: EntityType.GROUP })),
     ...depts.map(({ groupId: id, groupName: name }) => ({ id, name, type: EntityType.GROUP })),
     ...[{ id: company.companyId, name: company.name, type: EntityType.COMPANY }],
-  ];
+  ].filter(({ type, id }) => exclude.type !== type || exclude.id !== id);
   const { isSearching, keyword, data = [] } = state.ownersFound || {};
-  return { defaultOwners, keyword, ownersFound: data.map(mapOwner), isSearching };
+  const ownersFound = data.map(mapOwner).filter(({ type, id }) =>
+    exclude.type !== type || exclude.id !== id);
+  return { defaultOwners, keyword, ownersFound, isSearching };
 };
 
 const mapDispatchToProps = (dispatch) => {
