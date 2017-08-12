@@ -20,7 +20,7 @@ class FeedbackTargetReportEmailCommand extends BaseCommand
         $this->setName('BB0106')
             ->setDescription('フィードバック対象者報告メールバッチ')
             ->setDefinition(array(
-                new InputOption('bulk_size', 1000, InputOption::VALUE_REQUIRED, 'バルクサイズ')
+                new InputOption('bulk_size', null, InputOption::VALUE_REQUIRED, 'バルクサイズ')
             ));
     }
 

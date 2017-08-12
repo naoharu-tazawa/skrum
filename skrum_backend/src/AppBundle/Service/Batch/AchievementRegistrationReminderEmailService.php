@@ -61,7 +61,7 @@ class AchievementRegistrationReminderEmailService extends BaseService
                 $this->createEmail($userInfo);
 
                 // バルクインサート
-                if ($key % $bulkSize === 0) {
+                if (($key + 1) % $bulkSize === 0) {
                     $this->flush();
                     $this->clear();
                 }

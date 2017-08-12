@@ -142,6 +142,10 @@ services:
         class: AppBundle\Service\Batch\AchievementRegistrationReminderEmailService
         arguments: ['@service_container']
 
+    batch.additional_users_bulk_registration_service:
+        class: AppBundle\Service\Batch\AdditionalUsersBulkRegistrationService
+        arguments: ['@service_container']
+
     batch.email_sending_service:
         class: AppBundle\Service\Batch\EmailSendingService
         arguments: ['@service_container']

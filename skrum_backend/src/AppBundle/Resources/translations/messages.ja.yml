@@ -16,6 +16,10 @@ parameters:
 
     feedback_target_report: '【Skrum】フィードバック対象者自動抽出レポート'
 
+    file_registration_error: '【Skrum】CSVファイル登録エラー'
+
+    file_registration_success: '【Skrum】CSVファイル登録成功データ'
+
     auto_post_type_generate: 'さんが目標を作成しました。'
 
     auto_post_type_achievement: 'さんの達成値が%%d%%sから%%d%%sに進捗しました。（%%s%%d%%s）'

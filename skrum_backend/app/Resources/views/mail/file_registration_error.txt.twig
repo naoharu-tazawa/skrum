@@ -1,0 +1,9 @@
+{{ data.userName }} さん
+
+登録されたCSVファイルについて以下の行データが登録できませんでした。
+
+
+{% for error in data.errors %}
+{{ error.line }}
+----- {{ error.message }}
+{% endfor %}

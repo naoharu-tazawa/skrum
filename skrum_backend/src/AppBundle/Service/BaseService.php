@@ -441,4 +441,14 @@ class BaseService
     {
         return $this->entityManager->getRepository('AppBundle:TTimeframe');
     }
+
+    protected function getTUploadControlRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TUploadControl');
+    }
+
+    protected function getTUploadRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TUpload');
+    }
 }

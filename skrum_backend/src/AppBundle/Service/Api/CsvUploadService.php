@@ -31,6 +31,16 @@ class CsvUploadService extends BaseService
      */
     public function registerCsv(Auth $auth, string $fileContent): array
     {
+        // 二重登録チェック
+        $tUploadControlRepos = $this->getTUploadControlRepository();
+        $tUploadControlArray = $tUploadControlRepos->findBy(array('companyId' => $auth->getCompanyId()));
+        if (count($tUploadControlArray) !== 0) {
+            $this->message = 'ファイルは既に登録済みです';
+            $result['error'] = $this->message;
+
+            return $result;
+        }
+
         // CSVファイルを改行コードで分割し配列に格納
         $replacedFileContent = str_replace(array("\r\n","\r"), "\n", $fileContent);
         $lines = explode("\n", $replacedFileContent);
@@ -57,6 +67,7 @@ class CsvUploadService extends BaseService
                 $tUploadControl->setCompanyId($auth->getCompanyId());
                 $tUploadControl->setUploadType(DBConstant::UPLOAD_TYPE_ADDITIONNAL_USERS);
                 $tUploadControl->setCount(count($lines));
+                $tUploadControl->setUploadUserId($auth->getUserId());
                 $this->persist($tUploadControl);
                 $this->flush();
 
@@ -109,6 +120,20 @@ class CsvUploadService extends BaseService
         // ID(連番)と行数が一致するかチェック
         if ($items[0] != $number) {
             $this->message = $number . '行目：ID(連番)が不正です';
+
+            return false;
+        }
+
+        // 名前(姓)空チェック
+        if ($items[1] === '') {
+            $this->message = $number . '行目：名前(姓)は必須です';
+
+            return false;
+        }
+
+        // 名前(名)空チェック
+        if ($items[2] === '') {
+            $this->message = $number . '行目：名前(名)は必須です';
 
             return false;
         }

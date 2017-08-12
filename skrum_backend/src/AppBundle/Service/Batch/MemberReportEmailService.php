@@ -86,7 +86,7 @@ class MemberReportEmailService extends BaseService
                 $this->createEmail($mUser);
 
                 // バルクインサート
-                if ($key % $bulkSize === 0) {
+                if (($key + 1) % $bulkSize === 0) {
                     $this->flush();
                     $this->clear();
                 }

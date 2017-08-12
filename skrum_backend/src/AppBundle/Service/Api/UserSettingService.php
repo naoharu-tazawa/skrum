@@ -357,13 +357,13 @@ class UserSettingService extends BaseService
         }
 
         // ランダムパスワード生成
-        $ramdomPassword =  null;
-        while (!preg_match('/^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,20}$/', $ramdomPassword)) {
-            $ramdomPassword = $this->generateRamdomPassword();
+        $randomPassword =  null;
+        while (!preg_match('/^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,20}$/', $randomPassword)) {
+            $randomPassword = $this->generateRamdomPassword();
         }
 
         // パスワードをハッシュ化
-        $hashedPassword = password_hash($ramdomPassword, PASSWORD_DEFAULT, array('cost' => 12));
+        $hashedPassword = password_hash($randomPassword, PASSWORD_DEFAULT, array('cost' => 12));
 
         // トランザクション開始
         $this->beginTransaction();
@@ -374,7 +374,7 @@ class UserSettingService extends BaseService
 
             // Eメール本文テンプレート埋め込み変数配列の設定
             $data = array();
-            $data['password'] = $ramdomPassword;
+            $data['password'] = $randomPassword;
             $data['subdomain'] = $auth->getSubdomain();
             $data['supportAddress'] = $this->getParameter('support_address');
 

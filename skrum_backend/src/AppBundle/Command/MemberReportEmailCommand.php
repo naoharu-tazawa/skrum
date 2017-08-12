@@ -20,7 +20,7 @@ class MemberReportEmailCommand extends BaseCommand
         $this->setName('BB0104')
             ->setDescription('メンバー進捗状況レポートメールバッチ')
             ->setDefinition(array(
-                new InputOption('bulk_size', 1000, InputOption::VALUE_REQUIRED, 'バルクサイズ')
+                new InputOption('bulk_size', null, InputOption::VALUE_REQUIRED, 'バルクサイズ')
             ));
     }
 

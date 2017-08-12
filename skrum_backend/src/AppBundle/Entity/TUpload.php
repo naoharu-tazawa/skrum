@@ -50,6 +50,13 @@ class TUpload
     private $message;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="temporary_password", type="string", length=255, nullable=true)
+     */
+    private $temporaryPassword;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -211,6 +218,30 @@ class TUpload
     public function getMessage()
     {
         return $this->message;
+    }
+
+    /**
+     * Set temporaryPassword
+     *
+     * @param string $temporaryPassword
+     *
+     * @return TUpload
+     */
+    public function setTemporaryPassword($temporaryPassword)
+    {
+        $this->temporaryPassword = $temporaryPassword;
+
+        return $this;
+    }
+
+    /**
+     * Get temporaryPassword
+     *
+     * @return string
+     */
+    public function getTemporaryPassword()
+    {
+        return $this->temporaryPassword;
     }
 
     /**

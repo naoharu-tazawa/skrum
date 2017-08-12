@@ -20,7 +20,7 @@ class AchievementRateLogCommand extends BaseCommand
         $this->setName('BA0101')
             ->setDescription('目標進捗率ログ作成バッチ')
             ->setDefinition(array(
-                new InputOption('bulk_size', 1000, InputOption::VALUE_REQUIRED, 'バルクサイズ')
+                new InputOption('bulk_size', null, InputOption::VALUE_REQUIRED, 'バルクサイズ')
             ));
     }
 

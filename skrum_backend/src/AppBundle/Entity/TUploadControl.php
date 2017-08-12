@@ -36,6 +36,13 @@ class TUploadControl
     private $count;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="upload_user_id", type="integer", nullable=false)
+     */
+    private $uploadUserId;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -139,6 +146,30 @@ class TUploadControl
     public function getCount()
     {
         return $this->count;
+    }
+
+    /**
+     * Set uploadUserId
+     *
+     * @param integer $uploadUserId
+     *
+     * @return TUploadControl
+     */
+    public function setUploadUserId($uploadUserId)
+    {
+        $this->uploadUserId = $uploadUserId;
+
+        return $this;
+    }
+
+    /**
+     * Get uploadUserId
+     *
+     * @return integer
+     */
+    public function getUploadUserId()
+    {
+        return $this->uploadUserId;
     }
 
     /**

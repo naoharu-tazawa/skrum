@@ -21,7 +21,7 @@ class EmailSendingCommand extends BaseCommand
         $this->setName('BB0108')
             ->setDescription('メール送信バッチ')
             ->setDefinition(array(
-                new InputOption('bulk_size', 1000, InputOption::VALUE_REQUIRED, 'バルクサイズ')
+                new InputOption('bulk_size', null, InputOption::VALUE_REQUIRED, 'バルクサイズ')
             ));
     }
 

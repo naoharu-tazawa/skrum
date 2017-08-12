@@ -20,7 +20,7 @@ class AchievementRegistrationReminderEmailCommand extends BaseCommand
         $this->setName('BB0103')
             ->setDescription('進捗登録リマインダーメールバッチ')
             ->setDefinition(array(
-                new InputOption('bulk_size', 1000, InputOption::VALUE_REQUIRED, 'バルクサイズ')
+                new InputOption('bulk_size', null, InputOption::VALUE_REQUIRED, 'バルクサイズ')
             ));
     }
 
