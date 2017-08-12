@@ -6,6 +6,7 @@ export default (state = {
   group: {},
   isFetching: false,
   isPutting: false,
+  isPostingImage: false,
   isChangingLeader: false,
   isAddingGroupMember: false,
   isDeletingGroupMember: false,
@@ -63,6 +64,19 @@ export default (state = {
       const { group, members } = state.group;
       const newGroup = mergeUpdateById(group, 'groupId', data, id);
       return { ...state, group: { group: newGroup, members }, isPutting: false, error: null };
+    }
+
+    case Action.REQUEST_POST_USER_IMAGE:
+    case Action.REQUEST_POST_GROUP_IMAGE:
+      return { ...state, isPostingImage: true };
+
+    case Action.FINISH_POST_USER_IMAGE:
+    case Action.FINISH_POST_GROUP_IMAGE: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isPostingImage: false, error: { message: payload.message } };
+      }
+      return { ...state, isPostingImage: false, error: null };
     }
 
     case Action.REQUEST_CHANGE_GROUP_LEADER:

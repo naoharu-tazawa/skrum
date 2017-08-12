@@ -3,21 +3,23 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { userPropTypes } from './propTypes';
 import InlineTextInput from '../../../editors/InlineTextInput';
-import EntityLink, { EntityType } from '../../../components/EntityLink';
+import InlineEntityImagePicker from '../../../components/InlineEntityImagePicker';
+import { EntityType } from '../../../util/EntityUtil';
 import { replacePath } from '../../../util/RouteUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
+import { loadImageSrc } from '../../../util/ImageUtil';
 import styles from './UserInfoEdit.css';
 
 export default class UserInfoEdit extends Component {
 
   static propTypes = {
     user: userPropTypes.isRequired,
-    infoLink: PropTypes.string,
     dispatchPutUser: PropTypes.func.isRequired,
+    dispatchPostUserImage: PropTypes.func.isRequired,
   };
 
   render() {
-    const { user, dispatchPutUser } = this.props;
+    const { user, dispatchPutUser, dispatchPostUserImage } = this.props;
     const { userId, lastName, firstName, departments,
       position, phoneNumber, emailAddress, lastUpdate } = user;
     const groupsLink = departments.map(({ groupId, groupName }, index) =>
@@ -30,7 +32,12 @@ export default class UserInfoEdit extends Component {
         <h1 className={styles.ttl_setion}>基本情報</h1>
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <div className={styles.profile_img}>
-            <EntityLink entity={{ id: userId, type: EntityType.USER }} fluid avatarOnly />
+            <InlineEntityImagePicker
+              entity={{ id: userId, type: EntityType.USER }}
+              avatarSize="70px"
+              onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
+                dispatchPostUserImage(userId, image, mimeType))}
+            />
             <p>最終更新: {toRelativeTimeText(lastUpdate)}</p>
           </div>
           <div className={styles.profile_txt}>

@@ -10,7 +10,11 @@ export const Action = {
   REQUEST_PUT_USER: 'REQUEST_PUT_USER',
   FINISH_PUT_USER: 'FINISH_PUT_USER',
   REQUEST_PUT_GROUP: 'REQUEST_PUT_GROUP',
-  FINISH_PUT_GROUP: 'FINISH_PUT_GROUP',
+  FINISH_PUT_GROUP: 'FINISH_POST_GROUP_IMAGE',
+  REQUEST_POST_USER_IMAGE: 'REQUEST_POST_USER_IMAGE',
+  FINISH_POST_USER_IMAGE: 'FINISH_POST_USER_IMAGE',
+  REQUEST_POST_GROUP_IMAGE: 'REQUEST_POST_GROUP_IMAGE',
+  FINISH_POST_GROUP_IMAGE: 'FINISH_POST_GROUP_IMAGE',
   REQUEST_CHANGE_GROUP_LEADER: 'REQUEST_CHANGE_GROUP_LEADER',
   FINISH_CHANGE_GROUP_LEADER: 'FINISH_CHANGE_GROUP_LEADER',
   REQUEST_ADD_GROUP_MEMBER: 'REQUEST_ADD_GROUP_MEMBER',
@@ -36,6 +40,10 @@ const {
   finishPutUser,
   requestPutGroup,
   finishPutGroup,
+  requestPostUserImage,
+  finishPostUserImage,
+  requestPostGroupImage,
+  finishPostGroupImage,
   requestChangeGroupLeader,
   finishChangeGroupLeader,
   requestAddGroupMember,
@@ -55,6 +63,8 @@ const {
   [Action.FINISH_FETCH_GROUP_MEMBERS]: keyValueIdentity,
   [Action.FINISH_PUT_USER]: keyValueIdentity,
   [Action.FINISH_PUT_GROUP]: keyValueIdentity,
+  [Action.FINISH_POST_USER_IMAGE]: keyValueIdentity,
+  [Action.FINISH_POST_GROUP_IMAGE]: keyValueIdentity,
   [Action.FINISH_CHANGE_GROUP_LEADER]: keyValueIdentity,
   [Action.FINISH_ADD_GROUP_MEMBER]: keyValueIdentity,
   [Action.FINISH_DELETE_GROUP_MEMBER]: keyValueIdentity,
@@ -67,6 +77,8 @@ const {
   Action.REQUEST_FETCH_GROUP_MEMBERS,
   Action.REQUEST_PUT_USER,
   Action.REQUEST_PUT_GROUP,
+  Action.REQUEST_POST_USER_IMAGE,
+  Action.REQUEST_POST_GROUP_IMAGE,
   Action.REQUEST_CHANGE_GROUP_LEADER,
   Action.REQUEST_ADD_GROUP_MEMBER,
   Action.REQUEST_DELETE_GROUP_MEMBER,
@@ -114,6 +126,26 @@ export const putGroup = (id, data) =>
     return putJson(`/groups/${id}.json`, state)(null, data)
       .then(() => dispatch(finishPutGroup('data', { id, ...data })))
       .catch(({ message }) => dispatch(finishPutGroup(new Error(message))));
+  };
+
+export const postUserImage = (id, image, mimeType) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.groupManagement.isPostingImage) return Promise.resolve();
+    dispatch(requestPostUserImage());
+    return postJson(`/users/${id}/images.json`, state)(null, { image, mimeType })
+      .then(json => dispatch(finishPostUserImage('data', json)))
+      .catch(({ message }) => dispatch(finishPostUserImage(new Error(message))));
+  };
+
+export const postGroupImage = (id, image, mimeType) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.groupManagement.isPostingImage) return Promise.resolve();
+    dispatch(requestPostGroupImage());
+    return postJson(`/groups/${id}/images.json`, state)(null, { image, mimeType })
+      .then(json => dispatch(finishPostGroupImage('data', json)))
+      .catch(({ message }) => dispatch(finishPostGroupImage(new Error(message))));
   };
 
 export const changeGroupLeader = (groupId, userId, userName) =>

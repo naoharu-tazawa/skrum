@@ -17,6 +17,7 @@
   width: 100%;
   position: absolute;
   top: 50%;
+  display: block;
   text-align: center;
   color: black;
   /*font-size: 200%;*/

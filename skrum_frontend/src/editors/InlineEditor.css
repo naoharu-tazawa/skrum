@@ -3,7 +3,7 @@
   margin: -3px 0 0 -4px;
   padding: 2px 20px 2px 4px;
   display: inline-block;
-  max-width: 100%;
+  /*max-width: 100%;*/
   position: relative;
   vertical-align: top;
   box-sizing: border-box;

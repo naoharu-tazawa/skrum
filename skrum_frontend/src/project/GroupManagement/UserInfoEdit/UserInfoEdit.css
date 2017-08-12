@@ -21,6 +21,7 @@
 プロファイル画面
 ==================================================== */
 .cont_box {
+  display: flex;
   background: #fff;
   margin-bottom: 10px;
   padding-bottom: 66px;
@@ -34,12 +35,8 @@
     width: 70px;
     float: left;
     text-align: center; }
-    .profile_box .profile_img div {
-      margin: 0 auto 10px;
-      width: 70px;
-      height: 70px;
-      border-radius: 50%; }
     .profile_box .profile_img p {
+      margin-top: 10px;
       font-size: 12px; }
   .profile_box .profile_txt {
     margin-left: 34px;
@@ -58,6 +55,7 @@
 }
 .user_info .info {
   position: relative;
+  white-space: nowrap;
   top: 2px;
   margin-bottom: 7px;
   font-size: 10px;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { userPropTypes } from './propTypes';
-import { putUser } from '../action';
+import { putUser, postUserImage } from '../action';
 import UserInfoEdit from './UserInfoEdit';
 
 class UserInfoEditContainer extends Component {
@@ -10,15 +10,16 @@ class UserInfoEditContainer extends Component {
   static propTypes = {
     user: userPropTypes,
     dispatchPutUser: PropTypes.func.isRequired,
+    dispatchPostUserImage: PropTypes.func.isRequired,
   };
 
   render() {
-    const { user, dispatchPutUser } = this.props;
+    const { user, dispatchPutUser, dispatchPostUserImage } = this.props;
     return !user ? null : (
       <UserInfoEdit
         user={user}
-        infoLink="./"
         dispatchPutUser={dispatchPutUser}
+        dispatchPostUserImage={dispatchPostUserImage}
       />);
   }
 }
@@ -32,7 +33,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   const dispatchPutUser = (id, data) =>
     dispatch(putUser(id, data));
-  return { dispatchPutUser };
+  const dispatchPostUserImage = (id, image, mimeType) =>
+    dispatch(postUserImage(id, image, mimeType));
+  return { dispatchPutUser, dispatchPostUserImage };
 };
 
 export default connect(

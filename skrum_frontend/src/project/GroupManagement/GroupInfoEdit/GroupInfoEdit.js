@@ -5,6 +5,7 @@ import { groupPropTypes } from './propTypes';
 import InlineTextInput from '../../../editors/InlineTextInput';
 import InlineTextArea from '../../../editors/InlineTextArea';
 import InlinePotentialLeaders from '../../PotentialLeaders/InlinePotentialLeaders';
+import InlineEntityImagePicker from '../../../components/InlineEntityImagePicker';
 import GroupPathLinks from '../../../components/GroupPathLinks';
 import DialogForm from '../../../dialogs/DialogForm';
 import EntitySubject from '../../../components/EntitySubject';
@@ -12,15 +13,17 @@ import EntityLink, { EntityType } from '../../../components/EntityLink';
 import PathSearch from '../../PathSearch/PathSearch';
 import { withModal } from '../../../util/ModalUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
+import { loadImageSrc } from '../../../util/ImageUtil';
+import { isBasicRole } from '../../../util/UserUtil';
 import styles from './GroupInfoEdit.css';
 
 class GroupInfoEdit extends Component {
 
   static propTypes = {
     group: groupPropTypes.isRequired,
-    infoLink: PropTypes.string.isRequired,
     roleLevel: PropTypes.number.isRequired,
     dispatchPutGroup: PropTypes.func.isRequired,
+    dispatchPostGroupImage: PropTypes.func.isRequired,
     dispatchChangeGroupLeader: PropTypes.func.isRequired,
     dispatchAddGroupPath: PropTypes.func.isRequired,
     dispatchDeleteGroupPath: PropTypes.func.isRequired,
@@ -51,15 +54,23 @@ class GroupInfoEdit extends Component {
     </DialogForm>);
 
   render() {
-    const { group, dispatchPutGroup, dispatchChangeGroupLeader, dispatchDeleteGroupPath,
-      openModal } = this.props;
+    const { group, roleLevel, dispatchPutGroup, dispatchPostGroupImage,
+      dispatchChangeGroupLeader, dispatchDeleteGroupPath, openModal } = this.props;
     const { groupId, name, groupPaths, mission, leaderUserId, leaderName, lastUpdate } = group;
+    const entity = { id: groupId, type: EntityType.GROUP };
     return (
       <section className={styles.profile_box}>
         <h1 className={styles.ttl_setion}>基本情報</h1>
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <div className={styles.profile_img}>
-            <EntityLink entity={{ id: groupId, type: EntityType.GROUP }} fluid avatarOnly />
+            {isBasicRole(roleLevel) ?
+              <EntityLink entity={entity} avatarSize="70px" avatarOnly /> :
+              <InlineEntityImagePicker
+                entity={entity}
+                avatarSize="70px"
+                onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
+                  dispatchPostGroupImage(groupId, image, mimeType))}
+              />}
             <p>最終更新: {toRelativeTimeText(lastUpdate)}</p>
           </div>
           <div className={styles.profile_txt}>

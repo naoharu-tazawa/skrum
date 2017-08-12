@@ -10,7 +10,7 @@ export const imagePath = (entityType, companyId, id) => `
   /c
   /${companyId}
   ${implodeSubject(entityType) === 'c' ? '' : `/${implodeSubject(entityType)}/${id}`}
-  /image
+  /image1
   `.replace(/[\s\n]/g, '');
 
 export const dummyImagePath = entityType =>
