@@ -1,11 +1,11 @@
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
-    host: ec2-52-198-233-208.ap-northeast-1.compute.amazonaws.com
+    host: "{subdomain}.localhost"
     prefix: /
 
 login:
     path: /v1/preregister.{_format}
     defaults: { _controller: AppBundle:Api\Login:preregister }
     methods: [POST]
-    host: ec2-52-198-233-208.ap-northeast-1.compute.amazonaws.com
+    host: localhost
