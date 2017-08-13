@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { groupMemberPropTypes } from './propTypes';
-import DeletionPrompt from '../../../dialogs/DeletionPrompt';
+import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
 import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { isBasicRole } from '../../../util/UserUtil';
@@ -42,14 +42,15 @@ class GroupMemberBar extends Component {
     </div>);
 
   deleteMemberPrompt = ({ groupId, groupName, id, name, onClose }) => (
-    <DeletionPrompt
+    <ConfirmationPrompt
       title="グループメンバーの削除"
       prompt={`${groupName}からこちらのメンバーを削除しますか？`}
-      onDelete={() => this.props.dispatchDeleteGroupMember(groupId, id)}
+      confirmButton="削除"
+      onConfirm={() => this.props.dispatchDeleteGroupMember(groupId, id)}
       onClose={onClose}
     >
       <EntitySubject entity={{ id, name, type: EntityType.USER }} />
-    </DeletionPrompt>);
+    </ConfirmationPrompt>);
 
   render() {
     const { header, groupId, groupName, member, roleLevel, openModal } = this.props;

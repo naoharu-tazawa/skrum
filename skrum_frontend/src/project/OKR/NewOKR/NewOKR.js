@@ -28,7 +28,7 @@ const validate = ({ owner, disclosureType, okrName, startDate, endDate } = {}) =
   disclosureType: owner && !getDisclosureTypeName(owner.type, disclosureType) && '公開範囲を入力してください',
   okrName: !okrName && '目標名を入力してください',
   startDate: !isValidDate(startDate) && '開始日を入力してください',
-  endDate: !isValidDate(endDate) && '終了日を入力してください',
+  endDate: !isValidDate(endDate) && '期限日を入力してください',
 });
 
 const dialogInitialValues = (state) => {
@@ -93,7 +93,7 @@ class NewOKR extends Component {
       targetValue, unit, startDate, endDate, alignment = {} } = entry;
     const isOwnerCurrent = getEntityTypeSubject(owner.type) === subject && owner.id === id;
     if (compareDates(startDate, endDate) > 0) {
-      throw new SubmissionError({ _error: '終了日は開始日以降に設定してください' });
+      throw new SubmissionError({ _error: '期限日は開始日以降に設定してください' });
     }
     const { type: parentOwnerType, id: parentOwnerId } = parentOkr.owner || {};
     const okrType = type === 'Okr' || owner.type !== parentOwnerType ||

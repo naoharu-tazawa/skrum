@@ -18,7 +18,7 @@
 .buttons {
   padding: 1.5em;
   background-color: #f0f4f5;
-  min-width: 30em;
+  min-width: 48em;
   display: flex;
 }
 .buttons button {

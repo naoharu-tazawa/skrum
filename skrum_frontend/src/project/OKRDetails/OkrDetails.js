@@ -6,7 +6,7 @@ import { okrPropTypes } from './propTypes';
 import { replacePath, toBasicPath } from '../../util/RouteUtil';
 import InlineTextArea from '../../editors/InlineTextArea';
 import InlineDateInput from '../../editors/InlineDateInput';
-import DeletionPrompt from '../../dialogs/DeletionPrompt';
+import ConfirmationPrompt from '../../dialogs/ConfirmationPrompt';
 import DialogForm from '../../dialogs/DialogForm';
 import EntitySubject from '../../components/EntitySubject';
 import DropdownMenu from '../../components/DropdownMenu';
@@ -120,7 +120,7 @@ class OkrDetails extends Component {
     </DialogForm>);
 
   deleteOkrPrompt = ({ id, name, owner, onClose }) => (
-    <DeletionPrompt
+    <ConfirmationPrompt
       title="目標の削除"
       prompt="こちらの目標を削除しますか？"
       warning={(
@@ -129,14 +129,15 @@ class OkrDetails extends Component {
           <li>上記の目標に直接紐づいている全ての目標/サブ目標、およびその下に紐づいている全ての目標/サブ目標も同時に削除されます。</li>
         </ul>
       )}
-      onDelete={() => this.props.dispatchDeleteOkr(id).then(({ error }) => {
+      confirmButton="削除"
+      onConfirm={() => this.props.dispatchDeleteOkr(id).then(({ error }) => {
         if (!error) browserHistory.push(toBasicPath(location.pathname));
         return Promise.resolve();
       })}
       onClose={onClose}
     >
       <EntitySubject entity={owner} subject={name} />
-    </DeletionPrompt>);
+    </ConfirmationPrompt>);
 
   render() {
     const { parentOkr, okr, dispatchPutOKR, openModal } = this.props;

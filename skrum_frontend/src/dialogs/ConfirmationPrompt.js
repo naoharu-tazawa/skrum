@@ -2,30 +2,31 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BasicModalDialog from './BasicModalDialog';
 import DialogForm from './DialogForm';
-import styles from './DeletionPrompt.css';
+import styles from './ConfirmationPrompt.css';
 
-export default class DeletionPrompt extends Component {
+export default class ConfirmationPrompt extends Component {
 
   static propTypes = {
     title: PropTypes.string.isRequired,
     prompt: PropTypes.string.isRequired,
-    onDelete: PropTypes.func.isRequired,
+    confirmButton: PropTypes.string.isRequired,
+    onConfirm: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
     warning: PropTypes.node,
   };
 
   render() {
-    const { title, prompt, onDelete, onClose, children, warning } = this.props;
+    const { title, prompt, confirmButton, onConfirm, onClose, children, warning } = this.props;
     const { yesSelected = false } = this.state || {};
     return (
       <BasicModalDialog onClose={onClose}>
         <DialogForm
           title={title}
           message={prompt}
-          submitButton="削除"
+          submitButton={confirmButton}
           valid={yesSelected}
-          onSubmit={onDelete}
+          onSubmit={onConfirm}
           onClose={onClose}
         >
           <div className={styles.content}>{children}</div>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { postPropTypes } from './propTypes';
-import DeletionPrompt from '../../../dialogs/DeletionPrompt';
+import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
 import DialogForm from '../../../dialogs/DialogForm';
 import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
@@ -58,15 +58,16 @@ class PostBar extends Component {
     </DialogForm>);
 
   deletePostPrompt = ({ id, post, poster, onClose }) => (
-    <DeletionPrompt
+    <ConfirmationPrompt
       title="投稿の削除"
       prompt="こちらの投稿を削除しますか？"
       warning={<ul><li>一度削除した投稿は復元できません。</li></ul>}
-      onDelete={() => this.props.dispatchDeleteGroupPosts(id)}
+      confirmButton="削除"
+      onConfirm={() => this.props.dispatchDeleteGroupPosts(id)}
       onClose={onClose}
     >
       <EntitySubject entity={poster} subject={post} />
-    </DeletionPrompt>);
+    </ConfirmationPrompt>);
 
   render() {
     const { post: timeline, roleLevel, currentUserId,

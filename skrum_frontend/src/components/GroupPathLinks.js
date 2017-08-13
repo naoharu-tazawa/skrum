@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import DeletionPrompt from '../dialogs/DeletionPrompt';
+import ConfirmationPrompt from '../dialogs/ConfirmationPrompt';
 import { withModal } from '../util/ModalUtil';
 import { replacePath } from '../util/RouteUtil';
 import styles from './GroupPathLinks.css';
@@ -27,16 +27,17 @@ class GroupPathLinks extends Component {
   };
 
   deletePathPrompt = ({ groupId, groupName, groupTreeId, path, onClose }) => (
-    <DeletionPrompt
+    <ConfirmationPrompt
       title="グループの所属先の削除"
       prompt={`${groupName}の以下の所属先を削除しますか？`}
-      onDelete={() => this.props.dispatchDeleteGroupPath(groupId, groupTreeId)}
+      confirmButton="削除"
+      onConfirm={() => this.props.dispatchDeleteGroupPath(groupId, groupTreeId)}
       onClose={onClose}
     >
       <div className={styles.box}>
         <GroupPathLinks groupId={groupId} groupName={groupName} path={path} local readonly />
       </div>
-    </DeletionPrompt>);
+    </ConfirmationPrompt>);
 
   render() {
     const { groupId, groupName, path, local, readonly, openModal } = this.props;

@@ -8,7 +8,7 @@ export const withReduxForm = (WrappedForm, form, reduxFormProps = {}) =>
 
 export const withLoadedReduxForm = (WrappedForm, form, stateToInitialValues, reduxFormProps = {}) =>
   connect(
-    state => ({ initialValues: stateToInitialValues(state) }),
+    state => ({ initialValues: stateToInitialValues ? stateToInitialValues(state) : {} }),
   )(withReduxForm(WrappedForm, form, reduxFormProps));
 
 export const withReduxField = (WrappedComponent, name, fieldProps = {}) =>

@@ -90,7 +90,7 @@ class GroupInfoEdit extends Component {
                 dispatchDeleteGroupPath={dispatchDeleteGroupPath}
               />)}
             <button
-              className={styles.add_belonging}
+              className={styles.addPath}
               onClick={() => openModal(this.addPathDialog, { group })}
             >
               所属先グループを追加

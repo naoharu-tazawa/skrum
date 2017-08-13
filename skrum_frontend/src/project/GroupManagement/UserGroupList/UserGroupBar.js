@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { userGroupPropTypes } from './propTypes';
-import DeletionPrompt from '../../../dialogs/DeletionPrompt';
+import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
 import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { withModal } from '../../../util/ModalUtil';
@@ -22,14 +22,15 @@ class UserGroupBar extends Component {
     `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   leaveGroupPrompt = ({ userId, userName, id, name, onClose }) => (
-    <DeletionPrompt
+    <ConfirmationPrompt
       title="所属グループからの退出"
       prompt={`${userName} さんをこちらのグループから退出させますか？`}
-      onDelete={() => this.props.dispatchLeaveGroup(userId, id)}
+      confirmButton="削除"
+      onConfirm={() => this.props.dispatchLeaveGroup(userId, id)}
       onClose={onClose}
     >
       <EntitySubject entity={{ id, name, type: EntityType.USER }} />
-    </DeletionPrompt>);
+    </ConfirmationPrompt>);
 
   render() {
     const { header, userId, userName, group, openModal } = this.props;

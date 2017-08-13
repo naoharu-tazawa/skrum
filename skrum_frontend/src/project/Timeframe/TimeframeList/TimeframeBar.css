@@ -2,50 +2,65 @@
 /* ====================================================
 プロファイル画面
 ==================================================== */
-.td {
-  margin: 10px 0px;
+.bar {
+  padding: 14px 0;
+  display: flex;
+  border-bottom: 1px solid #d8dfe5;
 }
 .name {
-  border-bottom: 1px solid #d8dfe5;
   padding-left: 70px !important;
-  width: 35%; }
+  width: 35%;
+  margin: auto 0;
+}
 .date {
-  width: 20%; }
+  width: 20%;
+  margin: auto 0;
+}
 .default {
-  width: 20%
+  width: 20%;
+  margin: auto 0;
+}
+.default button {
+  background: none;
+  border: none;
+  padding: 0;
 }
 .delete {
   width: 10px;
-  text-align: right;
   cursor: pointer;
-}
-.check {
-  width: 15px;
-  padding-left: 1px;
+  border: none;
+  background-color: inherit;
+  padding: 0;
+  vertical-align: text-top;
 }
 .hyphen {
   margin-left: 44px;
 }
 .circle {
-  width: 35px;
-  height: 35px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: hidden;
 }
-.circle {
-  display: inline-block;
-  border-color: #8e9aa6;
-  line-height: 35px;
+.check {
+  background: #2562b2 url(/img/check.svg) no-repeat center;
+  background-size: 16px 16px, cover;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #8e9aa6;
+  line-height: 32px;
   text-align: center;
   vertical-align: middle;
+  border-radius: 50%;
+  display: inline-block;
+  overflow: hidden;
   margin-left: 30px;
-  background-color: #2562b2;
 }
-.circle_inactive {
-  width: 35px;
-  height: 35px;
+.check_inactive {
+  width: 32px;
+  height: 32px;
   border: 1px solid #8e9aa6;
-  line-height: 35px;
+  line-height: 32px;
   text-align: center;
   vertical-align: middle;
   border-radius: 50%;
@@ -53,4 +68,26 @@
   overflow: hidden;
   margin-left: 30px;
   cursor: pointer;
+}
+.check_inactive:hover {
+  background: #4A90E2 url(/img/check.svg) no-repeat center;
+  background-size: 16px 16px, cover;
+}
+.box {
+  margin-bottom: 1em;
+  padding: 1em 1em 1em 3em;
+  border: 1px solid #bfbfbf;
+  border-radius: 1em;
+  font-size: 12px;
+  display: flex;
+}
+.box .name {
+  width: 50%;
+  margin: 0 0 auto 0;
+  padding-left: 0 !important;
+}
+.box .date {
+  width: 25%;
+  margin: 0 0 auto 0;
+  word-break: keep-all;
 }
