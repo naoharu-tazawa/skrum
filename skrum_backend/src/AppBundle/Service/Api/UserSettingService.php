@@ -17,6 +17,7 @@ use AppBundle\Entity\MUser;
 use AppBundle\Entity\TPreUser;
 use AppBundle\Entity\TTimeframe;
 use AppBundle\Api\ResponseDTO\RoleDTO;
+use AppBundle\Api\ResponseDTO\UserSearchDTO;
 
 /**
  * ユーザ設定サービスクラス
@@ -347,9 +348,9 @@ class UserSettingService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param MUser $mUser ユーザエンティティ
-     * @return void
+     * @return UserSearchDTO
      */
-    public function resetPassword(Auth $auth, MUser $mUser)
+    public function resetPassword(Auth $auth, MUser $mUser): UserSearchDTO
     {
         // 自ユーザのパスワードリセットは不可
         if ($mUser->getUserId() === $auth->getUserId()) {
@@ -393,6 +394,20 @@ class UserSettingService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // 返却用DTOを生成
+        $userSearchDTO = new UserSearchDTO();
+        $userSearchDTO->setUserId($mUser->getUserId());
+        $userSearchDTO->setUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $userSearchDTO->setRoleAssignmentId($mUser->getRoleAssignment()->getRoleAssignmentId());
+        $userSearchDTO->setRoleLevel($mUser->getRoleAssignment()->getRoleLevel());
+        $tLoginRepos = $this->getTLoginRepository();
+        $lastLogin = $tLoginRepos->getLastLogin($mUser->getUserId());
+        if ($lastLogin !== null) {
+            $userSearchDTO->setLastLogin($lastLogin);
+        }
+
+        return $userSearchDTO;
     }
 
     /**

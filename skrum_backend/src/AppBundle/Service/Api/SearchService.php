@@ -107,7 +107,9 @@ class SearchService extends BaseService
             $userSearchDTO->setUserName($mUser['last_name'] . ' ' . $mUser['first_name']);
             $userSearchDTO->setRoleAssignmentId($mUser['role_assignment_id']);
             $userSearchDTO->setRoleLevel($mUser['role_level']);
-            $userSearchDTO->setLastLogin(DateUtility::transIntoDatetime($mUser['login_datetime']));
+            if ($mUser['login_datetime'] !== null) {
+                $userSearchDTO->setLastLogin(DateUtility::transIntoDatetime($mUser['login_datetime']));
+            }
 
             $userSearchDTOArray[] = $userSearchDTO;
         }

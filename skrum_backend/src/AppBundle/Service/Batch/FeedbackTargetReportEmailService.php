@@ -80,14 +80,17 @@ class FeedbackTargetReportEmailService extends BaseService
                 }
 
                 // 最終ログイン日時条件
-                $noLoginDays = (strtotime(DateUtility::getCurrentDateString()) - strtotime(DateUtility::transIntoDateString($tLoginRepos->getLastLogin($userInfo['userId'])))) / 86400;
-                if ($noLoginDays >= $this->getParameter('feedback_target_condition_login')) {
-                    // メンバー情報をメール本文記載変数配列に格納
-                    $memberName = $userInfo['lastName'] . ' ' . $userInfo['firstName'];
-                    $data[$key1]['members'][$key2]['memberName'] = $memberName;
-                    $data[$key1]['members'][$key2]['reason'] = sprintf($this->getParameter('feedback_target_reason_login'), $this->getParameter('feedback_target_condition_login'));
+                $lastLogin = $tLoginRepos->getLastLogin($userInfo['userId']);
+                if ($lastLogin !== null) {
+                    $noLoginDays = (strtotime(DateUtility::getCurrentDateString()) - strtotime($lastLogin)) / 86400;
+                    if ($noLoginDays >= $this->getParameter('feedback_target_condition_login')) {
+                        // メンバー情報をメール本文記載変数配列に格納
+                        $memberName = $userInfo['lastName'] . ' ' . $userInfo['firstName'];
+                        $data[$key1]['members'][$key2]['memberName'] = $memberName;
+                        $data[$key1]['members'][$key2]['reason'] = sprintf($this->getParameter('feedback_target_reason_login'), $this->getParameter('feedback_target_condition_login'));
 
-                    continue;
+                        continue;
+                    }
                 }
             }
 

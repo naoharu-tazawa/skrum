@@ -44,16 +44,36 @@ paths:
                     items:
                       type: object
                       properties:
+                        groupTreeId:
+                          type: string
                         groupPath:
-                          type: string
-                        groupPathName:
-                          type: string
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              name:
+                                type: string
+                            required:
+                              - id
+                              - name
+                      required:
+                        - groupTreeId
+                        - groupPath
                   mission:
                     type: string
                   leaderName:
                     type: string
                   leaderUserId:
                     type: integer
+                required:
+                  - groupId
+                  - name
+                  - groupPaths
+                  - mission
+                  - leaderName
+                  - leaderUserId
               members:
                 type: array
                 items:
@@ -69,6 +89,14 @@ paths:
                       type: number
                     lastLogin:
                       type: string
+                  required:
+                    - userId
+                    - name
+                    - position
+                    - achievementRate
+            required:
+              - group
+              - members
         400:
           description: JSONスキーマ不正
         409:
