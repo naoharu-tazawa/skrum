@@ -42,28 +42,42 @@ paths:
         200:
           description: 成功
           schema:
-            user:
-              type: object
-              properties:
-                userId:
-                  type: integer
-                name:
-                  type: string
-                position:
-                  type: string
-                achievementRate:
-                  type: number
-                lastLogin:
-                  type: string
-            group:
-              type: object
-              properties:
-                groupId:
-                  type: integer
-                groupName:
-                  type: string
-                achievementRate:
-                  type: number
+            type: object
+            properties:
+              user:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                  name:
+                    type: string
+                  position:
+                    type: string
+                  achievementRate:
+                    type: number
+                  lastLogin:
+                    type: string
+                required:
+                  - userId
+                  - name
+                  - position
+                  - achievementRate
+              group:
+                type: object
+                properties:
+                  groupId:
+                    type: integer
+                  groupName:
+                    type: string
+                  achievementRate:
+                    type: number
+                required:
+                  - groupId
+                  - groupName
+                  - achievementRate
+            required:
+              - user
+              - group
         400:
           description: JSONスキーマ不正
         409:

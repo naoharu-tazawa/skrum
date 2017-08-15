@@ -64,7 +64,10 @@ class GroupMemberService extends BaseService
             $memberDTO->setAchievementRate(0);
         }
         $tLoginRepos = $this->getTLoginRepository();
-        $memberDTO->setLastLogin($tLoginRepos->getLastLogin($mUser->getUserId()));
+        $lastLogin = $tLoginRepos->getLastLogin($mUser->getUserId());
+        if ($lastLogin !== null) {
+            $memberDTO->setLastLogin($lastLogin);
+        }
 
         // GroupDTOの生成
         $groupDTO = new GroupDTO();
@@ -111,7 +114,10 @@ class GroupMemberService extends BaseService
                 $memberDTO->setUserId($userInfoArray[$i]['userId']);
                 $memberDTO->setName($userInfoArray[$i]['lastName'] . ' ' . $userInfoArray[$i]['firstName']);
                 $memberDTO->setPosition($userInfoArray[$i]['position']);
-                $memberDTO->setLastLogin($tLoginRepos->getLastLogin($userInfoArray[$i]['userId']));
+                $lastLogin = $tLoginRepos->getLastLogin($userInfoArray[$i]['userId']);
+                if ($lastLogin !== null) {
+                    $memberDTO->setLastLogin($lastLogin);
+                }
 
                 $achievementRateArray = array();
                 $achievementRateArray[] = $userInfoArray[$i]['achievementRate'];
@@ -133,7 +139,10 @@ class GroupMemberService extends BaseService
                     $memberDTO->setUserId($userInfoArray[$i]['userId']);
                     $memberDTO->setName($userInfoArray[$i]['lastName'] . ' ' . $userInfoArray[$i]['firstName']);
                     $memberDTO->setPosition($userInfoArray[$i]['position']);
-                    $memberDTO->setLastLogin($tLoginRepos->getLastLogin($userInfoArray[$i]['userId']));
+                    $lastLogin = $tLoginRepos->getLastLogin($userInfoArray[$i]['userId']);
+                    if ($lastLogin !== null) {
+                        $memberDTO->setLastLogin($lastLogin);
+                    }
 
                     $achievementRateArray = array();
                     $achievementRateArray[] = $userInfoArray[$i]['achievementRate'];

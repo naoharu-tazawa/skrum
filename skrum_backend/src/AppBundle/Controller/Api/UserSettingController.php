@@ -10,6 +10,7 @@ use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\Permission;
+use AppBundle\Api\ResponseDTO\UserSearchDTO;
 
 /**
  * ユーザ設定コントローラ
@@ -133,9 +134,9 @@ class UserSettingController extends BaseController
      * @Permission(value="password_reset")
      * @param Request $request リクエストオブジェクト
      * @param string $userId ユーザID
-     * @return array
+     * @return UserSearchDTO
      */
-    public function resetUserPasswordAction(Request $request, string $userId): array
+    public function resetUserPasswordAction(Request $request, string $userId): UserSearchDTO
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -152,9 +153,9 @@ class UserSettingController extends BaseController
 
         // パスワード変更処理
         $userSettingService = $this->getUserSettingService();
-        $userSettingService->resetPassword($auth, $mUser);
+        $userSearchDTO = $userSettingService->resetPassword($auth, $mUser);
 
-        return array('result' => 'OK');
+        return $userSearchDTO;
     }
 
     /**

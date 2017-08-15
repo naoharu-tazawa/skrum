@@ -54,7 +54,6 @@ paths:
                     - userName
                     - roleAssignmentId
                     - roleLevel
-                    - lastLogin
         400:
           description: JSONスキーマ不正
         409:

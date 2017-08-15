@@ -13,9 +13,9 @@ class TLoginRepository extends BaseRepository
      * 最終ログイン日時を取得
      *
      * @param integer $userId ユーザID
-     * @return \DateTime
+     * @return mixed
      */
-    public function getLastLogin(int $userId): \DateTime
+    public function getLastLogin(int $userId)
     {
         $qb = $this->createQueryBuilder('tl');
         $qb->select('tl.loginDatetime')
@@ -24,8 +24,12 @@ class TLoginRepository extends BaseRepository
             ->orderBy('tl.loginDatetime', 'DESC')
             ->setMaxResults(1);
 
-        $result = $qb->getQuery()->getSingleResult();
+        $result = $qb->getQuery()->getResult();
 
-        return $result['loginDatetime'];
+        if (empty($result)) {
+            return null;
+        } else {
+            return $result[0]['loginDatetime'];
+        }
     }
 }
