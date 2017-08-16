@@ -10,6 +10,7 @@ use AppBundle\Entity\MCompany;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\TEmailReservation;
+use AppBundle\Entity\TEmailSettings;
 use AppBundle\Entity\TGroupMember;
 use AppBundle\Entity\TUpload;
 use AppBundle\Entity\TUploadControl;
@@ -65,6 +66,9 @@ class AdditionalUsersBulkRegistrationService extends BaseService
 
             // グループテーブルに登録
             $this->registerGroups($items, $mUser, $mCompany);
+
+            // メール通知設定テーブルにレコード追加
+            $this->registerEmailSettings($mUser);
         } catch (\Exception $e) {
             $this->message = $this->message . 'DBエラーが発生しました。';
             $this->result = DBConstant::FLG_TRUE;
@@ -212,11 +216,31 @@ class AdditionalUsersBulkRegistrationService extends BaseService
                 }
                 $tGroupMember->setUser($mUser);
                 $this->persist($tGroupMember);
+
                 $this->flush();
             }
         }
+    }
 
-        return true;
+    /**
+     * メール通知設定テーブルにレコード追加
+     *
+     * @param MUser $mUser ユーザエンティティ
+     * @return void
+     */
+    private function registerEmailSettings(MUser $mUser)
+    {
+        $tEmailSettings = new TEmailSettings();
+        $tEmailSettings->setUserId($mUser->getUserId());
+        if ($mUser->getRoleAssignment()->getRoleLevel() >= DBConstant::ROLE_LEVEL_ADMIN) {
+            $tEmailSettings->setReportGroupAchievement(DBConstant::EMAIL_OFF);
+        } else {
+            $tEmailSettings->setReportMemberAchievement(DBConstant::EMAIL_OFF);
+            $tEmailSettings->setReportFeedbackTarget(DBConstant::EMAIL_OFF);
+        }
+        $this->persist($tEmailSettings);
+
+        $this->flush();
     }
 
     /**
@@ -364,6 +388,20 @@ class AdditionalUsersBulkRegistrationService extends BaseService
     }
 
     /**
+     * アップロードテーブルの仮パスワードを削除し、レコードも削除
+     *
+     * @param TUploadControl $tUploadControl アップロード管理エンティティ
+     * @return void
+     */
+    private function deleteTemporaryPassword(TUploadControl $tUploadControl)
+    {
+        $tUploadRepos = $this->getTUploadRepository();
+        $tUploadRepos->deleteTemporaryPasswordAndItsRecord($tUploadControl->getId());
+
+        $this->flush();
+    }
+
+    /**
      * ユーザ一括追加登録
      *
      * @param integer $mailSending 対社員メール送信フラグ
@@ -444,6 +482,9 @@ class AdditionalUsersBulkRegistrationService extends BaseService
                         /* 社員1人1人にメール送信あり */
                         $this->createEmailToEmployees($tUploadControl, $mCompany->getSubdomain());
                     }
+
+                    // アップロードテーブルの仮パスワードを削除する
+                    $this->deleteTemporaryPassword($tUploadControl);
 
                     // アップロード管理データを削除
                     $this->remove($tUploadControl);

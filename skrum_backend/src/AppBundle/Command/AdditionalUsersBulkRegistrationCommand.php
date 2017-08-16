@@ -20,7 +20,7 @@ class AdditionalUsersBulkRegistrationCommand extends BaseCommand
         $this->setName('BC0101')
             ->setDescription('ユーザ一括追加登録バッチ')
             ->setDefinition(array(
-                    new InputOption('mail_sending', null, InputOption::VALUE_OPTIONAL, 'バルクサイズ')
+                    new InputOption('mail_sending', null, InputOption::VALUE_OPTIONAL, 'メール送信設定(送信する→1、送信しない→0)')
             ));
     }
 

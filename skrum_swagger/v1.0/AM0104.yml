@@ -26,21 +26,10 @@ paths:
           schema:
             type: object
             properties:
-              userId:
-                type: integer
-              userName:
-                type: string
-              roleAssignmentId:
-                type: integer
-              roleLevel:
-                type: integer
-              lastLogin:
+              result:
                 type: string
             required:
-              - userId
-              - userName
-              - roleAssignmentId
-              - roleLevel
+              - result
         400:
           description: JSONスキーマ不正
         409:
