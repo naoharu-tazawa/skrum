@@ -60,46 +60,38 @@ export default class UserInfoEdit extends Component {
             <div className={styles.groups}>
               {groupsLink}
             </div>
-            <table className={`${styles.user_info} ${styles.floatL}`}>
-              <tbody>
-                <tr>
-                  <td><div className={styles.info}>役　職:</div></td>
-                  <td className={styles.td}>
-                    <div className={styles.info_data}>
-                      <InlineTextInput
-                        value={position}
-                        required
-                        onSubmit={value => dispatchPutUser(userId, { position: value })}
-                      />
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td><div className={styles.info}>電　話:</div></td>
-                  <td>
-                    <div className={styles.info_data}>
-                      <InlineTextInput
-                        value={phoneNumber}
-                        placeholder="電話番号を入力してください"
-                        onSubmit={value => dispatchPutUser(userId, { phoneNumber: value })}
-                      />
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td><div className={styles.info}>メール:</div></td>
-                  <td>
-                    <div className={styles.info_data}>
-                      <InlineTextInput
-                        value={emailAddress}
-                        required
-                        onSubmit={value => dispatchPutUser(userId, { emailAddress: value })}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div className={`${styles.user_info} ${styles.floatL}`}>
+              <div className={styles.info}>
+                <small>役　職:</small>
+                <div className={styles.info_data}>
+                  <InlineTextInput
+                    value={position}
+                    required
+                    onSubmit={value => dispatchPutUser(userId, { position: value })}
+                  />
+                </div>
+              </div>
+              <div className={styles.info}>
+                <small>電　話:</small>
+                <div className={styles.info_data}>
+                  <InlineTextInput
+                    value={phoneNumber}
+                    placeholder="電話番号を入力してください"
+                    onSubmit={value => dispatchPutUser(userId, { phoneNumber: value })}
+                  />
+                </div>
+              </div>
+              <div className={styles.info}>
+                <small>メール:</small>
+                <div className={styles.info_data}>
+                  <InlineTextInput
+                    value={emailAddress}
+                    required
+                    onSubmit={value => dispatchPutUser(userId, { emailAddress: value })}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>);

@@ -185,7 +185,7 @@ class KRDetailsBar extends Component {
               <InlineDateInput
                 value={startDate}
                 required
-                validate={value => compareDates(value, endDate) > 0 && '終了日は開始日以降に設定してください'}
+                validate={value => compareDates(value, endDate) > 0 && '期限日は開始日以降に設定してください'}
                 onSubmit={value => dispatchPutOKR(id, { startDate: value })}
               />
             </div>
@@ -193,14 +193,14 @@ class KRDetailsBar extends Component {
               <InlineDateInput
                 value={endDate}
                 required
-                validate={value => compareDates(startDate, value) > 0 && '終了日は開始日以降に設定してください'}
+                validate={value => compareDates(startDate, value) > 0 && '期限日は開始日以降に設定してください'}
                 onSubmit={value => dispatchPutOKR(id, { endDate: value })}
               />
             </div>
           </div>
         </div>
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
-        <div className={styles.krCount}>
+        <div className={styles.action}>
           {type === OKRType.KR && (
             <Dropdown
               trigger={<button className={styles.tool}><img src="/img/checkin.png" alt="Achievement" /></button>}

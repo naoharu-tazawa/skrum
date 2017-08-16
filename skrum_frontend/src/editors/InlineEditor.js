@@ -34,7 +34,7 @@ export default class InlineEditor extends PureComponent {
     const { value } = this.state || {};
     let unsetEditingCompanions = {};
     let unsetEditingCompletion = () => {};
-    if (required && isEmpty(value)) {
+    if (required && isEmpty(value === undefined ? defaultValue : value)) {
       unsetEditingCompletion = () => this.setState({ value, error: '入力してください' });
     } else if (value !== undefined && value !== defaultValue && onSubmit) {
       const validationError = validate && validate(value);

@@ -36,7 +36,9 @@
   font-size: 14px;
 }
 .user_info .info {
-  margin-bottom: 7px;
+  margin-bottom: 6px;
+}
+.user_info small {
   font-size: 10px;
 }
 .user_info .info_data {
@@ -76,45 +78,16 @@
   vertical-align: middle;
   content: "";
 }
-
-.circle {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #fff;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.circle {
-  display: inline-block;
-  border-color: #8e9aa6;
-  line-height: 35px;
-  text-align: center;
-  vertical-align: middle;
-}
-.circle-small {
-  width: 27px;
-  height: 27px;
-  font-size: 10px;
-  line-height: 27px;
-}
-.circle-plus {
-  background-color: #8e9aa6;
-  color: #fff;
-}
-
 .percent {
   display: inline-block;
   width: 40px;
   margin-right: 10px;
   font-size: 20px;
 }
-
 .percent .sub {
   margin-left: 3px;
   font-size: 14px;
 }
-
 .percent_bar {
   display: inline-block;
   position: relative;
@@ -134,7 +107,6 @@
 .percent_bar .percent_width.orange {
   background-color: #f2b230;
 }
-
 .overall_info .basic_info figure figcaption {
   margin-top: 10px;
   font-size: 12px;

@@ -7,16 +7,18 @@ import routes from '../../routes';
 
 const Root = ({ store, history }) => (
   <Provider store={store}>
-    <Router history={history} routes={routes} />
-    <ReduxToastr
-      timeOut={2000}
-      newestOnTop={false}
-      preventDuplicates
-      position="top-center"
-      transitionIn="fadeIn"
-      transitionOut="fadeOut"
-      progressBar={false}
-    />
+    <div>
+      <Router history={history} routes={routes} />
+      <ReduxToastr
+        timeOut={2000}
+        newestOnTop={false}
+        preventDuplicates
+        position="top-center"
+        transitionIn="fadeIn"
+        transitionOut="fadeOut"
+        progressBar={false}
+      />
+    </div>
   </Provider>
 );
 

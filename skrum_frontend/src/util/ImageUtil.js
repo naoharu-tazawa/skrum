@@ -3,10 +3,17 @@ import parseDataUrl from 'parse-data-url';
 import { implodeSubject } from './RouteUtil';
 import { getEntityTypeSubject } from './EntityUtil';
 
-const skrumBucket = 'https://s3-ap-northeast-1.amazonaws.com/skrumdev';
+const s3BucketBase = 'https://s3-ap-northeast-1.amazonaws.com';
+let s3Bucket;
+
+if (process.env.NODE_ENV === 'production') {
+  s3Bucket = `${s3BucketBase}/skrum`;
+} else {
+  s3Bucket = `${s3BucketBase}/skrumdev`;
+}
 
 export const imagePath = (entityType, companyId, id) => `
-  ${skrumBucket}
+  ${s3Bucket}
   /c
   /${companyId}
   ${implodeSubject(entityType) === 'c' ? '' : `/${implodeSubject(entityType)}/${id}`}

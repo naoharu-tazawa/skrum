@@ -57,7 +57,7 @@ export default class OkrBar extends Component {
           </div>
         </div>
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
-        <div className={styles.krCount}>
+        <div className={styles.action}>
           <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
           <DropdownMenu
             trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}

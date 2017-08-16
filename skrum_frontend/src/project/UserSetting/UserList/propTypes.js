@@ -4,8 +4,8 @@ export const userPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   roleAssignmentId: PropTypes.number.isRequired,
-  roleAssignmentName: PropTypes.string.isRequired,
-  lastLogin: PropTypes.string.isRequired,
+  roleLevel: PropTypes.number.isRequired,
+  lastLogin: PropTypes.string,
 });
 
 export const usersPropTypes = PropTypes.arrayOf(userPropTypes);

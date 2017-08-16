@@ -66,7 +66,7 @@ export default class DialogForm extends Component {
         {title && <div className={styles.title}>{title}</div>}
         {message && <div className={styles.message}>{message}</div>}
         <div className={styles.content}>
-          {isFunction(children) ? children({ setFieldData: this.setFieldData.bind(this) }) :
+          {isFunction(children) ? children({ setFieldData: this.setFieldData.bind(this), data }) :
             children}
           <div className={styles.error}>{error || submissionError || <span>&nbsp;</span>}</div>
         </div>

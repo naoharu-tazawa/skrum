@@ -1,34 +1,38 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { rolesPropTypes } from './propTypes';
 import CreateGroup from './CreateGroup';
+import { createGroup } from '../action';
 
 class CreateGroupContainer extends Component {
 
   static propTypes = {
-    items: rolesPropTypes,
+    isPostingGroup: PropTypes.bool.isRequired,
+    roleLevel: PropTypes.number.isRequired,
+    dispatchCreateGroup: PropTypes.func.isRequired,
   };
 
   render() {
-    return (
-      <CreateGroup
-        items={this.props.items}
-      />);
+    const { isPostingGroup, roleLevel, dispatchCreateGroup } = this.props;
+    return <CreateGroup {...{ isPostingGroup, roleLevel, dispatchCreateGroup }} />;
   }
 }
 
 const mapStateToProps = (state) => {
-  const { roles = [] } = state.userSetting || {};
-  const items = roles.map((role) => {
-    const { roleAssignmentId, roleName } = role;
-    return {
-      id: roleAssignmentId,
-      name: roleName,
-    };
-  });
-  return { items };
+  const { isPostingGroup } = state.groupSetting || {};
+  const { roleLevel } = state.auth || {};
+  return { isPostingGroup, roleLevel };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  const dispatchCreateGroup = group =>
+    dispatch(createGroup(group));
+  return {
+    dispatchCreateGroup,
+  };
 };
 
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(CreateGroupContainer);

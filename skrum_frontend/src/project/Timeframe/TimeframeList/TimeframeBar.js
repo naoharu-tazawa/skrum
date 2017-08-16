@@ -58,7 +58,7 @@ class TimeframeBar extends Component {
     const { header, timeframe, dispatchPutTimeframe, openModal } = this.props;
     if (header) {
       return (
-        <div className={styles.bar}>
+        <div className={styles.header}>
           <div className={styles.name}>名前</div>
           <div className={styles.date}>開始日</div>
           <div className={styles.date}>終了日</div>
