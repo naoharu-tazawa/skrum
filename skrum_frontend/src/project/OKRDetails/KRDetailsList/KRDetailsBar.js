@@ -213,9 +213,9 @@ class KRDetailsBar extends Component {
           <DropdownMenu
             trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
             options={[
-              { caption: '担当者変更',
-                onClick: () => openModal(this.changeOwnerDialog,
-                  { id, name, owner }) },
+              // { caption: '担当者変更',
+              //   onClick: () => openModal(this.changeOwnerDialog,
+              //     { id, name, owner }) },
               // { caption: '紐付け先設定',
               //   onClick: () => openModal(this.changeParentOkrDialog,
               //     { id, parentOkr, keyResult }) },

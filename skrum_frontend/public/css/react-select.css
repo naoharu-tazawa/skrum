@@ -178,15 +178,10 @@
 }
 .Select-arrow-zone {
   cursor: pointer;
-  display: block;
-  position: relative;
-  text-align: center;
-  vertical-align: middle;
-  width: 25px;
-  padding-right: 5px;
   position: absolute;
-  right: 0;
-  top: 9px;
+  display: flex;
+  top: calc(50% - 2px);
+  right: 6px;
 }
 .Select-arrow {
   border-color: #fff transparent transparent;
