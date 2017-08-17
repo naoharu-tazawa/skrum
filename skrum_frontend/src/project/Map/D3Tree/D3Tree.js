@@ -1,17 +1,53 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 import { d3treePropTypes } from './propTypes';
+import { imagePath, dummyImagePath } from '../../../util/ImageUtil';
+import { EntityType } from '../../../util/EntityUtil';
+
+let companyId;
 
 export default class D3Tree extends Component {
 
   static propTypes = {
     map: d3treePropTypes.isRequired,
+    companyId: PropTypes.number.isRequired,
   };
 
   static root;
-
   static isHidden = false;
+
+  // S3から画像取得するURLを生成
+  static getImageDummyUrl(data) {
+    return dummyImagePath(data.ownerType);
+  }
+
+  // S3から画像取得するURLを生成
+  static getImageFromS3(data) {
+    let url = null;
+    if (data.ownerType === EntityType.USER) {
+      url = imagePath(data.ownerType, companyId, data.ownerUserId);
+    } else if (data.ownerType === EntityType.GROUP) {
+      url = imagePath(data.ownerType, companyId, data.ownerGroupId);
+    } else if (data.ownerType === EntityType.COMPANY) {
+      url = imagePath(data.ownerType, companyId, data.ownerCompanyId);
+    }
+    return url;
+  }
+
+  static setImageUrl(d) {
+    const node = this;
+    d3.select(node).attr('xlink:href', () => D3Tree.getImageDummyUrl(d.data));
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = D3Tree.getImageFromS3(d.data);
+      img.onload = () => {
+        d3.select(node).attr('xlink:href', () => img.src);
+      };
+      resolve(img.src);
+    });
+  }
 
   componentDidMount() {
     // Render the tree usng d3 after first component mount
@@ -241,33 +277,34 @@ export default class D3Tree extends Component {
         return d.data.hidden ? 'none' : '';
       });
 
+    // ユーザ/グループ/会社画像ノード
     nodeEnter.append('image')
       .attr('class', 'uim')
-      .attr('xlink:href', () => { return 'https://cdn3.iconfinder.com/data/icons/users/100/user_male_1-512.png'; })
       .attr('x', `${-87 * reductionRatio}px`)
       .attr('y', `${-47 * reductionRatio}px`)
       .attr('width', `${32 * reductionRatio}px`)
       .attr('height', `${32 * reductionRatio}px`)
+      .each(D3Tree.setImageUrl)
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
 
-    nodeEnter.append('image')
-      .attr('class', 'menu')
-      .attr('xlink:href', () => { return 'https://cdn3.iconfinder.com/data/icons/users/100/user_male_1-512.png'; })
-      .attr('x', `${58 * reductionRatio}px`)
-      .attr('y', `${-47 * reductionRatio}px`)
-      .attr('width', `${32 * reductionRatio}px`)
-      .attr('height', `${32 * reductionRatio}px`)
-      .style('display', (d) => {
-        return d.data.hidden ? 'none' : '';
-      });
+      // メニュー画像ノード
+//    nodeEnter.append('image')
+//      .attr('class', 'menu')
+//      .attr('xlink:href', () => { return 'https://cdn4.iconfinder.com/data/icons/essential-app-1/16/dot-more-menu-hide-512.png'; })
+//      .attr('x', `${58 * reductionRatio}px`)
+//      .attr('y', `${-47 * reductionRatio}px`)
+//      .attr('width', `${32 * reductionRatio}px`)
+//      .attr('height', `${32 * reductionRatio}px`)
+//      .style('display', (d) => {
+//        return d.data.hidden ? 'none' : '';
+//      });
 
     // プログレスバーを生成
     this.createProgressBar(nodeEnter, reductionRatio);
 
-    // テキストを作成
-    // adds the text to the node
+    // 目標名テキストノード
     nodeEnter.append('text')
       .attr('class', 'oname')
       .attr('y', 0)
@@ -280,6 +317,7 @@ export default class D3Tree extends Component {
         return d.data.hidden ? 'none' : '';
       });
 
+    // 達成率テキストノード
     nodeEnter.append('text')
       .attr('class', 'arate')
       .attr('y', `${-65 * reductionRatio}px`)
@@ -294,6 +332,7 @@ export default class D3Tree extends Component {
         return d.data.hidden ? 'none' : '';
       });
 
+    // ユーザ/グループ/会社名テキストノード
     nodeEnter.append('text')
       .attr('class', 'uname')
       .attr('y', `${-26 * reductionRatio}px`)
@@ -439,15 +478,26 @@ export default class D3Tree extends Component {
     });
   }
 
+
   renderTree(treeData, svgDomNode) {
     // hidden setting
     this.isHidden = (treeData.hidden !== undefined);
+    companyId = this.props.companyId;
 
     // Set the dimensions and margins of the diagram
-    const marginTop = this.isHidden ? 180 : 180;
+    const marginTop = this.isHidden ? -20 : 180;
     const margin = { top: marginTop, right: 0, bottom: 30, left: 0 }; // SVG描画スペースの余白
-    const width = svgDomNode.clientWidth - margin.left - margin.right; // SVG描画スペースの横幅
-    const height = 1290 - margin.top - margin.bottom; // SVG描画スペースの縦幅
+
+    // const expandedWidth = svgDomNode.clientWidth;
+    // const expandedWidth = svgDomNode.clientWidth * 1.23;
+    const expandedWidth = svgDomNode.clientWidth * 2.15;
+
+    // const width = svgDomNode.clientWidth - margin.left - margin.right; // SVG描画スペースの横幅
+    const width = expandedWidth - margin.left - margin.right; // SVG描画スペースの横幅
+
+    // const height = 1090 - margin.top - margin.bottom; // SVG描画スペースの縦幅
+    // const height = 1290 - margin.top - margin.bottom; // SVG描画スペースの縦幅
+    const height = 2290 - margin.top - margin.bottom; // SVG描画スペースの縦幅
 
     // SVGを作成
     // append the svg object to the body of the page
@@ -461,7 +511,7 @@ export default class D3Tree extends Component {
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
     const i = 0;
-    const duration = 350;
+    const duration = 300;
 
     // Treeを作成
     // declares a tree layout and assigns the size
