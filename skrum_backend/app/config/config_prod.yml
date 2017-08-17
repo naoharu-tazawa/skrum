@@ -25,3 +25,12 @@ monolog:
             level: debug
         console:
             type: console
+
+# NelmioCorsBundle Configuration
+nelmio_cors:
+    paths:
+        '^/':
+            origin_regex: true
+            allow_origin: ['^https:[/][/][a-z0-9-]+\.skrum.jp']
+            allow_headers: ['Authorization', 'Content-Type']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
