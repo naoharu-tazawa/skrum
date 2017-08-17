@@ -663,6 +663,37 @@ SQL;
     }
 
     /**
+     * 親子OKRを取得（キー）（親OKRを指定）
+     *
+     * @param integer $okrId OKRID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
+     * @param string $okrTypeOfKeyResults キーリザルトのOKR種別（OKR種別＝'1'or'2'を指定）
+     * @return array
+     */
+    public function getObjectiveAndKeyResults(int $okrId, int $timeframeId, int $companyId, string $okrTypeOfKeyResults = null): array
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to1', 'to2')
+            ->innerJoin('AppBundle:TTimeframe', 'tt', 'WITH', 'to1.timeframe = tt.timeframeId')
+            ->innerJoin('AppBundle:MCompany', 'mc', 'WITH', 'tt.company = mc.companyId')
+            ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
+            ->where('to1.okrId = :okrId')
+            ->andWhere('to1.timeframe = :timeframeId')
+            ->andWhere('tt.company = :companyId')
+            ->setParameter('okrId', $okrId)
+            ->setParameter('timeframeId', $timeframeId)
+            ->setParameter('companyId', $companyId);
+
+        if ($okrTypeOfKeyResults !== null) {
+            $qb->andWhere('to2.type = :okrType')
+                ->setParameter('okrType', $okrTypeOfKeyResults);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * 親子OKRを取得（親OKRを指定）（達成率再計算ロジック用）
      *
      * @param integer $okrId OKRID

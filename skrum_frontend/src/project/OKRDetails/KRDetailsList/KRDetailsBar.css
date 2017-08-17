@@ -86,7 +86,7 @@
 .ownerBox {
   width: 19%;
 }
-.krCount {
+.action {
   display: flex;
   margin: auto 0;
 }
@@ -109,9 +109,6 @@ button.tool {
 }
 button.tool:focus {
   outline: 0;
-}
-.list table tfoot tr td .tool {
-  margin-right: 10px;
 }
 .checkinSpace {
   width: 55px;

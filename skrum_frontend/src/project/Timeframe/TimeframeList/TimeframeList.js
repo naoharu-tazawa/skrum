@@ -33,7 +33,7 @@ class TimeframeList extends Component {
           <div className={`${styles.footer} ${styles.alignC}`}>
             <button
               className={styles.addTimeframe}
-              onClick={() => openModal(NewTimeframe, {})}
+              onClick={() => openModal(NewTimeframe)}
             >
               <span className={styles.circle}>
                 <img src="/img/common/icn_plus.png" alt="Add" />

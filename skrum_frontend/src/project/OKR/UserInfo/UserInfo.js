@@ -35,22 +35,20 @@ export default class UserInfo extends Component {
             {groupsLink}
           </div>
           <div className={styles.infoList}>
-            <table className={`${styles.user_info} ${styles.floatL}`}>
-              <tbody>
-                <tr>
-                  <td><div className={styles.info}>役　職:</div></td>
-                  <td><div className={styles.info_data}>{position}</div></td>
-                </tr>
-                <tr>
-                  <td><div className={styles.info}>電　話:</div></td>
-                  <td><div className={styles.info_data}>{phoneNumber}</div></td>
-                </tr>
-                <tr>
-                  <td><div className={styles.info}>メール:</div></td>
-                  <td><div className={styles.info_data}>{emailAddress}</div></td>
-                </tr>
-              </tbody>
-            </table>
+            <div className={`${styles.user_info} ${styles.floatL}`}>
+              <div className={styles.info}>
+                <small>役　職:</small>
+                <span className={styles.info_data}>{position}</span>
+              </div>
+              <div className={styles.info}>
+                <small>電　話:</small>
+                <span className={styles.info_data}>{phoneNumber}</span>
+              </div>
+              <div className={styles.info}>
+                <small>メール:</small>
+                <span className={styles.info_data}>{emailAddress}</span>
+              </div>
+            </div>
             <Link
               className={`${styles.btn} ${styles.btn_arrow_r}`}
               to={replacePath({ tab: 'control' })}

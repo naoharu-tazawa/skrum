@@ -16,10 +16,10 @@ use AppBundle\Entity\MGroup;
 use AppBundle\Entity\MRoleAssignment;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\TAuthorization;
+use AppBundle\Entity\TEmailSettings;
 use AppBundle\Entity\TGroupTree;
 use AppBundle\Entity\TPreUser;
 use AppBundle\Entity\TLogin;
-use AppBundle\Entity\TMailSettings;
 
 /**
  * ログインサービスクラス
@@ -200,10 +200,10 @@ class LoginService extends BaseService
             $this->persist($tAuthorization);
 
             // メール通知設定テーブルにレコード追加
-            $tMailSettings = new TMailSettings();
-            $tMailSettings->setUserId($mUser->getUserId());
-            $tMailSettings->setReportGroupAchievement(DBConstant::EMAIL_OFF);
-            $this->persist($tMailSettings);
+            $tEmailSettings = new TEmailSettings();
+            $tEmailSettings->setUserId($mUser->getUserId());
+            $tEmailSettings->setReportGroupAchievement(DBConstant::EMAIL_OFF);
+            $this->persist($tEmailSettings);
 
             $this->flush();
             $this->commit();
@@ -290,15 +290,15 @@ class LoginService extends BaseService
             $tPreUser->setInvalidFlg(DBConstant::FLG_TRUE);
 
             // メール通知設定テーブルにレコード追加
-            $tMailSettings = new TMailSettings();
-            $tMailSettings->setUserId($mUser->getUserId());
+            $tEmailSettings = new TEmailSettings();
+            $tEmailSettings->setUserId($mUser->getUserId());
             if ($mRoleAssignment->getRoleLevel() >= DBConstant::ROLE_LEVEL_ADMIN) {
-                $tMailSettings->setReportGroupAchievement(DBConstant::EMAIL_OFF);
+                $tEmailSettings->setReportGroupAchievement(DBConstant::EMAIL_OFF);
             } else {
-                $tMailSettings->setReportMemberAchievement(DBConstant::EMAIL_OFF);
-                $tMailSettings->setReportFeedbackTarget(DBConstant::EMAIL_OFF);
+                $tEmailSettings->setReportMemberAchievement(DBConstant::EMAIL_OFF);
+                $tEmailSettings->setReportFeedbackTarget(DBConstant::EMAIL_OFF);
             }
-            $this->persist($tMailSettings);
+            $this->persist($tEmailSettings);
 
             $this->flush();
             $this->commit();

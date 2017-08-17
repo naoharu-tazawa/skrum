@@ -531,12 +531,12 @@ class OkrService extends BaseService
             $unit = $tOkr->getUnit();
             $autoPostAchievement = sprintf(
                     $this->getParameter('auto_post_type_achievement'),
-                    $previousAchievedValue,
+                    number_format($previousAchievedValue),
                     $unit,
-                    $data['achievedValue'],
+                    number_format($data['achievedValue']),
                     $unit,
                     $mathSymbol,
-                    $balanceAmount,
+                    number_format($balanceAmount),
                     $unit);
 
             // 投稿

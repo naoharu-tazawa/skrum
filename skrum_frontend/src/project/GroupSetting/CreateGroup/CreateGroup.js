@@ -1,36 +1,69 @@
 import React, { Component } from 'react';
-import { rolesPropTypes } from './propTypes';
+import PropTypes from 'prop-types';
+import { toastr } from 'react-redux-toastr';
+import { toPairs } from 'lodash';
+import PathSearch from '../../PathSearch/PathSearch';
+import { isBasicRole } from '../../../util/UserUtil';
+import { GroupTypeName } from '../../../util/GroupUtil';
 import styles from './CreateGroup.css';
 
 export default class CreateGroup extends Component {
 
   static propTypes = {
-    items: rolesPropTypes.isRequired,
+    isPostingGroup: PropTypes.bool.isRequired,
+    roleLevel: PropTypes.number.isRequired,
+    dispatchCreateGroup: PropTypes.func.isRequired,
   };
 
-  handleSubmit() {
-  }
-
   render() {
-    // const { items } = this.props;
-    // const { id, name } = items;
+    const { isPostingGroup, roleLevel, dispatchCreateGroup } = this.props;
+    const isBasicUser = isBasicRole(roleLevel);
+    const { groupName = '', groupType = isBasicUser && '2', groupPath = {} } = this.state || {};
+    const { groupPathId } = groupPath;
+    const groupOrTeam = isBasicUser ? 'チーム' : 'グループ';
     return (
       <section>
-        <div className={styles.title}>グループ作成</div>
-        <form onSubmit={e => this.handleSubmit(e)}>
-          <div>
-            <span><input className={styles.input} type="text" placeholder="グループ名" /></span>
-            <span>
-              <input className={styles.radio} type="radio" name="department" value="1" /><span>部署</span>
-              <input className={styles.radio} type="radio" name="team" value="2" /><span>チーム</span>
-            </span>
-          </div>
-          <div>
-            <span className={styles.group_search_label}>所属先グループ検索：</span>
-            <span><input className={styles.group_search} type="text" /></span>
-            <span><button className={styles.btn}>作成する</button></span>
-          </div>
-        </form>
+        <div className={styles.title}>
+          {`${groupOrTeam}作成`}
+        </div>
+        <div>
+          <input
+            className={styles.input}
+            type="text"
+            placeholder={`${groupOrTeam}名`}
+            value={groupName}
+            onChange={e => this.setState({ groupName: e.target.value })}
+          />
+          {toPairs(GroupTypeName).map(([type, name]) => !isBasicUser && (
+            <label className={styles.radio} key={type}>
+              <input
+                type="radio"
+                checked={groupType === type}
+                onClick={() => this.setState({ groupType: type })}
+              />
+              {name}
+            </label>))}
+        </div>
+        <div className={styles.group_search}>
+          <span className={styles.group_search_label}>所属先グループ検索：</span>
+          <span className={styles.group_search_box}>
+            <PathSearch value={groupPath} onChange={value => this.setState({ groupPath: value })} />
+          </span>
+          {!isPostingGroup && (
+            <button
+              className={styles.btn}
+              disabled={!groupName || !groupType}
+              onClick={() => dispatchCreateGroup({ groupName, groupType, groupPathId })
+                .then(({ error /* , payload: { message } = {} */ } = {}) => {
+                  if (error) { toastr.error('グループ作成に失敗しました'); }
+                  if (!error) { toastr.info('グループを作成しました'); }
+                  if (!error) { this.setState({ groupName: '' }); }
+                })}
+            >
+              作成する
+            </button>)}
+          {isPostingGroup && <div className={styles.disable_btn} />}
+        </div>
       </section>
     );
   }

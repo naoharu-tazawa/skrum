@@ -78,14 +78,14 @@
 .ownerBox {
   width: 19%;
 }
-.krCount {
+.action {
   display: flex;
   margin: auto 0;
 }
-.krCount a {
+.action a {
   cursor: pointer;
 }
-.krCount a:focus {
+.action a:focus {
   outline: none;
 }
 .circle {

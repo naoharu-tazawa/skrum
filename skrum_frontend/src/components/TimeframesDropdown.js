@@ -25,19 +25,19 @@ class TimeframesDropdown extends PureComponent {
   render() {
     const { plain, timeframes, timeframeId, value: dirtyValue,
       onChange, onFocus, onBlur } = this.props;
-    const timeframeOptions = orderBy(timeframes, 'timeframeId', 'asc')
+    const options = orderBy(timeframes, 'timeframeId', 'asc')
       .map(({ timeframeId: value, timeframeName: label }) => ({ value, label }));
-    const getTimeframeStyle = (id, currentId) =>
+    const getOptionStyle = (id, currentId) =>
       `${styles.item} ${id === currentId ? styles.current : ''}`;
-    const timeframeRenderer = ({ value: id, label }) =>
-      <div className={getTimeframeStyle(id, timeframeId)}>
+    const optionRenderer = ({ value: id, label }) => (
+      <div className={getOptionStyle(id, timeframeId)}>
         {label}
-      </div>;
+      </div>);
     return (
       <Select
         className={`${styles.select} ${plain && styles.plain}`}
-        options={timeframeOptions}
-        optionRenderer={timeframeRenderer}
+        options={options}
+        optionRenderer={optionRenderer}
         value={dirtyValue || timeframeId}
         {...{ onChange, onFocus, onBlur }}
         placeholder=""

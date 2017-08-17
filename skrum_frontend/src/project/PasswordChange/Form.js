@@ -74,16 +74,16 @@ class _Form extends Component {
       <form onSubmit={handleSubmit}>
         <div className={styles.floatL}>
           <div className={styles.title} >パスワード変更</div>
-          <div className={styles.td}>
+          <div className={styles.field}>
             <Field name="currentPassword" type="password" component={renderField} label="現在のパスワード：" />
           </div>
-          <div className={styles.td}>
+          <div className={styles.field}>
             <Field name="newPassword" type="password" component={renderField} label="新しいパスワード：" />
           </div>
-          <div className={styles.td}>
+          <div className={styles.field}>
             <Field name="confirm" type="password" component={renderField} label="新しいパスワード（確認）：" />
           </div>
-          <div className={styles.td}>
+          <div className={styles.field}>
             {this.renderError()}
           </div>
         </div>

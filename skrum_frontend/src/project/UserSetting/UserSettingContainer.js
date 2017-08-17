@@ -3,24 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import InvitationContainer from './Invitation/InvitationContainer';
 import UserListContainer from './UserList/UserListContainer';
-import { fetchCompanyRoles } from './action';
 import styles from './UserSettingContainer.css';
 
 class UserSettingContainer extends Component {
 
   static propTypes = {
-    isFetching: PropTypes.bool,
-    companyId: PropTypes.number,
-    dispatchFetchCompanyRoles: PropTypes.func,
+    isFetchingRoles: PropTypes.bool,
   };
 
-  componentWillMount() {
-    const { dispatchFetchCompanyRoles, companyId } = this.props;
-    dispatchFetchCompanyRoles(companyId);
-  }
-
   render() {
-    if (this.props.isFetching) {
+    if (this.props.isFetchingRoles) {
       return <span className={styles.spinner} />;
     }
     return (
@@ -32,20 +24,10 @@ class UserSettingContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { companyId } = state.auth || {};
-  const { isFetching = false } = state.userSetting || {};
-  return { isFetching, companyId };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  const dispatchFetchCompanyRoles = companyId =>
-    dispatch(fetchCompanyRoles(companyId));
-  return {
-    dispatchFetchCompanyRoles,
-  };
+  const { isFetchingRoles } = state.userSetting || {};
+  return { isFetchingRoles };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
 )(UserSettingContainer);

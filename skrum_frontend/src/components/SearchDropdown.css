@@ -1,5 +1,6 @@
 .component {
   width: 100%;
+  height: 100%;
   display: flex !important;
 }
 .input {
@@ -15,10 +16,10 @@
 .component:not(.focused):after {
   mask: url(/img/search.svg);
   mask-repeat: no-repeat;
-  mask-position-y: 2px;
+  mask-position-y: center;
   -webkit-mask: url(/img/search.svg);
   -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position-y: 2px;
+  -webkit-mask-position-y: center;
   background-color: #dddddd;
 }
 .component.searching:after {

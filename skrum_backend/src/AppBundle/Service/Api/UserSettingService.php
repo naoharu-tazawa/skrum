@@ -348,9 +348,9 @@ class UserSettingService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param MUser $mUser ユーザエンティティ
-     * @return UserSearchDTO
+     * @return void
      */
-    public function resetPassword(Auth $auth, MUser $mUser): UserSearchDTO
+    public function resetPassword(Auth $auth, MUser $mUser)
     {
         // 自ユーザのパスワードリセットは不可
         if ($mUser->getUserId() === $auth->getUserId()) {
@@ -394,20 +394,6 @@ class UserSettingService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
-
-        // 返却用DTOを生成
-        $userSearchDTO = new UserSearchDTO();
-        $userSearchDTO->setUserId($mUser->getUserId());
-        $userSearchDTO->setUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
-        $userSearchDTO->setRoleAssignmentId($mUser->getRoleAssignment()->getRoleAssignmentId());
-        $userSearchDTO->setRoleLevel($mUser->getRoleAssignment()->getRoleLevel());
-        $tLoginRepos = $this->getTLoginRepository();
-        $lastLogin = $tLoginRepos->getLastLogin($mUser->getUserId());
-        if ($lastLogin !== null) {
-            $userSearchDTO->setLastLogin($lastLogin);
-        }
-
-        return $userSearchDTO;
     }
 
     /**
@@ -513,13 +499,26 @@ class UserSettingService extends BaseService
      * @param Auth $auth 認証情報
      * @param MUser $mUser ユーザエンティティ
      * @param MRoleAssignment $mRoleAssignment ロール割当エンティティ
-     * @return void
+     * @return UserSearchDTO
      */
-    public function changeRole(Auth $auth, MUser $mUser, MRoleAssignment $mRoleAssignment)
+    public function changeRole(Auth $auth, MUser $mUser, MRoleAssignment $mRoleAssignment): UserSearchDTO
     {
+        $tLoginRepos = $this->getTLoginRepository();
+
         // 現在のロール割当IDと変更後のロール割当IDが同一の場合、更新処理を行わない
         if ($mUser->getRoleAssignment()->getRoleAssignmentId() === $mRoleAssignment->getRoleAssignmentId()) {
-            return;
+            // 返却用DTOを生成
+            $userSearchDTO = new UserSearchDTO();
+            $userSearchDTO->setUserId($mUser->getUserId());
+            $userSearchDTO->setUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+            $userSearchDTO->setRoleAssignmentId($mUser->getRoleAssignment()->getRoleAssignmentId());
+            $userSearchDTO->setRoleLevel($mUser->getRoleAssignment()->getRoleLevel());
+            $lastLogin = $tLoginRepos->getLastLogin($mUser->getUserId());
+            if ($lastLogin !== null) {
+                $userSearchDTO->setLastLogin($lastLogin);
+            }
+
+            return $userSearchDTO;
         }
 
         // 変更後ロールがスーパー管理者ユーザの場合、スーパー管理者ユーザ数をチェック
@@ -550,6 +549,19 @@ class UserSettingService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // 返却用DTOを生成
+        $userSearchDTO = new UserSearchDTO();
+        $userSearchDTO->setUserId($mUser->getUserId());
+        $userSearchDTO->setUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $userSearchDTO->setRoleAssignmentId($mUser->getRoleAssignment()->getRoleAssignmentId());
+        $userSearchDTO->setRoleLevel($mUser->getRoleAssignment()->getRoleLevel());
+        $lastLogin = $tLoginRepos->getLastLogin($mUser->getUserId());
+        if ($lastLogin !== null) {
+            $userSearchDTO->setLastLogin($lastLogin);
+        }
+
+        return $userSearchDTO;
     }
 
     /**

@@ -25,21 +25,10 @@
   margin-bottom: 80px;
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12);
 }
-
 .group_list {
   width: 100%;
   font-size: 14px;
 }
-  .group_list table th {
-    padding: 15px 0 12px;
-    border-bottom: 1px solid #d8dfe5; }
-  .group_list table td {
-    padding: 10px 0;
-    border-bottom: 1px solid #d8dfe5; }
-    .group_list table td:first-of-type {
-      padding-left: 70px; }
-    .group_list table td span {
-      /*margin-right: 10px;*/ }
 .footer {
   background-color: #fff;
   padding: 10px 0px;

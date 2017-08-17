@@ -6,26 +6,24 @@ export default (state = {
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_LOGIN:
-      return Object.assign({}, state, {
-        isFetching: true,
-      });
+      return { ...state, isFetching: true };
+
     case Action.FINISH_LOGIN: {
       const { payload, error } = action;
       if (error) {
-        return Object.assign({}, state, {
+        return {
+          ...state,
           isFetching: false,
           isAuthorized: false,
           token: null,
-          error: {
-            message: payload.message,
-          },
-        });
+          error: { message: payload.message },
+        };
       }
-
       const { jwt } = payload.data;
       const splitedJwt = jwt.split('.');
       const jwtPayload = JSON.parse(window.atob(splitedJwt[1]));
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         isAuthorized: true,
         token: jwt,
@@ -35,15 +33,11 @@ export default (state = {
         roleLevel: jwtPayload.rlv,
         permissions: jwtPayload.permissions,
         error: null,
-      });
+      };
     }
 
     case Action.REQUEST_LOGOUT:
-      return Object.assign({}, state, {
-        isAuthorized: false,
-        token: null,
-        error: action.error,
-      });
+      return { ...state, isAuthorized: false, token: null, error: action.error };
 
     default:
       return state;

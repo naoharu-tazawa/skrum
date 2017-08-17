@@ -1,12 +1,13 @@
 import readBlob from 'read-blob';
 import parseDataUrl from 'parse-data-url';
+import config from '../config/config';
 import { implodeSubject } from './RouteUtil';
 import { getEntityTypeSubject } from './EntityUtil';
 
-const skrumBucket = 'https://s3-ap-northeast-1.amazonaws.com/skrumdev';
+const { bucket } = config;
 
 export const imagePath = (entityType, companyId, id) => `
-  ${skrumBucket}
+  ${bucket}
   /c
   /${companyId}
   ${implodeSubject(entityType) === 'c' ? '' : `/${implodeSubject(entityType)}/${id}`}
@@ -24,5 +25,3 @@ export const loadImageSrc = ({ preview }) =>
           const { data: image, mediaType: mimeType } = parseDataUrl(dataUrl);
           return { image, mimeType };
         })));
-
-// export const loadImageSrc = file => console.log(file);

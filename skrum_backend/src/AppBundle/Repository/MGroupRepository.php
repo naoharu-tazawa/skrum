@@ -193,11 +193,9 @@ SQL;
         $qb->select('tgt.id', 'tgt.groupTreePathName')
             ->innerJoin('AppBundle:TGroupTree', 'tgt', 'WITH', 'mg.groupId = tgt.group')
             ->where('mg.company = :companyId')
-            ->andWhere('mg.companyFlg = :companyFlg')
             ->andWhere('mg.archivedFlg = :archivedFlg')
             ->andWhere('mg.groupName LIKE :groupName')
             ->setParameter('companyId', $companyId)
-            ->setParameter('companyFlg', DBConstant::FLG_FALSE)
             ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
             ->setParameter('groupName', $keyword . '%');
 
@@ -219,17 +217,18 @@ SQL;
         $qb->select('tgt.id', 'tgt.groupTreePathName')
             ->innerJoin('AppBundle:TGroupTree', 'tgt', 'WITH', 'mg.groupId = tgt.group')
             ->where('mg.company = :companyId')
-            ->andWhere('mg.companyFlg = :companyFlg')
             ->andWhere('mg.archivedFlg = :archivedFlg')
             ->andWhere('mg.groupId <> :groupId')
-            ->andWhere('tgt.groupTreePath NOT IN (?1)')
             ->andWhere('mg.groupName LIKE :groupName')
             ->setParameter('companyId', $companyId)
-            ->setParameter('companyFlg', DBConstant::FLG_FALSE)
             ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
             ->setParameter('groupId', $groupId)
-            ->setParameter(1, $groupTreePathArray)
             ->setParameter('groupName', $keyword . '%');
+
+        if (!empty($groupTreePathArray)) {
+            $qb->andWhere('tgt.groupTreePath NOT IN (?1)')
+                ->setParameter(1, $groupTreePathArray);
+        }
 
         return $qb->getQuery()->getResult();
     }

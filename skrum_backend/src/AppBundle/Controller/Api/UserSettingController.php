@@ -134,9 +134,9 @@ class UserSettingController extends BaseController
      * @Permission(value="password_reset")
      * @param Request $request リクエストオブジェクト
      * @param string $userId ユーザID
-     * @return UserSearchDTO
+     * @return array
      */
-    public function resetUserPasswordAction(Request $request, string $userId): UserSearchDTO
+    public function resetUserPasswordAction(Request $request, string $userId): array
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -153,9 +153,9 @@ class UserSettingController extends BaseController
 
         // パスワード変更処理
         $userSettingService = $this->getUserSettingService();
-        $userSearchDTO = $userSettingService->resetPassword($auth, $mUser);
+        $userSettingService->resetPassword($auth, $mUser);
 
-        return $userSearchDTO;
+        return array('result' => 'OK');
     }
 
     /**
@@ -224,9 +224,9 @@ class UserSettingController extends BaseController
      * @param Request $request リクエストオブジェクト
      * @param string $userId ユーザID
      * @param string $roleAssignmentId ロール割当ID
-     * @return array
+     * @return UserSearchDTO
      */
-    public function putUserRoleAction(Request $request, string $userId, string $roleAssignmentId): array
+    public function putUserRoleAction(Request $request, string $userId, string $roleAssignmentId): UserSearchDTO
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -246,8 +246,8 @@ class UserSettingController extends BaseController
 
         // ユーザ権限更新処理
         $userSettingService = $this->getUserSettingService();
-        $userSettingService->changeRole($auth, $mUser, $mRoleAssignment);
+        $userSearchDTO = $userSettingService->changeRole($auth, $mUser, $mRoleAssignment);
 
-        return array('result' => 'OK');
+        return $userSearchDTO;
     }
 }

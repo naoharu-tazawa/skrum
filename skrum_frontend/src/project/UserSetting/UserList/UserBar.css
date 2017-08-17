@@ -2,16 +2,50 @@
 /* ====================================================
 プロファイル画面
 ==================================================== */
-.name {
+.header {
+  padding: 14px 0;
+}
+.bar {
+  padding: 10px 0;
+}
+.header, .bar {
+  display: flex;
   border-bottom: 1px solid #d8dfe5;
+}
+.name {
   padding-left: 70px !important;
-  width: 40%; }
-.position {
-  width: 20%; }
-.update {
-  width: 35%; }
-.delete {
-  width: 10px;
-  text-align: right;
+  width: calc(50% - 100px);
+  margin: auto 0;
+}
+.role {
+  width: 20%;
+  margin: auto 0;
+}
+.lastLogin {
+  width: 30%;
+  margin: auto 0;
+}
+.action {
+  width: 100px;
+  display: flex;
+  margin: auto 0;
+}
+.tool {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #8e9aa6;
+  border-radius: 50%;
+  /*overflow: hidden;*/
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  margin-right: 15px;
   cursor: pointer;
+}
+button.tool {
+  background-color: inherit;
+  padding: 0;
+}
+button.tool:focus {
+  outline: 0;
 }

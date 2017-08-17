@@ -34,3 +34,12 @@ monolog:
 
 swiftmailer:
     delivery_addresses: ['skrum.development@gmail.com']
+
+# NelmioCorsBundle Configuration
+nelmio_cors:
+    paths:
+        '^/':
+            origin_regex: true
+            allow_origin: ['^http:[/][/][a-z0-9-]+\.localhost:3000']
+            allow_headers: ['Authorization', 'Content-Type']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
