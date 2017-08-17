@@ -22,7 +22,7 @@ parameters:
 
     auto_post_type_generate: 'さんが目標を作成しました。'
 
-    auto_post_type_achievement: 'さんの達成値が%%d%%sから%%d%%sに進捗しました。（%%s%%d%%s）'
+    auto_post_type_achievement: 'さんの達成値が%%s%%sから%%s%%sに進捗しました。（%%s%%s%%s）'
 
     auto_post_type_achievement_30: 'さんが目標進捗率30%を達成しました。'
 

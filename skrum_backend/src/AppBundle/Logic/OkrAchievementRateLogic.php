@@ -85,18 +85,22 @@ class OkrAchievementRateLogic extends BaseLogic
             $tOkrArray[0]['parentOkr']->setUnit('％');
 
             // OKRアクティビティ登録
-            $tOkrActivity = new TOkrActivity();
-            $tOkrActivity->setOkr($tOkrArray[0]['parentOkr']);
-            $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ACHIEVEMENT);
-            $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
-            $tOkrActivity->setAchievementRate($achievementRate);
-            $tOkrActivity->setChangedPercentage($achievementRate - $previousAchievementRate);
-            $this->persist($tOkrActivity);
+            if ($achievementRate != 0) {
+                $tOkrActivity = new TOkrActivity();
+                $tOkrActivity->setOkr($tOkrArray[0]['parentOkr']);
+                $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ACHIEVEMENT);
+                $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
+                $tOkrActivity->setAchievementRate($achievementRate);
+                $tOkrActivity->setChangedPercentage($achievementRate - $previousAchievementRate);
+                $this->persist($tOkrActivity);
+            }
 
             $this->flush();
 
             // 自動投稿登録（◯%達成時）
-            $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkrArray[0]['parentOkr'], $tOkrActivity);
+            if ($achievementRate != 0) {
+                $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkrArray[0]['parentOkr'], $tOkrActivity);
+            }
 
             // 親OKRを$tOkrに代入
             $tOkr = $tOkrArray[0]['parentOkr'];
@@ -174,19 +178,23 @@ class OkrAchievementRateLogic extends BaseLogic
         $tOkrArray[0]['parentOkr']->setUnit('％');
 
         // OKRアクティビティ登録
-        $tOkrActivity = new TOkrActivity();
-        $tOkrActivity->setOkr($tOkrArray[0]['parentOkr']);
-        $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ACHIEVEMENT);
-        $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
-        $tOkrActivity->setAchievementRate($achievementRate);
-        $tOkrActivity->setChangedPercentage($achievementRate - $previousAchievementRate);
-        $this->persist($tOkrActivity);
+        if ($achievementRate != 0) {
+            $tOkrActivity = new TOkrActivity();
+            $tOkrActivity->setOkr($tOkrArray[0]['parentOkr']);
+            $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ACHIEVEMENT);
+            $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
+            $tOkrActivity->setAchievementRate($achievementRate);
+            $tOkrActivity->setChangedPercentage($achievementRate - $previousAchievementRate);
+            $this->persist($tOkrActivity);
+        }
 
         $this->flush();
 
         // 自動投稿登録（◯%達成時）
-        $postLogic = $this->getPostLogic();
-        $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkrArray[0]['parentOkr'], $tOkrActivity);
+        if ($achievementRate != 0) {
+            $postLogic = $this->getPostLogic();
+            $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkrArray[0]['parentOkr'], $tOkrActivity);
+        }
 
         $this->recalculate($auth, $tOkr, $auth->getCompanyId(), $weightedAverageRatioFlg);
     }
