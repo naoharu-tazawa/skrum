@@ -54,7 +54,9 @@ class ImageUploadController extends BaseController
         $bucket = null;
         if ($this->get('kernel')->getEnvironment() === 'prod') {
             $bucket = Constant::S3_BUCKET_PROD;
-        } elseif ($this->get('kernel')->getEnvironment() === 'dev' || $this->get('kernel')->getEnvironment() === 'test') {
+        } elseif ($this->get('kernel')->getEnvironment() === 'test') {
+            $bucket = Constant::S3_BUCKET_TEST;
+        } elseif ($this->get('kernel')->getEnvironment() === 'dev') {
             $bucket = Constant::S3_BUCKET_DEV;
         }
 
@@ -112,7 +114,9 @@ class ImageUploadController extends BaseController
         $bucket = null;
         if ($this->get('kernel')->getEnvironment() === 'prod') {
             $bucket = Constant::S3_BUCKET_PROD;
-        } elseif ($this->get('kernel')->getEnvironment() === 'dev' || $this->get('kernel')->getEnvironment() === 'test') {
+        } elseif ($this->get('kernel')->getEnvironment() === 'test') {
+            $bucket = Constant::S3_BUCKET_TEST;
+        } elseif ($this->get('kernel')->getEnvironment() === 'dev') {
             $bucket = Constant::S3_BUCKET_DEV;
         }
 
@@ -170,7 +174,9 @@ class ImageUploadController extends BaseController
         $bucket = null;
         if ($this->get('kernel')->getEnvironment() === 'prod') {
             $bucket = Constant::S3_BUCKET_PROD;
-        } elseif ($this->get('kernel')->getEnvironment() === 'dev' || $this->get('kernel')->getEnvironment() === 'test') {
+        } elseif ($this->get('kernel')->getEnvironment() === 'test') {
+            $bucket = Constant::S3_BUCKET_TEST;
+        } elseif ($this->get('kernel')->getEnvironment() === 'dev') {
             $bucket = Constant::S3_BUCKET_DEV;
         }
 

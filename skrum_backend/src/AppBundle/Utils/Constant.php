@@ -15,6 +15,11 @@ class Constant
     const S3_BUCKET_DEV = 'skrumdev';
 
     /**
+     * S3バケット名（テスト環境）
+     */
+    const S3_BUCKET_TEST = 'skrumstg';
+
+    /**
      * S3バケット名（本番環境）
      */
     const S3_BUCKET_PROD = 'skrum';
