@@ -1,0 +1,20 @@
+# BA0101 目標進捗率ログ作成
+0 0 * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BA0101 --env=prod --bulk_size=1000
+
+# BB0103 進捗登録リマインダーメール
+0 2 * * 5 cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0103 --env=prod --bulk_size=1000
+
+# BB0104 メンバー進捗状況レポートメール
+0 3 * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0104 --env=prod --bulk_size=1000
+
+# BB0105 グループ進捗状況レポートメール
+0 4 * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0105 --env=prod --bulk_size=1000
+
+# BB0106 フィードバック対象者報告メール
+0 5 * * 1 cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0106 --env=prod --bulk_size=1000
+
+# BB0108 メール送信
+* * * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0108 --env=prod --bulk_size=1000
+
+# BC0101 ユーザ一括追加登録
+* * * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BC0101 --env=prod --mail_sending=1
