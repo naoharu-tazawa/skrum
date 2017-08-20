@@ -38,13 +38,13 @@ swiftmailer:
 # NelmioCorsBundle Configuration
 nelmio_cors:
     paths:
-        '^/':
-            origin_regex: true
-            allow_origin: ['^http:[/][/][a-z0-9-]+\.localhost:3000']
-            allow_headers: ['Authorization', 'Content-Type']
-            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
         '^/v1/preregister.json':
             origin_regex: true
             allow_origin: ['^http:[/][/]localhost:3000']
             allow_headers: ['Authorization', 'Content-Type']
             allow_methods: ['POST']
+        '^/':
+            origin_regex: true
+            allow_origin: ['^http:[/][/][a-z0-9-]+\.localhost:3000']
+            allow_headers: ['Authorization', 'Content-Type']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']

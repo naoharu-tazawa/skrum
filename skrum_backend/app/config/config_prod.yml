@@ -29,6 +29,11 @@ monolog:
 # NelmioCorsBundle Configuration
 nelmio_cors:
     paths:
+        '^/v1/preregister.json':
+            origin_regex: true
+            allow_origin: ['^https:[/][/]skrum.jp']
+            allow_headers: ['Authorization', 'Content-Type']
+            allow_methods: ['POST']
         '^/':
             origin_regex: true
             allow_origin: ['^https:[/][/][a-z0-9-]+\.skrum.jp']
