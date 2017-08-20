@@ -12,3 +12,15 @@ _errors:
 
 _main:
     resource: routing.yml
+
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+    host: "{subdomain}.localhost"
+    prefix: /
+
+login:
+    path: /v1/preregister.{_format}
+    defaults: { _controller: AppBundle:Api\Login:preregister }
+    methods: [POST]
+    host: localhost
