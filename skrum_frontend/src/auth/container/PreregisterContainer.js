@@ -33,14 +33,14 @@ class PreregisterContainer extends Component {
       return (
         <div className={styles.container}>
           <div className={styles.content}>
-            <p>新規アカウント作成確認メールを以下のメールアドレスに送信しました。</p>
+            <p>新規アカウント作成確認メールを以下のEメールアドレスに送信しました。</p>
             <p>Eメールアドレス：<strong>{preregistered.emailAddress}</strong></p>
             <p>サブドメイン　&nbsp;&nbsp;：<strong>{preregistered.subdomain}</strong></p>
             <br />
-            <p>メールに記載されているURLから本登録を行なってください。</p>
+            <p>Eメールに記載されているURLから本登録を行なってください。</p>
             <br />
             <br />
-            <p>もしメールアドレスを間違えて入力した場合は新規アカウント作成画面に戻り、再度登録を行なってください。</p>
+            <p>もしEメールアドレスまたは希望サブドメインを間違えて入力した場合は新規アカウント作成画面に戻り、再度登録を行なってください。</p>
             <br />
             <button onClick={browserHistory.goBack}>戻る</button>
           </div>
