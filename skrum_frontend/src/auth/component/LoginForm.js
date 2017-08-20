@@ -50,8 +50,8 @@ class LoginForm extends Component {
       <div>
         <p className={styles.default}>Skrum Login</p>
         <br />
-        <form onSubmit={e => this.handleSubmit(e)}>
-          <input type="text" id="email" placeholder="Email" className={styles.defaultInput} />
+        <form onSubmit={this.handleSubmit.bind(this)}>
+          <input type="email" id="email" placeholder="Email" className={styles.defaultInput} />
           <br />
           <input type="password" id="password" placeholder="Password" className={styles.defaultInput} />
           {this.renderError()}

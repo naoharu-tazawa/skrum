@@ -3,6 +3,7 @@ import { Action } from './action';
 export default (state = {
   isFetching: false,
   isAuthorized: false,
+  isPreregistering: false,
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_LOGIN:
@@ -38,6 +39,17 @@ export default (state = {
 
     case Action.REQUEST_LOGOUT:
       return { ...state, isAuthorized: false, token: null, error: action.error };
+
+    case Action.REQUEST_PREREGISTER:
+      return { ...state, isPreregistering: true };
+
+    case Action.FINISH_PREREGISTER: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isPreregistering: false, error: { message: payload.message } };
+      }
+      return { ...state, isPreregistering: false, preregistered: payload.data, error: null };
+    }
 
     default:
       return state;

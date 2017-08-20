@@ -18,8 +18,8 @@ const getUrlParam = (param) => {
   return `?${params.join('&')}`;
 };
 
-const createUrl = (path, param, status) => {
-  const domain = extractDomain(status);
+const createUrl = (path, param /* , status */) => {
+  const domain = extractDomain(/* status */);
   const url = getBaseUrl(domain);
   const urlParam = getUrlParam(param);
   return url + path + urlParam;

@@ -13,6 +13,7 @@ import GroupSettingContainer from './project/GroupSetting/GroupSettingContainer'
 import CompanyProfileContainer from './project/CompanyProfile/CompanyProfileContainer';
 import TimeframeContainer from './project/Timeframe/TimeframeContainer';
 import PasswordChangeContainer from './project/PasswordChange/PasswordChangeContainer';
+import PreregisterContainer from './auth/container/PreregisterContainer';
 
 const topPage = '/o/u';
 const loginPage = '/login';
@@ -65,6 +66,8 @@ export default (
       <Route path="/s/t" component={TimeframeContainer} />
       <Route path="/s/a" component={PasswordChangeContainer} />
     </Route>
+    <Route path="/preregister" component={PreregisterContainer} />
+    <Route path="/preregister/:status" component={PreregisterContainer} />
     <Route path="/login" component={AnonymousRegion} />
     <IndexRoute component={RedirectRoute} />
     <Route path="*" component={RedirectRoute} />
