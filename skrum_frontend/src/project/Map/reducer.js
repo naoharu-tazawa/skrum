@@ -10,11 +10,13 @@ export default (state = {
     case Action.REQUEST_FETCH_USER_OKRS:
     case Action.REQUEST_FETCH_GROUP_OKRS:
     case Action.REQUEST_FETCH_COMPANY_OKRS:
+    case Action.REQUEST_FETCH_OKR_DESCENDANTS:
       return { ...state, isFetching: true };
 
     case Action.FINISH_FETCH_USER_OKRS:
     case Action.FINISH_FETCH_GROUP_OKRS:
-    case Action.FINISH_FETCH_COMPANY_OKRS: {
+    case Action.FINISH_FETCH_COMPANY_OKRS:
+    case Action.FINISH_FETCH_OKR_DESCENDANTS: {
       const { payload, error } = action;
       if (error) {
         return { ...state, isFetching: false, error: { message: payload.message } };
