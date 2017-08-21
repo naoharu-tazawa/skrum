@@ -1,0 +1,11 @@
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+    host: "{subdomain}.skrum-api-stg.space"
+    prefix: /
+
+login:
+    path: /v1/preregister.{_format}
+    defaults: { _controller: AppBundle:Api\Login:preregister }
+    methods: [POST]
+    host: skrum-api-stg.space

@@ -2,6 +2,9 @@ imports:
     - { resource: config_dev.yml }
 
 framework:
+    router:
+        resource: "%kernel.root_dir%/config/routing_test.yml"
+        strict_requirements: true
     test: ~
     session:
         storage_id: session.storage.mock_file
@@ -13,4 +16,18 @@ web_profiler:
     intercept_redirects: false
 
 swiftmailer:
-    disable_delivery: true
+    delivery_addresses: ['skrum.development@gmail.com']
+
+# NelmioCorsBundle Configuration
+nelmio_cors:
+    paths:
+        '^/v1/preregister.json':
+            origin_regex: true
+            allow_origin: ['^https:[/][/]skrum-stg.work']
+            allow_headers: ['Authorization', 'Content-Type']
+            allow_methods: ['POST']
+        '^/':
+            origin_regex: true
+            allow_origin: ['^https:[/][/][a-z0-9-]+\.skrum-stg.work']
+            allow_headers: ['Authorization', 'Content-Type']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
