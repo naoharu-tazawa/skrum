@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { d3treePropTypes } from './propTypes';
-import { imagePath, dummyImagePath } from '../../../util/ImageUtil';
+import { imagePath, dummyImagePathForD3 } from '../../../util/ImageUtil';
 import { EntityType } from '../../../util/EntityUtil';
 
 let companyId;
@@ -20,7 +20,7 @@ export default class D3Tree extends Component {
 
   // S3から画像取得するURLを生成
   static getImageDummyUrl(data) {
-    return dummyImagePath(data.ownerType);
+    return dummyImagePathForD3(data.ownerType);
   }
 
   // S3から画像取得するURLを生成
@@ -278,16 +278,31 @@ export default class D3Tree extends Component {
       });
 
     // ユーザ/グループ/会社画像ノード
+    const imgdefs = nodeEnter.append('defs').attr('id', 'imgdefs');
+
+    imgdefs.append('circle')
+      .attr('id', 'imgcircle')
+      .attr('r', `${17 * reductionRatio}px`) // 円の半径を指定
+      .attr('cx', `${-70 * reductionRatio}px`) // x座標を指定
+      .attr('cy', `${-30 * reductionRatio}px`); // y座標を指定
+
+    imgdefs.append('clipPath')
+        .attr('id', 'clip')
+        .append('use')
+        .attr('xlink:href', '#imgcircle');
+
     nodeEnter.append('image')
       .attr('class', 'uim')
       .attr('x', `${-87 * reductionRatio}px`)
       .attr('y', `${-47 * reductionRatio}px`)
-      .attr('width', `${32 * reductionRatio}px`)
-      .attr('height', `${32 * reductionRatio}px`)
+      .attr('width', `${34 * reductionRatio}px`)
+      .attr('height', `${34 * reductionRatio}px`)
+      .attr('clip-path', 'url(#clip)')
       .each(D3Tree.setImageUrl)
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
+
 
       // メニュー画像ノード
 //    nodeEnter.append('image')
@@ -382,14 +397,14 @@ export default class D3Tree extends Component {
     nodeUpdate.select('image.uim')
       .attr('x', `${-87 * reductionRatio}px`)
       .attr('y', `${-47 * reductionRatio}px`)
-      .attr('width', `${32 * reductionRatio}px`)
-      .attr('height', `${32 * reductionRatio}px`);
+      .attr('width', `${34 * reductionRatio}px`)
+      .attr('height', `${34 * reductionRatio}px`);
 
-    nodeUpdate.select('image.menu')
-      .attr('x', `${58 * reductionRatio}px`)
-      .attr('y', `${-47 * reductionRatio}px`)
-      .attr('width', `${32 * reductionRatio}px`)
-      .attr('height', `${32 * reductionRatio}px`);
+//    nodeUpdate.select('image.menu')
+//      .attr('x', `${58 * reductionRatio}px`)
+//      .attr('y', `${-47 * reductionRatio}px`)
+//      .attr('width', `${32 * reductionRatio}px`)
+//      .attr('height', `${32 * reductionRatio}px`);
 
     // プログレスバーを生成
     this.createProgressBar(nodeUpdate, reductionRatio);

@@ -17,6 +17,9 @@ export const imagePath = (entityType, companyId, id) => `
 export const dummyImagePath = entityType =>
   `/img/dummy_${getEntityTypeSubject(entityType)}.svg`;
 
+export const dummyImagePathForD3 = entityType =>
+  `/img/dummy_${getEntityTypeSubject(entityType)}_for_D3.png`;
+
 export const loadImageSrc = ({ preview }) =>
   fetch(preview)
     .then(res => res.blob()
