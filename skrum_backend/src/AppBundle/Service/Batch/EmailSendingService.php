@@ -26,7 +26,7 @@ class EmailSendingService extends BaseService
     {
         // メッセージ作成
         $message = \Swift_Message::newInstance()
-            ->setFrom($fromAddress)
+            ->setFrom(array($fromAddress => 'Skrum'))
             ->setTo($toAddress)
             ->setSubject($subject)
             ->setBody($body);

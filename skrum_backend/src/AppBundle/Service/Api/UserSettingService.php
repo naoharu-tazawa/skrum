@@ -143,7 +143,7 @@ class UserSettingService extends BaseService
     {
         // Eメールスプール
         $message = \Swift_Message::newInstance()
-            ->setFrom($fromAddress)
+            ->setFrom(array($fromAddress => 'Skrum'))
             ->setTo($toAddress)
             ->setSubject($subject)
             ->setBody(
@@ -161,7 +161,13 @@ class UserSettingService extends BaseService
         }
 
         // スプールしたEメールを送信するコマンドを非同期実行
-        exec('php ../app/console swiftmailer:spool:send > /dev/null &');
+        if ($this->getContainer()->get('kernel')->getEnvironment() === 'prod') {
+            exec('php ../app/console swiftmailer:spool:send --env=prod > /dev/null &');
+        } elseif ($this->getContainer()->get('kernel')->getEnvironment() === 'test') {
+            exec('php ../app/console swiftmailer:spool:send --env=test > /dev/null &');
+        } elseif ($this->getContainer()->get('kernel')->getEnvironment() === 'dev') {
+            exec('php ../app/console swiftmailer:spool:send --env=dev > /dev/null &');
+        }
     }
 
     /**
