@@ -61,11 +61,12 @@ class TOkrActivityRepository extends BaseRepository
      * @param integer $okrId OKRID
      * @return void
      */
-    public function deleteOkrActivities(int $okrId)
+    public function deleteRelatedOkrActivitiesAndPosts(int $okrId)
     {
         $sql = <<<SQL
         UPDATE t_okr_activity AS t0_
-        SET t0_.deleted_at = NOW()
+        LEFT OUTER JOIN t_post AS t1_ ON (t0_.id = t1_.okr_activity_id) AND (t1_.deleted_at IS NULL)
+        SET t0_.deleted_at = NOW(), t1_.deleted_at = NOW()
         WHERE (t0_.okr_id = :okrId) AND (t0_.deleted_at IS NULL);
 SQL;
 
