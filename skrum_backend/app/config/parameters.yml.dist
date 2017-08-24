@@ -17,7 +17,7 @@ parameters:
     mailer_user:       skrum.development@gmail.com
     mailer_password:   skrumskrum
 
-    secret:            fbb4e323da412eefca6e1630246bf8b249912b0e
+    secret:            9d24946eef1212a6e630fb223cbf8b4e3b0ea41b
 
 
 
@@ -37,7 +37,7 @@ parameters:
     mailer_user:       skrum.development@gmail.com
     mailer_password:   skrumskrum
 
-    secret:            fbb4e323da412eefca6e1630246bf8b249912b0e
+    secret:            e323df8b249fbaefca6e4b491412e16b0e3026b2
 
 
 

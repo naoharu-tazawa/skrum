@@ -1,16 +1,16 @@
 parameters:
 
     #送信元Eメールアドレス
-    from_address: 'service@skrum.jp'
+    from_address: 'service@skrum.co.jp'
 
     #カスタマーサポートEメールアドレス
-    support_address: 'support@skrum.jp'
+    support_address: 'support@skrum.co.jp'
 
     #JWT有効期限（単位：分）
-    jwt_exp_minutes: 10080
+    jwt_exp_minutes: 4320
 
     #お試しプラン期間（単位：日）
-    trial_plan_period: 14
+    trial_plan_period: 15
 
     #1ページあたり表示データ数
     paging_data_number: 20
