@@ -166,9 +166,13 @@ class OkrOperationLogic extends BaseLogic
     {
         $parentOkrIdArray = array($tOkr->getOkrId());
         $tOkrRepos = $this->getTOkrRepository();
+        $tOkrActivityRepos = $this->getTOkrActivityRepository();
 
-        // 捜査対象OKRを削除
+        // 操作対象OKRを削除
         $this->remove($tOkr);
+
+        // 関連するOKRアクティビティを削除
+        $tOkrActivityRepos->deleteOkrActivities($tOkr->getOkrId());
 
         while (!empty($parentOkrIdArray)) {
             // 全ての子OKRを取得
@@ -179,6 +183,9 @@ class OkrOperationLogic extends BaseLogic
             foreach ($childrenOkrArray as $childOkr) {
                 $parentOkrIdArray[] = $childOkr->getOkrId();
                 $this->remove($childOkr);
+
+                // 関連するOKRアクティビティを削除
+                $tOkrActivityRepos->deleteOkrActivities($childOkr->getOkrId());
             }
         }
 

@@ -54,4 +54,24 @@ class TOkrActivityRepository extends BaseRepository
 
         return $qb->getQuery()->getSingleResult();
     }
+
+    /**
+     * 指定OKRIDに紐付くOKRアクティビティを全て削除
+     *
+     * @param integer $okrId OKRID
+     * @return void
+     */
+    public function deleteOkrActivities(int $okrId)
+    {
+        $sql = <<<SQL
+        UPDATE t_okr_activity AS t0_
+        SET t0_.deleted_at = NOW()
+        WHERE (t0_.okr_id = :okrId) AND (t0_.deleted_at IS NULL);
+SQL;
+
+        $params['okrId'] = $okrId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+    }
 }
