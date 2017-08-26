@@ -17,7 +17,7 @@ function DisabledButton() {
 
 class LoginForm extends Component {
   static propTypes = {
-    isFetching: PropTypes.bool,
+    isPosting: PropTypes.bool,
     handleLoginSubmit: PropTypes.func.isRequired,
     error: errorType,
   };
@@ -42,7 +42,7 @@ class LoginForm extends Component {
   }
 
   renderButton() {
-    return this.props.isFetching ? <DisabledButton /> : <SubmitButton />;
+    return this.props.isPosting ? <DisabledButton /> : <SubmitButton />;
   }
 
   render() {

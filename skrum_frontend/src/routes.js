@@ -14,6 +14,8 @@ import CompanyProfileContainer from './project/CompanyProfile/CompanyProfileCont
 import TimeframeContainer from './project/Timeframe/TimeframeContainer';
 import PasswordChangeContainer from './project/PasswordChange/PasswordChangeContainer';
 import PreregisterContainer from './auth/container/PreregisterContainer';
+import NewUserContainer from './auth/container/NewUserContainer';
+import AdditionalUserContainer from './auth/container/AdditionalUserContainer';
 
 const topPage = '/o/u';
 const loginPage = '/login';
@@ -67,7 +69,8 @@ export default (
       <Route path="/s/a" component={PasswordChangeContainer} />
     </Route>
     <Route path="/preregister" component={PreregisterContainer} />
-    <Route path="/preregister/:status" component={PreregisterContainer} />
+    <Route path="/new_user_registration" component={NewUserContainer} />
+    <Route path="/additional_user_registration" component={AdditionalUserContainer} />
     <Route path="/login" component={AnonymousRegion} />
     <IndexRoute component={RedirectRoute} />
     <Route path="*" component={RedirectRoute} />

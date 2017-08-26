@@ -1,0 +1,171 @@
+.container {
+  height: 100%
+}
+.container:before {
+  content: " ";
+  height: 32px;
+  width: calc(100% - 2 * 8px);
+  padding: 8px;
+  background: #094f97 url(/img/skrum_logo.svg) no-repeat;
+  background-origin: content-box;
+  background-size: contain;
+  /*left: 0;*/
+  /*color: inherit;*/
+  position: absolute;
+  /*speak: none;*/
+}
+.content {
+  width: 40em;
+  height: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.content h1 {
+  margin: 0 0 4em 140px;
+  font-size: large;
+}
+.content ol {
+  display: flex;
+  margin: 0 0 1em 140px;
+  padding: 0;
+  list-style-type: none;
+}
+.content li {
+  counter-increment: step-counter;
+  font-size: x-small;
+  margin-right: 40px;
+  color: #d3d7db;
+}
+.content li.active {
+  color: #636b7e;
+}
+.content li:before {
+  content: counter(step-counter);
+  position: relative;
+  top: -250%;
+  left: 50%;
+  font-size: 60%;
+  background-color: #d3d7db;
+  color: white;
+  padding: 6px 10px;
+  margin: -10px;
+  border-radius: 50%;
+}
+.content li.active:before {
+  background-color: #636b7e;
+}
+.content li:not(:last-child):after {
+  content: " ";
+  position: absolute;
+  border-right: 1px solid #cfd2d3;
+  border-bottom: 1px solid #cfd2d3;
+  transform: rotate(-45deg);
+  height: 40px;
+  width: 40px;
+  top: 56px;
+  margin-left: -8px;
+}
+.content section {
+  margin-bottom: 1em;
+  display: flex;
+}
+.content .hidden {
+  display: none;
+}
+.content label {
+  margin: auto 0;
+  padding-right: 0.5em;
+  font-size: smaller;
+  text-align: right;
+  width: 140px;
+}
+.content label:not(:first-child) {
+  width: auto;
+  padding-left: 0.5em;
+}
+.content input {
+  padding: 4px;
+  flex: 1;
+}
+.content input.half {
+  flex: 0.5;
+}
+.content input:last-child {
+  margin-right: 90px;
+}
+.error {
+  color: red;
+}
+.disclosureTypes {
+  margin-bottom: 1em;
+}
+.disclosureOption {
+  display: flex;
+}
+.disclosureOption, .error, .content button, .posting {
+  margin: 1em 0 0 140px;
+}
+.disclosureOption {
+  display: flex;
+}
+.disclosureOption label {
+  font-size: inherit;
+  display: inline-table;
+  width: 200px;
+  text-align: inherit;
+  margin: 0;
+}
+.disclosureOption input {
+  margin-right: 0.5em !important;
+}
+.content button:not(:first-child) {
+  margin-left: 1em;
+}
+.content button, .posting {
+  width: 120px;
+}
+.content button {
+  font-size: smaller;
+  border: none;
+  padding: 10px 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.back:disabled {
+  opacity: 0;
+  cursor: default;
+}
+.select {
+  min-width: 179px;
+  border: 1px solid #bfbfbf;
+  background-color: white;
+  padding: 2px 0;
+}
+.select :global(.Select-control) {
+  height: 24px;
+  cursor: pointer;
+}
+.select :global(.Select-value-label) {
+  color: #626A7F !important;
+}
+.select:not(:global(.is-open)) :global(.Select-arrow), .select :global(.Select-arrow):hover {
+  border-color: #626A7F transparent transparent !important;
+}
+.select:global(.is-open) :global(.Select-arrow) {
+  border-color: transparent transparent #626A7F !important;
+}
+.posting {
+  height: 40px;
+  background: url(/img/rolling.svg) center no-repeat;
+  background-size: contain;
+}
+.content strong {
+  font-weight: bold;
+}
+.container p {
+  line-height: 1.5;
+}

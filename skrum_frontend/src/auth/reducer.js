@@ -1,20 +1,24 @@
 import { Action } from './action';
 
 export default (state = {
-  isFetching: false,
+  isPosting: false,
   isAuthorized: false,
   isPreregistering: false,
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_LOGIN:
-      return { ...state, isFetching: true };
+    case Action.REQUEST_USER_SIGN_UP:
+    case Action.REQUEST_USER_JOIN:
+      return { ...state, isPosting: true };
 
-    case Action.FINISH_LOGIN: {
+    case Action.FINISH_LOGIN:
+    case Action.FINISH_USER_SIGN_UP:
+    case Action.FINISH_USER_JOIN: {
       const { payload, error } = action;
       if (error) {
         return {
           ...state,
-          isFetching: false,
+          isPosting: false,
           isAuthorized: false,
           token: null,
           error: { message: payload.message },
@@ -25,7 +29,7 @@ export default (state = {
       const jwtPayload = JSON.parse(window.atob(splitedJwt[1]));
       return {
         ...state,
-        isFetching: false,
+        isPosting: false,
         isAuthorized: true,
         token: jwt,
         userId: jwtPayload.uid,

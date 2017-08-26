@@ -66,6 +66,7 @@ export default class UserInfoEdit extends Component {
                 <div className={styles.info_data}>
                   <InlineTextInput
                     value={position}
+                    maxLength={120}
                     required
                     onSubmit={value => dispatchPutUser(userId, { position: value })}
                   />
@@ -76,6 +77,7 @@ export default class UserInfoEdit extends Component {
                 <div className={styles.info_data}>
                   <InlineTextInput
                     value={phoneNumber}
+                    maxLength={45}
                     placeholder="電話番号を入力してください"
                     onSubmit={value => dispatchPutUser(userId, { phoneNumber: value })}
                   />

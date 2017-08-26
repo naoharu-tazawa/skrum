@@ -3,13 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { preregister } from '../action';
-import styles from './PreregisterContainer.css';
+import styles from './Registration.css';
 
 class PreregisterContainer extends Component {
   static propTypes = {
-    params: PropTypes.shape({
-      status: PropTypes.string,
-    }),
+    location: PropTypes.shape({ query: PropTypes.shape({}).isRequired }).isRequired,
     preregistered: PropTypes.shape({
       emailAddress: PropTypes.string.isRequired,
       subdomain: PropTypes.string.isRequired,
@@ -23,13 +21,14 @@ class PreregisterContainer extends Component {
     this.props.dispatchPreregister(email, subdomain)
       .then(({ error, payload: { message } = {} } = {}) => {
         if (error) { this.setState({ error: message }); }
-        if (!error) { browserHistory.push('/preregister/success'); }
+        if (!error) { browserHistory.push('/preregister?result=success'); }
       });
   }
 
   render() {
-    const { params: { status } = {}, isPreregistering, preregistered = {} } = this.props;
-    if (status) {
+    const { location: { query: { result } } } = this.props;
+    const { isPreregistering, preregistered = {} } = this.props;
+    if (result === 'success') {
       return (
         <div className={styles.container}>
           <div className={styles.content}>
@@ -59,7 +58,7 @@ class PreregisterContainer extends Component {
             <label>サブドメイン</label>
             <input type="text" onChange={e => this.setState({ subdomain: e.target.value })} />
           </section>
-          {error && <div className={styles.error}>{error}</div>}
+          {!isPreregistering && error && <div className={styles.error}>{error}</div>}
           {!isPreregistering && <button type="submit" disabled={!email || !subdomain}>送信</button>}
           {isPreregistering && <div className={styles.posting} />}
         </form>

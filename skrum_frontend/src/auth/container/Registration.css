@@ -39,6 +39,9 @@
   text-align: right;
   width: 140px;
 }
+.content input {
+  padding: 4px;
+}
 .content input[type="email"] {
   width: 20em;
 }
@@ -53,7 +56,6 @@
 }
 .content button {
   font-size: smaller;
-  display: block;
   border: none;
   padding: 10px 0;
   border-radius: 3px;
