@@ -3,15 +3,23 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Select from 'react-select';
+import InlineEntityImagePicker from '../../components/InlineEntityImagePicker';
 import DatePickerInput from '../../components/DatePickerInput';
+import { EntityType } from '../../util/EntityUtil';
+import { loadImageSrc } from '../../util/ImageUtil';
 import { compareDates, formatUtcDate, toUtcDate, isValidDate } from '../../util/DatetimeUtil';
+import { postUserImage } from '../../project/GroupManagement/action';
+import { postCompanyImage } from '../../project/CompanyProfile/action';
 import { setupCompany } from '../action';
 import styles from './Setup.css';
 
 class CompanySetupContainer extends Component {
   static propTypes = {
+    userId: PropTypes.number.isRequired,
     companyId: PropTypes.number.isRequired,
     isPosting: PropTypes.bool.isRequired,
+    dispatchPostUserImage: PropTypes.func.isRequired,
+    dispatchPostCompanyImage: PropTypes.func.isRequired,
     dispatchSetupCompany: PropTypes.func.isRequired,
   };
 
@@ -30,7 +38,8 @@ class CompanySetupContainer extends Component {
   }
 
   render() {
-    const { isPosting } = this.props;
+    const { userId, companyId, isPosting,
+      dispatchPostUserImage, dispatchPostCompanyImage } = this.props;
     const { activeTab = 1, user = {}, company = { defaultDisclosureType: '1' }, timeframe = {},
       localCycleType, error } = this.state || {};
     return (
@@ -49,13 +58,13 @@ class CompanySetupContainer extends Component {
             </ol>
           </section>
           <section className={activeTab !== 1 && styles.hidden}>
-            <label>姓</label>
+            <label className={styles.required}>姓</label>
             <input
               className={styles.half}
               maxLength={120}
               onChange={e => this.setState({ user: { ...user, lastName: e.target.value } })}
             />
-            <label>名</label>
+            <label className={styles.required}>名</label>
             <input
               className={styles.half}
               maxLength={120}
@@ -63,7 +72,7 @@ class CompanySetupContainer extends Component {
             />
           </section>
           <section className={activeTab !== 1 && styles.hidden}>
-            <label>役職</label>
+            <label className={styles.required}>役職</label>
             <input
               maxLength={120}
               onChange={e => this.setState({ user: { ...user, position: e.target.value } })}
@@ -76,8 +85,17 @@ class CompanySetupContainer extends Component {
               onChange={e => this.setState({ user: { ...user, phoneNumber: e.target.value } })}
             />
           </section>
+          <section className={activeTab !== 1 && styles.hidden}>
+            <label>プロフィール画像</label>
+            <InlineEntityImagePicker
+              entity={{ id: userId, type: EntityType.USER }}
+              avatarSize="120px"
+              onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
+                dispatchPostUserImage(userId, image, mimeType))}
+            />
+          </section>
           <section className={activeTab !== 2 && styles.hidden}>
-            <label>会社名</label>
+            <label className={styles.required}>会社名</label>
             <input
               className={styles.half}
               maxLength={120}
@@ -96,6 +114,15 @@ class CompanySetupContainer extends Component {
             <input
               maxLength={120}
               onChange={e => this.setState({ company: { ...company, mission: e.target.value } })}
+            />
+          </section>
+          <section className={activeTab !== 2 && styles.hidden}>
+            <label>会社プロフィール画像</label>
+            <InlineEntityImagePicker
+              entity={{ id: companyId, type: EntityType.COMPANY }}
+              avatarSize="120px"
+              onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
+                dispatchPostCompanyImage(companyId, image, mimeType))}
             />
           </section>
           <div className={activeTab === 3 ? styles.disclosureTypes : styles.hidden}>
@@ -120,7 +147,7 @@ class CompanySetupContainer extends Component {
                 />
                 グループ公開
               </label>
-              所属するグループメンバーのみに目標が公開されます。（スーパー管理者は閲覧可能）
+              所属するグループメンバーのみに目標が公開されます。<br />（スーパー管理者は閲覧可能）
             </div>
             <div className={styles.disclosureOption}>
               <label>
@@ -131,7 +158,7 @@ class CompanySetupContainer extends Component {
                 />
                 管理者公開
               </label>
-              全ての管理者のみに目標が公開されます。（スーパー管理者は閲覧可能）
+              全ての管理者のみに目標が公開されます。<br />（スーパー管理者は閲覧可能）
             </div>
             <div className={styles.disclosureOption}>
               <label>
@@ -142,11 +169,11 @@ class CompanySetupContainer extends Component {
                 />
                 グループ管理者公開
               </label>
-              所属するグループの管理者のみに目標が公開されます。（スーパー管理者は閲覧可能）
+              所属するグループの管理者のみに目標が公開されます。<br />（スーパー管理者は閲覧可能）
             </div>
           </div>
           <section className={activeTab !== 4 && styles.hidden}>
-            <label>目標期間サイクル</label>
+            <label className={styles.required}>目標期間サイクル</label>
             <Select
               className={styles.select}
               options={[
@@ -172,7 +199,7 @@ class CompanySetupContainer extends Component {
             />
           </section>
           {timeframe.customFlg && <section className={activeTab !== 4 && styles.hidden}>
-            <label>目標期間名</label>
+            <label className={styles.required}>目標期間名</label>
             <input
               defaultValue={timeframe.timeframeName}
               maxLength={120}
@@ -181,7 +208,7 @@ class CompanySetupContainer extends Component {
             />
           </section>}
           <section className={activeTab !== 4 && styles.hidden}>
-            <label>開始日</label>
+            <label className={styles.required}>開始日</label>
             <DatePickerInput
               value={timeframe.startDate && formatUtcDate(timeframe.startDate)}
               onChange={({ target: { value } }) =>
@@ -192,7 +219,7 @@ class CompanySetupContainer extends Component {
             />
           </section>
           {timeframe.customFlg && <section className={activeTab !== 4 && styles.hidden}>
-            <label>終了日</label>
+            <label className={styles.required}>終了日</label>
             <DatePickerInput
               value={timeframe.endDate && formatUtcDate(timeframe.endDate)}
               onChange={({ target: { value } }) =>
@@ -242,15 +269,19 @@ class CompanySetupContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { companyId } = state.auth;
+  const { userId, companyId } = state.auth;
   const { isPosting } = state.top;
-  return { companyId, isPosting };
+  return { userId, companyId, isPosting };
 };
 
 const mapDispatchToProps = (dispatch) => {
+  const dispatchPostUserImage = (id, image, mimeType) =>
+    dispatch(postUserImage(id, image, mimeType));
+  const dispatchPostCompanyImage = (companyId, image, mimeType) =>
+    dispatch(postCompanyImage(companyId, image, mimeType));
   const dispatchSetupCompany = (companyId, setup) =>
     dispatch(setupCompany(companyId, setup));
-  return { dispatchSetupCompany };
+  return { dispatchPostUserImage, dispatchPostCompanyImage, dispatchSetupCompany };
 };
 
 export default connect(

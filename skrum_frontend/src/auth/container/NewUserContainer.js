@@ -42,9 +42,11 @@ class NewUserContainer extends Component {
             <label>パスワード再入力</label>
             <input type="password" maxLength={20} onChange={e => this.setState({ retype: e.target.value })} />
           </section>
-          {!isPosting && error && <div className={styles.error}>{error}</div>}
-          {!isPosting && <button type="submit" disabled={!password || password !== retype}>送信</button>}
-          {isPosting && <div className={styles.posting} />}
+          <section>
+            {!isPosting && error && <div className={styles.error}>{error}</div>}
+            {!isPosting && <button type="submit" disabled={!password || password !== retype}>送信</button>}
+            {isPosting && <div className={styles.posting} />}
+          </section>
         </form>
       </div>);
   }

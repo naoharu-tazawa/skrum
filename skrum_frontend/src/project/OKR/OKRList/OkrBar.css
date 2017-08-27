@@ -114,6 +114,10 @@
   background-color: #8e9aa6;
   color: #fff;
 }
+.invisible {
+  opacity: 0;
+  cursor: default !important;
+}
 .tool {
   width: 40px;
   height: 40px;

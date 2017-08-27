@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { join } from 'lodash';
 import EntityLink from '../../../components/EntityLink';
 import DropdownMenu from '../../../components/DropdownMenu';
+import { replacePath } from '../../../util/RouteUtil';
 import { keyResultPropTypes } from './propTypes';
 import styles from './KRBar.css';
 
@@ -27,7 +29,7 @@ export default class KRBar extends Component {
 
   render() {
     const { display, keyResult, onAddParentedOkr } = this.props;
-    const { name, unit, targetValue, achievedValue, achievementRate, owner } = keyResult;
+    const { id, name, unit, targetValue, achievedValue, achievementRate, owner } = keyResult;
     return (
       <div className={this.getBaseStyles(display)}>
         <div className={styles.name}>
@@ -49,7 +51,12 @@ export default class KRBar extends Component {
         </div>
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
-          <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
+          <Link
+            className={styles.circle}
+            to={replacePath({ tab: 'map', aspect: 'o', aspectId: id })}
+          >
+            <img src="/img/common/inc_organization.png" alt="Map" />
+          </Link>
           <DropdownMenu
             trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
             options={[

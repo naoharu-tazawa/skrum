@@ -48,13 +48,13 @@
 .error {
   color: red;
 }
-.error, .content button[type="submit"], .posting {
+.error, .content section > button[type="submit"], .posting {
   margin: 1em 0 0 140px;
 }
-.content button, .posting {
+.content section > button, .posting {
   width: 120px;
 }
-.content button {
+.content section > button {
   font-size: smaller;
   border: none;
   padding: 10px 0;

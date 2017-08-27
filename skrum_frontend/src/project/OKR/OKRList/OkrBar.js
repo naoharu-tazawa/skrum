@@ -36,7 +36,7 @@ export default class OkrBar extends Component {
       <div className={styles.component}>
         <div className={styles.name}>
           <Link
-            to={replacePath({ aspect: 'o', aspectId: `${id}` })}
+            to={replacePath({ aspect: 'o', aspectId: id })}
             onMouseUp={e => e.stopPropagation()}
           >
             {name}
@@ -58,7 +58,12 @@ export default class OkrBar extends Component {
         </div>
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
-          <a className={styles.circle} href=""><img src="/img/common/inc_organization.png" alt="Organization" /></a>
+          <Link
+            className={styles.circle}
+            to={replacePath({ tab: 'map', aspect: 'o', aspectId: id })}
+          >
+            <img src="/img/common/inc_organization.png" alt="Map" />
+          </Link>
           <DropdownMenu
             trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
             options={[
@@ -67,7 +72,7 @@ export default class OkrBar extends Component {
           />
           {keyResults && (
             <a
-              className={`${styles.circle} ${styles.circle_small} ${styles.circle_plus}`}
+              className={`${styles.circle} ${styles.circle_small} ${styles.circle_plus} ${keyResults.length === 0 && styles.invisible}`}
               onClick={onKRClicked}
               tabIndex={0}
             >

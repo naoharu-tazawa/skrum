@@ -58,9 +58,11 @@ class PreregisterContainer extends Component {
             <label>サブドメイン</label>
             <input type="text" onChange={e => this.setState({ subdomain: e.target.value })} />
           </section>
-          {!isPreregistering && error && <div className={styles.error}>{error}</div>}
-          {!isPreregistering && <button type="submit" disabled={!email || !subdomain}>送信</button>}
-          {isPreregistering && <div className={styles.posting} />}
+          <section>
+            {!isPreregistering && error && <div className={styles.error}>{error}</div>}
+            {!isPreregistering && <button type="submit" disabled={!email || !subdomain}>送信</button>}
+            {isPreregistering && <div className={styles.posting} />}
+          </section>
         </form>
       </div>);
   }

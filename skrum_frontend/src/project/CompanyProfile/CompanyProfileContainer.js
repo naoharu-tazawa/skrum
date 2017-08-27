@@ -20,9 +20,9 @@ class CompanyProfileContainer extends Component {
     isFetching: PropTypes.bool,
     isPutting: PropTypes.bool,
     isPosting: PropTypes.bool,
-    dispatchFetchCompany: PropTypes.func,
-    dispatchPutCompany: PropTypes.func,
-    dispatchPostCompanyImage: PropTypes.func,
+    dispatchFetchCompany: PropTypes.func.isRequired,
+    dispatchPutCompany: PropTypes.func.isRequired,
+    dispatchPostCompanyImage: PropTypes.func.isRequired,
     error: errorType,
   };
 

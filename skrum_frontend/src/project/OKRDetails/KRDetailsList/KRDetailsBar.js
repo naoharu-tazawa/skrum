@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { isEmpty } from 'lodash';
 import { okrPropTypes, keyResultPropTypes } from '../propTypes';
 import InlineTextArea from '../../../editors/InlineTextArea';
@@ -14,6 +15,7 @@ import EntityLink from '../../../components/EntityLink';
 import OwnerSearch from '../../OwnerSearch/OwnerSearch';
 // import OKRSearch from '../../OKRSearch/OKRSearch';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
+import { replacePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
 import { compareDates } from '../../../util/DatetimeUtil';
 import { OKRType } from '../../../util/OKRUtil';
@@ -209,7 +211,12 @@ class KRDetailsBar extends Component {
               arrow="right"
             />)}
           {type === OKRType.OKR && <div className={styles.checkinSpace} />}
-          <a className={styles.tool} href=""><img src="/img/common/inc_organization.png" alt="Map" /></a>
+          <Link
+            className={styles.tool}
+            to={replacePath({ tab: 'map', aspect: 'o', aspectId: id })}
+          >
+            <img src="/img/common/inc_organization.png" alt="Map" />
+          </Link>
           <DropdownMenu
             trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
             options={[

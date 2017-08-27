@@ -15,8 +15,8 @@
   /*speak: none;*/
 }
 .content {
-  width: 40em;
-  height: 200px;
+  width: 760px;
+  height: 480px;
   position: absolute;
   top: 0;
   left: 0;
@@ -25,12 +25,13 @@
   margin: auto;
 }
 .content h1 {
-  margin: 0 0 4em 140px;
+  margin: 0 160px 4em 160px;
   font-size: large;
+  text-align: center;
 }
 .content ol {
   display: flex;
-  margin: 0 0 1em 140px;
+  margin: 0 0 1em 160px;
   padding: 0;
   list-style-type: none;
 }
@@ -81,11 +82,18 @@
   padding-right: 0.5em;
   font-size: smaller;
   text-align: right;
-  width: 140px;
+  width: 160px;
 }
 .content label:not(:first-child) {
   width: auto;
   padding-left: 0.5em;
+}
+.content label.required:after {
+  content: "（必須）";
+  word-break: keep-all;
+  color: red;
+  margin-right: -8px;
+  display: inline-block;
 }
 .content input {
   padding: 4px;
@@ -93,9 +101,10 @@
 }
 .content input.half {
   flex: 0.5;
+  width: 50%;
 }
 .content input:last-child {
-  margin-right: 90px;
+  margin-right: 160px;
 }
 .error {
   color: red;
@@ -106,8 +115,8 @@
 .disclosureOption {
   display: flex;
 }
-.disclosureOption, .error, .content button, .posting {
-  margin: 1em 0 0 140px;
+.disclosureOption, .error, .content section > button, .posting {
+  margin: 1em 0 0 160px;
 }
 .disclosureOption {
   display: flex;
@@ -122,13 +131,19 @@
 .disclosureOption input {
   margin-right: 0.5em !important;
 }
-.content button:not(:first-child) {
+.content section > button:first-child {
+  margin-left: auto;
+}
+.content section > button:not(:first-child) {
   margin-left: 1em;
 }
-.content button, .posting {
+.content section > button:last-child {
+  margin-right: auto;
+}
+.content section > button, .posting {
   width: 120px;
 }
-.content button {
+.content section > button {
   font-size: smaller;
   border: none;
   padding: 10px 0;

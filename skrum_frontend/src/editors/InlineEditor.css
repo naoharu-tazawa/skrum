@@ -13,6 +13,9 @@
   box-shadow: 0 0 0 0 transparent;
   white-space: pre-line;
 }
+.editor:not(.fluid).editing {
+  padding-right: 2px;
+}
 .editor.dropdown {
 }
 .editor:not(.readonly):not(.editing):not(.error):hover, .submitting {

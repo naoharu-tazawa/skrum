@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
 import { isEmpty } from 'lodash';
 import { okrPropTypes } from './propTypes';
-import { replacePath, toBasicPath } from '../../util/RouteUtil';
 import InlineTextArea from '../../editors/InlineTextArea';
 import InlineDateInput from '../../editors/InlineDateInput';
 import ConfirmationPrompt from '../../dialogs/ConfirmationPrompt';
@@ -16,6 +15,7 @@ import EntityLink from '../../components/EntityLink';
 import OwnerSearch from '../OwnerSearch/OwnerSearch';
 import OKRSearch from '../OKRSearch/OKRSearch';
 import NewAchievement from '../OKR/NewAchievement/NewAchievement';
+import { replacePath, toBasicPath } from '../../util/RouteUtil';
 import { withModal } from '../../util/ModalUtil';
 import { compareDates } from '../../util/DatetimeUtil';
 import styles from './OkrDetails.css';
@@ -149,7 +149,7 @@ class OkrDetails extends Component {
           <p className={`${styles.alignment} ${styles.floatL}`}>紐付け先目標</p>
           <div className={`${styles.txt_content_top} ${styles.floatL} ${styles.clear}`}>
             {parentOkr && (
-              <Link to={replacePath({ aspect: 'o', aspectId: `${parentOkr.id}` })}>
+              <Link to={replacePath({ aspect: 'o', aspectId: parentOkr.id })}>
                 {parentOkr.name}
               </Link>)}
             {!parentOkr && <span>➖</span>}
@@ -223,7 +223,12 @@ class OkrDetails extends Component {
                       <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
                     arrow="center"
                   />)}
-                <a className={styles.tool} href=""><img src="/img/common/inc_organization.png" alt="Map" /></a>
+                <Link
+                  className={styles.tool}
+                  to={replacePath({ tab: 'map', aspect: 'o', aspectId: id })}
+                >
+                  <img src="/img/common/inc_organization.png" alt="Map" />
+                </Link>
                 <DropdownMenu
                   trigger={(
                     <button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>)}
