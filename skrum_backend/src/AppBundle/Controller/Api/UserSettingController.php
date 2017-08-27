@@ -146,7 +146,7 @@ class UserSettingController extends BaseController
 
         // 操作権限チェック
         $permissionLogic = $this->getPermissionLogic();
-        $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $userId);
+        $checkResult = $permissionLogic->checkUserOperationSelfNG($auth, $userId);
         if (!$checkResult) {
             throw new PermissionException('ユーザ操作権限がありません');
         }

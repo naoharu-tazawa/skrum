@@ -5,7 +5,7 @@
   margin: 1px auto 0 auto;
   padding: 5px 65px;
   background-color: #fff;
-  color: #626A7F;
+  color: #333333;
   max-height: 500px;
   border-bottom: 1px solid #d8dfe5;
 }
@@ -73,6 +73,7 @@
   background-color: #EFB04C;
 }
 .progressConstituents {
+  color: #8e9aa6;
   margin-top: 0.75em;
   margin-left: 4.2em;
 }
@@ -132,7 +133,7 @@ button.tool:focus {
   vertical-align: middle; }
 .user_info .user_name {
   margin-top: 14px;
-  color: #626a7f;
+  color: #333333;
   font-size: 14px; }
 
 .parentOkrToChange {

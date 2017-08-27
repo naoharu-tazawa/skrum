@@ -1,6 +1,11 @@
-.default {
-  color: #fff;
+.container {
   text-align: center;
+  vertical-align: middle;
+}
+.default {
+  color: #004A91;
+  font-size: 20px;
+  font-weight: bold;
 }
 .defaultInput {
   width: 100%;

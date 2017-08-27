@@ -47,7 +47,7 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <div>
+      <div className={styles.container}>
         <p className={styles.default}>Skrum Login</p>
         <br />
         <form onSubmit={this.handleSubmit.bind(this)}>

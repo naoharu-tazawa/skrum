@@ -163,11 +163,11 @@
   background-color: #fff;
   /*background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`*/
   overflow: hidden;
-  color: #626A7F;
+  color: #333333;
   padding: 40px 40px 20px;
 }
 .groupLink {
   display: inline-block;
-  color: #d8dfe5;
+  color: #8e9aa6;
   text-decoration: underline !important;
 }

@@ -12,7 +12,7 @@
   padding-right: 0 !important;
 }
 .select:not(.plain) :global(.Select-value-label) {
-  color: #626A7F !important;
+  color: #333333 !important;
 }
 .select:not(.plain):not(:global(.is-open)) :global(.Select-arrow),
 .select:not(.plain) :global(.Select-arrow):hover {

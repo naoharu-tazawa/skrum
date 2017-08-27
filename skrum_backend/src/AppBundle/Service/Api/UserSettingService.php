@@ -358,11 +358,6 @@ class UserSettingService extends BaseService
      */
     public function resetPassword(Auth $auth, MUser $mUser)
     {
-        // 自ユーザのパスワードリセットは不可
-        if ($mUser->getUserId() === $auth->getUserId()) {
-            throw new ApplicationException('自ユーザのパスワードリセットはできません');
-        }
-
         // ランダムパスワード生成
         $randomPassword =  null;
         while (!preg_match('/^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,20}$/', $randomPassword)) {

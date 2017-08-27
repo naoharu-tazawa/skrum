@@ -82,7 +82,7 @@ class OkrAchievementRateLogic extends BaseLogic
             // 達成値、目標値、単位をリセット
             $tOkrArray[0]['parentOkr']->setAchievedValue(0);
             $tOkrArray[0]['parentOkr']->setTargetValue(100);
-            $tOkrArray[0]['parentOkr']->setUnit('％');var_dump($previousAchievementRate);
+            $tOkrArray[0]['parentOkr']->setUnit('％');
 
             // OKRアクティビティ登録
             if ($achievementRate != 0 || ($achievementRate == 0 && $previousAchievementRate != 0)) {

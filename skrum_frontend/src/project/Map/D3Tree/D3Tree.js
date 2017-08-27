@@ -148,6 +148,7 @@ export default class D3Tree extends Component {
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
+    console.log(segmentWidth);
 
     // nodeEnter.append('rect')
     const progress = nodeEnter.append('rect')
@@ -276,6 +277,7 @@ export default class D3Tree extends Component {
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
+    console.log(rectWidth);
 
     // ユーザ/グループ/会社画像ノード
     const imgdefs = nodeEnter.append('defs').attr('id', 'imgdefs');
@@ -324,7 +326,7 @@ export default class D3Tree extends Component {
       .attr('class', 'oname')
       .attr('y', 0)
       .attr('dy', 0)
-      .attr('fill', 'grey')
+      .attr('fill', '#333333')
       .style('text-anchor', 'start')
       .style('font-size', `${0.8 * reductionRatio}em`)
       .html((d) => { return this.leftLinebreak(d.data.okrName); })
@@ -339,9 +341,9 @@ export default class D3Tree extends Component {
       .attr('dy', 0)
       .attr('x', `${-87 * reductionRatio}px`)
       .attr('dx', 0)
-      .attr('fill', 'grey')
+      .attr('fill', '#333333')
       .style('text-anchor', 'start')
-      .style('font-size', `${0.7 * reductionRatio}em`)
+      .style('font-size', `${0.8 * reductionRatio}em`)
       .text((d) => { return `${d.data.achievementRate}%`; })
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
@@ -354,7 +356,7 @@ export default class D3Tree extends Component {
       .attr('dy', 0)
       .attr('x', `${-46 * reductionRatio}px`)
       .attr('dx', 0)
-      .attr('fill', 'grey')
+      .attr('fill', '#333333')
       .style('text-anchor', 'start')
       .style('font-size', `${0.8 * reductionRatio}em`)
       .text((d) => {
@@ -393,6 +395,7 @@ export default class D3Tree extends Component {
         return d._children ? '#EFF2FB' : 'white';
       })
       .attr('cursor', 'pointer');
+    console.log(rectWidth);
 
     nodeUpdate.select('image.uim')
       .attr('x', `${-87 * reductionRatio}px`)
@@ -416,7 +419,7 @@ export default class D3Tree extends Component {
     nodeUpdate.select('text.arate')
       .attr('y', `${-65 * reductionRatio}px`)
       .attr('x', `${-87 * reductionRatio}px`)
-      .style('font-size', `${0.7 * reductionRatio}em`)
+      .style('font-size', `${0.8 * reductionRatio}em`)
       .text((d) => { return `${d.data.achievementRate}%`; });
 
     nodeUpdate.select('text.uname')
@@ -542,6 +545,8 @@ export default class D3Tree extends Component {
     const { children = [] } = this.root;
     if (children.length > 0) {
       children.forEach(_.partial(this.collapse, this));
+      this.update(this.root, tree, svg, i, duration);
+    } else {
       this.update(this.root, tree, svg, i, duration);
     }
   }

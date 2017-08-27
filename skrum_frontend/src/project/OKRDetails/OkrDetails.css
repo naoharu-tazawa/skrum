@@ -22,7 +22,7 @@
 .alignment {
   font-size: 12px;
   margin-bottom: 4px;
-  color: #848484;
+  color: #8e9aa6;
 }
 .txt {
   font-size: 14px;
@@ -91,7 +91,7 @@ button.tool:focus {
     margin-bottom: 18px; }
     .boxInfo .bar_top_bottom .txt_percent {
       margin-left: 68px;
-      color: #BDBDBD }
+      color: #8e9aa6 }
     .boxInfo .bar_top_bottom .txt_date {
       font-size: 12px; }
       .boxInfo .bar_top_bottom .txt_date > span {

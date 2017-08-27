@@ -3,7 +3,7 @@
   font-size: small;
   padding: 5px 65px;
   background-color: #fff;
-  color: #626A7F;
+  color: #333333;
   max-height: 500px;
   border-bottom: 1px solid #d8dfe5;
   border-collapse: collapse;
@@ -73,7 +73,7 @@
   font-size: 12px;
   margin-top: 0.75em;
   margin-left: 4.5em;
-  color: #BDBDBD;
+  color: #8e9aa6;
 }
 .ownerBox {
   width: 19%;

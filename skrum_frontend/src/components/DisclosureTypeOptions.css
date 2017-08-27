@@ -13,7 +13,7 @@
   cursor: pointer;
 }
 .select :global(.Select-value-label) {
-  color: #626A7F !important;
+  color: #333333 !important;
 }
 .select:not(:global(.is-open)) :global(.Select-arrow), .select :global(.Select-arrow):hover {
   border-color: #626A7F transparent transparent !important;

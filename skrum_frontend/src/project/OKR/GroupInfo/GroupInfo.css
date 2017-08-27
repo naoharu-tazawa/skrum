@@ -179,17 +179,14 @@
   background-color: #fff;
   /*background: `url(${imgSrc('common/bg_stripe.gif')}) #1f363e repeat 0 0`*/
   overflow: hidden;
-  color: #626A7F;
+  color: #333333;
   padding: 40px 40px 20px;
-}
-.groupTree {
-  color: #d8dfe5;
 }
 .groupLink {
   display: inline-block;
   text-decoration: underline !important;
+  color: #8e9aa6;
 }
-
 .title {
   font-size: 10px;
   margin-top: 10px;

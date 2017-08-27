@@ -160,7 +160,7 @@ class NewOKR extends Component {
             </div>
             <label>単位</label>
             <div>
-              <Field component="input" name="unit" placeholder="例)時間、回、件、枚" />
+              <Field component="input" name="unit" placeholder="例)円、件、時間、回" />
               <small>※途中で変更不可。空欄の場合は%</small>
             </div>
           </section>
