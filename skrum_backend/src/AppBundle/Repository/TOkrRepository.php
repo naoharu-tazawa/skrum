@@ -663,7 +663,7 @@ SQL;
     }
 
     /**
-     * 親子OKRを取得（キー）（親OKRを指定）
+     * 親子OKRを取得（親OKRを指定）
      *
      * @param integer $okrId OKRID
      * @param integer $timeframeId タイムフレームID

@@ -7,6 +7,7 @@ use AppBundle\Utils\Auth;
 use AppBundle\Utils\Constant;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
+use AppBundle\Repository\TOkrRepository;
 use AppBundle\Api\ResponseDTO\OkrMapDTO;
 use AppBundle\Api\ResponseDTO\ThreeGensOkrMapDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
@@ -132,7 +133,11 @@ class OkrMapService extends BaseService
     {
         // OKRマップを取得
         $tOkrRepos = $this->getTOkrRepository();
-        $tOkrArray = $tOkrRepos->getOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $timeframeId, $auth->getCompanyId());
+        if ($tOkr->getTreeLeft() !== null) {
+            $tOkrArray = $tOkrRepos->getOkrAndAllAlignmentOkrs($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $timeframeId, $auth->getCompanyId());
+        } else {
+            $tOkrArray = $this->makeOkrArray(array($tOkr), $tOkr->getOkrId(), $timeframeId, $auth->getCompanyId(), $tOkrRepos);
+        }
 
         // 会社名を取得
         $mCompanyRepos = $this->getMCompanyRepository();
@@ -144,6 +149,32 @@ class OkrMapService extends BaseService
         $okrMapDTO = $okrOperationLogic->tree($auth, $tOkrArray, $companyName);
 
         return $okrMapDTO;
+    }
+
+    /**
+     * 左値・右値の無いOKRのマップを取得（再帰処理）
+     *
+     * @param array $tOkrArray OKRマップ配列
+     * @param integer $okrId 取得対象OKRID
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
+     * @param TOkrRepository $tOkrRepos OKRリポジトリ
+     * @return array
+     */
+    private function makeOkrArray(array $tOkrArray, int $okrId, int $timeframeId, int $companyId, TOkrRepository $tOkrRepos): array
+    {
+        $returnArray = array();
+
+        $okrEntityArray = $tOkrRepos->getObjectiveAndKeyResults($okrId, $timeframeId, $companyId);
+        $count = count($okrEntityArray);
+        for ($i = 1; $i < $count; ++$i) {
+            if ($okrEntityArray[$i] !== null) {
+                $tOkrArray[] = $okrEntityArray[$i];
+                $tOkrArray = $this->makeOkrArray($tOkrArray, $okrEntityArray[$i]->getOkrId(), $timeframeId, $companyId, $tOkrRepos);
+            }
+        }
+
+        return $tOkrArray;
     }
 
     /**

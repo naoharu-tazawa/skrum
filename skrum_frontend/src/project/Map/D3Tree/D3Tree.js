@@ -148,7 +148,6 @@ export default class D3Tree extends Component {
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
-    console.log(segmentWidth);
 
     // nodeEnter.append('rect')
     const progress = nodeEnter.append('rect')
@@ -176,10 +175,13 @@ export default class D3Tree extends Component {
     progress.transition()
       .duration(1000)
       .attr('width', (d) => {
-        if (d.data.achievementRate >= 100) {
-          return segmentWidth;
+        if (d.data.achievementRate !== undefined) {
+          if (d.data.achievementRate >= 100) {
+            return segmentWidth;
+          }
+          return (d.data.achievementRate / 100) * segmentWidth;
         }
-        return (d.data.achievementRate / 100) * segmentWidth;
+        return null;
       });
   }
 
@@ -277,7 +279,6 @@ export default class D3Tree extends Component {
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
-    console.log(rectWidth);
 
     // ユーザ/グループ/会社画像ノード
     const imgdefs = nodeEnter.append('defs').attr('id', 'imgdefs');
@@ -395,7 +396,6 @@ export default class D3Tree extends Component {
         return d._children ? '#EFF2FB' : 'white';
       })
       .attr('cursor', 'pointer');
-    console.log(rectWidth);
 
     nodeUpdate.select('image.uim')
       .attr('x', `${-87 * reductionRatio}px`)
