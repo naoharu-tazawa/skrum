@@ -42,7 +42,7 @@ export const logout = requestLogout;
 
 export const forceLogout = () =>
   (dispatch) => {
-    dispatch(forceLogout());
+    dispatch(requestLogout());
     browserHistory.push('/login');
     return requestLogin();
   };
