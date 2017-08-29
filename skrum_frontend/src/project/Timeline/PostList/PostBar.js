@@ -88,7 +88,7 @@ class PostBar extends Component {
                   {formatDate(postedDatetime, { format: DateFormat.YMDHM })}
                   <span>{toRelativeTimeText(postedDatetime)}</span>
                 </p>
-                {post && <p>{post}</p>}
+                {post && <p className={styles.post}>{post}</p>}
                 {autoShare && (
                   <EntitySubject
                     entity={autoShare.owner}

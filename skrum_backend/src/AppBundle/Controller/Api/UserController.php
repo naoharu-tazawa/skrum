@@ -37,7 +37,8 @@ class UserController extends BaseController
         $auth = $request->get('auth_token');
 
         // ユーザ存在チェック
-        $mUser = $this->getDBExistanceLogic()->checkUserExistanceIncludingArchivedUsers($userId, $auth->getCompanyId());
+        // $mUser = $this->getDBExistanceLogic()->checkUserExistanceIncludingArchivedUsers($userId, $auth->getCompanyId());
+        $mUser = $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
 
         // 操作権限チェック
         $permissionLogic = $this->getPermissionLogic();

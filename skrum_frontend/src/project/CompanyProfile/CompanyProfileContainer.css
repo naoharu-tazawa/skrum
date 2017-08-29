@@ -59,6 +59,9 @@
   padding: 30px 60px;
   overflow: scroll;
 }
+.heading {
+  font-size: 18px;
+}
 .spinner {
   height: 100%;
   width: 100%;

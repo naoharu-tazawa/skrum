@@ -1269,7 +1269,8 @@ SQL;
         INNER JOIN t_timeframe AS t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
         LEFT OUTER JOIN t_okr_activity AS t2_ ON (t0_.okr_id = t2_.okr_id) AND (t2_.deleted_at IS NULL)
         LEFT OUTER JOIN t_post AS t3_ ON (t2_.id = t3_.okr_activity_id) AND (t3_.deleted_at IS NULL)
-        SET t0_.deleted_at = NOW(), t2_.deleted_at = NOW(), t3_.deleted_at = NOW()
+        LEFT OUTER JOIN t_like AS t4_ ON (t3_.id = t4_.post_id) AND (t4_.deleted_at IS NULL)
+        SET t0_.deleted_at = NOW(), t2_.deleted_at = NOW(), t3_.deleted_at = NOW(), t4_.deleted_at = NOW()
         WHERE (t1_.company_id = :companyId
                 AND t0_.timeframe_id = :timeframeId
                 AND t0_.tree_left >= :treeLeft
