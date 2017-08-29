@@ -10,6 +10,7 @@ use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\Permission;
+use AppBundle\Api\ResponseDTO\EmailSettingsDTO;
 use AppBundle\Api\ResponseDTO\UserSearchDTO;
 
 /**
@@ -249,5 +250,73 @@ class UserSettingController extends BaseController
         $userSearchDTO = $userSettingService->changeRole($auth, $mUser, $mRoleAssignment);
 
         return $userSearchDTO;
+    }
+
+    /**
+     * メール配信設定取得
+     *
+     * @Rest\Get("/v1/users/{userId}/emailsettings.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
+     * @return EmailSettingsDTO
+     */
+    public function putUserEmailsettingsAction(Request $request, string $userId): EmailSettingsDTO
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // ユーザIDの一致をチェック
+        if ($userId != $auth->getUserId()) {
+            throw new ApplicationException('ユーザIDが存在しません');
+        }
+
+        // メール配信設定取得処理
+        $userSettingService = $this->getUserSettingService();
+        $emailSettingsDTO = $userSettingService->getEmailSettings($auth);
+
+        return $emailSettingsDTO;
+    }
+
+    /**
+     * メール配信設定変更
+     *
+     * @Rest\Put("/v1/users/{userId}/changeemailsettings.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
+     * @return array
+     */
+    public function putUserChangeemailsettingsAction(Request $request, string $userId): array
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PutUserChangeemailsettingsPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // ユーザIDの一致をチェック
+        if ($userId != $auth->getUserId()) {
+            throw new ApplicationException('ユーザIDが存在しません');
+        }
+
+        // ロールによってJsonSchemaをチェック
+        if ($auth->getRoleLevel() < DBConstant::ROLE_LEVEL_ADMIN) {
+            if (array_key_exists('reportMemberAchievement', $data) || array_key_exists('reportFeedbackTarget', $data)) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        } else {
+            if (array_key_exists('reportGroupAchievement', $data)) {
+                throw new JsonSchemaException("リクエストJSONスキーマが不正です");
+            }
+        }
+
+        // メール配信設定変更処理
+        $userSettingService = $this->getUserSettingService();
+        $emailSettingsDTO = $userSettingService->changeEmailSettings($auth, $data);
+
+        return array('result' => 'OK');
     }
 }

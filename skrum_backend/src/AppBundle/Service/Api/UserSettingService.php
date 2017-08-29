@@ -16,6 +16,7 @@ use AppBundle\Entity\MRoleAssignment;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\TPreUser;
 use AppBundle\Entity\TTimeframe;
+use AppBundle\Api\ResponseDTO\EmailSettingsDTO;
 use AppBundle\Api\ResponseDTO\RoleDTO;
 use AppBundle\Api\ResponseDTO\UserSearchDTO;
 
@@ -583,6 +584,68 @@ class UserSettingService extends BaseService
             if ($superAdminUserCount >= 2) {
                 throw new ApplicationException('スーパー管理者ユーザは2人までしか登録できません');
             }
+        }
+    }
+
+    /**
+     * メール配信設定取得
+     *
+     * @param Auth $auth 認証情報
+     * @return EmailSettingsDTO
+     */
+    public function getEmailSettings(Auth $auth): EmailSettingsDTO
+    {
+        // メール配信設定情報を取得
+        $tEmailSettingsRepos = $this->getTEmailSettingsRepository();
+        $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $auth->getUserId()));
+
+        // 返却用DTOを生成
+        $emailSettingDTO = new EmailSettingsDTO();
+        $emailSettingDTO->setOkrAchievement($tEmailSettings->getOkrAchievement());
+        $emailSettingDTO->setOkrTimeline($tEmailSettings->getOkrTimeline());
+        $emailSettingDTO->setOkrReminder($tEmailSettings->getOkrReminder());
+        if ($auth->getRoleLevel() < DBConstant::ROLE_LEVEL_ADMIN) {
+            $emailSettingDTO->setReportGroupAchievement($tEmailSettings->getReportGroupAchievement());
+        } else {
+            $emailSettingDTO->setReportMemberAchievement($tEmailSettings->getReportMemberAchievement());
+            $emailSettingDTO->setReportFeedbackTarget($tEmailSettings->getReportFeedbackTarget());
+        }
+        $emailSettingDTO->setServiceNotification($tEmailSettings->getServiceNotification());
+
+        return $emailSettingDTO;
+    }
+
+    /**
+     * メール配信設定変更
+     *
+     * @param Auth $auth 認証情報
+     * @param array $data リクエストJSON連想配列
+     * @return void
+     */
+    public function changeEmailSettings(Auth $auth, $data)
+    {
+        // メール配信設定情報を取得
+        $tEmailSettingsRepos = $this->getTEmailSettingsRepository();
+        $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $auth->getUserId()));
+
+        // トランザクション開始
+        $this->beginTransaction();
+
+        try {
+            // 更新処理
+            if (array_key_exists('okrAchievement', $data)) $tEmailSettings->setOkrAchievement($data['okrAchievement']);
+            if (array_key_exists('okrTimeline', $data)) $tEmailSettings->setOkrTimeline($data['okrTimeline']);
+            if (array_key_exists('okrReminder', $data)) $tEmailSettings->setOkrReminder($data['okrReminder']);
+            if (array_key_exists('reportMemberAchievement', $data)) $tEmailSettings->setReportMemberAchievement($data['reportMemberAchievement']);
+            if (array_key_exists('reportGroupAchievement', $data)) $tEmailSettings->setReportGroupAchievement($data['reportGroupAchievement']);
+            if (array_key_exists('reportFeedbackTarget', $data)) $tEmailSettings->setReportFeedbackTarget($data['reportFeedbackTarget']);
+            if (array_key_exists('serviceNotification', $data)) $tEmailSettings->setServiceNotification($data['serviceNotification']);
+
+            $this->flush();
+            $this->commit();
+        } catch (\Exception $e) {
+            $this->rollback();
+            throw new SystemException($e->getMessage());
         }
     }
 }

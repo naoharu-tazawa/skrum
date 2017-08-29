@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /users/{userId}/emailsettings.json:
-    get:
-      description: メール配信設定取得
+  /users/{userId}/changeemailsettings.json:
+    put:
+      description: メール配信設定
       parameters:
         -
           name: userId
@@ -20,9 +20,11 @@ paths:
           type: string
           description: ユーザID
           required: true
-      responses:
-        200:
-          description: 契約情報
+        -
+          name: JsonRequest
+          in: body
+          description: メール配信設定変更
+          required: true
           schema:
             type: object
             properties:
@@ -40,6 +42,16 @@ paths:
                 type: integer
               serviceNotification:
                 type: integer
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
         400:
           description: JSONスキーマ不正
         409:

@@ -10,41 +10,35 @@ produces:
 basePath: /v1
 
 paths:
-  /users/{userId}/changepassword.json:
-    put:
-      description: パスワード変更
+  /companies/{companyId}/payments.json:
+    get:
+      description: 請求情報取得
       parameters:
         -
-          name: userId
+          name: companyId
           in: path
           type: string
-          description: ユーザID
+          description: 会社ID
           required: true
-        -
-          name: JsonRequest
-          in: body
-          description: 現在のパスワード、新パスワード
-          required: true
-          schema:
-            type: object
-            properties:
-              currentPassword:
-                type: string
-              newPassword:
-                type: string
-            required:
-              - currentPassword
-              - newPassword
       responses:
         200:
-          description: 成功
+          description: 請求情報
           schema:
             type: object
             properties:
-              result:
+              paymentId:
+                type: integer
+              paymentDate:
                 type: string
+              status:
+                type: string
+              chargeAmount:
+                type: number
             required:
-              - result
+              - paymentId
+              - paymentDate
+              - status
+              - chargeAmount
         400:
           description: JSONスキーマ不正
         409:

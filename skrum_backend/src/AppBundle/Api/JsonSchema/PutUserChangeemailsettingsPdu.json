@@ -1,0 +1,35 @@
+{
+  "title": "メール配信設定変更",
+  "type": "object",
+  "properties": {
+    "okrAchievement": {
+      "title": "達成率通知メール設定",
+      "enum": [0, 1]
+    },
+    "okrTimeline": {
+      "title": "投稿通知メール設定",
+      "enum": [0, 1]
+    },
+    "okrReminder": {
+      "title": "進捗登録リマインドメール設定",
+      "enum": [0, 1]
+    },
+    "reportMemberAchievement": {
+      "title": "メンバー進捗状況レポートメール設定",
+      "enum": [0, 1]
+    },
+    "reportGroupAchievement": {
+      "title": "グループ進捗状況レポートメール設定",
+      "enum": [0, 1]
+    },
+    "reportFeedbackTarget": {
+      "title": "フィードバック対象者通知メール設定",
+      "enum": [0, 1]
+    },
+    "serviceNotification": {
+      "title": "サービスお知らせメール設定",
+      "enum": [0, 1]
+    }
+  },
+  "additionalProperties": false
+}
