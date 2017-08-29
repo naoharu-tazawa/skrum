@@ -98,11 +98,12 @@ class OkrMapService extends BaseService
         $children = array();
         foreach ($objectiveArray as $objective) {
             // OKRマップを取得
-            $tOkrArray = $tOkrRepos->getOkrAndAllAlignmentOkrs($objective->getTreeLeft(), $objective->getTreeRight(), $timeframeId, $auth->getCompanyId());
-
-            // OKRの左値・右値が存在しない場合、直接取得
-            if (empty($tOkrArray)) {
-                $tOkrArray[] = $objective;
+            if ($objective->getTreeLeft() !== null) {
+                // OKRの左値・右値が存在する場合
+                $tOkrArray = $tOkrRepos->getOkrAndAllAlignmentOkrs($objective->getTreeLeft(), $objective->getTreeRight(), $timeframeId, $auth->getCompanyId());
+            } else {
+                // OKRの左値・右値が存在しない場合
+                $tOkrArray = $this->makeOkrArray(array($objective), $objective->getOkrId(), $timeframeId, $auth->getCompanyId(), $tOkrRepos);
             }
 
             // 階層構造に変換
