@@ -15,7 +15,7 @@ export const imagePath = (entityType, companyId, id) => `
   `.replace(/[\s\n]/g, '');
 
 export const dummyImagePath = entityType =>
-  `/img/dummy_${getEntityTypeSubject(entityType)}.svg`;
+  `/img/dummy_${getEntityTypeSubject(entityType)}.png`;
 
 export const dummyImagePathForD3 = entityType =>
   `/img/dummy_${getEntityTypeSubject(entityType)}_for_D3.png`;

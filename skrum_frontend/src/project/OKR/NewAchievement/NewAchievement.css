@@ -2,6 +2,7 @@
   margin: auto 1em 6px 1em;
   white-space: nowrap;
   cursor: default;
+  height: 100%;
 }
 .label:first-child {
   margin-left: 0;
@@ -20,9 +21,11 @@
   margin: 1em 0 0 0;
 }
 .inputWithTitle {
-  display: grid;
+  display: flex;
+  flex-direction: column;
 }
 .title {
   margin: 0 auto 4px auto;
   font-size: small;
+  text-align: center;
 }

@@ -59,7 +59,7 @@ class GroupPathLinks extends Component {
                 onClick={() =>
                   openModal(this.deletePathPrompt, { groupId, groupName, groupTreeId, path })}
               >
-                <img src="/img/delete.svg" alt="" />
+                <img src="/img/delete.png" alt="" />
               </button>)}
           </li>)}
       </ul>);

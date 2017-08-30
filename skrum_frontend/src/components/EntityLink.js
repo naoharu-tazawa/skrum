@@ -41,6 +41,8 @@ class EntityLink extends Component {
             alt={name}
             onError={() => this.setState({ imageError: true })}
             style={{ width: avatarSize, height: avatarSize }}
+            width={avatarSize}
+            height={avatarSize}
           />)}
       </div>);
     const nameContent = (title || editor || name || !id) && (
@@ -59,8 +61,7 @@ class EntityLink extends Component {
         ${imageError && styles.imageError}
         ${componentClassName || ''}`}
       >
-        {(local || !id) && avatarContent}
-        {(local || !id) && nameContent}
+        {(local || !id) && <div className={styles.noLink}>{avatarContent}{nameContent}</div>}
         {!local && id && <Link to={replacePath({ subject: type, id }, { basicOnly: true })}>
           {avatarContent}
           {nameContent}

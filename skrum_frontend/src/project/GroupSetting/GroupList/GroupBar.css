@@ -20,6 +20,7 @@
 .type {
   width: calc(40% - 100px);
   margin: auto 0;
+  height: 100%;
 }
 .action {
   width: 100px;

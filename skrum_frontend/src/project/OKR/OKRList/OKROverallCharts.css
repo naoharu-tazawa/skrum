@@ -1,7 +1,8 @@
 .content {
   padding: 0 10px;
-  height: calc(100% - 40px);
+  /*height: calc(100% - 40px);*/
   display: flex;
+  margin: auto;
 }
 .charts {
   margin: auto;

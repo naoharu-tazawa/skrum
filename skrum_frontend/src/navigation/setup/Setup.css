@@ -3,11 +3,10 @@
 }
 .container:before {
   content: " ";
-  height: 32px;
-  width: calc(100% - 2 * 8px);
-  padding: 8px;
-  background: #094f97 url(/img/skrum_logo.svg) no-repeat;
-  background-origin: content-box;
+  height: 48px;
+  width: 100%;
+  background: #094f97 url(/img/skrum_logo.png) no-repeat 8px;
+  background-origin: border-box;
   background-size: contain;
   /*left: 0;*/
   /*color: inherit;*/
@@ -49,7 +48,7 @@
   position: relative;
   top: -250%;
   left: 50%;
-  font-size: 60%;
+  font-size: 100%;
   background-color: #d3d7db;
   color: white;
   padding: 6px 10px;
@@ -83,6 +82,7 @@
   font-size: smaller;
   text-align: right;
   width: 160px;
+  height: 100%;
 }
 .content label:not(:first-child) {
   width: auto;
@@ -149,6 +149,7 @@
   padding: 10px 0;
   border-radius: 3px;
   cursor: pointer;
+  background-color: rgb(192, 192, 192);
 }
 .back:disabled {
   opacity: 0;

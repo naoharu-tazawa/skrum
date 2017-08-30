@@ -81,7 +81,7 @@ class GroupMemberBar extends Component {
           className={styles.delete}
           onClick={() => openModal(this.deleteMemberPrompt, { groupId, groupName, id, name })}
         >
-          <img src="/img/delete.svg" alt="" />
+          <img src="/img/delete.png" alt="" />
         </button>
       </div>);
   }

@@ -11,10 +11,12 @@
   padding-left: 70px !important;
   width: 35%;
   margin: auto 0;
+  height: 100%;
 }
 .date {
   width: 20%;
   margin: auto 0;
+  height: 100%;
 }
 .default {
   width: 20%;
@@ -29,9 +31,12 @@
   width: 10px;
   cursor: pointer;
   border: none;
-  background-color: inherit;
+  background-color: transparent;
   padding: 0;
   vertical-align: text-top;
+}
+.delete > img {
+  width: 10px;
 }
 .hyphen {
   margin-left: 44px;

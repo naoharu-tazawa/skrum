@@ -57,7 +57,7 @@
   height: 100%;
   width: 100%;
   padding: 30px 60px;
-  overflow: scroll;
+  overflow-y: auto;
 }
 .heading {
   font-size: 18px;

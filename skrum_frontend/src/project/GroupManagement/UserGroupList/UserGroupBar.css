@@ -22,10 +22,13 @@
   width: 10px;
   cursor: pointer;
   border: none;
-  background-color: inherit;
+  background-color: transparent;
   padding: 0;
   vertical-align: text-top;
   margin-left: auto;
+}
+.delete > img {
+  width: 10px;
 }
 .delete:focus {
   outline: 0;
@@ -33,6 +36,7 @@
 .progressBox {
   display: flex;
   margin: auto 0;
+  height: 100%;
 }
 .progressPercent {
   margin-right: 8px;

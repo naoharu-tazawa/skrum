@@ -205,7 +205,7 @@ class KRDetailsBar extends Component {
         <div className={styles.action}>
           {type === OKRType.KR && (
             <Dropdown
-              trigger={<button className={styles.tool}><img src="/img/checkin.png" alt="Achievement" /></button>}
+              triggerIcon="/img/checkin.png"
               content={props =>
                 <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
               arrow="right"
@@ -218,7 +218,6 @@ class KRDetailsBar extends Component {
             <img src="/img/common/inc_organization.png" alt="Map" />
           </Link>
           <DropdownMenu
-            trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
             options={[
               // { caption: '担当者変更',
               //   onClick: () => openModal(this.changeOwnerDialog,
@@ -229,7 +228,7 @@ class KRDetailsBar extends Component {
               { caption: '公開範囲設定',
                 onClick: () => openModal(this.changeDisclosureTypeDialog,
                   { id, name, owner, disclosureType }) },
-              { caption: '影響度設定' },
+              // { caption: '影響度設定' },
               { caption: '削除',
                 onClick: () => openModal(this.deleteKRPrompt, { id, name, owner }) },
             ]}

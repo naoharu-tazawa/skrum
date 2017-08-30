@@ -160,39 +160,37 @@
 .dropdown .saveOptions {
   border-left: none;
   border-radius: 0 3px 3px 0;
-  right: -48px;
-  bottom: -1px;
+  right: -54px;
+  bottom: -4px;
 }
 .datePickerCalendarHidden {
   background-color: #2eb9fe;
 }
+.submit, .cancel {
+  width: 22px;
+  padding: 4px;
+}
 .submit:before {
   content: " ";
-  width: 13px;
-  height: 100%;
-  mask: url(/img/check.svg);
-  mask-repeat: no-repeat;
-  -webkit-mask: url(/img/check.svg);
-  -webkit-mask-repeat: no-repeat;
-  background-color: green;
-  left: 6px;
+  width: 14px;
+  height: 14px;
+  background: url(/img/check.png) no-repeat;
+  left: 7px;
   color: inherit;
   position: absolute;
   speak: none;
+  background-size: contain;
 }
 .cancel:before {
   content: " ";
-  width: 13px;
-  height: 100%;
-  mask: url(/img/delete.svg);
-  mask-repeat: no-repeat;
-  -webkit-mask: url(/img/delete.svg);
-  -webkit-mask-repeat: no-repeat;
-  background-color: red;
-  right: 6px;
+  width: 14px;
+  height: 14px;
+  background: url(/img/cancel.png) no-repeat;
+  right: 7px;
   color: inherit;
   position: absolute;
   speak: none;
+  background-size: contain;
 }
 .error:not(.editing) {
   border-color: orange;

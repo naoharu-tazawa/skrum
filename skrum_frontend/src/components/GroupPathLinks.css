@@ -32,10 +32,13 @@
   width: 10px;
   cursor: pointer;
   border: none;
-  background-color: inherit;
+  background-color: transparent;
   padding: 0;
   vertical-align: text-top;
   margin-left: 25px;
+}
+.delete > img {
+  width: 10px;
 }
 .groupLink {
   color: #8e9aa6;

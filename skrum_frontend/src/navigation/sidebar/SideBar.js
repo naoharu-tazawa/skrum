@@ -29,7 +29,7 @@ class SecttingItem extends Component {
     return (
       <Link className={linkStyle} to={implodePath({ tab: 'setting', subject })}>
         <img
-          src={`/img/${svgName || `${subject}_setting`}.svg`}
+          src={`/img/${svgName || `${subject}_setting`}.png`}
           alt=""
           title={title}
           style={{ width: iconSize, height: iconSize, minWidth: iconSize, minHeight: iconSize }}

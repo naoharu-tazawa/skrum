@@ -12,6 +12,10 @@
   margin: auto;
   background-color: white;
 }
+_:-ms-fullscreen, :root .modal {
+  transform: translate(0px, 50%);
+  display: table;
+}
 .modal:focus {
   outline: 0;
 }

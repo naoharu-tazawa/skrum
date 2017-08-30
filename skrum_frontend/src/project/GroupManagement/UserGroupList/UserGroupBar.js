@@ -61,7 +61,7 @@ class UserGroupBar extends Component {
           className={styles.delete}
           onClick={() => openModal(this.leaveGroupPrompt, { userId, userName, id, name })}
         >
-          <img src="/img/delete.svg" alt="" />
+          <img src="/img/delete.png" alt="" />
         </button>
       </div>);
   }

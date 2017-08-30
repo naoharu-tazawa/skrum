@@ -1,7 +1,7 @@
 .component {
   display: flex;
   font-size: small;
-  padding: 5px 65px;
+  padding: 15px 65px;
   background-color: #f8f9fb;
   max-height: 500px;
   transition: all 0.3s ease-in;
@@ -35,6 +35,7 @@
   /*overflow: hidden;*/
   /*text-overflow: ellipsis;*/
   margin: auto 0 auto 20px;
+  height: 100%;
 }
 .name:before {
   content: " ";
@@ -50,7 +51,7 @@
 }
 .progressColumn {
   width: 25%;
-  margin: 10px 0px;
+  margin: auto 0px;
 }
 .progressBox {
   display: flex;

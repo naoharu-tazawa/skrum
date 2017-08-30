@@ -90,6 +90,7 @@
 .action {
   display: flex;
   margin: auto 0;
+  height: 100%;
 }
 .tool {
   width: 40px;

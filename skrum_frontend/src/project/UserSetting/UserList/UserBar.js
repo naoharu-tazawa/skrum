@@ -102,7 +102,6 @@ class UserBar extends Component {
         <div className={styles.action}>
           {isAuthoratativeOver(currentRoleLevel, roleLevel) && (
             <DropdownMenu
-              trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
               options={[
                 { caption: 'パスワードリセット',
                   onClick: () => openModal(this.resetPasswordPrompt,

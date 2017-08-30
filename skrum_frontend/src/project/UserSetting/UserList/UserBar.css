@@ -20,10 +20,12 @@
 .role {
   width: 20%;
   margin: auto 0;
+  height: 100%;
 }
 .lastLogin {
   width: 30%;
   margin: auto 0;
+  height: 100%;
 }
 .action {
   width: 100px;

@@ -3,11 +3,10 @@
 }
 .container:before {
   content: " ";
-  height: 32px;
-  width: calc(100% - 2 * 8px);
-  padding: 8px;
-  background: #094f97 url(/img/skrum_logo.svg) no-repeat;
-  background-origin: content-box;
+  height: 48px;
+  width: 100%;
+  background: #094f97 url(/img/skrum_logo.png) no-repeat 8px;
+  background-origin: border-box;
   background-size: contain;
   /*left: 0;*/
   /*color: inherit;*/
@@ -38,6 +37,7 @@
   font-size: smaller;
   text-align: right;
   width: 140px;
+  height: 100%;
 }
 .content input {
   padding: 4px;
@@ -60,6 +60,7 @@
   padding: 10px 0;
   border-radius: 3px;
   cursor: pointer;
+  background-color: rgb(192, 192, 192);
 }
 .posting {
   height: 40px;

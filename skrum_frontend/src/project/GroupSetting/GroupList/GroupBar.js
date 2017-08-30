@@ -56,7 +56,6 @@ class GroupBar extends Component {
         <div className={styles.action}>
           {(!isBasicRole(currentRoleLevel) || type !== GroupType.DEPARTMENT) && (
             <DropdownMenu
-              trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
               options={[
                 { caption: 'グループ削除',
                   onClick: () => openModal(this.deleteGroupPrompt,

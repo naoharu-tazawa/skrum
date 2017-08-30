@@ -1,5 +1,6 @@
 .component {
   margin: auto 0 0 0;
+  height: 100%;
 }
 .component input[type="radio"] {
   margin: 0 0.5em;

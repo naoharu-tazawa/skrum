@@ -8,6 +8,7 @@ import SideBarContainer from './sidebar/SideBarContainer';
 import HeaderContainer from './header/HeaderContainer';
 import styles from './NavigationContainer.css';
 import { fetchUserTop } from './action';
+import { logout } from '../auth/action';
 
 class NavigationContainer extends Component {
 
@@ -20,11 +21,13 @@ class NavigationContainer extends Component {
     companyName: PropTypes.string,
     userName: PropTypes.string,
     dispatchFetchUserInfo: PropTypes.func.isRequired,
+    dispatchForceLogout: PropTypes.func.isRequired,
   };
 
   componentWillMount() {
-    const { dispatchFetchUserInfo, currentUserId } = this.props;
-    dispatchFetchUserInfo(currentUserId);
+    const { dispatchFetchUserInfo, currentUserId, dispatchForceLogout } = this.props;
+    dispatchFetchUserInfo(currentUserId)
+      .then(({ error } = {}) => error && dispatchForceLogout());
   }
 
   render() {
@@ -56,8 +59,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchUserInfo = userId => dispatch(fetchUserTop(userId));
+  const dispatchForceLogout = () => dispatch(logout());
   return {
     dispatchFetchUserInfo,
+    dispatchForceLogout,
   };
 };
 

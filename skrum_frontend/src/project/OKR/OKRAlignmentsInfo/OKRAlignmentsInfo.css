@@ -50,4 +50,5 @@
 .list .numberOfOkrs {
   margin: auto 0;
   padding-right: 8px;
+  height: 100%;
 }

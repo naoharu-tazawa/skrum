@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
+import styles from './Dropdown.css';
 
 export default class extends PureComponent {
 
   static propTypes = {
-    trigger: PropTypes.element.isRequired,
+    trigger: PropTypes.element,
+    triggerIcon: PropTypes.string,
     content: PropTypes.func.isRequired,
     arrow: PropTypes.oneOf(['left', 'center', 'right']),
   };
@@ -16,7 +18,7 @@ export default class extends PureComponent {
   }
 
   render() {
-    const { trigger, content, arrow = 'center' } = this.props;
+    const { trigger, triggerIcon, content, arrow = 'center' } = this.props;
     const { activeContent } = this.state || {};
     let style = {}; // left
     if (arrow === 'center') style = { left: '50%', transform: 'translate(-50%, 0)' };
@@ -29,7 +31,11 @@ export default class extends PureComponent {
           activeContent || content({ onClose: this.hide.bind(this) }) })}
       >
         <DropdownTrigger>
-          {trigger}
+          {trigger || (
+            <div
+              className={styles.circle}
+              style={{ background: `url(${triggerIcon || '/img/common/inc_link.png'}) no-repeat center` }}
+            />)}
         </DropdownTrigger>
         <DropdownContent style={style}>
           {activeContent}

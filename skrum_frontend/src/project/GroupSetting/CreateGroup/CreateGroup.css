@@ -1,5 +1,4 @@
 @charset "UTF-8";
-
 .btn, .disable_btn {
   margin-left: 2em;
   width: 150px;
@@ -32,13 +31,11 @@
   background: url(/img/rolling.svg) center no-repeat;
   background-size: contain;
 }
-
 .input {
   width: 400px;
   height: 30px;
   margin-top: 30px;
 }
-
 .group_search {
   display: flex;
   margin: 30px 30px 0px 30px;
@@ -46,13 +43,13 @@
 .group_search_label {
   word-break: keep-all;
   margin: auto 1em auto 50px;
+  height: 100%;
 }
 .group_search_box {
   width: 600px;
   height: 30px;
   margin: auto 0;
 }
-
 .radio {
   margin-left: 30px;
 }

@@ -19,4 +19,5 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow-x: auto;
+  height: 100%;
 }

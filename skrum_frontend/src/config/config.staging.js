@@ -1,4 +1,4 @@
-const host = 'https://todo/fix';
+const host = sub => `https://${sub ? `${sub}.` : ''}skrum-api-stg.space`;
 const env = 'staging';
 const bucket = 'https://s3-ap-northeast-1.amazonaws.com/skrumstg';
 export default {

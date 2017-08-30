@@ -5,7 +5,7 @@
   border: 1px solid #bfbfbf;
 }
 .select :global(.Select-control) {
-  height: 24px;
+  height: 100%;
   cursor: pointer;
 }
 .select :global(.Select-value) {

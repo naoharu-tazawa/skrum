@@ -65,7 +65,6 @@ export default class OkrBar extends Component {
             <img src="/img/common/inc_organization.png" alt="Map" />
           </Link>
           <DropdownMenu
-            trigger={<button className={styles.tool}><img src="/img/common/inc_link.png" alt="Menu" /></button>}
             options={[
               { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(okr) },
             ]}

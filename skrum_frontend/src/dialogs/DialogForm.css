@@ -25,7 +25,8 @@
 }
 .buttons button {
   color: #e6e9eb;
-  width: 100px;
+  min-width: 108px;
+  min-height: 26px;
 }
 .buttons button:disabled {
   color: gray;

@@ -18,6 +18,47 @@ export default class D3Tree extends Component {
   static root;
   static isHidden = false;
 
+  static splitByLength(str, length) {
+    const resultArr = [];
+    if (!str || !length || length < 1) {
+      return resultArr;
+    }
+    let index = 0;
+    let start = index;
+    let end = start + length;
+    while (start < str.length) {
+      resultArr[index] = str.substring(start, end);
+      if (index === 2) {
+        if (str.substring(end).length) {
+          resultArr[index] = `${resultArr[index].substr(0, length - 1)}…`;
+        }
+        break;
+      }
+      index += 1;
+      start = end;
+      end = start + length;
+    }
+    return resultArr;
+  }
+
+  static wrapOKRName(d) {
+    const node = this;
+    const d3Text = d3.select(node);
+    const lines = D3Tree.splitByLength(d.data.okrName, 14);
+    const lineHeight = 1.1; // ems
+    const x = d3Text.attr('x');
+    const y = d3Text.attr('y');
+    const dy = parseFloat(d3Text.attr('dy'));
+    lines.forEach((line, lineNumber) => {
+      d3Text
+        .append('tspan')
+        .attr('x', x)
+        .attr('y', y)
+        .attr('dy', `${(lineNumber * lineHeight) + dy}em`)
+        .text(line);
+    });
+  }
+
   // S3から画像取得するURLを生成
   static getImageDummyUrl(data) {
     return dummyImagePathForD3(data.ownerType);
@@ -62,28 +103,10 @@ export default class D3Tree extends Component {
     return false;
   }
 
-  splitByLength(str, length) {
-    const resultArr = [];
-    if (!str || !length || length < 1) {
-      return resultArr;
-    }
-    let index = 0;
-    let start = index;
-    let end = start + length;
-    while (start < str.length) {
-      resultArr[index] = str.substring(start, end);
-      index += 1;
-      start = end;
-      end = start + length;
-      if (index === 3) { break; }
-    }
-    return resultArr;
-  }
-
   // 改行のためtspanを作成
   leftLinebreak(text) {
     let string = '';
-    const array = this.splitByLength(text, 14);
+    const array = D3Tree.splitByLength(text, 14);
     array.forEach((t, i) => {
       if (i === 2 && t.length === 14) {
         string += `<tspan class="line${i}" y="${i - 9.5}em" x="-6.9em">${t.substr(0, t.length - 1)}…</tspan>`;
@@ -325,12 +348,14 @@ export default class D3Tree extends Component {
     // 目標名テキストノード
     nodeEnter.append('text')
       .attr('class', 'oname')
-      .attr('y', 0)
+      .attr('y', '-9.5em')
+      .attr('x', '-6.9em')
       .attr('dy', 0)
       .attr('fill', '#333333')
       .style('text-anchor', 'start')
       .style('font-size', `${0.8 * reductionRatio}em`)
-      .html((d) => { return this.leftLinebreak(d.data.okrName); })
+      // .html((d) => { return this.leftLinebreak(d.data.okrName); })
+      .each(D3Tree.wrapOKRName)
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
@@ -414,7 +439,8 @@ export default class D3Tree extends Component {
 
     nodeUpdate.select('text.oname')
       .style('font-size', `${0.8 * reductionRatio}em`)
-      .html((d) => { return this.leftLinebreak(d.data.okrName); });
+      // .html((d) => { return this.leftLinebreak(d.data.okrName); });
+      .each(D3Tree.wrapOKRName);
 
     nodeUpdate.select('text.arate')
       .attr('y', `${-65 * reductionRatio}px`)
