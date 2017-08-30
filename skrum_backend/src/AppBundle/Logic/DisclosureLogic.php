@@ -28,18 +28,14 @@ class DisclosureLogic extends BaseLogic
 
         // 閲覧権限チェック
         if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
-            // 全体公開の場合
-            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
+            // 自分のOKRは閲覧可能
+            if ($subjectUserId == $tOkr->getOwnerUser()->getUserId()) {
                 return true;
             }
 
-            // 本人のみ公開の場合
-            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_SELF) {
-                if ($subjectUserId == $tOkr->getOwnerUser()->getUserId()) {
-                    return true;
-                } else {
-                    return false;
-                }
+            // 全体公開の場合
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
+                return true;
             }
 
             // 操作主体ユーザがスーパー管理者ユーザの場合
@@ -159,22 +155,20 @@ class DisclosureLogic extends BaseLogic
      */
     public function checkPost(int $subjectUserId, int $subjectUserRoleLevel, TPost $tPost): bool
     {
+        // 閲覧権限チェック
+        // 自分のOKRは閲覧可能
+        if ($tPost->getPosterType() === DBConstant::POSTER_TYPE_USER) {
+            if ($subjectUserId === $tPost->getPosterUserId()) {
+                return true;
+            }
+        }
+
         // 公開種別を取得
         $disclosureType = $tPost->getDisclosureType();
 
-        // 閲覧権限チェック
         // 全体公開の場合
         if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_OVERALL) {
             return true;
-        }
-
-        // 本人のみ公開の場合
-        if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_SELF) {
-            if ($subjectUserId === $tPost->getPosterUserId()) {
-                return true;
-            } else {
-                return false;
-            }
         }
 
         // 操作主体ユーザがスーパー管理者ユーザの場合

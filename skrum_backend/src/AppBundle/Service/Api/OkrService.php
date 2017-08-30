@@ -57,20 +57,24 @@ class OkrService extends BaseService
         $disclosureLogic = $this->getDisclosureLogic();
         $tOkrArrayCount = count($tOkrArray);
         $returnArray = array();
-        $flg = false;
+        $keyResultFlg = false; // キーリザルト有りフラグ
+        $restrictedObjectiveFlg = false; // オブジェクティブ閲覧制限フラグ
         for ($i = 0; $i < $tOkrArrayCount; ++$i) {
             if (array_key_exists('objective', $tOkrArray[$i])) {
                 // 2回目のループ以降、前回ループ分のDTOを配列に入れる
-                if ($i !== 0) {
-                    if ($flg) {
+                if ($i !== 0 && !$restrictedObjectiveFlg) {
+                    if ($keyResultFlg) {
                         $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
                     }
                     $returnArray[] = $basicOkrDTOObjective;
                 }
 
+                // オブジェクティブ閲覧制限フラグをリセット
+                $restrictedObjectiveFlg = false;
+
                 // 閲覧権限をチェック
                 if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[$i]['objective'])) {
-                    $flg = false;
+                    $restrictedObjectiveFlg = true;
                     continue;
                 }
 
@@ -93,9 +97,16 @@ class OkrService extends BaseService
                 $basicOkrDTOObjective->setAchievementRate($tOkrArray[$i]['objective']->getAchievementRate());
                 $basicOkrDTOObjective->setStatus($tOkrArray[$i]['objective']->getStatus());
 
+                // キーリザルト配列変数を初期化
                 $basicOkrDTOKeyResultArray = array();
-                $flg = false;
+                // キーリザルト有りフラグをリセット
+                $keyResultFlg = false;
             } else {
+                // オブジェクティブに閲覧制限がかかっている場合、スキップ
+                if ($restrictedObjectiveFlg) {
+                    continue;
+                }
+
                 // キーリザルトがnullの場合、スキップ
                 if ($tOkrArray[$i]['keyResult'] == null) {
                     // 最終ループ
@@ -109,12 +120,12 @@ class OkrService extends BaseService
                 if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkrArray[$i]['keyResult'])) {
                     // 最終ループ
                     if ($i === ($tOkrArrayCount - 1)) {
-                        if ($flg) {
+                        if ($keyResultFlg) {
                             $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
                         }
                         $returnArray[] = $basicOkrDTOObjective;
                     }
-                    $flg = true;
+                    $keyResultFlg = true;
                     continue;
                 }
 
@@ -141,12 +152,12 @@ class OkrService extends BaseService
                 $basicOkrDTOKeyResult->setRatioLockedFlg($tOkrArray[$i]['keyResult']->getRatioLockedFlg());
 
                 $basicOkrDTOKeyResultArray[] = $basicOkrDTOKeyResult;
-                $flg = true;
+                $keyResultFlg = true;
             }
 
             // 最終ループ
             if ($i === ($tOkrArrayCount - 1)) {
-                if ($flg) {
+                if ($keyResultFlg) {
                     $basicOkrDTOObjective->setKeyResults($basicOkrDTOKeyResultArray);
                 }
                 $returnArray[] = $basicOkrDTOObjective;

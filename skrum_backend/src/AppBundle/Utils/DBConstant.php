@@ -100,11 +100,6 @@ class DBConstant
     const OKR_DISCLOSURE_TYPE_GROUP_ADMIN = '4';
 
     /**
-     * OKR公開種別（本人のみ公開）
-     */
-    const OKR_DISCLOSURE_TYPE_SELF = '5';
-
-    /**
      * OKR操作種別（作成）
      */
     const OKR_OPERATION_TYPE_GENERATE = '1';

@@ -109,6 +109,11 @@ class OkrMapService extends BaseService
             // 階層構造に変換
             $okrMapDTO = $okrOperationLogic->tree($auth, $tOkrArray, $companyName);
 
+            // トップのOKRに閲覧制限がかかっている場合、スキップ
+            if ($okrMapDTO->getOkrId() === null) {
+                continue;
+            }
+
             $children[] = $okrMapDTO;
         }
 
