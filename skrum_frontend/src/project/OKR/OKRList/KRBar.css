@@ -36,6 +36,7 @@
   /*text-overflow: ellipsis;*/
   margin: auto 0 auto 20px;
   height: 100%;
+  padding-right: 10px;
 }
 .name:before {
   content: " ";

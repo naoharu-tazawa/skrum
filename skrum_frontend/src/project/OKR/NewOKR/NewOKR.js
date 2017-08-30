@@ -129,13 +129,13 @@ class NewOKR extends Component {
         <div className={styles.dialog}>
           {parentOkr && <EntitySubject entity={parentOkr.owner} heading="紐付け先目標" subject={parentOkr.name} />}
           <section>
-            <label>担当者</label>
+            <label>担当者*</label>
             {ownerName ? <label>{ownerName}</label> : ownerSearch}
             {!parentOkr && <label>目標の時間枠</label>}
             {!parentOkr && withSelectReduxField(TimeframesDropdown, 'timeframeId')}
           </section>
           <section>
-            <label>公開範囲</label>
+            <label>公開範囲*</label>
             {withSelectReduxField(DisclosureTypeOptions,
               'disclosureType',
               { entityType: (owner || {}).type || getEntityTypeId(subject),
@@ -147,7 +147,7 @@ class NewOKR extends Component {
             )}
           </section>
           <section>
-            <Field component="textarea" name="okrName" placeholder="目標120字以内" maxLength={120} />
+            <Field component="textarea" name="okrName" placeholder="目標120字以内（必須）" maxLength={120} />
           </section>
           <section>
             <Field component="textarea" name="okrDetail" placeholder="詳細250字以内" maxLength={250} />
@@ -165,9 +165,9 @@ class NewOKR extends Component {
             </div>
           </section>
           <section>
-            <label>開始日</label>
+            <label>開始日*</label>
             {withReduxField(DatePickerInput, 'startDate')}
-            <label>期限日</label>
+            <label>期限日*</label>
             {withReduxField(DatePickerInput, 'endDate')}
           </section>
           {!parentOkr && timeframeId && <section>

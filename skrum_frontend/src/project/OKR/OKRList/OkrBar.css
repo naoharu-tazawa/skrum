@@ -31,13 +31,14 @@
   /*white-space: nowrap;*/
   /*text-overflow: ellipsis;*/
   margin: auto 0;
+  padding-right: 10px;
 }
 .name a {
   display: block;
 }
 .progressColumn {
   width: 25%;
-  /*margin: 10px 0px;*/
+  margin: auto 0px;
 }
 .progressBox {
   display: flex;
