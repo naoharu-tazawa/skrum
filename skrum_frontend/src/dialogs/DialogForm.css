@@ -14,14 +14,15 @@
 .content {
   padding: 2em 2em;
   font-size: 12px;
+  max-width: 64em;
+}
+.content:not(.compact) {
+  min-width: 48em;
 }
 .buttons {
   padding: 1.5em;
   background-color: #f0f4f5;
   display: flex;
-}
-.buttons:not(.compact) {
-  min-width: 48em;
 }
 .buttons button {
   color: #e6e9eb;

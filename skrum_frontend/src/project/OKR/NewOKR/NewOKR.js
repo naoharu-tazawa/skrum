@@ -117,8 +117,9 @@ class NewOKR extends Component {
   }
 
   render() {
-    const { type, onClose, parentOkr, owner, ownerName, timeframeId, subject } = this.props;
+    const { subject, id, type, onClose, parentOkr, owner, ownerName, timeframeId } = this.props;
     const { ownerSearch } = this.state;
+    const defaultOwner = { type: getEntityTypeId(subject), id };
     const okrForm = Form => (
       <Form
         title={type === 'Okr' ? '目標新規登録' : 'サブ目標新規登録'}
@@ -172,8 +173,11 @@ class NewOKR extends Component {
           </section>
           {!parentOkr && timeframeId && <section>
             <label>紐づけ先検索</label>
-            {withItemisedReduxField(OKRSearch, 'alignment',
-              { owner, timeframeId, disabled: !ownerName && isEmpty(owner) })}
+            {withItemisedReduxField(
+              OKRSearch,
+              'alignment',
+              { owner: owner || defaultOwner, timeframeId, disabled: isEmpty(owner) && !ownerName },
+            )}
           </section>}
         </div>
       </Form>);
