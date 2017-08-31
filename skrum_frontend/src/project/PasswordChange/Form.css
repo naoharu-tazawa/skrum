@@ -46,17 +46,3 @@
 .warning {
   color: #FA5858;
 }
-
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  padding: 30px 60px;
-  overflow-y: auto;
-}
-.spinner {
-  height: 100%;
-  width: 100%;
-  background: url(/img/rolling.svg) center no-repeat;
-}
