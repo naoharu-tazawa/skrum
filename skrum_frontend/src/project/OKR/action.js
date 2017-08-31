@@ -1,6 +1,8 @@
 import { createActions } from 'redux-actions';
+import { omit } from 'lodash';
 import { keyValueIdentity } from '../../util/ActionUtil';
-import { getJson, postJson, deleteJson } from '../../util/ApiUtil';
+import { getJson, postJson, deleteJson, putJson } from '../../util/ApiUtil';
+import { mapOwnerOutbound } from '../../util/OwnerUtil';
 
 export const Action = {
   REQUEST_FETCH_USER_BASICS: 'REQUEST_FETCH_USER_BASICS',
@@ -13,6 +15,8 @@ export const Action = {
   FINISH_POST_OKR: 'FINISH_POST_OKR',
   REQUEST_DELETE_OKR: 'REQUEST_DELETE_OKR',
   FINISH_DELETE_OKR: 'FINISH_DELETE_OKR',
+  REQUEST_CHANGE_OKR_OWNER: 'REQUEST_CHANGE_OKR_OWNER',
+  FINISH_CHANGE_OKR_OWNER: 'FINISH_CHANGE_OKR_OWNER',
   SYNC_OKR_DETAILS: 'SYNC_OKR_DETAILS',
 };
 
@@ -27,6 +31,8 @@ const {
   finishPostOkr,
   requestDeleteOkr,
   finishDeleteOkr,
+  requestChangeOkrOwner,
+  finishChangeOkrOwner,
   syncOkrDetails,
 } = createActions({
   [Action.FINISH_FETCH_USER_BASICS]: keyValueIdentity,
@@ -34,6 +40,7 @@ const {
   [Action.FINISH_FETCH_COMPANY_BASICS]: keyValueIdentity,
   [Action.FINISH_POST_OKR]: keyValueIdentity,
   [Action.FINISH_DELETE_OKR]: keyValueIdentity,
+  [Action.FINISH_CHANGE_OKR_OWNER]: keyValueIdentity,
   [Action.SYNC_OKR_DETAILS]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_USER_BASICS,
@@ -41,6 +48,7 @@ const {
   Action.REQUEST_FETCH_COMPANY_BASICS,
   Action.REQUEST_POST_OKR,
   Action.REQUEST_DELETE_OKR,
+  Action.REQUEST_CHANGE_OKR_OWNER,
 );
 
 const fetchBasics = (subject, node, request, finish) => (id, timeframeId) =>
@@ -80,6 +88,16 @@ export const deleteOkr = (subject, id) =>
     return deleteJson(`/okrs/${id}.json`, state)()
       .then(() => dispatch(finishDeleteOkr('data', { subject, id })))
       .catch(({ message }) => dispatch(finishDeleteOkr(new Error(message))));
+  };
+
+export const changeOkrOwner = (subject, id, owner) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.basics.isChangingOkrOwner) return Promise.resolve();
+    dispatch(requestChangeOkrOwner());
+    return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound(omit(owner, 'name')))
+      .then(() => dispatch(finishChangeOkrOwner('data', { subject, id })))
+      .catch(({ message }) => dispatch(finishChangeOkrOwner(new Error(message))));
   };
 
 export const syncOkr = (subject, { payload, error }) =>

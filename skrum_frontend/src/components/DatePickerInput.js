@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import localeUtils from 'react-day-picker/moment';
 import 'moment/locale/ja';
-import { /* formatDate ,*/ DateFormat } from '../util/DatetimeUtil';
+import { formatDate, DateFormat } from '../util/DatetimeUtil';
 import styles from './DatePickerInput.css';
 
 export default class DatePickerInput extends Component {
@@ -25,7 +25,7 @@ export default class DatePickerInput extends Component {
 
   render() {
     const { containerClass, wrapperClass, overlayClass,
-      value, onChange, onFocus, onBlur, onDayChange, onDayClick, onKeyPress } = this.props;
+      value, onChange, onFocus, onBlur, onDayChange, onKeyPress } = this.props;
     // const { hasOverlay = false } = this.state || {};
     const locale = 'ja';
     // return (
@@ -53,9 +53,8 @@ export default class DatePickerInput extends Component {
           localeUtils,
           // disabledDays: { daysOfWeek: [0] },
           renderDay: day => day.getDate().toLocaleString(locale),
-          // onDayClick: day => onChange({ target: { value: formatDate(day) } }),
+          onDayClick: day => onChange(formatDate(day)),
           onDayChange,
-          onDayClick,
           onKeyPress,
         }}
         {...{ value, onChange, onFocus, onBlur }}

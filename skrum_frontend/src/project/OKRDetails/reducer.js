@@ -6,7 +6,7 @@ export default (state = {
   isFetching: false,
   isPutting: false,
   isPostingKR: false,
-  isChangingOwner: false,
+  isChangingKROwner: false,
   isChangingParentOkr: false,
   isChangingDisclosureType: false,
   isDeletingKR: false,
@@ -51,18 +51,18 @@ export default (state = {
       return { ...state, objective, keyResults, isPutting: false, error: null };
     }
 
-    case Action.REQUEST_CHANGE_OWNER:
-      return { ...state, isChangingOwner: true };
+    case Action.REQUEST_CHANGE_KR_OWNER:
+      return { ...state, isChangingKROwner: true };
 
-    case Action.FINISH_CHANGE_OWNER: {
+    case Action.FINISH_CHANGE_KR_OWNER: {
       const { payload, error } = action;
       if (error) {
-        return { ...state, isChangingOwner: false, error: { message: payload.message } };
+        return { ...state, isChangingKROwner: false, error: { message: payload.message } };
       }
       const { id, ...update } = payload.data;
       const objective = mergeUpdateById(state.objective, 'okrId', update, id);
       const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, id));
-      return { ...state, objective, keyResults, isChangingOwner: false, error: null };
+      return { ...state, objective, keyResults, isChangingKROwner: false, error: null };
     }
 
     case Action.REQUEST_CHANGE_PARENT_OKR:

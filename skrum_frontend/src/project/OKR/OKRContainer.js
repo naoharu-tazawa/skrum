@@ -10,21 +10,22 @@ import { UserOKRListContainer, GroupOKRListContainer, CompanyOKRListContainer } 
 import { UserOKRAlignmentsInfoContainer, GroupOKRAlignmentsInfoContainer } from './OKRAlignmentsInfo/OKRAlignmentsInfoContainer';
 import OKRAlignmentsInfo from './OKRAlignmentsInfo/OKRAlignmentsInfo';
 import OKRDetailsContainer from '../OKRDetails/OKRDetailsContainer';
-import { fetchUserBasics, fetchGroupBasics, fetchCompanyBasics, deleteOkr } from './action';
+import { fetchUserBasics, fetchGroupBasics, fetchCompanyBasics, deleteOkr, changeOkrOwner } from './action';
 import { explodePath, implodePath, comparePath, isPathFinal } from '../../util/RouteUtil';
 import styles from './OKRContainer.css';
 
 class OKRContainer extends Component {
 
   static propTypes = {
-    isFetching: PropTypes.bool,
-    subject: PropTypes.string,
-    dispatchFetchUserBasics: PropTypes.func,
-    dispatchFetchGroupBasics: PropTypes.func,
-    dispatchFetchCompanyBasics: PropTypes.func,
-    dispatchDeleteOkr: PropTypes.func,
-    pathname: PropTypes.string,
-    okrIds: PropTypes.arrayOf(PropTypes.number),
+    isFetching: PropTypes.bool.isRequired,
+    subject: PropTypes.string.isRequired,
+    dispatchFetchUserBasics: PropTypes.func.isRequired,
+    dispatchFetchGroupBasics: PropTypes.func.isRequired,
+    dispatchFetchCompanyBasics: PropTypes.func.isRequired,
+    dispatchDeleteOkr: PropTypes.func.isRequired,
+    dispatchChangeOkrOwner: PropTypes.func.isRequired,
+    pathname: PropTypes.string.isRequired,
+    okrIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   };
 
   componentWillMount() {
@@ -115,7 +116,7 @@ class OKRContainer extends Component {
   }
 
   render() {
-    const { isFetching, pathname, okrIds, dispatchDeleteOkr } = this.props;
+    const { isFetching, pathname, okrIds, dispatchDeleteOkr, dispatchChangeOkrOwner } = this.props;
     if (isFetching) {
       return <span className={styles.spinner} />;
     }
@@ -144,7 +145,8 @@ class OKRContainer extends Component {
               前のOKR
             </Link>
           </div>
-          {showDetails && <OKRDetailsContainer {...{ subject, dispatchDeleteOkr }} />}
+          {showDetails && (
+            <OKRDetailsContainer {...{ subject, dispatchDeleteOkr, dispatchChangeOkrOwner }} />)}
         </div>
         <article style={showDetails ? { display: 'none' } : {}}>
           <section className={`${styles.overall_info} ${styles.cf}`}>
@@ -216,11 +218,14 @@ const mapDispatchToProps = (dispatch, { subject }) => {
     dispatch(fetchCompanyBasics(companyId, timeframeId));
   const dispatchDeleteOkr = id =>
     dispatch(deleteOkr(subject, id));
+  const dispatchChangeOkrOwner = (id, owner) =>
+    dispatch(changeOkrOwner(subject, id, owner));
   return {
     dispatchFetchUserBasics,
     dispatchFetchGroupBasics,
     dispatchFetchCompanyBasics,
     dispatchDeleteOkr,
+    dispatchChangeOkrOwner,
   };
 };
 

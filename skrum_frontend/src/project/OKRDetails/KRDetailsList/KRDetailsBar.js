@@ -28,7 +28,7 @@ class KRDetailsBar extends Component {
     parentOkr: okrPropTypes,
     keyResult: keyResultPropTypes,
     dispatchPutOKR: PropTypes.func,
-    dispatchChangeOwner: PropTypes.func,
+    dispatchChangeKROwner: PropTypes.func,
     dispatchChangeParentOkr: PropTypes.func,
     dispatchChangeDisclosureType: PropTypes.func,
     dispatchDeleteKR: PropTypes.func,
@@ -42,7 +42,7 @@ class KRDetailsBar extends Component {
     <DialogForm
       title="担当者の変更"
       submitButton="変更"
-      onSubmit={({ changedOwner } = {}) => this.props.dispatchChangeOwner(id, changedOwner)}
+      onSubmit={({ changedOwner } = {}) => this.props.dispatchChangeKROwner(id, changedOwner)}
       valid={({ changedOwner }) => !isEmpty(changedOwner) &&
         (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
       onClose={onClose}

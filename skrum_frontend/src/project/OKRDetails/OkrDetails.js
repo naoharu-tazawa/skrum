@@ -26,10 +26,10 @@ class OkrDetails extends Component {
     parentOkr: okrPropTypes,
     okr: okrPropTypes.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
-    dispatchChangeOwner: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired,
+    dispatchChangeOkrOwner: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
   };
 
@@ -40,7 +40,11 @@ class OkrDetails extends Component {
     <DialogForm
       title="担当者の変更"
       submitButton="変更"
-      onSubmit={({ changedOwner } = {}) => this.props.dispatchChangeOwner(id, changedOwner)}
+      onSubmit={({ changedOwner } = {}) =>
+        this.props.dispatchChangeOkrOwner(id, changedOwner).then(({ error }) => {
+          if (!error) browserHistory.push(toBasicPath(location.pathname));
+          return Promise.resolve();
+        })}
       valid={({ changedOwner }) => !isEmpty(changedOwner) &&
         (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
       onClose={onClose}
