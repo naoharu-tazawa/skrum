@@ -14,6 +14,7 @@ use AppBundle\Entity\MUser;
 use AppBundle\Entity\TOkr;
 use AppBundle\Entity\TOkrActivity;
 use AppBundle\Entity\TTimeframe;
+use AppBundle\Api\ResponseDTO\OkrInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\AlignmentsInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\CompanyAlignmentsDTO;
@@ -252,9 +253,9 @@ class OkrService extends BaseService
      * @param integer $companyId オーナー会社ID
      * @param boolean $alignmentFlg 紐付け先OKR有りフラグ
      * @param TOkr $parentOkrEntity 紐付け先OKRエンティティ
-     * @return BasicOkrDTO
+     * @return OkrInfoDTO
      */
-    public function createOkr(Auth $auth, string $ownerType, array $data, TTimeframe $tTimeframe, MUser $mUser = null, MGroup $mGroup = null, int $companyId, bool $alignmentFlg, TOkr $parentOkrEntity = null): BasicOkrDTO
+    public function createOkr(Auth $auth, string $ownerType, array $data, TTimeframe $tTimeframe, MUser $mUser = null, MGroup $mGroup = null, int $companyId, bool $alignmentFlg, TOkr $parentOkrEntity = null): OkrInfoDTO
     {
         // 開始日と終了日の妥当性チェック
         DateUtility::checkStartDateAndEndDate($data['startDate'], $data['endDate']);
@@ -374,47 +375,59 @@ class OkrService extends BaseService
 
             $this->flush();
             $this->commit();
-
-            // レスポンス用DTO作成
-            $basicOkrDTO = new BasicOkrDTO();
-            $basicOkrDTO->setOkrId($tOkr->getOkrId());
-            $basicOkrDTO->setOkrType($tOkr->getType());
-            $basicOkrDTO->setOkrName($tOkr->getName());
-            $basicOkrDTO->setOkrDetail($tOkr->getDetail());
-            $basicOkrDTO->setOwnerType($tOkr->getOwnerType());
-            if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
-                $basicOkrDTO->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
-                $basicOkrDTO->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
-            } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                $basicOkrDTO->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
-                $basicOkrDTO->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
-            } else {
-                // 会社エンティティを取得
-                $mCompanyRepos = $this->getMCompanyRepository();
-                $mCompany = $mCompanyRepos->find($companyId);
-
-                $basicOkrDTO->setOwnerCompanyId($tOkr->getOwnerCompanyId());
-                $basicOkrDTO->setOwnerCompanyName($mCompany->getCompanyName());
-            }
-            $basicOkrDTO->setTargetValue($tOkr->getTargetValue());
-            $basicOkrDTO->setAchievedValue($tOkr->getAchievedValue());
-            $basicOkrDTO->setUnit($tOkr->getUnit());
-            $basicOkrDTO->setAchievementRate($tOkr->getAchievementRate());
-            if ($tOkr->getParentOkr() !== null) {
-                $basicOkrDTO->setParentOkrId($tOkr->getParentOkr()->getOkrId());
-            }
-            $basicOkrDTO->setStartDate($tOkr->getStartDate());
-            $basicOkrDTO->setEndDate($tOkr->getEndDate());
-            $basicOkrDTO->setStatus($tOkr->getStatus());
-            $basicOkrDTO->setDisclosureType($tOkr->getDisclosureType());
-            $basicOkrDTO->setWeightedAverageRatio($tOkr->getWeightedAverageRatio());
-            $basicOkrDTO->setRatioLockedFlg($tOkr->getRatioLockedFlg());
-
-            return $basicOkrDTO;
         } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンス用DTOを作成
+        $okrInfoDTO = new OkrInfoDTO();
+
+        // targetOkr
+        $basicOkrDTOTargetOkr = new BasicOkrDTO();
+        $basicOkrDTOTargetOkr->setOkrId($tOkr->getOkrId());
+        $basicOkrDTOTargetOkr->setOkrType($tOkr->getType());
+        $basicOkrDTOTargetOkr->setOkrName($tOkr->getName());
+        $basicOkrDTOTargetOkr->setOkrDetail($tOkr->getDetail());
+        $basicOkrDTOTargetOkr->setOwnerType($tOkr->getOwnerType());
+        if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+            $basicOkrDTOTargetOkr->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
+            $basicOkrDTOTargetOkr->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+        } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+            $basicOkrDTOTargetOkr->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+            $basicOkrDTOTargetOkr->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+        } else {
+            // 会社エンティティを取得
+            $mCompanyRepos = $this->getMCompanyRepository();
+            $mCompany = $mCompanyRepos->find($companyId);
+
+            $basicOkrDTOTargetOkr->setOwnerCompanyId($tOkr->getOwnerCompanyId());
+            $basicOkrDTOTargetOkr->setOwnerCompanyName($mCompany->getCompanyName());
+        }
+        $basicOkrDTOTargetOkr->setTargetValue($tOkr->getTargetValue());
+        $basicOkrDTOTargetOkr->setAchievedValue($tOkr->getAchievedValue());
+        $basicOkrDTOTargetOkr->setUnit($tOkr->getUnit());
+        $basicOkrDTOTargetOkr->setAchievementRate($tOkr->getAchievementRate());
+        if ($tOkr->getParentOkr() !== null) {
+            $basicOkrDTOTargetOkr->setParentOkrId($tOkr->getParentOkr()->getOkrId());
+        }
+        $basicOkrDTOTargetOkr->setStartDate($tOkr->getStartDate());
+        $basicOkrDTOTargetOkr->setEndDate($tOkr->getEndDate());
+        $basicOkrDTOTargetOkr->setStatus($tOkr->getStatus());
+        $basicOkrDTOTargetOkr->setDisclosureType($tOkr->getDisclosureType());
+        $basicOkrDTOTargetOkr->setWeightedAverageRatio($tOkr->getWeightedAverageRatio());
+        $basicOkrDTOTargetOkr->setRatioLockedFlg($tOkr->getRatioLockedFlg());
+        $okrInfoDTO->setTargetOkr($basicOkrDTOTargetOkr);
+
+        // parentOkr
+        if ($tOkr->getParentOkr() !== null) {
+            $basicOkrDTOParentOkr = new BasicOkrDTO();
+            $basicOkrDTOParentOkr->setOkrId($tOkr->getParentOkr()->getOkrId());
+            $basicOkrDTOParentOkr->setAchievementRate($tOkr->getParentOkr()->getAchievementRate());
+            $okrInfoDTO->setParentOkr($basicOkrDTOParentOkr);
+        }
+
+        return $okrInfoDTO;
     }
 
     /**
@@ -490,9 +503,9 @@ class OkrService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param TOkr $tOkr OKRエンティティ
-     * @return BasicOkrDTO
+     * @return OkrInfoDTO
      */
-    public function registerAchievement(Auth $auth, array $data, TOkr $tOkr): BasicOkrDTO
+    public function registerAchievement(Auth $auth, array $data, TOkr $tOkr): OkrInfoDTO
     {
         // 「OKR種別＝1:目標」の場合、かつ子OKRが紐づいている場合、進捗登録不可
         $tOkrRepos = $this->getTOkrRepository();
@@ -571,19 +584,31 @@ class OkrService extends BaseService
 
             $this->flush();
             $this->commit();
-
-            // レスポンス用DTOを作成
-            $basicOkrDTO = new BasicOkrDTO;
-            $basicOkrDTO->setOkrId($tOkr->getOkrId());
-            $basicOkrDTO->setAchievedValue($tOkr->getAchievedValue());
-            $basicOkrDTO->setTargetValue($tOkr->getTargetValue());
-            $basicOkrDTO->setAchievementRate($tOkr->getAchievementRate());
-
-            return $basicOkrDTO;
         } catch (\Exception $e) {
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンス用DTOを作成
+        $okrInfoDTO = new OkrInfoDTO();
+
+        // targetOkr
+        $basicOkrDTOTargetOkr = new BasicOkrDTO();
+        $basicOkrDTOTargetOkr->setOkrId($tOkr->getOkrId());
+        $basicOkrDTOTargetOkr->setAchievedValue($tOkr->getAchievedValue());
+        $basicOkrDTOTargetOkr->setTargetValue($tOkr->getTargetValue());
+        $basicOkrDTOTargetOkr->setAchievementRate($tOkr->getAchievementRate());
+        $okrInfoDTO->setTargetOkr($basicOkrDTOTargetOkr);
+
+        // parentOkr
+        if ($tOkr->getParentOkr() !== null) {
+            $basicOkrDTOParentOkr = new BasicOkrDTO();
+            $basicOkrDTOParentOkr->setOkrId($tOkr->getParentOkr()->getOkrId());
+            $basicOkrDTOParentOkr->setAchievementRate($tOkr->getParentOkr()->getAchievementRate());
+            $okrInfoDTO->setParentOkr($basicOkrDTOParentOkr);
+        }
+
+        return $okrInfoDTO;
     }
 
     /**
@@ -591,9 +616,9 @@ class OkrService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param TOkr $tOkr 削除対象OKRエンティティ
-     * @return void
+     * @return OkrInfoDTO
      */
-    public function deleteOkrs(Auth $auth, TOkr $tOkr)
+    public function deleteOkrs(Auth $auth, TOkr $tOkr): OkrInfoDTO
     {
         // 親OKRを取得
         $parentOkr = $tOkr->getParentOkr();
@@ -624,5 +649,16 @@ class OkrService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンス用DTOを作成
+        $okrInfoDTO = new OkrInfoDTO();
+        if ($parentOkr != null) {
+            $basicOkrDTOParentOkr = new BasicOkrDTO();
+            $basicOkrDTOParentOkr->setOkrId($parentOkr->getOkrId());
+            $basicOkrDTOParentOkr->setAchievementRate($parentOkr->getAchievementRate());
+            $okrInfoDTO->setParentOkr($basicOkrDTOParentOkr);
+        }
+
+        return $okrInfoDTO;
     }
 }

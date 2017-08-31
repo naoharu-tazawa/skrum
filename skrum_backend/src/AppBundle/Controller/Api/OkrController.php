@@ -9,6 +9,7 @@ use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\OkrInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 
 /**
@@ -23,9 +24,9 @@ class OkrController extends BaseController
      *
      * @Rest\Post("/v1/okrs.{_format}")
      * @param Request $request リクエストオブジェクト
-     * @return BasicOkrDTO
+     * @return OkrInfoDTO
      */
-    public function postOkrsAction(Request $request): BasicOkrDTO
+    public function postOkrsAction(Request $request): OkrInfoDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostOkrsPdu');
@@ -168,9 +169,9 @@ class OkrController extends BaseController
      * @Rest\Post("/v1/okrs/{okrId}/achievements.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $okrId OKRID
-     * @return BasicOkrDTO
+     * @return OkrInfoDTO
      */
-    public function postOkrAchievementsAction(Request $request, string $okrId): BasicOkrDTO
+    public function postOkrAchievementsAction(Request $request, string $okrId): OkrInfoDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostOkrAchievementsPdu');
@@ -196,9 +197,9 @@ class OkrController extends BaseController
 
         // OKR進捗登録処理
         $okrService = $this->getOkrService();
-        $basicOkrDTO = $okrService->registerAchievement($auth, $data, $tOkr);
+        $okrInfoDTO = $okrService->registerAchievement($auth, $data, $tOkr);
 
-        return $basicOkrDTO;
+        return $okrInfoDTO;
     }
 
     /**
@@ -207,9 +208,9 @@ class OkrController extends BaseController
      * @Rest\Delete("/v1/okrs/{okrId}.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $okrId OKRID
-     * @return array
+     * @return OkrInfoDTO
      */
-    public function deleteOkrAction(Request $request, string $okrId): array
+    public function deleteOkrAction(Request $request, string $okrId): OkrInfoDTO
     {
         // 認証情報を取得
         $auth = $request->get('auth_token');
@@ -228,8 +229,8 @@ class OkrController extends BaseController
 
         // OKR削除処理
         $okrService = $this->getOkrService();
-        $okrService->deleteOkrs($auth, $tOkr);
+        $okrInfoDTO = $okrService->deleteOkrs($auth, $tOkr);
 
-        return array('result' => 'OK');
+        return $okrInfoDTO;
     }
 }

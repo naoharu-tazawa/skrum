@@ -39,18 +39,39 @@ paths:
               - targetValue
       responses:
         200:
-          description: 成功
+          description: 登録OKR情報
           schema:
             type: object
             properties:
-              okrId:
-                type: integer
-              achievedValue:
-                type: integer
-              targetValue:
-                type: integer
-              achievementRate:
-                type: number
+              targetOkr:
+                type: object
+                properties:
+                  okrId:
+                    type: integer
+                  achievedValue:
+                    type: integer
+                  targetValue:
+                    type: integer
+                  achievementRate:
+                    type: number
+                required:
+                  - okrId
+                  - achievedValue
+                  - targetValue
+                  - achievementRate
+              parentOkr:
+                type: object
+                properties:
+                  okrId:
+                    type: integer
+                  achievementRate:
+                    type: number
+                required:
+                  - okrId
+                  - achievementRate
+            required:
+              - targetOkr
+              - parentOkr
         400:
           description: パラメータ不正
         401:

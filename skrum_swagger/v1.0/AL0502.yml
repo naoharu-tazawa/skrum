@@ -22,43 +22,59 @@ paths:
           schema:
             type: object
             properties:
-              timeframeId:
-                type: integer
-              okrType:
-                type: string
-              ownerType:
-                type: string
-              ownerUserId:
-                type: integer
-              ownerGroupId:
-                type: integer
-              ownerCompanyId:
-                type: integer
-              startDate:
-                type: string
-              endDate:
-                type: string
-              okrName:
-                type: string
-              okrDetail:
-                type: string
-              targetValue:
-                type: integer
-              unit:
-                type: string
-              parentOkrId:
-                type: integer
-              disclosureType:
-                type: string
+              targetOkr:
+                type: object
+                properties:
+                  timeframeId:
+                    type: integer
+                  okrType:
+                    type: string
+                  ownerType:
+                    type: string
+                  ownerUserId:
+                    type: integer
+                  ownerGroupId:
+                    type: integer
+                  ownerCompanyId:
+                    type: integer
+                  startDate:
+                    type: string
+                  endDate:
+                    type: string
+                  okrName:
+                    type: string
+                  okrDetail:
+                    type: string
+                  targetValue:
+                    type: integer
+                  unit:
+                    type: string
+                  parentOkrId:
+                    type: integer
+                  disclosureType:
+                    type: string
+                required:
+                  - okrType
+                  - ownerType
+                  - startDate
+                  - endDate
+                  - okrName
+                  - okrDetail
+                  - targetValue
+                  - unit
+              parentOkr:
+                type: object
+                properties:
+                  okrId:
+                    type: integer
+                  achievementRate:
+                    type: number
+                required:
+                  - okrId
+                  - achievementRate
             required:
-              - okrType
-              - ownerType
-              - startDate
-              - endDate
-              - okrName
-              - okrDetail
-              - targetValue
-              - unit
+              - targetOkr
+              - parentOkr
       responses:
         200:
           description: 登録結果
