@@ -81,6 +81,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   height: 100%;
+  align-items: center;
 }
 .has-value.Select--single > .Select-control .Select-value .Select-value-label,
 .has-value.is-pseudo-focused.Select--single > .Select-control .Select-value .Select-value-label {

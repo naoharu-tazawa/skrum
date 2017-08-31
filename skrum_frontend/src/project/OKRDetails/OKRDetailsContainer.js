@@ -18,7 +18,6 @@ class OKRDetailsContainer extends Component {
   static propTypes = {
     subject: PropTypes.string,
     isFetching: PropTypes.bool,
-    error: PropTypes.shape({ message: PropTypes.string.isRequired }),
     parentOkr: okrPropTypes,
     okr: okrPropTypes,
     progressSeries: ProgressSeriesPropTypes,
@@ -56,13 +55,9 @@ class OKRDetailsContainer extends Component {
   }
 
   render() {
-    const { isFetching, /* error, */ parentOkr, okr, progressSeries = [],
+    const { isFetching, parentOkr, okr, progressSeries = [],
       dispatchPutOKR, dispatchChangeOwner, dispatchChangeParentOkr, dispatchDeleteOkr,
       dispatchChangeDisclosureType, dispatchDeleteKR, openModal } = this.props;
-    // TODO use toastr
-    // if (error) {
-    //   return <div className={`${styles.container} ${styles.error}`} >{error.message}</div>;
-    // }
     if (isFetching || !okr) {
       return null; // <div className={`${styles.container} ${styles.spinner}`} />;
     }
@@ -109,10 +104,10 @@ class OKRDetailsContainer extends Component {
 
 const mapStateToProps = (state) => {
   const { okr } = state;
-  const { isFetching, error, parentOkr, objective, keyResults, chart } = okr;
+  const { isFetching, parentOkr, objective, keyResults, chart } = okr;
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
-  const basicProps = { isFetching, error, pathname };
+  const basicProps = { isFetching, pathname };
   return !objective ? basicProps : {
     ...basicProps,
     parentOkr: parentOkr === null ? undefined : mapOKR(parentOkr, []),
