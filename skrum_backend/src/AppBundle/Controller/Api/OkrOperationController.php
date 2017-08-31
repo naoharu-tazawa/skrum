@@ -6,8 +6,6 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\JsonSchemaException;
-use AppBundle\Exception\PermissionException;
-use AppBundle\Utils\DBConstant;
 use AppBundle\Api\ResponseDTO\OkrDetailsDTO;
 
 /**
@@ -41,14 +39,9 @@ class OkrOperationController extends BaseController
         $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
         $newParentOkr = $this->getDBExistanceLogic()->checkOkrExistance($data['newParentOkrId'], $auth->getCompanyId());
 
-        // 操作権限チェック
-        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
-            $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
-            if (!$checkResult) {
-                throw new PermissionException('ユーザ操作権限がありません');
-            }
-        }
+        // ユーザ/グループ/会社操作権限一括チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $permissionLogic->checkUserGroupCompanyOperationSelfOK($auth, $tOkr);
 
         // 紐付け先OKR変更処理
         $okrOperationService = $this->getOkrOperationService();

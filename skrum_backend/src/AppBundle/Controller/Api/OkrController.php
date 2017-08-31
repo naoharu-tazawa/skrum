@@ -146,14 +146,9 @@ class OkrController extends BaseController
         // OKR存在チェック
         $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
 
-        // 操作権限チェック
-        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
-            $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
-            if (!$checkResult) {
-                throw new PermissionException('ユーザ操作権限がありません');
-            }
-        }
+        // ユーザ/グループ/会社操作権限一括チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $permissionLogic->checkUserGroupCompanyOperationSelfOK($auth, $tOkr);
 
         // OKR更新処理
         $okrService = $this->getOkrService();
@@ -217,14 +212,9 @@ class OkrController extends BaseController
         // OKR存在チェック
         $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
 
-        // 操作権限チェック
-        if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
-            $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
-            if (!$checkResult) {
-                throw new PermissionException('ユーザ操作権限がありません');
-            }
-        }
+        // ユーザ/グループ/会社操作権限一括チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $permissionLogic->checkUserGroupCompanyOperationSelfOK($auth, $tOkr);
 
         // OKR削除処理
         $okrService = $this->getOkrService();
