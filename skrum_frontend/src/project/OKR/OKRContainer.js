@@ -27,10 +27,6 @@ class OKRContainer extends Component {
     okrIds: PropTypes.arrayOf(PropTypes.number),
   };
 
-  state = {
-    showAlignmentsInfo: false,
-  };
-
   componentWillMount() {
     const { pathname } = this.props;
     if (isPathFinal(pathname)) {
@@ -123,7 +119,7 @@ class OKRContainer extends Component {
     if (isFetching) {
       return <span className={styles.spinner} />;
     }
-    const { showAlignmentsInfo } = this.state;
+    const { showAlignmentsInfo } = this.state || {};
     const { aspect, aspectId: okrId, ...basicPath } = explodePath(pathname);
     const { subject } = basicPath;
     const okrIndex = okrId && okrIds.indexOf(okrId);
@@ -148,7 +144,7 @@ class OKRContainer extends Component {
               前のOKR
             </Link>
           </div>
-          <OKRDetailsContainer {...{ subject, dispatchDeleteOkr }} />
+          {showDetails && <OKRDetailsContainer {...{ subject, dispatchDeleteOkr }} />}
         </div>
         <article style={showDetails ? { display: 'none' } : {}}>
           <section className={`${styles.overall_info} ${styles.cf}`}>

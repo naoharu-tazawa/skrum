@@ -75,7 +75,7 @@
     "react-router-redux": "^4.0.7",
     "react-select": "^1.0.0-rc.3",
     "react-simple-dropdown": "^3.0.0",
-    "react-vis": "^1.6.7",
+    "react-vis": "^1.7.3",
     "react-waypoint": "^7.0.4",
     "read-blob": "^1.1.0",
     "recharts": "^0.22.4",

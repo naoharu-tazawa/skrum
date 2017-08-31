@@ -686,7 +686,7 @@ SQL;
             ->setParameter('companyId', $companyId);
 
         if ($okrTypeOfKeyResults !== null) {
-            $qb->andWhere('to2.type = :okrType')
+            $qb->andWhere('to2.type = :okrType OR to2.type IS NULL')
                 ->setParameter('okrType', $okrTypeOfKeyResults);
         }
 

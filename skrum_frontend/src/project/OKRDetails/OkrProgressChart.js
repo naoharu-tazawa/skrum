@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, makeWidthFlexible, LineMarkSeries, Hint } from 'react-vis';
 import { toNumber } from 'lodash';
 import { ProgressSeriesPropTypes } from './propTypes';
 import ChartHighlightOverlay from '../../components/ChartHighlightOverlay';
-import { formatDate, formatDateTime } from '../../util/DatetimeUtil';
+import { formatDate, formatDateTime, fromUtcDate } from '../../util/DatetimeUtil';
 import styles from './OkrProgressChart.css';
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot);
 
-export default class OkrProgressChart extends Component {
+export default class OkrProgressChart extends PureComponent {
 
   static propTypes = {
     progressSeries: ProgressSeriesPropTypes.isRequired,
@@ -17,7 +17,7 @@ export default class OkrProgressChart extends Component {
   render() {
     const { progressSeries = [] } = this.props;
     const progressData = progressSeries.map(({ datetime, achievementRate }) =>
-      ({ x: new Date(datetime), y: toNumber(achievementRate) }));
+      ({ x: fromUtcDate(datetime), y: toNumber(achievementRate) }));
     const { lastDrawLocation, hint } = this.state || {};
     return (
       <div className={styles.component}>
@@ -27,6 +27,7 @@ export default class OkrProgressChart extends Component {
           xDomain={lastDrawLocation && [lastDrawLocation.left, lastDrawLocation.right]}
           xType="time"
           height={330}
+          // width={330}
           margin={{ bottom: 70, left: 60, right: 20 }}
           onMouseLeave={() => this.setState({ hint: null })}
         >

@@ -3,8 +3,10 @@
 namespace AppBundle\Logic;
 
 use AppBundle\Exception\NoDataException;
+use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\Auth;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\TOkr;
 
 /**
  * 権限ロジッククラス
@@ -78,6 +80,23 @@ class PermissionLogic extends BaseLogic
     }
 
     /**
+     * ユーザのロールレベルを取得
+     *
+     * @param integer $userId
+     * @return integer ロールレベル
+     */
+    private function getRoleLevel(int $userId): int
+    {
+        $mUserRepos = $this->getMUserRepository();
+        $mUser = $mUserRepos->find($userId);
+        if ($mUser === null) {
+            throw new NoDataException('ユーザが存在しません');
+        }
+
+        return $mUser->getRoleAssignment()->getRoleLevel();
+    }
+
+    /**
      * グループ操作権限チェック
      *
      * @param Auth $auth 認証情報
@@ -113,19 +132,92 @@ class PermissionLogic extends BaseLogic
     }
 
     /**
-     * ユーザのロールレベルを取得
+     * 会社操作権限チェック
      *
-     * @param integer $userId
-     * @return integer ロールレベル
+     * @param Auth $auth 認証情報
+     * @return boolean チェック結果
      */
-    private function getRoleLevel(int $userId): int
+    public function checkCompanyOperation(Auth $auth): bool
     {
-        $mUserRepos = $this->getMUserRepository();
-        $mUser = $mUserRepos->find($userId);
-        if ($mUser === null) {
-            throw new NoDataException('ユーザが存在しません');
+        // 権限チェックを行う
+        switch ($auth->getRoleLevel()) {
+            case DBConstant::ROLE_LEVEL_NORMAL:
+                return false;
+            case DBConstant::ROLE_LEVEL_ADMIN:
+            case DBConstant::ROLE_LEVEL_SUPERADMIN:
+                return true;
+        }
+    }
+
+    /**
+     * ユーザ/グループ/会社操作権限一括チェック（自ユーザ可）
+     *
+     * @param Auth $auth 認証情報
+     * @param TOkr $tOkr チェック対象OKRエンティティ
+     * @return boolean チェック結果
+     */
+    public function checkUserGroupCompanyOperationSelfOK(Auth $auth, TOkr $tOkr): bool
+    {
+        // ユーザ操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            $checkResult = $this->checkUserOperationSelfOK($auth, $tOkr->getOwnerUser()->getUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
         }
 
-        return $mUser->getRoleAssignment()->getRoleLevel();
+        // グループ操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            $checkResult = $this->checkGroupOperation($auth, $tOkr->getOwnerGroup()->getGroupId());
+            if (!$checkResult) {
+                throw new PermissionException('グループ操作権限がありません');
+            }
+        }
+
+        // 会社操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_COMPANY) {
+            $checkResult = $this->checkCompanyOperation($auth);
+            if (!$checkResult) {
+                throw new PermissionException('会社操作権限がありません');
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * ユーザ/グループ/会社操作権限一括チェック（自ユーザ不可）
+     *
+     * @param Auth $auth 認証情報
+     * @param TOkr $tOkr チェック対象OKRエンティティ
+     * @return boolean チェック結果
+     */
+    public function checkUserGroupCompanyOperationSelfNG(Auth $auth, TOkr $tOkr): bool
+    {
+        // ユーザ操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
+            $checkResult = $this->checkUserOperationSelfNG($auth, $tOkr->getOwnerUser()->getUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
+        }
+
+        // グループ操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+            $checkResult = $this->checkGroupOperation($auth, $tOkr->getOwnerGroup()->getGroupId());
+            if (!$checkResult) {
+                throw new PermissionException('グループ操作権限がありません');
+            }
+        }
+
+        // 会社操作権限チェック
+        if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_COMPANY) {
+            $checkResult = $this->checkCompanyOperation($auth);
+            if (!$checkResult) {
+                throw new PermissionException('会社操作権限がありません');
+            }
+        }
+
+        return true;
     }
 }
