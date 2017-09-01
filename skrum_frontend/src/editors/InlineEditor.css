@@ -145,6 +145,7 @@
   margin: 0;
   position: absolute;
   z-index: 1;
+  cursor: default;
 }
 .editor:not(.dropdown) .saveOptions {
   border-top: none;
@@ -169,6 +170,7 @@
 .submit, .cancel {
   width: 22px;
   padding: 4px;
+  cursor: pointer;
 }
 .submit:before {
   content: " ";

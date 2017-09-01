@@ -25,9 +25,7 @@ export default class InlineDateInput extends PureComponent {
             // containerClass={styles.datePicker}
             // wrapperClass={styles.datePickerWrapper}
             value={displayValue}
-            onChange={({ target }) =>
-              isValidDate(target.value) && setValue(toUtcDate(target.value))
-            }
+            onChange={day => isValidDate(day) && setValue(toUtcDate(day))}
             onDayClick={day => setValue(toUtcDate(day))}
             onKeyPress={e => e.key === 'Enter' && submit()}
           />}
