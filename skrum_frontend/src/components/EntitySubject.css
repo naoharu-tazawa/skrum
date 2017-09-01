@@ -18,6 +18,7 @@
   margin: auto 1em;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow-x: auto;
+  overflow: hidden;
   height: 100%;
+  width: 100%;
 }

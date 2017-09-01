@@ -177,6 +177,7 @@
   display: flex;
   margin-top: auto;
   padding-left: 70px;
+  height: 100%;
 }
 .like {
   background-image: url(/img/common/icn_good.png) !important;

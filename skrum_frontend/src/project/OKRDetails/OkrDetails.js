@@ -81,6 +81,7 @@ class OkrDetails extends Component {
               entity={parentOkr.owner}
               heading="現在の紐付け先目標/サブ目標（親目標）"
               subject={parentOkr.name}
+              componentClassName={styles.parentEntitySubject}
             />
           </div>
           <section>
