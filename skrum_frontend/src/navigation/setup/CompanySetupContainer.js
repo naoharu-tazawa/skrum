@@ -214,8 +214,6 @@ class CompanySetupContainer extends Component {
               onChange={({ target: { value } }) =>
                 this.setState({ timeframe: { ...timeframe,
                   startDate: isValidDate(value) ? toUtcDate(value) : undefined } })}
-              onDayClick={day =>
-                this.setState({ timeframe: { ...timeframe, startDate: toUtcDate(day) } })}
             />
           </section>
           {timeframe.customFlg && <section className={activeTab !== 4 && styles.hidden}>
@@ -225,8 +223,6 @@ class CompanySetupContainer extends Component {
               onChange={({ target: { value } }) =>
                 this.setState({ timeframe: { ...timeframe,
                   endDate: isValidDate(value) ? toUtcDate(value) : undefined } })}
-              onDayClick={day =>
-                this.setState({ timeframe: { ...timeframe, endDate: toUtcDate(day) } })}
             />
           </section>}
           {!isPosting && error && <div className={styles.error}>{error}</div>}

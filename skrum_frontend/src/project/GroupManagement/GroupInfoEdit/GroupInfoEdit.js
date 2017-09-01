@@ -10,18 +10,17 @@ import GroupPathLinks from '../../../components/GroupPathLinks';
 import DialogForm from '../../../dialogs/DialogForm';
 import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
+import Editable from '../../../components/Editable';
 import PathSearch from '../../PathSearch/PathSearch';
 import { withModal } from '../../../util/ModalUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 import { loadImageSrc } from '../../../util/ImageUtil';
-import { isBasicRole } from '../../../util/UserUtil';
 import styles from './GroupInfoEdit.css';
 
 class GroupInfoEdit extends Component {
 
   static propTypes = {
     group: groupPropTypes.isRequired,
-    roleLevel: PropTypes.number.isRequired,
     dispatchPutGroup: PropTypes.func.isRequired,
     dispatchPostGroupImage: PropTypes.func.isRequired,
     dispatchChangeGroupLeader: PropTypes.func.isRequired,
@@ -54,7 +53,7 @@ class GroupInfoEdit extends Component {
     </DialogForm>);
 
   render() {
-    const { group, roleLevel, dispatchPutGroup, dispatchPostGroupImage,
+    const { group, dispatchPutGroup, dispatchPostGroupImage,
       dispatchChangeGroupLeader, dispatchDeleteGroupPath, openModal } = this.props;
     const { groupId, name, groupPaths, mission, leaderUserId, leaderName, lastUpdate } = group;
     const entity = { id: groupId, type: EntityType.GROUP };
@@ -63,14 +62,17 @@ class GroupInfoEdit extends Component {
         <h1 className={styles.ttl_setion}>基本情報</h1>
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <div className={styles.profile_img}>
-            {isBasicRole(roleLevel) ?
-              <EntityLink entity={entity} avatarSize="70px" avatarOnly /> :
+            <Editable
+              entity={entity}
+              fallback={<EntityLink entity={entity} avatarSize="70px" avatarOnly />}
+            >
               <InlineEntityImagePicker
                 entity={entity}
                 avatarSize="70px"
                 onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
                   dispatchPostGroupImage(groupId, image, mimeType))}
-              />}
+              />
+            </Editable>
             <p>最終更新: {toRelativeTimeText(lastUpdate)}</p>
           </div>
           <div className={styles.profile_txt}>

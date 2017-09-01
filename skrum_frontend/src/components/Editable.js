@@ -15,12 +15,13 @@ class Editable extends PureComponent {
   static propTypes = {
     entity: entityPropType.isRequired,
     children: PropTypes.element.isRequired,
+    fallback: PropTypes.element.isRequired,
     granted: PropTypes.bool.isRequired,
   };
 
   render() {
-    const { children, granted } = this.props;
-    return granted && children;
+    const { children, fallback, granted } = this.props;
+    return granted ? children : fallback;
   }
 }
 
