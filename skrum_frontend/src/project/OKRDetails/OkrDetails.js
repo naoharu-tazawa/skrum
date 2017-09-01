@@ -12,6 +12,7 @@ import DropdownMenu from '../../components/DropdownMenu';
 import Dropdown from '../../components/Dropdown';
 import DisclosureTypeOptions from '../../components/DisclosureTypeOptions';
 import EntityLink from '../../components/EntityLink';
+import Editable from '../../components/Editable';
 import OwnerSearch from '../OwnerSearch/OwnerSearch';
 import OKRSearch from '../OKRSearch/OKRSearch';
 import NewAchievement from '../OKR/NewAchievement/NewAchievement';
@@ -26,10 +27,10 @@ class OkrDetails extends Component {
     parentOkr: okrPropTypes,
     okr: okrPropTypes.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
-    dispatchChangeOwner: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired,
+    dispatchChangeOkrOwner: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
   };
 
@@ -40,7 +41,11 @@ class OkrDetails extends Component {
     <DialogForm
       title="担当者の変更"
       submitButton="変更"
-      onSubmit={({ changedOwner } = {}) => this.props.dispatchChangeOwner(id, changedOwner)}
+      onSubmit={({ changedOwner } = {}) =>
+        this.props.dispatchChangeOkrOwner(id, changedOwner).then(({ error, payload }) => {
+          if (!error) browserHistory.push(toBasicPath(location.pathname));
+          return { error, payload };
+        })}
       valid={({ changedOwner }) => !isEmpty(changedOwner) &&
         (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
       onClose={onClose}
@@ -76,6 +81,7 @@ class OkrDetails extends Component {
               entity={parentOkr.owner}
               heading="現在の紐付け先目標/サブ目標（親目標）"
               subject={parentOkr.name}
+              componentClassName={styles.parentEntitySubject}
             />
           </div>
           <section>
@@ -130,9 +136,9 @@ class OkrDetails extends Component {
         </ul>
       )}
       confirmButton="削除"
-      onConfirm={() => this.props.dispatchDeleteOkr(id).then(({ error }) => {
+      onConfirm={() => this.props.dispatchDeleteOkr(id).then(({ error, payload }) => {
         if (!error) browserHistory.push(toBasicPath(location.pathname));
-        return Promise.resolve();
+        return { error, payload };
       })}
       onClose={onClose}
     >
@@ -228,21 +234,23 @@ class OkrDetails extends Component {
                 >
                   <img src="/img/common/inc_organization.png" alt="Map" />
                 </Link>
-                <DropdownMenu
-                  options={[
-                    { caption: '担当者変更',
-                      onClick: () => openModal(this.changeOwnerDialog,
-                        { id, name, owner }) },
-                    { caption: '紐付け先設定',
-                      onClick: () => openModal(this.changeParentOkrDialog,
-                        { id, parentOkr, okr }) },
-                    { caption: '公開範囲設定',
-                      onClick: () => openModal(this.changeDisclosureTypeDialog,
-                        { id, name, owner, disclosureType }) },
-                    { caption: '削除',
-                      onClick: () => openModal(this.deleteOkrPrompt, { id, name, owner }) },
-                  ]}
-                />
+                <Editable entity={owner}>
+                  <DropdownMenu
+                    options={[
+                      { caption: '担当者変更',
+                        onClick: () => openModal(this.changeOwnerDialog,
+                          { id, name, owner }) },
+                      { caption: '紐付け先設定',
+                        onClick: () => openModal(this.changeParentOkrDialog,
+                          { id, parentOkr, okr }) },
+                      { caption: '公開範囲設定',
+                        onClick: () => openModal(this.changeDisclosureTypeDialog,
+                          { id, name, owner, disclosureType }) },
+                      { caption: '削除',
+                        onClick: () => openModal(this.deleteOkrPrompt, { id, name, owner }) },
+                    ]}
+                  />
+                </Editable>
               </div>
             </div>
           </div>

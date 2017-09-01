@@ -38,7 +38,8 @@
 }
 .progressColumn {
   width: 25%;
-  margin: auto 0px;
+  margin: auto 0;
+  height: 100%;
 }
 .progressBox {
   display: flex;
@@ -83,6 +84,7 @@
 .action {
   display: flex;
   margin: auto 0;
+  height: 100%;
 }
 .action a {
   cursor: pointer;

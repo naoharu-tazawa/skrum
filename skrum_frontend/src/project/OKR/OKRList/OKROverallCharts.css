@@ -9,10 +9,7 @@
 }
 .progressChart, .okrCountChart {
   fill: #626A7F;
-  margin: auto 0 auto 25px;
-}
-.okrCountChart {
-  margin-right: 25px;
+  margin: auto 12px;
 }
 .progressChart > text:first-child, .okrCountChart > text:first-child {
   font-size: x-small;

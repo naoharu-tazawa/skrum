@@ -11,14 +11,14 @@ export default class KRDetailsList extends Component {
     keyResults: keyResultsPropTypes,
     onAdd: PropTypes.func.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
-    dispatchChangeOwner: PropTypes.func.isRequired,
+    dispatchChangeKROwner: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeleteKR: PropTypes.func.isRequired,
   };
 
   render() {
-    const { parentOkr, keyResults = [], onAdd, dispatchPutOKR, dispatchChangeOwner,
+    const { parentOkr, keyResults = [], onAdd, dispatchPutOKR, dispatchChangeKROwner,
       dispatchChangeParentOkr, dispatchChangeDisclosureType, dispatchDeleteKR } = this.props;
     return (
       <div className={styles.component}>
@@ -33,7 +33,7 @@ export default class KRDetailsList extends Component {
                 parentOkr,
                 keyResult,
                 dispatchPutOKR,
-                dispatchChangeOwner,
+                dispatchChangeKROwner,
                 dispatchChangeParentOkr,
                 dispatchChangeDisclosureType,
                 dispatchDeleteKR,

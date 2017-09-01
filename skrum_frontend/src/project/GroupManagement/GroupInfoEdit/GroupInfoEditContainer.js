@@ -4,13 +4,11 @@ import { connect } from 'react-redux';
 import { groupPropTypes } from './propTypes';
 import { putGroup, postGroupImage, changeGroupLeader, addGroupPath, deleteGroupPath } from '../action';
 import GroupInfoEdit from './GroupInfoEdit';
-import { RoleLevel } from '../../../util/UserUtil';
 
 class GroupInfoEditContainer extends Component {
 
   static propTypes = {
     group: groupPropTypes,
-    roleLevel: PropTypes.number.isRequired,
     dispatchPutGroup: PropTypes.func.isRequired,
     dispatchPostGroupImage: PropTypes.func.isRequired,
     dispatchChangeGroupLeader: PropTypes.func.isRequired,
@@ -19,12 +17,11 @@ class GroupInfoEditContainer extends Component {
   };
 
   render() {
-    const { group, roleLevel, dispatchPutGroup, dispatchPostGroupImage,
+    const { group, dispatchPutGroup, dispatchPostGroupImage,
       dispatchChangeGroupLeader, dispatchAddGroupPath, dispatchDeleteGroupPath } = this.props;
     return !group ? null : (
       <GroupInfoEdit
         group={group}
-        roleLevel={roleLevel}
         dispatchPutGroup={dispatchPutGroup}
         dispatchPostGroupImage={dispatchPostGroupImage}
         dispatchChangeGroupLeader={dispatchChangeGroupLeader}
@@ -35,10 +32,9 @@ class GroupInfoEditContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { auth = {}, groupManagement = {} } = state;
-  const { roleLevel = RoleLevel.BASIC } = auth;
+  const { groupManagement = {} } = state;
   const { isFetching, group = {} } = groupManagement;
-  return { roleLevel, ...(isFetching ? {} : { group: group.group }) };
+  return isFetching ? {} : { group: group.group };
 };
 
 const mapDispatchToProps = (dispatch) => {

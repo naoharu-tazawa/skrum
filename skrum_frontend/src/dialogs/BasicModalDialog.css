@@ -7,15 +7,17 @@
   left: 0;
   z-index: 100;
   display: flex;
+  align-items: center;
 }
 .modal {
   margin: auto;
   background-color: white;
 }
+/*
 _:-ms-fullscreen, :root .modal {
-  transform: translate(0px, 50%);
   display: table;
 }
+*/
 .modal:focus {
   outline: 0;
 }

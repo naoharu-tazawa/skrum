@@ -58,6 +58,9 @@ class PreregisterContainer extends Component {
             <label>サブドメイン</label>
             <input type="text" onChange={e => this.setState({ subdomain: e.target.value })} />
           </section>
+          <div className={styles.notice}>サブドメインとは御社専用のSkrumページにアクセスするために必要なものです。</div>
+          <div className={styles.notice}>`（例：https://[サブドメイン].skrum.jp）`</div>
+          <div className={styles.notice}>小文字アルファベット、数字、ハイフンのみを使い、3文字以上28文字以下で指定してください。</div>
           <section>
             {!isPreregistering && error && <div className={styles.error}>{error}</div>}
             {!isPreregistering && <button type="submit" disabled={!email || !subdomain}>送信</button>}

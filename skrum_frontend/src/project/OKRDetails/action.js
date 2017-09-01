@@ -15,8 +15,8 @@ export const Action = {
   FINISH_DELETE_KR: 'FINISH_DELETE_KR',
   REQUEST_POST_ACHIEVEMENT: 'REQUEST_POST_ACHIEVEMENT',
   FINISH_POST_ACHIEVEMENT: 'FINISH_POST_ACHIEVEMENT',
-  REQUEST_CHANGE_OWNER: 'REQUEST_CHANGE_OWNER',
-  FINISH_CHANGE_OWNER: 'FINISH_CHANGE_OWNER',
+  REQUEST_CHANGE_KR_OWNER: 'REQUEST_CHANGE_KR_OWNER',
+  FINISH_CHANGE_KR_OWNER: 'FINISH_CHANGE_KR_OWNER',
   REQUEST_CHANGE_PARENT_OKR: 'REQUEST_CHANGE_PARENT_OKR',
   FINISH_CHANGE_PARENT_OKR: 'FINISH_CHANGE_PARENT_OKR',
   REQUEST_CHANGE_OKR_DISCLOSURE_TYPE: 'REQUEST_CHANGE_OKR_DISCLOSURE_TYPE',
@@ -34,8 +34,8 @@ const {
   finishDeleteKr,
   requestPostAchievement,
   finishPostAchievement,
-  requestChangeOwner,
-  finishChangeOwner,
+  requestChangeKrOwner,
+  finishChangeKrOwner,
   requestChangeParentOkr,
   finishChangeParentOkr,
   requestChangeOkrDisclosureType,
@@ -46,7 +46,7 @@ const {
   [Action.FINISH_PUT_OKR_DETAILS]: keyValueIdentity,
   [Action.FINISH_DELETE_KR]: keyValueIdentity,
   [Action.FINISH_POST_ACHIEVEMENT]: keyValueIdentity,
-  [Action.FINISH_CHANGE_OWNER]: keyValueIdentity,
+  [Action.FINISH_CHANGE_KR_OWNER]: keyValueIdentity,
   [Action.FINISH_CHANGE_PARENT_OKR]: keyValueIdentity,
   [Action.FINISH_CHANGE_OKR_DISCLOSURE_TYPE]: keyValueIdentity,
 },
@@ -55,7 +55,7 @@ const {
   Action.REQUEST_PUT_OKR_DETAILS,
   Action.REQUEST_DELETE_KR,
   Action.REQUEST_POST_ACHIEVEMENT,
-  Action.REQUEST_CHANGE_OWNER,
+  Action.REQUEST_CHANGE_KR_OWNER,
   Action.REQUEST_CHANGE_PARENT_OKR,
   Action.REQUEST_CHANGE_OKR_DISCLOSURE_TYPE,
 );
@@ -90,14 +90,14 @@ export const putOKR = (id, data) =>
       .catch(({ message }) => dispatch(finishPutOkrDetails(new Error(message))));
   };
 
-export const changeOwner = (id, owner) =>
+export const changeKROwner = (id, owner) =>
   (dispatch, getState) => {
     const state = getState();
-    if (state.okr.isChangingOwner) return Promise.resolve();
-    dispatch(requestChangeOwner());
+    if (state.okr.isChangingKROwner) return Promise.resolve();
+    dispatch(requestChangeKrOwner());
     return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound(omit(owner, 'name')))
-      .then(() => dispatch(finishChangeOwner('data', { id, ...mapOwnerOutbound(owner) })))
-      .catch(({ message }) => dispatch(finishChangeOwner(new Error(message))));
+      .then(() => dispatch(finishChangeKrOwner('data', { id, ...mapOwnerOutbound(owner) })))
+      .catch(({ message }) => dispatch(finishChangeKrOwner(new Error(message))));
   };
 
 export const changeParentOkr = (id, newParentOkrId) =>

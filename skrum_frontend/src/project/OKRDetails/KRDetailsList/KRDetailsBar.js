@@ -12,6 +12,7 @@ import DropdownMenu from '../../../components/DropdownMenu';
 import Dropdown from '../../../components/Dropdown';
 import DisclosureTypeOptions from '../../../components/DisclosureTypeOptions';
 import EntityLink from '../../../components/EntityLink';
+import Editable from '../../../components/Editable';
 import OwnerSearch from '../../OwnerSearch/OwnerSearch';
 // import OKRSearch from '../../OKRSearch/OKRSearch';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
@@ -28,7 +29,7 @@ class KRDetailsBar extends Component {
     parentOkr: okrPropTypes,
     keyResult: keyResultPropTypes,
     dispatchPutOKR: PropTypes.func,
-    dispatchChangeOwner: PropTypes.func,
+    dispatchChangeKROwner: PropTypes.func,
     dispatchChangeParentOkr: PropTypes.func,
     dispatchChangeDisclosureType: PropTypes.func,
     dispatchDeleteKR: PropTypes.func,
@@ -42,7 +43,7 @@ class KRDetailsBar extends Component {
     <DialogForm
       title="担当者の変更"
       submitButton="変更"
-      onSubmit={({ changedOwner } = {}) => this.props.dispatchChangeOwner(id, changedOwner)}
+      onSubmit={({ changedOwner } = {}) => this.props.dispatchChangeKROwner(id, changedOwner)}
       valid={({ changedOwner }) => !isEmpty(changedOwner) &&
         (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
       onClose={onClose}
@@ -217,22 +218,24 @@ class KRDetailsBar extends Component {
           >
             <img src="/img/common/inc_organization.png" alt="Map" />
           </Link>
-          <DropdownMenu
-            options={[
-              // { caption: '担当者変更',
-              //   onClick: () => openModal(this.changeOwnerDialog,
-              //     { id, name, owner }) },
-              // { caption: '紐付け先設定',
-              //   onClick: () => openModal(this.changeParentOkrDialog,
-              //     { id, parentOkr, keyResult }) },
-              { caption: '公開範囲設定',
-                onClick: () => openModal(this.changeDisclosureTypeDialog,
-                  { id, name, owner, disclosureType }) },
-              // { caption: '影響度設定' },
-              { caption: '削除',
-                onClick: () => openModal(this.deleteKRPrompt, { id, name, owner }) },
-            ]}
-          />
+          <Editable entity={owner}>
+            <DropdownMenu
+              options={[
+                // { caption: '担当者変更',
+                //   onClick: () => openModal(this.changeOwnerDialog,
+                //     { id, name, owner }) },
+                // { caption: '紐付け先設定',
+                //   onClick: () => openModal(this.changeParentOkrDialog,
+                //     { id, parentOkr, keyResult }) },
+                { caption: '公開範囲設定',
+                  onClick: () => openModal(this.changeDisclosureTypeDialog,
+                    { id, name, owner, disclosureType }) },
+                // { caption: '影響度設定' },
+                { caption: '削除',
+                  onClick: () => openModal(this.deleteKRPrompt, { id, name, owner }) },
+              ]}
+            />
+          </Editable>
         </div>
       </div>);
   }

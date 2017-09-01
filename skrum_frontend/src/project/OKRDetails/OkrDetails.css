@@ -163,3 +163,6 @@ button.tool:focus {
   margin-top: -1em;
   display: block;
 }
+.parentEntitySubject {
+  width: calc(100% - 7em);
+}

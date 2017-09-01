@@ -32,7 +32,7 @@ export default (state = {
       }
       const { id, ...update } = payload.data;
       const data = state.data.map(tf => mergeUpdateById(tf, 'timeframeId', update, id));
-      return { ...state, data, isPutting: true, error: null };
+      return { ...state, data, isPutting: false, error: null };
     }
 
     case Action.REQUEST_POST_TIMEFRAME:

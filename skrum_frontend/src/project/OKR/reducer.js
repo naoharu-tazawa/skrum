@@ -8,6 +8,7 @@ export default (state = {
   isFetching: false,
   isPostingOkr: false,
   isDeletingOkr: false,
+  isChangingOkrOwner: false,
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_USER_BASICS:
@@ -53,6 +54,20 @@ export default (state = {
       const { [subject]: basics } = state;
       const okrs = basics.okrs.filter(({ okrId }) => id !== okrId);
       return { ...state, [subject]: { ...basics, okrs }, isDeletingOkr: false, error: null };
+    }
+
+    case Action.REQUEST_CHANGE_OKR_OWNER:
+      return { ...state, isChangingOkrOwner: true };
+
+    case Action.FINISH_CHANGE_OKR_OWNER: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isChangingOkrOwner: false, error: { message: payload.message } };
+      }
+      const { subject, id } = payload.data;
+      const { [subject]: basics } = state;
+      const okrs = basics.okrs.filter(({ okrId }) => id !== okrId);
+      return { ...state, [subject]: { ...basics, okrs }, isChangingOkrOwner: false, error: null };
     }
 
     case Action.SYNC_OKR_DETAILS: {

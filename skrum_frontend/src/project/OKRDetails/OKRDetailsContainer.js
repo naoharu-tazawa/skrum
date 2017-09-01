@@ -6,7 +6,7 @@ import OkrDetails from './OkrDetails';
 import KRDetailsList from './KRDetailsList/KRDetailsList';
 import OkrProgressChart from './OkrProgressChart';
 import NewOKR from '../OKR/NewOKR/NewOKR';
-import { fetchOKRDetails, putOKR, changeOwner, changeParentOkr, changeDisclosureType, deleteKR } from './action';
+import { fetchOKRDetails, putOKR, changeKROwner, changeParentOkr, changeDisclosureType, deleteKR } from './action';
 import { syncOkr } from '../OKR/action';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
 import { mapOKR } from '../../util/OKRUtil';
@@ -16,18 +16,19 @@ import styles from './OKRDetailsContainer.css';
 class OKRDetailsContainer extends Component {
 
   static propTypes = {
-    subject: PropTypes.string,
-    isFetching: PropTypes.bool,
+    subject: PropTypes.string.isRequired,
+    isFetching: PropTypes.bool.isRequired,
     parentOkr: okrPropTypes,
     okr: okrPropTypes,
     progressSeries: ProgressSeriesPropTypes,
     dispatchFetchOKRDetails: PropTypes.func.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
-    dispatchChangeOwner: PropTypes.func.isRequired,
+    dispatchChangeKROwner: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
-    dispatchDeleteOkr: PropTypes.func.isRequired, // passed from OKRContainer
     dispatchDeleteKR: PropTypes.func.isRequired,
+    dispatchDeleteOkr: PropTypes.func.isRequired, // passed from OKRContainer
+    dispatchChangeOkrOwner: PropTypes.func.isRequired, // passed from OKRContainer
     openModal: PropTypes.func.isRequired,
     pathname: PropTypes.string,
   };
@@ -56,8 +57,9 @@ class OKRDetailsContainer extends Component {
 
   render() {
     const { isFetching, parentOkr, okr, progressSeries = [],
-      dispatchPutOKR, dispatchChangeOwner, dispatchChangeParentOkr, dispatchDeleteOkr,
-      dispatchChangeDisclosureType, dispatchDeleteKR, openModal } = this.props;
+      dispatchPutOKR, dispatchChangeKROwner, dispatchChangeParentOkr,
+      dispatchDeleteOkr, dispatchChangeOkrOwner, dispatchChangeDisclosureType,
+      dispatchDeleteKR, openModal } = this.props;
     if (isFetching || !okr) {
       return null; // <div className={`${styles.container} ${styles.spinner}`} />;
     }
@@ -71,10 +73,10 @@ class OKRDetailsContainer extends Component {
                 parentOkr,
                 okr,
                 dispatchPutOKR,
-                dispatchChangeOwner,
                 dispatchChangeParentOkr,
                 dispatchChangeDisclosureType,
                 dispatchDeleteOkr,
+                dispatchChangeOkrOwner,
               }}
             />
           </div>
@@ -91,7 +93,7 @@ class OKRDetailsContainer extends Component {
             onAdd={() => openModal(NewOKR, { type: 'KR', parentOkr: okr })}
             {...{
               dispatchPutOKR,
-              dispatchChangeOwner,
+              dispatchChangeKROwner,
               dispatchChangeParentOkr,
               dispatchChangeDisclosureType,
               dispatchDeleteKR,
@@ -121,8 +123,8 @@ const mapDispatchToProps = (dispatch, { subject }) => {
     dispatch(fetchOKRDetails(id));
   const dispatchPutOKR = (id, data) =>
     dispatch(putOKR(id, data)).then(result => dispatch(syncOkr(subject, result)));
-  const dispatchChangeOwner = (id, owner) =>
-    dispatch(changeOwner(id, owner));
+  const dispatchChangeKROwner = (id, owner) =>
+    dispatch(changeKROwner(id, owner));
   const dispatchChangeParentOkr = (id, newParentOkrId) =>
     dispatch(changeParentOkr(id, newParentOkrId));
   const dispatchChangeDisclosureType = (id, disclosureType) =>
@@ -132,7 +134,7 @@ const mapDispatchToProps = (dispatch, { subject }) => {
   return {
     dispatchFetchOKRDetails,
     dispatchPutOKR,
-    dispatchChangeOwner,
+    dispatchChangeKROwner,
     dispatchChangeParentOkr,
     dispatchChangeDisclosureType,
     dispatchDeleteKR,

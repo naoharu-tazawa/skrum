@@ -457,10 +457,11 @@ class UserSettingService extends BaseService
     /**
      * ロール一覧取得
      *
+     * @param Auth $auth 認証情報
      * @param integer $companyId 会社ID
      * @return array
      */
-    public function getRoles(int $companyId): array
+    public function getRoles(Auth $auth, int $companyId): array
     {
         // スーパー管理者ユーザ数を取得
         $mUserRepos = $this->getMUserRepository();
@@ -468,7 +469,7 @@ class UserSettingService extends BaseService
 
         // ロール一覧取得
         $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
-        if ($superAdminUserCount < 2) {
+        if ($superAdminUserCount < 2 && $auth->getRoleLevel() >= DBConstant::ROLE_LEVEL_SUPERADMIN) {
             // スーパー管理者ユーザ登録数が1人の場合
             $mRoleAssignmentArray = $mRoleAssignmentRepos->getRoles($companyId, true);
         } else {

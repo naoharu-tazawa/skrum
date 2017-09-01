@@ -1,6 +1,12 @@
 import PropTypes from 'prop-types';
 import { entityTypePropType } from '../../../util/EntityUtil';
 
+export const ownerPropTypes = PropTypes.shape({
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  type: entityTypePropType.isRequired,
+});
+
 export const keyResultPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
@@ -8,11 +14,7 @@ export const keyResultPropTypes = PropTypes.shape({
   targetValue: PropTypes.number.isRequired,
   achievedValue: PropTypes.number.isRequired,
   achievementRate: PropTypes.string.isRequired,
-  owner: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    type: entityTypePropType.isRequired,
-  }).isRequired,
+  owner: ownerPropTypes.isRequired,
   status: PropTypes.string.isRequired,
   ratioLockedFlg: PropTypes.number.isRequired,
 });
@@ -26,10 +28,7 @@ export const okrPropTypes = PropTypes.shape({
   targetValue: PropTypes.number.isRequired,
   achievedValue: PropTypes.number.isRequired,
   achievementRate: PropTypes.string.isRequired,
-  owner: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-  }).isRequired,
+  owner: ownerPropTypes.isRequired,
   keyResults: keyResultsPropTypes.isRequired,
   status: PropTypes.string.isRequired,
   ratioLockedFlg: PropTypes.number,

@@ -1,6 +1,6 @@
 .content, .warning {
   font-size: 14px;
-  max-width: 50em;
+  /*max-width: 50em;*/
 }
 .warning li {
   display: list-item;

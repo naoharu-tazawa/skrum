@@ -212,7 +212,7 @@ class UserSettingController extends BaseController
 
         // ロール一覧取得処理
         $userSettingService = $this->getUserSettingService();
-        $roleDTOArray = $userSettingService->getRoles($companyId);
+        $roleDTOArray = $userSettingService->getRoles($auth, $companyId);
 
         return $roleDTOArray;
     }
