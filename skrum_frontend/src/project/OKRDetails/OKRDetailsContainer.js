@@ -56,7 +56,7 @@ class OKRDetailsContainer extends Component {
   }
 
   render() {
-    const { isFetching, parentOkr, okr, progressSeries = [],
+    const { isFetching, parentOkr, okr, progressSeries = [], subject,
       dispatchPutOKR, dispatchChangeKROwner, dispatchChangeParentOkr,
       dispatchDeleteOkr, dispatchChangeOkrOwner, dispatchChangeDisclosureType,
       dispatchDeleteKR, openModal } = this.props;
@@ -72,6 +72,7 @@ class OKRDetailsContainer extends Component {
               {...{
                 parentOkr,
                 okr,
+                subject,
                 dispatchPutOKR,
                 dispatchChangeParentOkr,
                 dispatchChangeDisclosureType,
@@ -92,6 +93,7 @@ class OKRDetailsContainer extends Component {
             keyResults={okr.keyResults}
             onAdd={() => openModal(NewOKR, { type: 'KR', parentOkr: okr })}
             {...{
+              subject,
               dispatchPutOKR,
               dispatchChangeKROwner,
               dispatchChangeParentOkr,

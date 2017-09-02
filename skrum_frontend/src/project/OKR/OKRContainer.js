@@ -199,10 +199,9 @@ class OKRContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, { subject }) => {
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
-  const { subject } = explodePath(pathname);
   const { isFetching = false, [subject]: basics = {} } = state.basics || {};
   const { okrs = [] } = basics || {};
   const okrIds = okrs.map(({ okrId }) => okrId);

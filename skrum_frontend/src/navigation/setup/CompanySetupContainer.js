@@ -177,10 +177,10 @@ class CompanySetupContainer extends Component {
             <Select
               className={styles.select}
               options={[
-                { value: '1', label: '1年ごと' },
-                { value: '2', label: '6ヶ月ごと' },
-                { value: '3', label: '3ヶ月ごと' },
-                { value: '4', label: '1ヶ月ごと' },
+                { value: '4', label: '1年ごと' },
+                { value: '3', label: '6ヶ月ごと' },
+                { value: '2', label: '3ヶ月ごと' },
+                { value: '1', label: '1ヶ月ごと' },
                 { value: 'c', label: 'カスタム設定' },
               ]}
               value={localCycleType}

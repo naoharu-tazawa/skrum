@@ -26,6 +26,7 @@ class OkrDetails extends Component {
   static propTypes = {
     parentOkr: okrPropTypes,
     okr: okrPropTypes.isRequired,
+    subject: PropTypes.string.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
@@ -146,7 +147,7 @@ class OkrDetails extends Component {
     </ConfirmationPrompt>);
 
   render() {
-    const { parentOkr, okr, dispatchPutOKR, openModal } = this.props;
+    const { parentOkr, okr, subject, dispatchPutOKR, openModal } = this.props;
     const { id, name, detail, unit, targetValue, achievedValue, achievementRate,
       startDate, endDate, owner, disclosureType, keyResults = [] } = okr;
     return (
@@ -225,7 +226,9 @@ class OkrDetails extends Component {
                   <Dropdown
                     triggerIcon="/img/checkin.png"
                     content={props =>
-                      <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
+                      <NewAchievement
+                        {...{ subject, id, achievedValue, targetValue, unit, ...props }}
+                      />}
                     arrow="center"
                   />)}
                 <Link

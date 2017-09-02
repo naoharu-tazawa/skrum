@@ -75,9 +75,9 @@ export default (state = {
       if (error) {
         return state;
       }
-      const { subject, id, ...data } = payload.syncOkr;
+      const { subject, id, okrId, ...data } = payload.data;
       const { [subject]: basics } = state;
-      const okrs = basics.okrs.map(okr => mergeUpdateById(okr, 'okrId', data, id));
+      const okrs = basics.okrs.map(okr => mergeUpdateById(okr, 'okrId', data, id || okrId));
       return { ...state, [subject]: { ...basics, okrs } };
     }
 

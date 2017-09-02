@@ -6,6 +6,7 @@ import { toNumber } from 'lodash';
 import DialogForm from '../../../dialogs/DialogForm';
 import { withReduxForm } from '../../../util/FormUtil';
 import { postAchievement } from '../../OKRDetails/action';
+import { syncOkr } from '../../OKR/action';
 import styles from './NewAchievement.css';
 
 const formName = 'newProgress';
@@ -18,6 +19,7 @@ const validate = ({ achievedValue, targetValue } = {}) => ({
 class NewAchievement extends Component {
 
   static propTypes = {
+    subject: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     achievedValue: PropTypes.number.isRequired,
     targetValue: PropTypes.number.isRequired,
@@ -43,11 +45,11 @@ class NewAchievement extends Component {
       targetValue: toNumber(targetValue),
       post,
     };
-    this.setState({ isSubmitting: true }, () =>
-      dispatchPostAchievement(id, entry).then(({ error }) =>
-        this.setState({ isSubmitting: false }, () => !error && onClose()),
-      ),
-    );
+    this.setState({ isSubmitting: true });
+    return dispatchPostAchievement(id, entry).then(({ error, payload }) => {
+      this.setState({ isSubmitting: false }, () => !error && onClose());
+      return { error, payload };
+    });
   }
 
   render() {
@@ -81,9 +83,11 @@ class NewAchievement extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, { subject }) => {
   const dispatchPostAchievement = (id, entry) =>
-    dispatch(postAchievement(id, entry));
+    dispatch(postAchievement(id, entry))
+      .then(({ payload: { data: { data: { parentOkr = {} } = {} } = {}, message }, error }) =>
+        dispatch(syncOkr(subject, { payload: { data: parentOkr, message }, error })));
   return { dispatchPostAchievement };
 };
 

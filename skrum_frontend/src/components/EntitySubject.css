@@ -13,6 +13,7 @@
 }
 .entity {
   float: left;
+  min-width: calc(40px + 1em + 6em);
 }
 .subject {
   margin: auto 1em;
@@ -21,4 +22,5 @@
   overflow: hidden;
   height: 100%;
   flex: 1;
+  line-height: normal;
 }

@@ -1,6 +1,7 @@
 import { values } from 'lodash';
 import { Action } from './action';
 import { mergeUpdateById } from '../../util/ActionUtil';
+import { toUtcDate } from '../../util/DatetimeUtil';
 
 export default (state = {
   isFetching: false,
@@ -111,10 +112,16 @@ export default (state = {
       if (error) {
         return { ...state, isPostingAchievement: false, error: { message: payload.message } };
       }
-      const { okrId, ...update } = payload.data.data;
-      const objective = mergeUpdateById(state.objective, 'okrId', update, okrId);
+      const { parentOkr, targetOkr } = payload.data.data;
+      const { okrId: parentOkrId, ...parentUpdate } = parentOkr;
+      const { okrId, ...update } = targetOkr;
+      const parentObjective = mergeUpdateById(state.objective, 'okrId', parentUpdate, parentOkrId);
+      const objective = mergeUpdateById(parentObjective, 'okrId', update, okrId);
       const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, okrId));
-      return { ...state, objective, keyResults, isPostingAchievement: false, error: null };
+      const datetime = toUtcDate(new Date());
+      const chart = parentOkrId !== state.objective.okrId ? state.chart :
+        [...state.chart, { datetime, achievementRate: parentOkr.achievementRate }];
+      return { ...state, objective, keyResults, chart, isPostingAchievement: false, error: null };
     }
 
     default:

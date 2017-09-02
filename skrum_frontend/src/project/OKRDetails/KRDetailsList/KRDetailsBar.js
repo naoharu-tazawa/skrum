@@ -28,6 +28,7 @@ class KRDetailsBar extends Component {
     header: PropTypes.bool,
     parentOkr: okrPropTypes,
     keyResult: keyResultPropTypes,
+    subject: PropTypes.string,
     dispatchPutOKR: PropTypes.func,
     dispatchChangeKROwner: PropTypes.func,
     dispatchChangeParentOkr: PropTypes.func,
@@ -140,7 +141,7 @@ class KRDetailsBar extends Component {
     </ConfirmationPrompt>);
 
   render() {
-    const { header, /* parentOkr, */ keyResult, dispatchPutOKR, openModal } = this.props;
+    const { header, /* parentOkr, */ keyResult, subject, dispatchPutOKR, openModal } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -208,7 +209,7 @@ class KRDetailsBar extends Component {
             <Dropdown
               triggerIcon="/img/checkin.png"
               content={props =>
-                <NewAchievement {...{ id, achievedValue, targetValue, unit, ...props }} />}
+                <NewAchievement {...{ subject, id, achievedValue, targetValue, unit, ...props }} />}
               arrow="right"
             />)}
           {type === OKRType.OKR && <div className={styles.checkinSpace} />}
