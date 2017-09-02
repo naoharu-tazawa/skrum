@@ -30,6 +30,13 @@ class GroupDTO
      *
      * @JSON\Type("string")
      */
+    private $groupType;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
     private $achievementRate;
 
     /**
@@ -78,6 +85,30 @@ class GroupDTO
     public function getGroupName()
     {
         return $this->groupName;
+    }
+
+    /**
+     * Set groupType
+     *
+     * @param string $groupType
+     *
+     * @return GroupDTO
+     */
+    public function setGroupType($groupType)
+    {
+        $this->groupType = $groupType;
+
+        return $this;
+    }
+
+    /**
+     * Get groupType
+     *
+     * @return string
+     */
+    public function getGroupType()
+    {
+        return $this->groupType;
     }
 
     /**

@@ -73,6 +73,7 @@ class GroupMemberService extends BaseService
         $groupDTO = new GroupDTO();
         $groupDTO->setGroupId($mGroup->getGroupId());
         $groupDTO->setGroupName($mGroup->getGroupName());
+        $groupDTO->setGroupType($mGroup->getGroupType());
         $groupAchievementRateArray = array();
         foreach ($groupOkrsArray as $groupOkr) {
             $groupAchievementRateArray[] = $groupOkr->getAchievementRate();

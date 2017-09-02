@@ -69,6 +69,8 @@ paths:
                     type: integer
                   groupName:
                     type: string
+                  groupType:
+                    type: string
                   achievementRate:
                     type: number
                 required:
