@@ -131,18 +131,18 @@ class OKRContainer extends Component {
       <div className={styles.container}>
         <div style={!showDetails ? { display: 'none' } : {}}>
           <div className={styles.navigator}>
-            <Link to={implodePath(basicPath)} className={styles.backLink}>所有OKR一覧へ戻る</Link>
+            <Link to={implodePath(basicPath)} className={styles.backLink}>目標一覧へ戻る</Link>
             <Link
               to={nextOkrId ? implodePath({ aspect: 'o', aspectId: nextOkrId, ...basicPath }) : ''}
               className={`${styles.naviLink} ${styles.nextLink} ${!nextOkrId ? styles.disabled : ''}`}
             >
-              次のOKR
+              次の目標
             </Link>
             <Link
               to={prevOkrId ? implodePath({ aspect: 'o', aspectId: prevOkrId, ...basicPath }) : ''}
               className={`${styles.naviLink} ${styles.prevLink} ${!prevOkrId ? styles.disabled : ''}`}
             >
-              前のOKR
+              前の目標
             </Link>
           </div>
           {showDetails && (
