@@ -1,4 +1,5 @@
 import { Action } from './action';
+import { GroupType } from '../util/GroupUtil';
 
 export default (state = {
   isFetching: false,
@@ -28,6 +29,37 @@ export default (state = {
         return { ...state, isPosting: false, error: { message: payload.message } };
       }
       return { ...state, isPosting: false, error: null };
+    }
+
+    case Action.ADD_GROUP: {
+      const { payload, error } = action;
+      if (error) {
+        return state;
+      }
+      const { groupId, groupName, groupType } = payload.data.group;
+      const { teams, departments, ...others } = state.data;
+      const group = { groupId, groupName };
+      const data = {
+        teams: groupType === GroupType.TEAM ? [...teams, group] : teams,
+        departments: groupType === GroupType.DEPARTMENT ? [...departments, group] : departments,
+        ...others,
+      };
+      return { ...state, data };
+    }
+
+    case Action.REMOVE_GROUP: {
+      const { payload, error } = action;
+      if (error) {
+        return state;
+      }
+      const { groupId } = payload.data;
+      const { teams, departments, ...others } = state.data;
+      const data = {
+        teams: teams.filter(team => team.groupId !== groupId),
+        departments: departments.filter(dept => dept.groupId !== groupId),
+        ...others,
+      };
+      return { ...state, data };
     }
 
     default:

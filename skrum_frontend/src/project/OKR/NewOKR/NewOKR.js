@@ -78,10 +78,12 @@ class NewOKR extends Component {
 
   constructor(props) {
     super(props);
-    const { differingParentOkrOwner, parentOkr } = props;
+    const { differingParentOkrOwner, parentOkr, type } = props;
     // FIXME: moving ownerSearch to mapStateToProps causes infinite loop
-    const ownerSearch = withItemisedReduxField(OwnerSearch, 'owner',
-      differingParentOkrOwner && parentOkr ? { exclude: parentOkr.owner } : {});
+    const ownerSearch = withItemisedReduxField(OwnerSearch, 'owner', {
+      ...(differingParentOkrOwner && parentOkr ? { exclude: parentOkr.owner } : {}),
+      ...(type === 'KR' ? { value: parentOkr.owner } : {}),
+    });
     this.state = { ownerSearch };
   }
 

@@ -9,6 +9,8 @@ export const Action = {
   FINISH_SETUP_COMPANY: 'FINISH_SETUP_COMPANY',
   REQUEST_SETUP_USER: 'REQUEST_SETUP_USER',
   FINISH_SETUP_USER: 'FINISH_SETUP_USER',
+  ADD_GROUP: 'ADD_GROUP',
+  REMOVE_GROUP: 'REMOVE_GROUP',
 };
 
 const {
@@ -18,10 +20,14 @@ const {
   finishSetupCompany,
   requestSetupUser,
   finishSetupUser,
+  addGroup,
+  removeGroup,
 } = createActions({
   [Action.FINISH_FETCH_USER_TOP]: keyValueIdentity,
   [Action.FINISH_SETUP_COMPANY]: keyValueIdentity,
   [Action.FINISH_SETUP_USER]: keyValueIdentity,
+  [Action.ADD_GROUP]: keyValueIdentity,
+  [Action.REMOVE_GROUP]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_USER_TOP,
   Action.REQUEST_SETUP_COMPANY,
@@ -57,3 +63,13 @@ export const setupUser = (userId, setup) =>
       .then(json => dispatch(finishSetupUser('data', json)))
       .catch(err => dispatch(finishSetupUser(new Error(err.message))));
   };
+
+export const syncJoinGroup = ({ payload, error }) =>
+  dispatch => (!error ?
+    dispatch(addGroup('data', payload.data)) :
+    dispatch(addGroup(new Error(payload.message))));
+
+export const syncLeaveGroup = ({ payload, error }) =>
+  dispatch => (!error ?
+    dispatch(removeGroup('data', payload.data)) :
+    dispatch(removeGroup(new Error(payload.message))));

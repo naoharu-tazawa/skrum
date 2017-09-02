@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { userGroupsPropTypes } from './propTypes';
 import UserGroupList from './UserGroupList';
 import { joinGroup, leaveGroup } from '../action';
+import { syncJoinGroup, syncLeaveGroup } from '../../../navigation/action';
 
 class UserGroupListContainer extends Component {
 
@@ -41,9 +42,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   const dispatchJoinGroup = (timeframeId, userId, groupId) =>
-    dispatch(joinGroup(timeframeId, userId, groupId));
+    dispatch(joinGroup(timeframeId, userId, groupId))
+      .then(result => dispatch(syncJoinGroup(result)));
   const dispatchLeaveGroup = (userId, groupId) =>
-    dispatch(leaveGroup(userId, groupId));
+    dispatch(leaveGroup(userId, groupId))
+      .then(result => dispatch(syncLeaveGroup(result)));
   return { dispatchJoinGroup, dispatchLeaveGroup };
 };
 
