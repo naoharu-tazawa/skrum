@@ -7,6 +7,7 @@ use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\Auth;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
+use AppBundle\Entity\TPost;
 
 /**
  * 権限ロジッククラス
@@ -150,13 +151,13 @@ class PermissionLogic extends BaseLogic
     }
 
     /**
-     * ユーザ/グループ/会社操作権限一括チェック（自ユーザ可）
+     * ユーザ/グループ/会社OKR操作権限一括チェック（自ユーザ可）
      *
      * @param Auth $auth 認証情報
      * @param TOkr $tOkr チェック対象OKRエンティティ
      * @return boolean チェック結果
      */
-    public function checkUserGroupCompanyOperationSelfOK(Auth $auth, TOkr $tOkr): bool
+    public function checkUserGroupCompanyOkrOperationSelfOK(Auth $auth, TOkr $tOkr): bool
     {
         // ユーザ操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
@@ -186,13 +187,13 @@ class PermissionLogic extends BaseLogic
     }
 
     /**
-     * ユーザ/グループ/会社操作権限一括チェック（自ユーザ不可）
+     * ユーザ/グループ/会社OKR操作権限一括チェック（自ユーザ不可）
      *
      * @param Auth $auth 認証情報
      * @param TOkr $tOkr チェック対象OKRエンティティ
      * @return boolean チェック結果
      */
-    public function checkUserGroupCompanyOperationSelfNG(Auth $auth, TOkr $tOkr): bool
+    public function checkUserGroupCompanyOkrOperationSelfNG(Auth $auth, TOkr $tOkr): bool
     {
         // ユーザ操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
@@ -212,6 +213,78 @@ class PermissionLogic extends BaseLogic
 
         // 会社操作権限チェック
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_COMPANY) {
+            $checkResult = $this->checkCompanyOperation($auth);
+            if (!$checkResult) {
+                throw new PermissionException('会社操作権限がありません');
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * ユーザ/グループ/会社投稿操作権限一括チェック（自ユーザ可）
+     *
+     * @param Auth $auth 認証情報
+     * @param TPost $tPost チェック対象投稿エンティティ
+     * @return boolean チェック結果
+     */
+    public function checkUserGroupCompanyPostOperationSelfOK(Auth $auth, TPost $tPost): bool
+    {
+        // ユーザ操作権限チェック
+        if ($tPost->getPosterType() == DBConstant::POSTER_TYPE_USER) {
+            $checkResult = $this->checkUserOperationSelfOK($auth, $tPost->getPosterUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
+        }
+
+        // グループ操作権限チェック
+        if ($tPost->getPosterType() == DBConstant::POSTER_TYPE_GROUP) {
+            $checkResult = $this->checkGroupOperation($auth, $tPost->getPosterGroupId());
+            if (!$checkResult) {
+                throw new PermissionException('グループ操作権限がありません');
+            }
+        }
+
+        // 会社操作権限チェック
+        if ($tPost->getPosterType() == DBConstant::POSTER_TYPE_COMPANY) {
+            $checkResult = $this->checkCompanyOperation($auth);
+            if (!$checkResult) {
+                throw new PermissionException('会社操作権限がありません');
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * ユーザ/グループ/会社投稿操作権限一括チェック（自ユーザ不可）
+     *
+     * @param Auth $auth 認証情報
+     * @param TPost $tPost チェック対象投稿エンティティ
+     * @return boolean チェック結果
+     */
+    public function checkUserGroupCompanyPostOperationSelfNG(Auth $auth, TPost $tPost): bool
+    {
+        // ユーザ操作権限チェック
+        if ($tPost->getPosterType() == DBConstant::POSTER_TYPE_USER) {
+            $checkResult = $this->checkUserOperationSelfNG($auth, $tPost->getPosterUserId());
+            if (!$checkResult) {
+                throw new PermissionException('ユーザ操作権限がありません');
+            }
+        }
+
+        // グループ操作権限チェック
+        if ($tPost->getPosterType() == DBConstant::POSTER_TYPE_GROUP) {
+            $checkResult = $this->checkGroupOperation($auth, $tPost->getPosterGroupId());
+            if (!$checkResult) {
+                throw new PermissionException('グループ操作権限がありません');
+            }
+        }
+
+        // 会社操作権限チェック
+        if ($tPost->getPosterType() == DBConstant::POSTER_TYPE_COMPANY) {
             $checkResult = $this->checkCompanyOperation($auth);
             if (!$checkResult) {
                 throw new PermissionException('会社操作権限がありません');

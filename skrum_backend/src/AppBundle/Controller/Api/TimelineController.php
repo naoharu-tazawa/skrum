@@ -242,14 +242,9 @@ class TimelineController extends BaseController
         // 投稿存在チェック
         $tPost = $this->getDBExistanceLogic()->checkPostExistance($postId, $auth->getCompanyId());
 
-        // 操作権限チェック
-        if ($tPost->getPosterType() === DBConstant::OKR_OWNER_TYPE_USER) {
-            $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tPost->getPosterUserId());
-            if (!$checkResult) {
-                throw new PermissionException('ユーザ操作権限がありません');
-            }
-        }
+        // ユーザ/グループ/会社操作権限一括チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $permissionLogic->checkUserGroupCompanyPostOperationSelfOK($auth, $tPost);
 
         // 投稿削除処理
         $timelineService = $this->getTimelineService();
@@ -286,14 +281,9 @@ class TimelineController extends BaseController
             throw new ApplicationException('リプライ投稿に対しての公開設定変更はできません');
         }
 
-        // 操作権限チェック
-        if ($tPost->getPosterType() === DBConstant::OKR_OWNER_TYPE_USER) {
-            $permissionLogic = $this->getPermissionLogic();
-            $checkResult = $permissionLogic->checkUserOperationSelfOK($auth, $tPost->getPosterUserId());
-            if (!$checkResult) {
-                throw new PermissionException('ユーザ操作権限がありません');
-            }
-        }
+        // ユーザ/グループ/会社操作権限一括チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $permissionLogic->checkUserGroupCompanyPostOperationSelfOK($auth, $tPost);
 
         // 投稿公開設定変更処理
         $timelineService = $this->getTimelineService();

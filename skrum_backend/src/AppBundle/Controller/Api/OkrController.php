@@ -149,7 +149,7 @@ class OkrController extends BaseController
 
         // ユーザ/グループ/会社操作権限一括チェック
         $permissionLogic = $this->getPermissionLogic();
-        $permissionLogic->checkUserGroupCompanyOperationSelfOK($auth, $tOkr);
+        $permissionLogic->checkUserGroupCompanyOkrOperationSelfOK($auth, $tOkr);
 
         // OKR更新処理
         $okrService = $this->getOkrService();
@@ -215,7 +215,7 @@ class OkrController extends BaseController
 
         // ユーザ/グループ/会社操作権限一括チェック
         $permissionLogic = $this->getPermissionLogic();
-        $permissionLogic->checkUserGroupCompanyOperationSelfOK($auth, $tOkr);
+        $permissionLogic->checkUserGroupCompanyOkrOperationSelfOK($auth, $tOkr);
 
         // OKR削除処理
         $okrService = $this->getOkrService();

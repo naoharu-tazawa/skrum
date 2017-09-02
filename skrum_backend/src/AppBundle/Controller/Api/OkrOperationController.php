@@ -41,7 +41,7 @@ class OkrOperationController extends BaseController
 
         // ユーザ/グループ/会社操作権限一括チェック
         $permissionLogic = $this->getPermissionLogic();
-        $permissionLogic->checkUserGroupCompanyOperationSelfOK($auth, $tOkr);
+        $permissionLogic->checkUserGroupCompanyOkrOperationSelfOK($auth, $tOkr);
 
         // 紐付け先OKR変更処理
         $okrOperationService = $this->getOkrOperationService();
