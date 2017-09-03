@@ -1,4 +1,4 @@
-import { extractToken, extractDomain } from './ActionUtil';
+import { extractToken, extractSubdomain } from './ActionUtil';
 import config from '../config/config';
 
 const { host } = config;
@@ -19,7 +19,7 @@ const getUrlParam = (param) => {
 };
 
 const createUrl = (path, param /* , status */) => {
-  const domain = extractDomain(/* status */);
+  const domain = extractSubdomain(/* status */);
   const url = getBaseUrl(domain);
   const urlParam = getUrlParam(param);
   return url + path + urlParam;
