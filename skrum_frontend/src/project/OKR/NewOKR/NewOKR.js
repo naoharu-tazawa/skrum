@@ -81,6 +81,7 @@ class NewOKR extends Component {
     const { differingParentOkrOwner, parentOkr, type } = props;
     // FIXME: moving ownerSearch to mapStateToProps causes infinite loop
     const ownerSearch = withItemisedReduxField(OwnerSearch, 'owner', {
+      tabIndex: type === 'KR' ? 91 : 1,
       ...(differingParentOkrOwner && parentOkr ? { exclude: parentOkr.owner } : {}),
       ...(type === 'KR' ? { value: parentOkr.owner } : {}),
     });
@@ -122,12 +123,14 @@ class NewOKR extends Component {
     const { subject, id, type, onClose, parentOkr, owner, ownerName, timeframeId } = this.props;
     const { ownerSearch } = this.state;
     const defaultOwner = { type: getEntityTypeId(subject), id };
+    const startTabIndex = type === 'KR' ? 90 : 0;
     const okrForm = Form => (
       <Form
         title={type === 'Okr' ? '目標新規登録' : 'サブ目標新規登録'}
         submitButton="目標作成"
         onSubmit={this.submit.bind(this)}
         onClose={onClose}
+        lastTabIndex={80}
       >
         <div className={styles.dialog}>
           {parentOkr && <EntitySubject entity={parentOkr.owner} heading="紐付け先目標" subject={parentOkr.name} />}
@@ -135,50 +138,53 @@ class NewOKR extends Component {
             <label>担当者*</label>
             {ownerName ? <label>{ownerName}</label> : ownerSearch}
             {!parentOkr && <label>目標の時間枠</label>}
-            {!parentOkr && withSelectReduxField(TimeframesDropdown, 'timeframeId')}
+            {!parentOkr && withSelectReduxField(TimeframesDropdown, 'timeframeId', { tabIndex: startTabIndex + 2 })}
           </section>
           <section>
             <label>公開範囲*</label>
             {withSelectReduxField(DisclosureTypeOptions,
               'disclosureType',
               { entityType: (owner || {}).type || getEntityTypeId(subject),
-                renderer: ({ value, label }) => (
+                renderer: ({ value, label }, index) => (
                   <label key={value}>
-                    <Field name="disclosureType" component="input" type="radio" value={value} />
+                    <Field name="disclosureType" component="input" type="radio" value={value} props={{ tabIndex: startTabIndex + index + 3 }} />
                     {label}
                   </label>) },
             )}
           </section>
           <section>
-            <Field component="textarea" name="okrName" placeholder="目標120字以内（必須）" maxLength={120} />
+            <Field component="textarea" name="okrName" placeholder="目標120字以内（必須）" maxLength={120} props={{ tabIndex: 11 }} />
           </section>
           <section>
-            <Field component="textarea" name="okrDetail" placeholder="詳細250字以内" maxLength={250} />
+            <Field component="textarea" name="okrDetail" placeholder="詳細250字以内" maxLength={250} props={{ tabIndex: 12 }} />
           </section>
           <section>
             <label>目標値</label>
             <div>
-              <Field component="input" type="number" name="targetValue" />
+              <Field component="input" type="number" name="targetValue" props={{ tabIndex: 13 }} />
               <small>※空欄の場合は100</small>
             </div>
             <label>単位</label>
             <div>
-              <Field component="input" name="unit" placeholder="例)円、件、時間、回" />
+              <Field component="input" name="unit" placeholder="例)円、件、時間、回" props={{ tabIndex: 14 }} />
               <small>※途中で変更不可。空欄の場合は%</small>
             </div>
           </section>
           <section>
             <label>開始日*</label>
-            {withReduxField(DatePickerInput, 'startDate')}
+            {withReduxField(DatePickerInput, 'startDate', { tabIndex: 15 })}
             <label>期限日*</label>
-            {withReduxField(DatePickerInput, 'endDate')}
+            {withReduxField(DatePickerInput, 'endDate', { tabIndex: 16 })}
           </section>
           {!parentOkr && timeframeId && <section>
             <label>紐づけ先検索</label>
             {withItemisedReduxField(
               OKRSearch,
               'alignment',
-              { owner: owner || defaultOwner, timeframeId, disabled: isEmpty(owner) && !ownerName },
+              { tabIndex: 17,
+                owner: owner || defaultOwner,
+                timeframeId,
+                disabled: isEmpty(owner) && !ownerName },
             )}
           </section>}
         </div>

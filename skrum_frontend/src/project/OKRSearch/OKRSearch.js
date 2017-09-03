@@ -34,13 +34,14 @@ class OKRSearch extends PureComponent {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     disabled: PropTypes.bool,
+    tabIndex: PropTypes.number,
     dispatchSearchOkr: PropTypes.func,
     dispatchSearchParentOkr: PropTypes.func,
     isSearching: PropTypes.bool,
   };
 
   render() {
-    const { timeframeId, owner, okrs = [], value, onChange, onFocus, onBlur, disabled,
+    const { timeframeId, owner, okrs = [], value, onChange, onFocus, onBlur, disabled, tabIndex,
       dispatchSearchOkr, dispatchSearchParentOkr, isSearching } = this.props;
     const { currentInput = (value || {}).name } = this.state || {};
     const dispatcher = owner ? partial(dispatchSearchParentOkr, owner) : dispatchSearchOkr;
@@ -53,6 +54,7 @@ class OKRSearch extends PureComponent {
         onSelect={onChange}
         {...(!isEmpty(currentInput) && value)}
         {...{ onFocus, onBlur, disabled }}
+        tabIndex={tabIndex}
         isSearching={isSearching}
       />
     );

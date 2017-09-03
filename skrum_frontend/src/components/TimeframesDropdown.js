@@ -20,11 +20,12 @@ class TimeframesDropdown extends PureComponent {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
+    tabIndex: PropTypes.number,
   };
 
   render() {
     const { plain, timeframes, timeframeId, value: dirtyValue,
-      onChange, onFocus, onBlur } = this.props;
+      onChange, onFocus, onBlur, tabIndex } = this.props;
     const options = orderBy(timeframes, 'timeframeId', 'asc')
       .map(({ timeframeId: value, timeframeName: label }) => ({ value, label }));
     const getOptionStyle = (id, currentId) =>
@@ -43,6 +44,7 @@ class TimeframesDropdown extends PureComponent {
         placeholder=""
         clearable={false}
         searchable={false}
+        tabIndex={tabIndex}
       />
     );
   }

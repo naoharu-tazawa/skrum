@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FocusTrap from 'focus-trap-react';
 import { isFunction } from 'lodash';
 import styles from './DialogForm.css';
 
@@ -14,6 +15,7 @@ export default class DialogForm extends Component {
     handleSubmit: PropTypes.func, // for redux-form
     onSubmit: PropTypes.func.isRequired,
     onClose: PropTypes.func,
+    lastTabIndex: PropTypes.number,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     valid: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     error: PropTypes.string,
@@ -56,7 +58,7 @@ export default class DialogForm extends Component {
 
   render() {
     const { title, message, compact, cancelButton = 'キャンセル', submitButton = 'OK',
-      onClose, children, valid = true, error } = this.props;
+      onClose, lastTabIndex, children, valid = true, error } = this.props;
     const { data = {}, isSubmitting = false, submissionError } = this.state || {};
     return (
       <form
@@ -66,29 +68,33 @@ export default class DialogForm extends Component {
       >
         {title && <div className={styles.title}>{title}</div>}
         {message && <div className={styles.message}>{message}</div>}
-        <div className={`${styles.content} ${compact && styles.compact}`}>
-          {isFunction(children) ? children({ setFieldData: this.setFieldData.bind(this), data }) :
-            children}
-          <div className={styles.error}>{error || submissionError || <span>&nbsp;</span>}</div>
-        </div>
-        <div className={`${styles.buttons} ${compact && styles.compact}`}>
-          <div className={styles.filler} />
-          {cancelButton && (
+        <FocusTrap>
+          <div className={`${styles.content} ${compact && styles.compact}`}>
+            {isFunction(children) ? children({ setFieldData: this.setFieldData.bind(this), data }) :
+              children}
+            <div className={styles.error}>{error || submissionError || <span>&nbsp;</span>}</div>
+          </div>
+          <div className={`${styles.buttons} ${compact && styles.compact}`}>
+            <div className={styles.filler} />
+            {cancelButton && (
+              <button
+                type="button"
+                className={styles.cancelButton}
+                onClick={onClose}
+                tabIndex={lastTabIndex && lastTabIndex + 1}
+              >
+                {cancelButton}
+              </button>)}
             <button
-              type="button"
-              className={styles.cancelButton}
-              onClick={onClose}
+              type="submit"
+              className={styles.submitButton}
+              disabled={isFunction(valid) ? !valid(data) : !valid}
+              tabIndex={lastTabIndex && lastTabIndex + 2}
             >
-              {cancelButton}
-            </button>)}
-          <button
-            type="submit"
-            className={styles.submitButton}
-            disabled={isFunction(valid) ? !valid(data) : !valid}
-          >
-            {submitButton}
-          </button>
-        </div>
+              {submitButton}
+            </button>
+          </div>
+        </FocusTrap>
       </form>
     );
   }

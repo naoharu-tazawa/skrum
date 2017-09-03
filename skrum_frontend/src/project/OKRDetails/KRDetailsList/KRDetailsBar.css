@@ -91,6 +91,7 @@
   display: flex;
   margin: auto 0;
   height: 100%;
+  width: 22%;
 }
 .tool {
   width: 40px;

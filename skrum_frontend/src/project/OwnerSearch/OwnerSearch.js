@@ -24,12 +24,13 @@ class OwnerSearch extends PureComponent {
     onChange: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
+    tabIndex: PropTypes.number,
     dispatchSearchOwner: PropTypes.func,
     isSearching: PropTypes.bool,
   };
 
   render() {
-    const { defaultOwners, keyword, ownersFound, value, onChange, onFocus, onBlur,
+    const { defaultOwners, keyword, ownersFound, value, onChange, onFocus, onBlur, tabIndex,
       dispatchSearchOwner, isSearching } = this.props;
     const currentName = (value || {}).name; // || (find(defaultOwners, value) || {}).name
     const { currentInput = currentName || '' } = this.state || {};
@@ -42,6 +43,7 @@ class OwnerSearch extends PureComponent {
         onSelect={onChange}
         {...(!isEmpty(currentInput) && { value: { name: currentName, ...value } })}
         {...{ onFocus, onBlur }}
+        tabIndex={tabIndex}
         isSearching={isSearching}
       />
     );
