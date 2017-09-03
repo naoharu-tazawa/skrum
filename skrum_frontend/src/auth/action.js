@@ -50,7 +50,7 @@ export const forceLogout = () =>
 export const startLogin = (emailAddress, password) =>
   (dispatch, getState) => {
     const state = getState();
-    if (state.isPosting) return Promise.resolve();
+    // if (state.isPosting) return Promise.resolve();
     dispatch(requestLogin());
     return postJson('/login.json', state)(null, { emailAddress, password })
       .then(resp => dispatch(finishLogin('data', resp)))

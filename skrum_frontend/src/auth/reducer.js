@@ -1,7 +1,7 @@
 import { Action } from './action';
 
 export default (state = {
-  isPosting: false,
+  // isPosting: false,
   isAuthorized: false,
   isPreregistering: false,
 }, action) => {
@@ -9,7 +9,8 @@ export default (state = {
     case Action.REQUEST_LOGIN:
     case Action.REQUEST_USER_SIGN_UP:
     case Action.REQUEST_USER_JOIN:
-      return { ...state, isPosting: true };
+      // return { ...state, isPosting: true };
+      return { ...state };
 
     case Action.FINISH_LOGIN:
     case Action.FINISH_USER_SIGN_UP:
@@ -18,7 +19,7 @@ export default (state = {
       if (error) {
         return {
           ...state,
-          isPosting: false,
+          // isPosting: false,
           isAuthorized: false,
           token: null,
           error: { message: payload.message },
@@ -29,7 +30,7 @@ export default (state = {
       const jwtPayload = JSON.parse(window.atob(splitedJwt[1]));
       return {
         ...state,
-        isPosting: false,
+        // isPosting: false,
         isAuthorized: true,
         token: jwt,
         userId: jwtPayload.uid,

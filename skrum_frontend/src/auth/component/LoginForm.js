@@ -17,7 +17,7 @@ function DisabledButton() {
 
 class LoginForm extends Component {
   static propTypes = {
-    isPosting: PropTypes.bool,
+    // isPosting: PropTypes.bool,
     handleLoginSubmit: PropTypes.func.isRequired,
     error: errorType,
   };
@@ -25,10 +25,11 @@ class LoginForm extends Component {
   handleSubmit(e) {
     const target = e.target;
     e.preventDefault();
+    this.setState({ isPosting: true });
     this.props.handleLoginSubmit(
       target.email.value.trim(),
       target.password.value.trim(),
-    );
+    ).then(() => this.setState({ isPosting: false }));
   }
 
   renderError() {
@@ -42,7 +43,8 @@ class LoginForm extends Component {
   }
 
   renderButton() {
-    return this.props.isPosting ? <DisabledButton /> : <SubmitButton />;
+    const { isPosting } = this.state || {};
+    return isPosting ? <DisabledButton /> : <SubmitButton />;
   }
 
   render() {
