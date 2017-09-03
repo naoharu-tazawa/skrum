@@ -43,7 +43,7 @@ export default class OkrProgressChart extends PureComponent {
           />
           <LineMarkSeries
             data={progressData}
-            curve={'curveMonotoneX'}
+            // curve={'curveMonotoneX'}
             onNearestXY={value => this.setState({ hint: value })}
           />
           {hint && (

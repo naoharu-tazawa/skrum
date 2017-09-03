@@ -92,6 +92,7 @@
     "start": "NODE_ENV=${NODE_ENV:=development} BABEL_ENV=development node scripts/start.js",
     "start:mock": "NODE_ENV=${NODE_ENV:=development_mock} BABEL_ENV=development node scripts/start.js",
     "build": "NODE_ENV=${NODE_ENV:=production} BABEL_ENV=production node scripts/build.js",
+    "buildstg": "NODE_ENV=${NODE_ENV:=staging} BABEL_ENV=production node scripts/build.js",
     "lint": "eslint src",
     "storybook": "start-storybook -p 6006 -s ./public",
     "storybook:build": "STORYBOOK_PATH_ENV=${STORYBOOK_PATH_ENV:='/'} build-storybook -s ./public"
