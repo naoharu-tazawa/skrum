@@ -423,7 +423,7 @@ class OkrService extends BaseService
         if ($tOkr->getParentOkr() !== null) {
             $basicOkrDTOParentOkr = new BasicOkrDTO();
             $basicOkrDTOParentOkr->setOkrId($tOkr->getParentOkr()->getOkrId());
-            $basicOkrDTOParentOkr->setAchievementRate($tOkr->getParentOkr()->getAchievementRate());
+            $basicOkrDTOParentOkr->setAchievementRate(round($tOkr->getParentOkr()->getAchievementRate(), 1));
             $okrInfoDTO->setParentOkr($basicOkrDTOParentOkr);
         }
 
@@ -604,7 +604,7 @@ class OkrService extends BaseService
         if ($tOkr->getParentOkr() !== null) {
             $basicOkrDTOParentOkr = new BasicOkrDTO();
             $basicOkrDTOParentOkr->setOkrId($tOkr->getParentOkr()->getOkrId());
-            $basicOkrDTOParentOkr->setAchievementRate($tOkr->getParentOkr()->getAchievementRate());
+            $basicOkrDTOParentOkr->setAchievementRate(round($tOkr->getParentOkr()->getAchievementRate(), 1));
             $okrInfoDTO->setParentOkr($basicOkrDTOParentOkr);
         }
 
@@ -655,7 +655,7 @@ class OkrService extends BaseService
         if ($parentOkr != null) {
             $basicOkrDTOParentOkr = new BasicOkrDTO();
             $basicOkrDTOParentOkr->setOkrId($parentOkr->getOkrId());
-            $basicOkrDTOParentOkr->setAchievementRate($parentOkr->getAchievementRate());
+            $basicOkrDTOParentOkr->setAchievementRate(round($parentOkr->getAchievementRate(), 1));
             $okrInfoDTO->setParentOkr($basicOkrDTOParentOkr);
         }
 

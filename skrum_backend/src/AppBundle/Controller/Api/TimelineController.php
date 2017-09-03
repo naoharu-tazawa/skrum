@@ -8,8 +8,6 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
-use AppBundle\Exception\PermissionException;
-use AppBundle\Utils\DBConstant;
 use AppBundle\Api\ResponseDTO\PostDTO;
 
 /**
