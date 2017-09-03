@@ -12,30 +12,34 @@
 .row {
   padding: 10px 2em 10px 70px;
 }
-.row > span {
-  margin: auto 0;
-}
 .name {
   width: 40%;
+  margin: auto 0;
   height: 100%;
 }
 .nameAdmin {
   width: 30%;
+  margin: auto 0;
   height: 100%;
 }
 .position {
   width: 20%;
+  margin: auto 0;
   height: 100%;
 }
-.progress, .progressBox {
+.progress {
   width: 30%;
+  margin: auto 0;
+  height: 100%;
 }
 .update {
   width: 30%;
+  margin: auto 0;
   height: 100%;
 }
 .updateAdmin {
   width: 20%;
+  margin: auto 0;
   height: 100%;
 }
 .delete {
@@ -52,35 +56,4 @@
 }
 .delete:focus {
   outline: 0;
-}
-.progressBox {
-  display: flex;
-  margin: auto 0;
-  height: 100%;
-}
-.progressPercent {
-  margin-right: 4px;
-  width: 3.5em;
-  font-weight: bold;
-  text-align: right;
-}
-.progressBar {
-  height: 15px;
-  width: 120px;
-  border-radius: 0px;
-  background-color: #D8DFE5;
-}
-.progress {
-  height: 100%;
-  max-width: 100%;
-  border-radius: 0px;
-}
-.progress.high {
-  background-color: #42BBF8;
-}
-.progress.mid {
-  background-color: #AFDB56;
-}
-.progress.low {
-  background-color: #EFB04C;
 }

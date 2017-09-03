@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { userGroupPropTypes } from './propTypes';
 import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
+import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { withModal } from '../../../util/ModalUtil';
@@ -17,9 +18,6 @@ class UserGroupBar extends Component {
     dispatchLeaveGroup: PropTypes.func,
     openModal: PropTypes.func.isRequired,
   };
-
-  getProgressStyles = rate =>
-    `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   leaveGroupPrompt = ({ userId, userName, id, name, onClose }) => (
     <ConfirmationPrompt
@@ -48,15 +46,10 @@ class UserGroupBar extends Component {
         <div className={styles.name}>
           <EntityLink entity={{ id, name, type: EntityType.GROUP }} />
         </div>
-        <div className={styles.progressBox}>
-          <span className={styles.progressPercent}>{achievementRate}%</span>
-          <div className={styles.progressBar}>
-            <div
-              className={this.getProgressStyles(achievementRate)}
-              style={{ width: `${achievementRate}%` }}
-            />
-          </div>
-        </div>
+        <ProgressPercentage
+          componentClassName={styles.progress}
+          achievementRate={achievementRate}
+        />
         <button
           className={styles.delete}
           onClick={() => openModal(this.leaveGroupPrompt, { userId, userName, id, name })}

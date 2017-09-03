@@ -16,7 +16,7 @@
 .dialog input[type=number] {
   text-align: right;
 }
-.progressBox, .dateRangeBox, .alignmentBox {
+.progressConstituents, .dateRangeBox, .alignmentBox {
   display: flex;
   margin: 1em 0 0 0;
 }

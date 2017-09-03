@@ -7,6 +7,7 @@ import InlineTextArea from '../../../editors/InlineTextArea';
 import InlineDateInput from '../../../editors/InlineDateInput';
 import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
 import DialogForm from '../../../dialogs/DialogForm';
+import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntitySubject from '../../../components/EntitySubject';
 import DropdownMenu from '../../../components/DropdownMenu';
 import Dropdown from '../../../components/Dropdown';
@@ -36,9 +37,6 @@ class KRDetailsBar extends Component {
     dispatchDeleteKR: PropTypes.func,
     openModal: PropTypes.func.isRequired,
   };
-
-  getProgressStyles = rate =>
-    `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   changeOwnerDialog = ({ id, name, owner, onClose }) => (
     <DialogForm
@@ -171,19 +169,10 @@ class KRDetailsBar extends Component {
             />
           </div>
         </div>
-        <div className={styles.progressColumn}>
-          <div className={styles.progressBox}>
-            <div className={styles.progressPercent}>{achievementRate}%</div>
-            <div className={styles.progressBar}>
-              <div
-                className={this.getProgressStyles(achievementRate)}
-                style={{ width: `${achievementRate}%` }}
-              />
-            </div>
-          </div>
-          <div className={styles.progressConstituents}>
-            {achievedValue}／{targetValue}{unit}
-          </div>
+        <ProgressPercentage
+          componentClassName={styles.progressColumn}
+          {...{ unit, targetValue, achievedValue, achievementRate }}
+        >
           <div className={styles.txt_date}>
             <div>開始日：
               <InlineDateInput
@@ -202,7 +191,7 @@ class KRDetailsBar extends Component {
               />
             </div>
           </div>
-        </div>
+        </ProgressPercentage>
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
           {type === OKRType.KR && (

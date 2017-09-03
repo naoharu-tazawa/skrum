@@ -7,6 +7,7 @@ import InlineTextArea from '../../editors/InlineTextArea';
 import InlineDateInput from '../../editors/InlineDateInput';
 import ConfirmationPrompt from '../../dialogs/ConfirmationPrompt';
 import DialogForm from '../../dialogs/DialogForm';
+import ProgressPercentage from '../../components/ProgressPercentage';
 import EntitySubject from '../../components/EntitySubject';
 import DropdownMenu from '../../components/DropdownMenu';
 import Dropdown from '../../components/Dropdown';
@@ -34,9 +35,6 @@ class OkrDetails extends Component {
     dispatchChangeOkrOwner: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
   };
-
-  getProgressStyles = rate =>
-    `${styles.progress} ${rate >= 70 ? styles.high : `${rate >= 30 ? styles.mid : styles.low}`}`;
 
   changeOwnerDialog = ({ id, name, owner, onClose }) => (
     <DialogForm
@@ -185,23 +183,13 @@ class OkrDetails extends Component {
                 onSubmit={value => dispatchPutOKR(id, { okrDetail: value })}
               />
             </div>
-            <div className={`${styles.bar_top} ${styles.cf}`}>
-              <div className={styles.progressBox}>
-                <div className={styles.progressPercent}>{achievementRate}%</div>
-                <div className={styles.progressBar}>
-                  <div
-                    className={this.getProgressStyles(achievementRate)}
-                    style={{ width: `${achievementRate}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className={`${styles.bar_top_bottom} ${styles.cf}`}>
-              <div className={`${styles.txt_percent} ${styles.floatL}`}>
-                {achievedValue}／{targetValue}{unit}
-              </div>
-              <div className={`${styles.txt_date} ${styles.floatR}`}>
-                <span>開始日：
+            <ProgressPercentage
+              componentClassName={`${styles.bar_top_bottom} ${styles.cf}`}
+              {...{ unit, targetValue, achievedValue, achievementRate }}
+              fluid
+            >
+              <span className={styles.floatR}>
+                <span className={`${styles.txt_date}`}>開始日：
                   <InlineDateInput
                     value={startDate}
                     required
@@ -209,7 +197,7 @@ class OkrDetails extends Component {
                     onSubmit={value => dispatchPutOKR(id, { startDate: value })}
                   />
                 </span>
-                <span>期限日：
+                <span className={`${styles.txt_date}`}>期限日：
                   <InlineDateInput
                     value={endDate}
                     required
@@ -217,8 +205,8 @@ class OkrDetails extends Component {
                     onSubmit={value => dispatchPutOKR(id, { endDate: value })}
                   />
                 </span>
-              </div>
-            </div>
+              </span>
+            </ProgressPercentage>
             <div className={`${styles.nav_info} ${styles.cf}`}>
               <EntityLink componentClassName={styles.owner_info} entity={owner} />
               <div className={styles.floatR}>

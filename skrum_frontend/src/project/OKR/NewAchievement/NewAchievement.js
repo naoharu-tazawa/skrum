@@ -65,7 +65,7 @@ class NewAchievement extends Component {
         onClose={onClose}
       >
         <div className={styles.dialog}>
-          <div className={styles.progressBox}>
+          <div className={styles.progressConstituents}>
             <div className={styles.inputWithTitle}>
               <span className={styles.title}>達成値</span>
               <Field component="input" type="number" name="achievedValue" />

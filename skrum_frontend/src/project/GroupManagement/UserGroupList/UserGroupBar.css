@@ -14,9 +14,12 @@
 }
 .name {
   width: 45%;
+  height: 100%;
 }
-.progress, .progressBox {
+.progress {
   width: 50%;
+  margin: auto 0;
+  height: 100%;
 }
 .delete {
   width: 10px;
@@ -32,35 +35,4 @@
 }
 .delete:focus {
   outline: 0;
-}
-.progressBox {
-  display: flex;
-  margin: auto 0;
-  height: 100%;
-}
-.progressPercent {
-  margin-right: 8px;
-  width: 3.5em;
-  font-weight: bold;
-  text-align: right;
-}
-.progressBar {
-  height: 15px;
-  width: 120px;
-  border-radius: 0px;
-  background-color: #D8DFE5;
-}
-.progress {
-  height: 100%;
-  max-width: 100%;
-  border-radius: 0px;
-}
-.progress.high {
-  background-color: #42BBF8;
-}
-.progress.mid {
-  background-color: #AFDB56;
-}
-.progress.low {
-  background-color: #EFB04C;
 }
