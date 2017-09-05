@@ -54,7 +54,7 @@
   {% endfor %}
 </table>
 
-<form action="http://{{ domain }}/authz_stop/{{ data[0].companyId }}" method="post" {{ form_enctype(form) }}>
+<form action="{{ path("authz_stop_post", {"companyId": data[0].companyId}) }}" method="post" {{ form_enctype(form) }}>
   <center>{{ form_widget(form.authorizationStopFlg, {"attr": {"class": "form-control"}}) }}{{ form_errors(form.authorizationStopFlg) }}</center>
   <center>{{ form_widget(form.submit, {"attr": {"class": "form-control"}}) }}</center>
 </form>

@@ -22,7 +22,7 @@
     <td>{{ item.companyId | default("") }}</td>
     <td>{{ item.companyName | default("") }}</td>
     <td>{{ item.contractId | default("未契約") }}</td>
-    <td><a href="http://{{ domain }}/plan_change/{{ item.companyId }}">{{ item.planName }}</a></td>
+    <td><a href="{{ path("plan_change", {"companyId": item.companyId}) }}">{{ item.planName }}</a></td>
     {% if (item.contractId | default(null)) is not null %}
       {% if item.priceType is constant('AppBundle\\Utils\\DBConstant::PRICE_TYPE_COMPANY') %}
         <td>会社単位</td>
@@ -48,7 +48,7 @@
       <td>-</td>
     {% endif %}
     <td>
-      <a href="http://{{ domain }}/authz_stop/{{ item.companyId }}">
+      <a href="{{ path("authz_stop", {"companyId": item.companyId}) }}">
         {% if item.authorizationStopFlg %}利用不可{% else %}利用可{% endif %}
       </a>
     </td>

@@ -25,6 +25,3 @@ monolog:
             level: debug
         console:
             type: console
-
-parameters:
-    domain: 'ec2-13-114-151-251.ap-northeast-1.compute.amazonaws.com'

@@ -31,7 +31,6 @@ class AuthorizationStopController extends BaseController
         return $this->render('authorization_stop/index.html.twig', array(
                 'form' => $form->createView(),
                 'data' => $data,
-                'domain' => $this->getParameter('domain'),
                 'message' => ''
         ));
     }
@@ -59,7 +58,6 @@ class AuthorizationStopController extends BaseController
             return $this->render('authorization_stop/index.html.twig', array(
                     'form' => $form->createView(),
                     'data' => $data,
-                    'domain' => $this->getParameter('domain'),
                     'message' => '利用停止または利用停止解除を選択してください'
             ));
         }
@@ -74,14 +72,12 @@ class AuthorizationStopController extends BaseController
             return $this->render('authorization_stop/index.html.twig', array(
                     'form' => $form->createView(),
                     'data' => $data,
-                    'domain' => $this->getParameter('domain'),
                     'message' => '利用停止/利用停止解除が完了しました'
             ));
         } else {
             return $this->render('authorization_stop/index.html.twig', array(
                     'form' => $form->createView(),
                     'data' => $data,
-                    'domain' => $this->getParameter('domain'),
                     'message' => '利用停止/利用停止解除に失敗しました'
             ));
         }
