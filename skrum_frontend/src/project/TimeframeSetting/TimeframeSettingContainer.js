@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import styles from './TimeframeContainer.css';
 import { fetchCompanyTimeframes } from './action';
 import TimeframeListContainer from './TimeframeList/TimeframeListContainer';
+import styles from './TimeframeSettingContainer.css';
 
-class TimeframeContainer extends Component {
+class TimeframeSettingContainer extends Component {
 
   static propTypes = {
     companyId: PropTypes.number,
@@ -16,9 +16,6 @@ class TimeframeContainer extends Component {
   componentWillMount() {
     const { dispatchFetchCompanyTimeframes, companyId } = this.props;
     dispatchFetchCompanyTimeframes(companyId);
-  }
-
-  componentWillReceiveProps() {
   }
 
   render() {
@@ -37,7 +34,7 @@ class TimeframeContainer extends Component {
 
 const mapStateToProps = (state) => {
   const { companyId } = state.auth || {};
-  const { isFetching = false } = state.timeframeSetting || {};
+  const { isFetching } = state.timeframeSetting || {};
   return { companyId, isFetching };
 };
 
@@ -49,4 +46,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(TimeframeContainer);
+)(TimeframeSettingContainer);

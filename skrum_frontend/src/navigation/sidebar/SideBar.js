@@ -154,6 +154,8 @@ export default class SideBar extends Component {
         {isSetting && isSuperRole(roleLevel) && (
           <SecttingItem subject="timeframe" title="目標期間設定" {...{ pathname, isExpanded }} />)}
         {isSetting && isBasicRoleAndAbove(roleLevel) && (
+          <SecttingItem subject="email" title="メール設定" {...{ pathname, isExpanded }} />)}
+        {isSetting && isBasicRoleAndAbove(roleLevel) && (
           <SecttingItem subject="account" title="パスワード" {...{ pathname, isExpanded }} svgName="password_change" />)}
       </div>
     );

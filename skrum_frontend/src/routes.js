@@ -11,7 +11,8 @@ import CompanyRouter from './project/CompanyRouter';
 import UserSettingContainer from './project/UserSetting/UserSettingContainer';
 import GroupSettingContainer from './project/GroupSetting/GroupSettingContainer';
 import CompanyProfileContainer from './project/CompanyProfile/CompanyProfileContainer';
-import TimeframeContainer from './project/Timeframe/TimeframeContainer';
+import TimeframeSettingContainer from './project/TimeframeSetting/TimeframeSettingContainer';
+import EmailSettingContainer from './project/EmailSetting/EmailSettingContainer';
 import PasswordChangeContainer from './project/PasswordChange/PasswordChangeContainer';
 import PreregisterContainer from './auth/container/PreregisterContainer';
 import NewUserContainer from './auth/container/NewUserContainer';
@@ -65,7 +66,8 @@ export default (
       <Route path="/s/u" component={UserSettingContainer} />
       <Route path="/s/g" component={GroupSettingContainer} />
       <Route path="/s/c" component={CompanyProfileContainer} />
-      <Route path="/s/t" component={TimeframeContainer} />
+      <Route path="/s/t" component={TimeframeSettingContainer} />
+      <Route path="/s/e" component={EmailSettingContainer} />
       <Route path="/s/a" component={PasswordChangeContainer} />
     </Route>
     <Route path="/preregister" component={PreregisterContainer} />

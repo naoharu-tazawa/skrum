@@ -18,7 +18,8 @@ import pathSearchReducer from '../../project/PathSearch/reducer';
 import userSettingReducer from '../../project/UserSetting/reducer';
 import groupSettingReducer from '../../project/GroupSetting/reducer';
 import companyProfileReducer from '../../project/CompanyProfile/reducer';
-import timeframeReducer from '../../project/Timeframe/reducer';
+import timeframeSettingReducer from '../../project/TimeframeSetting/reducer';
+import emailSettingReducer from '../../project/EmailSetting/reducer';
 import passwordChangeReducer from '../../project/PasswordChange/reducer';
 import { Action } from '../../project/PasswordChange/action';
 
@@ -39,7 +40,8 @@ const rootReducer = combineReducers({
   userSetting: userSettingReducer,
   groupSetting: groupSettingReducer,
   companySetting: companyProfileReducer,
-  timeframeSetting: timeframeReducer,
+  timeframeSetting: timeframeSettingReducer,
+  emailSetting: emailSettingReducer,
   setting: passwordChangeReducer,
   routing: routerReducer,
   form: formReducer.plugin({
