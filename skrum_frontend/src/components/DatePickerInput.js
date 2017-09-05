@@ -20,7 +20,7 @@ export default class DatePickerInput extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    tabIndex: PropTypes.number,
+    tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onDayChange: PropTypes.func,
     onDayClick: PropTypes.func,
     onKeyPress: PropTypes.func,
@@ -63,7 +63,7 @@ export default class DatePickerInput extends Component {
           onKeyPress,
         }}
         {...{ value: targetValue || value, onChange, onFocus, onBlur }}
-        tabIndex={tabIndex}
+        tabIndex={`${tabIndex}`}
       />
     );
   }

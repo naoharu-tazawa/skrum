@@ -66,7 +66,7 @@ export const postTimeframe = data =>
     if (state.timeframeSetting.isPosting) return Promise.resolve();
     dispatch(requestPostTimeframe());
     return postJson('/timeframes.json', state)(null, data)
-      .then(json => dispatch(finishPostTimeframe('data', { data: json })))
+      .then(json => dispatch(finishPostTimeframe('data', json)))
       .catch(({ message }) => dispatch(finishPostTimeframe(new Error(message))));
   };
 

@@ -34,8 +34,10 @@ export default (state = {
       if (error) {
         return { ...state, isPostingKR: false, error: { message: payload.message } };
       }
-      const keyResults = [...state.keyResults, payload.data.data];
-      return { ...state, keyResults, isPostingKR: false, error: null };
+      const { targetOkr, parentOkr } = payload.data;
+      const objective = mergeUpdateById(state.objective, 'okrId', parentOkr, parentOkr.okrId);
+      const keyResults = [...state.keyResults, targetOkr];
+      return { ...state, objective, keyResults, isPostingKR: false, error: null };
     }
 
     case Action.REQUEST_PUT_OKR_DETAILS:
@@ -99,9 +101,10 @@ export default (state = {
       if (error) {
         return { ...state, isDeletingKR: false, error: { message: payload.message } };
       }
-      const { id } = payload.data;
+      const { id, parentOkr } = payload.data;
+      const objective = mergeUpdateById(state.objective, 'okrId', parentOkr, parentOkr.okrId);
       const keyResults = state.keyResults.filter(({ okrId }) => id !== okrId);
-      return { ...state, keyResults, isDeletingKR: false, error: null };
+      return { ...state, objective, keyResults, isDeletingKR: false, error: null };
     }
 
     case Action.REQUEST_POST_ACHIEVEMENT:
@@ -112,7 +115,7 @@ export default (state = {
       if (error) {
         return { ...state, isPostingAchievement: false, error: { message: payload.message } };
       }
-      const { parentOkr, targetOkr } = payload.data.data;
+      const { parentOkr, targetOkr } = payload.data;
       const { okrId: parentOkrId, ...parentUpdate } = parentOkr;
       const { okrId, ...update } = targetOkr;
       const parentObjective = mergeUpdateById(state.objective, 'okrId', parentUpdate, parentOkrId);

@@ -76,7 +76,7 @@ export const postKR = kr =>
     if (state.okr.isPostingKR) return Promise.resolve();
     dispatch(requestPostKr());
     return postJson('/okrs.json', state)(null, kr)
-      .then(json => dispatch(finishPostKr('data', { data: json })))
+      .then(json => dispatch(finishPostKr('data', json)))
       .catch(({ message }) => dispatch(finishPostKr(new Error(message))));
   };
 
@@ -126,7 +126,7 @@ export const deleteKR = id =>
     if (state.okr.isDeletingKR) return Promise.resolve();
     dispatch(requestDeleteKr());
     return deleteJson(`/okrs/${id}.json`, state)()
-      .then(() => dispatch(finishDeleteKr('data', { id })))
+      .then(json => dispatch(finishDeleteKr('data', { id, ...json })))
       .catch(({ message }) => dispatch(finishDeleteKr(new Error(message))));
   };
 
@@ -136,6 +136,6 @@ export const postAchievement = (id, data) =>
     if (state.okr.isPostingAchievement) return Promise.resolve();
     dispatch(requestPostAchievement());
     return postJson(`/okrs/${id}/achievements.json`, state)(null, data)
-      .then(json => dispatch(finishPostAchievement('data', { data: json })))
+      .then(json => dispatch(finishPostAchievement('data', json)))
       .catch(({ message }) => dispatch(finishPostAchievement(new Error(message))));
   };
