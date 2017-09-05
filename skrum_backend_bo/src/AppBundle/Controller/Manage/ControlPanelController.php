@@ -20,6 +20,8 @@ class ControlPanelController extends BaseController
      */
     public function indexAction(Request $request)
     {
-        return $this->render('control_panel/index.html.twig');
+        return $this->render('control_panel/index.html.twig', array(
+                'domain' => $this->getParameter('domain')
+        ));
     }
 }

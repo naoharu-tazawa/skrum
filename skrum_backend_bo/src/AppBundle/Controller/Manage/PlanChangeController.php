@@ -31,6 +31,7 @@ class PlanChangeController extends BaseController
         return $this->render('plan_change/index.html.twig', array(
                 'form' => $form->createView(),
                 'data' => $data,
+                'domain' => $this->getParameter('domain'),
                 'message' => ''
         ));
     }
@@ -58,6 +59,7 @@ class PlanChangeController extends BaseController
             return $this->render('plan_change/index.html.twig', array(
                     'form' => $form->createView(),
                     'data' => $data,
+                    'domain' => $this->getParameter('domain'),
                     'message' => 'プランを選択してください'
             ));
         }
@@ -71,12 +73,14 @@ class PlanChangeController extends BaseController
             return $this->render('plan_change/index.html.twig', array(
                     'form' => $form->createView(),
                     'data' => $data,
+                    'domain' => $this->getParameter('domain'),
                     'message' => '契約プラン変更が完了しました'
             ));
         } else {
             return $this->render('plan_change/index.html.twig', array(
                     'form' => $form->createView(),
                     'data' => $data,
+                    'domain' => $this->getParameter('domain'),
                     'message' => '契約プラン変更に失敗しました'
             ));
         }

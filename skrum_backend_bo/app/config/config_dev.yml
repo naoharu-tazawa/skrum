@@ -31,3 +31,6 @@ monolog:
         console:
             type: console
             channels: [!event, !doctrine]
+
+parameters:
+    domain: 'localhost:8000'

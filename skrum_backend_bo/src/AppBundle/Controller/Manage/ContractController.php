@@ -24,7 +24,8 @@ class ContractController extends BaseController
         $data = $contractService->getContracts();
 
         return $this->render('contract/index.html.twig', array(
-                'data' => $data
+                'data' => $data,
+                'domain' => $this->getParameter('domain')
         ));
     }
 }
