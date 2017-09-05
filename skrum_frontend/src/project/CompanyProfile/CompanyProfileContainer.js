@@ -100,7 +100,7 @@ class CompanyProfileContainer extends Component {
 
 const mapStateToProps = (state) => {
   const { companyId } = state.auth || {};
-  const { isFetching = false, isPutting = false } = state.companySetting || {};
+  const { isFetching, isPutting } = state.companySetting || {};
   const { name, vision, mission } = state.companySetting.data || {};
   return { companyId, name, vision, mission, isFetching, isPutting };
 };

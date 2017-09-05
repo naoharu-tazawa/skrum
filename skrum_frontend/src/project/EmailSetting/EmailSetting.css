@@ -1,0 +1,56 @@
+@charset "UTF-8";
+  /* ====================================================
+  共通
+  ==================================================== */
+.title {
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+.component {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 700px;
+  padding: 30px 60px;
+  overflow-y: auto;
+}
+.setting {
+  display: flex;
+  margin-bottom: 1.5em;
+}
+.name {
+  flex: 1;
+}
+.radio {
+  width: 128px;
+  text-align: center;
+}
+.button {
+  vertical-align: bottom;
+  padding: 0;
+  background: none;
+  border: 0px;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  width: 150px;
+  height: 38px;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 19px;
+  background-color: #2562b2;
+}
+.button button:hover {
+  opacity: .7;
+}
+.spinner {
+  height: 50px;
+  width: 150px;
+  background: url(/img/rolling.svg) center no-repeat;
+  margin: auto;
+}
+.button, .spinner {
+  margin: 0 calc((2 * 128px - 150px) / 2);
+}

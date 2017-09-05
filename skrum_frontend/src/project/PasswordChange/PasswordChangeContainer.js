@@ -59,7 +59,7 @@ class PasswordChangeContainer extends Component {
 
 const mapStateToProps = (state) => {
   const { userId } = state.auth;
-  const { isProcessing = false, error } = state.setting || {};
+  const { isProcessing, error } = state.setting || {};
   return { userId, isProcessing, error };
 };
 

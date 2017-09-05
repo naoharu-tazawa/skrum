@@ -88,7 +88,7 @@ class GroupManagementContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { isFetching = false } = state.groupManagement || {};
+  const { isFetching } = state.groupManagement || {};
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
   return { isFetching, pathname };

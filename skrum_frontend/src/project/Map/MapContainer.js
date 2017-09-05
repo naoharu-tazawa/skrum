@@ -84,7 +84,7 @@ class MapContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { isFetching = false } = state.map || {};
+  const { isFetching } = state.map || {};
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
   return { isFetching, pathname };
