@@ -1,0 +1,33 @@
+imports:
+    - { resource: config.yml }
+
+framework:
+    router:
+        resource: '%kernel.root_dir%/config/routing_dev.yml'
+        strict_requirements: true
+    profiler: { only_exceptions: false }
+
+web_profiler:
+    toolbar: false
+    intercept_redirects: false
+
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/application.log"
+            level: debug
+            channels: [!event, !doctrine, !security]
+        alert:
+            type: stream
+            path: "%kernel.logs_dir%/alert.log"
+            level: alert
+            channels: [!event, !doctrine]
+        doctrine:
+            type: stream
+            path: "%kernel.logs_dir%/sql.log"
+            level: debug
+            channels: [doctrine]
+        console:
+            type: console
+            channels: [!event, !doctrine]

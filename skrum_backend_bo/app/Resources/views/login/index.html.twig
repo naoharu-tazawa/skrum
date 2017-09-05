@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ログイン{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+  <table class="login-table header-color">
+    <tr>
+      <th>ID：</th>
+      <td>{{ form_widget(form.id, {"attr": {"class": "form-control"}}) }}{{ form_errors(form.id) }}</td>
+    </tr>
+    <tr>
+      <th>パスワード：</th>
+      <td>{{ form_widget(form.password, {"attr": {"class": "form-control"}}) }}{{ form_errors(form.password) }}</td>
+    </tr>
+  </table>
+  <center>{{ form_widget(form.submit, {"attr": {"class": "form-control"}}) }}</center>
+{{ form_end(form) }}
+<center>{{ message }}</center>
+{% endblock %}

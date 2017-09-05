@@ -1,0 +1,47 @@
+body {
+	background-color: #EFEFFB;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Helvetica, Arial, Verdana, sans-serif;
+}
+
+.header-color th {
+	background-color: #CECEF6;
+}
+
+.normal-table {
+	border: solid 1px #000000;
+    border-collapse: collapse;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.normal-table th {
+    border: solid 1px #000000;
+    border-collapse: collapse;
+}
+
+.normal-table td {
+	border: solid 1px #000000;
+    border-collapse: collapse;
+}
+
+.login-table {
+	border: solid 1px #000000;
+    border-collapse: collapse;
+    width: 30%;
+    margin: 0 auto;
+    margin-top: 200px;
+}
+
+.login-table th {
+    border: solid 1px #000000;
+    border-collapse: collapse;
+}
+
+.login-table td {
+	border: solid 1px #000000;
+    border-collapse: collapse;
+}
+
+button, select {
+	margin-top: 30px;
+}

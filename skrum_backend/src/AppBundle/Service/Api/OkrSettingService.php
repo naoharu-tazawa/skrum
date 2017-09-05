@@ -348,7 +348,7 @@ class OkrSettingService extends BaseService
             $tOkrRepos->resetRatioLockedFlg($okrEntity->getOkrId(), $okrEntity->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
 
             // KR加重平均割合更新
-            $weweightedAverageRatioArray = array();
+            $weightedAverageRatioArray = array();
             foreach ($data as $item) {
                 $tOkrArray = $tOkrRepos->getOkr($item['keyResultId'], $auth->getCompanyId());
                 if (count($tOkrArray) !== 1) {
@@ -365,11 +365,11 @@ class OkrSettingService extends BaseService
                 $this->flush();
 
                 // KR加重平均割合を全て配列に格納
-                $weweightedAverageRatioArray[] = $item['weightedAverageRatio'];
+                $weightedAverageRatioArray[] = $item['weightedAverageRatio'];
             }
 
             // 持分比率ロックフラグを立てるKR加重平均割合の合計値が100を超えていないかチェック
-            if (array_sum($weweightedAverageRatioArray) > 100) {
+            if (array_sum($weightedAverageRatioArray) > 100) {
                 throw new ApplicationException('キーリザルト加重平均割合の合計値が100%を超えています');
             }
 
