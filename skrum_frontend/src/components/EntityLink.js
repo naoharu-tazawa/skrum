@@ -34,13 +34,16 @@ class EntityLink extends Component {
     const { id, name, type } = entity;
     const imgSrc = imageError ? dummyImagePath(type) : imagePath(type, companyId, id);
     const avatarContent = (
-      <div className={styles.avatar} title={name}>
+      <div
+        className={styles.avatar}
+        title={name}
+        style={{ width: avatarSize, height: avatarSize }}
+      >
         {id && (
           <img
             src={imgSrc}
             alt={name}
             onError={() => this.setState({ imageError: true })}
-            style={{ width: avatarSize, height: avatarSize }}
             width={avatarSize}
             height={avatarSize}
           />)}
