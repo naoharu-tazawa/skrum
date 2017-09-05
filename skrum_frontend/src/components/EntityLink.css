@@ -31,6 +31,7 @@
   padding: 5%;
 }
 .hasName .avatar {
+  width: auto !important;
   margin-right: 1em;
 }
 .title {
