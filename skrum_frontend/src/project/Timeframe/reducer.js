@@ -43,7 +43,7 @@ export default (state = {
       if (error) {
         return { ...state, isPosting: false, error: { message: payload.message } };
       }
-      const data = [payload.data.data, ...state.data];
+      const data = [payload.data, ...state.data];
       return { ...state, data, isPosting: false, error: null };
     }
 

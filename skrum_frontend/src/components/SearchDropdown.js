@@ -16,7 +16,7 @@ export default class SearchDropdown extends PureComponent {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     disabled: PropTypes.bool,
-    tabIndex: PropTypes.number,
+    tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     isSearching: PropTypes.bool,
   };
 

@@ -81,7 +81,7 @@ export default class DialogForm extends Component {
                 type="button"
                 className={styles.cancelButton}
                 onClick={onClose}
-                tabIndex={lastTabIndex && lastTabIndex + 1}
+                tabIndex={lastTabIndex && `${lastTabIndex + 1}`}
               >
                 {cancelButton}
               </button>)}
@@ -89,7 +89,7 @@ export default class DialogForm extends Component {
               type="submit"
               className={styles.submitButton}
               disabled={isFunction(valid) ? !valid(data) : !valid}
-              tabIndex={lastTabIndex && lastTabIndex + 2}
+              tabIndex={lastTabIndex && `${lastTabIndex + 2}`}
             >
               {submitButton}
             </button>
