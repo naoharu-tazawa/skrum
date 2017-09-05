@@ -76,6 +76,7 @@ class UserService extends BaseService
         $basicUserInfoDTO = new BasicUserInfoDTO();
         $basicUserInfoDTO->setUserId($mUserArray[0]->getUserId());
         $basicUserInfoDTO->setName($mUserArray[0]->getLastName() . ' ' . $mUserArray[0]->getFirstName());
+        $basicUserInfoDTO->setImageVersion($mUserArray[0]->getImageVersion());
 
         $users[] = $basicUserInfoDTO;
 

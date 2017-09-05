@@ -26,6 +26,13 @@ class BasicUserInfoDTO
     private $name;
 
     /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $imageVersion;
+
+    /**
      * @var string
      *
      * @JSON\Type("string")
@@ -113,6 +120,30 @@ class BasicUserInfoDTO
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set imageVersion
+     *
+     * @param integer $imageVersion
+     *
+     * @return BasicUserInfoDTO
+     */
+    public function setImageVersion($imageVersion)
+    {
+        $this->imageVersion = $imageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get imageVersion
+     *
+     * @return integer
+     */
+    public function getImageVersion()
+    {
+        return $this->imageVersion;
     }
 
     /**

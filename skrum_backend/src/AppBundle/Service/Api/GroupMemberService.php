@@ -329,6 +329,7 @@ class GroupMemberService extends BaseService
             $groupDTO = new GroupDTO();
             $groupDTO->setGroupId($groupInfo['groupId']);
             $groupDTO->setGroupName($groupInfo['groupName']);
+            $groupDTO->setImageVersion($groupInfo['imageVersion']);
             if ($groupInfo['groupType'] == DBConstant::GROUP_TYPE_TEAM) {
                 $teams[] = $groupDTO;
             } elseif ($groupInfo['groupType'] == DBConstant::GROUP_TYPE_DEPARTMENT) {
