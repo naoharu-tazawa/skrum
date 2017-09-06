@@ -39,14 +39,22 @@ paths:
                 - weightedAverageRatio
       responses:
         200:
-          description: 成功
+          description: 親OKR情報
           schema:
             type: object
             properties:
-              result:
-                type: string
+              parentOkr:
+                type: object
+                properties:
+                  okrId:
+                    type: integer
+                  achievementRate:
+                    type: number
+                required:
+                  - okrId
+                  - achievementRate
             required:
-              - result
+              - parentOkr
         400:
           description: JSONスキーマ不正
         409:

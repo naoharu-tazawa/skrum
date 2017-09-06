@@ -9,6 +9,7 @@ use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\OkrInfoDTO;
 
 /**
  * OKR設定コントローラ
@@ -186,9 +187,9 @@ class OkrSettingController extends BaseController
      * @Rest\Put("/v1/okrs/{okrId}/setratio.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $okrId OKRID
-     * @return array
+     * @return OkrInfoDTO
      */
-    public function setOkrRatioAction(Request $request, string $okrId): array
+    public function setOkrRatioAction(Request $request, string $okrId): OkrInfoDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/SetOkrRatioPdu');
@@ -214,8 +215,8 @@ class OkrSettingController extends BaseController
 
         // KR加重平均割合更新処理
         $okrSettingService = $this->getOkrSettingService();
-        $okrSettingService->updateRatio($auth, $data, $tOkr);
+        $okrInfoDTO = $okrSettingService->updateRatio($auth, $data, $tOkr);
 
-        return array('result' => 'OK');
+        return $okrInfoDTO;
     }
 }

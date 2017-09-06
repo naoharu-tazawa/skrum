@@ -12,6 +12,8 @@ use AppBundle\Entity\MGroup;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\TOkr;
 use AppBundle\Entity\TOkrActivity;
+use AppBundle\Api\ResponseDTO\OkrInfoDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 
 /**
  * OKR設定サービスクラス
@@ -332,9 +334,9 @@ class OkrSettingService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param TOkr $okrEntity OKRエンティティ
-     * @return void
+     * @return OkrInfoDTO
      */
-    public function updateRatio(Auth $auth, array $data, TOkr $okrEntity)
+    public function updateRatio(Auth $auth, array $data, TOkr $okrEntity): OkrInfoDTO
     {
         // 親OKRIDを取得
         $parentOkrId = $okrEntity->getOkrId();
@@ -383,5 +385,14 @@ class OkrSettingService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンス用DTOを作成
+        $okrInfoDTO = new OkrInfoDTO();
+        $basicOkrDTOParentOkr = new BasicOkrDTO();
+        $basicOkrDTOParentOkr->setOkrId($okrEntity->getOkrId());
+        $basicOkrDTOParentOkr->setAchievementRate(round($okrEntity->getAchievementRate(), 1));
+        $okrInfoDTO->setParentOkr($basicOkrDTOParentOkr);
+
+        return $okrInfoDTO;
     }
 }
