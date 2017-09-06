@@ -37,6 +37,7 @@ class AdditionalUserContainer extends Component {
             <label>パスワード再入力</label>
             <input type="password" maxLength={20} onChange={e => this.setState({ retype: e.target.value })} />
           </section>
+          <div className={styles.notice}>半角英数字8字以上20字以下で、アルファベット・数字をそれぞれ1字以上含めてください。</div>
           <section>
             {!isPosting && error && <div className={styles.error}>{error}</div>}
             {!isPosting && <button type="submit" disabled={!password || password !== retype}>送信</button>}

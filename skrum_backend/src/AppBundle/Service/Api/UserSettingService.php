@@ -340,7 +340,7 @@ class UserSettingService extends BaseService
         $mUser->setLastName($userInfo['lastName']);
         $mUser->setFirstName($userInfo['firstName']);
         $mUser->setPosition($userInfo['position']);
-        $mUser->setPhoneNumber($userInfo['phoneNumber']);
+        if (array_key_exists('phoneNumber', $userInfo)) $mUser->setPhoneNumber($userInfo['phoneNumber']);
 
         try {
             $this->persist($mUser);
