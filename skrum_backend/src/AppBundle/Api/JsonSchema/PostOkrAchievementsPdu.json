@@ -5,11 +5,13 @@
     "achievedValue": {
       "title": "達成値",
       "type": "integer",
+      "minimum": 0,
       "maxLength": 20
     },
     "targetValue": {
       "title": "目標値",
       "type": "integer",
+      "minimum": 1,
       "maxLength": 20
     },
     "post": {
