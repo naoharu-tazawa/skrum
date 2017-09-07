@@ -58,7 +58,7 @@
   width: 22%;
 }
 .tool {
-  width: 40px;
+  min-width: 40px;
   height: 40px;
   border: 1px solid #8e9aa6;
   border-radius: 50%;

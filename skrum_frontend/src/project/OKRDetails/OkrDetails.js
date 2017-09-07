@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
-import { isEmpty } from 'lodash';
+import { isEmpty, toNumber, isNumber, sum, round, fromPairs, toPairs } from 'lodash';
 import { okrPropTypes } from './propTypes';
 import InlineTextArea from '../../editors/InlineTextArea';
 import InlineDateInput from '../../editors/InlineDateInput';
@@ -22,6 +22,32 @@ import { withModal } from '../../util/ModalUtil';
 import { compareDates } from '../../util/DatetimeUtil';
 import styles from './OkrDetails.css';
 
+const overrideKeyResults = (keyResults, data) => {
+  const ratioFallback = (ratio, krLocked, krRatio, fallback) => {
+    if (isNumber(ratio)) return ratio;
+    if (ratio === null) return fallback;
+    return krLocked ? toNumber(krRatio) : fallback;
+  };
+  const lockedRatios = keyResults.map(({ id, weightedAverageRatio, ratioLockedFlg }) =>
+    ratioFallback(data[id], ratioLockedFlg, weightedAverageRatio, null))
+    .filter(ratio => isNumber(ratio));
+  const lockedRatiosSum = sum(lockedRatios);
+  const unlockedCount = keyResults.length - lockedRatios.length;
+  const unlockedRatio = round((100 - lockedRatiosSum) / unlockedCount, 1);
+  return {
+    lockedRatiosSum,
+    unlockedCount,
+    overrides: fromPairs(
+      keyResults.map(({ id, weightedAverageRatio, ratioLockedFlg }) => (
+        [id, {
+          weightedAverageRatio:
+            ratioFallback(data[id], ratioLockedFlg, weightedAverageRatio, unlockedRatio),
+          ratioLockedFlg: data[id] !== null && (isNumber(data[id]) || ratioLockedFlg) ? 1 : 0,
+        }]
+      ))),
+  };
+};
+
 class OkrDetails extends Component {
 
   static propTypes = {
@@ -31,10 +57,80 @@ class OkrDetails extends Component {
     dispatchPutOKR: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
+    dispatchSetRatios: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired,
     dispatchChangeOkrOwner: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
   };
+
+  setRatioDialog = ({ id, name, owner, keyResults, onClose }) => (
+    <DialogForm
+      title="サブ目標の目標への影響度合い設定"
+      submitButton="設定"
+      constrainHeight
+      onSubmit={data => (!data ? Promise.resolve() :
+        this.props.dispatchSetRatios(id,
+          toPairs(overrideKeyResults(keyResults, data).overrides)
+            .filter(([, { ratioLockedFlg }]) => ratioLockedFlg)
+            .map(([keyResultId, { weightedAverageRatio }]) =>
+              ({ keyResultId: toNumber(keyResultId), weightedAverageRatio }))))
+      }
+      onClose={onClose}
+    >
+      {({ setFieldData, data }) => {
+        const { lockedRatiosSum, /* unlockedCount, */overrides } =
+          overrideKeyResults(keyResults, data);
+        // console.log({ data, overrides });
+        return (
+          <div>
+            <EntitySubject entity={owner} heading="対象目標" subject={name} />
+            {keyResults.map((kr) => {
+              const {
+                weightedAverageRatio: ratio = toNumber(kr.weightedAverageRatio),
+                ratioLockedFlg: locked = kr.ratioLockedFlg,
+              } = overrides[kr.id] || {};
+              const maxRatio = (100 - lockedRatiosSum) + (locked ? ratio : 0);
+              // console.log({ id: kr.id, locked, ratio });
+              return (<EntitySubject
+                key={kr.id}
+                componentClassName={styles.ratioKR}
+                entityClassName={styles.ratioEntity}
+                entity={kr.owner}
+                entityStyle={{ width: '10em' }}
+                subject={(
+                  <div className={styles.ratioDetails}>
+                    <div className={styles.ratioKR}>{kr.name}</div>
+                    <div className={styles.ratio}>
+                      <input
+                        type="number"
+                        min={0}
+                        max={maxRatio}
+                        step="0.1"
+                        value={locked ? ratio : ''}
+                        placeholder={!locked && ratio}
+                        // disabled={unlockedCount === 0 || (unlockedCount === 1 && !locked)}
+                        onChange={e =>
+                          setFieldData({
+                            ...data,
+                            [kr.id]: Math.min(Math.max(toNumber(e.target.value), 0), maxRatio),
+                          })}
+                      />
+                      <span>%</span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFieldData({ ...data, [kr.id]: locked ? null : ratio })}
+                      >
+                        <img src={locked ? '/img/lock.png' : '/img/unlock.png'} alt="" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              />);
+            })}
+          </div>);
+      }}
+    </DialogForm>);
 
   changeOwnerDialog = ({ id, name, owner, onClose }) => (
     <DialogForm
@@ -237,6 +333,9 @@ class OkrDetails extends Component {
                       { caption: '公開範囲設定',
                         onClick: () => openModal(this.changeDisclosureTypeDialog,
                           { id, name, owner, disclosureType }) },
+                      ...(keyResults.length === 0 ? [] : [{ caption: '影響度設定',
+                        onClick: () => openModal(this.setRatioDialog,
+                          { id, name, owner, keyResults }) }]),
                       { caption: '削除',
                         onClick: () => openModal(this.deleteOkrPrompt, { id, name, owner }) },
                     ]}

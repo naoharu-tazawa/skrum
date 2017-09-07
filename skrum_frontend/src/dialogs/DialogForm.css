@@ -1,5 +1,6 @@
 .form {
   font-size: 13px;
+  max-height: 80%;
 }
 .title {
   padding: 2em 2em 1em 2em;
@@ -19,6 +20,13 @@
 .content:not(.compact) {
   min-width: 48em;
 }
+.constrainedHeight {
+  max-height: 500px;
+  overflow-y: auto;
+}
+.constrainedHeight > * {
+  overflow-y: hidden;
+}
 .buttons {
   padding: 1.5em;
   background-color: #f0f4f5;
@@ -37,11 +45,13 @@
 }
 .cancelButton {
   background-color: #8e9aa5;
-  margin-left: 2em;
 }
 .submitButton {
   background-color: #094f97;
+}
+.submitButton, .cancelButton {
   margin-left: 2em;
+  cursor: pointer;
 }
 .submitting .submitButton {
   background: #094f97 url(/img/rolling.svg) center no-repeat;

@@ -10,6 +10,7 @@ export default class DialogForm extends Component {
     title: PropTypes.string,
     message: PropTypes.string,
     compact: PropTypes.bool,
+    constrainHeight: PropTypes.bool,
     cancelButton: PropTypes.string,
     submitButton: PropTypes.string,
     handleSubmit: PropTypes.func, // for redux-form
@@ -57,7 +58,8 @@ export default class DialogForm extends Component {
   }
 
   render() {
-    const { title, message, compact, cancelButton = 'キャンセル', submitButton = 'OK',
+    const { title, message, compact, constrainHeight,
+      cancelButton = 'キャンセル', submitButton = 'OK',
       onClose, lastTabIndex, children, valid = true, error } = this.props;
     const { data = {}, isSubmitting = false, submissionError } = this.state || {};
     return (
@@ -68,10 +70,13 @@ export default class DialogForm extends Component {
       >
         {title && <div className={styles.title}>{title}</div>}
         {message && <div className={styles.message}>{message}</div>}
-        <FocusTrap>
+        <FocusTrap active={!compact}>
           <div className={`${styles.content} ${compact && styles.compact}`}>
-            {isFunction(children) ? children({ setFieldData: this.setFieldData.bind(this), data }) :
-              children}
+            <div className={constrainHeight && styles.constrainedHeight}>
+              {isFunction(children) ?
+                children({ setFieldData: this.setFieldData.bind(this), data }) :
+                children}
+            </div>
             <div className={styles.error}>{error || submissionError || <span>&nbsp;</span>}</div>
           </div>
           <div className={`${styles.buttons} ${compact && styles.compact}`}>

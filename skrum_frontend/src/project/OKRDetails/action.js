@@ -21,6 +21,8 @@ export const Action = {
   FINISH_CHANGE_PARENT_OKR: 'FINISH_CHANGE_PARENT_OKR',
   REQUEST_CHANGE_OKR_DISCLOSURE_TYPE: 'REQUEST_CHANGE_OKR_DISCLOSURE_TYPE',
   FINISH_CHANGE_OKR_DISCLOSURE_TYPE: 'FINISH_CHANGE_OKR_DISCLOSURE_TYPE',
+  REQUEST_SET_RATIOS: 'REQUEST_SET_RATIOS',
+  FINISH_SET_RATIOS: 'FINISH_SET_RATIOS',
 };
 
 const {
@@ -40,6 +42,8 @@ const {
   finishChangeParentOkr,
   requestChangeOkrDisclosureType,
   finishChangeOkrDisclosureType,
+  requestSetRatios,
+  finishSetRatios,
 } = createActions({
   [Action.FINISH_FETCH_OKR_DETAILS]: keyValueIdentity,
   [Action.FINISH_POST_KR]: keyValueIdentity,
@@ -49,6 +53,7 @@ const {
   [Action.FINISH_CHANGE_KR_OWNER]: keyValueIdentity,
   [Action.FINISH_CHANGE_PARENT_OKR]: keyValueIdentity,
   [Action.FINISH_CHANGE_OKR_DISCLOSURE_TYPE]: keyValueIdentity,
+  [Action.FINISH_SET_RATIOS]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_OKR_DETAILS,
   Action.REQUEST_POST_KR,
@@ -58,6 +63,7 @@ const {
   Action.REQUEST_CHANGE_KR_OWNER,
   Action.REQUEST_CHANGE_PARENT_OKR,
   Action.REQUEST_CHANGE_OKR_DISCLOSURE_TYPE,
+  Action.REQUEST_SET_RATIOS,
 );
 
 export const fetchOKRDetails = id =>
@@ -138,4 +144,14 @@ export const postAchievement = (id, data) =>
     return postJson(`/okrs/${id}/achievements.json`, state)(null, data)
       .then(json => dispatch(finishPostAchievement('data', json)))
       .catch(({ message }) => dispatch(finishPostAchievement(new Error(message))));
+  };
+
+export const setRatios = (id, ratios) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.okr.isSettingRatios) return Promise.resolve();
+    dispatch(requestSetRatios());
+    return putJson(`/okrs/${id}/setratio.json`, state)(null, ratios)
+      .then(json => dispatch(finishSetRatios('data', { ...json, ratios })))
+      .catch(({ message }) => dispatch(finishSetRatios(new Error(message))));
   };

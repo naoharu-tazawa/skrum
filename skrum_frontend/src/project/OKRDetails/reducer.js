@@ -1,4 +1,4 @@
-import { values } from 'lodash';
+import { values, fromPairs } from 'lodash';
 import { Action } from './action';
 import { mergeUpdateById } from '../../util/ActionUtil';
 import { toUtcDate } from '../../util/DatetimeUtil';
@@ -10,6 +10,7 @@ export default (state = {
   isChangingKROwner: false,
   isChangingParentOkr: false,
   isChangingDisclosureType: false,
+  isSettingRatios: false,
   isDeletingKR: false,
   isPostingAchievement: false,
 }, action) => {
@@ -125,6 +126,24 @@ export default (state = {
       const chart = parentOkrId !== state.objective.okrId ? state.chart :
         [...state.chart, { datetime, achievementRate: parentOkr.achievementRate }];
       return { ...state, objective, keyResults, chart, isPostingAchievement: false, error: null };
+    }
+
+    case Action.REQUEST_SET_RATIOS:
+      return { ...state, isSettingRatios: true };
+
+    case Action.FINISH_SET_RATIOS: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isSettingRatios: false, error: { message: payload.message } };
+      }
+      const { parentOkr, ratios } = payload.data;
+      const { okrId: parentOkrId, ...parentUpdate } = parentOkr;
+      const objective = mergeUpdateById(state.objective, 'okrId', parentUpdate, parentOkrId);
+      const ratiosById = fromPairs(ratios.map(({ keyResultId, weightedAverageRatio }) =>
+        ([keyResultId, { weightedAverageRatio }])));
+      const keyResults = state.keyResults.map(kr =>
+        ({ ...kr, ...ratiosById[kr.okrId], ratioLockedFlg: ratiosById[kr.okrId] ? 1 : 0 }));
+      return { ...state, objective, keyResults, isSettingRatios: false, error: null };
     }
 
     default:

@@ -16,6 +16,9 @@ const objectiveBase = {
     type: entityTypePropType.isRequired,
   }).isRequired,
   status: PropTypes.string.isRequired,
+  disclosureType: PropTypes.string,
+  weightedAverageRatio: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  ratioLockedFlg: PropTypes.number,
 };
 
 export const objectivePropTypes = PropTypes.shape(objectiveBase);
@@ -31,8 +34,6 @@ export const keyResultsPropTypes = PropTypes.arrayOf(keyResultPropTypes);
 export const okrPropTypes = PropTypes.shape({
   ...objectiveBase,
   keyResults: keyResultsPropTypes.isRequired,
-  weightedAverageRatio: PropTypes.string,
-  ratioLockedFlg: PropTypes.number,
 });
 
 export const ProgressPropTypes = PropTypes.shape({

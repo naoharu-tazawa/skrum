@@ -13,11 +13,11 @@ class SecttingItem extends Component {
     title: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
     isExpanded: PropTypes.bool.isRequired,
-    svgName: PropTypes.string,
+    imageName: PropTypes.string,
   };
 
   render() {
-    const { subject, pathname, title, isExpanded, svgName } = this.props;
+    const { subject, pathname, title, isExpanded, imageName } = this.props;
     const path = explodePath(pathname);
     const isActive = subject === path.subject;
     const linkStyle = `
@@ -29,7 +29,7 @@ class SecttingItem extends Component {
     return (
       <Link className={linkStyle} to={implodePath({ tab: 'setting', subject })}>
         <img
-          src={`/img/${svgName || `${subject}_setting`}.png`}
+          src={`/img/${imageName || `${subject}_setting`}.png`}
           alt=""
           title={title}
           style={{ width: iconSize, height: iconSize, minWidth: iconSize, minHeight: iconSize }}
@@ -156,7 +156,7 @@ export default class SideBar extends Component {
         {isSetting && isBasicRoleAndAbove(roleLevel) && (
           <SecttingItem subject="email" title="メール設定" {...{ pathname, isExpanded }} />)}
         {isSetting && isBasicRoleAndAbove(roleLevel) && (
-          <SecttingItem subject="account" title="パスワード" {...{ pathname, isExpanded }} svgName="password_change" />)}
+          <SecttingItem subject="account" title="パスワード" {...{ pathname, isExpanded }} imageName="password_change" />)}
       </div>
     );
   }
