@@ -63,8 +63,10 @@ class TimelineController extends BaseController
         $before = $request->get('before'); // 投稿ID
 
         // リクエストパラメータのバリデーション
-        $beforeErrors = $this->checkIntID($before);
-        if($beforeErrors) throw new InvalidParameterException("タイムライン取得基準投稿IDが不正です", $beforeErrors);
+        if ($before !== null) {
+            $beforeErrors = $this->checkIntID($before);
+            if($beforeErrors) throw new InvalidParameterException("タイムライン取得基準投稿IDが不正です", $beforeErrors);
+        }
 
         // 認証情報を取得
         $auth = $request->get('auth_token');
