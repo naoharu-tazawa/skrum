@@ -1,27 +1,31 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
+import AvatarEditor from 'react-avatar-editor';
 import EntityLink, { entityPropType } from './EntityLink';
 import InlineEditor, { inlineEditorPublicPropTypes } from '../editors/InlineEditor';
+import { loadImageDataUrl, parseDataUrl } from '../util/ImageUtil';
 import styles from './InlineEntityImagePicker.css';
 
 export default class InlineEntityImagePicker extends PureComponent {
 
   static propTypes = {
     entity: entityPropType,
-    avatarSize: PropTypes.string,
+    avatarSize: PropTypes.number,
     ...inlineEditorPublicPropTypes,
   };
 
   render() {
-    const { entity, avatarSize = '180px', ...inlineEditorProps } = this.props;
-    const content = ({ preview }) =>
-      (preview ?
-        <img
-          className={styles.preview}
-          src={preview}
-          alt=""
-          style={{ width: avatarSize, height: avatarSize }}
+    const { entity, avatarSize = 180, ...inlineEditorProps } = this.props;
+    const content = ({ dataUrl }) =>
+      (dataUrl ?
+        <AvatarEditor
+          ref={(ref) => { this.avatar = ref; }}
+          image={dataUrl}
+          width={avatarSize}
+          height={avatarSize}
+          border={0}
+          style={{ borderRadius: '50%' }}
         /> :
         <EntityLink
           entity={entity}
@@ -35,12 +39,15 @@ export default class InlineEntityImagePicker extends PureComponent {
         componentClassName={styles.editor}
         {...{ value: {}, ...inlineEditorProps }}
         formatter={content}
+        preProcess={({ dataUrl } = {}) => dataUrl &&
+          { dataUrl, ...parseDataUrl(this.avatar.getImageScaledToCanvas().toDataURL()) }
+        }
       >
         {({ setRef, currentValue, setValue }) =>
           <div className={styles.dropzone} style={{ width: avatarSize, height: avatarSize }}>
             <Dropzone
               ref={setRef}
-              onDrop={([file]) => setValue(file)}
+              onDrop={([file]) => loadImageDataUrl(file).then(dataUrl => setValue({ dataUrl }))}
               accept="image/*"
               multiple={false}
             >

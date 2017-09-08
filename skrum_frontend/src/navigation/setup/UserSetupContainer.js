@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import InlineEntityImagePicker from '../../components/InlineEntityImagePicker';
 import { EntityType } from '../../util/EntityUtil';
-import { loadImageSrc } from '../../util/ImageUtil';
 import { postUserImage } from '../../project/GroupManagement/action';
 import { setupUser } from '../action';
 import styles from './Setup.css';
@@ -69,9 +68,8 @@ class UserSetupContainer extends Component {
             <label>プロフィール画像</label>
             <InlineEntityImagePicker
               entity={{ id: userId, type: EntityType.USER }}
-              avatarSize="120px"
-              onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
-                dispatchPostUserImage(userId, image, mimeType))}
+              avatarSize={120}
+              onSubmit={({ image, mimeType }) => dispatchPostUserImage(userId, image, mimeType)}
             />
           </section>
           {!isPosting && error && <div className={styles.error}>{error}</div>}

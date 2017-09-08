@@ -7,7 +7,6 @@ import InlineEntityImagePicker from '../../../components/InlineEntityImagePicker
 import { EntityType } from '../../../util/EntityUtil';
 import { replacePath } from '../../../util/RouteUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
-import { loadImageSrc } from '../../../util/ImageUtil';
 import styles from './UserInfoEdit.css';
 
 export default class UserInfoEdit extends Component {
@@ -34,9 +33,8 @@ export default class UserInfoEdit extends Component {
           <div className={styles.profile_img}>
             <InlineEntityImagePicker
               entity={{ id: userId, type: EntityType.USER }}
-              avatarSize="70px"
-              onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
-                dispatchPostUserImage(userId, image, mimeType))}
+              avatarSize={70}
+              onSubmit={({ image, mimeType }) => dispatchPostUserImage(userId, image, mimeType)}
             />
             <p>最終更新: {toRelativeTimeText(lastUpdate)}</p>
           </div>

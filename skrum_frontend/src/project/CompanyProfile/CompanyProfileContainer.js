@@ -6,7 +6,6 @@ import InlineTextInput from '../../editors/InlineTextInput';
 import InlineTextArea from '../../editors/InlineTextArea';
 import { fetchCompany, putCompany, postCompanyImage } from './action';
 import { EntityType } from '../../util/EntityUtil';
-import { loadImageSrc } from '../../util/ImageUtil';
 import { errorType } from '../../util/PropUtil';
 import styles from './CompanyProfileContainer.css';
 
@@ -53,8 +52,7 @@ class CompanyProfileContainer extends Component {
         <div className={styles.company_img}>
           <InlineEntityImagePicker
             entity={{ id: companyId, type: EntityType.COMPANY }}
-            onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
-              dispatchPostCompanyImage(companyId, image, mimeType))}
+            onSubmit={({ image, mimeType }) => dispatchPostCompanyImage(companyId, image, mimeType)}
           />
         </div>
         <div>

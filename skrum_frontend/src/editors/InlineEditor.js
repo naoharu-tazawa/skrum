@@ -21,6 +21,7 @@ export default class InlineEditor extends PureComponent {
     multiline: PropTypes.bool,
     dropdown: PropTypes.bool,
     formatter: PropTypes.func,
+    preProcess: PropTypes.func,
     children: PropTypes.func,
     componentClassName: PropTypes.string,
   };
@@ -30,8 +31,9 @@ export default class InlineEditor extends PureComponent {
   }
 
   submit() {
-    const { value: defaultValue = '', required, validate, onSubmit } = this.props;
-    const { value } = this.state || {};
+    const { preProcess, value: defaultValue = '', required, validate, onSubmit } = this.props;
+    const { value: stateValue } = this.state || {};
+    const value = preProcess ? preProcess(stateValue) : stateValue;
     let unsetEditingCompanions = {};
     let unsetEditingCompletion = () => {};
     if (required && isEmpty(value === undefined ? defaultValue : value)) {
