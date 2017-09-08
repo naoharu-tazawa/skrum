@@ -128,6 +128,24 @@ class OkrSettingService extends BaseService
      */
     public function changeOwner(TOkr $tOkr, string $ownerType, MUser $mUser = null, MGroup $mGroup = null, int $companyId)
     {
+        // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが同一の場合、オーナー変更不可
+        if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+            // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝1:ユーザ」の場合
+            if ($tOkr->getParentOkr()->getOwnerUser()->getUserId() === $mUser->getUserId()) {
+                throw new ApplicationException('親OKRと同一のオーナーには変更できません');
+            }
+        } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+            // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝2:グループ」の場合
+            if ($tOkr->getParentOkr()->getOwnerGroup()->getGroupId() === $mGroup->getGroupId()) {
+                throw new ApplicationException('親OKRと同一のオーナーには変更できません');
+            }
+        } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
+            // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝3:会社」の場合
+            if ($tOkr->getParentOkr()->getOwnerCompanyId() === $companyId) {
+                throw new ApplicationException('親OKRと同一のオーナーには変更できません');
+            }
+        }
+
         // 所有者変更対象OKRのキーリザルト（OKR種別＝'2' のみ）を取得
         $tOkrRepos = $this->getTOkrRepository();
         $tOkrArray = $tOkrRepos->getObjectiveAndKeyResults($tOkr->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $companyId, DBConstant::OKR_TYPE_KEY_RESULT);
