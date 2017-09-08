@@ -41,7 +41,7 @@ export default (state = {
         (okr.okrId === parentOkrId ? {
           ...okr,
           ...parentOkr,
-          keyResults: [...okr.keyResults, targetOkr],
+          keyResults: [...(okr.keyResults || []), targetOkr],
         } : okr));
       return { ...state, [subject]: { ...basics, okrs }, isPostingOkr: false, error: null };
     }
@@ -75,10 +75,7 @@ export default (state = {
     }
 
     case Action.SYNC_OKR_DETAILS: {
-      const { payload, error } = action;
-      if (error) {
-        return state;
-      }
+      const { payload } = action;
       const { subject, id, okrId, ...data } = payload.data;
       const { [subject]: basics } = state;
       const okrs = basics.okrs.map(okr => mergeUpdateById(okr, 'okrId', data, id || okrId));

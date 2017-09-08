@@ -101,6 +101,9 @@ export const changeOkrOwner = (subject, id, owner) =>
   };
 
 export const syncOkr = (subject, { payload, error }) =>
-  dispatch => (!error ?
-    dispatch(syncOkrDetails('data', { subject, ...payload.data })) :
-    dispatch(syncOkrDetails(new Error(payload.message))));
+  dispatch => (error ? ({ payload, error }) :
+    dispatch(syncOkrDetails('data', { subject, ...payload.data })));
+
+export const syncNewKR = (subject, { payload, error }) =>
+  dispatch => (error ? ({ payload, error }) :
+    dispatch(finishPostOkr('data', { subject, ...payload.data })));
