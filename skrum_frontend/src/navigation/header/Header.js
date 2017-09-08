@@ -105,7 +105,7 @@ export default class Header extends Component {
         {isSetting && <Tab title="設定" name="setting" pathname={pathname} local />}
         {!isSetting && <Tab title="目標管理" name="objective" pathname={pathname} />}
         {!isSetting && <Tab title="マップ" name="map" pathname={pathname} />}
-        {!isSetting && subject === 'group' && <Tab title="タイムライン" name="timeline" pathname={pathname} />}
+        {!isSetting && subject !== 'user' && <Tab title="タイムライン" name="timeline" pathname={pathname} />}
         {!isSetting && subject !== 'company' && <Tab title="グループ管理" name="control" pathname={pathname} />}
         <div className={styles.rightArea}>
           <SubMenu {...{ isSetting, currentUserId, roleLevel, onAdd, handleLogoutSubmit }} />

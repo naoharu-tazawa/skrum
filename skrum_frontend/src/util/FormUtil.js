@@ -13,7 +13,7 @@ export const withLoadedReduxForm = (WrappedForm, form, stateToInitialValues, red
 
 export const withReduxField = (WrappedComponent, name, fieldProps = {}) =>
   <Field
-    component={({ input, meta }) => <WrappedComponent {...{...input, meta}} {...fieldProps} />}
+    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...fieldProps} />}
     name={name}
   />;
 
