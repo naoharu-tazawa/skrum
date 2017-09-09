@@ -19,9 +19,10 @@ class GroupReportEmailService extends BaseService
      * メール作成・登録
      *
      * @param MUser $mUser ユーザエンティティ
+     * @param string $subdomain サブドメイン
      * @return void
      */
-    private function createEmail(MUser $mUser)
+    private function createEmail(MUser $mUser, string $subdomain)
     {
         // デフォルトタイムフレームエンティティを取得
         $tTimeframeRepos = $this->getTTimeframeRepository();
@@ -45,7 +46,7 @@ class GroupReportEmailService extends BaseService
         $tEmailReservation = new TEmailReservation();
         $tEmailReservation->setToEmailAddress($mUser->getEmailAddress());
         $tEmailReservation->setTitle($this->getParameter('group_achievement_rate_report'));
-        $tEmailReservation->setBody($this->renderView('mail/group_achievement_rate_report.txt.twig', ['data' => $data]));
+        $tEmailReservation->setBody($this->renderView('mail/group_achievement_rate_report.txt.twig', ['data' => $data, 'subdomain' => $subdomain]));
         $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
         $tEmailReservation->setSendingReservationDatetime(DateUtility::transIntoDatetime(DateUtility::getTodayXYTimeDatetimeString(8, 0)));
         $this->persist($tEmailReservation);
@@ -71,7 +72,7 @@ class GroupReportEmailService extends BaseService
         try {
             foreach ($mUserArray as $key => $mUser) {
                 // メール作成・登録
-                $this->createEmail($mUser);
+                $this->createEmail($mUser, $mUser->getCompany()->getSubdomain());
 
                 // バルクインサート
                 if (($key + 1) % $bulkSize === 0) {
