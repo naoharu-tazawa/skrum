@@ -32,7 +32,7 @@ export default class GroupInfo extends Component {
         <figure className={styles.floatL}>
           <EntityLink entity={{ id: groupId, type: EntityType.GROUP }} fluid avatarOnly />
           <figcaption className={styles.alignC}>
-            最終更新: {toRelativeTimeText(lastUpdate)}
+            最終更新:<br />{toRelativeTimeText(lastUpdate)}
           </figcaption>
         </figure>
         <div className={`${styles.boxInfo} ${styles.floatR}`}>

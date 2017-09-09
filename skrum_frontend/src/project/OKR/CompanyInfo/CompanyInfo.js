@@ -18,7 +18,7 @@ export default class CompanyInfo extends Component {
         <figure className={styles.floatL}>
           <EntityLink entity={{ id: companyId, type: EntityType.COMPANY }} fluid avatarOnly />
           <figcaption className={styles.alignC}>
-            最終更新: {toRelativeTimeText(lastUpdate)}
+            最終更新:<br />{toRelativeTimeText(lastUpdate)}
           </figcaption>
         </figure>
         <div className={`${styles.boxInfo} ${styles.floatR}`}>

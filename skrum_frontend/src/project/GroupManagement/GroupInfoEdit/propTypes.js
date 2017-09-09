@@ -12,7 +12,6 @@ export const groupPropTypes = PropTypes.shape({
   })).isRequired,
   mission: PropTypes.string.isRequired,
   leaderName: PropTypes.string,
-  lastUpdate: PropTypes.instanceOf(Date),
 });
 
 export default {

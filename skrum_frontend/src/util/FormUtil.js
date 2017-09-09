@@ -19,7 +19,7 @@ export const withReduxField = (WrappedComponent, name, fieldProps = {}) =>
 
 export const withItemisedReduxField = (WrappedComponent, name, fieldProps = {}) =>
   <Field
-    component={({ input }) => <WrappedComponent {...input} {...fieldProps} />}
+    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...fieldProps} />}
     name={name}
     // format={item => (item || {}).name}
     normalize={(value, previousValue) => (isObject(value) ? value : previousValue)}
@@ -27,7 +27,7 @@ export const withItemisedReduxField = (WrappedComponent, name, fieldProps = {}) 
 
 export const withSelectReduxField = (WrappedComponent, name, fieldProps = {}) =>
   <Field
-    component={({ input }) => <WrappedComponent {...input} {...fieldProps} />}
+    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...fieldProps} />}
     name={name}
     normalize={value => (isObject(value) ? value.value : value)}
   />;

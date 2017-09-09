@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, getFormValues, SubmissionError } from 'redux-form';
-import { isEmpty, omit, toNumber, partial } from 'lodash';
+import { isEmpty, omit, toNumber, partial, find } from 'lodash';
 import { objectivePropTypes } from '../../OKRDetails/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
 import OwnerSearch, { ownerPropType } from '../../OwnerSearch/OwnerSearch';
@@ -15,7 +15,7 @@ import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, with
 import { getEntityTypeId, getEntityTypeSubject } from '../../../util/EntityUtil';
 import { mapOwnerOutbound } from '../../../util/OwnerUtil';
 import { explodePath } from '../../../util/RouteUtil';
-import { isValidDate, compareDates, toUtcDate } from '../../../util/DatetimeUtil';
+import { isValidDate, compareDates, toUtcDate, formatDate } from '../../../util/DatetimeUtil';
 import { OKRType } from '../../../util/OKRUtil';
 import { postOkr, syncNewKR } from '../action';
 import { postKR } from '../../OKRDetails/action';
@@ -37,7 +37,13 @@ const dialogInitialValues = (state) => {
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
   const { timeframeId } = explodePath(pathname);
-  return { disclosureType: defaultDisclosureType, timeframeId };
+  const { timeframes = [] } = state.top.data || {};
+  const { startDate, endDate } = find(timeframes, { timeframeId }) || {};
+  return {
+    disclosureType: defaultDisclosureType,
+    timeframeId,
+    startDate: formatDate(startDate),
+    endDate: formatDate(endDate) };
 };
 
 const OkrDialogForm = withLoadedReduxForm(

@@ -13,7 +13,6 @@ import EntityLink, { EntityType } from '../../../components/EntityLink';
 import Editable from '../../../components/Editable';
 import PathSearch from '../../PathSearch/PathSearch';
 import { withModal } from '../../../util/ModalUtil';
-import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 import styles from './GroupInfoEdit.css';
 
 class GroupInfoEdit extends Component {
@@ -54,7 +53,7 @@ class GroupInfoEdit extends Component {
   render() {
     const { group, dispatchPutGroup, dispatchPostGroupImage,
       dispatchChangeGroupLeader, dispatchDeleteGroupPath, openModal } = this.props;
-    const { groupId, name, groupPaths, mission, leaderUserId, leaderName, lastUpdate } = group;
+    const { groupId, name, groupPaths, mission, leaderUserId, leaderName } = group;
     const entity = { id: groupId, type: EntityType.GROUP };
     return (
       <section className={styles.profile_box}>
@@ -71,7 +70,6 @@ class GroupInfoEdit extends Component {
                 onSubmit={({ image, mimeType }) => dispatchPostGroupImage(groupId, image, mimeType)}
               />
             </Editable>
-            <p>最終更新: {toRelativeTimeText(lastUpdate)}</p>
           </div>
           <div className={styles.profile_txt}>
             <h2 className={styles.team_name}>

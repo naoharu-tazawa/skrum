@@ -6,7 +6,6 @@ import InlineTextInput from '../../../editors/InlineTextInput';
 import InlineEntityImagePicker from '../../../components/InlineEntityImagePicker';
 import { EntityType } from '../../../util/EntityUtil';
 import { replacePath } from '../../../util/RouteUtil';
-import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 import styles from './UserInfoEdit.css';
 
 export default class UserInfoEdit extends Component {
@@ -20,7 +19,7 @@ export default class UserInfoEdit extends Component {
   render() {
     const { user, dispatchPutUser, dispatchPostUserImage } = this.props;
     const { userId, lastName, firstName, departments,
-      position, phoneNumber, emailAddress, lastUpdate } = user;
+      position, phoneNumber, emailAddress } = user;
     const groupsLink = departments.map(({ groupId, groupName }, index) =>
       <span key={groupId}>
         {index ? '・' : ''}
@@ -36,7 +35,6 @@ export default class UserInfoEdit extends Component {
               avatarSize={70}
               onSubmit={({ image, mimeType }) => dispatchPostUserImage(userId, image, mimeType)}
             />
-            <p>最終更新: {toRelativeTimeText(lastUpdate)}</p>
           </div>
           <div className={styles.profile_txt}>
             <h2 className={styles.user_name}>
