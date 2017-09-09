@@ -34,7 +34,7 @@ class AuthenticatedRegion extends Component {
 
   render() {
     return (
-      <Authenticated top={topPage} login={loginPage}>
+      <Authenticated login={loginPage}>
         {this.props.children}
       </Authenticated>);
   }
@@ -56,19 +56,22 @@ const RedirectRoute = () => <RootRedirect top={topPage} login={loginPage} />;
 export default (
   <Route path="/" component={App} >
     <Route path="" component={AuthenticatedRegion}>
-      <Route path={topPage} component={UserRouter} />
-      <Route path="/:tab/u/:userId/:timeframeId" component={UserRouter} />
-      <Route path="/:tab/u/:userId/:timeframeId/o/:okrId" component={UserRouter} />
-      <Route path="/:tab/g/:groupId/:timeframeId" component={GroupRouter} />
-      <Route path="/:tab/g/:groupId/:timeframeId/o/:okrId" component={GroupRouter} />
-      <Route path="/:tab/c/:companyId/:timeframeId" component={CompanyRouter} />
-      <Route path="/:tab/c/:companyId/:timeframeId/o/:okrId" component={CompanyRouter} />
       <Route path="/s/u" component={UserSettingContainer} />
       <Route path="/s/g" component={GroupSettingContainer} />
       <Route path="/s/c" component={CompanyProfileContainer} />
       <Route path="/s/t" component={TimeframeSettingContainer} />
       <Route path="/s/e" component={EmailSettingContainer} />
       <Route path="/s/a" component={PasswordChangeContainer} />
+      <Route path="/:tab/u" component={UserRouter} />
+      <Route path="/:tab/u/:userId" component={UserRouter} />
+      <Route path="/:tab/u/:userId/:timeframeId" component={UserRouter} />
+      <Route path="/:tab/u/:userId/:timeframeId/o/:okrId" component={UserRouter} />
+      <Route path="/:tab/g/:groupId" component={GroupRouter} />
+      <Route path="/:tab/g/:groupId/:timeframeId" component={GroupRouter} />
+      <Route path="/:tab/g/:groupId/:timeframeId/o/:okrId" component={GroupRouter} />
+      <Route path="/:tab/c/:companyId" component={CompanyRouter} />
+      <Route path="/:tab/c/:companyId/:timeframeId" component={CompanyRouter} />
+      <Route path="/:tab/c/:companyId/:timeframeId/o/:okrId" component={CompanyRouter} />
     </Route>
     <Route path="/preregister" component={PreregisterContainer} />
     <Route path="/new_user_registration" component={NewUserContainer} />

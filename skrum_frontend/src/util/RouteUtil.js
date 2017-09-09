@@ -40,11 +40,14 @@ export const implodeSubject = (subject) => {
 
 export const explodePath = (path, options = {}) => {
   const [, tab, subject, id, timeframeId, aspect, aspectId] = path.split('/');
+  const explodedTab = explodeTab(tab);
   const basicParts = {
-    tab: explodeTab(tab),
+    tab: explodedTab,
     subject: explodeSubject(subject),
-    id: toNumber(id),
-    timeframeId: toNumber(timeframeId),
+    ...(explodedTab === 'setting' ? {} : {
+      id: id && toNumber(id),
+      timeframeId: timeframeId && toNumber(timeframeId),
+    }),
   };
   const { basicOnly = false } = options;
   return basicOnly || !aspect ? basicParts : {
@@ -57,9 +60,9 @@ export const implodePath = ({ tab, subject, id, timeframeId, aspect, aspectId },
   return `
     /${implodeTab(tab)}
     /${implodeSubject(subject)}
-    ${!isSetting ? `/${id}` : ''}
-    ${!isSetting ? `/${timeframeId}` : ''}
-    ${!isSetting && !basicOnly && aspect ? `/${aspect}/${aspectId}` : ''}
+    ${!isSetting && id ? `/${id}` : ''}
+    ${!isSetting && id && timeframeId ? `/${timeframeId}` : ''}
+    ${!isSetting && id && timeframeId && !basicOnly && aspect ? `/${aspect}/${aspectId}` : ''}
     `.replace(/[\s\n]/g, '');
 };
 

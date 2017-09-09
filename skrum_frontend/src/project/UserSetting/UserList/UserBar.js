@@ -10,6 +10,7 @@ import EntitySubject from '../../../components/EntitySubject';
 import DropdownMenu from '../../../components/DropdownMenu';
 import { RoleLevelName, isAuthoratativeOver } from '../../../util/UserUtil';
 import { formatDate, toRelativeTimeText } from '../../../util/DatetimeUtil';
+import { implodePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
 import styles from './UserBar.css';
 
@@ -103,6 +104,10 @@ class UserBar extends Component {
           {isAuthoratativeOver(currentRoleLevel, roleLevel) && (
             <DropdownMenu
               options={[
+                { caption: '目標を見る',
+                  path: implodePath({ tab: 'objective', subject: 'user', id }) },
+                { caption: '所属グループを見る',
+                  path: implodePath({ tab: 'control', subject: 'user', id }) },
                 { caption: 'パスワードリセット',
                   onClick: () => openModal(this.resetPasswordPrompt,
                     { id, name }) },

@@ -4,17 +4,17 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { find, mapValues, values, some } from 'lodash';
 import NavigationContainer from '../../navigation/NavigationContainer';
-import { implodePath } from '../../util/RouteUtil';
+import { isPathFinal, explodePath, implodePath } from '../../util/RouteUtil';
 import { logout } from '../action';
 
 class Authenticated extends Component {
   static propTypes = {
-    top: PropTypes.string.isRequired,
     login: PropTypes.string.isRequired,
+    toRelogin: PropTypes.bool.isRequired,
+    pathname: PropTypes.string.isRequired,
     isAuthorized: PropTypes.bool,
-    userId: PropTypes.number,
+    currentUserId: PropTypes.number,
     timeframeId: PropTypes.number,
-    toRelogin: PropTypes.bool,
     children: PropTypes.element,
     dispatchForceLogout: PropTypes.func.isRequired,
   };
@@ -28,14 +28,15 @@ class Authenticated extends Component {
   }
 
   transfer(props = this.props) {
-    const { top, login, isAuthorized, userId, timeframeId, toRelogin, dispatchForceLogout } = props;
-    const path = location.pathname;
+    const { login, pathname, isAuthorized, currentUserId, timeframeId, toRelogin,
+      dispatchForceLogout } = props;
     if (!isAuthorized) {
       browserHistory.push(login);
     } else if (toRelogin) {
       dispatchForceLogout();
-    } else if (userId && timeframeId && path === top) {
-      browserHistory.push(implodePath({ tab: 'objective', subject: 'user', id: userId, timeframeId }));
+    } else if (currentUserId && timeframeId && !isPathFinal(pathname)) {
+      const { tab = 'objective', subject = 'user', id = currentUserId } = explodePath(pathname);
+      browserHistory.replace(implodePath({ tab, subject, id, timeframeId }));
     }
   }
 
@@ -49,11 +50,13 @@ class Authenticated extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { isAuthorized, userId } = state.auth;
+  const { isAuthorized, userId: currentUserId } = state.auth;
   const { timeframes = [] } = state.top.data || {};
   const { timeframeId } = find(timeframes, { defaultFlg: 1 }) || {};
+  const { locationBeforeTransitions } = state.routing || {};
+  const { pathname } = locationBeforeTransitions || {};
   const toRelogin = some(values(mapValues(state, 'error')), ['message', 'ログインしてください。']);
-  return { isAuthorized, userId, timeframeId, toRelogin };
+  return { toRelogin, pathname, isAuthorized, currentUserId, timeframeId };
 };
 
 const mapDispatchToProps = (dispatch) => {
