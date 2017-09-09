@@ -4,10 +4,12 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
+use Aws\S3\Exception\S3Exception;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
+use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\Constant;
 
@@ -61,14 +63,23 @@ class ImageUploadController extends BaseController
         }
 
         // Upload an object to Amazon S3
-        $result = $client->putObject(array(
-                'Bucket'     => $bucket,
-                'Key'        => $filePathInS3,
-                'Metadata'   => array(
-                        'mime-type' => $data['mimeType']
-                ),
-                'Body'       => $data['image']
-        ));
+        try {
+            $result = $client->putObject(array(
+                    'Bucket'     => $bucket,
+                    'Key'        => $filePathInS3,
+                    'Metadata'   => array(
+                            'mime-type' => $data['mimeType']
+                    ),
+                    'Body'       => $data['image']
+            ));
+        } catch (S3Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+
+        // イメージバージョンを1に更新
+        // Ver1.1リリース後はこの3行コードを削除
+        $imageUploadService = $this->getImageUploadService();
+        $imageUploadService->imageVersion1(Constant::SUBJECT_TYPE_USER, $userId, null, null);
 
         // ToDo: リリースVer1.1の時、下記コメントアウトを除去し、画像バージョンを導入
         // 画像バージョンを更新
@@ -121,14 +132,23 @@ class ImageUploadController extends BaseController
         }
 
         // Upload an object to Amazon S3
-        $result = $client->putObject(array(
-                'Bucket'     => $bucket,
-                'Key'        => $filePathInS3,
-                'Metadata'   => array(
-                        'mime-type' => $data['mimeType']
-                ),
-                'Body'       => $data['image']
-        ));
+        try {
+            $result = $client->putObject(array(
+                    'Bucket'     => $bucket,
+                    'Key'        => $filePathInS3,
+                    'Metadata'   => array(
+                            'mime-type' => $data['mimeType']
+                    ),
+                    'Body'       => $data['image']
+            ));
+        } catch (S3Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+
+        // イメージバージョンを1に更新
+        // Ver1.1リリース後はこの3行コードを削除
+        $imageUploadService = $this->getImageUploadService();
+        $imageUploadService->imageVersion1(Constant::SUBJECT_TYPE_GROUP, null, $groupId, null);
 
         // ToDo: リリースVer1.1の時、下記コメントアウトを除去し、画像バージョンを導入
         // 画像バージョンを更新
@@ -181,14 +201,23 @@ class ImageUploadController extends BaseController
         }
 
         // Upload an object to Amazon S3
-        $result = $client->putObject(array(
-                'Bucket'     => $bucket,
-                'Key'        => $filePathInS3,
-                'Metadata'   => array(
-                        'mime-type' => $data['mimeType']
-                ),
-                'Body'       => $data['image']
-        ));
+        try {
+            $result = $client->putObject(array(
+                    'Bucket'     => $bucket,
+                    'Key'        => $filePathInS3,
+                    'Metadata'   => array(
+                            'mime-type' => $data['mimeType']
+                    ),
+                    'Body'       => $data['image']
+            ));
+        } catch (S3Exception $e) {
+            throw new SystemException($e->getMessage());
+        }
+
+        // イメージバージョンを1に更新
+        // Ver1.1リリース後はこの3行コードを削除
+        $imageUploadService = $this->getImageUploadService();
+        $imageUploadService->imageVersion1(Constant::SUBJECT_TYPE_COMPANY, null, null, $companyId);
 
         // ToDo: リリースVer1.1の時、下記コメントアウトを除去し、画像バージョンを導入
         // 画像保存済みフラグを更新
