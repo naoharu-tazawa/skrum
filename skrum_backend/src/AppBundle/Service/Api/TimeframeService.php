@@ -9,8 +9,7 @@ use AppBundle\Utils\Auth;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TTimeframe;
-use AppBundle\Api\ResponseDTO\TimeframeDetailDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\TimeframeDTO;
+use AppBundle\Api\ResponseDTO\TimeframeDTO;
 
 /**
  * タイムフレームサービスクラス
@@ -37,38 +36,13 @@ class TimeframeService extends BaseService
             $timeframeDTO = new TimeframeDTO();
             $timeframeDTO->setTimeframeId($tTimeframe->getTimeframeId());
             $timeframeDTO->setTimeframeName($tTimeframe->getTimeframeName());
+            $timeframeDTO->setStartDate($tTimeframe->getStartDate());
+            $timeframeDTO->setEndDate($tTimeframe->getEndDate());
             $timeframeDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
             $timeframeDTOArray[] = $timeframeDTO;
         }
 
         return $timeframeDTOArray;
-    }
-
-    /**
-     * タイムフレーム詳細取得
-     *
-     * @param integer $companyId 会社ID
-     * @return array
-     */
-    public function getTimeframeDetails(int $companyId): array
-    {
-        // タイムフレーム取得
-        $tTimeframeRepos = $this->getTTimeframeRepository();
-        $tTimeframeArray = $tTimeframeRepos->findBy(array('company' => $companyId), array('timeframeId' => 'DESC'));
-
-        // DTOに詰め替える
-        $timeframeDetailDTOArray = array();
-        foreach ($tTimeframeArray as $tTimeframe) {
-            $timeframeDetailDTO = new TimeframeDetailDTO();
-            $timeframeDetailDTO->setTimeframeId($tTimeframe->getTimeframeId());
-            $timeframeDetailDTO->setTimeframeName($tTimeframe->getTimeframeName());
-            $timeframeDetailDTO->setStartDate($tTimeframe->getStartDate());
-            $timeframeDetailDTO->setEndDate($tTimeframe->getEndDate());
-            $timeframeDetailDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
-            $timeframeDetailDTOArray[] = $timeframeDetailDTO;
-        }
-
-        return $timeframeDetailDTOArray;
     }
 
     /**
@@ -110,9 +84,9 @@ class TimeframeService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
-     * @return TimeframeDetailDTO
+     * @return TimeframeDTO
      */
-    public function registerTimeframe(Auth $auth, array $data): TimeframeDetailDTO
+    public function registerTimeframe(Auth $auth, array $data): TimeframeDTO
     {
         // 開始日と終了日を大小比較
         if ($data['startDate'] > $data['endDate']) {
@@ -138,14 +112,14 @@ class TimeframeService extends BaseService
         }
 
         // レスポンス用DTO生成
-        $timeframeDetailDTO = new TimeframeDetailDTO();
-        $timeframeDetailDTO->setTimeframeId($tTimeframe->getTimeframeId());
-        $timeframeDetailDTO->setTimeframeName($tTimeframe->getTimeframeName());
-        $timeframeDetailDTO->setStartDate($tTimeframe->getStartDate());
-        $timeframeDetailDTO->setEndDate($tTimeframe->getEndDate());
-        $timeframeDetailDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
+        $timeframeDTO = new TimeframeDTO();
+        $timeframeDTO->setTimeframeId($tTimeframe->getTimeframeId());
+        $timeframeDTO->setTimeframeName($tTimeframe->getTimeframeName());
+        $timeframeDTO->setStartDate($tTimeframe->getStartDate());
+        $timeframeDTO->setEndDate($tTimeframe->getEndDate());
+        $timeframeDTO->setDefaultFlg($tTimeframe->getDefaultFlg());
 
-        return $timeframeDetailDTO;
+        return $timeframeDTO;
     }
 
     /**

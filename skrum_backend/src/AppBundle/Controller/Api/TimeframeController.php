@@ -8,7 +8,7 @@ use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Utils\Permission;
-use AppBundle\Api\ResponseDTO\TimeframeDetailDTO;
+use AppBundle\Api\ResponseDTO\TimeframeDTO;
 
 /**
  * タイムフレームコントローラ
@@ -63,7 +63,7 @@ class TimeframeController extends BaseController
 
         // タイムフレーム取得処理
         $timeframeService = $this->getTimeframeService();
-        $timeframeDetailDTOArray = $timeframeService->getTimeframeDetails($companyId);
+        $timeframeDetailDTOArray = $timeframeService->getTimeframes($companyId);
 
         return $timeframeDetailDTOArray;
     }
@@ -98,9 +98,9 @@ class TimeframeController extends BaseController
      * @Rest\Post("/v1/timeframes.{_format}")
      * @Permission(value="timeframe_edit")
      * @param Request $request リクエストオブジェクト
-     * @return TimeframeDetailDTO
+     * @return TimeframeDTO
      */
-    public function postTimeframesAction(Request $request): TimeframeDetailDTO
+    public function postTimeframesAction(Request $request): TimeframeDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostTimeframesPdu');
@@ -114,9 +114,9 @@ class TimeframeController extends BaseController
 
         // タイムフレーム登録処理
         $timeframeService = $this->getTimeframeService();
-        $timeframeDetailDTO = $timeframeService->registerTimeframe($auth, $data);
+        $timeframeDTO = $timeframeService->registerTimeframe($auth, $data);
 
-        return $timeframeDetailDTO;
+        return $timeframeDTO;
     }
 
     /**

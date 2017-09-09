@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Api\ResponseDTO\NestedObject;
+namespace AppBundle\Api\ResponseDTO;
 
 use JMS\Serializer\Annotation as JSON;
 
@@ -24,6 +24,20 @@ class TimeframeDTO
      * @JSON\Type("string")
      */
     private $timeframeName;
+
+    /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d'>")
+     */
+    private $startDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d'>")
+     */
+    private $endDate;
 
     /**
      * @var integer
@@ -78,6 +92,54 @@ class TimeframeDTO
     public function getTimeframeName()
     {
         return $this->timeframeName;
+    }
+
+    /**
+     * Set startDate
+     *
+     * @param \DateTime $startDate
+     *
+     * @return TimeframeDTO
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * Get startDate
+     *
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * Set endDate
+     *
+     * @param \DateTime $endDate
+     *
+     * @return TimeframeDTO
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * Get endDate
+     *
+     * @return \DateTime
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
     }
 
     /**

@@ -35,12 +35,17 @@ paths:
                       type: integer
                     timeframeName:
                       type: string
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
                     defaultFlg:
                       type: integer
                   required:
                     - timeframeId
                     - timeframeName
-                    - defaultFlg
+                    - startDate
+                    - endDate
               teams:
                 type: array
                 items:
