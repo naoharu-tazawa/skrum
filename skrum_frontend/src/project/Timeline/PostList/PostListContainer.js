@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { postsPropTypes } from './propTypes';
 import PostList from './PostList';
-import { deleteGroupPosts, changeDisclosureType, postLike, deleteLike, postReply } from '../action';
+import { deletePost, changeDisclosureType, postLike, deleteLike, postReply } from '../action';
 import { EntityType } from '../../../util/EntityUtil';
 import { mapPoster } from '../../../util/PosterUtil';
 import { mapOwner } from '../../../util/OwnerUtil';
@@ -16,9 +16,9 @@ class PostListContainer extends Component {
     items: postsPropTypes,
     roleLevel: PropTypes.number.isRequired,
     currentUserId: PropTypes.number.isRequired,
-    dispatchFetchMoreGroupPosts: PropTypes.func,
+    dispatchFetchMorePosts: PropTypes.func,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
-    dispatchDeleteGroupPosts: PropTypes.func.isRequired,
+    dispatchDeletePost: PropTypes.func.isRequired,
     dispatchPostLike: PropTypes.func.isRequired,
     dispatchDeleteLike: PropTypes.func.isRequired,
     dispatchPostReply: PropTypes.func.isRequired,
@@ -26,7 +26,7 @@ class PostListContainer extends Component {
 
   render() {
     const { isFetchingMore, hasMorePosts, items = [], roleLevel, currentUserId,
-      dispatchFetchMoreGroupPosts, dispatchChangeDisclosureType, dispatchDeleteGroupPosts,
+      dispatchFetchMorePosts, dispatchChangeDisclosureType, dispatchDeletePost,
       dispatchPostLike, dispatchDeleteLike, dispatchPostReply } = this.props;
     return (
       <PostList
@@ -36,9 +36,9 @@ class PostListContainer extends Component {
           items,
           roleLevel,
           currentUserId,
-          dispatchFetchMoreGroupPosts,
+          dispatchFetchMorePosts,
           dispatchChangeDisclosureType,
-          dispatchDeleteGroupPosts,
+          dispatchDeletePost,
           dispatchPostLike,
           dispatchDeleteLike,
           dispatchPostReply,
@@ -82,8 +82,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   const dispatchChangeDisclosureType = (postId, disclosureType) =>
     dispatch(changeDisclosureType(postId, disclosureType));
-  const dispatchDeleteGroupPosts = postId =>
-    dispatch(deleteGroupPosts(postId));
+  const dispatchDeletePost = postId =>
+    dispatch(deletePost(postId));
   const dispatchPostLike = postId =>
     dispatch(postLike(postId));
   const dispatchDeleteLike = postId =>
@@ -92,7 +92,7 @@ const mapDispatchToProps = (dispatch) => {
     dispatch(postReply(postId, post));
   return {
     dispatchChangeDisclosureType,
-    dispatchDeleteGroupPosts,
+    dispatchDeletePost,
     dispatchPostLike,
     dispatchDeleteLike,
     dispatchPostReply,

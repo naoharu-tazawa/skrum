@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}契約プラン変更{% endblock %}
+
+{% block body %}
+<table class="normal-table header-color">
+  <tr>
+    <th>会社ID</th>
+    <th>会社名</th>
+    <th>契約ID</th>
+    <th>契約プラン名</th>
+    <th>価格種別</th>
+    <th>契約価格</th>
+    <th>アカウント数</th>
+    <th>契約価格 × アカウント数</th>
+    <th>プラン開始日</th>
+    <th>プラン終了日</th>
+    <th>ステータス</th>
+  </tr>
+  {% for item in data %}
+  <tr>
+    <td>{{ item.companyId | default("") }}</td>{% set companyId = item.companyId %}
+    <td>{{ item.companyName | default("") }}</td>
+    <td>{{ item.contractId | default("未契約") }}</td>
+    <td>{{ item.planName }}</td>
+    {% if (item.contractId | default(null)) is not null %}
+      {% if item.priceType is constant('AppBundle\\Utils\\DBConstant::PRICE_TYPE_COMPANY') %}
+        <td>会社単位</td>
+        <td>{{ item.price|number_format(0, '.', ',') }}円</td>
+        <td>{{ item.userCount|number_format(0, '.', ',') }}人</td>
+        <td>-</td>
+        <td>{{ item.planStartDate | default("") }}</td>
+        <td>{{ item.planEndDate | default("") }}</td>
+      {% else %}
+        <td>人数単位</td>
+        <td>{{ item.price|number_format(0, '.', ',') }}円</td>
+        <td>{{ item.userCount|number_format(0, '.', ',') }}人</td>
+        <td>{{ (item.price * item.userCount)|number_format(0, '.', ',') }}円</td>
+        <td>{{ item.planStartDate | default("") }}</td>
+        <td>{{ item.planEndDate | default("") }}</td>
+      {% endif %}
+    {% else %}
+      <td>-</td>
+      <td>-</td>
+      <td>{{ item.userCount|number_format(0, '.', ',') }}人</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    {% endif %}
+    <td>
+      {% if item.authorizationStopFlg %}利用不可{% else %}利用可{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<form action="{{ path("plan_change_post", {"companyId": data[0].companyId}) }}" method="post" {{ form_enctype(form) }}>
+  <center>{{ form_widget(form.planId, {"attr": {"class": "form-control"}}) }}{{ form_errors(form.planId) }}</center>
+  <center>{{ form_widget(form.submit, {"attr": {"class": "form-control"}}) }}</center>
+</form>
+
+<center>{{ message }}</center>
+
+{% endblock %}

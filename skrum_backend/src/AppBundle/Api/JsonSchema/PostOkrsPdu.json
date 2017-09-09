@@ -53,6 +53,7 @@
     "targetValue": {
       "title": "目標値",
       "type": "integer",
+      "minimum": 0,
       "maxLength": 20
     },
     "unit": {

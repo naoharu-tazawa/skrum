@@ -76,7 +76,7 @@ export const postOkr = (subject, isOwnerCurrent, okr) =>
     if (state.basics.isPostingOkr) return Promise.resolve();
     dispatch(requestPostOkr());
     return postJson('/okrs.json', state)(null, okr)
-      .then(json => dispatch(finishPostOkr('data', { subject, isOwnerCurrent, data: json })))
+      .then(json => dispatch(finishPostOkr('data', { subject, isOwnerCurrent, ...json })))
       .catch(({ message }) => dispatch(finishPostOkr(new Error(message))));
   };
 
@@ -86,7 +86,7 @@ export const deleteOkr = (subject, id) =>
     if (state.basics.isDeletingOkr) return Promise.resolve();
     dispatch(requestDeleteOkr());
     return deleteJson(`/okrs/${id}.json`, state)()
-      .then(() => dispatch(finishDeleteOkr('data', { subject, id })))
+      .then(json => dispatch(finishDeleteOkr('data', { subject, id, ...json })))
       .catch(({ message }) => dispatch(finishDeleteOkr(new Error(message))));
   };
 
@@ -101,6 +101,9 @@ export const changeOkrOwner = (subject, id, owner) =>
   };
 
 export const syncOkr = (subject, { payload, error }) =>
-  dispatch => (!error ?
-    dispatch(syncOkrDetails('data', { subject, ...payload.data })) :
-    dispatch(syncOkrDetails(new Error(payload.message))));
+  dispatch => (error ? ({ payload, error }) :
+    dispatch(syncOkrDetails('data', { subject, ...payload.data })));
+
+export const syncNewKR = (subject, { payload, error }) =>
+  dispatch => (error ? ({ payload, error }) :
+    dispatch(finishPostOkr('data', { subject, ...payload.data })));

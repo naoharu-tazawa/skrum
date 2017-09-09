@@ -44,7 +44,7 @@ export const createGroup = data =>
     if (state.groupSetting.isPostingGroup) return Promise.resolve();
     dispatch(requestCreateGroup());
     return postJson('/groups.json', state)(null, data)
-      .then(json => dispatch(finishCreateGroup('data', { data: json })))
+      .then(json => dispatch(finishCreateGroup('data', json)))
       .catch(({ message }) => dispatch(finishCreateGroup(new Error(message))));
   };
 

@@ -14,7 +14,6 @@ import Editable from '../../../components/Editable';
 import PathSearch from '../../PathSearch/PathSearch';
 import { withModal } from '../../../util/ModalUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
-import { loadImageSrc } from '../../../util/ImageUtil';
 import styles from './GroupInfoEdit.css';
 
 class GroupInfoEdit extends Component {
@@ -68,9 +67,8 @@ class GroupInfoEdit extends Component {
             >
               <InlineEntityImagePicker
                 entity={entity}
-                avatarSize="70px"
-                onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
-                  dispatchPostGroupImage(groupId, image, mimeType))}
+                avatarSize={70}
+                onSubmit={({ image, mimeType }) => dispatchPostGroupImage(groupId, image, mimeType)}
               />
             </Editable>
             <p>最終更新: {toRelativeTimeText(lastUpdate)}</p>

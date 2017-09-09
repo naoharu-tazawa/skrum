@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}契約管理{% endblock %}
+
+{% block body %}
+<table class="normal-table header-color">
+  <tr>
+    <th>会社ID</th>
+    <th>会社名</th>
+    <th>契約ID</th>
+    <th>契約プラン名</th>
+    <th>価格種別</th>
+    <th>契約価格</th>
+    <th>アカウント数</th>
+    <th>契約価格 × アカウント数</th>
+    <th>プラン開始日</th>
+    <th>プラン終了日</th>
+    <th>ステータス</th>
+  </tr>
+  {% for item in data %}
+  <tr>
+    <td>{{ item.companyId | default("") }}</td>
+    <td>{{ item.companyName | default("") }}</td>
+    <td>{{ item.contractId | default("未契約") }}</td>
+    <td><a href="{{ path("plan_change", {"companyId": item.companyId}) }}">{{ item.planName }}</a></td>
+    {% if (item.contractId | default(null)) is not null %}
+      {% if item.priceType is constant('AppBundle\\Utils\\DBConstant::PRICE_TYPE_COMPANY') %}
+        <td>会社単位</td>
+        <td>{{ item.price|number_format(0, '.', ',') }}円</td>
+        <td>{{ item.userCount|number_format(0, '.', ',') }}人</td>
+        <td>-</td>
+        <td>{{ item.planStartDate | default("") }}</td>
+        <td>{{ item.planEndDate | default("") }}</td>
+      {% else %}
+        <td>人数単位</td>
+        <td>{{ item.price|number_format(0, '.', ',') }}円</td>
+        <td>{{ item.userCount|number_format(0, '.', ',') }}人</td>
+        <td>{{ (item.price * item.userCount)|number_format(0, '.', ',') }}円</td>
+        <td>{{ item.planStartDate | default("") }}</td>
+        <td>{{ item.planEndDate | default("") }}</td>
+      {% endif %}
+    {% else %}
+      <td>-</td>
+      <td>-</td>
+      <td>{{ item.userCount|number_format(0, '.', ',') }}人</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    {% endif %}
+    <td>
+      <a href="{{ path("authz_stop", {"companyId": item.companyId}) }}">
+        {% if item.authorizationStopFlg %}利用不可{% else %}利用可{% endif %}
+      </a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

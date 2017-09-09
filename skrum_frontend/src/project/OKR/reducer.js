@@ -34,11 +34,15 @@ export default (state = {
       if (error) {
         return { ...state, isPostingOkr: false, error: { message: payload.message } };
       }
-      const { subject, isOwnerCurrent, data } = payload.data;
-      const { parentOkrId } = data;
+      const { subject, isOwnerCurrent, parentOkr, targetOkr } = payload.data;
+      const { parentOkrId } = targetOkr;
       const { [subject]: basics } = state;
-      const okrs = (isOwnerCurrent ? [...basics.okrs, data] : basics.okrs).map(okr =>
-        (okr.okrId === parentOkrId ? { ...okr, keyResults: [...okr.keyResults, data] } : okr));
+      const okrs = (isOwnerCurrent ? [...basics.okrs, targetOkr] : basics.okrs).map(okr =>
+        (okr.okrId === parentOkrId ? {
+          ...okr,
+          ...parentOkr,
+          keyResults: [...(okr.keyResults || []), targetOkr],
+        } : okr));
       return { ...state, [subject]: { ...basics, okrs }, isPostingOkr: false, error: null };
     }
 
@@ -71,10 +75,7 @@ export default (state = {
     }
 
     case Action.SYNC_OKR_DETAILS: {
-      const { payload, error } = action;
-      if (error) {
-        return state;
-      }
+      const { payload } = action;
       const { subject, id, okrId, ...data } = payload.data;
       const { [subject]: basics } = state;
       const okrs = basics.okrs.map(okr => mergeUpdateById(okr, 'okrId', data, id || okrId));

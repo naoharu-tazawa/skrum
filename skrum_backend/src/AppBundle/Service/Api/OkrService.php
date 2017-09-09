@@ -563,17 +563,11 @@ class OkrService extends BaseService
                     number_format($balanceAmount),
                     $unit);
 
-            // 投稿
+            // 手動投稿登録
             $postLogic = $this->getPostLogic();
-            if (array_key_exists('post', $data)) {
-                $manualPost = $data['post'];
-
-                // 手動投稿登録
-                $postLogic->manualPost($auth, $manualPost, $autoPostAchievement, $tOkr, $tOkrActivity);
-            } else {
-                // 自動投稿登録
-                $postLogic->autoPost($auth, $autoPostAchievement, $tOkr, $tOkrActivity);
-            }
+            $manualPost = null;
+            if (array_key_exists('post', $data)) $manualPost = $data['post'];
+            $postLogic->manualPost($auth, $manualPost, $autoPostAchievement, $tOkr, $tOkrActivity);
 
             // 自動投稿登録（◯%達成時）
             $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkr, $tOkrActivity);

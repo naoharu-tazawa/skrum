@@ -34,7 +34,7 @@ class OKRSearch extends PureComponent {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     disabled: PropTypes.bool,
-    tabIndex: PropTypes.number,
+    tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     dispatchSearchOkr: PropTypes.func,
     dispatchSearchParentOkr: PropTypes.func,
     isSearching: PropTypes.bool,
@@ -54,7 +54,7 @@ class OKRSearch extends PureComponent {
         onSelect={onChange}
         {...(!isEmpty(currentInput) && value)}
         {...{ onFocus, onBlur, disabled }}
-        tabIndex={tabIndex}
+        tabIndex={`${tabIndex}`}
         isSearching={isSearching}
       />
     );

@@ -20,7 +20,7 @@ export default class ProgressPercentage extends Component {
   render() {
     const { unit = '％', targetValue, achievedValue = 0, achievementRate, fluid,
       componentClassName, children } = this.props;
-    const hasConstituents = targetValue && (targetValue !== 100 || (unit !== '%' && unit !== '％'));
+    const hasConstituents = targetValue !== 100 || (unit !== '%' && unit !== '％');
     return (
       <div className={componentClassName}>
         <div className={`${styles.progressBox} ${fluid && styles.fluid}`}>

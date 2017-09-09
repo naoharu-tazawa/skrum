@@ -25,7 +25,6 @@ paths:
           in: path
           type: string
           description: 取得基準投稿Id
-          required: true
       responses:
         200:
           description: タイムライン（会社）

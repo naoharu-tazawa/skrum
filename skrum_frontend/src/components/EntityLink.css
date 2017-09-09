@@ -7,14 +7,31 @@
   display: flex;
   width: 100%;
 }
+.avatar {
+  position: relative;
+}
+.avatar:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
 .avatar > img {
   border-radius: 50%;
+  object-fit: cover;
+}
+.component:not(.hasName) .avatar > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 .imageError .avatar > img {
   background-color: #8e9aa6;
   padding: 5%;
 }
 .hasName .avatar {
+  width: auto !important;
   margin-right: 1em;
 }
 .title {

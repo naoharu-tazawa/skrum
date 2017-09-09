@@ -17,7 +17,7 @@ import { mapOwnerOutbound } from '../../../util/OwnerUtil';
 import { explodePath } from '../../../util/RouteUtil';
 import { isValidDate, compareDates, toUtcDate } from '../../../util/DatetimeUtil';
 import { OKRType } from '../../../util/OKRUtil';
-import { postOkr } from '../action';
+import { postOkr, syncNewKR } from '../action';
 import { postKR } from '../../OKRDetails/action';
 import styles from './NewOKR.css';
 
@@ -115,7 +115,7 @@ class NewOKR extends Component {
       endDate: toUtcDate(endDate),
     };
     const dispatcher = okrType === OKRType.OKR ?
-      partial(dispatchPostOkr, subject, isOwnerCurrent) : dispatchPostKR;
+      partial(dispatchPostOkr, subject, isOwnerCurrent) : partial(dispatchPostKR, subject);
     return dispatcher(okr).then(({ error }) => !error && onClose());
   }
 
@@ -123,7 +123,7 @@ class NewOKR extends Component {
     const { subject, id, type, onClose, parentOkr, owner, ownerName, timeframeId } = this.props;
     const { ownerSearch } = this.state;
     const defaultOwner = { type: getEntityTypeId(subject), id };
-    const startTabIndex = type === 'KR' ? 90 : 0;
+    const startTabIndex = type === 'KR' || ownerName ? 90 : 0;
     const okrForm = Form => (
       <Form
         title={type === 'Okr' ? '目標新規登録' : 'サブ目標新規登録'}
@@ -202,10 +202,10 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const dispatchPostOkr = (subject, id, entry) =>
-    dispatch(postOkr(subject, id, entry));
-  const dispatchPostKR = entry =>
-    dispatch(postKR(entry));
+  const dispatchPostOkr = (subject, isOwnerCurrent, entry) =>
+    dispatch(postOkr(subject, isOwnerCurrent, entry));
+  const dispatchPostKR = (subject, entry) =>
+    dispatch(postKR(entry)).then(result => dispatch(syncNewKR(subject, result)));
   return { dispatchPostOkr, dispatchPostKR };
 };
 

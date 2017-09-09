@@ -26,6 +26,13 @@ class GroupDTO
     private $groupName;
 
     /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $imageVersion;
+
+    /**
      * @var string
      *
      * @JSON\Type("string")
@@ -85,6 +92,30 @@ class GroupDTO
     public function getGroupName()
     {
         return $this->groupName;
+    }
+
+    /**
+     * Set imageVersion
+     *
+     * @param integer $imageVersion
+     *
+     * @return GroupDTO
+     */
+    public function setImageVersion($imageVersion)
+    {
+        $this->imageVersion = $imageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get imageVersion
+     *
+     * @return integer
+     */
+    public function getImageVersion()
+    {
+        return $this->imageVersion;
     }
 
     /**

@@ -102,7 +102,7 @@ class TGroupMemberRepository extends BaseRepository
     public function getAllGroups(int $userId): array
     {
         $qb = $this->createQueryBuilder('tgm');
-        $qb->select('mg.groupId', 'mg.groupName', 'mg.groupType')
+        $qb->select('mg.groupId', 'mg.groupName', 'mg.groupType', 'mg.imageVersion')
             ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgm.group = mg.groupId')
             ->where('tgm.user = :userId')
             ->andWhere('mg.groupType <> :groupType')

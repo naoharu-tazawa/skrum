@@ -150,7 +150,7 @@ class TimelineService extends BaseService
      * @param string $before 取得基準日時
      * @return array
      */
-    public function getCompanyTimeline(Auth $auth, int $companyId, string $before): array
+    public function getCompanyTimeline(Auth $auth, int $companyId, string $before = null): array
     {
         // 会社IDに対応するグループIDを取得
         $mGroupRepos = $this->getMGroupRepository();
@@ -185,7 +185,7 @@ class TimelineService extends BaseService
             // メール送信予約
             $mUserRepos = $this->getMUserRepository();
             $mUser = $mUserRepos->find($tPost->getPosterUserId());
-            $this->reserveEmails($groupId, $mUser);
+            $this->reserveEmails($groupId, $mUser, $mUser->getCompany()->getSubdomain());
 
             $this->flush();
             $this->commit();
@@ -231,9 +231,10 @@ class TimelineService extends BaseService
      *
      * @param integer $timelineOwnerGroupId タイムラインオーナーグループID
      * @param MUser $posterEntity 投稿者ユーザエンティティ
+     * @param string $subdomain サブドメイン
      * @return void
      */
-    private function reserveEmails(int $timelineOwnerGroupId, MUser $posterEntity)
+    private function reserveEmails(int $timelineOwnerGroupId, MUser $posterEntity, string $subdomain)
     {
         // 会社IDに対応するグループIDを取得
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
@@ -255,7 +256,7 @@ class TimelineService extends BaseService
                 $tEmailReservation = new TEmailReservation();
                 $tEmailReservation->setToEmailAddress($mUser->getEmailAddress());
                 $tEmailReservation->setTitle($this->getParameter('post_notice'));
-                $tEmailReservation->setBody($this->renderView('mail/post_notice.txt.twig', ['data' => $data]));
+                $tEmailReservation->setBody($this->renderView('mail/post_notice.txt.twig', ['data' => $data, 'subdomain' => $subdomain]));
                 $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
                 $tEmailReservation->setSendingReservationDatetime(DateUtility::getCurrentDatetime());
                 $this->persist($tEmailReservation);

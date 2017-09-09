@@ -14,9 +14,9 @@ export default class PostList extends Component {
     items: postsPropTypes.isRequired,
     roleLevel: PropTypes.number.isRequired,
     currentUserId: PropTypes.number.isRequired,
-    dispatchFetchMoreGroupPosts: PropTypes.func.isRequired,
+    dispatchFetchMorePosts: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
-    dispatchDeleteGroupPosts: PropTypes.func.isRequired,
+    dispatchDeletePost: PropTypes.func.isRequired,
     dispatchPostLike: PropTypes.func.isRequired,
     dispatchDeleteLike: PropTypes.func.isRequired,
     dispatchPostReply: PropTypes.func.isRequired,
@@ -24,7 +24,7 @@ export default class PostList extends Component {
 
   render() {
     const { isFetchingMore, hasMorePosts, items, roleLevel, currentUserId,
-      dispatchFetchMoreGroupPosts, dispatchChangeDisclosureType, dispatchDeleteGroupPosts,
+      dispatchFetchMorePosts, dispatchChangeDisclosureType, dispatchDeletePost,
       dispatchPostLike, dispatchDeleteLike, dispatchPostReply } = this.props;
     const lastId = (last(items) || {}).id;
     return (
@@ -37,14 +37,14 @@ export default class PostList extends Component {
               roleLevel,
               currentUserId,
               dispatchChangeDisclosureType,
-              dispatchDeleteGroupPosts,
+              dispatchDeletePost,
               dispatchPostLike,
               dispatchDeleteLike,
               dispatchPostReply,
             }}
           />)}
         {!isFetchingMore && hasMorePosts && (
-          <Waypoint onEnter={() => dispatchFetchMoreGroupPosts(lastId)}>
+          <Waypoint onEnter={() => dispatchFetchMorePosts(lastId)}>
             <div className={styles.spinner} />
           </Waypoint>)}
       </section>);

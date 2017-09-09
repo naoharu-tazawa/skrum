@@ -312,8 +312,10 @@ SQL;
     public function getUsersForAchievementRegistrationReminderEmail($mailSendingConditionDatetimeString): array
     {
         $sql = <<<SQL
-        SELECT m0_.last_name, m0_.first_name, m0_.email_address
+        SELECT m0_.last_name, m0_.first_name, m0_.email_address, m1_.subdomain
         FROM m_user m0_
+        INNER JOIN m_company m1_
+        ON (m0_.company_id = m1_.company_id) AND (m1_.deleted_at IS NULL)
         INNER JOIN t_email_settings t0_
         ON (m0_.user_id = t0_.user_id) AND (t0_.deleted_at IS NULL)
         LEFT OUTER JOIN t_okr_activity t1_

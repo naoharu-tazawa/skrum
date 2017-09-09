@@ -27,7 +27,7 @@
           "maxLength": 45
         }
       },
-      "required": ["lastName", "firstName", "position", "phoneNumber"],
+      "required": ["lastName", "firstName", "position"],
       "additionalProperties": false
     }
   },

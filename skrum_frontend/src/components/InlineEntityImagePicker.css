@@ -1,9 +1,6 @@
 .editor {
   cursor: pointer;
 }
-.preview {
-  border-radius: 50%;
-}
 .dropzone {
   margin: -2px 0;
 }
@@ -25,7 +22,7 @@
   speak: none;
   opacity: 0;
 }
-.dropzone > div:hover img {
+.dropzone > div:hover img, .dropzone > div:hover canvas {
   opacity: 0.25;
 }
 .dropzone > div:hover:before {

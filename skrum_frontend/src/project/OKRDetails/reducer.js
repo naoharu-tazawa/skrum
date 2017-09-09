@@ -1,4 +1,4 @@
-import { values } from 'lodash';
+import { values, fromPairs } from 'lodash';
 import { Action } from './action';
 import { mergeUpdateById } from '../../util/ActionUtil';
 import { toUtcDate } from '../../util/DatetimeUtil';
@@ -10,6 +10,7 @@ export default (state = {
   isChangingKROwner: false,
   isChangingParentOkr: false,
   isChangingDisclosureType: false,
+  isSettingRatios: false,
   isDeletingKR: false,
   isPostingAchievement: false,
 }, action) => {
@@ -34,8 +35,14 @@ export default (state = {
       if (error) {
         return { ...state, isPostingKR: false, error: { message: payload.message } };
       }
-      const keyResults = [...state.keyResults, payload.data.data];
-      return { ...state, keyResults, isPostingKR: false, error: null };
+      const { targetOkr: keyResult, parentOkr } = payload.data;
+      const { okrId: parentOkrId, achievementRate } = parentOkr;
+      const objective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
+      const keyResults = [...state.keyResults, keyResult];
+      const datetime = toUtcDate(new Date());
+      const chart = parentOkrId !== state.objective.okrId ? state.chart :
+        [...state.chart, { datetime, achievementRate }];
+      return { ...state, objective, keyResults, chart, isPostingKR: false, error: null };
     }
 
     case Action.REQUEST_PUT_OKR_DETAILS:
@@ -99,9 +106,14 @@ export default (state = {
       if (error) {
         return { ...state, isDeletingKR: false, error: { message: payload.message } };
       }
-      const { id } = payload.data;
+      const { id, parentOkr } = payload.data;
+      const { okrId: parentOkrId, achievementRate } = parentOkr;
+      const objective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
       const keyResults = state.keyResults.filter(({ okrId }) => id !== okrId);
-      return { ...state, keyResults, isDeletingKR: false, error: null };
+      const datetime = toUtcDate(new Date());
+      const chart = parentOkrId !== state.objective.okrId ? state.chart :
+        [...state.chart, { datetime, achievementRate }];
+      return { ...state, objective, keyResults, chart, isDeletingKR: false, error: null };
     }
 
     case Action.REQUEST_POST_ACHIEVEMENT:
@@ -112,16 +124,34 @@ export default (state = {
       if (error) {
         return { ...state, isPostingAchievement: false, error: { message: payload.message } };
       }
-      const { parentOkr, targetOkr } = payload.data.data;
-      const { okrId: parentOkrId, ...parentUpdate } = parentOkr;
+      const { parentOkr, targetOkr } = payload.data;
+      const { okrId: parentOkrId, achievementRate } = parentOkr;
       const { okrId, ...update } = targetOkr;
-      const parentObjective = mergeUpdateById(state.objective, 'okrId', parentUpdate, parentOkrId);
+      const parentObjective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
       const objective = mergeUpdateById(parentObjective, 'okrId', update, okrId);
       const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, okrId));
       const datetime = toUtcDate(new Date());
       const chart = parentOkrId !== state.objective.okrId ? state.chart :
-        [...state.chart, { datetime, achievementRate: parentOkr.achievementRate }];
+        [...state.chart, { datetime, achievementRate }];
       return { ...state, objective, keyResults, chart, isPostingAchievement: false, error: null };
+    }
+
+    case Action.REQUEST_SET_RATIOS:
+      return { ...state, isSettingRatios: true };
+
+    case Action.FINISH_SET_RATIOS: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isSettingRatios: false, error: { message: payload.message } };
+      }
+      const { parentOkr, ratios } = payload.data;
+      const { okrId: parentOkrId, ...parentUpdate } = parentOkr;
+      const objective = mergeUpdateById(state.objective, 'okrId', parentUpdate, parentOkrId);
+      const ratiosById = fromPairs(ratios.map(({ keyResultId, weightedAverageRatio }) =>
+        ([keyResultId, { weightedAverageRatio }])));
+      const keyResults = state.keyResults.map(kr =>
+        ({ ...kr, ...ratiosById[kr.okrId], ratioLockedFlg: ratiosById[kr.okrId] ? 1 : 0 }));
+      return { ...state, objective, keyResults, isSettingRatios: false, error: null };
     }
 
     default:

@@ -20,7 +20,8 @@ export default class DatePickerInput extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    tabIndex: PropTypes.number,
+    meta: PropTypes.shape({}), // available if under redux-form
+    tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onDayChange: PropTypes.func,
     onDayClick: PropTypes.func,
     onKeyPress: PropTypes.func,
@@ -29,7 +30,7 @@ export default class DatePickerInput extends Component {
 
   render() {
     const { containerClass, wrapperClass, overlayClass,
-      value, onChange, onFocus, onBlur, tabIndex, onDayChange, onKeyPress } = this.props;
+      value, onChange, onFocus, onBlur, meta, tabIndex, onDayChange, onKeyPress } = this.props;
     const { target: { value: targetValue } = {} } = value || {};
     // const { hasOverlay = false } = this.state || {};
     const locale = 'ja';
@@ -58,12 +59,13 @@ export default class DatePickerInput extends Component {
           localeUtils,
           // disabledDays: { daysOfWeek: [0] },
           renderDay: day => day.getDate().toLocaleString(locale),
-          onDayClick: day => onChange({ target: { value: formatDate(day) } }),
+          onDayClick: day => onChange(meta ? formatDate(day) :
+            { target: { value: formatDate(day) } }),
           onDayChange,
           onKeyPress,
         }}
         {...{ value: targetValue || value, onChange, onFocus, onBlur }}
-        tabIndex={tabIndex}
+        tabIndex={`${tabIndex}`}
       />
     );
   }

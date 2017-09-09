@@ -40,7 +40,7 @@ paths:
               - userId
       responses:
         200:
-          description: 成功
+          description: 追加グループメンバー情報
           schema:
             type: object
             properties:

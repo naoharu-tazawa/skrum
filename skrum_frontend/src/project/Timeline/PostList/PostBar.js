@@ -19,7 +19,7 @@ class PostBar extends Component {
     roleLevel: PropTypes.number.isRequired,
     currentUserId: PropTypes.number.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
-    dispatchDeleteGroupPosts: PropTypes.func.isRequired,
+    dispatchDeletePost: PropTypes.func.isRequired,
     dispatchPostLike: PropTypes.func.isRequired,
     dispatchDeleteLike: PropTypes.func.isRequired,
     dispatchPostReply: PropTypes.func.isRequired,
@@ -63,7 +63,7 @@ class PostBar extends Component {
       prompt="こちらの投稿を削除しますか？"
       warning={<ul><li>一度削除した投稿は復元できません。</li></ul>}
       confirmButton="削除"
-      onConfirm={() => this.props.dispatchDeleteGroupPosts(id)}
+      onConfirm={() => this.props.dispatchDeletePost(id)}
       onClose={onClose}
     >
       <EntitySubject entity={poster} subject={post} />

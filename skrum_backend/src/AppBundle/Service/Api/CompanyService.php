@@ -7,6 +7,7 @@ use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\SystemException;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicCompanyInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\PolicyDTO;
+use AppBundle\Utils\DBConstant;
 
 /**
  * 会社サービスクラス
@@ -58,6 +59,7 @@ class CompanyService extends BaseService
         $basicCompanyInfoDTO = new BasicCompanyInfoDTO();
         $basicCompanyInfoDTO->setCompanyId($mCompany->getCompanyId());
         $basicCompanyInfoDTO->setName($mCompany->getCompanyName());
+        $basicCompanyInfoDTO->setImageVersion($mCompany->getImageVersion());
         $basicCompanyInfoDTO->setPolicy($policyDTO);
 
         return $basicCompanyInfoDTO;
@@ -92,8 +94,13 @@ class CompanyService extends BaseService
                 $mCompany->setMission($data['mission']);
             }
 
-            // グループパス名を更新
+            // グループ名・グループパス名を更新
             if (array_key_exists('name', $data) && !empty($data['name'])) {
+                // グループマスタのグループ名（会社名）を更新
+                $mGroupRepos = $this->getMGroupRepository();
+                $mGroup = $mGroupRepos->findOneBy(array('company' => $companyId, 'groupType' => DBConstant::GROUP_TYPE_COMPANY));
+                $mGroup->setGroupName($data['name']);
+
                 // 全てのグループツリーエンティティを取得
                 $tGroupTreeRepos = $this->getTGroupTreeRepository();
                 $tGroupTreeArray = $tGroupTreeRepos->getAllGroupPath($companyId);

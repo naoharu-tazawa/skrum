@@ -135,3 +135,41 @@ button.tool:focus {
 .parentEntitySubject {
   width: calc(100% - 7em);
 }
+.ratioKR {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+  padding: .5em 1em;
+  margin: 0 1em;
+  width: 50em;
+}
+.ratioEntity {
+  width: 14em;
+}
+.ratioDetails {
+  display: flex;
+}
+.ratioKR {
+  flex: 1;
+}
+.ratio {
+  margin: auto;
+  font-size: larger;
+}
+.ratio input {
+  width:  4em;
+}
+.ratio span {
+  margin-left: 2px;
+  font-size: larger;
+  vertical-align: middle;
+}
+.ratio button {
+  padding: 0;
+  border: none;
+  outline: none;
+  background-color: inherit;
+  margin-left: 1em;
+  cursor: pointer;
+}

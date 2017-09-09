@@ -1,5 +1,5 @@
 import readBlob from 'read-blob';
-import parseDataUrl from 'parse-data-url';
+import dataUrlParser from 'parse-data-url';
 import config from '../config/config';
 import { implodeSubject } from './RouteUtil';
 import { getEntityTypeSubject } from './EntityUtil';
@@ -20,11 +20,15 @@ export const dummyImagePath = entityType =>
 export const dummyImagePathForD3 = entityType =>
   `/img/dummy_${getEntityTypeSubject(entityType)}_for_D3.png`;
 
-export const loadImageSrc = ({ preview }) =>
+export const loadImageDataUrl = ({ preview }) =>
   fetch(preview)
     .then(res => res.blob()
-      .then(blob => readBlob.dataurl(blob)
-        .then((dataUrl) => {
-          const { data: image, mediaType: mimeType } = parseDataUrl(dataUrl);
-          return { image, mimeType };
-        })));
+      .then(blob => readBlob.dataurl(blob)));
+
+export const parseDataUrl = (dataUrl) => {
+  const { data: image, mediaType: mimeType } = dataUrlParser(dataUrl);
+  return { image, mimeType };
+};
+
+export const loadImageSrc = ({ preview }) =>
+  loadImageDataUrl(preview).then(parseDataUrl);

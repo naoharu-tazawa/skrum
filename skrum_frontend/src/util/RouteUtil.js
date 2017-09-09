@@ -1,54 +1,40 @@
 import PropTypes from 'prop-types';
-import { toNumber, isEmpty, pickBy, isUndefined } from 'lodash';
+import { toPairs, flatten, invert, toNumber, isEmpty, pickBy, isUndefined } from 'lodash';
 import { EntityType } from './EntityUtil';
 
-export const tabPropType =
-  PropTypes.oneOf(['o', 'objective', 'm', 'map', 't', 'timeline', 'c', 'control', 's', 'setting']);
-
-export const explodeTab = (tab) => {
-  switch (tab && tab[0]) {
-    case 'o': return 'objective';
-    case 'm': return 'map';
-    case 't': return 'timeline';
-    case 'c': return 'control';
-    case 's': return 'setting';
-    default: return undefined;
-  }
+const tabs = {
+  o: 'objective',
+  m: 'map',
+  t: 'timeline',
+  c: 'control',
+  s: 'setting',
 };
 
-export const implodeTab = (tab) => {
-  switch (tab) {
-    case 'objective': return 'o';
-    case 'map': return 'm';
-    case 'timeline': return 't';
-    case 'control': return 'c';
-    case 'setting': return 's';
-    default: return undefined;
-  }
+export const tabPropType = PropTypes.oneOf(flatten(toPairs(tabs)));
+
+export const explodeTab = tab => tabs[tab && tab[0]];
+
+export const implodeTab = tab => invert(tabs)[tab];
+
+const subjects = {
+  u: 'user',
+  g: 'group',
+  c: 'company',
+  t: 'timeframe',
+  e: 'email',
+  a: 'account',
 };
 
-export const subjectPropType =
-  PropTypes.oneOf(['user', 'group', 'company', 'timeframe', 'account']);
+export const subjectPropType = PropTypes.oneOf(flatten(toPairs(subjects)));
 
-export const explodeSubject = (section) => {
-  switch (section && section[0]) {
-    case 'u': return 'user';
-    case 'g': return 'group';
-    case 'c': return 'company';
-    case 't': return 'timeframe';
-    case 'a': return 'account';
-    default: return undefined;
-  }
-};
+export const explodeSubject = subject => subjects[subject && subject[0]];
 
-export const implodeSubject = (section) => {
-  switch (section) {
-    case 'user': case EntityType.USER: return 'u';
-    case 'group': case EntityType.GROUP: return 'g';
-    case 'company': case EntityType.COMPANY: return 'c';
-    case 'timeframe': return 't';
-    case 'account': return 'a';
-    default: return undefined;
+export const implodeSubject = (subject) => {
+  switch (subject) {
+    case EntityType.USER: return 'u';
+    case EntityType.GROUP: return 'g';
+    case EntityType.COMPANY: return 'c';
+    default: return invert(subjects)[subject];
   }
 };
 

@@ -20,7 +20,7 @@ class TimeframesDropdown extends PureComponent {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    tabIndex: PropTypes.number,
+    tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   };
 
   render() {
@@ -44,7 +44,7 @@ class TimeframesDropdown extends PureComponent {
         placeholder=""
         clearable={false}
         searchable={false}
-        tabIndex={tabIndex}
+        tabIndex={`${tabIndex}`}
       />
     );
   }

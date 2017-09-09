@@ -12,6 +12,8 @@ use AppBundle\Entity\MGroup;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\TOkr;
 use AppBundle\Entity\TOkrActivity;
+use AppBundle\Api\ResponseDTO\OkrInfoDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 
 /**
  * OKR設定サービスクラス
@@ -126,6 +128,24 @@ class OkrSettingService extends BaseService
      */
     public function changeOwner(TOkr $tOkr, string $ownerType, MUser $mUser = null, MGroup $mGroup = null, int $companyId)
     {
+        // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが同一の場合、オーナー変更不可
+        if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+            // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝1:ユーザ」の場合
+            if ($tOkr->getParentOkr()->getOwnerUser()->getUserId() === $mUser->getUserId()) {
+                throw new ApplicationException('親OKRと同一のオーナーには変更できません');
+            }
+        } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+            // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝2:グループ」の場合
+            if ($tOkr->getParentOkr()->getOwnerGroup()->getGroupId() === $mGroup->getGroupId()) {
+                throw new ApplicationException('親OKRと同一のオーナーには変更できません');
+            }
+        } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
+            // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝3:会社」の場合
+            if ($tOkr->getParentOkr()->getOwnerCompanyId() === $companyId) {
+                throw new ApplicationException('親OKRと同一のオーナーには変更できません');
+            }
+        }
+
         // 所有者変更対象OKRのキーリザルト（OKR種別＝'2' のみ）を取得
         $tOkrRepos = $this->getTOkrRepository();
         $tOkrArray = $tOkrRepos->getObjectiveAndKeyResults($tOkr->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $companyId, DBConstant::OKR_TYPE_KEY_RESULT);
@@ -332,9 +352,9 @@ class OkrSettingService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param TOkr $okrEntity OKRエンティティ
-     * @return void
+     * @return OkrInfoDTO
      */
-    public function updateRatio(Auth $auth, array $data, TOkr $okrEntity)
+    public function updateRatio(Auth $auth, array $data, TOkr $okrEntity): OkrInfoDTO
     {
         // 親OKRIDを取得
         $parentOkrId = $okrEntity->getOkrId();
@@ -348,7 +368,7 @@ class OkrSettingService extends BaseService
             $tOkrRepos->resetRatioLockedFlg($okrEntity->getOkrId(), $okrEntity->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
 
             // KR加重平均割合更新
-            $weweightedAverageRatioArray = array();
+            $weightedAverageRatioArray = array();
             foreach ($data as $item) {
                 $tOkrArray = $tOkrRepos->getOkr($item['keyResultId'], $auth->getCompanyId());
                 if (count($tOkrArray) !== 1) {
@@ -365,11 +385,11 @@ class OkrSettingService extends BaseService
                 $this->flush();
 
                 // KR加重平均割合を全て配列に格納
-                $weweightedAverageRatioArray[] = $item['weightedAverageRatio'];
+                $weightedAverageRatioArray[] = $item['weightedAverageRatio'];
             }
 
             // 持分比率ロックフラグを立てるKR加重平均割合の合計値が100を超えていないかチェック
-            if (array_sum($weweightedAverageRatioArray) > 100) {
+            if (array_sum($weightedAverageRatioArray) > 100) {
                 throw new ApplicationException('キーリザルト加重平均割合の合計値が100%を超えています');
             }
 
@@ -383,5 +403,14 @@ class OkrSettingService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // レスポンス用DTOを作成
+        $okrInfoDTO = new OkrInfoDTO();
+        $basicOkrDTOParentOkr = new BasicOkrDTO();
+        $basicOkrDTOParentOkr->setOkrId($okrEntity->getOkrId());
+        $basicOkrDTOParentOkr->setAchievementRate(round($okrEntity->getAchievementRate(), 1));
+        $okrInfoDTO->setParentOkr($basicOkrDTOParentOkr);
+
+        return $okrInfoDTO;
     }
 }

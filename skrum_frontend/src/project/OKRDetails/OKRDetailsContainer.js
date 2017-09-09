@@ -6,7 +6,7 @@ import OkrDetails from './OkrDetails';
 import KRDetailsList from './KRDetailsList/KRDetailsList';
 import OkrProgressChart from './OkrProgressChart';
 import NewOKR from '../OKR/NewOKR/NewOKR';
-import { fetchOKRDetails, putOKR, changeKROwner, changeParentOkr, changeDisclosureType, deleteKR } from './action';
+import { fetchOKRDetails, putOKR, changeKROwner, changeParentOkr, changeDisclosureType, setRatios, deleteKR } from './action';
 import { syncOkr } from '../OKR/action';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
 import { mapOKR } from '../../util/OKRUtil';
@@ -26,6 +26,7 @@ class OKRDetailsContainer extends Component {
     dispatchChangeKROwner: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
+    dispatchSetRatios: PropTypes.func.isRequired,
     dispatchDeleteKR: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired, // passed from OKRContainer
     dispatchChangeOkrOwner: PropTypes.func.isRequired, // passed from OKRContainer
@@ -59,7 +60,7 @@ class OKRDetailsContainer extends Component {
     const { isFetching, parentOkr, okr, progressSeries = [], subject,
       dispatchPutOKR, dispatchChangeKROwner, dispatchChangeParentOkr,
       dispatchDeleteOkr, dispatchChangeOkrOwner, dispatchChangeDisclosureType,
-      dispatchDeleteKR, openModal } = this.props;
+      dispatchSetRatios, dispatchDeleteKR, openModal } = this.props;
     if (isFetching || !okr) {
       return null; // <div className={`${styles.container} ${styles.spinner}`} />;
     }
@@ -76,6 +77,7 @@ class OKRDetailsContainer extends Component {
                 dispatchPutOKR,
                 dispatchChangeParentOkr,
                 dispatchChangeDisclosureType,
+                dispatchSetRatios,
                 dispatchDeleteOkr,
                 dispatchChangeOkrOwner,
               }}
@@ -131,6 +133,8 @@ const mapDispatchToProps = (dispatch, { subject }) => {
     dispatch(changeParentOkr(id, newParentOkrId));
   const dispatchChangeDisclosureType = (id, disclosureType) =>
     dispatch(changeDisclosureType(id, disclosureType));
+  const dispatchSetRatios = (id, ratios) =>
+    dispatch(setRatios(id, ratios));
   const dispatchDeleteKR = id =>
     dispatch(deleteKR(id));
   return {
@@ -139,6 +143,7 @@ const mapDispatchToProps = (dispatch, { subject }) => {
     dispatchChangeKROwner,
     dispatchChangeParentOkr,
     dispatchChangeDisclosureType,
+    dispatchSetRatios,
     dispatchDeleteKR,
   };
 };

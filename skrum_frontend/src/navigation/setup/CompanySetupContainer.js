@@ -6,7 +6,6 @@ import Select from 'react-select';
 import InlineEntityImagePicker from '../../components/InlineEntityImagePicker';
 import DatePickerInput from '../../components/DatePickerInput';
 import { EntityType } from '../../util/EntityUtil';
-import { loadImageSrc } from '../../util/ImageUtil';
 import { compareDates, formatUtcDate, toUtcDate, isValidDate } from '../../util/DatetimeUtil';
 import { postUserImage } from '../../project/GroupManagement/action';
 import { postCompanyImage } from '../../project/CompanyProfile/action';
@@ -89,9 +88,8 @@ class CompanySetupContainer extends Component {
             <label>プロフィール画像</label>
             <InlineEntityImagePicker
               entity={{ id: userId, type: EntityType.USER }}
-              avatarSize="120px"
-              onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
-                dispatchPostUserImage(userId, image, mimeType))}
+              avatarSize={120}
+              onSubmit={({ image, mimeType }) => dispatchPostUserImage(userId, image, mimeType)}
             />
           </section>
           <section className={activeTab !== 2 && styles.hidden}>
@@ -120,9 +118,9 @@ class CompanySetupContainer extends Component {
             <label>会社プロフィール画像</label>
             <InlineEntityImagePicker
               entity={{ id: companyId, type: EntityType.COMPANY }}
-              avatarSize="120px"
-              onSubmit={file => loadImageSrc(file).then(({ image, mimeType }) =>
-                dispatchPostCompanyImage(companyId, image, mimeType))}
+              avatarSize={120}
+              onSubmit={({ image, mimeType }) =>
+                dispatchPostCompanyImage(companyId, image, mimeType)}
             />
           </section>
           <div className={activeTab === 3 ? styles.disclosureTypes : styles.hidden}>

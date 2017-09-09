@@ -15,9 +15,11 @@ export default (state = {
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_GROUP_POSTS:
+    case Action.REQUEST_FETCH_COMPANY_POSTS:
       return { ...state, isFetching: true };
 
-    case Action.FINISH_FETCH_GROUP_POSTS: {
+    case Action.FINISH_FETCH_GROUP_POSTS:
+    case Action.FINISH_FETCH_COMPANY_POSTS: {
       const { payload, error } = action;
       if (error) {
         const { message } = payload;
@@ -28,9 +30,11 @@ export default (state = {
     }
 
     case Action.REQUEST_MORE_GROUP_POSTS:
+    case Action.REQUEST_MORE_COMPANY_POSTS:
       return { ...state, isFetchingMore: true };
 
-    case Action.FINISH_MORE_GROUP_POSTS: {
+    case Action.FINISH_MORE_GROUP_POSTS:
+    case Action.FINISH_MORE_COMPANY_POSTS: {
       const { payload, error } = action;
       if (error) {
         const { message } = payload;
@@ -41,10 +45,12 @@ export default (state = {
       return { ...state, posts, isFetchingMore: false, hasMorePosts, error: null };
     }
 
-    case Action.REQUEST_POST_GROUP_POSTS:
+    case Action.REQUEST_POST_GROUP_POST:
+    case Action.REQUEST_POST_COMPANY_POST:
       return { ...state, isPosting: true };
 
-    case Action.FINISH_POST_GROUP_POSTS: {
+    case Action.FINISH_POST_GROUP_POST:
+    case Action.FINISH_POST_COMPANY_POST: {
       const { payload, error } = action;
       if (error) {
         return { ...state, isPosting: false, error: { message: payload.message } };
@@ -65,10 +71,10 @@ export default (state = {
       return { ...state, posts, isChangingDisclosureType: false, error: null };
     }
 
-    case Action.REQUEST_DELETE_GROUP_POSTS:
+    case Action.REQUEST_DELETE_POST:
       return { ...state, isDeleting: true };
 
-    case Action.FINISH_DELETE_GROUP_POSTS: {
+    case Action.FINISH_DELETE_POST: {
       const { payload, error } = action;
       if (error) {
         return { ...state, isDeleting: false, error: { message: payload.message } };
@@ -106,10 +112,10 @@ export default (state = {
       return { ...state, posts, isDeletingLike: false, error: null };
     }
 
-    case Action.REQUEST_POST_GROUP_REPLY:
+    case Action.REQUEST_POST_REPLY:
       return { ...state, isPostingReply: true };
 
-    case Action.FINISH_POST_GROUP_REPLY: {
+    case Action.FINISH_POST_REPLY: {
       const { payload, error } = action;
       if (error) {
         return { ...state, isPostingReply: false, error: { message: payload.message } };

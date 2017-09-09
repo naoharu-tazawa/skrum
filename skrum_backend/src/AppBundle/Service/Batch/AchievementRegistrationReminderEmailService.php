@@ -29,7 +29,7 @@ class AchievementRegistrationReminderEmailService extends BaseService
         $tEmailReservation = new TEmailReservation();
         $tEmailReservation->setToEmailAddress($userInfo['email_address']);
         $tEmailReservation->setTitle($this->getParameter('achievement_registration_reminder'));
-        $tEmailReservation->setBody($this->renderView('mail/achievement_registration_reminder.txt.twig', ['data' => $data]));
+        $tEmailReservation->setBody($this->renderView('mail/achievement_registration_reminder.txt.twig', ['data' => $data, 'subdomain' => $userInfo['subdomain']]));
         $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
         $tEmailReservation->setSendingReservationDatetime(DateUtility::transIntoDatetime(DateUtility::getTodayXYTimeDatetimeString(15, 0)));
         $this->persist($tEmailReservation);

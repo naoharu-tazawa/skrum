@@ -1,0 +1,33 @@
+# This file is a "template" of what your parameters.yml file should look like
+# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
+
+# Prod environment
+parameters:
+    database_host:     skrum-prod-01.c09z2hrjpzi3.ap-northeast-1.rds.amazonaws.com
+    database_port:     3306
+    database_name:     skm
+    database_user:     nohr
+    database_password: skmpassword
+    secret:            9d24946eef1212a6e630fb223cbf8b4e3b0ea41b
+
+
+
+# Test environment
+parameters:
+    database_host:     skrum-stg-01.c09z2hrjpzi3.ap-northeast-1.rds.amazonaws.com
+    database_port:     3306
+    database_name:     skm
+    database_user:     nohr
+    database_password: skmstgpassword
+    secret:            e323df8b249fbaefca6e4b491412e16b0e3026b2
+
+
+
+# Dev environment
+parameters:
+    database_host:     127.0.0.1
+    database_port:     13306
+    database_name:     skm
+    database_user:     root
+    database_password: password
+    secret:            fbb4e323da412eefca6e1630246bf8b249912b0e

@@ -6,35 +6,38 @@ import NewTimeline, { formName } from './NewTimeline';
 import PostListContainer from './PostList/PostListContainer';
 import { errorType } from '../../util/PropUtil';
 import { isPathFinal } from '../../util/RouteUtil';
-import { fetchGroupPosts, fetchMoreGroupPosts, postGroupPosts } from './action';
+import { fetchGroupPosts, fetchMoreGroupPosts, postGroupPost,
+  fetchCompanyPosts, fetchMoreCompanyPosts, postCompanyPost } from './action';
 import styles from './TimelineContainer.css';
 
 class TimelineContainer extends Component {
 
   static propTypes = {
+    subject: PropTypes.oneOf(['group', 'company']).isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     isFetching: PropTypes.bool,
     isFetchingMore: PropTypes.bool,
     hasMorePosts: PropTypes.bool,
     isPosting: PropTypes.bool,
     pathname: PropTypes.string,
-    dispatchFetchGroupPosts: PropTypes.func,
-    dispatchFetchMoreGroupPosts: PropTypes.func,
-    dispatchPostGroupPosts: PropTypes.func,
+    dispatchFetchPosts: PropTypes.func,
+    dispatchFetchMorePosts: PropTypes.func,
+    dispatchPostPost: PropTypes.func,
     dispatchResetForm: PropTypes.func,
     error: errorType,
   };
 
   componentWillMount() {
-    const { pathname, dispatchFetchGroupPosts } = this.props;
+    const { pathname, dispatchFetchPosts } = this.props;
     if (isPathFinal(pathname)) {
-      dispatchFetchGroupPosts();
+      dispatchFetchPosts();
     }
   }
 
   componentWillReceiveProps(next) {
-    const { pathname, dispatchFetchGroupPosts } = next;
+    const { pathname, dispatchFetchPosts } = next;
     if (this.props.pathname !== pathname) {
-      dispatchFetchGroupPosts();
+      dispatchFetchPosts();
     }
     this.result(next);
   }
@@ -48,11 +51,11 @@ class TimelineContainer extends Component {
 
   handleSubmit({ post, disclosureType }) {
     if (post === undefined) return Promise.resolve();
-    return this.props.dispatchPostGroupPosts(post, disclosureType);
+    return this.props.dispatchPostPost(post, disclosureType);
   }
 
   render() {
-    const { isFetching, isFetchingMore, hasMorePosts, dispatchFetchMoreGroupPosts,
+    const { isFetching, isFetchingMore, hasMorePosts, dispatchFetchMorePosts,
       isPosting, error } = this.props;
     if (isFetching) {
       return <span className={styles.spinner} />; // MUST be other than div here to scroll to top
@@ -67,7 +70,7 @@ class TimelineContainer extends Component {
               onSubmit={this.handleSubmit.bind(this)}
             />
           </section>
-          <PostListContainer {...{ isFetchingMore, hasMorePosts, dispatchFetchMoreGroupPosts }} />
+          <PostListContainer {...{ isFetchingMore, hasMorePosts, dispatchFetchMorePosts }} />
         </div>
       </div>);
   }
@@ -85,13 +88,22 @@ const mapDispatchToProps = (dispatch) => {
     dispatch(fetchGroupPosts(groupId));
   const dispatchFetchMoreGroupPosts = (groupId, before) =>
     dispatch(fetchMoreGroupPosts(groupId, before));
-  const dispatchPostGroupPosts = (groupId, post, disclosureType) =>
-    dispatch(postGroupPosts(groupId, post, disclosureType));
+  const dispatchPostGroupPost = (groupId, post, disclosureType) =>
+    dispatch(postGroupPost(groupId, post, disclosureType));
+  const dispatchFetchCompanyPosts = companyId =>
+    dispatch(fetchCompanyPosts(companyId));
+  const dispatchFetchMoreCompanyPosts = (companyId, before) =>
+    dispatch(fetchMoreCompanyPosts(companyId, before));
+  const dispatchPostCompanyPost = (companyId, post, disclosureType) =>
+    dispatch(postCompanyPost(companyId, post, disclosureType));
   const dispatchResetForm = () => dispatch(reset(formName));
   return {
     dispatchFetchGroupPosts,
     dispatchFetchMoreGroupPosts,
-    dispatchPostGroupPosts,
+    dispatchPostGroupPost,
+    dispatchFetchCompanyPosts,
+    dispatchFetchMoreCompanyPosts,
+    dispatchPostCompanyPost,
     dispatchResetForm,
   };
 };
@@ -99,15 +111,26 @@ const mapDispatchToProps = (dispatch) => {
 const mergeProps = (state, {
   dispatchFetchGroupPosts,
   dispatchFetchMoreGroupPosts,
-  dispatchPostGroupPosts,
+  dispatchPostGroupPost,
+  dispatchFetchCompanyPosts,
+  dispatchFetchMoreCompanyPosts,
+  dispatchPostCompanyPost,
   dispatchResetForm,
 }, props) => ({
   ...state,
   ...props,
-  dispatchFetchGroupPosts: () => dispatchFetchGroupPosts(props.groupId),
-  dispatchFetchMoreGroupPosts: before => dispatchFetchMoreGroupPosts(props.groupId, before),
-  dispatchPostGroupPosts: (post, disclosureType) =>
-    dispatchPostGroupPosts(props.groupId, post, disclosureType),
+  dispatchFetchPosts: () =>
+    (props.subject === 'group' ?
+      dispatchFetchGroupPosts(props.id) :
+      dispatchFetchCompanyPosts(props.id)),
+  dispatchFetchMorePosts: before =>
+    (props.subject === 'group' ?
+      dispatchFetchMoreGroupPosts(props.id, before) :
+      dispatchFetchMoreCompanyPosts(props.id, before)),
+  dispatchPostPost: (post, disclosureType) =>
+    (props.subject === 'group' ?
+      dispatchPostGroupPost(props.id, post, disclosureType) :
+      dispatchPostCompanyPost(props.id, post, disclosureType)),
   dispatchResetForm,
 });
 

@@ -24,7 +24,7 @@ class OwnerSearch extends PureComponent {
     onChange: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    tabIndex: PropTypes.number,
+    tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     dispatchSearchOwner: PropTypes.func,
     isSearching: PropTypes.bool,
   };
@@ -43,7 +43,7 @@ class OwnerSearch extends PureComponent {
         onSelect={onChange}
         {...(!isEmpty(currentInput) && { value: { name: currentName, ...value } })}
         {...{ onFocus, onBlur }}
-        tabIndex={tabIndex}
+        tabIndex={`${tabIndex}`}
         isSearching={isSearching}
       />
     );

@@ -50,6 +50,8 @@ paths:
                       type: integer
                     groupName:
                       type: string
+                    imageVersion:
+                      type: integer
               departments:
                 type: array
                 items:
@@ -59,6 +61,8 @@ paths:
                       type: integer
                     groupName:
                       type: string
+                    imageVersion:
+                      type: integer
               company:
                 type: object
                 properties:
@@ -66,6 +70,8 @@ paths:
                     type: integer
                   name:
                     type: string
+                  imageVersion:
+                    type: integer
               users:
                 type: array
                 items:
@@ -75,6 +81,8 @@ paths:
                       type: integer
                     name:
                       type: string
+                    imageVersion:
+                      type: integer
             required:
               - timeframes
               - company

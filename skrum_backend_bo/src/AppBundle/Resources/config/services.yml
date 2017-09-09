@@ -1,0 +1,20 @@
+services:
+
+    bo.exception_listener:
+        class: AppBundle\Listener\ExceptionListener
+        arguments: ['@service_container', '@templating']
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    bo.auth_n_listener:
+        class: AppBundle\Listener\AuthNListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, priority: 255 }
+
+    bo.contract_service:
+        class: AppBundle\Service\Manage\ContractService
+        arguments: ['@service_container']
+
+    bo.authorization_service:
+        class: AppBundle\Service\Manage\AuthorizationService
+        arguments: ['@service_container']

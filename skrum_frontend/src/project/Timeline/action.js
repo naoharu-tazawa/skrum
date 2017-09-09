@@ -7,18 +7,24 @@ export const Action = {
   FINISH_FETCH_GROUP_POSTS: 'FINISH_FETCH_GROUP_POSTS',
   REQUEST_MORE_GROUP_POSTS: 'REQUEST_MORE_GROUP_POSTS',
   FINISH_MORE_GROUP_POSTS: 'FINISH_MORE_GROUP_POSTS',
-  REQUEST_POST_GROUP_POSTS: 'REQUEST_POST_GROUP_POSTS',
-  FINISH_POST_GROUP_POSTS: 'FINISH_POST_GROUP_POSTS',
+  REQUEST_POST_GROUP_POST: 'REQUEST_POST_GROUP_POST',
+  FINISH_POST_GROUP_POST: 'FINISH_POST_GROUP_POST',
+  REQUEST_FETCH_COMPANY_POSTS: 'REQUEST_FETCH_COMPANY_POSTS',
+  FINISH_FETCH_COMPANY_POSTS: 'FINISH_FETCH_COMPANY_POSTS',
+  REQUEST_MORE_COMPANY_POSTS: 'REQUEST_MORE_COMPANY_POSTS',
+  FINISH_MORE_COMPANY_POSTS: 'FINISH_MORE_COMPANY_POSTS',
+  REQUEST_POST_COMPANY_POST: 'REQUEST_POST_COMPANY_POST',
+  FINISH_POST_COMPANY_POST: 'FINISH_POST_COMPANY_POST',
   REQUEST_CHANGE_POST_DISCLOSURE_TYPE: 'REQUEST_CHANGE_POST_DISCLOSURE_TYPE',
   FINISH_CHANGE_POST_DISCLOSURE_TYPE: 'FINISH_CHANGE_POST_DISCLOSURE_TYPE',
-  REQUEST_DELETE_GROUP_POSTS: 'REQUEST_DELETE_GROUP_POSTS',
-  FINISH_DELETE_GROUP_POSTS: 'FINISH_DELETE_GROUP_POSTS',
+  REQUEST_DELETE_POST: 'REQUEST_DELETE_POST',
+  FINISH_DELETE_POST: 'FINISH_DELETE_POST',
   REQUEST_POST_LIKE: 'REQUEST_POST_LIKE',
   FINISH_POST_LIKE: 'FINISH_POST_LIKE',
   REQUEST_DELETE_LIKE: 'REQUEST_DELETE_LIKE',
   FINISH_DELETE_LIKE: 'FINISH_DELETE_LIKE',
-  REQUEST_POST_GROUP_REPLY: 'REQUEST_POST_GROUP_REPLY',
-  FINISH_POST_GROUP_REPLY: 'FINISH_POST_GROUP_REPLY',
+  REQUEST_POST_REPLY: 'REQUEST_POST_REPLY',
+  FINISH_POST_REPLY: 'FINISH_POST_REPLY',
 };
 
 const {
@@ -26,36 +32,48 @@ const {
   finishFetchGroupPosts,
   requestMoreGroupPosts,
   finishMoreGroupPosts,
-  requestPostGroupPosts,
-  finishPostGroupPosts,
+  requestPostGroupPost,
+  finishPostGroupPost,
+  requestFetchCompanyPosts,
+  finishFetchCompanyPosts,
+  requestMoreCompanyPosts,
+  finishMoreCompanyPosts,
+  requestPostCompanyPost,
+  finishPostCompanyPost,
   requestChangePostDisclosureType,
   finishChangePostDisclosureType,
-  requestDeleteGroupPosts,
-  finishDeleteGroupPosts,
+  requestDeletePost,
+  finishDeletePost,
   requestPostLike,
   finishPostLike,
   requestDeleteLike,
   finishDeleteLike,
-  requestPostGroupReply,
-  finishPostGroupReply,
+  requestPostReply,
+  finishPostReply,
 } = createActions({
   [Action.FINISH_FETCH_GROUP_POSTS]: keyValueIdentity,
   [Action.FINISH_MORE_GROUP_POSTS]: keyValueIdentity,
-  [Action.FINISH_POST_GROUP_POSTS]: keyValueIdentity,
+  [Action.FINISH_POST_GROUP_POST]: keyValueIdentity,
+  [Action.FINISH_FETCH_COMPANY_POSTS]: keyValueIdentity,
+  [Action.FINISH_MORE_COMPANY_POSTS]: keyValueIdentity,
+  [Action.FINISH_POST_COMPANY_POST]: keyValueIdentity,
   [Action.FINISH_CHANGE_POST_DISCLOSURE_TYPE]: keyValueIdentity,
-  [Action.FINISH_DELETE_GROUP_POSTS]: keyValueIdentity,
+  [Action.FINISH_DELETE_POST]: keyValueIdentity,
   [Action.FINISH_POST_LIKE]: keyValueIdentity,
   [Action.FINISH_DELETE_LIKE]: keyValueIdentity,
-  [Action.FINISH_POST_GROUP_REPLY]: keyValueIdentity,
+  [Action.FINISH_POST_REPLY]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_GROUP_POSTS,
   Action.REQUEST_MORE_GROUP_POSTS,
-  Action.REQUEST_POST_GROUP_POSTS,
+  Action.REQUEST_POST_GROUP_POST,
+  Action.REQUEST_FETCH_COMPANY_POSTS,
+  Action.REQUEST_MORE_COMPANY_POSTS,
+  Action.REQUEST_POST_COMPANY_POST,
   Action.REQUEST_CHANGE_POST_DISCLOSURE_TYPE,
-  Action.REQUEST_DELETE_GROUP_POSTS,
+  Action.REQUEST_DELETE_POST,
   Action.REQUEST_POST_LIKE,
   Action.REQUEST_DELETE_LIKE,
-  Action.REQUEST_POST_GROUP_REPLY,
+  Action.REQUEST_POST_REPLY,
 );
 
 export const fetchGroupPosts = groupId =>
@@ -78,14 +96,44 @@ export const fetchMoreGroupPosts = (groupId, before) =>
       .catch(({ message }) => dispatch(finishMoreGroupPosts(new Error(message))));
   };
 
-export const postGroupPosts = (groupId, post, disclosureType) =>
+export const postGroupPost = (groupId, post, disclosureType) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.timeline.isPosting) return Promise.resolve();
-    dispatch(requestPostGroupPosts());
+    dispatch(requestPostGroupPost());
     return postJson(`/groups/${groupId}/posts.json`, state)(null, { post, disclosureType })
-      .then(json => dispatch(finishPostGroupPosts('data', json)))
-      .catch(({ message }) => dispatch(finishPostGroupPosts(new Error(message))));
+      .then(json => dispatch(finishPostGroupPost('data', json)))
+      .catch(({ message }) => dispatch(finishPostGroupPost(new Error(message))));
+  };
+
+export const fetchCompanyPosts = companyId =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.timeline.isFetching) return Promise.resolve();
+    dispatch(requestFetchCompanyPosts());
+    return getJson(`/companies/${companyId}/posts.json`, state)()
+      .then(json => dispatch(finishFetchCompanyPosts('data', json)))
+      .catch(({ message }) => dispatch(finishFetchCompanyPosts(new Error(message))));
+  };
+
+export const fetchMoreCompanyPosts = (companyId, before) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.timeline.isFetchingMore) return Promise.resolve();
+    dispatch(requestMoreCompanyPosts());
+    return getJson(`/companies/${companyId}/posts.json`, state)({ before })
+      .then(json => dispatch(finishMoreCompanyPosts('data', json)))
+      .catch(({ message }) => dispatch(finishMoreCompanyPosts(new Error(message))));
+  };
+
+export const postCompanyPost = (companyId, post, disclosureType) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.timeline.isPosting) return Promise.resolve();
+    dispatch(requestPostCompanyPost());
+    return postJson(`/companies/${companyId}/posts.json`, state)(null, { post, disclosureType })
+      .then(json => dispatch(finishPostCompanyPost('data', json)))
+      .catch(({ message }) => dispatch(finishPostCompanyPost(new Error(message))));
   };
 
 export const changeDisclosureType = (postId, disclosureType) =>
@@ -98,14 +146,14 @@ export const changeDisclosureType = (postId, disclosureType) =>
       .catch(({ message }) => dispatch(finishChangePostDisclosureType(new Error(message))));
   };
 
-export const deleteGroupPosts = postId =>
+export const deletePost = postId =>
   (dispatch, getState) => {
     const state = getState();
     if (state.timeline.isDeleting) return Promise.resolve();
-    dispatch(requestDeleteGroupPosts());
+    dispatch(requestDeletePost());
     return deleteJson(`/posts/${postId}.json`, state)()
-      .then(() => dispatch(finishDeleteGroupPosts('data', { postId })))
-      .catch(({ message }) => dispatch(finishDeleteGroupPosts(new Error(message))));
+      .then(() => dispatch(finishDeletePost('data', { postId })))
+      .catch(({ message }) => dispatch(finishDeletePost(new Error(message))));
   };
 
 export const postLike = postId =>
@@ -132,8 +180,8 @@ export const postReply = (postId, post) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.timeline.isPostingReply) return Promise.resolve();
-    dispatch(requestPostGroupReply());
+    dispatch(requestPostReply());
     return postJson(`/posts/${postId}/replies.json`, state)(null, { post })
-      .then(json => dispatch(finishPostGroupReply('data', { postId, reply: json })))
-      .catch(({ message }) => dispatch(finishPostGroupReply(new Error(message))));
+      .then(json => dispatch(finishPostReply('data', { postId, reply: json })))
+      .catch(({ message }) => dispatch(finishPostReply(new Error(message))));
   };
