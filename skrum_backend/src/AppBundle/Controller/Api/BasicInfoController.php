@@ -99,6 +99,11 @@ class BasicInfoController extends BaseController
         $userService = $this->getUserService();
         $basicUserInfoDTO = $userService->getBasicUserInfo($userId, $auth->getCompanyId());
 
+        // 最終更新日時を取得
+        $okrActivityService = $this->getOkrActivityService();
+        $lastUpdate = $okrActivityService->getLastUpdate(Constant::SUBJECT_TYPE_USER, $userId, null, null, $timeframeId);
+        $basicUserInfoDTO->setLastUpdate($lastUpdate);
+
         // OKR一覧取得
         $okrService = $this->getOkrService();
         $okrsArray = $okrService->getObjectivesAndKeyResults(Constant::SUBJECT_TYPE_USER, $auth, $userId, null, $timeframeId, $auth->getCompanyId());
@@ -141,6 +146,11 @@ class BasicInfoController extends BaseController
         // グループ基本情報取得
         $groupService = $this->getGroupService();
         $basicGroupInfoDTO = $groupService->getBasicGroupInfo($groupId, $auth->getCompanyId());
+
+        // 最終更新日時を取得
+        $okrActivityService = $this->getOkrActivityService();
+        $lastUpdate = $okrActivityService->getLastUpdate(Constant::SUBJECT_TYPE_GROUP, null, $groupId, null, $timeframeId);
+        $basicGroupInfoDTO->setLastUpdate($lastUpdate);
 
         // OKR一覧取得
         $okrService = $this->getOkrService();
@@ -186,6 +196,11 @@ class BasicInfoController extends BaseController
         // 会社基本情報取得
         $companyService = $this->getCompanyService();
         $basicCompanyInfoDTO = $companyService->getBasicCompanyInfo($companyId);
+
+        // 最終更新日時を取得
+        $okrActivityService = $this->getOkrActivityService();
+        $lastUpdate = $okrActivityService->getLastUpdate(Constant::SUBJECT_TYPE_GROUP, null, null, $companyId, $timeframeId);
+        $basicCompanyInfoDTO->setLastUpdate($lastUpdate);
 
         // OKR一覧取得
         $okrService = $this->getOkrService();

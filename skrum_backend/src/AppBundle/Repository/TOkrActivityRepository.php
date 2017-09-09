@@ -32,6 +32,49 @@ class TOkrActivityRepository extends BaseRepository
     }
 
     /**
+     * 最新の進捗登録時のエンティティを取得
+     *
+     * @param integer $userId ユーザID
+     * @param integer $groupId グループID
+     * @param integer $companyId 会社ID
+     * @param integer $timeframeId タイムフレームID
+     * @return array
+     */
+    public function getLatestActivityDatetime(int $userId = null, int $groupId = null, int $companyId = null, int $timeframeId): array
+    {
+        $qb = $this->createQueryBuilder('toa');
+        $qb->select('toa.activityDatetime')
+            ->innerJoin('AppBundle:TOkr', 'to', 'WITH', 'toa.okr = to.okrId')
+            ->where('toa.type = :type')
+            ->andWhere('to.timeframe = :timeframeId')
+            ->setParameter('type', DBConstant::OKR_OPERATION_TYPE_ACHIEVEMENT)
+            ->setParameter('timeframeId', $timeframeId);
+
+        // ユーザの場合
+        if ($userId !== null) {
+            $qb->andWhere('to.ownerUser = :ownerUserId')
+                ->setParameter('ownerUserId', $userId);
+        }
+
+        // グループの場合
+        if ($groupId !== null) {
+            $qb->andWhere('to.ownerGroup = :ownerGroupId')
+                ->setParameter('ownerGroupId', $groupId);
+        }
+
+        // 会社の場合
+        if ($companyId !== null) {
+            $qb->andWhere('to.ownerCompanyId = :ownerCompanyId')
+                ->setParameter('ownerCompanyId', $companyId);
+        }
+
+        $qb->orderBy('toa.activityDatetime', 'DESC')
+            ->setMaxResults(1);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * 最新の進捗登録時のエンティティを取得（バッチ）
      *
      * @param integer $userId ユーザID
@@ -52,7 +95,7 @@ class TOkrActivityRepository extends BaseRepository
             ->orderBy('toa.activityDatetime', 'DESC')
             ->setMaxResults(1);
 
-        return $qb->getQuery()->getSingleResult();
+        return $qb->getQuery()->getResult();
     }
 
     /**

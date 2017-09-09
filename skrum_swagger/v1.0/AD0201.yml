@@ -56,6 +56,11 @@ paths:
                     type: string
                   leaderUserId:
                     type: integer
+                  lastUpdate:
+                    type: string
+                required:
+                  - groupId
+                  - name
               okrs:
                 type: array
                 items:

@@ -56,6 +56,14 @@ paths:
                     type: string
                   emailAddress:
                     type: string
+                  lastUpdate:
+                    type: string
+                required:
+                  - userId
+                  - lastName
+                  - firstName
+                  - position
+                  - emailAddress
               okrs:
                 type: array
                 items:

@@ -414,6 +414,11 @@ class BaseController extends FOSRestController
         return $this->get('api.login_service');
     }
 
+    protected function getOkrActivityService()
+    {
+        return $this->get('api.okr_activity_service');
+    }
+
     protected function getOkrDetailsService()
     {
         return $this->get('api.okr_details_service');

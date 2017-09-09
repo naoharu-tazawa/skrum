@@ -75,6 +75,13 @@ class BasicUserInfoDTO
     private $emailAddress;
 
     /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d H:i:s'>")
+     */
+    private $lastUpdate;
+
+    /**
      * Set userId
      *
      * @param integer $userId
@@ -288,5 +295,29 @@ class BasicUserInfoDTO
     public function getEmailAddress()
     {
         return $this->emailAddress;
+    }
+
+    /**
+     * Set lastUpdate
+     *
+     * @param \DateTime $lastUpdate
+     *
+     * @return BasicUserInfoDTO
+     */
+    public function setLastUpdate($lastUpdate)
+    {
+        $this->lastUpdate = $lastUpdate;
+
+        return $this;
+    }
+
+    /**
+     * Get lastUpdate
+     *
+     * @return \DateTime
+     */
+    public function getLastUpdate()
+    {
+        return $this->lastUpdate;
     }
 }

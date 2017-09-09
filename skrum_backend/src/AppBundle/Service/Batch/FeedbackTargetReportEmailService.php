@@ -70,20 +70,22 @@ class FeedbackTargetReportEmailService extends BaseService
 
                 // 進捗登録日数条件
                 $okrActivityInfo = $tOkrActivityRepos->getLatestEntityInAchievementRegistration($userInfo['userId'], $tTimeframe->getTimeframeId());
-                $noRegistrationDays = (strtotime(DateUtility::getCurrentDateString()) - strtotime(DateUtility::transIntoDateString($okrActivityInfo['activityDatetime']))) / 86400;
-                if ($noRegistrationDays >= $this->getParameter('feedback_target_condition_achievement_registration')) {
-                    // メンバー情報をメール本文記載変数配列に格納
-                    $memberName = $userInfo['lastName'] . ' ' . $userInfo['firstName'];
-                    $data[$key1]['members'][$key2]['memberName'] = $memberName;
-                    $data[$key1]['members'][$key2]['reason'] = sprintf($this->getParameter('feedback_target_reason_achievement_registration'), $this->getParameter('feedback_target_condition_achievement_registration'));
+                if (count($okrActivityInfo) !== 0) {
+                    $noRegistrationDays = (strtotime(DateUtility::getCurrentDateString()) - strtotime(DateUtility::transIntoDateString($okrActivityInfo[0]['activityDatetime']))) / 86400;
+                    if ($noRegistrationDays >= $this->getParameter('feedback_target_condition_achievement_registration')) {
+                        // メンバー情報をメール本文記載変数配列に格納
+                        $memberName = $userInfo['lastName'] . ' ' . $userInfo['firstName'];
+                        $data[$key1]['members'][$key2]['memberName'] = $memberName;
+                        $data[$key1]['members'][$key2]['reason'] = sprintf($this->getParameter('feedback_target_reason_achievement_registration'), $this->getParameter('feedback_target_condition_achievement_registration'));
 
-                    continue;
+                        continue;
+                    }
                 }
 
                 // 最終ログイン日時条件
                 $lastLogin = $tLoginRepos->getLastLogin($userInfo['userId']);
                 if ($lastLogin !== null) {
-                    $noLoginDays = (strtotime(DateUtility::getCurrentDateString()) - strtotime($lastLogin)) / 86400;
+                    $noLoginDays = (strtotime(DateUtility::getCurrentDateString()) - strtotime(DateUtility::transIntoDateString($lastLogin))) / 86400;
                     if ($noLoginDays >= $this->getParameter('feedback_target_condition_login')) {
                         // メンバー情報をメール本文記載変数配列に格納
                         $memberName = $userInfo['lastName'] . ' ' . $userInfo['firstName'];

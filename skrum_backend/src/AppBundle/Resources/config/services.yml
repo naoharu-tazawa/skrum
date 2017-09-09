@@ -90,6 +90,10 @@ services:
         class: AppBundle\Service\Api\LoginService
         arguments: ['@service_container']
 
+    api.okr_activity_service:
+        class: AppBundle\Service\Api\OkrActivityService
+        arguments: ['@service_container']
+
     api.okr_details_service:
         class: AppBundle\Service\Api\OkrDetailsService
         arguments: ['@service_container']

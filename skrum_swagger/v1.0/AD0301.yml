@@ -43,6 +43,11 @@ paths:
                     type: string
                   mission:
                     type: string
+                  lastUpdate:
+                    type: string
+                required:
+                  - companyId
+                  - name
               okrs:
                 type: array
                 items:

@@ -54,6 +54,13 @@ class BasicGroupInfoDTO
     private $leaderName;
 
     /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d H:i:s'>")
+     */
+    private $lastUpdate;
+
+    /**
      * Set groupId
      *
      * @param integer $groupId
@@ -195,5 +202,29 @@ class BasicGroupInfoDTO
     public function getLeaderName()
     {
         return $this->leaderName;
+    }
+
+    /**
+     * Set lastUpdate
+     *
+     * @param \DateTime $lastUpdate
+     *
+     * @return BasicGroupInfoDTO
+     */
+    public function setLastUpdate($lastUpdate)
+    {
+        $this->lastUpdate = $lastUpdate;
+
+        return $this;
+    }
+
+    /**
+     * Get lastUpdate
+     *
+     * @return \DateTime
+     */
+    public function getLastUpdate()
+    {
+        return $this->lastUpdate;
     }
 }

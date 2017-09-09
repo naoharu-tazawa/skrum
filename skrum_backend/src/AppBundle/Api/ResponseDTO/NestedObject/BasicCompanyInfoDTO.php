@@ -47,6 +47,13 @@ class BasicCompanyInfoDTO
     private $mission;
 
     /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d H:i:s'>")
+     */
+    private $lastUpdate;
+
+    /**
      * @var \AppBundle\Api\ResponseDTO\NestedObject\PolicyDTO
      *
      * @JSON\Type("AppBundle\Api\ResponseDTO\NestedObject\PolicyDTO")
@@ -171,6 +178,30 @@ class BasicCompanyInfoDTO
     public function getMission()
     {
         return $this->mission;
+    }
+
+    /**
+     * Set lastUpdate
+     *
+     * @param \DateTime $lastUpdate
+     *
+     * @return BasicCompanyInfoDTO
+     */
+    public function setLastUpdate($lastUpdate)
+    {
+        $this->lastUpdate = $lastUpdate;
+
+        return $this;
+    }
+
+    /**
+     * Get lastUpdate
+     *
+     * @return \DateTime
+     */
+    public function getLastUpdate()
+    {
+        return $this->lastUpdate;
     }
 
     /**
