@@ -122,7 +122,7 @@ export default (state = {
       }
       const { postId, reply } = payload.data;
       const posts = state.posts.map(post => (post.postId !== postId ? post :
-          { ...post, replies: [...post.replies, reply] }));
+          { ...post, replies: [...(post.replies || []), reply] }));
       return { ...state, posts, isPostingReply: false, error: null };
     }
 

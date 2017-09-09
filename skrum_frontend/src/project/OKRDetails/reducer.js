@@ -145,13 +145,16 @@ export default (state = {
         return { ...state, isSettingRatios: false, error: { message: payload.message } };
       }
       const { parentOkr, ratios } = payload.data;
-      const { okrId: parentOkrId, ...parentUpdate } = parentOkr;
-      const objective = mergeUpdateById(state.objective, 'okrId', parentUpdate, parentOkrId);
+      const { okrId: parentOkrId, achievementRate } = parentOkr;
+      const objective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
       const ratiosById = fromPairs(ratios.map(({ keyResultId, weightedAverageRatio }) =>
         ([keyResultId, { weightedAverageRatio }])));
       const keyResults = state.keyResults.map(kr =>
         ({ ...kr, ...ratiosById[kr.okrId], ratioLockedFlg: ratiosById[kr.okrId] ? 1 : 0 }));
-      return { ...state, objective, keyResults, isSettingRatios: false, error: null };
+      const datetime = toUtcDate(new Date());
+      const chart = parentOkrId !== state.objective.okrId ? state.chart :
+        [...state.chart, { datetime, achievementRate }];
+      return { ...state, objective, keyResults, chart, isSettingRatios: false, error: null };
     }
 
     default:
