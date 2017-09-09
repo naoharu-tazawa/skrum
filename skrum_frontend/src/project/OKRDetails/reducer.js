@@ -35,10 +35,14 @@ export default (state = {
       if (error) {
         return { ...state, isPostingKR: false, error: { message: payload.message } };
       }
-      const { targetOkr, parentOkr } = payload.data;
-      const objective = mergeUpdateById(state.objective, 'okrId', parentOkr, parentOkr.okrId);
-      const keyResults = [...state.keyResults, targetOkr];
-      return { ...state, objective, keyResults, isPostingKR: false, error: null };
+      const { targetOkr: keyResult, parentOkr } = payload.data;
+      const { okrId: parentOkrId, achievementRate } = parentOkr;
+      const objective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
+      const keyResults = [...state.keyResults, keyResult];
+      const datetime = toUtcDate(new Date());
+      const chart = parentOkrId !== state.objective.okrId ? state.chart :
+        [...state.chart, { datetime, achievementRate }];
+      return { ...state, objective, keyResults, chart, isPostingKR: false, error: null };
     }
 
     case Action.REQUEST_PUT_OKR_DETAILS:
@@ -103,9 +107,13 @@ export default (state = {
         return { ...state, isDeletingKR: false, error: { message: payload.message } };
       }
       const { id, parentOkr } = payload.data;
-      const objective = mergeUpdateById(state.objective, 'okrId', parentOkr, parentOkr.okrId);
+      const { okrId: parentOkrId, achievementRate } = parentOkr;
+      const objective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
       const keyResults = state.keyResults.filter(({ okrId }) => id !== okrId);
-      return { ...state, objective, keyResults, isDeletingKR: false, error: null };
+      const datetime = toUtcDate(new Date());
+      const chart = parentOkrId !== state.objective.okrId ? state.chart :
+        [...state.chart, { datetime, achievementRate }];
+      return { ...state, objective, keyResults, chart, isDeletingKR: false, error: null };
     }
 
     case Action.REQUEST_POST_ACHIEVEMENT:
@@ -117,14 +125,14 @@ export default (state = {
         return { ...state, isPostingAchievement: false, error: { message: payload.message } };
       }
       const { parentOkr, targetOkr } = payload.data;
-      const { okrId: parentOkrId, ...parentUpdate } = parentOkr;
+      const { okrId: parentOkrId, achievementRate } = parentOkr;
       const { okrId, ...update } = targetOkr;
-      const parentObjective = mergeUpdateById(state.objective, 'okrId', parentUpdate, parentOkrId);
+      const parentObjective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
       const objective = mergeUpdateById(parentObjective, 'okrId', update, okrId);
       const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, okrId));
       const datetime = toUtcDate(new Date());
       const chart = parentOkrId !== state.objective.okrId ? state.chart :
-        [...state.chart, { datetime, achievementRate: parentOkr.achievementRate }];
+        [...state.chart, { datetime, achievementRate }];
       return { ...state, objective, keyResults, chart, isPostingAchievement: false, error: null };
     }
 
