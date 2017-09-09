@@ -4,6 +4,7 @@ namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\SystemException;
+use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\Constant;
 use AppBundle\Entity\MCompany;
 use AppBundle\Entity\MGroup;
