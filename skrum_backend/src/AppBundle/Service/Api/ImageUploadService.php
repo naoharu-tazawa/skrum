@@ -90,7 +90,6 @@ class ImageUploadService extends BaseService
                     'Body'       => $data['image']
             ));
 
-            // ToDo: リリースVer1.1の時、下記コメントアウトを除去し、画像バージョンを導入
             // 画像バージョンを更新
             if ($subjectType === Constant::SUBJECT_TYPE_USER) {
                 $mUser->setImageVersion($imageVersion + 1);
@@ -98,6 +97,11 @@ class ImageUploadService extends BaseService
                 $mGroup->setImageVersion($imageVersion + 1);
             } elseif ($subjectType === Constant::SUBJECT_TYPE_COMPANY) {
                 $mCompany->setImageVersion($imageVersion + 1);
+
+                // グループマスタの会社レコードも更新
+                $mGroupRepos = $this->getMGroupRepository();
+                $mGroup = $mGroupRepos->findOneBy(array('company' => $companyId, 'groupType' => DBConstant::GROUP_TYPE_COMPANY));
+                $mGroup->setImageVersion($imageVersion + 1);
             }
             $this->flush();
         } catch (\Exception $e) {
