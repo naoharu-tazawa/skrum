@@ -3,12 +3,6 @@
 namespace AppBundle\Service\Api;
 
 use AppBundle\Service\BaseService;
-use AppBundle\Utils\Auth;
-use AppBundle\Entity\TOkr;
-use AppBundle\Entity\TOkrActivity;
-use AppBundle\Api\ResponseDTO\OkrDetailsDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\AchievementRateChartDTO;
-use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 use AppBundle\Utils\Constant;
 
 /**

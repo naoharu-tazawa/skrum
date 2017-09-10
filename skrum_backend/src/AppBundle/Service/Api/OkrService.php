@@ -97,6 +97,7 @@ class OkrService extends BaseService
                 $basicOkrDTOObjective->setUnit($tOkrArray[$i]['objective']->getUnit());
                 $basicOkrDTOObjective->setAchievementRate($tOkrArray[$i]['objective']->getAchievementRate());
                 $basicOkrDTOObjective->setStatus($tOkrArray[$i]['objective']->getStatus());
+                $basicOkrDTOObjective->setDisclosureType($tOkrArray[$i]['objective']->getDisclosureType());
 
                 // キーリザルト配列変数を初期化
                 $basicOkrDTOKeyResultArray = array();
@@ -149,6 +150,7 @@ class OkrService extends BaseService
                     $basicOkrDTOKeyResult->setOwnerCompanyName($tOkrArray[$i]['companyName']);
                 }
                 $basicOkrDTOKeyResult->setStatus($tOkrArray[$i]['keyResult']->getStatus());
+                $basicOkrDTOKeyResult->setDisclosureType($tOkrArray[$i]['keyResult']->getDisclosureType());
                 $basicOkrDTOKeyResult->setWeightedAverageRatio($tOkrArray[$i]['keyResult']->getWeightedAverageRatio());
                 $basicOkrDTOKeyResult->setRatioLockedFlg($tOkrArray[$i]['keyResult']->getRatioLockedFlg());
 

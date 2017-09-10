@@ -84,6 +84,8 @@ paths:
                       type: number
                     status:
                       type: string
+                    disclosureType:
+                      type: string
                     keyResults:
                       type: array
                       items:
@@ -117,6 +119,8 @@ paths:
                             type: string
                           status:
                             type: string
+                          disclosureType:
+                            type: string
                           weightedAverageRatio:
                             type: number
                           ratioLockedFlg:
@@ -130,6 +134,8 @@ paths:
                           - achievementRate
                           - ownerType
                           - status
+                          - disclosureType
+                          - weightedAverageRatio
                           - ratioLockedFlg
                   required:
                     - okrId
@@ -140,6 +146,7 @@ paths:
                     - unit
                     - achievementRate
                     - status
+                    - disclosureType
               alignmentsInfo:
                 type: array
                 items:

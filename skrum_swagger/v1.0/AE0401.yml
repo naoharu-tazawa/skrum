@@ -90,6 +90,8 @@ definitions:
         type: string
       status:
         type: string
+      disclosureType:
+        type: string
       weightedAverageRatio:
         type: number
       ratioLockedFlg:
@@ -107,3 +109,4 @@ definitions:
       - startDate
       - endDate
       - status
+      - disclosureType
