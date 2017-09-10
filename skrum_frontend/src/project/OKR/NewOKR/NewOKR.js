@@ -183,7 +183,7 @@ class NewOKR extends Component {
             {withReduxField(DatePickerInput, 'endDate', { tabIndex: 16 })}
           </section>
           {!parentOkr && timeframeId && <section>
-            <label>紐づけ先検索</label>
+            <label>紐付け先検索</label>
             {withItemisedReduxField(
               OKRSearch,
               'alignment',

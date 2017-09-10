@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { find, isEmpty } from 'lodash';
 import SearchDropdown from '../../components/SearchDropdown';
+import EntitySubject from '../../components/EntitySubject';
+import { EntityType } from '../../util/EntityUtil';
 import { getPotentialLeaders } from './action';
 
 export const leaderPropType = PropTypes.shape({
@@ -35,10 +37,13 @@ class PotentialLeaders extends PureComponent {
     const leaderName = ((find(potentialLeadersFound, { userId: leaderUserId }) || {}).name) ||
       currentLeaderName;
     const { currentInput = leaderName || '' } = this.state || {};
+    const type = EntityType.USER;
     return (
       <SearchDropdown
         items={isGetting ? [] : potentialLeadersFound}
         labelPropName="name"
+        renderItem={({ userId: id, name }) =>
+          <EntitySubject entity={{ type, id, name }} local plain avatarSize={20} />}
         onChange={({ target }) => this.setState({ currentInput: target.value })}
         onSearch={() => {}}
         onSelect={onChange}

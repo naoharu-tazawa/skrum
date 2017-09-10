@@ -16,20 +16,24 @@ export default class EntitySubject extends Component {
     heading: PropTypes.string,
     subject: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     local: PropTypes.bool,
+    plain: PropTypes.bool,
+    avatarSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     componentClassName: PropTypes.string,
     entityClassName: PropTypes.string,
   };
 
   render() {
-    const { entity, entityClassName = '', heading, subject, local = true, componentClassName } = this.props;
+    const { entity, entityClassName = '', heading, subject, local = true, plain, avatarSize,
+      componentClassName } = this.props;
     return (
-      <div className={`${styles.component} ${componentClassName || ''}`}>
+      <div className={`${!plain && styles.component} ${componentClassName || ''}`}>
         {heading && <div className={styles.heading}>{heading}</div>}
         <div className={styles.subjectArea}>
           <EntityLink
             componentClassName={`${styles.entity} ${entityClassName}`}
             entity={entity}
             local={local}
+            avatarSize={avatarSize}
           />
           {subject && <div className={styles.subject}>{subject}</div>}
         </div>

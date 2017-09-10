@@ -11,6 +11,7 @@ export default class SearchDropdown extends PureComponent {
     labelPropName: PropTypes.string.isRequired,
     onSearch: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
+    renderItem: PropTypes.func,
     value: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
@@ -25,8 +26,8 @@ export default class SearchDropdown extends PureComponent {
   }
 
   render() {
-    const { items, labelPropName, onSelect, value, onChange, onFocus, onBlur, disabled, tabIndex,
-      isSearching } = this.props;
+    const { items, labelPropName, onSelect, renderItem, value, onChange, onFocus, onBlur,
+      disabled, tabIndex, isSearching } = this.props;
     const { currentInput = isObject(value) ? value[labelPropName] : value,
       isFocused = false } = this.state || {};
     return (
@@ -34,7 +35,7 @@ export default class SearchDropdown extends PureComponent {
         items={items}
         value={currentInput}
         getItemValue={({ [labelPropName]: label }) => label}
-        renderItem={({ [labelPropName]: label }, isHighlighted, renderStyles) =>
+        renderItem={(item, isHighlighted, renderStyles) =>
           <div
             style={{
               background: isHighlighted ? '#ebf5ff' : 'white',
@@ -42,7 +43,7 @@ export default class SearchDropdown extends PureComponent {
               ...renderStyles,
             }}
           >
-            {label}
+            {renderItem ? renderItem(item) : item[labelPropName]}
           </div>
         }
         wrapperProps={{ className: `${styles.component}

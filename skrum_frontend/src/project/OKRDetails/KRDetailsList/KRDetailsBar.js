@@ -43,8 +43,7 @@ class KRDetailsBar extends Component {
       title="担当者の変更"
       submitButton="変更"
       onSubmit={({ changedOwner } = {}) => this.props.dispatchChangeKROwner(id, changedOwner)}
-      valid={({ changedOwner }) => !isEmpty(changedOwner) &&
-        (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
+      valid={({ changedOwner }) => !isEmpty(changedOwner)}
       onClose={onClose}
     >
       {({ setFieldData }) =>
@@ -52,7 +51,10 @@ class KRDetailsBar extends Component {
           <EntitySubject entity={owner} heading="担当者を変更するサブ目標" subject={name} />
           <section>
             <label>担当者検索</label>
-            <OwnerSearch onChange={value => setFieldData({ changedOwner: value })} />
+            <OwnerSearch
+              onChange={value => setFieldData({ changedOwner: value })}
+              exclude={owner}
+            />
           </section>
         </div>}
     </DialogForm>);

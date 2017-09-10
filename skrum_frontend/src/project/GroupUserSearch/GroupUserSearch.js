@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
 import SearchDropdown from '../../components/SearchDropdown';
+import EntitySubject from '../../components/EntitySubject';
+import { EntityType } from '../../util/EntityUtil';
 import { searchGroupUsers } from './action';
 
 const userPropType = PropTypes.shape({
@@ -28,10 +30,13 @@ class GroupUserSearch extends PureComponent {
     const { groupId, users = [], value, onChange, onFocus, onBlur, disabled,
       dispatchSearchGroupUsers, isSearching } = this.props;
     const { currentInput = (value || {}).name } = this.state || {};
+    const type = EntityType.USER;
     return (
       <SearchDropdown
         items={isEmpty(currentInput) ? [] : users}
         labelPropName="userName"
+        renderItem={({ userId: id, userName: name }) =>
+          <EntitySubject entity={{ type, id, name }} local plain avatarSize={20} />}
         onChange={({ target }) => this.setState({ currentInput: target.value })}
         onSearch={keyword => !isEmpty(keyword) && dispatchSearchGroupUsers(groupId, keyword)}
         onSelect={onChange}

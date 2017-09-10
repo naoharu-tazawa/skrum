@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
 import SearchDropdown from '../../components/SearchDropdown';
+import EntitySubject from '../../components/EntitySubject';
 import { EntityType } from '../../util/EntityUtil';
 import { mapOwner } from '../../util/OwnerUtil';
 import { searchOwner } from './action';
@@ -38,6 +39,7 @@ class OwnerSearch extends PureComponent {
       <SearchDropdown
         items={(keyword !== currentInput ? defaultOwners : ownersFound) || []}
         labelPropName="name"
+        renderItem={owner => <EntitySubject entity={owner} local plain avatarSize={20} />}
         onChange={({ target }) => this.setState({ currentInput: target.value })}
         onSearch={q => !isEmpty(q) && dispatchSearchOwner(q)}
         onSelect={onChange}

@@ -63,7 +63,7 @@ class OkrDetails extends Component {
     openModal: PropTypes.func.isRequired,
   };
 
-  setRatioDialog = ({ id, name, owner, keyResults, onClose }) => (
+  setRatiosDialog = ({ id, name, owner, keyResults, onClose }) => (
     <DialogForm
       title="サブ目標の目標への影響度合い設定"
       submitButton="設定"
@@ -111,7 +111,6 @@ class OkrDetails extends Component {
                         // disabled={unlockedCount === 0 || (unlockedCount === 1 && !locked)}
                         onChange={e =>
                           setFieldData({
-                            ...data,
                             [kr.id]: Math.min(Math.max(toNumber(e.target.value), 0), maxRatio),
                           })}
                       />
@@ -119,7 +118,7 @@ class OkrDetails extends Component {
                       <button
                         type="button"
                         onClick={() =>
-                          setFieldData({ ...data, [kr.id]: locked ? null : ratio })}
+                          setFieldData({ [kr.id]: locked ? null : ratio })}
                       >
                         <img src={locked ? '/img/lock.png' : '/img/unlock.png'} alt="" />
                       </button>
@@ -141,8 +140,7 @@ class OkrDetails extends Component {
           if (!error) browserHistory.push(toBasicPath(location.pathname));
           return { error, payload };
         })}
-      valid={({ changedOwner }) => !isEmpty(changedOwner) &&
-        (changedOwner.type !== owner.type || changedOwner.id !== owner.id)}
+      valid={({ changedOwner }) => !isEmpty(changedOwner)}
       onClose={onClose}
     >
       {({ setFieldData }) =>
@@ -150,7 +148,10 @@ class OkrDetails extends Component {
           <EntitySubject entity={owner} heading="担当者を変更する目標" subject={name} />
           <section>
             <label>担当者検索</label>
-            <OwnerSearch onChange={value => setFieldData({ changedOwner: value })} />
+            <OwnerSearch
+              onChange={value => setFieldData({ changedOwner: value })}
+              exclude={owner}
+            />
           </section>
         </div>}
     </DialogForm>);
@@ -334,7 +335,7 @@ class OkrDetails extends Component {
                         onClick: () => openModal(this.changeDisclosureTypeDialog,
                           { id, name, owner, disclosureType }) },
                       ...(keyResults.length === 0 ? [] : [{ caption: '影響度設定',
-                        onClick: () => openModal(this.setRatioDialog,
+                        onClick: () => openModal(this.setRatiosDialog,
                           { id, name, owner, keyResults }) }]),
                       { caption: '削除',
                         onClick: () => openModal(this.deleteOkrPrompt, { id, name, owner }) },

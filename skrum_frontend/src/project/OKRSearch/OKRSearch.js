@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEmpty, partial } from 'lodash';
 import SearchDropdown from '../../components/SearchDropdown';
+import EntitySubject from '../../components/EntitySubject';
 import { mapOKR } from '../../util/OKRUtil';
 import { explodePath } from '../../util/RouteUtil';
 import { searchOkr, searchParentOkr } from './action';
@@ -49,6 +50,8 @@ class OKRSearch extends PureComponent {
       <SearchDropdown
         items={isEmpty(currentInput) ? [] : okrs}
         labelPropName="name"
+        renderItem={okr =>
+          <EntitySubject entity={okr.owner} subject={okr.name} local plain avatarSize={20} />}
         onChange={({ target }) => this.setState({ currentInput: target.value })}
         onSearch={keyword => !isEmpty(keyword) && dispatcher(timeframeId, keyword)}
         onSelect={onChange}
