@@ -142,6 +142,25 @@ class BaseController extends FOSRestController
     }
 
     /**
+     * JsonSchemaバリデーション（空リクエストを許容）
+     *
+     * @param Request $request リクエストデータ
+     * @param string $schemaFilePath JsonSchemaファイルパス（例："AppBundle/Api/JsonSchema/SamplePdu"）
+     * @return array
+     */
+    protected function validateSchemaEmptyOK(Request $request, string $schemaFilePath): array
+    {
+        $data = json_decode($request->getContent());
+
+        if (!$data) return array();
+
+        $validator = new Validator();
+        $validator->validate($data, (object)['$ref' => 'file://' . realpath(dirname(__FILE__) . '/../../' . $schemaFilePath . '.json')]);
+
+        return $this->makeErrorResponse($validator->getErrors());
+    }
+
+    /**
      * JsonSchemaバリデーションエラーのレスポンスを整形
      *
      * @param array $errors JsonScemaエラー配列

@@ -192,7 +192,7 @@ class OkrSettingController extends BaseController
     public function setOkrRatioAction(Request $request, string $okrId): OkrInfoDTO
     {
         // JsonSchemaバリデーション
-        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/SetOkrRatioPdu');
+        $errors = $this->validateSchemaEmptyOK($request, 'AppBundle/Api/JsonSchema/SetOkrRatioPdu');
         if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
 
         // リクエストJSONを取得
