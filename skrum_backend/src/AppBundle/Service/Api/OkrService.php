@@ -49,11 +49,11 @@ class OkrService extends BaseService
             $tOkrArray = $tOkrRepos->getGroupObjectivesAndKeyResults($groupId, $timeframeId, $companyId);
         } else {
             $tOkrArray = $tOkrRepos->getCompanyObjectivesAndKeyResults($companyId, $timeframeId);
-
-            // 会社エンティティを取得
-            $mCompanyRepos = $this->getMCompanyRepository();
-            $mCompany = $mCompanyRepos->find($companyId);
         }
+
+        // 会社エンティティを取得
+        $mCompanyRepos = $this->getMCompanyRepository();
+        $mCompany = $mCompanyRepos->find($companyId);
 
         $disclosureLogic = $this->getDisclosureLogic();
         $tOkrArrayCount = count($tOkrArray);
@@ -79,6 +79,7 @@ class OkrService extends BaseService
                     continue;
                 }
 
+                // レスポンスDTOの生成
                 $basicOkrDTOObjective = new BasicOkrDTO();
                 $basicOkrDTOObjective->setOkrId($tOkrArray[$i]['objective']->getOkrId());
                 $basicOkrDTOObjective->setOkrName($tOkrArray[$i]['objective']->getName());
@@ -98,6 +99,25 @@ class OkrService extends BaseService
                 $basicOkrDTOObjective->setAchievementRate($tOkrArray[$i]['objective']->getAchievementRate());
                 $basicOkrDTOObjective->setStatus($tOkrArray[$i]['objective']->getStatus());
                 $basicOkrDTOObjective->setDisclosureType($tOkrArray[$i]['objective']->getDisclosureType());
+
+                // 親OKRDTOの生成
+                if ($tOkrArray[$i]['objective']->getParentOkr() !== null && $tOkrArray[$i]['objective']->getParentOkr()->getType() !== DBConstant::OKR_TYPE_ROOT_NODE) {
+                    $basicOkrDTOParentOkr = new BasicOkrDTO();
+                    $basicOkrDTOParentOkr->setOkrId($tOkrArray[$i]['objective']->getParentOkr()->getOkrId());
+                    $basicOkrDTOParentOkr->setOkrName($tOkrArray[$i]['objective']->getParentOkr()->getName());
+                    if ($tOkrArray[$i]['objective']->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+                        $basicOkrDTOParentOkr->setOwnerUserId($tOkrArray[$i]['objective']->getParentOkr()->getOwnerUser()->getUserId());
+                        $basicOkrDTOParentOkr->setOwnerUserName($tOkrArray[$i]['objective']->getParentOkr()->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['objective']->getParentOkr()->getOwnerUser()->getFirstName());
+                    } elseif ($tOkrArray[$i]['objective']->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                        $basicOkrDTOParentOkr->setOwnerGroupId($tOkrArray[$i]['objective']->getParentOkr()->getOwnerGroup()->getGroupId());
+                        $basicOkrDTOParentOkr->setOwnerGroupName($tOkrArray[$i]['objective']->getParentOkr()->getOwnerGroup()->getGroupName());
+                    } else {
+                        $basicOkrDTOParentOkr->setOwnerCompanyId($tOkrArray[$i]['objective']->getParentOkr()->getOwnerCompanyId());
+                        $basicOkrDTOParentOkr->setOwnerCompanyName($mCompany->getCompanyName());
+                    }
+
+                    $basicOkrDTOObjective->setParentOkr($basicOkrDTOParentOkr);
+                }
 
                 // キーリザルト配列変数を初期化
                 $basicOkrDTOKeyResultArray = array();
@@ -131,6 +151,7 @@ class OkrService extends BaseService
                     continue;
                 }
 
+                // キーリザルトDTOの生成
                 $basicOkrDTOKeyResult = new BasicOkrDTO();
                 $basicOkrDTOKeyResult->setOkrId($tOkrArray[$i]['keyResult']->getOkrId());
                 $basicOkrDTOKeyResult->setOkrName($tOkrArray[$i]['keyResult']->getName());

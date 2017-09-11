@@ -73,6 +73,31 @@ paths:
                       type: string
                     disclosureType:
                       type: string
+                    parentOkr:
+                      type: object
+                      properties:
+                        okrId:
+                          type: integer
+                        okrName:
+                          type: string
+                        ownerType:
+                          type: string
+                        ownerUserId:
+                          type: integer
+                        ownerUserName:
+                          type: integer
+                        ownerGroupId:
+                          type: integer
+                        ownerGroupName:
+                          type: integer
+                        ownerCompanyId:
+                          type: integer
+                        ownerCompanyName:
+                          type: integer
+                      required:
+                        - okrId
+                        - okrName
+                        - ownerType
                     keyResults:
                       type: array
                       items:

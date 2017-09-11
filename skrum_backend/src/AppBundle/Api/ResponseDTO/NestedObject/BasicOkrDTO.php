@@ -166,6 +166,13 @@ class BasicOkrDTO
     private $ratioLockedFlg;
 
     /**
+     * @var \AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO
+     *
+     * @JSON\Type("AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO")
+     */
+    private $parentOkr;
+
+    /**
      * @var array
      *
      * @JSON\Type("array")
@@ -698,6 +705,30 @@ class BasicOkrDTO
     public function getRatioLockedFlg()
     {
         return $this->ratioLockedFlg;
+    }
+
+    /**
+     * Set parentOkr
+     *
+     * @param \AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO $parentOkr
+     *
+     * @return BasicOkrDTO
+     */
+    public function setParentOkr($parentOkr)
+    {
+        $this->parentOkr = $parentOkr;
+
+        return $this;
+    }
+
+    /**
+     * Get parentOkr
+     *
+     * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO
+     */
+    public function getParentOkr()
+    {
+        return $this->parentOkr;
     }
 
     /**
