@@ -6,15 +6,20 @@ import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntityLink from '../../../components/EntityLink';
 import DropdownMenu from '../../../components/DropdownMenu';
 import { replacePath } from '../../../util/RouteUtil';
+import { withModal } from '../../../util/ModalUtil';
 import { keyResultPropTypes } from './propTypes';
+import { changeKRDisclosureTypeDialog, deleteKRPrompt } from '../../OKRDetails/dialogs';
 import styles from './KRBar.css';
 
-export default class KRBar extends Component {
+class KRBar extends Component {
 
   static propTypes = {
     display: PropTypes.oneOf(['expanded', 'collapsed']).isRequired,
     keyResult: keyResultPropTypes.isRequired,
     onAddParentedOkr: PropTypes.func.isRequired,
+    dispatchChangeDisclosureType: PropTypes.func.isRequired,
+    dispatchDeleteKR: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
   };
 
   getBaseStyles = (display) => {
@@ -26,8 +31,10 @@ export default class KRBar extends Component {
   };
 
   render() {
-    const { display, keyResult, onAddParentedOkr } = this.props;
-    const { id, name, unit, targetValue, achievedValue, achievementRate, owner } = keyResult;
+    const { display, keyResult, onAddParentedOkr,
+      dispatchChangeDisclosureType, dispatchDeleteKR, openModal } = this.props;
+    const { id, name, unit, targetValue, achievedValue, achievementRate, owner,
+      disclosureType } = keyResult;
     return (
       <div className={this.getBaseStyles(display)}>
         <div className={styles.name}>
@@ -48,9 +55,17 @@ export default class KRBar extends Component {
           <DropdownMenu
             options={[
               { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(keyResult) },
+              { caption: '公開範囲設定',
+                onClick: () => openModal(changeKRDisclosureTypeDialog,
+                  { id, name, owner, disclosureType, dispatch: dispatchChangeDisclosureType }) },
+              { caption: '削除',
+                onClick: () => openModal(deleteKRPrompt,
+                  { id, name, owner, dispatch: dispatchDeleteKR }) },
             ]}
           />
         </div>
       </div>);
   }
 }
+
+export default withModal(KRBar);

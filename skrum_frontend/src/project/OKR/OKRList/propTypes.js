@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+// import { okrTypePropType } from '../../../util/OKRUtil';
 import { entityTypePropType } from '../../../util/EntityUtil';
 
 export const ownerPropTypes = PropTypes.shape({
@@ -7,8 +8,9 @@ export const ownerPropTypes = PropTypes.shape({
   type: entityTypePropType.isRequired,
 });
 
-export const keyResultPropTypes = PropTypes.shape({
+const objectiveBase = {
   id: PropTypes.number.isRequired,
+  // type: okrTypePropType.isRequired,
   name: PropTypes.string.isRequired,
   unit: PropTypes.string.isRequired,
   targetValue: PropTypes.number.isRequired,
@@ -16,22 +18,20 @@ export const keyResultPropTypes = PropTypes.shape({
   achievementRate: PropTypes.string.isRequired,
   owner: ownerPropTypes.isRequired,
   status: PropTypes.string.isRequired,
-  ratioLockedFlg: PropTypes.number.isRequired,
+  disclosureType: PropTypes.string.isRequired,
+};
+
+export const keyResultPropTypes = PropTypes.shape({
+  ...objectiveBase,
+  ratioLockedFlg: PropTypes.number,
+  weightedAverageRatio: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 });
 
 export const keyResultsPropTypes = PropTypes.arrayOf(keyResultPropTypes);
 
 export const okrPropTypes = PropTypes.shape({
-  id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  unit: PropTypes.string.isRequired,
-  targetValue: PropTypes.number.isRequired,
-  achievedValue: PropTypes.number.isRequired,
-  achievementRate: PropTypes.string.isRequired,
-  owner: ownerPropTypes.isRequired,
+  ...objectiveBase,
   keyResults: keyResultsPropTypes.isRequired,
-  status: PropTypes.string.isRequired,
-  ratioLockedFlg: PropTypes.number,
 });
 
 export const okrsPropTypes = PropTypes.arrayOf(okrPropTypes);

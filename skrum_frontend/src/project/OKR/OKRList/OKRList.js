@@ -12,6 +12,12 @@ export default class OKRList extends Component {
     okrs: okrsPropTypes,
     onAddOkr: PropTypes.func.isRequired,
     onAddParentedOkr: PropTypes.func.isRequired,
+    dispatchChangeOkrOwner: PropTypes.func.isRequired,
+    dispatchChangeParentOkr: PropTypes.func.isRequired,
+    dispatchChangeDisclosureType: PropTypes.func.isRequired,
+    dispatchSetRatios: PropTypes.func.isRequired,
+    dispatchDeleteOkr: PropTypes.func.isRequired,
+    dispatchDeleteKR: PropTypes.func.isRequired,
   };
 
   toggleKeyResults(id) {
@@ -21,7 +27,9 @@ export default class OKRList extends Component {
   }
 
   render() {
-    const { okrs = [], onAddOkr, onAddParentedOkr } = this.props;
+    const { okrs = [], onAddOkr, onAddParentedOkr, dispatchChangeOkrOwner,
+      dispatchChangeParentOkr, dispatchChangeDisclosureType, dispatchSetRatios,
+      dispatchDeleteOkr, dispatchDeleteKR } = this.props;
     const { expandedKeyResults = {} } = this.state || {};
     return (
       <div className={styles.component}>
@@ -35,15 +43,28 @@ export default class OKRList extends Component {
             return [
               (<div key={`okr-${id}`}>
                 <OkrBar
-                  okr={okr}
-                  onAddParentedOkr={onAddParentedOkr}
+                  {...{
+                    okr,
+                    onAddParentedOkr,
+                    dispatchChangeOkrOwner,
+                    dispatchChangeParentOkr,
+                    dispatchChangeDisclosureType,
+                    dispatchSetRatios,
+                    dispatchDeleteOkr,
+                  }}
                   onKRClicked={() => keyResults.length && this.toggleKeyResults(id)}
                 />
               </div>),
               ...keyResults.map(keyResult =>
                 <KRBar
                   key={`kr-${keyResult.id}`}
-                  {...{ display, keyResult, onAddParentedOkr }}
+                  {...{
+                    display,
+                    keyResult,
+                    onAddParentedOkr,
+                    dispatchChangeDisclosureType,
+                    dispatchDeleteKR,
+                  }}
                 />),
             ];
           }))}

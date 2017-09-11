@@ -7,21 +7,39 @@ import NewOKR from '../NewOKR/NewOKR';
 import { withModal } from '../../../util/ModalUtil';
 import { mapOKR } from '../../../util/OKRUtil';
 import { EntityType } from '../../../util/EntityUtil';
+import { changeOkrOwner, changeDisclosureType, setRatios, deleteOkr, deleteKR } from '../action';
+import { changeParentOkr } from '../../OKRDetails/action'; // TODO move this to OKR action
 
 class OKRListContainer extends Component {
 
   static propTypes = {
     okrs: okrsPropTypes,
     ownerName: PropTypes.string,
+    dispatchChangeOkrOwner: PropTypes.func.isRequired,
+    dispatchChangeParentOkr: PropTypes.func.isRequired,
+    dispatchChangeDisclosureType: PropTypes.func.isRequired,
+    dispatchSetRatios: PropTypes.func.isRequired,
+    dispatchDeleteOkr: PropTypes.func.isRequired,
+    dispatchDeleteKR: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
   };
 
   render() {
-    const { okrs = [], ownerName, openModal } = this.props;
+    const { okrs = [], ownerName, dispatchChangeOkrOwner, dispatchChangeParentOkr,
+      dispatchChangeDisclosureType, dispatchSetRatios, dispatchDeleteOkr, dispatchDeleteKR,
+      openModal } = this.props;
     return (
       <div>
         <OKRList
-          okrs={okrs}
+          {...{
+            okrs,
+            dispatchChangeOkrOwner,
+            dispatchChangeParentOkr,
+            dispatchChangeDisclosureType,
+            dispatchSetRatios,
+            dispatchDeleteOkr,
+            dispatchDeleteKR,
+          }}
           onAddOkr={() => openModal(NewOKR, { type: 'Okr', ownerName })}
           onAddParentedOkr={okr => openModal(NewOKR,
             { type: 'Okr', parentOkr: okr, differingParentOkrOwner: true })}
@@ -38,14 +56,40 @@ const mapBasicsStateToProps = (subject, ownerType) => (state) => {
     ownerName: name || `${lastName} ${firstName}` };
 };
 
+const mapDispatchToProps = subject => (dispatch) => {
+  const dispatchChangeOkrOwner = (id, owner) =>
+    dispatch(changeOkrOwner(subject, id, owner));
+  const dispatchChangeParentOkr = (id, newParentOkrId) =>
+    dispatch(changeParentOkr(id, newParentOkrId));
+  const dispatchChangeDisclosureType = (id, disclosureType) =>
+    dispatch(changeDisclosureType(subject, id, disclosureType));
+  const dispatchSetRatios = (id, ratios) =>
+    dispatch(setRatios(subject, id, ratios));
+  const dispatchDeleteOkr = id =>
+    dispatch(deleteOkr(subject, id));
+  const dispatchDeleteKR = id =>
+    dispatch(deleteKR(subject, id));
+  return {
+    dispatchChangeOkrOwner,
+    dispatchChangeParentOkr,
+    dispatchChangeDisclosureType,
+    dispatchSetRatios,
+    dispatchDeleteOkr,
+    dispatchDeleteKR,
+  };
+};
+
 export const UserOKRListContainer = connect(
   mapBasicsStateToProps('user', EntityType.USER),
+  mapDispatchToProps('user'),
 )(withModal(OKRListContainer));
 
 export const GroupOKRListContainer = connect(
   mapBasicsStateToProps('group', EntityType.GROUP),
+  mapDispatchToProps('group'),
 )(withModal(OKRListContainer));
 
 export const CompanyOKRListContainer = connect(
   mapBasicsStateToProps('company', EntityType.COMPANY),
+  mapDispatchToProps('company'),
 )(withModal(OKRListContainer));

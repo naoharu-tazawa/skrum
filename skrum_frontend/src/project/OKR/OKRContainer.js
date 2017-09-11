@@ -10,7 +10,7 @@ import { UserOKRListContainer, GroupOKRListContainer, CompanyOKRListContainer } 
 import { UserOKRAlignmentsInfoContainer, GroupOKRAlignmentsInfoContainer } from './OKRAlignmentsInfo/OKRAlignmentsInfoContainer';
 import OKRAlignmentsInfo from './OKRAlignmentsInfo/OKRAlignmentsInfo';
 import OKRDetailsContainer from '../OKRDetails/OKRDetailsContainer';
-import { fetchUserBasics, fetchGroupBasics, fetchCompanyBasics, deleteOkr, changeOkrOwner } from './action';
+import { fetchUserBasics, fetchGroupBasics, fetchCompanyBasics, changeOkrOwner, deleteOkr } from './action';
 import { explodePath, implodePath, comparePath, isPathFinal } from '../../util/RouteUtil';
 import styles from './OKRContainer.css';
 
@@ -215,16 +215,16 @@ const mapDispatchToProps = (dispatch, { subject }) => {
     dispatch(fetchGroupBasics(groupId, timeframeId));
   const dispatchFetchCompanyBasics = (companyId, timeframeId) =>
     dispatch(fetchCompanyBasics(companyId, timeframeId));
-  const dispatchDeleteOkr = id =>
-    dispatch(deleteOkr(subject, id));
   const dispatchChangeOkrOwner = (id, owner) =>
     dispatch(changeOkrOwner(subject, id, owner));
+  const dispatchDeleteOkr = id =>
+    dispatch(deleteOkr(subject, id));
   return {
     dispatchFetchUserBasics,
     dispatchFetchGroupBasics,
     dispatchFetchCompanyBasics,
-    dispatchDeleteOkr,
     dispatchChangeOkrOwner,
+    dispatchDeleteOkr,
   };
 };
 

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { browserHistory } from 'react-router';
 import { toPairs, flatten, invert, toNumber, isEmpty, pickBy, isUndefined } from 'lodash';
 import { EntityType } from './EntityUtil';
 
@@ -77,3 +78,9 @@ export const comparePath = (pathname1, pathname2, options = {}) =>
 
 export const isPathFinal = path =>
   isEmpty(pickBy(explodePath(path), isUndefined));
+
+export const pushToBasic = () =>
+  browserHistory.push(toBasicPath(location.pathname));
+
+export const replaceAsBasic = () =>
+  browserHistory.replace(toBasicPath(location.pathname));

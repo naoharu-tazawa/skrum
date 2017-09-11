@@ -1,26 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { isEmpty } from 'lodash';
 import { okrPropTypes, keyResultPropTypes } from '../propTypes';
 import InlineTextArea from '../../../editors/InlineTextArea';
 import InlineDateInput from '../../../editors/InlineDateInput';
-import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
-import DialogForm from '../../../dialogs/DialogForm';
 import ProgressPercentage from '../../../components/ProgressPercentage';
-import EntitySubject from '../../../components/EntitySubject';
 import DropdownMenu from '../../../components/DropdownMenu';
 import Dropdown from '../../../components/Dropdown';
-import DisclosureTypeOptions from '../../../components/DisclosureTypeOptions';
 import EntityLink from '../../../components/EntityLink';
 import Editable from '../../../components/Editable';
-import OwnerSearch from '../../OwnerSearch/OwnerSearch';
-// import OKRSearch from '../../OKRSearch/OKRSearch';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
 import { replacePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
 import { compareDates } from '../../../util/DatetimeUtil';
 import { OKRType } from '../../../util/OKRUtil';
+import { changeKRDisclosureTypeDialog, deleteKRPrompt } from '../dialogs';
 import styles from './KRDetailsBar.css';
 
 class KRDetailsBar extends Component {
@@ -38,110 +32,9 @@ class KRDetailsBar extends Component {
     openModal: PropTypes.func.isRequired,
   };
 
-  changeOwnerDialog = ({ id, name, owner, onClose }) => (
-    <DialogForm
-      title="担当者の変更"
-      submitButton="変更"
-      onSubmit={({ changedOwner } = {}) => this.props.dispatchChangeKROwner(id, changedOwner)}
-      valid={({ changedOwner }) => !isEmpty(changedOwner)}
-      onClose={onClose}
-    >
-      {({ setFieldData }) =>
-        <div>
-          <EntitySubject entity={owner} heading="担当者を変更するサブ目標" subject={name} />
-          <section>
-            <label>担当者検索</label>
-            <OwnerSearch
-              onChange={value => setFieldData({ changedOwner: value })}
-              exclude={owner}
-            />
-          </section>
-        </div>}
-    </DialogForm>);
-
-  /* changeParentOkrDialog = ({ id, parentOkr = {}, keyResult, onClose }) => (
-    <DialogForm
-      title="サブ目標の紐付け先変更"
-      submitButton="変更"
-      onSubmit={({ changedParent } = {}) =>
-        this.props.dispatchChangeParentOkr(id, changedParent.id)}
-      valid={({ changedParent }) => !isEmpty(changedParent) && changedParent.id !== parentOkr.id}
-      onClose={onClose}
-    >
-      {({ setFieldData }) =>
-        <div>
-          <EntitySubject
-            entity={keyResult.owner}
-            heading="紐付け先目標を変更するサブ目標（子目標）"
-            subject={keyResult.name}
-          />
-          <div className={styles.parentOkrToChange}>
-            <EntitySubject
-              entity={parentOkr.owner}
-              heading="現在の紐付け先目標（親目標）"
-              subject={parentOkr.name}
-            />
-          </div>
-          <section>
-            <label>紐付け先検索</label>
-            <OKRSearch
-              owner={keyResult.owner}
-              onChange={value => setFieldData({ changedParent: value })}
-            />
-          </section>
-        </div>}
-    </DialogForm>); */
-
-  changeDisclosureTypeDialog = ({ id, name, owner, disclosureType, onClose }) => (
-    <DialogForm
-      title="公開範囲設定変更"
-      submitButton="設定"
-      onSubmit={({ changedDisclosureType } = {}) =>
-        (!changedDisclosureType || changedDisclosureType === disclosureType ? Promise.resolve() :
-          this.props.dispatchChangeDisclosureType(id, changedDisclosureType))}
-      onClose={onClose}
-    >
-      {({ setFieldData }) =>
-        <div>
-          <EntitySubject entity={owner} heading="対象サブ目標" subject={name} />
-          <section>
-            <label>公開範囲</label>
-            <DisclosureTypeOptions
-              entityType={owner.type}
-              renderer={({ value, label }) => (
-                <label key={value}>
-                  <input
-                    name="disclosureType"
-                    type="radio"
-                    defaultChecked={value === disclosureType}
-                    onClick={() => setFieldData({ changedDisclosureType: value })}
-                  />
-                  {label}
-                </label>)}
-            />
-          </section>
-        </div>}
-    </DialogForm>);
-
-  deleteKRPrompt = ({ id, name, owner, onClose }) => (
-    <ConfirmationPrompt
-      title="サブ目標の削除"
-      prompt="こちらのサブ目標を削除しますか？"
-      warning={(
-        <ul>
-          <li>一度削除したサブ目標は復元できません。</li>
-          <li>上記のサブ目標に直接紐づいている全ての目標/サブ目標、およびその下に紐づいている全ての目標/サブ目標も同時に削除されます。</li>
-        </ul>
-      )}
-      confirmButton="削除"
-      onConfirm={() => this.props.dispatchDeleteKR(id)}
-      onClose={onClose}
-    >
-      <EntitySubject entity={owner} subject={name} />
-    </ConfirmationPrompt>);
-
   render() {
-    const { header, /* parentOkr, */ keyResult, subject, dispatchPutOKR, openModal } = this.props;
+    const { header, /* parentOkr, */ keyResult, subject, dispatchPutOKR,
+      dispatchChangeDisclosureType, dispatchDeleteKR, openModal } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -214,17 +107,17 @@ class KRDetailsBar extends Component {
             <DropdownMenu
               options={[
                 // { caption: '担当者変更',
-                //   onClick: () => openModal(this.changeOwnerDialog,
-                //     { id, name, owner }) },
+                //   onClick: () => openModal(changeKROwnerDialog,
+                //     { id, name, owner, dispatch: dispatchChangeKROwner }) },
                 // { caption: '紐付け先設定',
                 //   onClick: () => openModal(this.changeParentOkrDialog,
-                //     { id, parentOkr, keyResult }) },
+                //     { id, parentOkr, keyResult, dispatch: dispatchChangeParentOkr }) },
                 { caption: '公開範囲設定',
-                  onClick: () => openModal(this.changeDisclosureTypeDialog,
-                    { id, name, owner, disclosureType }) },
-                // { caption: '影響度設定' },
+                  onClick: () => openModal(changeKRDisclosureTypeDialog,
+                    { id, name, owner, disclosureType, dispatch: dispatchChangeDisclosureType }) },
                 { caption: '削除',
-                  onClick: () => openModal(this.deleteKRPrompt, { id, name, owner }) },
+                  onClick: () => openModal(deleteKRPrompt,
+                    { id, name, owner, dispatch: dispatchDeleteKR }) },
               ]}
             />
           </Editable>

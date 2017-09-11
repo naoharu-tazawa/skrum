@@ -7,7 +7,7 @@ import KRDetailsList from './KRDetailsList/KRDetailsList';
 import OkrProgressChart from './OkrProgressChart';
 import NewOKR from '../OKR/NewOKR/NewOKR';
 import { fetchOKRDetails, putOKR, changeKROwner, changeParentOkr, changeDisclosureType, setRatios, deleteKR } from './action';
-import { syncOkr } from '../OKR/action';
+import { syncOkr, syncRatios } from '../OKR/action';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
 import { mapOKR } from '../../util/OKRUtil';
 import { withModal } from '../../util/ModalUtil';
@@ -23,13 +23,13 @@ class OKRDetailsContainer extends Component {
     progressSeries: ProgressSeriesPropTypes,
     dispatchFetchOKRDetails: PropTypes.func.isRequired,
     dispatchPutOKR: PropTypes.func.isRequired,
+    dispatchChangeOkrOwner: PropTypes.func.isRequired, // passed from OKRContainer
     dispatchChangeKROwner: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchSetRatios: PropTypes.func.isRequired,
-    dispatchDeleteKR: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired, // passed from OKRContainer
-    dispatchChangeOkrOwner: PropTypes.func.isRequired, // passed from OKRContainer
+    dispatchDeleteKR: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
     pathname: PropTypes.string,
   };
@@ -75,11 +75,11 @@ class OKRDetailsContainer extends Component {
                 okr,
                 subject,
                 dispatchPutOKR,
+                dispatchChangeOkrOwner,
                 dispatchChangeParentOkr,
                 dispatchChangeDisclosureType,
                 dispatchSetRatios,
                 dispatchDeleteOkr,
-                dispatchChangeOkrOwner,
               }}
             />
           </div>
@@ -132,9 +132,10 @@ const mapDispatchToProps = (dispatch, { subject }) => {
   const dispatchChangeParentOkr = (id, newParentOkrId) =>
     dispatch(changeParentOkr(id, newParentOkrId));
   const dispatchChangeDisclosureType = (id, disclosureType) =>
-    dispatch(changeDisclosureType(id, disclosureType));
+    dispatch(changeDisclosureType(id, disclosureType))
+      .then(result => dispatch(syncOkr(subject, result)));
   const dispatchSetRatios = (id, ratios) =>
-    dispatch(setRatios(id, ratios));
+    dispatch(setRatios(id, ratios)).then(result => dispatch(syncRatios(subject, result)));
   const dispatchDeleteKR = id =>
     dispatch(deleteKR(id));
   return {

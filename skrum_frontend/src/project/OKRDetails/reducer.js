@@ -7,9 +7,7 @@ export default (state = {
   isFetching: false,
   isPutting: false,
   isPostingKR: false,
-  isChangingKROwner: false,
   isChangingParentOkr: false,
-  isChangingDisclosureType: false,
   isSettingRatios: false,
   isDeletingKR: false,
   isPostingAchievement: false,
@@ -46,9 +44,13 @@ export default (state = {
     }
 
     case Action.REQUEST_PUT_OKR_DETAILS:
+    case Action.REQUEST_CHANGE_KR_OWNER:
+    case Action.REQUEST_CHANGE_OKR_DISCLOSURE_TYPE:
       return { ...state, isPutting: true };
 
-    case Action.FINISH_PUT_OKR_DETAILS: {
+    case Action.FINISH_PUT_OKR_DETAILS:
+    case Action.FINISH_CHANGE_KR_OWNER:
+    case Action.FINISH_CHANGE_OKR_DISCLOSURE_TYPE: {
       const { payload, error } = action;
       if (error) {
         return { ...state, isPutting: false, error: { message: payload.message } };
@@ -57,20 +59,6 @@ export default (state = {
       const objective = mergeUpdateById(state.objective, 'okrId', update, id);
       const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, id));
       return { ...state, objective, keyResults, isPutting: false, error: null };
-    }
-
-    case Action.REQUEST_CHANGE_KR_OWNER:
-      return { ...state, isChangingKROwner: true };
-
-    case Action.FINISH_CHANGE_KR_OWNER: {
-      const { payload, error } = action;
-      if (error) {
-        return { ...state, isChangingKROwner: false, error: { message: payload.message } };
-      }
-      const { id, ...update } = payload.data;
-      const objective = mergeUpdateById(state.objective, 'okrId', update, id);
-      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, id));
-      return { ...state, objective, keyResults, isChangingKROwner: false, error: null };
     }
 
     case Action.REQUEST_CHANGE_PARENT_OKR:
@@ -84,20 +72,6 @@ export default (state = {
       return { ...state, ...payload.data, isChangingParentOkr: false, error: null };
     }
 
-    case Action.REQUEST_CHANGE_OKR_DISCLOSURE_TYPE:
-      return { ...state, isChangingDisclosureType: true };
-
-    case Action.FINISH_CHANGE_OKR_DISCLOSURE_TYPE: {
-      const { payload, error } = action;
-      if (error) {
-        return { ...state, isChangingDisclosureType: false, error: { message: payload.message } };
-      }
-      const { id, ...update } = payload.data;
-      const objective = mergeUpdateById(state.objective, 'okrId', update, id);
-      const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, id));
-      return { ...state, objective, keyResults, isChangingDisclosureType: false, error: null };
-    }
-
     case Action.REQUEST_DELETE_KR:
       return { ...state, isDeletingKR: true };
 
@@ -109,7 +83,7 @@ export default (state = {
       const { id, parentOkr } = payload.data;
       const { okrId: parentOkrId, achievementRate } = parentOkr;
       const objective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
-      const keyResults = state.keyResults.filter(({ okrId }) => id !== okrId);
+      const keyResults = state.keyResults.filter(({ okrId }) => okrId !== id);
       const datetime = toUtcDate(new Date());
       const chart = parentOkrId !== state.objective.okrId ? state.chart :
         [...state.chart, { datetime, achievementRate }];

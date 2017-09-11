@@ -6,19 +6,32 @@ import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntityLink from '../../../components/EntityLink';
 import DropdownMenu from '../../../components/DropdownMenu';
 import { replacePath } from '../../../util/RouteUtil';
+import { withModal } from '../../../util/ModalUtil';
+import { /* changeOkrOwnerDialog, changeOkrParentDialog, */changeOkrDisclosureTypeDialog,
+  setRatiosDialog, deleteOkrPrompt } from '../../OKRDetails/dialogs';
 import styles from './OkrBar.css';
 
-export default class OkrBar extends Component {
+/* eslint-disable object-property-newline */
+
+class OkrBar extends Component {
 
   static propTypes = {
     header: PropTypes.bool,
     okr: okrPropTypes,
     onKRClicked: PropTypes.func,
     onAddParentedOkr: PropTypes.func,
+    dispatchChangeOkrOwner: PropTypes.func,
+    dispatchChangeParentOkr: PropTypes.func,
+    dispatchChangeDisclosureType: PropTypes.func,
+    dispatchSetRatios: PropTypes.func,
+    dispatchDeleteOkr: PropTypes.func,
+    openModal: PropTypes.func.isRequired,
   };
 
   render() {
-    const { header, okr, onKRClicked, onAddParentedOkr } = this.props;
+    const { header, okr, onKRClicked, onAddParentedOkr, /* dispatchChangeOkrOwner,
+      dispatchChangeParentOkr, */dispatchChangeDisclosureType, dispatchSetRatios,
+      dispatchDeleteOkr, openModal } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -29,7 +42,7 @@ export default class OkrBar extends Component {
         </div>);
     }
     const { id, name, unit, targetValue, achievedValue, achievementRate,
-      owner, keyResults } = okr;
+      owner, disclosureType, keyResults } = okr;
     return (
       <div className={styles.component}>
         <div className={styles.name}>
@@ -54,7 +67,23 @@ export default class OkrBar extends Component {
           </Link>
           <DropdownMenu
             options={[
+              // { caption: '担当者変更',
+              //   onClick: () => openModal(changeOkrOwnerDialog,
+              //     { id, name, owner, dispatch: dispatchChangeOkrOwner }) },
+              // { caption: '紐付け先設定',
+              //   onClick: () => openModal(changeOkrParentDialog,
+              //     { id, parentOkr, okr, dispatch: dispatchChangeParentOkr }) },
               { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(okr) },
+              { caption: '公開範囲設定',
+                onClick: () => openModal(changeOkrDisclosureTypeDialog,
+                  { id, name, owner, disclosureType,
+                    dispatch: dispatchChangeDisclosureType }) },
+              ...(keyResults.length === 0 ? [] : [{ caption: '影響度設定',
+                onClick: () => openModal(setRatiosDialog,
+                  { id, name, owner, keyResults, dispatch: dispatchSetRatios }) }]),
+              { caption: '削除',
+                onClick: () => openModal(deleteOkrPrompt,
+                  { id, name, owner, dispatch: dispatchDeleteOkr }) },
             ]}
           />
           {keyResults && (
@@ -69,3 +98,5 @@ export default class OkrBar extends Component {
       </div>);
   }
 }
+
+export default withModal(OkrBar);

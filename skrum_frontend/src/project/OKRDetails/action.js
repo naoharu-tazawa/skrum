@@ -99,7 +99,7 @@ export const putOKR = (id, data) =>
 export const changeKROwner = (id, owner) =>
   (dispatch, getState) => {
     const state = getState();
-    if (state.okr.isChangingKROwner) return Promise.resolve();
+    if (state.okr.isPutting) return Promise.resolve();
     dispatch(requestChangeKrOwner());
     return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound(omit(owner, 'name')))
       .then(() => dispatch(finishChangeKrOwner('data', { id, ...mapOwnerOutbound(owner) })))
@@ -119,7 +119,7 @@ export const changeParentOkr = (id, newParentOkrId) =>
 export const changeDisclosureType = (id, disclosureType) =>
   (dispatch, getState) => {
     const state = getState();
-    if (state.okr.isChangingDisclosureType) return Promise.resolve();
+    if (state.okr.isPutting) return Promise.resolve();
     dispatch(requestChangeOkrDisclosureType());
     return putJson(`/okrs/${id}/changedisclosure.json`, state)(null, { disclosureType })
       .then(() => dispatch(finishChangeOkrDisclosureType('data', { id, disclosureType })))
