@@ -9,6 +9,7 @@ export default (state = {
   isPostingOkr: false,
   isPutting: false,
   isChangingOkrOwner: false,
+  isChangingParentOkr: false,
   isSettingRatios: false,
   isDeletingOkr: false,
   isDeletingKR: false,
@@ -61,6 +62,22 @@ export default (state = {
       const { [subject]: basics } = state;
       const okrs = basics.okrs.filter(({ okrId }) => okrId !== id);
       return { ...state, [subject]: { ...basics, okrs }, isChangingOkrOwner: false, error: null };
+    }
+
+    case Action.REQUEST_BASICS_CHANGE_PARENT_OKR:
+      return { ...state, isChangingParentOkr: true };
+
+    case Action.FINISH_BASICS_CHANGE_PARENT_OKR: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isChangingParentOkr: false, error: { message: payload.message } };
+      }
+      const { subject, objective, parentOkr } = payload.data;
+      const { okrId } = objective;
+      const { [subject]: basics } = state;
+      const okrs = basics.okrs.map(okr =>
+        (okr.okrId === okrId ? { ...okr, ...objective, parentOkr } : okr));
+      return { ...state, [subject]: { ...basics, okrs }, isChangingParentOkr: false, error: null };
     }
 
     case Action.REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE:

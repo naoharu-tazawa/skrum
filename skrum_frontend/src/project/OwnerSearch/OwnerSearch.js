@@ -52,8 +52,7 @@ class OwnerSearch extends PureComponent {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  const { exclude = [] } = props;
+const mapStateToProps = (state, { exclude = [] }) => {
   const { users = [], teams = [], departments: depts = [], company = {} } = state.top.data || {};
   const defaultOwners = [
     ...users.map(({ userId: id, name }) => ({ id, name, type: EntityType.USER })),
@@ -62,8 +61,7 @@ const mapStateToProps = (state, props) => {
     ...[{ id: company.companyId, name: company.name, type: EntityType.COMPANY }],
   ].filter(({ type, id }) => !find(exclude, { type, id }));
   const { isSearching, keyword, data = [] } = state.ownersFound || {};
-  const ownersFound = data.map(mapOwner).filter(({ type, id }) =>
-    exclude.type !== type || exclude.id !== id);
+  const ownersFound = data.map(mapOwner).filter(({ type, id }) => !find(exclude, { type, id }));
   return { defaultOwners, keyword, ownersFound, isSearching };
 };
 

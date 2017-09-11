@@ -144,7 +144,7 @@ const changeParentDialog =
       title={title}
       submitButton="変更"
       onSubmit={({ changedParent } = {}) => dispatch(id, changedParent.id)}
-      valid={({ changedParent }) => !isEmpty(changedParent) && changedParent.id !== parentOkr.id}
+      valid={({ changedParent }) => !isEmpty(changedParent)}
       onClose={onClose}
     >
       {({ setFieldData }) =>
@@ -166,6 +166,7 @@ const changeParentDialog =
             <label>紐付け先検索</label>
             <OKRSearch
               owner={okr.owner}
+              exclude={[parentOkr.id]}
               onChange={value => setFieldData({ changedParent: value })}
             />
           </section>

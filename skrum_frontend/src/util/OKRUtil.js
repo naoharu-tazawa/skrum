@@ -10,10 +10,11 @@ export const OKRType = {
 export const okrTypePropType =
   PropTypes.oneOf([OKRType.OKR, OKRType.KR]);
 
-export const mapKeyResult = (kr) => {
-  const { okrId, okrType, okrName, okrDetail, unit, targetValue, achievedValue, achievementRate,
-    startDate, endDate, status, disclosureType, ratioLockedFlg, weightedAverageRatio } = kr;
-  return {
+export const mapObjective =
+  ({ okrId, okrType, okrName, okrDetail, unit, targetValue, achievedValue, achievementRate,
+     startDate, endDate, status, disclosureType, ratioLockedFlg, weightedAverageRatio,
+     ...others }) =>
+  omitBy({
     id: okrId,
     type: okrType,
     name: okrName,
@@ -24,16 +25,16 @@ export const mapKeyResult = (kr) => {
     achievementRate,
     startDate,
     endDate,
-    owner: mapOwner(kr),
+    owner: mapOwner(others),
     status,
     disclosureType,
     ratioLockedFlg,
     weightedAverageRatio,
-  };
-};
+  }, isUndefined);
 
-export const mapOKR = (okr, keyResults = okr.keyResults || []) => {
-  return omitBy(
-    { ...mapKeyResult(okr), keyResults: keyResults && keyResults.map(mapKeyResult) },
-    isUndefined);
-};
+export const mapOKR = (okr, keyResults = okr.keyResults, parentOkr = okr.parentOkr) =>
+  omitBy({
+    ...mapObjective(okr),
+    keyResults: (keyResults && keyResults.map(mapObjective)) || [],
+    parentOkr: parentOkr && mapObjective(parentOkr),
+  }, isUndefined);

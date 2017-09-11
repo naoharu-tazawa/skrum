@@ -7,7 +7,7 @@ import EntityLink from '../../../components/EntityLink';
 import DropdownMenu from '../../../components/DropdownMenu';
 import { replacePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
-import { /* changeOkrOwnerDialog, changeOkrParentDialog, */changeOkrDisclosureTypeDialog,
+import { changeOkrOwnerDialog, changeOkrParentDialog, changeOkrDisclosureTypeDialog,
   setRatiosDialog, deleteOkrPrompt } from '../../OKRDetails/dialogs';
 import styles from './OkrBar.css';
 
@@ -29,8 +29,8 @@ class OkrBar extends Component {
   };
 
   render() {
-    const { header, okr, onKRClicked, onAddParentedOkr, /* dispatchChangeOkrOwner,
-      dispatchChangeParentOkr, */dispatchChangeDisclosureType, dispatchSetRatios,
+    const { header, okr, onKRClicked, onAddParentedOkr, dispatchChangeOkrOwner,
+      dispatchChangeParentOkr, dispatchChangeDisclosureType, dispatchSetRatios,
       dispatchDeleteOkr, openModal } = this.props;
     if (header) {
       return (
@@ -42,7 +42,7 @@ class OkrBar extends Component {
         </div>);
     }
     const { id, name, unit, targetValue, achievedValue, achievementRate,
-      owner, disclosureType, keyResults } = okr;
+      owner, disclosureType, keyResults, parentOkr } = okr;
     return (
       <div className={styles.component}>
         <div className={styles.name}>
@@ -67,12 +67,13 @@ class OkrBar extends Component {
           </Link>
           <DropdownMenu
             options={[
-              // { caption: '担当者変更',
-              //   onClick: () => openModal(changeOkrOwnerDialog,
-              //     { id, name, owner, dispatch: dispatchChangeOkrOwner }) },
-              // { caption: '紐付け先設定',
-              //   onClick: () => openModal(changeOkrParentDialog,
-              //     { id, parentOkr, okr, dispatch: dispatchChangeParentOkr }) },
+              { caption: '担当者変更',
+                onClick: () => openModal(changeOkrOwnerDialog,
+                  { id, name, owner, parentOkrOwner: parentOkr.owner,
+                    dispatch: dispatchChangeOkrOwner }) },
+              { caption: '紐付け先設定',
+                onClick: () => openModal(changeOkrParentDialog,
+                  { id, parentOkr, okr, dispatch: dispatchChangeParentOkr }) },
               { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(okr) },
               { caption: '公開範囲設定',
                 onClick: () => openModal(changeOkrDisclosureTypeDialog,

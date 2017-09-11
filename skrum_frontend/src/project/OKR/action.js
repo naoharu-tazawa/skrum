@@ -15,6 +15,8 @@ export const Action = {
   FINISH_POST_OKR: 'FINISH_POST_OKR',
   REQUEST_CHANGE_OKR_OWNER: 'REQUEST_CHANGE_OKR_OWNER',
   FINISH_CHANGE_OKR_OWNER: 'FINISH_CHANGE_OKR_OWNER',
+  REQUEST_BASICS_CHANGE_PARENT_OKR: 'REQUEST_BASICS_CHANGE_PARENT_OKR',
+  FINISH_BASICS_CHANGE_PARENT_OKR: 'FINISH_BASICS_CHANGE_PARENT_OKR',
   REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE: 'REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE',
   FINISH_BASICS_CHANGE_DISCLOSURE_TYPE: 'FINISH_BASICS_CHANGE_DISCLOSURE_TYPE',
   REQUEST_BASICS_SET_RATIOS: 'REQUEST_BASICS_SET_RATIOS',
@@ -37,6 +39,8 @@ const {
   finishPostOkr,
   requestChangeOkrOwner,
   finishChangeOkrOwner,
+  requestBasicsChangeParentOkr,
+  finishBasicsChangeParentOkr,
   requestBasicsChangeDisclosureType,
   finishBasicsChangeDisclosureType,
   requestBasicsSetRatios,
@@ -52,6 +56,7 @@ const {
   [Action.FINISH_FETCH_COMPANY_BASICS]: keyValueIdentity,
   [Action.FINISH_POST_OKR]: keyValueIdentity,
   [Action.FINISH_CHANGE_OKR_OWNER]: keyValueIdentity,
+  [Action.FINISH_BASICS_CHANGE_PARENT_OKR]: keyValueIdentity,
   [Action.FINISH_BASICS_CHANGE_DISCLOSURE_TYPE]: keyValueIdentity,
   [Action.FINISH_BASICS_SET_RATIOS]: keyValueIdentity,
   [Action.FINISH_DELETE_OKR]: keyValueIdentity,
@@ -63,6 +68,7 @@ const {
   Action.REQUEST_FETCH_COMPANY_BASICS,
   Action.REQUEST_POST_OKR,
   Action.REQUEST_CHANGE_OKR_OWNER,
+  Action.REQUEST_BASICS_CHANGE_PARENT_OKR,
   Action.REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE,
   Action.REQUEST_BASICS_SET_RATIOS,
   Action.REQUEST_DELETE_OKR,
@@ -108,6 +114,16 @@ export const changeOkrOwner = (subject, id, owner) =>
       .catch(({ message }) => dispatch(finishChangeOkrOwner(new Error(message))));
   };
 
+export const changeParentOkr = (subject, id, newParentOkrId) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.basics.isChangingParentOkr) return Promise.resolve();
+    dispatch(requestBasicsChangeParentOkr());
+    return putJson(`/okrs/${id}/changeparent.json`, state)(null, { newParentOkrId })
+      .then(json => dispatch(finishBasicsChangeParentOkr('data', { subject, ...json })))
+      .catch(({ message }) => dispatch(finishBasicsChangeParentOkr(new Error(message))));
+  };
+
 export const changeDisclosureType = (subject, id, disclosureType) =>
   (dispatch, getState) => {
     const state = getState();
@@ -151,6 +167,10 @@ export const deleteKR = (subject, id) =>
 export const syncOkr = (subject, { payload, error }) =>
   dispatch => (error ? ({ payload, error }) :
     dispatch(syncBasicsDetails('data', { subject, ...payload.data })));
+
+export const syncParentOkr = (subject, { payload, error }) =>
+  dispatch => (error ? ({ payload, error }) :
+    dispatch(finishBasicsChangeParentOkr('data', { subject, ...payload.data })));
 
 export const syncNewKR = (subject, { payload, error }) =>
   dispatch => (error ? ({ payload, error }) :

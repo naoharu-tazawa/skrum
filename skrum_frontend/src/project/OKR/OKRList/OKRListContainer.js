@@ -7,8 +7,7 @@ import NewOKR from '../NewOKR/NewOKR';
 import { withModal } from '../../../util/ModalUtil';
 import { mapOKR } from '../../../util/OKRUtil';
 import { EntityType } from '../../../util/EntityUtil';
-import { changeOkrOwner, changeDisclosureType, setRatios, deleteOkr, deleteKR } from '../action';
-import { changeParentOkr } from '../../OKRDetails/action'; // TODO move this to OKR action
+import { changeOkrOwner, changeParentOkr, changeDisclosureType, setRatios, deleteOkr, deleteKR } from '../action';
 
 class OKRListContainer extends Component {
 
@@ -60,7 +59,7 @@ const mapDispatchToProps = subject => (dispatch) => {
   const dispatchChangeOkrOwner = (id, owner) =>
     dispatch(changeOkrOwner(subject, id, owner));
   const dispatchChangeParentOkr = (id, newParentOkrId) =>
-    dispatch(changeParentOkr(id, newParentOkrId));
+    dispatch(changeParentOkr(subject, id, newParentOkrId));
   const dispatchChangeDisclosureType = (id, disclosureType) =>
     dispatch(changeDisclosureType(subject, id, disclosureType));
   const dispatchSetRatios = (id, ratios) =>

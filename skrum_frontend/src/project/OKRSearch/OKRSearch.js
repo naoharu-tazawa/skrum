@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isEmpty, partial } from 'lodash';
+import { isEmpty, partial, includes } from 'lodash';
 import SearchDropdown from '../../components/SearchDropdown';
 import EntitySubject from '../../components/EntitySubject';
 import { mapOKR } from '../../util/OKRUtil';
@@ -27,9 +27,10 @@ const okrPropType = PropTypes.shape({
 class OKRSearch extends PureComponent {
 
   static propTypes = {
-    owner: ownerPropType,
     timeframeId: PropTypes.number.isRequired,
-    okrs: PropTypes.arrayOf(okrPropType),
+    owner: ownerPropType,
+    exclude: PropTypes.arrayOf(PropTypes.number),
+    okrsFound: PropTypes.arrayOf(okrPropType),
     value: PropTypes.oneOfType([okrPropType, PropTypes.shape({}), PropTypes.string]),
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
@@ -42,13 +43,13 @@ class OKRSearch extends PureComponent {
   };
 
   render() {
-    const { timeframeId, owner, okrs = [], value, onChange, onFocus, onBlur, disabled, tabIndex,
-      dispatchSearchOkr, dispatchSearchParentOkr, isSearching } = this.props;
+    const { timeframeId, owner, okrsFound = [], value, onChange, onFocus, onBlur, disabled,
+      tabIndex, dispatchSearchOkr, dispatchSearchParentOkr, isSearching } = this.props;
     const { currentInput = (value || {}).name } = this.state || {};
     const dispatcher = owner ? partial(dispatchSearchParentOkr, owner) : dispatchSearchOkr;
     return (
       <SearchDropdown
-        items={isEmpty(currentInput) ? [] : okrs}
+        items={isEmpty(currentInput) ? [] : okrsFound}
         labelPropName="name"
         renderItem={okr =>
           <EntitySubject entity={okr.owner} subject={okr.name} local plain avatarSize={20} />}
@@ -64,9 +65,12 @@ class OKRSearch extends PureComponent {
   }
 }
 
-const mapStateToProps = (state, { timeframeId }) => {
+const mapStateToProps = (state, { timeframeId, exclude = [] }) => {
   const { isSearching, data = [] } = state.okrsFound || {};
-  const stateProps = { okrs: data.map(okr => mapOKR(okr)), isSearching };
+  const stateProps = {
+    isSearching,
+    okrsFound: data.map(okr => mapOKR(okr)).filter(({ id }) => !includes(exclude, id)),
+  };
   if (timeframeId) return stateProps;
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};

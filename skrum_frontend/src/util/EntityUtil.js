@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { capitalize } from 'lodash';
+import { capitalize, omitBy, isUndefined } from 'lodash';
 
 export const EntityType = {
   USER: '1',
@@ -29,13 +29,14 @@ export const mapEntity = (data, prefix) => {
   const { [`${prefix}Type`]: type } = data;
   const subject = `${prefix}${capitalize(EntityTypeName[type])}`;
   const { [`${subject}Id`]: id, [`${subject}Name`]: name } = data;
-  return { id, name, type };
+  return omitBy({ id, name, type }, isUndefined);
 };
 
-export const mapEntityOutbound = ({ type, id, name }, prefix) => ({
-  [`${prefix}Type`]: type,
-  [`${prefix}${capitalize(EntityTypeName[type])}Id`]: id,
-  [`${prefix}${capitalize(EntityTypeName[type])}Name`]: name,
-});
+export const mapEntityOutbound = ({ type, id, name }, prefix) =>
+  omitBy({
+    [`${prefix}Type`]: type,
+    [`${prefix}${capitalize(EntityTypeName[type])}Id`]: id,
+    [`${prefix}${capitalize(EntityTypeName[type])}Name`]: name,
+  }, isUndefined);
 
 export const getEntityTypeSubject = type => EntityTypeName[type];

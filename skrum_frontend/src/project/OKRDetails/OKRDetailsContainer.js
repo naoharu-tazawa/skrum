@@ -7,7 +7,7 @@ import KRDetailsList from './KRDetailsList/KRDetailsList';
 import OkrProgressChart from './OkrProgressChart';
 import NewOKR from '../OKR/NewOKR/NewOKR';
 import { fetchOKRDetails, putOKR, changeKROwner, changeParentOkr, changeDisclosureType, setRatios, deleteKR } from './action';
-import { syncOkr, syncRatios } from '../OKR/action';
+import { syncOkr, syncParentOkr, syncRatios } from '../OKR/action';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
 import { mapOKR } from '../../util/OKRUtil';
 import { withModal } from '../../util/ModalUtil';
@@ -126,16 +126,19 @@ const mapDispatchToProps = (dispatch, { subject }) => {
   const dispatchFetchOKRDetails = id =>
     dispatch(fetchOKRDetails(id));
   const dispatchPutOKR = (id, data) =>
-    dispatch(putOKR(id, data)).then(result => dispatch(syncOkr(subject, result)));
+    dispatch(putOKR(id, data))
+      .then(result => dispatch(syncOkr(subject, result)));
   const dispatchChangeKROwner = (id, owner) =>
     dispatch(changeKROwner(id, owner));
   const dispatchChangeParentOkr = (id, newParentOkrId) =>
-    dispatch(changeParentOkr(id, newParentOkrId));
+    dispatch(changeParentOkr(id, newParentOkrId))
+      .then(result => dispatch(syncParentOkr(subject, result)));
   const dispatchChangeDisclosureType = (id, disclosureType) =>
     dispatch(changeDisclosureType(id, disclosureType))
       .then(result => dispatch(syncOkr(subject, result)));
   const dispatchSetRatios = (id, ratios) =>
-    dispatch(setRatios(id, ratios)).then(result => dispatch(syncRatios(subject, result)));
+    dispatch(setRatios(id, ratios))
+      .then(result => dispatch(syncRatios(subject, result)));
   const dispatchDeleteKR = id =>
     dispatch(deleteKR(id));
   return {
