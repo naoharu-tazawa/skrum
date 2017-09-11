@@ -105,6 +105,7 @@ class OkrService extends BaseService
                     $basicOkrDTOParentOkr = new BasicOkrDTO();
                     $basicOkrDTOParentOkr->setOkrId($tOkrArray[$i]['objective']->getParentOkr()->getOkrId());
                     $basicOkrDTOParentOkr->setOkrName($tOkrArray[$i]['objective']->getParentOkr()->getName());
+                    $basicOkrDTOParentOkr->setOwnerType($tOkrArray[$i]['objective']->getParentOkr()->getOwnerType());
                     if ($tOkrArray[$i]['objective']->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                         $basicOkrDTOParentOkr->setOwnerUserId($tOkrArray[$i]['objective']->getParentOkr()->getOwnerUser()->getUserId());
                         $basicOkrDTOParentOkr->setOwnerUserName($tOkrArray[$i]['objective']->getParentOkr()->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['objective']->getParentOkr()->getOwnerUser()->getFirstName());
