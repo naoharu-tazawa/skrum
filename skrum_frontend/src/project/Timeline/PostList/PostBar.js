@@ -81,7 +81,7 @@ class PostBar extends Component {
           <div className={styles.timeline_content}>
             <div className={styles.content_inner}>
               <div className={styles.poster}>
-                <EntityLink entity={poster} />
+                <EntityLink entity={poster} route={{ tab: 'objective' }} />
               </div>
               <div className={styles.text}>
                 <p className={styles.time}>
@@ -94,6 +94,8 @@ class PostBar extends Component {
                     entity={autoShare.owner}
                     heading={autoShare.autoPost}
                     subject={autoShare.okrName}
+                    route={{ tab: 'objective' }}
+                    aspectRoute={{ aspect: 'o', aspectId: autoShare.okrId }}
                   />
                 )}
                 <div className={styles.comments}>
@@ -136,7 +138,7 @@ class PostBar extends Component {
         <div className={styles.timeline_content}>
           <div className={styles.content_inner}>
             <div className={styles.poster}>
-              <EntityLink entity={poster} />
+              <EntityLink entity={poster} route={{ tab: 'objective' }} />
             </div>
             <div className={styles.text}>
               <p className={styles.time}>

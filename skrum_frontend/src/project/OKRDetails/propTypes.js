@@ -10,7 +10,7 @@ export const ownerPropTypes = PropTypes.shape({
 
 const objectiveBase = {
   id: PropTypes.number.isRequired,
-  type: okrTypePropType.isRequired,
+  type: okrTypePropType,
   name: PropTypes.string.isRequired,
   detail: PropTypes.string,
   unit: PropTypes.string.isRequired,

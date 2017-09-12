@@ -90,7 +90,7 @@ class NewOKR extends Component {
     // FIXME: moving ownerSearch to mapStateToProps causes infinite loop
     const ownerSearch = withItemisedReduxField(OwnerSearch, 'owner', {
       tabIndex: type === 'KR' ? 91 : 1,
-      ...(differingParentOkrOwner && parentOkr ? { exclude: parentOkr.owner } : {}),
+      ...(differingParentOkrOwner && parentOkr ? { exclude: [parentOkr.owner] } : {}),
       ...(type === 'KR' ? { value: parentOkr.owner } : {}),
     });
     this.state = { ownerSearch };

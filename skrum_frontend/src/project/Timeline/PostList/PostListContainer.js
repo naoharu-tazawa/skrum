@@ -63,14 +63,14 @@ const mapStateToProps = (state) => {
   const items = posts.map((item) => {
     const { postId, post, postedDatetime, disclosureType, autoShare,
       likesCount, likedFlg, replies = [] } = item;
-    const { autoPost, okrId, okrName } = autoShare || {};
+    const { autoPost, okrId, okrName, ...autoShareOthers } = autoShare || {};
     return {
       id: postId,
       post,
       poster: mapPoster(item),
       postedDatetime,
       disclosureType,
-      autoShare: autoShare && { autoPost, okrId, okrName, owner: mapOwner(autoShare) },
+      autoShare: autoShare && { autoPost, okrId, okrName, owner: mapOwner(autoShareOthers) },
       likesCount,
       likedFlg,
       replies: replies.map(mapReplies),
