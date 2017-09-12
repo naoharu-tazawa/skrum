@@ -91,6 +91,7 @@ class Section extends Component {
 export default class SideBar extends Component {
 
   static propTypes = {
+    top: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
     roleLevel: PropTypes.number.isRequired,
     userSection: sectionPropTypes.isRequired,
@@ -109,7 +110,7 @@ export default class SideBar extends Component {
     />;
 
   render() {
-    const { pathname, roleLevel, userSection, groupSections,
+    const { top, pathname, roleLevel, userSection, groupSections,
       companyId, companyName } = this.props;
     const { isExpanded = true } = this.state || {};
     const { tab } = explodePath(pathname);
@@ -120,11 +121,13 @@ export default class SideBar extends Component {
     return (
       <div className={this.getBaseStyles(isExpanded)}>
         <div className={`${styles.header} ${isExpanded && styles.isExpanded}`}>
-          <img
-            className={styles.headerLogo}
-            src="/img/skrum_logo.svg"
-            alt="Skrum"
-          />
+          <Link to={top}>
+            <img
+              className={styles.headerLogo}
+              src="/img/skrum_logo.svg"
+              alt="Skrum"
+            />
+          </Link>
         </div>
         <div className={styles.toggleArea}>
           <button

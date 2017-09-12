@@ -13,6 +13,7 @@ import { logout } from '../auth/action';
 class NavigationContainer extends Component {
 
   static propTypes = {
+    top: PropTypes.string.isRequired,
     children: PropTypes.node,
     pathname: PropTypes.string.isRequired,
     currentUserId: PropTypes.number.isRequired,
@@ -31,13 +32,14 @@ class NavigationContainer extends Component {
   }
 
   render() {
-    const { pathname, currentUserId, roleLevel, isFetching, companyName, userName } = this.props;
+    const { top, pathname, currentUserId, roleLevel, isFetching,
+      companyName, userName } = this.props;
     if (isFetching) return null;
     return (
       <div className={styles.layoutBase}>
         {!companyName && <CompanySetupContainer />}
         {companyName && !userName && <UserSetupContainer />}
-        {userName && <SideBarContainer {...{ pathname, currentUserId, roleLevel }} />}
+        {userName && <SideBarContainer {...{ top, pathname, currentUserId, roleLevel }} />}
         {userName && <main className={styles.layoutMain}>
           <HeaderContainer {...{ pathname, currentUserId, roleLevel }} />
           {this.props.children}

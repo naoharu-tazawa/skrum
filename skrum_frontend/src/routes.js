@@ -34,7 +34,7 @@ class AuthenticatedRegion extends Component {
 
   render() {
     return (
-      <Authenticated login={loginPage}>
+      <Authenticated top={topPage} login={loginPage}>
         {this.props.children}
       </Authenticated>);
   }

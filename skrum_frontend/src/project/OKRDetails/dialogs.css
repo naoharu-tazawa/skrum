@@ -1,8 +1,5 @@
-.ratioKR {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-radius: 0;
+.ratioBar {
+  border-bottom: 1px solid #bfbfbf;
   padding: .5em 1em;
   margin: 0 1em;
   width: 50em;
@@ -12,9 +9,11 @@
 }
 .ratioDetails {
   display: flex;
+  height: 40px;
 }
 .ratioKR {
   flex: 1;
+  margin: auto;
   overflow-x: hidden;
   text-overflow: ellipsis;
 }

@@ -9,6 +9,7 @@ import { logout } from '../action';
 
 class Authenticated extends Component {
   static propTypes = {
+    top: PropTypes.string.isRequired,
     login: PropTypes.string.isRequired,
     toRelogin: PropTypes.bool.isRequired,
     pathname: PropTypes.string.isRequired,
@@ -41,9 +42,9 @@ class Authenticated extends Component {
   }
 
   render() {
-    const { children } = this.props;
+    const { top, children } = this.props;
     return (
-      <NavigationContainer>
+      <NavigationContainer top={top}>
         {children}
       </NavigationContainer>);
   }
