@@ -377,7 +377,7 @@ class OkrService extends BaseService
 
             // 自動投稿登録（作成）
             $postLogic = $this->getPostLogic();
-            $postLogic->autoPost($auth, $this->getParameter('auto_post_type_generate'), $tOkr, $tOkrActivity);
+            $postLogic->autoPostPosterIsUser($auth, $this->getParameter('auto_post_type_generate'), $tOkr, $tOkrActivity);
 
             // OKRアクティビティ登録（紐付け）
             if ($alignmentFlg) {

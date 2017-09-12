@@ -199,6 +199,21 @@ class PostLogic extends BaseLogic
     }
 
     /**
+     * 自動投稿（投稿者が常にユーザの場合）
+     *
+     * @param Auth $auth 認証情報
+     * @param string $autoPost 自動投稿
+     * @param TOkr $tOkr 操作対象OKRエンティティ
+     * @param TOkrActivity $tOkrActivity 紐付け対象OKRアクティビティエンティティ
+     * @return void
+     * @throws \Exception
+     */
+    public function autoPostPosterIsUser(Auth $auth, string $autoPost, TOkr $tOkr, TOkrActivity $tOkrActivity)
+    {
+        $this->manualPost($auth, null, $autoPost, $tOkr, $tOkrActivity);
+    }
+
+    /**
      * 自動投稿（◯%達成時）
      *
      * @param Auth $auth 認証情報
