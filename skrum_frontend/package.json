@@ -68,6 +68,7 @@
     "react-dom": "^15.4.1",
     "react-dropzone": "^3.13.4",
     "react-gateway": "^2.7.0",
+    "react-linkify": "^0.2.1",
     "react-modal2": "^4.0.0",
     "react-number-format": "^2.0.4",
     "react-paginate": "^4.4.3",

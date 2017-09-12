@@ -1,7 +1,15 @@
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 li {
-    list-style: none;
+  list-style: none;
+}
+
+.Linkify a:link {
+  text-decoration: underline !important;
+  color: blue !important;
+}
+.Linkify a:visited {
+  color: purple !important;
 }

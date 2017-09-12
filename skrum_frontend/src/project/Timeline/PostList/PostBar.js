@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Linkify from 'react-linkify';
 import { postPropTypes } from './propTypes';
 import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
 import DialogForm from '../../../dialogs/DialogForm';
@@ -88,7 +89,7 @@ class PostBar extends Component {
                   {formatDate(postedDatetime, { format: DateFormat.YMDHM })}
                   <span>{toRelativeTimeText(postedDatetime)}</span>
                 </p>
-                {post && <p className={styles.post}>{post}</p>}
+                {post && <Linkify><p className={styles.post}>{post}</p></Linkify>}
                 {autoShare && (
                   <EntitySubject
                     entity={autoShare.owner}
@@ -145,7 +146,7 @@ class PostBar extends Component {
                 {formatDate(postedDatetime, { format: DateFormat.YMDHM })}
                 <span>{toRelativeTimeText(postedDatetime)}</span>
               </p>
-              <p>{post}</p>
+              <Linkify>{post}</Linkify>
               <div className={styles.comments} />
             </div>
             <div className={styles.btn_area} />
