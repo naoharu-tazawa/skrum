@@ -8,6 +8,7 @@ import { fetchUserBasics } from '../action';
 class SideBarContainer extends Component {
 
   static propTypes = {
+    top: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
     currentUserId: PropTypes.number.isRequired,
     roleLevel: PropTypes.number.isRequired,
@@ -19,10 +20,11 @@ class SideBarContainer extends Component {
   };
 
   render() {
-    const { pathname, roleLevel, userSection, groupSections, companyId, companyName,
+    const { top, pathname, roleLevel, userSection, groupSections, companyId, companyName,
       dispatchLoadEntity } = this.props;
     return (
       <SideBar
+        top={top}
         pathname={pathname}
         roleLevel={roleLevel}
         handleClick={dispatchLoadEntity}

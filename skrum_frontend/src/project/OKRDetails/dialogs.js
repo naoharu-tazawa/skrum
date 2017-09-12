@@ -67,7 +67,8 @@ export const setRatiosDialog =
               // console.log({ id: kr.id, locked, ratio });
               return (<EntitySubject
                 key={kr.id}
-                componentClassName={styles.ratioKR}
+                plain
+                componentClassName={styles.ratioBar}
                 entityClassName={styles.ratioEntity}
                 entity={kr.owner}
                 entityStyle={{ width: '10em' }}
