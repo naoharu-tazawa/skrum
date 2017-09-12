@@ -28,6 +28,15 @@ const subjects = {
 
 export const subjectPropType = PropTypes.oneOf(flatten(toPairs(subjects)));
 
+export const routePropTypes = PropTypes.shape({
+  tab: tabPropType,
+  subject: subjectPropType,
+  id: PropTypes.number,
+  timeframeId: PropTypes.number,
+  aspect: PropTypes.string,
+  aspectId: PropTypes.number,
+});
+
 export const explodeSubject = subject => subjects[subject && subject[0]];
 
 export const implodeSubject = (subject) => {

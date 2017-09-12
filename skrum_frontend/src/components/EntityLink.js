@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { entityTypePropType, getEntityTypeSubject, EntityType, getEntityTypeId } from '../util/EntityUtil';
-import { explodePath, replacePath } from '../util/RouteUtil';
+import { routePropTypes, explodePath, replacePath } from '../util/RouteUtil';
 import { imagePath, dummyImagePath } from '../util/ImageUtil';
 import styles from './EntityLink.css';
 
@@ -21,6 +21,7 @@ class EntityLink extends Component {
     title: PropTypes.string,
     editor: PropTypes.node,
     local: PropTypes.bool,
+    route: routePropTypes,
     fluid: PropTypes.bool,
     avatarOnly: PropTypes.bool,
     avatarSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -29,7 +30,7 @@ class EntityLink extends Component {
   };
 
   render() {
-    const { companyId, entity = {}, title, editor, local, fluid, avatarOnly,
+    const { companyId, entity = {}, title, editor, local, route, fluid, avatarOnly,
       avatarSize = fluid ? '100%' : '40px', avatarTick, componentClassName } = this.props;
     const { imageError } = this.state || {};
     const { id, name, type } = entity;
@@ -67,17 +68,18 @@ class EntityLink extends Component {
         ${componentClassName || ''}`}
       >
         {(local || !id) && <div className={styles.noLink}>{avatarContent}{nameContent}</div>}
-        {!local && id && <Link to={replacePath({ subject: type, id }, { basicOnly: true })}>
-          {avatarContent}
-          {nameContent}
-        </Link>}
+        {!local && id && (
+          <Link to={replacePath({ subject: type, id, ...route }, { basicOnly: !route })}>
+            {avatarContent}
+            {nameContent}
+          </Link>)}
       </div>);
   }
 }
 
-const mapStateToProps = (state, { local, entity }) => {
+const mapStateToProps = (state, { local, route, entity }) => {
   const { companyId } = state.auth || {};
-  if (local !== undefined) return { companyId, local };
+  if (local !== undefined || route) return { companyId, local: local || !route };
   const { id: entityId, type } = entity || {};
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
