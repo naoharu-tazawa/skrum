@@ -20,7 +20,7 @@ parameters:
 
     file_registration_success: '【Skrum】CSVファイル登録成功データ'
 
-    auto_post_type_generate: 'さんが目標を作成しました。'
+    auto_post_type_generate: 'さんの目標が作成されました。'
 
     auto_post_type_achievement: 'さんの達成値が%%s%%sから%%s%%sに進捗しました。（%%s%%s%%s）'
 
