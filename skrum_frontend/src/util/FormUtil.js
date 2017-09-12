@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
-import { isObject } from 'lodash';
+import { isObject, toNumber } from 'lodash';
 
 export const withReduxForm = (WrappedForm, form, reduxFormProps = {}) =>
   reduxForm({ form, ...reduxFormProps })(WrappedForm);
@@ -30,4 +30,11 @@ export const withSelectReduxField = (WrappedComponent, name, fieldProps = {}) =>
     component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...fieldProps} />}
     name={name}
     normalize={value => (isObject(value) ? value.value : value)}
+  />;
+
+export const withNumberReduxField = (WrappedComponent, name, fieldProps = {}) =>
+  <Field
+    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...fieldProps} />}
+    name={name}
+    normalize={value => toNumber(value.replace(/,/g, ''))}
   />;

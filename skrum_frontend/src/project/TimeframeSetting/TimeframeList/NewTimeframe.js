@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, SubmissionError } from 'redux-form';
 import DialogForm from '../../../dialogs/DialogForm';
-import DatePickerInput from '../../../components/DatePickerInput';
+import DatePickerInput from '../../../editors/DatePickerInput';
 import { withLoadedReduxForm, withReduxField } from '../../../util/FormUtil';
 import { isValidDate, compareDates, toUtcDate } from '../../../util/DatetimeUtil';
 import { postTimeframe } from '../action';

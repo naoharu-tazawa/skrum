@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { find, isEmpty } from 'lodash';
-import SearchDropdown from '../../components/SearchDropdown';
+import SearchDropdown from '../../editors/SearchDropdown';
 import EntitySubject from '../../components/EntitySubject';
 import { EntityType } from '../../util/EntityUtil';
 import { getPotentialLeaders } from './action';

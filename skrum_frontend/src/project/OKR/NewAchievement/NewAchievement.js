@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
-import { toNumber } from 'lodash';
 import DialogForm from '../../../dialogs/DialogForm';
-import { withReduxForm } from '../../../util/FormUtil';
+import NumberInput from '../../../editors/NumberInput';
+import { withReduxForm, withNumberReduxField } from '../../../util/FormUtil';
 import { postAchievement } from '../../OKRDetails/action';
 import { syncOkr } from '../../OKR/action';
 import styles from './NewAchievement.css';
@@ -38,13 +38,8 @@ class NewAchievement extends Component {
     );
   }
 
-  submit({ achievedValue, targetValue, post }) {
+  submit(entry) {
     const { id, onClose, dispatchPostAchievement } = this.props;
-    const entry = {
-      achievedValue: toNumber(achievedValue),
-      targetValue: toNumber(targetValue),
-      post,
-    };
     this.setState({ isSubmitting: true });
     return dispatchPostAchievement(id, entry).then(({ error, payload }) => {
       this.setState({ isSubmitting: false }, () => !error && onClose());
@@ -68,12 +63,12 @@ class NewAchievement extends Component {
           <div className={styles.progressConstituents}>
             <div className={styles.inputWithTitle}>
               <span className={styles.title}>達成値</span>
-              <Field component="input" type="number" name="achievedValue" />
+              {withNumberReduxField(NumberInput, 'achievedValue', { min: 0 })}
             </div>
             <span className={styles.label}>／</span>
             <div className={styles.inputWithTitle}>
               <span className={styles.title}>目標値</span>
-              <Field component="input" type="number" name="targetValue" />
+              {withNumberReduxField(NumberInput, 'targetValue', { min: 0 })}
             </div>
             <span className={styles.label}>{unit}</span>
           </div>

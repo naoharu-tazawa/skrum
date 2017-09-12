@@ -67,6 +67,7 @@ class OkrBar extends Component {
           </Link>
           <DropdownMenu
             options={[
+              { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(okr) },
               { caption: '担当者変更',
                 onClick: () => openModal(changeOkrOwnerDialog,
                   { id, name, owner, parentOkrOwner: parentOkr.owner,
@@ -74,7 +75,6 @@ class OkrBar extends Component {
               { caption: '紐付け先設定',
                 onClick: () => openModal(changeOkrParentDialog,
                   { id, parentOkr, okr, dispatch: dispatchChangeParentOkr }) },
-              { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(okr) },
               { caption: '公開範囲設定',
                 onClick: () => openModal(changeOkrDisclosureTypeDialog,
                   { id, name, owner, disclosureType,

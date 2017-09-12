@@ -36,7 +36,7 @@ export default class ProgressPercentage extends Component {
             </div>
             {hasConstituents && (
               <div className={styles.progressConstituents}>
-                {achievedValue}／{targetValue}{unit}
+                {achievedValue.toLocaleString()}／{targetValue.toLocaleString()}{unit}
               </div>)}
             {children}
           </div>

@@ -37,8 +37,9 @@ export default class DialogForm extends Component {
       handleSubmit((data) => {
         this.setState({ isSubmitting: true });
         try {
-          return onSubmit(data).then(() =>
-            !this.isUnmounting && this.setState({ isSubmitting: false }));
+          return onSubmit(data).then((({ error, payload: { message } = {} } = {}) =>
+            !this.isUnmounting && this.setState({
+              isSubmitting: false, submissionError: error && message })));
         } catch (e) {
           if (!this.isUnmounting) this.setState({ isSubmitting: false });
           throw e;

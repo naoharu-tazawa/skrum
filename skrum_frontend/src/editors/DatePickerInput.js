@@ -20,17 +20,17 @@ export default class DatePickerInput extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    meta: PropTypes.shape({}), // available if under redux-form
     tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onDayChange: PropTypes.func,
     onDayClick: PropTypes.func,
     onKeyPress: PropTypes.func,
     // onClose: PropTypes.func.isRequired,
+    meta: PropTypes.shape({}), // available if under redux-form
   };
 
   render() {
-    const { containerClass, wrapperClass, overlayClass,
-      value, onChange, onFocus, onBlur, meta, tabIndex, onDayChange, onKeyPress } = this.props;
+    const { containerClass, wrapperClass, overlayClass, value, onChange, onFocus, onBlur,
+      tabIndex, onDayChange, onKeyPress, meta } = this.props;
     const { target: { value: targetValue } = {} } = value || {};
     // const { hasOverlay = false } = this.state || {};
     const locale = 'ja';

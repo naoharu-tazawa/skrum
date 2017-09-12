@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Select from 'react-select';
 import InlineEntityImagePicker from '../../components/InlineEntityImagePicker';
-import DatePickerInput from '../../components/DatePickerInput';
+import DatePickerInput from '../../editors/DatePickerInput';
 import { EntityType } from '../../util/EntityUtil';
 import { compareDates, formatUtcDate, toUtcDate, isValidDate } from '../../util/DatetimeUtil';
 import { postUserImage } from '../../project/GroupManagement/action';

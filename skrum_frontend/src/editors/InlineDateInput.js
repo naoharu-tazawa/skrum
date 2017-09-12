@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import DatePickerInput from '../components/DatePickerInput';
+import DatePickerInput from './DatePickerInput';
 import InlineEditor, { inlineEditorPublicPropTypes } from './InlineEditor';
 import { formatUtcDate, toUtcDate, isValidDate } from '../util/DatetimeUtil';
 
@@ -18,6 +18,7 @@ export default class InlineDateInput extends PureComponent {
         dropdown
         formatter={formatUtcDate}
         {...{ value, ...inlineEditorProps }}
+        style={{ minWidth: '10em' }}
       >
         {({ setRef, displayValue, setValue, submit }) =>
           <DatePickerInput

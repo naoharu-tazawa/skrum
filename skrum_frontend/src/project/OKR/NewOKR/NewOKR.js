@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, getFormValues, SubmissionError } from 'redux-form';
-import { isEmpty, omit, toNumber, partial, find } from 'lodash';
+import { isEmpty, omit, partial, find } from 'lodash';
 import { objectivePropTypes } from '../../OKRDetails/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
 import OwnerSearch, { ownerPropType } from '../../OwnerSearch/OwnerSearch';
 import TimeframesDropdown from '../../../components/TimeframesDropdown';
-import DatePickerInput from '../../../components/DatePickerInput';
+import NumberInput from '../../../editors/NumberInput';
+import DatePickerInput from '../../../editors/DatePickerInput';
 import EntitySubject from '../../../components/EntitySubject';
 import DisclosureTypeOptions, { getDisclosureTypeName } from '../../../components/DisclosureTypeOptions';
 import OKRSearch from '../../OKRSearch/OKRSearch';
-import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, withReduxField } from '../../../util/FormUtil';
+import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, withNumberReduxField,
+  withReduxField } from '../../../util/FormUtil';
 import { getEntityTypeId, getEntityTypeSubject } from '../../../util/EntityUtil';
 import { mapOwnerOutbound } from '../../../util/OwnerUtil';
 import { explodePath } from '../../../util/RouteUtil';
@@ -115,14 +117,17 @@ class NewOKR extends Component {
       disclosureType,
       okrName,
       okrDetail: okrDetail || '',
-      targetValue: targetValue ? toNumber(targetValue) : 100,
+      targetValue: targetValue || 100,
       unit: unit || '%',
       startDate: toUtcDate(startDate),
       endDate: toUtcDate(endDate),
     };
     const dispatcher = okrType === OKRType.OKR ?
       partial(dispatchPostOkr, subject, isOwnerCurrent) : partial(dispatchPostKR, subject);
-    return dispatcher(okr).then(({ error }) => !error && onClose());
+    return dispatcher(okr).then(({ error, payload }) => {
+      if (!error) onClose();
+      return { error, payload };
+    });
   }
 
   render() {
@@ -167,7 +172,7 @@ class NewOKR extends Component {
           <section>
             <label>目標値</label>
             <div>
-              <Field component="input" type="number" name="targetValue" props={{ tabIndex: 13 }} />
+              {withNumberReduxField(NumberInput, 'targetValue', { tabIndex: 13, min: 0 })}
               <small>※空欄の場合は100</small>
             </div>
             <label>単位</label>

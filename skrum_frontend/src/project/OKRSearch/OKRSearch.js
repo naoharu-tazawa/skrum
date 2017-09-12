@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEmpty, partial, includes } from 'lodash';
-import SearchDropdown from '../../components/SearchDropdown';
+import SearchDropdown from '../../editors/SearchDropdown';
 import EntitySubject from '../../components/EntitySubject';
 import { mapOKR } from '../../util/OKRUtil';
 import { explodePath } from '../../util/RouteUtil';

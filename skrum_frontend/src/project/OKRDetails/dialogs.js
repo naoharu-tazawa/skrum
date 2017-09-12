@@ -2,6 +2,7 @@ import React from 'react';
 import { toNumber, isNumber, sum, round, fromPairs, toPairs, isEmpty } from 'lodash';
 import ConfirmationPrompt from '../../dialogs/ConfirmationPrompt';
 import DialogForm from '../../dialogs/DialogForm';
+import NumberInput from '../../editors/NumberInput';
 import EntitySubject from '../../components/EntitySubject';
 import DisclosureTypeOptions from '../../components/DisclosureTypeOptions';
 import OwnerSearch from '../OwnerSearch/OwnerSearch';
@@ -74,13 +75,12 @@ export const setRatiosDialog =
                   <div className={styles.ratioDetails}>
                     <div className={styles.ratioKR}>{kr.name}</div>
                     <div className={styles.ratio}>
-                      <input
-                        type="number"
+                      <NumberInput
                         min={0}
                         max={maxRatio}
-                        step="0.1"
+                        decimalPrecision={1}
                         value={locked ? ratio : ''}
-                        placeholder={!locked && ratio}
+                        placeholder={locked ? '' : `${ratio.toFixed(1)}`}
                         // disabled={unlockedCount === 0 || (unlockedCount === 1 && !locked)}
                         onChange={e =>
                           setFieldData({

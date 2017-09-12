@@ -8,7 +8,7 @@ import ProgressPercentage from '../../../components/ProgressPercentage';
 import DropdownMenu from '../../../components/DropdownMenu';
 import Dropdown from '../../../components/Dropdown';
 import EntityLink from '../../../components/EntityLink';
-import Editable from '../../../components/Editable';
+import Editable from '../../../editors/Editable';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
 import { replacePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
