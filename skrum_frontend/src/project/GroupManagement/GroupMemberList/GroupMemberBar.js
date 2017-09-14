@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { groupMemberPropTypes } from './propTypes';
 import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
+import Editable from '../../../editors/Editable';
 import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { isBasicRole } from '../../../util/UserUtil';
 import { withModal } from '../../../util/ModalUtil';
-import { formatDate, DateFormat } from '../../../util/DatetimeUtil';
+import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 import styles from './GroupMemberBar.css';
 
 class GroupMemberBar extends Component {
@@ -57,11 +58,11 @@ class GroupMemberBar extends Component {
       return isBasic ? this.getHeaderBasic() : this.getHeaderAdmin();
     }
     const { id, name, position, achievementRate, lastLogin } = member;
-    const lastLoginFormatted = formatDate(lastLogin, { format: DateFormat.YMDHM });
+    const lastLoginFormatted = toRelativeTimeText(lastLogin);
     return (
       <div className={styles.row}>
         <div className={isBasic ? styles.name : styles.nameAdmin}>
-          <EntityLink entity={{ id, name, type: EntityType.USER }} />
+          <EntityLink entity={{ id, name, type: EntityType.USER }} route={{ tab: 'objective' }} />
         </div>
         <span className={styles.position}>{position}</span>
         {!isBasic && (
@@ -70,12 +71,14 @@ class GroupMemberBar extends Component {
             achievementRate={achievementRate}
           />)}
         <span className={isBasic ? styles.update : styles.updateAdmin}>{lastLoginFormatted}</span>
-        <button
-          className={styles.delete}
-          onClick={() => openModal(this.deleteMemberPrompt, { groupId, groupName, id, name })}
-        >
-          <img src="/img/delete.png" alt="" />
-        </button>
+        <Editable entity={{ id: groupId, type: EntityType.GROUP }}>
+          <button
+            className={styles.delete}
+            onClick={() => openModal(this.deleteMemberPrompt, { groupId, groupName, id, name })}
+          >
+            <img src="/img/delete.png" alt="" />
+          </button>
+        </Editable>
       </div>);
   }
 }

@@ -63,7 +63,9 @@ class InvitationForm extends Component {
   }
 }
 
+export const formName = 'Invitation';
+
 export default reduxForm({
-  form: 'form',
+  form: formName,
   validate,
 })(InvitationForm);

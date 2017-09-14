@@ -44,7 +44,7 @@ class UserGroupBar extends Component {
     return (
       <div className={styles.row}>
         <div className={styles.name}>
-          <EntityLink entity={{ id, name, type: EntityType.GROUP }} />
+          <EntityLink entity={{ id, name, type: EntityType.GROUP }} route={{ tab: 'objective' }} />
         </div>
         <ProgressPercentage
           componentClassName={styles.progress}

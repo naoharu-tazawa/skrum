@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import { groupMembersPropTypes } from './propTypes';
 import GroupMemberBar from './GroupMemberBar';
 import DialogForm from '../../../dialogs/DialogForm';
+import Editable from '../../../editors/Editable';
 import EntitySubject from '../../../components/EntitySubject';
 import { EntityType } from '../../../util/EntityUtil';
 import { withModal } from '../../../util/ModalUtil';
@@ -58,18 +59,20 @@ class GroupMemberList extends Component {
               key={member.id}
               {...{ roleLevel, groupId, groupName, member, dispatchDeleteGroupMember }}
             />)}
-          <div className={`${styles.footer} ${styles.alignC}`}>
-            <button
-              className={styles.addMember}
-              onClick={() => openModal(this.addMemberDialog,
-                { group: { id: groupId, name: groupName, type: EntityType.GROUP } })}
-            >
-              <span className={styles.circle}>
-                <img src="/img/common/icn_plus.png" alt="Add" />
-              </span>
-              <span>メンバーを追加</span>
-            </button>
-          </div>
+          <Editable entity={{ id: groupId, type: EntityType.GROUP }}>
+            <div className={`${styles.footer} ${styles.alignC}`}>
+              <button
+                className={styles.addMember}
+                onClick={() => openModal(this.addMemberDialog,
+                  { group: { id: groupId, name: groupName, type: EntityType.GROUP } })}
+              >
+                <span className={styles.circle}>
+                  <img src="/img/common/icn_plus.png" alt="Add" />
+                </span>
+                <span>メンバーを追加</span>
+              </button>
+            </div>
+          </Editable>
         </div>
       </section>);
   }

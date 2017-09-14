@@ -13,6 +13,8 @@ class TimeframesDropdown extends PureComponent {
     timeframes: PropTypes.arrayOf(PropTypes.shape({
       timeframeId: PropTypes.number.isRequired,
       timeframeName: PropTypes.string.isRequired,
+      startDate: PropTypes.string.isRequired,
+      endDate: PropTypes.string.isRequired,
       defaultFlg: PropTypes.number,
     })),
     timeframeId: PropTypes.number,
@@ -26,7 +28,7 @@ class TimeframesDropdown extends PureComponent {
   render() {
     const { plain, timeframes, timeframeId, value: dirtyValue,
       onChange, onFocus, onBlur, tabIndex } = this.props;
-    const options = orderBy(timeframes, 'timeframeId', 'asc')
+    const options = orderBy(timeframes, 'timeframeId', 'desc')
       .map(({ timeframeId: value, timeframeName: label }) => ({ value, label }));
     const getOptionStyle = (id, currentId) =>
       `${styles.item} ${id === currentId ? styles.current : ''}`;

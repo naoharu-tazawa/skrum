@@ -9,6 +9,7 @@
   color: #f3b48c;
 }
 .choice {
+  text-align: right;
   padding-top: 2em;
   font-size: 14px;
 }

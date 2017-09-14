@@ -29,7 +29,7 @@ class LoginForm extends Component {
     this.props.handleLoginSubmit(
       target.email.value.trim(),
       target.password.value.trim(),
-    ).then(() => this.setState({ isPosting: false }));
+    ).then(({ error }) => error && this.setState({ isPosting: false }));
   }
 
   renderError() {

@@ -1,7 +1,7 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { find } from 'lodash';
+import { find, isFunction } from 'lodash';
 import { entityTypePropType, EntityType } from '../util/EntityUtil';
 import { isAdminRoleAndAbove } from '../util/UserUtil';
 
@@ -14,13 +14,16 @@ class Editable extends PureComponent {
 
   static propTypes = {
     entity: entityPropType.isRequired,
-    children: PropTypes.element.isRequired,
-    fallback: PropTypes.element,
     granted: PropTypes.bool.isRequired,
+    fallback: PropTypes.element,
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   };
 
   render() {
     const { children, fallback = null, granted } = this.props;
+    if (isFunction(children)) {
+      return children({ granted, fallback });
+    }
     return granted ? children : fallback;
   }
 }

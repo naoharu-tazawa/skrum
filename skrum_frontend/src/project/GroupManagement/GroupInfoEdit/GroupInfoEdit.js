@@ -73,51 +73,68 @@ class GroupInfoEdit extends Component {
           </div>
           <div className={styles.profile_txt}>
             <h2 className={styles.team_name}>
-              <InlineTextInput
-                value={name}
-                required
-                onSubmit={value => dispatchPutGroup(groupId, { name: value })}
-              />
+              <Editable entity={entity}>
+                {({ granted }) => (
+                  <InlineTextInput
+                    value={name}
+                    required
+                    readonly={!granted}
+                    onSubmit={value => dispatchPutGroup(groupId, { name: value })}
+                  />)}
+              </Editable>
             </h2>
             {groupPaths.map(path =>
-              <GroupPathLinks
-                key={path.groupTreeId}
-                groupId={groupId}
-                groupName={name}
-                path={path}
-                dispatchDeleteGroupPath={dispatchDeleteGroupPath}
-              />)}
-            <button
-              className={styles.addPath}
-              onClick={() => openModal(this.addPathDialog, { group })}
-            >
-              所属先グループを追加
-            </button>
+              <Editable key={path.groupTreeId} entity={entity}>
+                {({ granted }) => (
+                  <GroupPathLinks
+                    groupId={groupId}
+                    groupName={name}
+                    path={path}
+                    readonly={!granted}
+                    dispatchDeleteGroupPath={dispatchDeleteGroupPath}
+                  />)}
+              </Editable>)}
+            <Editable entity={entity}>
+              <button
+                className={styles.addPath}
+                onClick={() => openModal(this.addPathDialog, { group })}
+              >
+                所属先グループを追加
+              </button>
+            </Editable>
             <div>
               <div className={styles.title}>ミッション</div>
               <div className={styles.txt}>
-                <InlineTextArea
-                  value={mission}
-                  placeholder="ミッションを入力してください"
-                  maxLength={250}
-                  onSubmit={value => dispatchPutGroup(groupId, { mission: value })}
-                />
+                <Editable entity={entity}>
+                  {({ granted }) => (
+                    <InlineTextArea
+                      value={mission}
+                      placeholder="ミッションを入力してください"
+                      maxLength={250}
+                      readonly={!granted}
+                      onSubmit={value => dispatchPutGroup(groupId, { mission: value })}
+                    />)}
+                </Editable>
               </div>
             </div>
             <EntityLink
               componentClassName={styles.leader}
               entity={{ id: leaderUserId, type: EntityType.USER }}
               title="リーダー"
-              editor={
-                <InlinePotentialLeaders
-                  groupId={groupId}
-                  leaderUserId={leaderUserId}
-                  leaderName={leaderName}
-                  placeholder="リーダーが決まっていません"
-                  onSubmit={({ userId, name: userName }) =>
-                    dispatchChangeGroupLeader(userId, userName)}
-                />}
               local
+              editor={
+                <Editable entity={entity}>
+                  {({ granted }) => (
+                    <InlinePotentialLeaders
+                      groupId={groupId}
+                      leaderUserId={leaderUserId}
+                      leaderName={leaderName}
+                      placeholder="リーダーが決まっていません"
+                      readonly={!granted}
+                      onSubmit={({ userId, name: userName }) =>
+                        dispatchChangeGroupLeader(userId, userName)}
+                    />)}
+                </Editable>}
             />
           </div>
         </div>
