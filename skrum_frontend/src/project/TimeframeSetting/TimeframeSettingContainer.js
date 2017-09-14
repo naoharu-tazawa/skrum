@@ -24,7 +24,7 @@ class TimeframeSettingContainer extends Component {
     }
     return (
       <div className={styles.container}>
-        <div className={styles.title}>タイムフレーム設定</div>
+        <div className={styles.title}>目標期間設定</div>
         <div>
           <TimeframeListContainer />
         </div>

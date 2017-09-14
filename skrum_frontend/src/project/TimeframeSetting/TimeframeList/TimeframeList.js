@@ -21,7 +21,7 @@ class TimeframeList extends Component {
       openModal } = this.props;
     return (
       <section className={styles.group_list}>
-        <h1 className={styles.ttl_setion}>タイムフレーム一覧</h1>
+        <h1 className={styles.ttl_setion}>目標期間一覧</h1>
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <TimeframeBar header />
           {items.map(timeframe =>
@@ -38,7 +38,7 @@ class TimeframeList extends Component {
               <span className={styles.circle}>
                 <img src="/img/common/icn_plus.png" alt="Add" />
               </span>
-              <span>新しいタイムフレームを追加</span>
+              <span>新しい目標期間を追加</span>
             </button>
           </div>
         </div>
