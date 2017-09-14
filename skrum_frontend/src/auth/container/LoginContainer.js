@@ -9,7 +9,6 @@ import styles from './LoginContainer.css';
 
 class LoginContainer extends Component {
   static propTypes = {
-    isPosting: PropTypes.bool,
     isAuthorized: PropTypes.bool,
     dispatchLogin: PropTypes.func,
     error: errorType,
@@ -31,13 +30,12 @@ class LoginContainer extends Component {
   }
 
   render() {
-    const { isPosting, dispatchLogin, error } = this.props;
+    const { dispatchLogin, error } = this.props;
     return (
       <div className={styles.default}>
         <div className={styles.shadow}>
           <div className={styles.container}>
             <LoginForm
-              isPosting={isPosting}
               handleLoginSubmit={dispatchLogin}
               error={error}
             />
@@ -48,8 +46,8 @@ class LoginContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { isPosting, isAuthorized, error } = state.auth;
-  return { isPosting, isAuthorized, error };
+  const { isAuthorized, error } = state.auth;
+  return { isAuthorized, error };
 };
 
 const mapDispatchToProps = (dispatch) => {

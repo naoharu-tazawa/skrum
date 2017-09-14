@@ -17,7 +17,6 @@ function DisabledButton() {
 
 class LoginForm extends Component {
   static propTypes = {
-    // isPosting: PropTypes.bool,
     handleLoginSubmit: PropTypes.func.isRequired,
     error: errorType,
   };

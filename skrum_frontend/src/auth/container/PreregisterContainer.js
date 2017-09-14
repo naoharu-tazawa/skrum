@@ -12,22 +12,22 @@ class PreregisterContainer extends Component {
       emailAddress: PropTypes.string.isRequired,
       subdomain: PropTypes.string.isRequired,
     }),
-    isPreregistering: PropTypes.bool.isRequired,
     dispatchPreregister: PropTypes.func.isRequired,
   };
 
   handleSubmit(e, email, subdomain) {
     e.preventDefault();
+    this.setState({ isPreregistering: true });
     this.props.dispatchPreregister(email, subdomain)
       .then(({ error, payload: { message } = {} } = {}) => {
-        if (error) { this.setState({ error: message }); }
-        if (!error) { browserHistory.push('/preregister?result=success'); }
+        this.setState({ isPreregistering: false, error: error && message });
+        if (!error) browserHistory.push('/preregister?result=success');
       });
   }
 
   render() {
-    const { location: { query: { result } } } = this.props;
-    const { isPreregistering, preregistered = {} } = this.props;
+    const { location: { query: { result } }, preregistered = {} } = this.props;
+    const { isPreregistering } = this.state || {};
     if (result === 'success') {
       return (
         <div className={styles.container}>
@@ -72,8 +72,8 @@ class PreregisterContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { isPreregistering, preregistered } = state.auth;
-  return { isPreregistering, preregistered };
+  const { preregistered } = state.auth;
+  return { preregistered };
 };
 
 const mapDispatchToProps = (dispatch) => {

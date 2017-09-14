@@ -42,8 +42,8 @@ class Authenticated extends Component {
   }
 
   render() {
-    const { top, children } = this.props;
-    return (
+    const { isAuthorized, top, children } = this.props;
+    return !isAuthorized ? null : (
       <NavigationContainer top={top}>
         {children}
       </NavigationContainer>);

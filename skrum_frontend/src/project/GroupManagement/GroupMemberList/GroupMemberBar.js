@@ -58,7 +58,6 @@ class GroupMemberBar extends Component {
       return isBasic ? this.getHeaderBasic() : this.getHeaderAdmin();
     }
     const { id, name, position, achievementRate, lastLogin } = member;
-    const lastLoginFormatted = toRelativeTimeText(lastLogin);
     return (
       <div className={styles.row}>
         <div className={isBasic ? styles.name : styles.nameAdmin}>
@@ -70,7 +69,9 @@ class GroupMemberBar extends Component {
             componentClassName={styles.progress}
             achievementRate={achievementRate}
           />)}
-        <span className={isBasic ? styles.update : styles.updateAdmin}>{lastLoginFormatted}</span>
+        <span className={isBasic ? styles.update : styles.updateAdmin}>
+          {lastLogin && toRelativeTimeText(lastLogin)}
+        </span>
         <Editable entity={{ id: groupId, type: EntityType.GROUP }}>
           <button
             className={styles.delete}

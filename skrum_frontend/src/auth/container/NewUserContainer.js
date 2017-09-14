@@ -9,7 +9,6 @@ import styles from './Registration.css';
 class NewUserContainer extends Component {
   static propTypes = {
     location: PropTypes.shape({ query: PropTypes.shape({}).isRequired }).isRequired,
-    isPosting: PropTypes.bool.isRequired,
     dispatchUserSignUp: PropTypes.func.isRequired,
   };
 
@@ -18,18 +17,17 @@ class NewUserContainer extends Component {
     if (!isPasswordValid(password)) {
       this.setState({ error: '半角英数字8字以上20字以下で、アルファベット・数字をそれぞれ1字以上含めてください' });
     } else {
+      this.setState({ isPosting: true });
       this.props.dispatchUserSignUp(password, urltoken)
-        .then(({ error, payload: { message } = {} } = {}) => {
-          if (error) { this.setState({ error: message }); }
-          if (!error) { browserHistory.push('/'); }
-        });
+        .then(({ error, payload: { message } = {} } = {}) =>
+          (error ? this.setState({ isPosting: false, error: message }) : browserHistory.replace('/')));
     }
   }
 
   render() {
-    const { location: { query: { tkn: urltoken } }, isPosting } = this.props;
+    const { location: { query: { tkn: urltoken } } } = this.props;
     if (!urltoken) return null;
-    const { password, retype, error } = this.state || {};
+    const { password, retype, error, isPosting } = this.state || {};
     return (
       <div className={styles.container}>
         <form className={styles.content} onSubmit={e => this.handleSubmit(e, password, urltoken)}>
@@ -53,11 +51,6 @@ class NewUserContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { isPosting } = state.auth;
-  return { isPosting };
-};
-
 const mapDispatchToProps = (dispatch) => {
   const dispatchUserSignUp = (password, token) =>
     dispatch(userSignUp(password, token));
@@ -65,6 +58,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
 )(NewUserContainer);

@@ -29,10 +29,8 @@ class CompanySetupContainer extends Component {
     } else {
       const { companyId, dispatchSetupCompany } = this.props;
       dispatchSetupCompany(companyId, { user, company, timeframe })
-        .then(({ error, payload: { message } = {} } = {}) => {
-          if (error) { this.setState({ error: message }); }
-          if (!error) { browserHistory.push('/'); }
-        });
+        .then(({ error, payload: { message } = {} } = {}) =>
+          (error ? this.setState({ error: message }) : browserHistory.replace('/')));
     }
   }
 

@@ -9,6 +9,7 @@
 }
 .ratioDetails {
   display: flex;
+  align-items: center;
   height: 40px;
 }
 .ratioKR {

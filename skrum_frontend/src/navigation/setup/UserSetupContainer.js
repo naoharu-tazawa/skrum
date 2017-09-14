@@ -20,10 +20,8 @@ class UserSetupContainer extends Component {
     e.preventDefault();
     const { userId, dispatchSetupUser } = this.props;
     dispatchSetupUser(userId, { user })
-      .then(({ error, payload: { message } = {} } = {}) => {
-        if (error) { this.setState({ error: message }); }
-        if (!error) { browserHistory.push('/'); }
-      });
+      .then(({ error, payload: { message } = {} } = {}) =>
+        (error ? this.setState({ error: message }) : browserHistory.replace('/')));
   }
 
   render() {
