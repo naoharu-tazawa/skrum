@@ -647,22 +647,6 @@ SQL;
     }
 
     /**
-     * 複数の親OKRに対する全ての子OKRを取得
-     *
-     * @param array $parentOkrIdArray 親OKRID配列
-     * @return array
-     */
-    public function getAllChildrenOkrsOfMultipleParentOkrs(array $parentOkrIdArray): array
-    {
-        $qb = $this->createQueryBuilder('to1');
-        $qb->select('to2')
-            ->innerJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
-            ->where($qb->expr()->in('to1.okrId', $parentOkrIdArray));
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
      * 親子OKRを取得（親OKRを指定）
      *
      * @param integer $okrId OKRID
@@ -689,6 +673,22 @@ SQL;
             $qb->andWhere('to2.type = :okrType OR to2.type IS NULL')
                 ->setParameter('okrType', $okrTypeOfKeyResults);
         }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 複数の親OKRに対する全ての子OKRを取得
+     *
+     * @param array $parentOkrIdArray 親OKRID配列
+     * @return array
+     */
+    public function getAllChildrenOkrsOfMultipleParentOkrs(array $parentOkrIdArray): array
+    {
+        $qb = $this->createQueryBuilder('to1');
+        $qb->select('to2')
+        ->innerJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
+        ->where($qb->expr()->in('to1.okrId', $parentOkrIdArray));
 
         return $qb->getQuery()->getResult();
     }

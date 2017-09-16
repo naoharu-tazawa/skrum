@@ -21,7 +21,7 @@ class OkrOperationController extends BaseController
      * @Rest\Put("/v1/okrs/{okrId}/changeparent.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $okrId OKRID
-     * @return array
+     * @return OkrDetailsDTO
      */
     public function changeOkrParentAction(Request $request, string $okrId): OkrDetailsDTO
     {
@@ -48,5 +48,42 @@ class OkrOperationController extends BaseController
         $okrDetailsDTO = $okrOperationService->changeParent($auth, $tOkr, $newParentOkr);
 
         return $okrDetailsDTO;
+    }
+
+    /**
+     * OKRコピー
+     *
+     * @Rest\Post("/v1/okrs/{okrId}/clone.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $okrId OKRID
+     * @return array
+     */
+    public function cloneOkrAction(Request $request, string $okrId): array
+    {
+        // JsonSchemaバリデーション
+        $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/CloneOkrPdu');
+        if ($errors) throw new JsonSchemaException("リクエストJSONスキーマが不正です", $errors);
+
+        // リクエストJSONを取得
+        $data = $this->getRequestJsonAsArray($request);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // OKR存在チェック
+        $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
+
+        // タイムフレーム存在チェック
+        $tTimeframe = $this->getDBExistanceLogic()->checkTimeframeExistance($data['timeframeId'], $auth->getCompanyId());
+
+        // ユーザ/グループ/会社操作権限一括チェック
+        $permissionLogic = $this->getPermissionLogic();
+        $permissionLogic->checkUserGroupCompanyOkrOperationSelfOK($auth, $tOkr);
+
+        // 紐付け先OKR変更処理
+        $okrOperationService = $this->getOkrOperationService();
+        $okrOperationService->cloneOkr($auth, $tOkr, $tTimeframe);
+
+        return array('result' => 'OK');
     }
 }

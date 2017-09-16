@@ -125,12 +125,12 @@ class DBConstant
     const OKR_OPERATION_TYPE_ACHIEVEMENT = '5';
 
     /**
-     * OKR操作種別（クローン）
+     * OKR操作種別（コピー）
      */
     const OKR_OPERATION_TYPE_CLONE = '6';
 
     /**
-     * OKR操作種別（複製）
+     * OKR操作種別（移動）
      */
     const OKR_OPERATION_TYPE_COPY = '7';
 

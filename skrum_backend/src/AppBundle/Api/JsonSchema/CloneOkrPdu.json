@@ -1,0 +1,13 @@
+{
+  "title": "OKRコピー",
+  "type": "object",
+  "properties": {
+    "timeframeId": {
+      "title": "タイムフレームID",
+      "type": "integer",
+      "maxLength": 11
+    }
+  },
+  "required": ["timeframeId"],
+  "additionalProperties": false
+}
