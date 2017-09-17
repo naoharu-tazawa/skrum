@@ -60,9 +60,11 @@ class TimelineService extends BaseService
                     if ($postInfo['post']->getPosterType() === DBConstant::POSTER_TYPE_USER) {
                         $postDTOPost->setPosterUserId($postInfo['post']->getPosterUserId());
                         $postDTOPost->setPosterUserName($postInfo['lastName'] . ' ' . $postInfo['firstName']);
+                        $postDTOPost->setPosterUserRoleLevel($postInfo['roleLevel']);
                     } elseif ($postInfo['post']->getPosterType() === DBConstant::POSTER_TYPE_GROUP) {
                         $postDTOPost->setPosterGroupId($postInfo['post']->getPosterGroupId());
                         $postDTOPost->setPosterGroupName($postInfo['groupName']);
+                        $postDTOPost->setPosterGroupType($postInfo['groupType']);
                     } else {
                         $postDTOPost->setPosterCompanyId($postInfo['post']->getPosterCompanyId());
                         $postDTOPost->setPosterCompanyName($postInfo['companyName']);

@@ -39,8 +39,9 @@ class TPostRepository extends BaseRepository
     public function getPosts(int $groupId, int $before = null): array
     {
         $qb = $this->createQueryBuilder('tp');
-        $qb->select('tp AS post', 'mu.lastName', 'mu.firstName', 'mg.groupName', 'mc.companyName')
+        $qb->select('tp AS post', 'mu.lastName', 'mu.firstName', 'mra.roleLevel', 'mg.groupName', 'mg.groupType', 'mc.companyName')
             ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
+            ->leftJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
             ->leftJoin('AppBundle:MGroup', 'mg', 'WITH', 'tp.posterGroupId = mg.groupId')
             ->leftJoin('AppBundle:MCompany', 'mc', 'WITH', 'tp.posterCompanyId = mc.companyId')
             ->where('tp.timelineOwnerGroupId = :timelineOwnerGroupId')

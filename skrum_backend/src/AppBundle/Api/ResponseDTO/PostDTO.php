@@ -44,6 +44,13 @@ class PostDTO
      *
      * @JSON\Type("integer")
      */
+    private $posterUserRoleLevel;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $posterGroupId;
 
     /**
@@ -52,6 +59,13 @@ class PostDTO
      * @JSON\Type("string")
      */
     private $posterGroupName;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $posterGroupType;
 
     /**
      * @var integer
@@ -213,6 +227,30 @@ class PostDTO
     }
 
     /**
+     * Set posterUserRoleLevel
+     *
+     * @param integer $posterUserRoleLevel
+     *
+     * @return PostDTO
+     */
+    public function setPosterUserRoleLevel($posterUserRoleLevel)
+    {
+        $this->posterUserRoleLevel = $posterUserRoleLevel;
+
+        return $this;
+    }
+
+    /**
+     * Get posterUserRoleLevel
+     *
+     * @return integer
+     */
+    public function getPosterUserRoleLevel()
+    {
+        return $this->posterUserRoleLevel;
+    }
+
+    /**
      * Set posterGroupId
      *
      * @param integer $posterGroupId
@@ -258,6 +296,30 @@ class PostDTO
     public function getPosterGroupName()
     {
         return $this->posterGroupName;
+    }
+
+    /**
+     * Set posterGroupType
+     *
+     * @param string $posterGroupType
+     *
+     * @return PostDTO
+     */
+    public function setPosterGroupType($posterGroupType)
+    {
+        $this->posterGroupType = $posterGroupType;
+
+        return $this;
+    }
+
+    /**
+     * Get posterGroupType
+     *
+     * @return string
+     */
+    public function getPosterGroupType()
+    {
+        return $this->posterGroupType;
     }
 
     /**

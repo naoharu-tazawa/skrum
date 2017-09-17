@@ -41,6 +41,8 @@ paths:
                   type: integer
                 posterUserName:
                   type: string
+                posterUserRoleLevel:
+                  type: integer
                 posterCompanyId:
                   type: integer
                 posterCompanyName:
@@ -83,10 +85,6 @@ paths:
               required:
                 - postId
                 - posterType
-                - posterUserId
-                - posterUserName
-                - posterCompanyId
-                - posterCompanyName
                 - post
                 - postedDatetime
                 - likesCount
