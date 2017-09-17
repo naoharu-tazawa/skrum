@@ -73,7 +73,9 @@ paths:
                     ownerGroupId:
                       type: integer
                     ownerGroupName:
-                      type: integer
+                      type: string
+                    ownerGroupType:
+                      type: string
                     targetValue:
                       type: integer
                     achievedValue:
@@ -134,9 +136,13 @@ paths:
                             type: integer
                           ownerUserName:
                             type: string
+                          ownerUserRoleLevel:
+                            type: integer
                           ownerGroupId:
                             type: integer
                           ownerGroupName:
+                            type: string
+                          ownerGroupType:
                             type: string
                           ownerCompanyId:
                             type: integer

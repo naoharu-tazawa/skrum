@@ -86,9 +86,11 @@ class OkrService extends BaseService
                 if ($tOkrArray[$i]['objective']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                     $basicOkrDTOObjective->setOwnerUserId($tOkrArray[$i]['objective']->getOwnerUser()->getUserId());
                     $basicOkrDTOObjective->setOwnerUserName($tOkrArray[$i]['objective']->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['objective']->getOwnerUser()->getFirstName());
+                    $basicOkrDTOObjective->setOwnerUserRoleLevel($tOkrArray[$i]['objective']->getOwnerUser()->getRoleAssignment()->getRoleLevel());
                 } elseif ($tOkrArray[$i]['objective']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $basicOkrDTOObjective->setOwnerGroupId($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupId());
                     $basicOkrDTOObjective->setOwnerGroupName($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupName());
+                    $basicOkrDTOObjective->setOwnerGroupType($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupType());
                 } else {
                     $basicOkrDTOObjective->setOwnerCompanyId($tOkrArray[$i]['objective']->getOwnerCompanyId());
                     $basicOkrDTOObjective->setOwnerCompanyName($mCompany->getCompanyName());
@@ -164,9 +166,11 @@ class OkrService extends BaseService
                 if ($tOkrArray[$i]['keyResult']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                     $basicOkrDTOKeyResult->setOwnerUserId($tOkrArray[$i]['keyResult']->getOwnerUser()->getUserId());
                     $basicOkrDTOKeyResult->setOwnerUserName($tOkrArray[$i]['keyResult']->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['keyResult']->getOwnerUser()->getFirstName());
+                    $basicOkrDTOKeyResult->setOwnerUserRoleLevel($tOkrArray[$i]['keyResult']->getOwnerUser()->getRoleAssignment()->getRoleLevel());
                 } elseif ($tOkrArray[$i]['keyResult']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $basicOkrDTOKeyResult->setOwnerGroupId($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupId());
                     $basicOkrDTOKeyResult->setOwnerGroupName($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupName());
+                    $basicOkrDTOKeyResult->setOwnerGroupType($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupType());
                 } else {
                     $basicOkrDTOKeyResult->setOwnerCompanyId($tOkrArray[$i]['keyResult']->getOwnerCompanyId());
                     $basicOkrDTOKeyResult->setOwnerCompanyName($tOkrArray[$i]['companyName']);

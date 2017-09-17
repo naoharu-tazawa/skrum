@@ -129,9 +129,11 @@ class OkrDetailsService extends BaseService
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $basicOkrDTO->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
             $basicOkrDTO->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+            $basicOkrDTO->setOwnerUserRoleLevel($tOkr->getOwnerUser()->getRoleAssignment()->getRoleLevel());
         } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
             $basicOkrDTO->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
             $basicOkrDTO->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+            $basicOkrDTO->setOwnerGroupType($tOkr->getOwnerGroup()->getGroupType());
         } else {
             $basicOkrDTO->setOwnerCompanyId($tOkr->getOwnerCompanyId());
             $basicOkrDTO->setOwnerCompanyName($companyName);

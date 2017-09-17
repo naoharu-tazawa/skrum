@@ -93,6 +93,13 @@ class BasicOkrDTO
      *
      * @JSON\Type("integer")
      */
+    private $ownerUserRoleLevel;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $ownerGroupId;
 
     /**
@@ -101,6 +108,13 @@ class BasicOkrDTO
      * @JSON\Type("string")
      */
     private $ownerGroupName;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $ownerGroupType;
 
     /**
      * @var integer
@@ -444,6 +458,30 @@ class BasicOkrDTO
     }
 
     /**
+     * Set ownerUserRoleLevel
+     *
+     * @param integer $ownerUserRoleLevel
+     *
+     * @return BasicOkrDTO
+     */
+    public function setOwnerUserRoleLevel($ownerUserRoleLevel)
+    {
+        $this->ownerUserRoleLevel = $ownerUserRoleLevel;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerUserRoleLevel
+     *
+     * @return integer
+     */
+    public function getOwnerUserRoleLevel()
+    {
+        return $this->ownerUserRoleLevel;
+    }
+
+    /**
      * Set ownerGroupId
      *
      * @param integer $ownerGroupId
@@ -489,6 +527,30 @@ class BasicOkrDTO
     public function getOwnerGroupName()
     {
         return $this->ownerGroupName;
+    }
+
+    /**
+     * Set ownerGroupType
+     *
+     * @param string $ownerGroupType
+     *
+     * @return BasicOkrDTO
+     */
+    public function setOwnerGroupType($ownerGroupType)
+    {
+        $this->ownerGroupType = $ownerGroupType;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerGroupType
+     *
+     * @return string
+     */
+    public function getOwnerGroupType()
+    {
+        return $this->ownerGroupType;
     }
 
     /**
