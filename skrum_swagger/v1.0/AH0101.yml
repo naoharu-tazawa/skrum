@@ -56,6 +56,8 @@ paths:
                     type: string
                   emailAddress:
                     type: string
+                  roleLevel:
+                    type: integer
               groups:
                 type: array
                 items:
@@ -64,6 +66,8 @@ paths:
                     groupId:
                       type: integer
                     groupName:
+                      type: string
+                    groupType:
                       type: string
                     achievementRate:
                       type: number

@@ -53,6 +53,7 @@ class UserService extends BaseService
         $basicUserInfoDTO->setPosition($mUserArray[0]->getPosition());
         $basicUserInfoDTO->setPhoneNumber($mUserArray[0]->getPhoneNumber());
         $basicUserInfoDTO->setEmailAddress($mUserArray[0]->getEmailAddress());
+        $basicUserInfoDTO->setRoleLevel($mUserArray[0]->getRoleAssignment()->getRoleLevel());
 
         return $basicUserInfoDTO;
     }

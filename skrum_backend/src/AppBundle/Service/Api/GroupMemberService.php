@@ -257,6 +257,7 @@ class GroupMemberService extends BaseService
                 $groupDTO = new GroupDTO();
                 $groupDTO->setGroupId($groupInfoArray[$i]['groupId']);
                 $groupDTO->setGroupName($groupInfoArray[$i]['groupName']);
+                $groupDTO->setGroupType($groupInfoArray[$i]['groupType']);
 
                 $achievementRateArray = array();
                 $achievementRateArray[] = $groupInfoArray[$i]['achievementRate'];
@@ -277,6 +278,7 @@ class GroupMemberService extends BaseService
                     $groupDTO = new GroupDTO();
                     $groupDTO->setGroupId($groupInfoArray[$i]['groupId']);
                     $groupDTO->setGroupName($groupInfoArray[$i]['groupName']);
+                    $groupDTO->setGroupType($groupInfoArray[$i]['groupType']);
 
                     $achievementRateArray = array();
                     $achievementRateArray[] = $groupInfoArray[$i]['achievementRate'];

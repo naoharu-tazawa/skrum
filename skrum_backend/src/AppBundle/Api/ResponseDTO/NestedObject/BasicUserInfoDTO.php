@@ -82,6 +82,13 @@ class BasicUserInfoDTO
     private $lastUpdate;
 
     /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $roleLevel;
+
+    /**
      * Set userId
      *
      * @param integer $userId
@@ -319,5 +326,29 @@ class BasicUserInfoDTO
     public function getLastUpdate()
     {
         return $this->lastUpdate;
+    }
+
+    /**
+     * Set roleLevel
+     *
+     * @param integer $roleLevel
+     *
+     * @return BasicUserInfoDTO
+     */
+    public function setRoleLevel($roleLevel)
+    {
+        $this->roleLevel = $roleLevel;
+
+        return $this;
+    }
+
+    /**
+     * Get roleLevel
+     *
+     * @return integer
+     */
+    public function getRoleLevel()
+    {
+        return $this->roleLevel;
     }
 }

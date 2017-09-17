@@ -123,7 +123,7 @@ class TGroupMemberRepository extends BaseRepository
     public function getAllGroupsWithAchievementRate(int $userId, int $timeframeId): array
     {
         $qb = $this->createQueryBuilder('tgm');
-        $qb->select('mg.groupId', 'mg.groupName', 'to.achievementRate')
+        $qb->select('mg.groupId', 'mg.groupName', 'mg.groupType', 'to.achievementRate')
             ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgm.group = mg.groupId')
             ->leftJoin('AppBundle:TOkr', 'to', 'WITH', '(mg.groupId = to.ownerGroup) AND (to.timeframe = :timeframeId OR to.timeframe is NULL)')
             ->where('tgm.user = :userId')
