@@ -4,12 +4,12 @@ import Linkify from 'react-linkify';
 import { postPropTypes } from './propTypes';
 import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
 import DialogForm from '../../../dialogs/DialogForm';
+import Permissible from '../../../components/Permissible';
 import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
 import DisclosureTypeOptions from '../../../components/DisclosureTypeOptions';
 import DropdownMenu from '../../../components/DropdownMenu';
 import { formatDate, DateFormat, toRelativeTimeText } from '../../../util/DatetimeUtil';
-import { isSuperRole } from '../../../util/UserUtil';
 import { withModal } from '../../../util/ModalUtil';
 import styles from './PostBar.css';
 
@@ -17,7 +17,6 @@ class PostBar extends Component {
 
   static propTypes = {
     post: postPropTypes.isRequired,
-    roleLevel: PropTypes.number.isRequired,
     currentUserId: PropTypes.number.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeletePost: PropTypes.func.isRequired,
@@ -71,7 +70,7 @@ class PostBar extends Component {
     </ConfirmationPrompt>);
 
   render() {
-    const { post: timeline, roleLevel, currentUserId,
+    const { post: timeline, currentUserId,
       dispatchPostLike, dispatchDeleteLike, dispatchPostReply, openModal } = this.props;
     const { replyPost, isPostingReply } = this.state || {};
 
@@ -114,8 +113,7 @@ class PostBar extends Component {
                     onClick={() => (!likedFlg ? dispatchPostLike(id) : dispatchDeleteLike(id))}
                   />
                 </div>
-                {((poster.type === EntityType.USER && poster.id === currentUserId) ||
-                  isSuperRole(roleLevel)) && (
+                <Permissible entity={poster}>
                   <DropdownMenu
                     trigger={(
                       <div className={styles.btn}>
@@ -128,7 +126,8 @@ class PostBar extends Component {
                       { caption: '削除',
                         onClick: () => openModal(this.deletePostPrompt, { id, post, poster }) },
                     ]}
-                  />)}
+                  />
+                </Permissible>
               </div>
             </div>
           </div>

@@ -4,6 +4,8 @@ const entityPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  roleLevel: PropTypes.number,
+  groupType: PropTypes.string,
 });
 
 const replyPropTypes = PropTypes.shape({

@@ -17,6 +17,7 @@ export default class InlineEntityImagePicker extends PureComponent {
 
   render() {
     const { entity, avatarSize = 180, ...inlineEditorProps } = this.props;
+    const { readonly } = inlineEditorProps;
     const content = ({ dataUrl }) =>
       (dataUrl ?
         <AvatarEditor
@@ -36,7 +37,7 @@ export default class InlineEntityImagePicker extends PureComponent {
         />);
     return (
       <InlineEditor
-        componentClassName={styles.editor}
+        componentClassName={`${styles.editor} ${readonly && styles.readonly}`}
         {...{ value: {}, ...inlineEditorProps }}
         formatter={content}
         preProcess={({ dataUrl } = {}) => dataUrl &&

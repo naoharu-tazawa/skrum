@@ -11,24 +11,25 @@ class UserGroupListContainer extends Component {
   static propTypes = {
     userId: PropTypes.number,
     userName: PropTypes.string,
+    roleLevel: PropTypes.number,
     items: userGroupsPropTypes,
     dispatchJoinGroup: PropTypes.func.isRequired,
     dispatchLeaveGroup: PropTypes.func.isRequired,
   };
 
   render() {
-    const { userId, userName, items,
+    const { userId, userName, roleLevel, items,
       dispatchJoinGroup, dispatchLeaveGroup } = this.props;
     return !userId ? null : (
       <UserGroupList
-        {...{ userId, userName, items, dispatchJoinGroup, dispatchLeaveGroup }}
+        {...{ userId, userName, roleLevel, items, dispatchJoinGroup, dispatchLeaveGroup }}
       />);
   }
 }
 
 const mapStateToProps = (state) => {
   const { user, groups = [] } = state.groupManagement.user || {};
-  const { userId, lastName, firstName } = user || {};
+  const { userId, lastName, firstName, roleLevel } = user || {};
   const items = groups.map((group) => {
     const { groupId, groupName, achievementRate } = group;
     return {
@@ -37,7 +38,7 @@ const mapStateToProps = (state) => {
       achievementRate,
     };
   });
-  return { userId, userName: `${lastName} ${firstName}`, items };
+  return { userId, userName: `${lastName} ${firstName}`, roleLevel, items };
 };
 
 const mapDispatchToProps = (dispatch) => {

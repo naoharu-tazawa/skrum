@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 import { groupMembersPropTypes } from './propTypes';
 import GroupMemberBar from './GroupMemberBar';
 import DialogForm from '../../../dialogs/DialogForm';
-import Editable from '../../../editors/Editable';
+import Permissible from '../../../components/Permissible';
 import EntitySubject from '../../../components/EntitySubject';
 import { EntityType } from '../../../util/EntityUtil';
 import { withModal } from '../../../util/ModalUtil';
@@ -59,7 +59,7 @@ class GroupMemberList extends Component {
               key={member.id}
               {...{ roleLevel, groupId, groupName, member, dispatchDeleteGroupMember }}
             />)}
-          <Editable entity={{ id: groupId, type: EntityType.GROUP }}>
+          <Permissible entity={{ id: groupId, type: EntityType.GROUP }}>
             <div className={`${styles.footer} ${styles.alignC}`}>
               <button
                 className={styles.addMember}
@@ -72,7 +72,7 @@ class GroupMemberList extends Component {
                 <span>メンバーを追加</span>
               </button>
             </div>
-          </Editable>
+          </Permissible>
         </div>
       </section>);
   }

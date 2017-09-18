@@ -14,7 +14,6 @@ class PostListContainer extends Component {
     isFetchingMore: PropTypes.bool,
     hasMorePosts: PropTypes.bool,
     items: postsPropTypes,
-    roleLevel: PropTypes.number.isRequired,
     currentUserId: PropTypes.number.isRequired,
     dispatchFetchMorePosts: PropTypes.func,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
@@ -25,7 +24,7 @@ class PostListContainer extends Component {
   };
 
   render() {
-    const { isFetchingMore, hasMorePosts, items = [], roleLevel, currentUserId,
+    const { isFetchingMore, hasMorePosts, items = [], currentUserId,
       dispatchFetchMorePosts, dispatchChangeDisclosureType, dispatchDeletePost,
       dispatchPostLike, dispatchDeleteLike, dispatchPostReply } = this.props;
     return (
@@ -34,7 +33,6 @@ class PostListContainer extends Component {
           isFetchingMore,
           hasMorePosts,
           items,
-          roleLevel,
           currentUserId,
           dispatchFetchMorePosts,
           dispatchChangeDisclosureType,
@@ -58,16 +56,16 @@ const mapReplies = (reply) => {
 };
 
 const mapStateToProps = (state) => {
-  const { userId: currentUserId, roleLevel } = state.auth || {};
+  const { userId: currentUserId } = state.auth || {};
   const { posts = [] } = state.timeline || {};
   const items = posts.map((item) => {
     const { postId, post, postedDatetime, disclosureType, autoShare,
-      likesCount, likedFlg, replies = [] } = item;
+      likesCount, likedFlg, replies = [], ...itemOthers } = item;
     const { autoPost, okrId, okrName, ...autoShareOthers } = autoShare || {};
     return {
       id: postId,
       post,
-      poster: mapPoster(item),
+      poster: mapPoster(itemOthers),
       postedDatetime,
       disclosureType,
       autoShare: autoShare && { autoPost, okrId, okrName, owner: mapOwner(autoShareOthers) },
@@ -76,7 +74,7 @@ const mapStateToProps = (state) => {
       replies: replies.map(mapReplies),
     };
   });
-  return { items, currentUserId, roleLevel };
+  return { items, currentUserId };
 };
 
 const mapDispatchToProps = (dispatch) => {

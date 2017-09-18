@@ -8,7 +8,7 @@ import DialogForm from '../../../dialogs/DialogForm';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
 import EntitySubject from '../../../components/EntitySubject';
 import DropdownMenu from '../../../components/DropdownMenu';
-import { RoleLevelName, isAuthoratativeOver } from '../../../util/UserUtil';
+import { RoleLevelName, isAuthoritativeOver } from '../../../util/UserUtil';
 import { formatDate, toRelativeTimeText } from '../../../util/DatetimeUtil';
 import { implodePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
@@ -101,22 +101,22 @@ class UserBar extends Component {
           {lastLogin && `${formatDate(lastLogin)}（${toRelativeTimeText(lastLogin)}）`}
         </div>
         <div className={styles.action}>
-          {isAuthoratativeOver(currentRoleLevel, roleLevel) && (
+          {isAuthoritativeOver(currentRoleLevel, roleLevel) && (
             <DropdownMenu
               options={[
                 { caption: '目標を見る',
                   path: implodePath({ tab: 'objective', subject: 'user', id }) },
                 { caption: '所属グループを見る',
                   path: implodePath({ tab: 'control', subject: 'user', id }) },
-                { caption: 'パスワードリセット',
+                ...currentUserId !== id && [{ caption: 'パスワードリセット',
                   onClick: () => openModal(this.resetPasswordPrompt,
-                    { id, name }) },
-                ...(currentUserId !== id && [{ caption: 'ユーザ権限変更',
+                    { id, name }) }],
+                ...currentUserId !== id && [{ caption: 'ユーザ権限変更',
                   onClick: () => openModal(this.changeRoleLevelDialog,
-                    { id, name, roleAssignmentId }) }]),
-                ...(currentUserId !== id && [{ caption: 'ユーザ削除',
+                    { id, name, roleAssignmentId }) }],
+                ...currentUserId !== id && [{ caption: 'ユーザ削除',
                   onClick: () => openModal(this.deleteUserPrompt,
-                    { id, name }) }]),
+                    { id, name }) }],
               ]}
               align="right"
             />)}

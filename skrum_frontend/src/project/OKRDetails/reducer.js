@@ -105,8 +105,10 @@ export default (state = {
       const objective = mergeUpdateById(parentObjective, 'okrId', update, okrId);
       const keyResults = state.keyResults.map(kr => mergeUpdateById(kr, 'okrId', update, okrId));
       const datetime = toUtcDate(new Date());
-      const chart = parentOkrId !== state.objective.okrId ? state.chart :
+      const parentChart = parentOkrId !== state.objective.okrId ? state.chart :
         [...state.chart, { datetime, achievementRate }];
+      const chart = okrId !== state.objective.okrId ? parentChart :
+        [...parentChart, { datetime, achievementRate: update.achievementRate }];
       return { ...state, objective, keyResults, chart, isPostingAchievement: false, error: null };
     }
 

@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { okrPropTypes } from './propTypes';
+import Permissible from '../../components/Permissible';
 import InlineTextArea from '../../editors/InlineTextArea';
 import InlineDateInput from '../../editors/InlineDateInput';
 import ProgressPercentage from '../../components/ProgressPercentage';
 import DropdownMenu from '../../components/DropdownMenu';
 import Dropdown from '../../components/Dropdown';
 import EntityLink from '../../components/EntityLink';
-import Editable from '../../editors/Editable';
 import NewAchievement from '../OKR/NewAchievement/NewAchievement';
 import { replacePath, pushToBasic, replaceAsBasic } from '../../util/RouteUtil';
 import { withModal } from '../../util/ModalUtil';
@@ -103,21 +103,23 @@ class OkrDetails extends Component {
               <EntityLink componentClassName={styles.owner_info} entity={owner} />
               <div className={styles.floatR}>
                 {keyResults.length === 0 && (
-                  <Dropdown
-                    triggerIcon="/img/checkin.png"
-                    content={props =>
-                      <NewAchievement
-                        {...{ subject, id, achievedValue, targetValue, unit, ...props }}
-                      />}
-                    arrow="center"
-                  />)}
+                  <Permissible entity={owner}>
+                    <Dropdown
+                      triggerIcon="/img/checkin.png"
+                      content={props =>
+                        <NewAchievement
+                          {...{ subject, id, achievedValue, targetValue, unit, ...props }}
+                        />}
+                      arrow="center"
+                    />
+                  </Permissible>)}
                 <Link
                   className={styles.tool}
                   to={replacePath({ tab: 'map', aspect: 'o', aspectId: id })}
                 >
                   <img src="/img/common/inc_organization.png" alt="Map" />
                 </Link>
-                <Editable entity={owner}>
+                <Permissible entity={owner}>
                   <DropdownMenu
                     options={[
                       { caption: '担当者変更',
@@ -131,16 +133,16 @@ class OkrDetails extends Component {
                         onClick: () => openModal(changeOkrDisclosureTypeDialog,
                           { id, name, owner, disclosureType,
                             dispatch: dispatchChangeDisclosureType }) },
-                      ...(keyResults.length === 0 ? [] : [{ caption: '影響度設定',
+                      ...keyResults.length > 0 && [{ caption: '影響度設定',
                         onClick: () => openModal(setRatiosDialog,
-                          { id, name, owner, keyResults, dispatch: dispatchSetRatios }) }]),
+                          { id, name, owner, keyResults, dispatch: dispatchSetRatios }) }],
                       { caption: '削除',
                         onClick: () => openModal(deleteOkrPrompt,
                           { id, name, owner, dispatch: dispatchDeleteOkr,
                             onSuccess: replaceAsBasic }) },
                     ]}
                   />
-                </Editable>
+                </Permissible>
               </div>
             </div>
           </div>

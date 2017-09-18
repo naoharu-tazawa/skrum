@@ -1,6 +1,9 @@
 .editor {
   cursor: pointer;
 }
+.editor.readonly {
+  cursor: default;
+}
 .dropzone {
   margin: -2px 0;
 }

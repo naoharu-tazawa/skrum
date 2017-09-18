@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import { groupPropTypes } from './propTypes';
-import Editable from '../../../editors/Editable';
+import Permissible from '../../../components/Permissible';
 import InlineTextInput from '../../../editors/InlineTextInput';
 import InlineTextArea from '../../../editors/InlineTextArea';
 import InlinePotentialLeaders from '../../PotentialLeaders/InlinePotentialLeaders';
@@ -60,7 +60,7 @@ class GroupInfoEdit extends Component {
         <h1 className={styles.ttl_setion}>基本情報</h1>
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <div className={styles.profile_img}>
-            <Editable
+            <Permissible
               entity={entity}
               fallback={<EntityLink entity={entity} avatarSize="70px" avatarOnly />}
             >
@@ -69,52 +69,52 @@ class GroupInfoEdit extends Component {
                 avatarSize={70}
                 onSubmit={({ image, mimeType }) => dispatchPostGroupImage(groupId, image, mimeType)}
               />
-            </Editable>
+            </Permissible>
           </div>
           <div className={styles.profile_txt}>
             <h2 className={styles.team_name}>
-              <Editable entity={entity}>
-                {({ granted }) => (
+              <Permissible entity={entity}>
+                {({ permitted }) => (
                   <InlineTextInput
                     value={name}
                     required
-                    readonly={!granted}
+                    readonly={!permitted}
                     onSubmit={value => dispatchPutGroup(groupId, { name: value })}
                   />)}
-              </Editable>
+              </Permissible>
             </h2>
             {groupPaths.map(path =>
-              <Editable key={path.groupTreeId} entity={entity}>
-                {({ granted }) => (
+              <Permissible key={path.groupTreeId} entity={entity}>
+                {({ permitted }) => (
                   <GroupPathLinks
                     groupId={groupId}
                     groupName={name}
                     path={path}
-                    readonly={!granted}
+                    readonly={!permitted}
                     dispatchDeleteGroupPath={dispatchDeleteGroupPath}
                   />)}
-              </Editable>)}
-            <Editable entity={entity}>
+              </Permissible>)}
+            <Permissible entity={entity}>
               <button
                 className={styles.addPath}
                 onClick={() => openModal(this.addPathDialog, { group })}
               >
                 所属先グループを追加
               </button>
-            </Editable>
+            </Permissible>
             <div>
               <div className={styles.title}>ミッション</div>
               <div className={styles.txt}>
-                <Editable entity={entity}>
-                  {({ granted }) => (
+                <Permissible entity={entity}>
+                  {({ permitted }) => (
                     <InlineTextArea
                       value={mission}
                       placeholder="ミッションを入力してください"
                       maxLength={250}
-                      readonly={!granted}
+                      readonly={!permitted}
                       onSubmit={value => dispatchPutGroup(groupId, { mission: value })}
                     />)}
-                </Editable>
+                </Permissible>
               </div>
             </div>
             <EntityLink
@@ -123,18 +123,18 @@ class GroupInfoEdit extends Component {
               title="リーダー"
               local
               editor={
-                <Editable entity={entity}>
-                  {({ granted }) => (
+                <Permissible entity={entity}>
+                  {({ permitted }) => (
                     <InlinePotentialLeaders
                       groupId={groupId}
                       leaderUserId={leaderUserId}
                       leaderName={leaderName}
                       placeholder="リーダーが決まっていません"
-                      readonly={!granted}
+                      readonly={!permitted}
                       onSubmit={({ userId, name: userName }) =>
                         dispatchChangeGroupLeader(userId, userName)}
                     />)}
-                </Editable>}
+                </Permissible>}
             />
           </div>
         </div>

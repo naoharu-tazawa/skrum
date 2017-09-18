@@ -12,8 +12,8 @@ export const RoleLevelName = {
 
 export const isBasicRole = level => level < RoleLevel.ADMIN;
 export const isBasicRoleAndAbove = level => level >= RoleLevel.BASIC;
-export const isAdminRole = level => level < RoleLevel.SUPER;
+export const isAdminRole = level => level >= RoleLevel.ADMIN && level < RoleLevel.SUPER;
 export const isAdminRoleAndAbove = level => level >= RoleLevel.ADMIN;
 export const isSuperRole = level => level >= RoleLevel.SUPER;
-export const isAuthoratativeOver = (currentLevel, level) => level <= currentLevel;
+export const isAuthoritativeOver = (currentLevel, level) => level && level <= currentLevel;
 export const isPasswordValid = password => /^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,20}$/.test(password);

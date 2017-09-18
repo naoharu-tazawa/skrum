@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { groupMemberPropTypes } from './propTypes';
 import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
-import Editable from '../../../editors/Editable';
+import Permissible from '../../../components/Permissible';
 import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
@@ -72,14 +72,14 @@ class GroupMemberBar extends Component {
         <span className={isBasic ? styles.update : styles.updateAdmin}>
           {lastLogin && toRelativeTimeText(lastLogin)}
         </span>
-        <Editable entity={{ id: groupId, type: EntityType.GROUP }}>
+        <Permissible entity={{ id: groupId, type: EntityType.GROUP }}>
           <button
             className={styles.delete}
             onClick={() => openModal(this.deleteMemberPrompt, { groupId, groupName, id, name })}
           >
             <img src="/img/delete.png" alt="" />
           </button>
-        </Editable>
+        </Permissible>
       </div>);
   }
 }

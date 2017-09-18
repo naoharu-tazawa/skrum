@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { userGroupPropTypes } from './propTypes';
 import ConfirmationPrompt from '../../../dialogs/ConfirmationPrompt';
+import Permissible from '../../../components/Permissible';
 import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
@@ -14,6 +15,7 @@ class UserGroupBar extends Component {
     header: PropTypes.bool,
     userId: PropTypes.number,
     userName: PropTypes.string,
+    roleLevel: PropTypes.number,
     group: userGroupPropTypes,
     dispatchLeaveGroup: PropTypes.func,
     openModal: PropTypes.func.isRequired,
@@ -31,7 +33,7 @@ class UserGroupBar extends Component {
     </ConfirmationPrompt>);
 
   render() {
-    const { header, userId, userName, group, openModal } = this.props;
+    const { header, userId, userName, roleLevel, group, openModal } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -41,6 +43,7 @@ class UserGroupBar extends Component {
         </div>);
     }
     const { id, name, achievementRate } = group;
+    const entity = { id: userId, type: EntityType.USER, roleLevel };
     return (
       <div className={styles.row}>
         <div className={styles.name}>
@@ -50,12 +53,14 @@ class UserGroupBar extends Component {
           componentClassName={styles.progress}
           achievementRate={achievementRate}
         />
-        <button
-          className={styles.delete}
-          onClick={() => openModal(this.leaveGroupPrompt, { userId, userName, id, name })}
-        >
-          <img src="/img/delete.png" alt="" />
-        </button>
+        <Permissible entity={entity}>
+          <button
+            className={styles.delete}
+            onClick={() => openModal(this.leaveGroupPrompt, { userId, userName, id, name })}
+          >
+            <img src="/img/delete.png" alt="" />
+          </button>
+        </Permissible>
       </div>);
   }
 }

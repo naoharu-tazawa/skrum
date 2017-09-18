@@ -12,7 +12,6 @@ export default class PostList extends Component {
     isFetchingMore: PropTypes.bool.isRequired,
     hasMorePosts: PropTypes.bool.isRequired,
     items: postsPropTypes.isRequired,
-    roleLevel: PropTypes.number.isRequired,
     currentUserId: PropTypes.number.isRequired,
     dispatchFetchMorePosts: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
@@ -23,7 +22,7 @@ export default class PostList extends Component {
   };
 
   render() {
-    const { isFetchingMore, hasMorePosts, items, roleLevel, currentUserId,
+    const { isFetchingMore, hasMorePosts, items, currentUserId,
       dispatchFetchMorePosts, dispatchChangeDisclosureType, dispatchDeletePost,
       dispatchPostLike, dispatchDeleteLike, dispatchPostReply } = this.props;
     const lastId = (last(items) || {}).id;
@@ -34,7 +33,6 @@ export default class PostList extends Component {
             key={post.id}
             {...{
               post,
-              roleLevel,
               currentUserId,
               dispatchChangeDisclosureType,
               dispatchDeletePost,

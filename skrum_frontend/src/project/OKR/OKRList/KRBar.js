@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { join } from 'lodash';
+import Permissible from '../../../components/Permissible';
 import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntityLink from '../../../components/EntityLink';
 import DropdownMenu from '../../../components/DropdownMenu';
@@ -52,17 +53,21 @@ class KRBar extends Component {
           >
             <img src="/img/common/inc_organization.png" alt="Map" />
           </Link>
-          <DropdownMenu
-            options={[
-              { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(keyResult) },
-              { caption: '公開範囲設定',
-                onClick: () => openModal(changeKRDisclosureTypeDialog,
-                  { id, name, owner, disclosureType, dispatch: dispatchChangeDisclosureType }) },
-              { caption: '削除',
-                onClick: () => openModal(deleteKRPrompt,
-                  { id, name, owner, dispatch: dispatchDeleteKR }) },
-            ]}
-          />
+          <Permissible entity={owner}>
+            {({ permitted }) => (
+              <DropdownMenu
+                options={[
+                  { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(keyResult) },
+                  ...permitted && [{ caption: '公開範囲設定',
+                    onClick: () => openModal(changeKRDisclosureTypeDialog,
+                      { ...{ id, name, owner, disclosureType },
+                        dispatch: dispatchChangeDisclosureType }) }],
+                  ...permitted && [{ caption: '削除',
+                    onClick: () => openModal(deleteKRPrompt,
+                      { id, name, owner, dispatch: dispatchDeleteKR }) }],
+                ]}
+              />)}
+          </Permissible>
         </div>
       </div>);
   }

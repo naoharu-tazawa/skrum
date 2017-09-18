@@ -8,7 +8,7 @@ import ProgressPercentage from '../../../components/ProgressPercentage';
 import DropdownMenu from '../../../components/DropdownMenu';
 import Dropdown from '../../../components/Dropdown';
 import EntityLink from '../../../components/EntityLink';
-import Editable from '../../../editors/Editable';
+import Permissible from '../../../components/Permissible';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
 import { replacePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
@@ -90,12 +90,16 @@ class KRDetailsBar extends Component {
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
           {type === OKRType.KR && (
-            <Dropdown
-              triggerIcon="/img/checkin.png"
-              content={props =>
-                <NewAchievement {...{ subject, id, achievedValue, targetValue, unit, ...props }} />}
-              arrow="right"
-            />)}
+            <Permissible entity={owner}>
+              <Dropdown
+                triggerIcon="/img/checkin.png"
+                content={props =>
+                  <NewAchievement
+                    {...{ subject, id, achievedValue, targetValue, unit, ...props }}
+                  />}
+                arrow="right"
+              />
+            </Permissible>)}
           {type === OKRType.OKR && <div className={styles.checkinSpace} />}
           <Link
             className={styles.tool}
@@ -103,7 +107,7 @@ class KRDetailsBar extends Component {
           >
             <img src="/img/common/inc_organization.png" alt="Map" />
           </Link>
-          <Editable entity={owner}>
+          <Permissible entity={owner}>
             <DropdownMenu
               options={[
                 // { caption: '担当者変更',
@@ -120,7 +124,7 @@ class KRDetailsBar extends Component {
                     { id, name, owner, dispatch: dispatchDeleteKR }) },
               ]}
             />
-          </Editable>
+          </Permissible>
         </div>
       </div>);
   }
