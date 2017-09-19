@@ -18,6 +18,38 @@ use AppBundle\Api\ResponseDTO\PostDTO;
 class TimelineController extends BaseController
 {
     /**
+     * タイムライン取得（ユーザ）
+     *
+     * @Rest\Get("/v1/users/{userId}/posts.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param string $userId ユーザID
+     * @return array
+     */
+    public function getUserPostsAction(Request $request, string $userId): array
+    {
+        // リクエストパラメータを取得
+        $before = $request->get('before'); // 投稿ID
+
+        // リクエストパラメータのバリデーション
+        if ($before !== null) {
+            $beforeErrors = $this->checkIntID($before);
+            if($beforeErrors) throw new InvalidParameterException("タイムライン取得基準投稿IDが不正です", $beforeErrors);
+        }
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // ユーザ存在チェック
+        $this->getDBExistanceLogic()->checkUserExistance($userId, $auth->getCompanyId());
+
+        // タイムライン取得処理
+        $timelineService = $this->getTimelineService();
+        $postDTOArray = $timelineService->getUserTimeline($auth, $before);
+
+        return $postDTOArray;
+    }
+
+    /**
      * タイムライン取得（グループ）
      *
      * @Rest\Get("/v1/groups/{groupId}/posts.{_format}")

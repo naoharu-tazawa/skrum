@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Utils\DBConstant;
+
 /**
  * TPostリポジトリクラス
  *
@@ -25,6 +27,54 @@ class TPostRepository extends BaseRepository
             ->andWhere('mg.company = :companyId')
             ->setParameter('postId', $postId)
             ->setParameter('companyId', $companyId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 指定ユーザIDが投稿者のタイムライン（コメント投稿のみ）を取得
+     *
+     * @param integer $userId ユーザID
+     * @param string $before 取得基準投稿ID
+     * @return array
+     */
+    public function getMyPosts(int $userId, int $before = null): array
+    {
+        $qb = $this->createQueryBuilder('tp');
+        $qb->select('tp AS post', 'mu.lastName', 'mu.firstName', 'mra.roleLevel')
+            ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
+            ->leftJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
+            ->where('tp.posterType = :posterType')
+            ->andWhere('tp.posterUserId = :posterUserId')
+            ->andWhere('tp.parent IS NULL')
+            ->setParameter('posterType', DBConstant::POSTER_TYPE_USER)
+            ->setParameter('posterUserId', $userId);
+
+        if ($before !== null) {
+            $qb->andWhere('tp.id < :id')
+            ->setParameter('id', $before);
+        }
+
+        $qb->orderBy('tp.id', 'DESC')
+        ->setMaxResults(5);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 指定ユーザIDが投稿者のタイムライン（リプライ投稿のみ）を取得
+     *
+     * @param integer $postId 投稿ID
+     * @return array
+     */
+    public function getMyReplies(int $postId): array
+    {
+        $qb = $this->createQueryBuilder('tp');
+        $qb->select('tp AS reply', 'mu.lastName', 'mu.firstName')
+            ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
+            ->where('tp.parent = :parentId')
+            ->setParameter('parentId', $postId)
+            ->addOrderBy('tp.id', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

@@ -24,6 +24,117 @@ use AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO;
 class TimelineService extends BaseService
 {
     /**
+     * タイムライン取得（ユーザ）
+     *
+     * @param Auth $auth 認証情報
+     * @param string $before 取得基準投稿ID
+     * @return array
+     */
+    public function getUserTimeline(Auth $auth, int $before = null): array
+    {
+        $tPostRepos = $this->getTPostRepository();
+        $postInfoArray = $tPostRepos->getMyPosts($auth->getUserId(), $before);
+
+        // 返却DTO配列を生成
+        $disclosureLogic = $this->getDisclosureLogic();
+        $tLikeRepos = $this->getTLikeRepository();
+        $postDTOArray = array();
+        $companyName = null;
+        while (count($postDTOArray) < 5) {
+            if (count($postInfoArray) === 0) {
+                break;
+            }
+
+            foreach ($postInfoArray as  $postInfo) {
+                if (array_key_exists('post', $postInfo)) {
+                    // 閲覧権限をチェック
+                    if (!$disclosureLogic->checkPost($auth->getUserId(), $auth->getRoleLevel(), $postInfo['post'])) {
+                        continue;
+                    }
+
+                    // DTOに詰め替える
+                    $postDTOPost = new PostDTO();
+                    $postDTOPost->setPostId($postInfo['post']->getId());
+                    $postDTOPost->setPosterType($postInfo['post']->getPosterType());
+                    $postDTOPost->setPosterUserId($postInfo['post']->getPosterUserId());
+                    $postDTOPost->setPosterUserName($postInfo['lastName'] . ' ' . $postInfo['firstName']);
+                    $postDTOPost->setPosterUserRoleLevel($postInfo['roleLevel']);
+                    $postDTOPost->setPost($postInfo['post']->getPost());
+                    $postDTOPost->setPostedDatetime($postInfo['post']->getPostedDatetime());
+                    if ($postInfo['post']->getOkrActivity() !== null) {
+                        $tOkr = $postInfo['post']->getOkrActivity()->getOkr();
+
+                        $autoShare = new AutoShareDTO();
+                        $autoShare->setAutoPost($postInfo['post']->getAutoPost());
+                        $autoShare->setOkrId($tOkr->getOkrId());
+                        $autoShare->setOkrName($tOkr->getName());
+                        $autoShare->setOwnerType($tOkr->getOwnerType());
+                        if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+                            $autoShare->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
+                            $autoShare->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+                        } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                            $autoShare->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
+                            $autoShare->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+                        } else {
+                            $autoShare->setOwnerCompanyId($tOkr->getOwnerCompanyId());
+                            if ($companyName === null) {
+                                $mCompanyRepos = $this->getMCompanyRepository();
+                                $mCompany = $mCompanyRepos->find($auth->getCompanyId());
+                                $companyName = $mCompany->getCompanyName();
+                            }
+                            $autoShare->setOwnerCompanyName($companyName);
+                        }
+                        $postDTOPost->setAutoShare($autoShare);
+                    }
+
+                    // いいね数を取得
+                    $likesCount = $tLikeRepos->getLikesCount($postInfo['post']->getId());
+                    $postDTOPost->setLikesCount($likesCount);
+
+                    // いいねが押されているかチェック
+                    $tLike = $tLikeRepos->findOneBy(array('userId' => $auth->getUserId(), 'postId' => $postInfo['post']->getId()));
+                    if (empty($tLike)) {
+                        $postDTOPost->setLikedFlg(DBConstant::FLG_FALSE);
+                    } else {
+                        $postDTOPost->setLikedFlg(DBConstant::FLG_TRUE);
+                    }
+
+                    $postDTOPost->setDisclosureType($postInfo['post']->getDisclosureType());
+
+                    // リプライ投稿があればセット
+                    $postDTOReplyArray = array();
+                    $replyInfoArray = $tPostRepos->getMyReplies($postInfo['post']->getId());
+                    foreach ($replyInfoArray as $replyInfo) {
+                        if (array_key_exists('reply', $replyInfo)) {
+                            $postDTOReply = new PostDTO();
+                            $postDTOReply->setPostId($replyInfo['reply']->getId());
+                            $postDTOReply->setPosterUserId($replyInfo['reply']->getPosterUserId());
+                            $postDTOReply->setPosterUserName($replyInfo['lastName'] . ' ' . $replyInfo['firstName']);
+                            $postDTOReply->setPost($replyInfo['reply']->getPost());
+                            $postDTOReply->setPostedDatetime($replyInfo['reply']->getPostedDatetime());
+                            $postDTOReplyArray[] = $postDTOReply;
+                        }
+                    }
+                    $postDTOPost->setReplies($postDTOReplyArray);
+
+                    $postDTOArray[] = $postDTOPost;
+                }
+            }
+
+            if (count($postDTOArray) < 5) {
+                $before = $postInfoArray[count($postInfoArray) - 1]['post']->getId();
+
+                $postInfoArray = $tPostRepos->getPosts($groupId, $before);
+                if (count($postInfoArray) === 0) {
+                    break;
+                }
+            }
+        }
+
+        return $postDTOArray;
+    }
+
+    /**
      * タイムライン取得（グループ）
      *
      * @param Auth $auth 認証情報
