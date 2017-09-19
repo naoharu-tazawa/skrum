@@ -106,7 +106,7 @@ class KRDetailsBar extends Component {
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
           {type === OKRType.KR && (
-            <Permissible entity={owner}>
+            <Permissible entity={owner} fallback={<div className={styles.checkinSpace} />}>
               <Dropdown
                 triggerIcon="/img/checkin.png"
                 content={props =>
