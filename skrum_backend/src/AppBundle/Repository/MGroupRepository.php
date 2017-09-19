@@ -75,7 +75,7 @@ class MGroupRepository extends BaseRepository
     public function searchGroup(string $keyword, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mg');
-        $qb->select('mg.groupId', 'mg.groupName')
+        $qb->select('mg.groupId', 'mg.groupName', 'mg.groupType')
             ->where('mg.company = :companyId')
             ->andWhere('mg.companyFlg = :companyFlg')
             ->andWhere('mg.archivedFlg = :archivedFlg')

@@ -37,6 +37,13 @@ class OwnerSearchDTO
      *
      * @JSON\Type("integer")
      */
+    private $ownerUserRoleLevel;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $ownerGroupId;
 
     /**
@@ -45,6 +52,13 @@ class OwnerSearchDTO
      * @JSON\Type("string")
      */
     private $ownerGroupName;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $ownerGroupType;
 
     /**
      * @var integer
@@ -133,6 +147,30 @@ class OwnerSearchDTO
     }
 
     /**
+     * Set ownerUserRoleLevel
+     *
+     * @param integer $ownerUserRoleLevel
+     *
+     * @return OwnerSearchDTO
+     */
+    public function setOwnerUserRoleLevel($ownerUserRoleLevel)
+    {
+        $this->ownerUserRoleLevel = $ownerUserRoleLevel;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerUserRoleLevel
+     *
+     * @return integer
+     */
+    public function getOwnerUserRoleLevel()
+    {
+        return $this->ownerUserRoleLevel;
+    }
+
+    /**
      * Set ownerGroupId
      *
      * @param integer $ownerGroupId
@@ -178,6 +216,30 @@ class OwnerSearchDTO
     public function getOwnerGroupName()
     {
         return $this->ownerGroupName;
+    }
+
+    /**
+     * Set ownerGroupType
+     *
+     * @param string $ownerGroupType
+     *
+     * @return OwnerSearchDTO
+     */
+    public function setOwnerGroupType($ownerGroupType)
+    {
+        $this->ownerGroupType = $ownerGroupType;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerGroupType
+     *
+     * @return string
+     */
+    public function getOwnerGroupType()
+    {
+        return $this->ownerGroupType;
     }
 
     /**

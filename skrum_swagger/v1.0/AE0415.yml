@@ -32,9 +32,13 @@ paths:
                 type: integer
               ownerUserName:
                 type: string
+              ownerUserRoleLevel:
+                type: string
               ownerGroupId:
                 type: integer
               ownerGroupName:
+                type: string
+              ownerGroupType:
                 type: string
               ownerCompanyId:
                 type: integer

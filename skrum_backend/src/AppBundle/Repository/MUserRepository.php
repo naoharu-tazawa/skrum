@@ -48,13 +48,14 @@ class MUserRepository extends BaseRepository
     public function searchUser(string $keyword, int $companyId): array
     {
         $sql = <<<SQL
-        SELECT m1_.userId, m1_.lastName, m1_.firstName
+        SELECT m2_.userId, m2_.lastName, m2_.firstName, m2_.roleLevel
         FROM (
-            SELECT m0_.user_id AS userId, m0_.last_name AS lastName, m0_.first_name AS firstName, CONCAT(m0_.last_name, m0_.first_name) AS name
+            SELECT m0_.user_id AS userId, m0_.last_name AS lastName, m0_.first_name AS firstName, CONCAT(m0_.last_name, m0_.first_name) AS name, m1_.role_level AS roleLevel
             FROM m_user m0_
+            INNER JOIN m_role_assignment m1_ ON m0_.role_assignment_id = m1_.role_assignment_id
             WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
-            ) AS m1_
-        WHERE m1_.name LIKE :keyword;
+            ) AS m2_
+        WHERE m2_.name LIKE :keyword;
 SQL;
 
         $params['companyId'] = $companyId;

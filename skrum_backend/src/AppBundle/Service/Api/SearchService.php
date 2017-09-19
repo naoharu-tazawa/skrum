@@ -240,6 +240,7 @@ class SearchService extends BaseService
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
             $ownerSearchDTO->setOwnerUserId($mUser['userId']);
             $ownerSearchDTO->setOwnerUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
+            $ownerSearchDTO->setOwnerUserRoleLevel($mUser['roleLevel']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
         }
@@ -254,6 +255,7 @@ class SearchService extends BaseService
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
             $ownerSearchDTO->setOwnerGroupId($mGroup['groupId']);
             $ownerSearchDTO->setOwnerGroupName($mGroup['groupName']);
+            $ownerSearchDTO->setOwnerGroupType($mGroup['groupType']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
         }
