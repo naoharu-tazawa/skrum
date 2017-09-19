@@ -91,6 +91,7 @@ class UserBar extends Component {
         </div>);
     }
     const { id, name, roleAssignmentId, roleLevel, lastLogin } = user;
+    const allowManaging = currentUserId !== id && isAuthoritativeOver(currentRoleLevel, roleLevel);
     return (
       <div className={styles.bar}>
         <div className={styles.name}>
@@ -101,25 +102,24 @@ class UserBar extends Component {
           {lastLogin && `${formatDate(lastLogin)}（${toRelativeTimeText(lastLogin)}）`}
         </div>
         <div className={styles.action}>
-          {isAuthoritativeOver(currentRoleLevel, roleLevel) && (
-            <DropdownMenu
-              options={[
-                { caption: '目標を見る',
-                  path: implodePath({ tab: 'objective', subject: 'user', id }) },
-                { caption: '所属グループを見る',
-                  path: implodePath({ tab: 'control', subject: 'user', id }) },
-                ...currentUserId !== id && [{ caption: 'パスワードリセット',
-                  onClick: () => openModal(this.resetPasswordPrompt,
-                    { id, name }) }],
-                ...currentUserId !== id && [{ caption: 'ユーザ権限変更',
-                  onClick: () => openModal(this.changeRoleLevelDialog,
-                    { id, name, roleAssignmentId }) }],
-                ...currentUserId !== id && [{ caption: 'ユーザ削除',
-                  onClick: () => openModal(this.deleteUserPrompt,
-                    { id, name }) }],
-              ]}
-              align="right"
-            />)}
+          <DropdownMenu
+            options={[
+              { caption: '目標を見る',
+                path: implodePath({ tab: 'objective', subject: 'user', id }) },
+              { caption: '所属グループを見る',
+                path: implodePath({ tab: 'control', subject: 'user', id }) },
+              ...allowManaging && [{ caption: 'パスワードリセット',
+                onClick: () => openModal(this.resetPasswordPrompt,
+                  { id, name }) }],
+              ...allowManaging && [{ caption: 'ユーザ権限変更',
+                onClick: () => openModal(this.changeRoleLevelDialog,
+                  { id, name, roleAssignmentId }) }],
+              ...allowManaging && [{ caption: 'ユーザ削除',
+                onClick: () => openModal(this.deleteUserPrompt,
+                  { id, name }) }],
+            ]}
+            align="right"
+          />
         </div>
       </div>);
   }
