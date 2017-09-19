@@ -60,20 +60,28 @@ class OkrDetails extends Component {
         <div className={`${styles.content} ${styles.cf}`}>
           <div className={styles.boxInfo}>
             <div className={styles.ttl_team}>
-              <InlineTextArea
-                value={name}
-                required
-                maxLength={120}
-                onSubmit={value => dispatchPutOKR(id, { okrName: value })}
-              />
+              <Permissible entity={owner}>
+                {({ permitted }) => (
+                  <InlineTextArea
+                    value={name}
+                    required
+                    maxLength={120}
+                    readonly={!permitted}
+                    onSubmit={value => dispatchPutOKR(id, { okrName: value })}
+                  />)}
+              </Permissible>
             </div>
             <div className={styles.txt}>
-              <InlineTextArea
-                value={detail}
-                placeholder="目標詳細を入力してください"
-                maxLength={250}
-                onSubmit={value => dispatchPutOKR(id, { okrDetail: value })}
-              />
+              <Permissible entity={owner}>
+                {({ permitted }) => (
+                  <InlineTextArea
+                    value={detail}
+                    placeholder="目標詳細を入力してください"
+                    maxLength={250}
+                    readonly={!permitted}
+                    onSubmit={value => dispatchPutOKR(id, { okrDetail: value })}
+                  />)}
+              </Permissible>
             </div>
             <ProgressPercentage
               componentClassName={`${styles.bar_top_bottom} ${styles.cf}`}
@@ -82,20 +90,28 @@ class OkrDetails extends Component {
             >
               <span className={styles.floatR}>
                 <span className={`${styles.txt_date}`}>開始日：
-                  <InlineDateInput
-                    value={startDate}
-                    required
-                    validate={value => compareDates(value, endDate) > 0 && '期限日は開始日以降に設定してください'}
-                    onSubmit={value => dispatchPutOKR(id, { startDate: value })}
-                  />
+                  <Permissible entity={owner}>
+                    {({ permitted }) => (
+                      <InlineDateInput
+                        value={startDate}
+                        required
+                        validate={value => compareDates(value, endDate) > 0 && '期限日は開始日以降に設定してください'}
+                        readonly={!permitted}
+                        onSubmit={value => dispatchPutOKR(id, { startDate: value })}
+                      />)}
+                  </Permissible>
                 </span>
                 <span className={`${styles.txt_date}`}>期限日：
-                  <InlineDateInput
-                    value={endDate}
-                    required
-                    validate={value => compareDates(startDate, value) > 0 && '期限日は開始日以降に設定してください'}
-                    onSubmit={value => dispatchPutOKR(id, { endDate: value })}
-                  />
+                  <Permissible entity={owner}>
+                    {({ permitted }) => (
+                      <InlineDateInput
+                        value={endDate}
+                        required
+                        validate={value => compareDates(startDate, value) > 0 && '期限日は開始日以降に設定してください'}
+                        readonly={!permitted}
+                        onSubmit={value => dispatchPutOKR(id, { endDate: value })}
+                      />)}
+                  </Permissible>
                 </span>
               </span>
             </ProgressPercentage>

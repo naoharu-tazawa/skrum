@@ -81,8 +81,9 @@ class NewAchievement extends Component {
 const mapDispatchToProps = (dispatch, { subject }) => {
   const dispatchPostAchievement = (id, entry) =>
     dispatch(postAchievement(id, entry))
-      .then(({ payload: { data: { data: { parentOkr = {} } = {} } = {}, message }, error }) =>
-        dispatch(syncOkr(subject, { payload: { data: parentOkr, message }, error })));
+      .then(({ payload: { data: { parentOkr, targetOkr } = {}, message }, error }) =>
+        dispatch(syncOkr(subject,
+          { payload: { data: parentOkr || targetOkr || {}, message }, error })));
   return { dispatchPostAchievement };
 };
 

@@ -99,7 +99,7 @@ export default (state = {
         return { ...state, isPostingAchievement: false, error: { message: payload.message } };
       }
       const { parentOkr, targetOkr } = payload.data;
-      const { okrId: parentOkrId, achievementRate } = parentOkr;
+      const { okrId: parentOkrId, achievementRate } = parentOkr || {};
       const { okrId, ...update } = targetOkr;
       const parentObjective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
       const objective = mergeUpdateById(parentObjective, 'okrId', update, okrId);

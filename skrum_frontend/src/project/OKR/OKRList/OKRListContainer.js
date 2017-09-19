@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { okrsPropTypes } from './propTypes';
 import OKRList from './OKRList';
 import NewOKR from '../NewOKR/NewOKR';
+import Permissible from '../../../components/Permissible';
 import { withModal } from '../../../util/ModalUtil';
 import { mapOKR } from '../../../util/OKRUtil';
 import { EntityType } from '../../../util/EntityUtil';
@@ -13,7 +14,11 @@ class OKRListContainer extends Component {
 
   static propTypes = {
     okrs: okrsPropTypes,
+    id: PropTypes.number,
+    ownerType: PropTypes.string,
     ownerName: PropTypes.string,
+    roleLevel: PropTypes.number,
+    groupType: PropTypes.string,
     dispatchChangeOkrOwner: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
@@ -24,35 +29,38 @@ class OKRListContainer extends Component {
   };
 
   render() {
-    const { okrs = [], ownerName, dispatchChangeOkrOwner, dispatchChangeParentOkr,
+    const { okrs = [], id, ownerType, ownerName, roleLevel, groupType,
+      dispatchChangeOkrOwner, dispatchChangeParentOkr,
       dispatchChangeDisclosureType, dispatchSetRatios, dispatchDeleteOkr, dispatchDeleteKR,
       openModal } = this.props;
+    const onAddOkr = () => openModal(NewOKR, { type: 'Okr', ownerName });
     return (
-      <div>
-        <OKRList
-          {...{
-            okrs,
-            dispatchChangeOkrOwner,
-            dispatchChangeParentOkr,
-            dispatchChangeDisclosureType,
-            dispatchSetRatios,
-            dispatchDeleteOkr,
-            dispatchDeleteKR,
-          }}
-          onAddOkr={() => openModal(NewOKR, { type: 'Okr', ownerName })}
-          onAddParentedOkr={okr => openModal(NewOKR,
-            { type: 'Okr', parentOkr: okr, differingParentOkrOwner: true })}
-        />
-      </div>);
+      <Permissible entity={{ id, type: ownerType, roleLevel, groupType }}>
+        {({ permitted }) => (
+          <OKRList
+            {...{
+              okrs,
+              dispatchChangeOkrOwner,
+              dispatchChangeParentOkr,
+              dispatchChangeDisclosureType,
+              dispatchSetRatios,
+              dispatchDeleteOkr,
+              dispatchDeleteKR,
+            }}
+            onAddOkr={permitted ? onAddOkr : null}
+            onAddParentedOkr={okr => openModal(NewOKR,
+              { type: 'Okr', parentOkr: okr, differingParentOkrOwner: true })}
+          />)}
+      </Permissible>);
   }
 }
 
 const mapBasicsStateToProps = (subject, ownerType) => (state) => {
   const { [subject]: basics = {} } = state.basics || {};
-  const { okrs = [] } = basics || {};
-  const { name, firstName, lastName } = basics[subject] || {};
-  return { okrs: okrs.map(okr => mapOKR({ ...okr, ownerType })),
-    ownerName: name || `${lastName} ${firstName}` };
+  const okrs = (basics.okrs || []).map(okr => mapOKR({ ...okr, ownerType }));
+  const { [`${subject}Id`]: id = 0, name, firstName, lastName, roleLevel, groupType } = basics[subject] || {};
+  const ownerName = name || `${lastName} ${firstName}`;
+  return { okrs, id, ownerType, ownerName, roleLevel, groupType };
 };
 
 const mapDispatchToProps = subject => (dispatch) => {

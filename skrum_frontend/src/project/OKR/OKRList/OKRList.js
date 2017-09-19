@@ -10,7 +10,7 @@ export default class OKRList extends Component {
 
   static propTypes = {
     okrs: okrsPropTypes,
-    onAddOkr: PropTypes.func.isRequired,
+    onAddOkr: PropTypes.func,
     onAddParentedOkr: PropTypes.func.isRequired,
     dispatchChangeOkrOwner: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
@@ -69,14 +69,15 @@ export default class OKRList extends Component {
             ];
           }))}
         </div>
-        <div className={`${styles.footer} ${styles.alignC}`}>
-          <button className={styles.addOkr} onClick={onAddOkr}>
-            <span className={styles.circle}>
-              <img src="/img/common/icn_plus.png" alt="Add" />
-            </span>
-            <span>新しい目標を追加</span>
-          </button>
-        </div>
+        {onAddOkr && (
+          <div className={`${styles.footer} ${styles.alignC}`}>
+            <button className={styles.addOkr} onClick={onAddOkr}>
+              <span className={styles.circle}>
+                <img src="/img/common/icn_plus.png" alt="Add" />
+              </span>
+              <span>新しい目標を追加</span>
+            </button>
+          </div>)}
       </div>);
   }
 }

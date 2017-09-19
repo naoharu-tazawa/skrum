@@ -80,7 +80,8 @@ export default class InlineEditor extends PureComponent {
         title={error}
       >
         <span className={styles.value}>
-          {displayValue === '' ? <span className={styles.placeholder}>{placeholder}</span> : displayValue}
+          {displayValue === '' && !readonly ?
+            <span className={styles.placeholder}>{placeholder}</span> : displayValue}
         </span>
         {!readonly && !isEditing &&
           <span

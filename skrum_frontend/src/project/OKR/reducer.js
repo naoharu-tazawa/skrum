@@ -41,7 +41,7 @@ export default (state = {
       const { subject, isOwnerCurrent, parentOkr, targetOkr } = payload.data;
       const { parentOkrId } = targetOkr;
       const { [subject]: basics } = state;
-      const okrs = (isOwnerCurrent ? [...basics.okrs, targetOkr] : basics.okrs).map(okr =>
+      const okrs = (isOwnerCurrent ? [...basics.okrs, targetOkr] : basics.okrs || []).map(okr =>
         (okr.okrId === parentOkrId ? {
           ...okr,
           ...parentOkr,

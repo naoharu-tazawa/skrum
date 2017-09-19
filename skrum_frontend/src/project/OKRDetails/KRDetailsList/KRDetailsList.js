@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { okrPropTypes, keyResultsPropTypes } from '../propTypes';
 import KRDetailsBar from './KRDetailsBar';
+import Permissible from '../../../components/Permissible';
 import styles from './KRDetailsList.css';
 
 export default class KRDetailsList extends Component {
@@ -42,14 +43,16 @@ export default class KRDetailsList extends Component {
               }}
             />)}
         </div>
-        <div className={`${styles.footer} ${styles.alignC}`}>
-          <button className={styles.addKR} onClick={onAdd}>
-            <span className={styles.circle}>
-              <img src="/img/common/icn_plus.png" alt="Add" />
-            </span>
-            <span>新しいサブ目標を追加</span>
-          </button>
-        </div>
+        <Permissible entity={parentOkr.owner}>
+          <div className={`${styles.footer} ${styles.alignC}`}>
+            <button className={styles.addKR} onClick={onAdd}>
+              <span className={styles.circle}>
+                <img src="/img/common/icn_plus.png" alt="Add" />
+              </span>
+              <span>新しいサブ目標を追加</span>
+            </button>
+          </div>
+        </Permissible>
       </div>);
   }
 }
