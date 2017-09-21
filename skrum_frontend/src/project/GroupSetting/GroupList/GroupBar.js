@@ -48,6 +48,7 @@ class GroupBar extends Component {
         </div>);
     }
     const { id, type, name } = group;
+    const allowManaging = !isBasicRole(currentRoleLevel) || type !== GroupType.DEPARTMENT;
     return (
       <div className={styles.bar}>
         <div className={styles.name}>
@@ -55,19 +56,18 @@ class GroupBar extends Component {
         </div>
         <div className={styles.type}>{GroupTypeName[type]}</div>
         <div className={styles.action}>
-          {(!isBasicRole(currentRoleLevel) || type !== GroupType.DEPARTMENT) && (
-            <DropdownMenu
-              options={[
-                { caption: '目標を見る',
-                  path: implodePath({ tab: 'objective', subject: 'group', id }) },
-                { caption: '所属メンバーを見る',
-                  path: implodePath({ tab: 'control', subject: 'group', id }) },
-                { caption: 'グループ削除',
-                  onClick: () => openModal(this.deleteGroupPrompt,
-                    { id, name }) },
-              ]}
-              align="right"
-            />)}
+          <DropdownMenu
+            options={[
+              { caption: '目標を見る',
+                path: implodePath({ tab: 'objective', subject: 'group', id }) },
+              { caption: '所属メンバーを見る',
+                path: implodePath({ tab: 'control', subject: 'group', id }) },
+              ...allowManaging && [{ caption: 'グループ削除',
+                onClick: () => openModal(this.deleteGroupPrompt,
+                  { id, name }) }],
+            ]}
+            align="right"
+          />
         </div>
       </div>);
   }

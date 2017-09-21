@@ -60,6 +60,7 @@ class SubMenu extends Component {
       <div className={styles.subMenu}>
         {!isSetting && <TimeframesDropdown
           plain
+          tabIndex={-1}
           onChange={({ value: timeframeId }) => browserHistory.push(replacePath({ timeframeId }))}
         />}
         {!isSetting && <button className={styles.addOKR} onClick={onAdd}>

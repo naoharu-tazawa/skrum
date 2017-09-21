@@ -46,6 +46,7 @@ class TimeframesDropdown extends PureComponent {
         placeholder=""
         clearable={false}
         searchable={false}
+        openOnFocus
         tabIndex={`${tabIndex}`}
       />
     );
