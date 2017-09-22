@@ -8,19 +8,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * TPost
  *
- * @ORM\Table(name="t_post", indexes={@ORM\Index(name="idx_post_01", columns={"okr_activity_id"}), @ORM\Index(name="idx_post_02", columns={"parent_id"}), @ORM\Index(name="idx_post_03", columns={"timeline_owner_group_id"})})
+ * @ORM\Table(name="t_post", indexes={@ORM\Index(name="idx_post_01", columns={"okr_activity_id"}), @ORM\Index(name="idx_post_02", columns={"parent_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TPostRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class TPost
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="timeline_owner_group_id", type="integer", nullable=false)
-     */
-    private $timelineOwnerGroupId;
-
     /**
      * @var string
      *
@@ -130,30 +123,6 @@ class TPost
     private $parent;
 
 
-
-    /**
-     * Set timelineOwnerGroupId
-     *
-     * @param integer $timelineOwnerGroupId
-     *
-     * @return TPost
-     */
-    public function setTimelineOwnerGroupId($timelineOwnerGroupId)
-    {
-        $this->timelineOwnerGroupId = $timelineOwnerGroupId;
-
-        return $this;
-    }
-
-    /**
-     * Get timelineOwnerGroupId
-     *
-     * @return integer
-     */
-    public function getTimelineOwnerGroupId()
-    {
-        return $this->timelineOwnerGroupId;
-    }
 
     /**
      * Set posterType

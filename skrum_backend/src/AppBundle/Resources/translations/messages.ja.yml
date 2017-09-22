@@ -20,17 +20,17 @@ parameters:
 
     file_registration_success: '【Skrum】CSVファイル登録成功データ'
 
-    auto_post_type_generate: 'さんの目標が作成されました。'
+    auto_post_type_generate_o: 'さんの目標が作成されました。'
 
-    auto_post_type_achievement: 'さんの達成値が%%s%%sから%%s%%sに進捗しました。（%%s%%s%%s）'
+    auto_post_type_generate_kr: 'さんのサブ目標が作成されました。'
 
-    auto_post_type_achievement_30: 'さんが目標進捗率30%を達成しました。'
+    auto_post_type_achievement_o: 'さんの目標達成値が%%s%%sから%%s%%sに進捗しました。（%%s%%s%%s）'
 
-    auto_post_type_achievement_50: 'さんが目標進捗率50%を達成しました。'
+    auto_post_type_achievement_kr: 'さんのサブ目標達成値が%%s%%sから%%s%%sに進捗しました。（%%s%%s%%s）'
 
-    auto_post_type_achievement_70: 'さんが目標進捗率70%を達成しました。'
+    auto_post_type_achievement_rate_o: 'さんが目標進捗率%%d%%%を達成しました。'
 
-    auto_post_type_achievement_100: 'さんが目標進捗率100%を達成しました。'
+    auto_post_type_achievement_rate_kr: 'さんがサブ目標進捗率%%d%%%を達成しました。'
 
     feedback_target_reason_login: '%%d日以上ログインしていません'
 

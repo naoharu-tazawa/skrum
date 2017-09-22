@@ -8,6 +8,7 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
 use AppBundle\Entity\TOkrActivity;
 use AppBundle\Entity\TPost;
+use AppBundle\Entity\TPostTo;
 
 /**
  * 投稿ロジッククラス
@@ -89,17 +90,22 @@ class PostLogic extends BaseLogic
         }
 
         // 投稿登録
+        $tPost = new TPost();
+        $tPost->setPosterType(DBConstant::POSTER_TYPE_USER);
+        $tPost->setPosterUserId($auth->getUserId());
+        if ($manualPost !== null) $tPost->setPost($manualPost);
+        if ($autoPost !== null) $tPost->setAutoPost($subject . $autoPost);
+        $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
+        $tPost->setOkrActivity($tOkrActivity);
+        $tPost->setDisclosureType($tOkr->getDisclosureType());
+        $this->persist($tPost);
+
+        // 投稿先登録
         foreach ($groupIdArray as $groupId) {
-            $tPost = new TPost();
-            $tPost->setTimelineOwnerGroupId($groupId);
-            $tPost->setPosterType(DBConstant::POSTER_TYPE_USER);
-            $tPost->setPosterUserId($auth->getUserId());
-            if ($manualPost !== null) $tPost->setPost($manualPost);
-            if ($autoPost !== null) $tPost->setAutoPost($subject . $autoPost);
-            $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
-            $tPost->setOkrActivity($tOkrActivity);
-            $tPost->setDisclosureType($tOkr->getDisclosureType());
-            $this->persist($tPost);
+            $tPostTo = new TPostTo();
+            $tPostTo->setPost($tPost);
+            $tPostTo->setTimelineOwnerGroupId($groupId);
+            $this->persist($tPostTo);
         }
 
         $this->flush();
@@ -177,21 +183,27 @@ class PostLogic extends BaseLogic
                 }
             }
 
+            // 投稿登録
+            $tPost = new TPost();
+            if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER || $tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                $tPost->setPosterType(DBConstant::POSTER_TYPE_GROUP);
+                $tPost->setPosterGroupId($groupIdArray[0]);
+            } else {
+                $tPost->setPosterType(DBConstant::POSTER_TYPE_COMPANY);
+                $tPost->setPosterCompanyId($auth->getCompanyId());
+            }
+            $tPost->setAutoPost($subject . $autoPost);
+            $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
+            $tPost->setOkrActivity($tOkrActivity);
+            $tPost->setDisclosureType($tOkr->getDisclosureType());
+            $this->persist($tPost);
+
+            // 投稿先登録
             foreach ($groupIdArray as $groupId) {
-                $tPost = new TPost();
-                $tPost->setTimelineOwnerGroupId($groupId);
-                if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER || $tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                    $tPost->setPosterType(DBConstant::POSTER_TYPE_GROUP);
-                    $tPost->setPosterGroupId($groupId);
-                } else {
-                    $tPost->setPosterType(DBConstant::POSTER_TYPE_COMPANY);
-                    $tPost->setPosterCompanyId($auth->getCompanyId());
-                }
-                $tPost->setAutoPost($subject . $autoPost);
-                $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
-                $tPost->setOkrActivity($tOkrActivity);
-                $tPost->setDisclosureType($tOkr->getDisclosureType());
-                $this->persist($tPost);
+                $tPostTo = new TPostTo();
+                $tPostTo->setPost($tPost);
+                $tPostTo->setTimelineOwnerGroupId($groupId);
+                $this->persist($tPostTo);
             }
 
             $this->flush();
@@ -230,15 +242,20 @@ class PostLogic extends BaseLogic
         $subject = null;
 
         // 自動投稿文面作成
+        if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
+            $format = $this->getParameter('auto_post_type_achievement_rate_o');
+        } elseif ($tOkr->getType() === DBConstant::OKR_TYPE_KEY_RESULT) {
+            $format = $this->getParameter('auto_post_type_achievement_rate_kr');
+        }
         $autoPost = null;
         if ($achievementRate >= 100 && $previousAchievementRate < 100) {
-            $autoPost = $this->getParameter('auto_post_type_achievement_100');
+            $autoPost = sprintf($format, 100);
         } elseif ($achievementRate >= 70 && $previousAchievementRate < 70) {
-            $autoPost = $this->getParameter('auto_post_type_achievement_70');
+            $autoPost = sprintf($format, 70);
         } elseif ($achievementRate >= 50 && $previousAchievementRate < 50) {
-            $autoPost = $this->getParameter('auto_post_type_achievement_50');
+            $autoPost = sprintf($format, 50);
         } elseif ($achievementRate >= 30 && $previousAchievementRate < 30) {
-            $autoPost = $this->getParameter('auto_post_type_achievement_30');
+            $autoPost = sprintf($format, 30);
         }
 
         if ($autoPost !== null) {
@@ -298,21 +315,25 @@ class PostLogic extends BaseLogic
                 }
             }
 
+            // 投稿登録
+            $tPost = new TPost();
+            if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER || $tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                $tPost->setPosterType(DBConstant::POSTER_TYPE_GROUP);
+                $tPost->setPosterGroupId($groupIdArray[0]);
+            } else {
+                $tPost->setPosterType(DBConstant::POSTER_TYPE_COMPANY);
+                $tPost->setPosterCompanyId($auth->getCompanyId());
+            }
+            $tPost->setAutoPost($subject . $autoPost);
+            $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
+            $tPost->setOkrActivity($tOkrActivity);
+            $tPost->setDisclosureType($tOkr->getDisclosureType());
+            $this->persist($tPost);
             foreach ($groupIdArray as $groupId) {
-                $tPost = new TPost();
-                $tPost->setTimelineOwnerGroupId($groupId);
-                if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER || $tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                    $tPost->setPosterType(DBConstant::POSTER_TYPE_GROUP);
-                    $tPost->setPosterGroupId($groupId);
-                } else {
-                    $tPost->setPosterType(DBConstant::POSTER_TYPE_COMPANY);
-                    $tPost->setPosterCompanyId($auth->getCompanyId());
-                }
-                $tPost->setAutoPost($subject . $autoPost);
-                $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
-                $tPost->setOkrActivity($tOkrActivity);
-                $tPost->setDisclosureType($tOkr->getDisclosureType());
-                $this->persist($tPost);
+                $tPostTo = new TPostTo();
+                $tPostTo->setPost($tPost);
+                $tPostTo->setTimelineOwnerGroupId($groupId);
+                $this->persist($tPostTo);
             }
 
             $this->flush();

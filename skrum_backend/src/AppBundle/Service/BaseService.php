@@ -432,6 +432,11 @@ class BaseService
         return $this->entityManager->getRepository('AppBundle:TPost');
     }
 
+    protected function getTPostToRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TPostTo');
+    }
+
     protected function getTPreUserRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TPreUser');

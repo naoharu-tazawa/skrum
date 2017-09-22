@@ -380,8 +380,13 @@ class OkrService extends BaseService
             $this->persist($tOkrActivity);
 
             // 自動投稿登録（作成）
+            if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
+                $autoPost = $this->getParameter('auto_post_type_generate_o');
+            } elseif ($tOkr->getType() === DBConstant::OKR_TYPE_KEY_RESULT) {
+                $autoPost = $this->getParameter('auto_post_type_generate_kr');
+            }
             $postLogic = $this->getPostLogic();
-            $postLogic->autoPostPosterIsUser($auth, $this->getParameter('auto_post_type_generate'), $tOkr, $tOkrActivity);
+            $postLogic->autoPostPosterIsUser($auth, $autoPost, $tOkr, $tOkrActivity);
 
             // OKRアクティビティ登録（紐付け）
             if ($alignmentFlg) {
@@ -581,8 +586,13 @@ class OkrService extends BaseService
                 $mathSymbol = null;
             }
             $unit = $tOkr->getUnit();
+            if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
+                $format = $this->getParameter('auto_post_type_achievement_o');
+            } elseif ($tOkr->getType() === DBConstant::OKR_TYPE_KEY_RESULT) {
+                $format = $this->getParameter('auto_post_type_achievement_kr');
+            }
             $autoPostAchievement = sprintf(
-                    $this->getParameter('auto_post_type_achievement'),
+                    $format,
                     number_format($previousAchievedValue),
                     $unit,
                     number_format($data['achievedValue']),

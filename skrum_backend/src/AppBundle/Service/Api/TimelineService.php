@@ -13,6 +13,7 @@ use AppBundle\Entity\MUser;
 use AppBundle\Entity\TEmailReservation;
 use AppBundle\Entity\TLike;
 use AppBundle\Entity\TPost;
+use AppBundle\Entity\TPostTo;
 use AppBundle\Api\ResponseDTO\PostDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\AutoShareDTO;
 
@@ -224,7 +225,7 @@ class TimelineService extends BaseService
 
                     // リプライ投稿があればセット
                     $postDTOReplyArray = array();
-                    $replyInfoArray = $tPostRepos->getReplies($groupId, $postInfo['post']->getId());
+                    $replyInfoArray = $tPostRepos->getReplies($postInfo['post']->getId());
                     foreach ($replyInfoArray as $replyInfo) {
                         if (array_key_exists('reply', $replyInfo)) {
                             $postDTOReply = new PostDTO();
@@ -287,13 +288,18 @@ class TimelineService extends BaseService
         try {
             // コメント登録
             $tPost = new TPost();
-            $tPost->setTimelineOwnerGroupId($groupId);
             $tPost->setPosterType(DBConstant::POSTER_TYPE_USER);
             $tPost->setPosterUserId($auth->getUserId());
             $tPost->setPost($data['post']);
             $tPost->setPostedDatetime(DateUtility::getCurrentDatetime());
             $tPost->setDisclosureType($data['disclosureType']);
             $this->persist($tPost);
+
+            // 投稿先グループ指定
+            $tPostTo = new TPostTo();
+            $tPostTo->setPost($tPost);
+            $tPostTo->setTimelineOwnerGroupId($groupId);
+            $this->persist($tPostTo);
 
             // メール送信予約
             $mUserRepos = $this->getMUserRepository();
@@ -387,19 +393,22 @@ class TimelineService extends BaseService
      */
     public function postReply(Auth $auth, array $data, TPost $tPost): PostDTO
     {
-        // リプライ登録
-        $tPostReply = new TPost();
-        $tPostReply->setTimelineOwnerGroupId($tPost->getTimelineOwnerGroupId());
-        $tPostReply->setPosterType(DBConstant::OKR_OWNER_TYPE_USER);
-        $tPostReply->setPosterUserId($auth->getUserId());
-        $tPostReply->setPost($data['post']);
-        $tPostReply->setPostedDatetime(DateUtility::getCurrentDatetime());
-        $tPostReply->setParent($tPost);
+        $this->beginTransaction();
 
         try {
+            // リプライ登録
+            $tPostReply = new TPost();
+            $tPostReply->setPosterType(DBConstant::OKR_OWNER_TYPE_USER);
+            $tPostReply->setPosterUserId($auth->getUserId());
+            $tPostReply->setPost($data['post']);
+            $tPostReply->setPostedDatetime(DateUtility::getCurrentDatetime());
+            $tPostReply->setParent($tPost);
             $this->persist($tPostReply);
+
             $this->flush();
+            $this->commit();
         } catch (\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
         }
 
@@ -492,6 +501,10 @@ class TimelineService extends BaseService
 
         // 投稿削除
         try {
+            // 該当する宛先を全て削除
+            $tPostToRepos = $this->getTPostToRepository();
+            $tPostToRepos->deletePostTo($tPost->getId());
+
             foreach ($replyEntityArray as $replyEntity) {
                 $this->remove($replyEntity);
             }

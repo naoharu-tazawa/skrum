@@ -22,7 +22,8 @@ class TPostRepository extends BaseRepository
     {
         $qb = $this->createQueryBuilder('tp');
         $qb->select('tp')
-            ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tp.timelineOwnerGroupId = mg.groupId')
+            ->innerJoin('AppBundle:TPostTo', 'tpt', 'WITH', 'tp.id = tpt.post')
+            ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tpt.timelineOwnerGroupId = mg.groupId')
             ->where('tp.id = :postId')
             ->andWhere('mg.company = :companyId')
             ->setParameter('postId', $postId)
@@ -90,11 +91,12 @@ class TPostRepository extends BaseRepository
     {
         $qb = $this->createQueryBuilder('tp');
         $qb->select('tp AS post', 'mu.lastName', 'mu.firstName', 'mra.roleLevel', 'mg.groupName', 'mg.groupType', 'mc.companyName')
+            ->innerJoin('AppBundle:TPostTo', 'tpt', 'WITH', 'tp.id = tpt.post')
             ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
             ->leftJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
             ->leftJoin('AppBundle:MGroup', 'mg', 'WITH', 'tp.posterGroupId = mg.groupId')
             ->leftJoin('AppBundle:MCompany', 'mc', 'WITH', 'tp.posterCompanyId = mc.companyId')
-            ->where('tp.timelineOwnerGroupId = :timelineOwnerGroupId')
+            ->where('tpt.timelineOwnerGroupId = :timelineOwnerGroupId')
             ->andWhere('tp.parent IS NULL')
             ->setParameter('timelineOwnerGroupId', $groupId);
 
@@ -112,18 +114,15 @@ class TPostRepository extends BaseRepository
     /**
      * 指定グループIDのタイムライン（リプライ投稿のみ）を取得
      *
-     * @param integer $groupId グループID
      * @param integer $postId 投稿ID
      * @return array
      */
-    public function getReplies(int $groupId, int $postId): array
+    public function getReplies(int $postId): array
     {
         $qb = $this->createQueryBuilder('tp');
         $qb->select('tp AS reply', 'mu.lastName', 'mu.firstName')
             ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
-            ->where('tp.timelineOwnerGroupId = :timelineOwnerGroupId')
-            ->andWhere('tp.parent = :parentId')
-            ->setParameter('timelineOwnerGroupId', $groupId)
+            ->where('tp.parent = :parentId')
             ->setParameter('parentId', $postId)
             ->addOrderBy('tp.id', 'ASC');
 
