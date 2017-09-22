@@ -143,7 +143,7 @@ class CompanySetupContainer extends Component {
                 />
                 グループ公開
               </label>
-              所属するグループメンバーのみに目標が公開されます。<br />（スーパー管理者は閲覧可能）
+              所属するグループメンバーのみに目標が公開されます。<br />（スーパー管理者ユーザは閲覧可能）
             </div>
             <div className={styles.disclosureOption}>
               <label>
@@ -154,7 +154,7 @@ class CompanySetupContainer extends Component {
                 />
                 管理者公開
               </label>
-              全ての管理者のみに目標が公開されます。<br />（スーパー管理者は閲覧可能）
+              全ての管理者ユーザのみに目標が公開されます。<br />（スーパー管理者ユーザは閲覧可能）
             </div>
             <div className={styles.disclosureOption}>
               <label>
@@ -165,7 +165,7 @@ class CompanySetupContainer extends Component {
                 />
                 グループ管理者公開
               </label>
-              所属するグループの管理者のみに目標が公開されます。<br />（スーパー管理者は閲覧可能）
+              所属するグループの管理者ユーザのみに目標が公開されます。<br />（スーパー管理者ユーザは閲覧可能）
             </div>
           </div>
           <section className={activeTab !== 4 && styles.hidden}>
