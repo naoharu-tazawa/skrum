@@ -140,7 +140,7 @@ class OkrDetails extends Component {
                     options={[
                       { caption: '担当者変更',
                         onClick: () => openModal(changeOkrOwnerDialog,
-                          { id, name, owner, parentOkrOwner: parentOkr.owner,
+                          { id, name, owner, parentOkrOwner: (parentOkr || {}).owner,
                             dispatch: dispatchChangeOkrOwner, onSuccess: pushToBasic }) },
                       { caption: '紐付け先設定',
                         onClick: () => openModal(changeOkrParentDialog,
