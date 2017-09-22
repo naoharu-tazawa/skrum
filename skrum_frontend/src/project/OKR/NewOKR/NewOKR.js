@@ -91,7 +91,7 @@ class NewOKR extends Component {
     const ownerSearch = withItemisedReduxField(OwnerSearch, 'owner', {
       tabIndex: type === 'KR' ? 91 : 1,
       ...(differingParentOkrOwner && parentOkr ? { exclude: [parentOkr.owner] } : {}),
-      ...(type === 'KR' ? { value: parentOkr.owner } : {}),
+      ...(type === 'KR' && parentOkr ? { value: parentOkr.owner } : {}),
     });
     this.state = { ownerSearch };
   }

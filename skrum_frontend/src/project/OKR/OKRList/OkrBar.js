@@ -73,7 +73,7 @@ class OkrBar extends Component {
                   { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(okr) },
                   ...permitted && [{ caption: '担当者変更',
                     onClick: () => openModal(changeOkrOwnerDialog,
-                      { id, name, owner, parentOkrOwner: parentOkr.owner,
+                      { id, name, owner, parentOkrOwner: (parentOkr || {}).owner,
                         dispatch: dispatchChangeOkrOwner }) }],
                   ...permitted && [{ caption: '紐付け先設定',
                     onClick: () => openModal(changeOkrParentDialog,
