@@ -11,6 +11,7 @@ use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\MGroup;
 use AppBundle\Entity\MUser;
+use AppBundle\Entity\TEmailReservation;
 use AppBundle\Entity\TOkr;
 use AppBundle\Entity\TOkrActivity;
 use AppBundle\Entity\TTimeframe;
@@ -614,6 +615,12 @@ class OkrService extends BaseService
             $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
             $okrAchievementRateLogic->recalculate($auth, $tOkr, false);
 
+            // メール送信予約
+            if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+                $mUser = $tOkr->getOwnerUser();
+                $this->reserveEmails($tOkr, $achievementRate, $previousAchievementRate, $tOkr->getDisclosureType(), $mUser->getCompany()->getSubdomain());
+            }
+
             $this->flush();
             $this->commit();
         } catch (\Exception $e) {
@@ -641,6 +648,72 @@ class OkrService extends BaseService
         }
 
         return $okrInfoDTO;
+    }
+
+    /**
+     * 目標進捗率通知メール送信予約
+     *
+     * @param TOkr $tOkr 操作対象OKRエンティティ
+     * @param float $achievementRate 今回達成率
+     * @param float $previousAchievementRate 前回達成率
+     * @param string $disclosureType 公開種別
+     * @param string $subdomain サブドメイン
+     * @return void
+     */
+    private function reserveEmails(TOkr $tOkr, float $achievementRate, float $previousAchievementRate, string $disclosureType, string $subdomain)
+    {
+        // 5%ごと達成時のみメール送信予約
+        $standardRate = floor($achievementRate / 5) * 5;
+        if ($achievementRate >= $standardRate && $previousAchievementRate < $standardRate) {
+
+        } else {
+            return;
+        }
+
+        // メールを配信するグループを取得
+        if ($tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+            $mGroup = $tOkr->getParentOkr()->getOwnerGroup();
+        } elseif ($tOkr->getParentOkr()->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+            $mGroup = $tOkr->getParentOkr()->getParentOkr()->getOwnerGroup();
+        } else {
+            return;
+        }
+
+        // グループメンバーを取得
+        $tGroupMemberRepos = $this->getTGroupMemberRepository();
+        $mUserArray = $tGroupMemberRepos->getAllGroupMembers($mGroup->getGroupId());
+
+        $tEmailSettingsRepos = $this->getTEmailSettingsRepository();
+
+        foreach ($mUserArray as $mUser) {
+            // 閲覧権限をチェック
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_ADMIN || $disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_GROUP_ADMIN) {
+                if ($mUser->getRoleAssignment()->getRoleLevel() < DBConstant::ROLE_LEVEL_ADMIN) {
+                    continue;
+                }
+            }
+
+            // メール本文記載変数
+            $data = array();
+            $data['userName'] = $mUser->getLastName() . $mUser->getFirstName();
+            $data['ownerUserName'] = $tOkr->getOwnerUser()->getLastName() . $tOkr->getOwnerUser()->getFirstName();
+            $data['achievementRate'] = $standardRate;
+            $data['okrName'] = $tOkr->getName();
+
+            // メール配信設定取得
+            $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $mUser->getUserId()));
+
+            // メール送信予約テーブルに登録
+            if ($mUser->getUserId() !== $tOkr->getOwnerUser()->getUserId() && $tEmailSettings->getOkrAchievement() === DBConstant::EMAIL_OKR_ACHIEVEMENT) {
+                $tEmailReservation = new TEmailReservation();
+                $tEmailReservation->setToEmailAddress($mUser->getEmailAddress());
+                $tEmailReservation->setTitle($this->getParameter('achievement_rate_notice'));
+                $tEmailReservation->setBody($this->renderView('mail/achievement_rate_notice.txt.twig', ['data' => $data, 'subdomain' => $subdomain]));
+                $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
+                $tEmailReservation->setSendingReservationDatetime(DateUtility::getCurrentDatetime());
+                $this->persist($tEmailReservation);
+            }
+        }
     }
 
     /**

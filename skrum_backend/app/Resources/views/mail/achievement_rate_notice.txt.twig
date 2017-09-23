@@ -1,7 +1,9 @@
 {{ data.userName }}さん、こんにちは。
 
 
-{{ data.posterUserName }}さんが {{ data.groupName }} のタイムラインに投稿しました。
+{{ data.ownerUserName }}さんが以下の目標について進捗率 {{ data.achievementRate }}% を超えました。
+
+  目標； {{ data.okrName }}
 
 ログインして確認してみましょう。
 https://{{ subdomain }}.skrum.jp/login
@@ -13,6 +15,6 @@ https://{{ subdomain }}.skrum.jp/login
  1. 下記URLからログインをしてください。
  2. ヘッダーの一番右のユーザ画像ボタンを押して、「設定」ボタンを押してください。
  3. サイドバーの「メール配信」タブを押してください。
- 4. 「投稿通知メール」を「受信しない」に設定し、「保存する」ボタンを押してください。
+ 4. 「達成率通知メール」を「受信しない」に設定し、「保存する」ボタンを押してください。
  5. 以上で設定完了です。
  https://{{ subdomain }}.skrum.jp/login

@@ -304,7 +304,7 @@ class TimelineService extends BaseService
             // メール送信予約
             $mUserRepos = $this->getMUserRepository();
             $mUser = $mUserRepos->find($tPost->getPosterUserId());
-            $this->reserveEmails($groupId, $mUser, $mUser->getCompany()->getSubdomain());
+            $this->reserveEmails($groupId, $mUser, $data['disclosureType'], $mUser->getCompany()->getSubdomain());
 
             $this->flush();
             $this->commit();
@@ -350,12 +350,13 @@ class TimelineService extends BaseService
      *
      * @param integer $timelineOwnerGroupId タイムラインオーナーグループID
      * @param MUser $posterEntity 投稿者ユーザエンティティ
+     * @param string $disclosureType 公開種別
      * @param string $subdomain サブドメイン
      * @return void
      */
-    private function reserveEmails(int $timelineOwnerGroupId, MUser $posterEntity, string $subdomain)
+    private function reserveEmails(int $timelineOwnerGroupId, MUser $posterEntity, string $disclosureType, string $subdomain)
     {
-        // 会社IDに対応するグループIDを取得
+        // グループメンバーを取得
         $tGroupMemberRepos = $this->getTGroupMemberRepository();
         $mUserArray = $tGroupMemberRepos->getAllGroupMembers($timelineOwnerGroupId);
 
@@ -363,15 +364,27 @@ class TimelineService extends BaseService
         $mGroupRepos = $this->getMGroupRepository();
         $mGroup = $mGroupRepos->find($timelineOwnerGroupId);
 
+        $tEmailSettingsRepos = $this->getTEmailSettingsRepository();
+
         foreach ($mUserArray as $mUser) {
+            // 閲覧権限をチェック
+            if ($disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_ADMIN || $disclosureType === DBConstant::OKR_DISCLOSURE_TYPE_GROUP_ADMIN) {
+                if ($mUser->getRoleAssignment()->getRoleLevel() < DBConstant::ROLE_LEVEL_ADMIN) {
+                    continue;
+                }
+            }
+
             // メール本文記載変数
             $data = array();
             $data['groupName'] = $mGroup->getGroupName();
             $data['userName'] = $mUser->getLastName() . $mUser->getFirstName();
             $data['posterUserName'] = $posterEntity->getLastName() . $posterEntity->getFirstName();
 
+            // メール配信設定取得
+            $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $mUser->getUserId()));
+
             // メール送信予約テーブルに登録
-            if ($mUser->getUserId() !== $posterEntity->getUserId()) {
+            if ($mUser->getUserId() !== $posterEntity->getUserId() && $tEmailSettings->getOkrTimeline() === DBConstant::EMAIL_OKR_TIMELINE) {
                 $tEmailReservation = new TEmailReservation();
                 $tEmailReservation->setToEmailAddress($mUser->getEmailAddress());
                 $tEmailReservation->setTitle($this->getParameter('post_notice'));

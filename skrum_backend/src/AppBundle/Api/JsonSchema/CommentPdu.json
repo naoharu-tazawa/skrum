@@ -9,7 +9,7 @@
     },
     "disclosureType": {
       "title": "公開種別",
-      "enum": ["1", "2", "3", "4", "5"]
+      "enum": ["1", "2", "3", "4"]
     }
   },
   "required": ["post", "disclosureType"],
