@@ -176,7 +176,7 @@ class OkrSettingController extends BaseController
 
         // OKRオーナー変更処理
         $okrSettingService = $this->getOkrSettingService();
-        $okrSettingService->changeOwner($tOkr, $data['ownerType'], $mUser, $mGroup, $auth->getCompanyId());
+        $okrSettingService->changeOwner($auth, $tOkr, $data['ownerType'], $mUser, $mGroup, $auth->getCompanyId());
 
         return array('result' => 'OK');
     }

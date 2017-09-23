@@ -119,6 +119,7 @@ class OkrSettingService extends BaseService
     /**
      * OKR所有者変更
      *
+     * @param Auth $auth 認証情報
      * @param TOkr $tOkr OKRエンティティ
      * @param string $ownerType オーナー種別
      * @param MUser $mUser ユーザエンティティ
@@ -126,225 +127,267 @@ class OkrSettingService extends BaseService
      * @param integer $companyId 会社ID
      * @return void
      */
-    public function changeOwner(TOkr $tOkr, string $ownerType, MUser $mUser = null, MGroup $mGroup = null, int $companyId)
+    public function changeOwner(Auth $auth, TOkr $tOkr, string $ownerType, MUser $mUser = null, MGroup $mGroup = null, int $companyId)
     {
-        // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが同一の場合、オーナー変更不可
-        if ($tOkr->getParentOkr() !== null) {
-            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
-                // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝1:ユーザ」の場合
-                if ($tOkr->getParentOkr()->getOwnerUser()->getUserId() === $mUser->getUserId()) {
-                    throw new ApplicationException('親OKRと同一のオーナーには変更できません');
-                }
-            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝2:グループ」の場合
-                if ($tOkr->getParentOkr()->getOwnerGroup()->getGroupId() === $mGroup->getGroupId()) {
-                    throw new ApplicationException('親OKRと同一のオーナーには変更できません');
-                }
-            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
-                // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝3:会社」の場合
-                if ($tOkr->getParentOkr()->getOwnerCompanyId() === $companyId) {
-                    throw new ApplicationException('親OKRと同一のオーナーには変更できません');
+        if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
+            /* OBJECTIVEの場合 */
+
+            // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが同一の場合、オーナー変更不可
+            if ($tOkr->getParentOkr() !== null) {
+                if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+                    // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝1:ユーザ」の場合
+                    if ($tOkr->getParentOkr()->getOwnerUser()->getUserId() === $mUser->getUserId()) {
+                        throw new ApplicationException('親OKRと同一のオーナーには変更できません');
+                    }
+                } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                    // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝2:グループ」の場合
+                    if ($tOkr->getParentOkr()->getOwnerGroup()->getGroupId() === $mGroup->getGroupId()) {
+                        throw new ApplicationException('親OKRと同一のオーナーには変更できません');
+                    }
+                } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
+                    // オーナー変更対象OKRの(変更後の)オーナーと、オーナー変更対象OKRの親OKRのオーナーが、「オーナー種別＝3:会社」の場合
+                    if ($tOkr->getParentOkr()->getOwnerCompanyId() === $companyId) {
+                        throw new ApplicationException('親OKRと同一のオーナーには変更できません');
+                    }
                 }
             }
-        }
 
-        // 所有者変更対象OKRのキーリザルト（OKR種別＝'2' のみ）を取得
-        $tOkrRepos = $this->getTOkrRepository();
-        $tOkrArray = $tOkrRepos->getObjectiveAndKeyResults($tOkr->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $companyId, DBConstant::OKR_TYPE_KEY_RESULT);
+            // 所有者変更対象OKRのキーリザルト（OKR種別＝'2' のみ）を取得
+            $tOkrRepos = $this->getTOkrRepository();
+            $tOkrArray = $tOkrRepos->getObjectiveAndKeyResults($tOkr->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $companyId, DBConstant::OKR_TYPE_KEY_RESULT);
 
-        // OKR種別＝'1' のキーリザルトしかない場合、オーナー種別変更対象OKRのみ配列に入れる
-        if (empty($tOkrArray)) {
-            $tOkrArray[] = $tOkr;
-        }
+            // OKR種別＝'1' のキーリザルトしかない場合、オーナー種別変更対象OKRのみ配列に入れる
+            if (empty($tOkrArray)) {
+                $tOkrArray[] = $tOkr;
+            }
 
-        // トランザクション開始
-        $this->beginTransaction();
+            // トランザクション開始
+            $this->beginTransaction();
 
-        try {
-            foreach ($tOkrArray as $okrEntity) {
-                // キーリザルト（OKR種別＝'1', '2'）が1つもない場合、配列の2要素目にnullが入っているので、処理終了
-                if ($okrEntity === null) {
-                    break;
+            try {
+                foreach ($tOkrArray as $okrEntity) {
+                    // キーリザルト（OKR種別＝'1', '2'）が1つもない場合、配列の2要素目にnullが入っているので、処理終了
+                    if ($okrEntity === null) {
+                        break;
+                    }
+
+                    // オーナー変更登録処理
+                    $this->registerChangeOwner($okrEntity, $ownerType, $mUser, $mGroup, $companyId);
                 }
 
-                // OKRアクティビティ登録（オーナー変更）
-                $tOkrActivity = new TOkrActivity();
-                $tOkrActivity->setOkr($okrEntity);
-                $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_OWNER_CHANGE);
-                $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
-
-                // 変更前のオーナー種別によって処理を分岐
-                if ($okrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
-                    // 「変更前オーナー種別＝1:ユーザ」の場合
-
-                    if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
-                        // 「変更前オーナー種別＝1:ユーザ」かつ「変更後オーナー種別＝1:ユーザ」の場合
-
-                        // オーナー変更がない場合は更新処理を行わない
-                        if ($okrEntity->getOwnerUser()->getUserId() === $mUser->getUserId()) {
-                            return;
-                        }
-
-                        // 変更前/変更後オーナー登録
-                        $tOkrActivity->setPreviousOwnerUserId($okrEntity->getOwnerUser()->getUserId());
-                        $tOkrActivity->setNewOwnerUserId($mUser->getUserId());
-                        $this->persist($tOkrActivity);
-
-                        // オーナー変更
-                        $okrEntity->setOwnerUser($mUser);
-
-                    } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                        // 「変更前オーナー種別＝1:ユーザ」かつ「変更後オーナー種別＝2:グループ」の場合
-
-                        // 変更前/変更後オーナー登録
-                        $tOkrActivity->setPreviousOwnerUserId($okrEntity->getOwnerUser()->getUserId());
-                        $tOkrActivity->setNewOwnerGroupId($mGroup->getGroupId());
-                        $this->persist($tOkrActivity);
-
-                        // オーナー変更
-                        $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
-                        $okrEntity->setOwnerUser(null);
-                        $okrEntity->setOwnerGroup($mGroup);
-
-                    } else {
-                        // 「変更前オーナー種別＝1:ユーザ」かつ「変更後オーナー種別＝3:会社」の場合
-
-                        // 変更前/変更後オーナー登録
-                        $tOkrActivity->setPreviousOwnerUserId($okrEntity->getOwnerUser()->getUserId());
-                        $tOkrActivity->setNewOwnerCompanyId($companyId);
-                        $this->persist($tOkrActivity);
-
-                        // オーナー変更
-                        $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
-                        $okrEntity->setOwnerUser(null);
-                        $okrEntity->setOwnerCompanyId($companyId);
-                        $okrEntity->setDisclosureType(DBConstant::OKR_DISCLOSURE_TYPE_OVERALL); // 公開種別を強制的に全体公開にする
-
+                // 目標の変更後オーナーと OKR種別＝'1' のキーリザルトのオーナーが同じ場合、当該キーリザルトのOKR種別を'2'にする
+                $differentOwnerOkrArray = $tOkrRepos->getObjectiveAndKeyResults($tOkr->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $companyId, DBConstant::OKR_TYPE_OBJECTIVE);
+                foreach ($differentOwnerOkrArray as $differentOwnerOkr) {
+                    // キーリザルト（OKR種別＝'1', '2'）が1つもない場合、配列の2要素目にnullが入っているので、処理終了
+                    if ($differentOwnerOkr === null) {
+                        break;
                     }
 
-                } elseif ($okrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                    // 「変更前オーナー種別＝2:グループ」の場合
-
-                    if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
-                        // 「変更前オーナー種別＝2:グループ」かつ「変更後オーナー種別＝1:ユーザ」の場合
-
-                        // 変更前/変更後オーナー登録
-                        $tOkrActivity->setPreviousOwnerGroupId($okrEntity->getOwnerGroup()->getGroupId());
-                        $tOkrActivity->setNewOwnerUserId($mUser->getUserId());
-                        $this->persist($tOkrActivity);
-
-                        // オーナー変更
-                        $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
-                        $okrEntity->setOwnerGroup(null);
-                        $okrEntity->setOwnerUser($mUser);
-
-                    } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                        // 「変更前オーナー種別＝2:グループ」かつ「変更後オーナー種別＝2:グループ」の場合
-
-                        // オーナー変更がない場合は更新処理を行わない
-                        if ($okrEntity->getOwnerGroup()->getGroupId() === $mGroup->getGroupId()) {
-                            return;
-                        }
-
-                        // 変更前/変更後オーナー登録
-                        $tOkrActivity->setPreviousOwnerGroupId($okrEntity->getOwnerGroup()->getGroupId());
-                        $tOkrActivity->setNewOwnerGroupId($mGroup->getGroupId());
-                        $this->persist($tOkrActivity);
-
-                        // オーナー変更
-                        $okrEntity->setOwnerGroup($mGroup);
-
-                    } else {
-                        // 「変更前オーナー種別＝2:グループ」かつ「変更後オーナー種別＝3:会社」の場合
-
-                        // 変更前/変更後オーナー登録
-                        $tOkrActivity->setPreviousOwnerGroupId($okrEntity->getOwnerGroup()->getGroupId());
-                        $tOkrActivity->setNewOwnerCompanyId($companyId);
-                        $this->persist($tOkrActivity);
-
-                        // オーナー変更
-                        $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
-                        $okrEntity->setOwnerGroup(null);
-                        $okrEntity->setOwnerCompanyId($companyId);
-                        $okrEntity->setDisclosureType(DBConstant::OKR_DISCLOSURE_TYPE_OVERALL); // 公開種別を強制的に全体公開にする
-
-                    }
-
-                } else {
-                    // 「変更前オーナー種別＝3:会社」の場合
-
-                    if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
-                        // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝1:ユーザ」の場合
-
-                        // 変更前/変更後オーナー登録
-                        $tOkrActivity->setPreviousOwnerCompanyId($okrEntity->getOwnerCompanyId());
-                        $tOkrActivity->setNewOwnerUserId($mUser->getUserId());
-                        $this->persist($tOkrActivity);
-
-                        // オーナー変更
-                        $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
-                        $okrEntity->setOwnerCompanyId(null);
-                        $okrEntity->setOwnerUser($mUser);
-
-                    } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                        // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝2:グループ」の場合
-
-                        // 変更前/変更後オーナー登録
-                        $tOkrActivity->setPreviousOwnerCompanyId($okrEntity->getOwnerCompanyId());
-                        $tOkrActivity->setNewOwnerGroupId($mGroup->getGroupId());
-                        $this->persist($tOkrActivity);
-
-                        // オーナー変更
-                        $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
-                        $okrEntity->setOwnerCompanyId(null);
-                        $okrEntity->setOwnerGroup($mGroup);
-
-                    } else {
-                        // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝3:会社」の場合
-
-                        // オーナー変更がないので更新処理を行わない
-                        $tOkrActivity = null;
+                    // オーナー変更対象OKRはスキップ
+                    if ($differentOwnerOkr->getOkrId() === $tOkr->getOkrId()) {
                         continue;
                     }
+
+                    if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER && $differentOwnerOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+                        // 「変更後オーナー種別＝1:ユーザ」の場合
+                        if ($differentOwnerOkr->getOwnerUser()->getUserId() === $mUser->getUserId()) {
+                            $differentOwnerOkr->setType(DBConstant::OKR_TYPE_KEY_RESULT);
+                        }
+                    } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $differentOwnerOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                        // 「変更後オーナー種別＝2:グループ」の場合
+                        if ($differentOwnerOkr->getOwnerGroup()->getGroupId() === $mGroup->getGroupId()) {
+                            $differentOwnerOkr->setType(DBConstant::OKR_TYPE_KEY_RESULT);
+                        }
+                    } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $differentOwnerOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
+                        // 「変更後オーナー種別＝3:会社」の場合
+                        if ($differentOwnerOkr->getCompanyId() === $companyId()) {
+                            $differentOwnerOkr->setType(DBConstant::OKR_TYPE_KEY_RESULT);
+                        }
+                    }
                 }
+
+                $this->flush();
+                $this->commit();
+            } catch (\Exception $e) {
+                $this->rollback();
+                throw new SystemException($e->getMessage());
+            }
+        } elseif ($tOkr->getType() === DBConstant::OKR_TYPE_KEY_RESULT) {
+            /* KEY RESULT の場合 */
+
+            // トランザクション開始
+            $this->beginTransaction();
+
+            try {
+                // OKR種別を'1'に変更
+                $tOkr->setType(DBConstant::OKR_TYPE_OBJECTIVE);
+
+                // オーナー変更登録処理
+                $this->registerChangeOwner($tOkr, $ownerType, $mUser, $mGroup, $companyId);
+
+                // 達成率を再計算
+                $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
+                $okrAchievementRateLogic->recalculateFromParent($auth, $tOkr, true);
+
+                $this->flush();
+                $this->commit();
+            } catch (\Exception $e) {
+                $this->rollback();
+                throw new SystemException($e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * OKR所有者変更処理
+     *
+     * @param TOkr $okrEntity OKRエンティティ
+     * @param string $ownerType オーナー種別
+     * @param MUser $mUser ユーザエンティティ
+     * @param MGroup $mGroup グループエンティティ
+     * @param integer $companyId 会社ID
+     * @return void
+     */
+    private function registerChangeOwner(TOkr $okrEntity, string $ownerType, MUser $mUser = null, MGroup $mGroup = null, int $companyId)
+    {
+        // OKRアクティビティ登録（オーナー変更）
+        $tOkrActivity = new TOkrActivity();
+        $tOkrActivity->setOkr($okrEntity);
+        $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_OWNER_CHANGE);
+        $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
+
+        // 変更前のオーナー種別によって処理を分岐
+        if ($okrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+            // 「変更前オーナー種別＝1:ユーザ」の場合
+
+            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
+                // 「変更前オーナー種別＝1:ユーザ」かつ「変更後オーナー種別＝1:ユーザ」の場合
+
+                // オーナー変更がない場合は更新処理を行わない
+                if ($okrEntity->getOwnerUser()->getUserId() === $mUser->getUserId()) {
+                    return;
+                }
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerUserId($okrEntity->getOwnerUser()->getUserId());
+                $tOkrActivity->setNewOwnerUserId($mUser->getUserId());
+                $this->persist($tOkrActivity);
+
+                // オーナー変更
+                $okrEntity->setOwnerUser($mUser);
+
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                // 「変更前オーナー種別＝1:ユーザ」かつ「変更後オーナー種別＝2:グループ」の場合
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerUserId($okrEntity->getOwnerUser()->getUserId());
+                $tOkrActivity->setNewOwnerGroupId($mGroup->getGroupId());
+                $this->persist($tOkrActivity);
+
+                // オーナー変更
+                $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
+                $okrEntity->setOwnerUser(null);
+                $okrEntity->setOwnerGroup($mGroup);
+
+            } else {
+                // 「変更前オーナー種別＝1:ユーザ」かつ「変更後オーナー種別＝3:会社」の場合
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerUserId($okrEntity->getOwnerUser()->getUserId());
+                $tOkrActivity->setNewOwnerCompanyId($companyId);
+                $this->persist($tOkrActivity);
+
+                // オーナー変更
+                $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
+                $okrEntity->setOwnerUser(null);
+                $okrEntity->setOwnerCompanyId($companyId);
+                $okrEntity->setDisclosureType(DBConstant::OKR_DISCLOSURE_TYPE_OVERALL); // 公開種別を強制的に全体公開にする
+
             }
 
-            // 目標の変更後オーナーと OKR種別＝'1' のキーリザルトのオーナーが同じ場合、当該キーリザルトのOKR種別を'2'にする
-            $differentOwnerOkrArray = $tOkrRepos->getObjectiveAndKeyResults($tOkr->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $companyId, DBConstant::OKR_TYPE_OBJECTIVE);
-            foreach ($differentOwnerOkrArray as $differentOwnerOkr) {
-                // キーリザルト（OKR種別＝'1', '2'）が1つもない場合、配列の2要素目にnullが入っているので、処理終了
-                if ($differentOwnerOkr === null) {
-                    break;
+        } elseif ($okrEntity->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+            // 「変更前オーナー種別＝2:グループ」の場合
+
+            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
+                // 「変更前オーナー種別＝2:グループ」かつ「変更後オーナー種別＝1:ユーザ」の場合
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerGroupId($okrEntity->getOwnerGroup()->getGroupId());
+                $tOkrActivity->setNewOwnerUserId($mUser->getUserId());
+                $this->persist($tOkrActivity);
+
+                // オーナー変更
+                $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
+                $okrEntity->setOwnerGroup(null);
+                $okrEntity->setOwnerUser($mUser);
+
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                // 「変更前オーナー種別＝2:グループ」かつ「変更後オーナー種別＝2:グループ」の場合
+
+                // オーナー変更がない場合は更新処理を行わない
+                if ($okrEntity->getOwnerGroup()->getGroupId() === $mGroup->getGroupId()) {
+                    return;
                 }
 
-                // オーナー変更対象OKRはスキップ
-                if ($differentOwnerOkr->getOkrId() === $tOkr->getOkrId()) {
-                    continue;
-                }
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerGroupId($okrEntity->getOwnerGroup()->getGroupId());
+                $tOkrActivity->setNewOwnerGroupId($mGroup->getGroupId());
+                $this->persist($tOkrActivity);
 
-                if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER && $differentOwnerOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
-                    // 「変更後オーナー種別＝1:ユーザ」の場合
-                    if ($differentOwnerOkr->getOwnerUser()->getUserId() === $mUser->getUserId()) {
-                        $differentOwnerOkr->setType(DBConstant::OKR_TYPE_KEY_RESULT);
-                    }
-                } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $differentOwnerOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
-                    // 「変更後オーナー種別＝2:グループ」の場合
-                    if ($differentOwnerOkr->getOwnerGroup()->getGroupId() === $mGroup->getGroupId()) {
-                        $differentOwnerOkr->setType(DBConstant::OKR_TYPE_KEY_RESULT);
-                    }
-                } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP && $differentOwnerOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
-                    // 「変更後オーナー種別＝3:会社」の場合
-                    if ($differentOwnerOkr->getCompanyId() === $companyId()) {
-                        $differentOwnerOkr->setType(DBConstant::OKR_TYPE_KEY_RESULT);
-                    }
-                }
+                // オーナー変更
+                $okrEntity->setOwnerGroup($mGroup);
+
+            } else {
+                // 「変更前オーナー種別＝2:グループ」かつ「変更後オーナー種別＝3:会社」の場合
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerGroupId($okrEntity->getOwnerGroup()->getGroupId());
+                $tOkrActivity->setNewOwnerCompanyId($companyId);
+                $this->persist($tOkrActivity);
+
+                // オーナー変更
+                $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
+                $okrEntity->setOwnerGroup(null);
+                $okrEntity->setOwnerCompanyId($companyId);
+                $okrEntity->setDisclosureType(DBConstant::OKR_DISCLOSURE_TYPE_OVERALL); // 公開種別を強制的に全体公開にする
+
             }
 
-            $this->flush();
-            $this->commit();
-        } catch (\Exception $e) {
-            $this->rollback();
-            throw new SystemException($e->getMessage());
+        } else {
+            // 「変更前オーナー種別＝3:会社」の場合
+
+            if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
+                // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝1:ユーザ」の場合
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerCompanyId($okrEntity->getOwnerCompanyId());
+                $tOkrActivity->setNewOwnerUserId($mUser->getUserId());
+                $this->persist($tOkrActivity);
+
+                // オーナー変更
+                $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
+                $okrEntity->setOwnerCompanyId(null);
+                $okrEntity->setOwnerUser($mUser);
+
+            } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
+                // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝2:グループ」の場合
+
+                // 変更前/変更後オーナー登録
+                $tOkrActivity->setPreviousOwnerCompanyId($okrEntity->getOwnerCompanyId());
+                $tOkrActivity->setNewOwnerGroupId($mGroup->getGroupId());
+                $this->persist($tOkrActivity);
+
+                // オーナー変更
+                $okrEntity->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
+                $okrEntity->setOwnerCompanyId(null);
+                $okrEntity->setOwnerGroup($mGroup);
+
+            } else {
+                // 「変更前オーナー種別＝3:会社」かつ「変更後オーナー種別＝3:会社」の場合
+
+                // オーナー変更がないので更新処理を行わない
+                $tOkrActivity = null;
+            }
         }
     }
 
