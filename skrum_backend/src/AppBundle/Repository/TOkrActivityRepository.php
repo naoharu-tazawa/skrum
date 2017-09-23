@@ -109,8 +109,9 @@ class TOkrActivityRepository extends BaseRepository
         $sql = <<<SQL
         UPDATE t_okr_activity AS t0_
         LEFT OUTER JOIN t_post AS t1_ ON (t0_.id = t1_.okr_activity_id) AND (t1_.deleted_at IS NULL)
-        LEFT OUTER JOIN t_like AS t2_ ON (t1_.id = t2_.post_id) AND (t2_.deleted_at IS NULL)
-        SET t0_.deleted_at = NOW(), t1_.deleted_at = NOW(), t2_.deleted_at = NOW()
+        LEFT OUTER JOIN t_post_to AS t2_ ON (t1_.id = t2_.post_id) AND (t2_.deleted_at IS NULL)
+        LEFT OUTER JOIN t_like AS t3_ ON (t1_.id = t3_.post_id) AND (t3_.deleted_at IS NULL)
+        SET t0_.deleted_at = NOW(), t1_.deleted_at = NOW(), t2_.deleted_at = NOW(), t3_.deleted_at = NOW()
         WHERE (t0_.okr_id = :okrId) AND (t0_.deleted_at IS NULL);
 SQL;
 
