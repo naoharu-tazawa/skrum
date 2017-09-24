@@ -4,14 +4,10 @@ import { connect } from 'react-redux';
 import { isEmpty, partial, includes } from 'lodash';
 import SearchDropdown from '../../editors/SearchDropdown';
 import EntitySubject from '../../components/EntitySubject';
+import { entityPropTypes } from '../../util/EntityUtil';
 import { mapOKR } from '../../util/OKRUtil';
 import { explodePath } from '../../util/RouteUtil';
 import { searchOkr, searchParentOkr } from './action';
-
-const ownerPropType = PropTypes.shape({
-  id: PropTypes.number, // fixme .isRequired,
-  type: PropTypes.string, // fixme .isRequired,
-});
 
 const okrPropType = PropTypes.shape({
   id: PropTypes.number.isRequired,
@@ -28,7 +24,7 @@ class OKRSearch extends PureComponent {
 
   static propTypes = {
     timeframeId: PropTypes.number.isRequired,
-    owner: ownerPropType,
+    owner: entityPropTypes,
     exclude: PropTypes.arrayOf(PropTypes.number),
     okrsFound: PropTypes.arrayOf(okrPropType),
     value: PropTypes.oneOfType([okrPropType, PropTypes.shape({}), PropTypes.string]),

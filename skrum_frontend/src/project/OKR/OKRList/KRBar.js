@@ -60,10 +60,10 @@ class KRBar extends Component {
             {({ permitted }) => (
               <DropdownMenu
                 options={[
-                  { caption: '担当者変更',
-                    onClick: () => openModal(changeKROwnerDialog,
-                      { id, name, owner, parentOkrOwner, dispatch: dispatchChangeKROwner }) },
                   { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(keyResult) },
+                  ...permitted && [{ caption: '担当者変更',
+                    onClick: () => openModal(changeKROwnerDialog,
+                      { id, name, owner, parentOkrOwner, dispatch: dispatchChangeKROwner }) }],
                   ...permitted && [{ caption: '公開範囲設定',
                     onClick: () => openModal(changeKRDisclosureTypeDialog,
                       { ...{ id, name, owner, disclosureType },

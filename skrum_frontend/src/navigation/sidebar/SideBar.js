@@ -115,7 +115,7 @@ export default class SideBar extends Component {
     const { isExpanded = true } = this.state || {};
     const { tab } = explodePath(pathname);
     const isSetting = tab === 'setting';
-    const showUser = !isSetting && tab !== 'timeline';
+    const showUser = !isSetting;
     const showGroups = !isSetting;
     const showCompany = !isSetting && companyId && /^(objective|map|timeline)$/.test(tab);
     return (

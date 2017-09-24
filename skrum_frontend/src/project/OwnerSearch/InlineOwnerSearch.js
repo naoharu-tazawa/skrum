@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import InlineEditor, { inlineEditorPublicPropTypes } from '../../editors/InlineEditor';
-import OwnerSearch, { ownerPropType } from './OwnerSearch';
+import OwnerSearch from './OwnerSearch';
+import { entityPropTypes } from '../../util/EntityUtil';
 
 export default class InlineOwnerSearch extends PureComponent {
 
   static propTypes = {
-    owner: PropTypes.oneOfType([ownerPropType, PropTypes.shape({}), PropTypes.string]),
+    owner: PropTypes.oneOfType([entityPropTypes, PropTypes.shape({}), PropTypes.string]),
     ...inlineEditorPublicPropTypes,
   };
 

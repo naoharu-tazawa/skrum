@@ -100,8 +100,8 @@ export const changeKROwner = (id, owner) =>
     const state = getState();
     if (state.okr.isPutting) return Promise.resolve();
     dispatch(requestChangeKrOwner());
-    const { type, id: groupId } = owner;
-    return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound({ type, id: groupId }))
+    const { type, id: ownerId } = owner;
+    return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound({ type, id: ownerId }))
       .then(() => dispatch(finishChangeKrOwner('data', { id, ...mapOwnerOutbound(owner) })))
       .catch(({ message }) => dispatch(finishChangeKrOwner(new Error(message))));
   };

@@ -14,10 +14,12 @@ export default (state = {
   posts: [],
 }, action) => {
   switch (action.type) {
+    case Action.REQUEST_FETCH_USER_POSTS:
     case Action.REQUEST_FETCH_GROUP_POSTS:
     case Action.REQUEST_FETCH_COMPANY_POSTS:
       return { ...state, isFetching: true };
 
+    case Action.FINISH_FETCH_USER_POSTS:
     case Action.FINISH_FETCH_GROUP_POSTS:
     case Action.FINISH_FETCH_COMPANY_POSTS: {
       const { payload, error } = action;
@@ -29,10 +31,12 @@ export default (state = {
       return { ...state, posts: payload.data, isFetching: false, hasMorePosts, error: null };
     }
 
+    case Action.REQUEST_MORE_USER_POSTS:
     case Action.REQUEST_MORE_GROUP_POSTS:
     case Action.REQUEST_MORE_COMPANY_POSTS:
       return { ...state, isFetchingMore: true };
 
+    case Action.FINISH_MORE_USER_POSTS:
     case Action.FINISH_MORE_GROUP_POSTS:
     case Action.FINISH_MORE_COMPANY_POSTS: {
       const { payload, error } = action;

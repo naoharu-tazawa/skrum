@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, getFormValues, SubmissionError } from 'redux-form';
-import { isEmpty, omit, partial, find } from 'lodash';
+import { isEmpty, partial, find } from 'lodash';
 import { objectivePropTypes } from '../../OKRDetails/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
-import OwnerSearch, { ownerPropType } from '../../OwnerSearch/OwnerSearch';
+import OwnerSearch from '../../OwnerSearch/OwnerSearch';
 import TimeframesDropdown from '../../../components/TimeframesDropdown';
 import NumberInput from '../../../editors/NumberInput';
 import DatePickerInput from '../../../editors/DatePickerInput';
@@ -14,7 +14,7 @@ import DisclosureTypeOptions, { getDisclosureTypeName } from '../../../component
 import OKRSearch from '../../OKRSearch/OKRSearch';
 import { withLoadedReduxForm, withItemisedReduxField, withSelectReduxField, withNumberReduxField,
   withReduxField } from '../../../util/FormUtil';
-import { getEntityTypeId, getEntityTypeSubject } from '../../../util/EntityUtil';
+import { entityPropTypes, getEntityTypeId, getEntityTypeSubject } from '../../../util/EntityUtil';
 import { mapOwnerOutbound } from '../../../util/OwnerUtil';
 import { explodePath } from '../../../util/RouteUtil';
 import { isValidDate, compareDates, toUtcDate, formatDate } from '../../../util/DatetimeUtil';
@@ -77,7 +77,7 @@ class NewOKR extends Component {
     ownerName: PropTypes.string,
     subject: PropTypes.string,
     id: PropTypes.number,
-    owner: ownerPropType,
+    owner: entityPropTypes,
     timeframeId: PropTypes.number,
     differingParentOkrOwner: PropTypes.bool,
     dispatchPostOkr: PropTypes.func,
@@ -109,11 +109,12 @@ class NewOKR extends Component {
     const { type: parentOwnerType, id: parentOwnerId } = parentOkr.owner || {};
     const okrType = type === 'Okr' || owner.type !== parentOwnerType ||
       owner.id !== parentOwnerId ? OKRType.OKR : OKRType.KR;
+    const { type: ownerType, id: ownerId } = owner;
     const okr = {
       okrType,
       timeframeId,
       parentOkrId: parentOkr.id || alignment.id,
-      ...mapOwnerOutbound(omit(owner, 'name')),
+      ...mapOwnerOutbound({ type: ownerType, id: ownerId }),
       disclosureType,
       okrName,
       okrDetail: okrDetail || '',
