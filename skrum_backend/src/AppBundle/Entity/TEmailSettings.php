@@ -38,6 +38,13 @@ class TEmailSettings
     /**
      * @var string
      *
+     * @ORM\Column(name="okr_deadline_reminder", type="string", length=2, nullable=false)
+     */
+    private $okrDeadlineReminder = '1';
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="okr_reminder", type="string", length=2, nullable=false)
      */
     private $okrReminder = '1';
@@ -174,6 +181,30 @@ class TEmailSettings
     public function getOkrTimeline()
     {
         return $this->okrTimeline;
+    }
+
+    /**
+     * Set okrDeadlineReminder
+     *
+     * @param string $okrDeadlineReminder
+     *
+     * @return TEmailSettings
+     */
+    public function setOkrDeadlineReminder($okrDeadlineReminder)
+    {
+        $this->okrDeadlineReminder = $okrDeadlineReminder;
+
+        return $this;
+    }
+
+    /**
+     * Get okrDeadlineReminder
+     *
+     * @return string
+     */
+    public function getOkrDeadlineReminder()
+    {
+        return $this->okrDeadlineReminder;
     }
 
     /**

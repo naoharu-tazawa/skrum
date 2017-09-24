@@ -32,6 +32,8 @@ paths:
                 type: integer
               okrTimeline:
                 type: integer
+              okrDeadlineReminder:
+                type: integer
               okrReminder:
                 type: integer
               reportMemberAchievement:

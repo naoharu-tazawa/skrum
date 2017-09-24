@@ -10,6 +10,10 @@
       "title": "投稿通知メール設定",
       "enum": [0, 1]
     },
+    "okrDeadlineReminder": {
+      "title": "目標期限日リマインドメール設定",
+      "enum": [0, 1]
+    },
     "okrReminder": {
       "title": "進捗登録リマインドメール設定",
       "enum": [0, 1]

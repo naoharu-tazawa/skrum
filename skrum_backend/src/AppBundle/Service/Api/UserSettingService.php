@@ -604,6 +604,7 @@ class UserSettingService extends BaseService
         $emailSettingDTO = new EmailSettingsDTO();
         $emailSettingDTO->setOkrAchievement($tEmailSettings->getOkrAchievement());
         $emailSettingDTO->setOkrTimeline($tEmailSettings->getOkrTimeline());
+        $emailSettingDTO->setOkrDeadlineReminder($tEmailSettings->getOkrDeadlineReminder());
         $emailSettingDTO->setOkrReminder($tEmailSettings->getOkrReminder());
         if ($auth->getRoleLevel() < DBConstant::ROLE_LEVEL_ADMIN) {
             $emailSettingDTO->setReportGroupAchievement($tEmailSettings->getReportGroupAchievement());
@@ -636,6 +637,7 @@ class UserSettingService extends BaseService
             // 更新処理
             if (array_key_exists('okrAchievement', $data)) $tEmailSettings->setOkrAchievement($data['okrAchievement']);
             if (array_key_exists('okrTimeline', $data)) $tEmailSettings->setOkrTimeline($data['okrTimeline']);
+            if (array_key_exists('okrDeadlineReminder', $data)) $tEmailSettings->setOkrDeadlineReminder($data['okrDeadlineReminder']);
             if (array_key_exists('okrReminder', $data)) $tEmailSettings->setOkrReminder($data['okrReminder']);
             if (array_key_exists('reportMemberAchievement', $data)) $tEmailSettings->setReportMemberAchievement($data['reportMemberAchievement']);
             if (array_key_exists('reportGroupAchievement', $data)) $tEmailSettings->setReportGroupAchievement($data['reportGroupAchievement']);

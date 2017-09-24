@@ -30,6 +30,13 @@ class EmailSettingsDTO
      *
      * @JSON\Type("integer")
      */
+    private $okrDeadlineReminder;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $okrReminder;
 
     /**
@@ -106,6 +113,30 @@ class EmailSettingsDTO
     public function getOkrTimeline()
     {
         return $this->okrTimeline;
+    }
+
+    /**
+     * Set okrDeadlineReminder
+     *
+     * @param integer $okrDeadlineReminder
+     *
+     * @return EmailSettingsDTO
+     */
+    public function setOkrDeadlineReminder($okrDeadlineReminder)
+    {
+        $this->okrDeadlineReminder = $okrDeadlineReminder;
+
+        return $this;
+    }
+
+    /**
+     * Get okrDeadlineReminder
+     *
+     * @return integer
+     */
+    public function getOkrDeadlineReminder()
+    {
+        return $this->okrDeadlineReminder;
     }
 
     /**
