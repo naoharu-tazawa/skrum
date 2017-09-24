@@ -8,7 +8,6 @@ export default (state = {
   isFetching: false,
   isPostingOkr: false,
   isPutting: false,
-  isChangingOkrOwner: false,
   isChangingParentOkr: false,
   isSettingRatios: false,
   isDeletingOkr: false,
@@ -51,17 +50,25 @@ export default (state = {
     }
 
     case Action.REQUEST_CHANGE_OKR_OWNER:
-      return { ...state, isChangingOkrOwner: true };
+    case Action.REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE:
+      return { ...state, isPutting: true };
 
-    case Action.FINISH_CHANGE_OKR_OWNER: {
+    case Action.FINISH_CHANGE_OKR_OWNER:
+    case Action.FINISH_BASICS_CHANGE_DISCLOSURE_TYPE:
+    case Action.SYNC_BASICS_DETAILS: {
       const { payload, error } = action;
       if (error) {
-        return { ...state, isChangingOkrOwner: false, error: { message: payload.message } };
+        return { ...state, isPutting: false, error: { message: payload.message } };
       }
-      const { subject, id } = payload.data;
+      const { subject, id = payload.data.okrId, ...data } = payload.data;
       const { [subject]: basics } = state;
-      const okrs = basics.okrs.filter(({ okrId }) => okrId !== id);
-      return { ...state, [subject]: { ...basics, okrs }, isChangingOkrOwner: false, error: null };
+      const okrs = basics.okrs.map(okr => ({
+        ...okr,
+        ...(okr.okrId === id ? data : {}),
+        keyResults: (okr.keyResults || []).map(kr =>
+          ({ ...kr, ...(kr.okrId === id ? data : {}) })),
+      }));
+      return { ...state, [subject]: { ...basics, okrs }, isPutting: false, error: null };
     }
 
     case Action.REQUEST_BASICS_CHANGE_PARENT_OKR:
@@ -78,26 +85,6 @@ export default (state = {
       const okrs = basics.okrs.map(okr =>
         (okr.okrId === okrId ? { ...okr, ...objective, parentOkr } : okr));
       return { ...state, [subject]: { ...basics, okrs }, isChangingParentOkr: false, error: null };
-    }
-
-    case Action.REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE:
-      return { ...state, isPutting: true };
-
-    case Action.FINISH_BASICS_CHANGE_DISCLOSURE_TYPE:
-    case Action.SYNC_BASICS_DETAILS: {
-      const { payload, error } = action;
-      if (error) {
-        return { ...state, isPutting: false, error: { message: payload.message } };
-      }
-      const { subject, id = payload.data.okrId, ...data } = payload.data;
-      const { [subject]: basics } = state;
-      const okrs = basics.okrs.map(okr => ({
-        ...okr,
-        ...(okr.okrId === id ? data : {}),
-        keyResults: (okr.keyResults || []).map(kr =>
-          ({ ...kr, ...(kr.okrId === id ? data : {}) })),
-      }));
-      return { ...state, [subject]: { ...basics, okrs }, isPutting: false, error: null };
     }
 
     case Action.REQUEST_BASICS_SET_RATIOS:

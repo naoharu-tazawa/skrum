@@ -8,6 +8,7 @@ import Permissible from '../../../components/Permissible';
 import { withModal } from '../../../util/ModalUtil';
 import { mapOKR } from '../../../util/OKRUtil';
 import { EntityType } from '../../../util/EntityUtil';
+import { groupTypePropType } from '../../../util/GroupUtil';
 import { changeOkrOwner, changeParentOkr, changeDisclosureType, setRatios, deleteOkr, deleteKR } from '../action';
 
 class OKRListContainer extends Component {
@@ -18,8 +19,9 @@ class OKRListContainer extends Component {
     ownerType: PropTypes.string,
     ownerName: PropTypes.string,
     roleLevel: PropTypes.number,
-    groupType: PropTypes.string,
+    groupType: groupTypePropType,
     dispatchChangeOkrOwner: PropTypes.func.isRequired,
+    dispatchChangeKROwner: PropTypes.func.isRequired,
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchSetRatios: PropTypes.func.isRequired,
@@ -30,7 +32,7 @@ class OKRListContainer extends Component {
 
   render() {
     const { okrs = [], id, ownerType, ownerName, roleLevel, groupType,
-      dispatchChangeOkrOwner, dispatchChangeParentOkr,
+      dispatchChangeOkrOwner, dispatchChangeKROwner, dispatchChangeParentOkr,
       dispatchChangeDisclosureType, dispatchSetRatios, dispatchDeleteOkr, dispatchDeleteKR,
       openModal } = this.props;
     const onAddOkr = () => openModal(NewOKR, { type: 'Okr', ownerName });
@@ -41,6 +43,7 @@ class OKRListContainer extends Component {
             {...{
               okrs,
               dispatchChangeOkrOwner,
+              dispatchChangeKROwner,
               dispatchChangeParentOkr,
               dispatchChangeDisclosureType,
               dispatchSetRatios,
@@ -66,6 +69,8 @@ const mapBasicsStateToProps = (subject, ownerType) => (state) => {
 const mapDispatchToProps = subject => (dispatch) => {
   const dispatchChangeOkrOwner = (id, owner) =>
     dispatch(changeOkrOwner(subject, id, owner));
+  const dispatchChangeKROwner = (id, owner) =>
+    dispatch(changeOkrOwner(subject, id, owner));
   const dispatchChangeParentOkr = (id, newParentOkrId) =>
     dispatch(changeParentOkr(subject, id, newParentOkrId));
   const dispatchChangeDisclosureType = (id, disclosureType) =>
@@ -78,6 +83,7 @@ const mapDispatchToProps = subject => (dispatch) => {
     dispatch(deleteKR(subject, id));
   return {
     dispatchChangeOkrOwner,
+    dispatchChangeKROwner,
     dispatchChangeParentOkr,
     dispatchChangeDisclosureType,
     dispatchSetRatios,

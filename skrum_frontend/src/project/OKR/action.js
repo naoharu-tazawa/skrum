@@ -1,5 +1,4 @@
 import { createActions } from 'redux-actions';
-import { omit } from 'lodash';
 import { keyValueIdentity } from '../../util/ActionUtil';
 import { getJson, postJson, deleteJson, putJson } from '../../util/ApiUtil';
 import { mapOwnerOutbound } from '../../util/OwnerUtil';
@@ -107,10 +106,11 @@ export const postOkr = (subject, isOwnerCurrent, okr) =>
 export const changeOkrOwner = (subject, id, owner) =>
   (dispatch, getState) => {
     const state = getState();
-    if (state.basics.isChangingOkrOwner) return Promise.resolve();
+    if (state.basics.isPutting) return Promise.resolve();
     dispatch(requestChangeOkrOwner());
-    return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound(omit(owner, 'name')))
-      .then(() => dispatch(finishChangeOkrOwner('data', { subject, id })))
+    const { type, id: groupId } = owner;
+    return putJson(`/okrs/${id}/changeowner.json`, state)(null, mapOwnerOutbound({ type, id: groupId }))
+      .then(() => dispatch(finishChangeOkrOwner('data', { subject, id, ...mapOwnerOutbound(owner) })))
       .catch(({ message }) => dispatch(finishChangeOkrOwner(new Error(message))));
   };
 

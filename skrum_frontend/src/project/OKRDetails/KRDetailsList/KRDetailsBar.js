@@ -14,7 +14,7 @@ import { replacePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
 import { compareDates } from '../../../util/DatetimeUtil';
 import { OKRType } from '../../../util/OKRUtil';
-import { changeKRDisclosureTypeDialog, deleteKRPrompt } from '../dialogs';
+import { changeKROwnerDialog, changeKRDisclosureTypeDialog, deleteKRPrompt } from '../dialogs';
 import styles from './KRDetailsBar.css';
 
 class KRDetailsBar extends Component {
@@ -33,7 +33,7 @@ class KRDetailsBar extends Component {
   };
 
   render() {
-    const { header, /* parentOkr, */ keyResult, subject, dispatchPutOKR,
+    const { header, parentOkr, keyResult, subject, dispatchPutOKR, dispatchChangeKROwner,
       dispatchChangeDisclosureType, dispatchDeleteKR, openModal } = this.props;
     if (header) {
       return (
@@ -44,6 +44,7 @@ class KRDetailsBar extends Component {
           <div className={styles.action}>アクション</div>
         </div>);
     }
+    const parentOkrOwner = parentOkr.owner;
     const { id, type, name, detail, unit, targetValue, achievedValue, achievementRate,
       startDate, endDate, owner, disclosureType } = keyResult;
     return (
@@ -126,9 +127,9 @@ class KRDetailsBar extends Component {
           <Permissible entity={owner}>
             <DropdownMenu
               options={[
-                // { caption: '担当者変更',
-                //   onClick: () => openModal(changeKROwnerDialog,
-                //     { id, name, owner, dispatch: dispatchChangeKROwner }) },
+                { caption: '担当者変更',
+                  onClick: () => openModal(changeKROwnerDialog,
+                    { id, name, owner, parentOkrOwner, dispatch: dispatchChangeKROwner }) },
                 // { caption: '紐付け先設定',
                 //   onClick: () => openModal(this.changeParentOkrDialog,
                 //     { id, parentOkr, keyResult, dispatch: dispatchChangeParentOkr }) },

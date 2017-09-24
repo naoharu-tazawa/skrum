@@ -129,7 +129,8 @@ const mapDispatchToProps = (dispatch, { subject }) => {
     dispatch(putOKR(id, data))
       .then(result => dispatch(syncOkr(subject, result)));
   const dispatchChangeKROwner = (id, owner) =>
-    dispatch(changeKROwner(id, owner));
+    dispatch(changeKROwner(id, owner))
+      .then(result => dispatch(syncOkr(subject, result)));
   const dispatchChangeParentOkr = (id, newParentOkrId) =>
     dispatch(changeParentOkr(id, newParentOkrId))
       .then(result => dispatch(syncParentOkr(subject, result)));

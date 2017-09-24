@@ -2,22 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { entityTypePropType, getEntityTypeSubject, EntityType, getEntityTypeId } from '../util/EntityUtil';
+import { entityPropTypes, getEntityTypeSubject, EntityType, getEntityTypeId } from '../util/EntityUtil';
 import { routePropTypes, explodePath, replacePath } from '../util/RouteUtil';
 import { imagePath, dummyImagePath } from '../util/ImageUtil';
 import styles from './EntityLink.css';
-
-export const entityPropType = PropTypes.shape({
-  id: PropTypes.number,
-  name: PropTypes.string,
-  type: entityTypePropType.isRequired,
-});
 
 class EntityLink extends Component {
 
   static propTypes = {
     companyId: PropTypes.number.isRequired,
-    entity: entityPropType,
+    entity: entityPropTypes,
     title: PropTypes.string,
     editor: PropTypes.node,
     local: PropTypes.bool,

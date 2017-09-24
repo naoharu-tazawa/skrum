@@ -2,19 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import EntityLink from './EntityLink';
+import { entityPropTypes } from '../util/EntityUtil';
 import { routePropTypes, replacePath } from '../util/RouteUtil';
 import styles from './EntitySubject.css';
-
-export const entityPropType = PropTypes.shape({
-  id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-});
 
 export default class EntitySubject extends Component {
 
   static propTypes = {
-    entity: entityPropType,
+    entity: entityPropTypes,
     heading: PropTypes.string,
     subject: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     local: PropTypes.bool,

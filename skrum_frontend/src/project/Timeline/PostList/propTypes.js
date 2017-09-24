@@ -1,12 +1,5 @@
 import PropTypes from 'prop-types';
-
-const entityPropTypes = PropTypes.shape({
-  id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  roleLevel: PropTypes.number,
-  groupType: PropTypes.string,
-});
+import { entityPropTypes } from '../../../util/EntityUtil';
 
 const replyPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,

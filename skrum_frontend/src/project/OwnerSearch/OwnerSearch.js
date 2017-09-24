@@ -4,24 +4,19 @@ import { connect } from 'react-redux';
 import { isEmpty, find } from 'lodash';
 import SearchDropdown from '../../editors/SearchDropdown';
 import EntitySubject from '../../components/EntitySubject';
-import { EntityType } from '../../util/EntityUtil';
+import { entityPropTypes, EntityType } from '../../util/EntityUtil';
+import { GroupType } from '../../util/GroupUtil';
 import { mapOwner } from '../../util/OwnerUtil';
 import { searchOwner } from './action';
-
-export const ownerPropType = PropTypes.shape({
-  id: PropTypes.number, // fixme .isRequired,
-  name: PropTypes.string,
-  type: PropTypes.string, // fixme .isRequired,
-});
 
 class OwnerSearch extends PureComponent {
 
   static propTypes = {
-    defaultOwners: PropTypes.arrayOf(ownerPropType),
+    defaultOwners: PropTypes.arrayOf(entityPropTypes),
     keyword: PropTypes.string,
-    exclude: PropTypes.arrayOf(ownerPropType),
-    ownersFound: PropTypes.arrayOf(ownerPropType),
-    value: PropTypes.oneOfType([ownerPropType, PropTypes.shape({}), PropTypes.string]),
+    exclude: PropTypes.arrayOf(entityPropTypes),
+    ownersFound: PropTypes.arrayOf(entityPropTypes),
+    value: PropTypes.oneOfType([entityPropTypes, PropTypes.shape({}), PropTypes.string]),
     onChange: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -54,10 +49,13 @@ class OwnerSearch extends PureComponent {
 
 const mapStateToProps = (state, { exclude = [] }) => {
   const { users = [], teams = [], departments: depts = [], company = {} } = state.top.data || {};
+  const userType = { type: EntityType.USER };
+  const teamType = { type: EntityType.GROUP, groupType: GroupType.TEAM };
+  const deptType = { type: EntityType.GROUP, groupType: GroupType.DEPARTMENT };
   const defaultOwners = [
-    ...users.map(({ userId: id, name }) => ({ id, name, type: EntityType.USER })),
-    ...teams.map(({ groupId: id, groupName: name }) => ({ id, name, type: EntityType.GROUP })),
-    ...depts.map(({ groupId: id, groupName: name }) => ({ id, name, type: EntityType.GROUP })),
+    ...users.map(({ userId: id, name, roleLevel }) => ({ id, name, ...userType, roleLevel })),
+    ...teams.map(({ groupId: id, groupName: name }) => ({ id, name, ...teamType })),
+    ...depts.map(({ groupId: id, groupName: name }) => ({ id, name, ...deptType })),
     ...[{ id: company.companyId, name: company.name, type: EntityType.COMPANY }],
   ].filter(({ type, id }) => !find(exclude, { type, id }));
   const { isSearching, keyword, data = [] } = state.ownersFound || {};

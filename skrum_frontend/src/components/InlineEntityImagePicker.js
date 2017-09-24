@@ -2,15 +2,16 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import AvatarEditor from 'react-avatar-editor';
-import EntityLink, { entityPropType } from './EntityLink';
+import EntityLink from './EntityLink';
 import InlineEditor, { inlineEditorPublicPropTypes } from '../editors/InlineEditor';
+import { entityPropTypes } from '../util/EntityUtil';
 import { loadImageDataUrl, parseDataUrl } from '../util/ImageUtil';
 import styles from './InlineEntityImagePicker.css';
 
 export default class InlineEntityImagePicker extends PureComponent {
 
   static propTypes = {
-    entity: entityPropType,
+    entity: entityPropTypes,
     avatarSize: PropTypes.number,
     ...inlineEditorPublicPropTypes,
   };

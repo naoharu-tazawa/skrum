@@ -2,21 +2,14 @@ import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { find, isFunction } from 'lodash';
-import { entityTypePropType, EntityType } from '../util/EntityUtil';
-import { groupTypePropType, GroupType } from '../util/GroupUtil';
+import { entityPropTypes, EntityType } from '../util/EntityUtil';
+import { GroupType } from '../util/GroupUtil';
 import { isSuperRole, isAdminRole, isAuthoritativeOver } from '../util/UserUtil';
-
-export const entityPropType = PropTypes.shape({
-  id: PropTypes.number.isRequired,
-  type: entityTypePropType.isRequired,
-  roleLevel: PropTypes.number,
-  groupType: groupTypePropType,
-});
 
 class Permissible extends PureComponent {
 
   static propTypes = {
-    entity: entityPropType.isRequired,
+    entity: entityPropTypes.isRequired,
     permitted: PropTypes.bool.isRequired,
     fallback: PropTypes.element,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
