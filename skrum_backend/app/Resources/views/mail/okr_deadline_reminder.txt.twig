@@ -1,0 +1,32 @@
+{{ data.userName }} さん、こんにちは。
+
+
+{% if data.okrNameArray1 is not null %}
+以下の目標の期限日が{{ data.daysLeft1 }}日後にせまっています。
+
+{% for okrName1 in data.okrNameArray1 %}
+    ・{{ okrName1 }}
+{% endfor %}
+{% endif %}
+{% if data.okrNameArray1 is not null and data.okrNameArray2 is not null %}
+
+
+{% endif %}
+{% if data.okrNameArray2 is not null %}
+以下の目標の期限日が{{ data.daysLeft2 }}日後にせまっています。
+
+{% for okrName2 in data.okrNameArray2 %}
+    ・{{ okrName2 }}
+{% endfor %}
+{% endif %}
+
+
+
+
+※このメールが不要な方は以下の方法で設定できます。
+ 1. 下記URLからログインをしてください。
+ 2. ヘッダーの一番右のユーザ画像ボタンを押して、「設定」ボタンを押してください。
+ 3. サイドバーの「メール配信」タブを押してください。
+ 4. 「目標期限日リマインドメール」を「受信しない」に設定し、「保存する」ボタンを押してください。
+ 5. 以上で設定完了です。
+ https://{{ subdomain }}.skrum.jp/login

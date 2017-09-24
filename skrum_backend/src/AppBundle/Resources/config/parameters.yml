@@ -15,6 +15,12 @@ parameters:
     #1ページあたり表示データ数
     paging_data_number: 20
 
+    #目標期限日リマインダーメール送信条件（目標期限日がX日後）
+    okr_deadline_mail_condition_1: 1
+
+    #目標期限日リマインダーメール送信条件（目標期限日がX日後）
+    okr_deadline_mail_condition_2: 7
+
     #進捗登録リマインダーメール送信条件（X日以上進捗登録していない）
     achievement_registration_mail_condition: 5
 

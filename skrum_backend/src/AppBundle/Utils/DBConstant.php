@@ -275,6 +275,11 @@ class DBConstant
     const EMAIL_OKR_TIMELINE = '1';
 
     /**
+     * メール通知設定オン（目標期限日リマインドメール）
+     */
+    const EMAIL_OKR_DEADLINE_REMINDER = '1';
+
+    /**
      * メール通知設定オン（進捗登録リマインドメール）
      */
     const EMAIL_OKR_REMINDER = '1';

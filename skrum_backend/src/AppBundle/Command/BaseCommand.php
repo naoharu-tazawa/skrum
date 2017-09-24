@@ -139,4 +139,9 @@ class BaseCommand extends ContainerAwareCommand
     {
         return $this->getContainer()->get('batch.member_report_email_service');
     }
+
+    protected function getOkrDeadlineReminderEmailService()
+    {
+        return $this->getContainer()->get('batch.okr_deadline_reminder_email_service');
+    }
 }

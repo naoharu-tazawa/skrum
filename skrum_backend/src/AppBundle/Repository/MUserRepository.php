@@ -306,6 +306,40 @@ SQL;
     }
 
     /**
+     * 目標期限日リマインダーメール対象者を取得（バッチ）
+     *
+     * @param string $mailSendingConditionDatetimeString1 目標期限日リマインダーメール送信条件1（X日後）
+     * @param string $mailSendingConditionDatetimeString2 目標期限日リマインダーメール送信条件2（X日後）
+     * @return array
+     */
+    public function getUsersForOkrDeadlineReminderEmail(string $mailSendingConditionDatetimeString1, string $mailSendingConditionDatetimeString2): array
+    {
+        $sql = <<<SQL
+        SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.email_address, m1_.subdomain
+        FROM m_user m0_
+        INNER JOIN m_company m1_
+        ON (m0_.company_id = m1_.company_id) AND (m1_.deleted_at IS NULL)
+        INNER JOIN t_email_settings t0_
+        ON (m0_.user_id = t0_.user_id) AND (t0_.deleted_at IS NULL)
+        INNER JOIN t_okr t1_
+        ON (t1_.owner_type = :ownerType AND m0_.user_id = t1_.owner_user_id) AND (t1_.deleted_at IS NULL)
+        WHERE (m0_.archived_flg = :archivedFlg AND t0_.okr_deadline_reminder = :okrDeadlineReminder
+                AND (t1_.end_date = :endDate1 OR t1_.end_date = :endDate2)) AND (m0_.deleted_at IS NULL);
+SQL;
+
+        $params['ownerType'] = DBConstant::OKR_OWNER_TYPE_USER;
+        $params['archivedFlg'] = DBConstant::FLG_FALSE;
+        $params['okrDeadlineReminder'] = DBConstant::EMAIL_OKR_DEADLINE_REMINDER;
+        $params['endDate1'] = $mailSendingConditionDatetimeString1;
+        $params['endDate2'] = $mailSendingConditionDatetimeString2;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * 進捗登録リマインダーメール対象者を取得（バッチ）
      *
      * @return array
