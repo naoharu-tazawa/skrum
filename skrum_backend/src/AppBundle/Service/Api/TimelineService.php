@@ -125,7 +125,7 @@ class TimelineService extends BaseService
             if (count($postDTOArray) < 5) {
                 $before = $postInfoArray[count($postInfoArray) - 1]['post']->getId();
 
-                $postInfoArray = $tPostRepos->getPosts($groupId, $before);
+                $postInfoArray = $tPostRepos->getMyPosts($auth->getUserId(), $before);
                 if (count($postInfoArray) === 0) {
                     break;
                 }
