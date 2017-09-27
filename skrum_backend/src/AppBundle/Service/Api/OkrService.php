@@ -671,9 +671,11 @@ class OkrService extends BaseService
         }
 
         // メールを配信するグループを取得
-        if ($tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+        if ($tOkr->getParentOkr() !== null && $tOkr->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
             $mGroup = $tOkr->getParentOkr()->getOwnerGroup();
-        } elseif ($tOkr->getParentOkr()->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
+        } elseif ($tOkr->getParentOkr() !== null &&
+                $tOkr->getParentOkr()->getParentOkr() !== null &&
+                $tOkr->getParentOkr()->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
             $mGroup = $tOkr->getParentOkr()->getParentOkr()->getOwnerGroup();
         } else {
             return;
