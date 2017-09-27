@@ -5,7 +5,9 @@ import { okrPropTypes } from './propTypes';
 import Permissible from '../../../components/Permissible';
 import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntityLink from '../../../components/EntityLink';
+import Dropdown from '../../../components/Dropdown';
 import DropdownMenu from '../../../components/DropdownMenu';
+import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
 import { replacePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
 import { changeOkrOwnerDialog, changeOkrParentDialog, changeOkrDisclosureTypeDialog,
@@ -18,6 +20,7 @@ class OkrBar extends Component {
 
   static propTypes = {
     header: PropTypes.bool,
+    subject: PropTypes.string,
     okr: okrPropTypes,
     onKRClicked: PropTypes.func,
     onAddParentedOkr: PropTypes.func,
@@ -30,7 +33,7 @@ class OkrBar extends Component {
   };
 
   render() {
-    const { header, okr, onKRClicked, onAddParentedOkr, dispatchChangeOkrOwner,
+    const { header, subject, okr, onKRClicked, onAddParentedOkr, dispatchChangeOkrOwner,
       dispatchChangeParentOkr, dispatchChangeDisclosureType, dispatchSetRatios,
       dispatchDeleteOkr, openModal } = this.props;
     if (header) {
@@ -60,7 +63,19 @@ class OkrBar extends Component {
         />
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
-          <div className={styles.toolSpace} />
+          {keyResults.length === 0 && (
+            <Permissible entity={owner}>
+              <Dropdown
+                triggerIcon="/img/checkin.png"
+                content={props =>
+                  <NewAchievement
+                    basicsOnly
+                    {...{ subject, id, achievedValue, targetValue, unit, ...props }}
+                  />}
+                arrow="right"
+              />
+            </Permissible>)}
+          {keyResults.length !== 0 && <div className={styles.toolSpace} />}
           <Permissible entity={owner}>
             {({ permitted }) => (
               <DropdownMenu

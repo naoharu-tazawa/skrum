@@ -100,12 +100,17 @@ export default (state = {
       const { okrId: parentOkrId, achievementRate } = parentOkr || {};
       const { okrId, ...update } = targetOkr;
       const { [subject]: basics } = state;
-      const okrs = basics.okrs.map(okr =>
+      const okrsPhase1 = basics.okrs.map(okr =>
         (okr.okrId === parentOkrId ? {
           ...okr,
           achievementRate,
           keyResults: (okr.keyResults || []).map(kr =>
             ({ ...kr, ...(kr.okrId === okrId ? update : {}) })),
+        } : okr));
+      const okrs = okrsPhase1.map(okr =>
+        (okr.okrId === okrId ? {
+          ...okr,
+          ...update,
         } : okr));
       return { ...state, [subject]: { ...basics, okrs }, isPostingAchievement: false, error: null };
     }

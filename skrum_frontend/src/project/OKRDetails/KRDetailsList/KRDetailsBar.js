@@ -107,7 +107,7 @@ class KRDetailsBar extends Component {
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
           {type === OKRType.KR && (
-            <Permissible entity={owner} fallback={<div className={styles.checkinSpace} />}>
+            <Permissible entity={owner} fallback={<div className={styles.toolSpace} />}>
               <Dropdown
                 triggerIcon="/img/checkin.png"
                 content={props =>
@@ -117,7 +117,7 @@ class KRDetailsBar extends Component {
                 arrow="right"
               />
             </Permissible>)}
-          {type === OKRType.OKR && <div className={styles.checkinSpace} />}
+          {type !== OKRType.KR && <div className={styles.toolSpace} />}
           <Link
             className={styles.tool}
             to={replacePath({ tab: 'map', aspect: 'o', aspectId: id })}

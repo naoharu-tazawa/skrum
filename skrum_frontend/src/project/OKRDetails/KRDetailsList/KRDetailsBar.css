@@ -77,7 +77,7 @@ button.tool {
 button.tool:focus {
   outline: 0;
 }
-.checkinSpace {
+.toolSpace {
   width: 55px;
 }
 .circle_small {

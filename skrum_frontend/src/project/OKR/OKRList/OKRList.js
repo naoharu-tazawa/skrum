@@ -46,6 +46,7 @@ export default class OKRList extends Component {
               (<div key={`okr-${id}`}>
                 <OkrBar
                   {...{
+                    subject,
                     okr,
                     onAddParentedOkr,
                     dispatchChangeOkrOwner,

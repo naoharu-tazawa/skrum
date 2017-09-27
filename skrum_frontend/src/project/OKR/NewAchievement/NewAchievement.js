@@ -82,7 +82,7 @@ class NewAchievement extends Component {
 const mapDispatchToProps = (dispatch, { subject, basicsOnly }) => {
   const dispatchPostAchievement = (id, entry) =>
     dispatch(
-      (basicsOnly ? postBasicsAchievement(subject, id, entry, basicsOnly) :
+      (basicsOnly ? postBasicsAchievement(subject, id, entry) :
         postAchievement(id, entry, basicsOnly)))
       .then(({ payload, error }) => dispatch(syncAchievement(subject, { payload, error })));
   return { dispatchPostAchievement };

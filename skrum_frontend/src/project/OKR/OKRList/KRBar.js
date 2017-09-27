@@ -8,6 +8,7 @@ import EntityLink from '../../../components/EntityLink';
 import Dropdown from '../../../components/Dropdown';
 import DropdownMenu from '../../../components/DropdownMenu';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
+import { OKRType } from '../../../util/OKRUtil';
 import { withModal } from '../../../util/ModalUtil';
 import { changeKROwnerDialog, changeKRDisclosureTypeDialog, deleteKRPrompt } from '../../OKRDetails/dialogs';
 import styles from './KRBar.css';
@@ -38,7 +39,7 @@ class KRBar extends Component {
     const { display, subject, okr, keyResult, onAddParentedOkr, dispatchChangeKROwner,
       dispatchChangeDisclosureType, dispatchDeleteKR, openModal } = this.props;
     const parentOkrOwner = okr.owner;
-    const { id, name, unit, targetValue, achievedValue, achievementRate, owner,
+    const { id, type, name, unit, targetValue, achievedValue, achievementRate, owner,
       disclosureType } = keyResult;
     return (
       <div className={this.getBaseStyles(display)}>
@@ -51,17 +52,19 @@ class KRBar extends Component {
         />
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
-          <Permissible entity={owner} fallback={<div className={styles.toolSpace} />}>
-            <Dropdown
-              triggerIcon="/img/checkin.png"
-              content={props =>
-                <NewAchievement
-                  basicsOnly
-                  {...{ subject, id, achievedValue, targetValue, unit, ...props }}
-                />}
-              arrow="right"
-            />
-          </Permissible>
+          {type === OKRType.KR && (
+            <Permissible entity={owner} fallback={<div className={styles.toolSpace} />}>
+              <Dropdown
+                triggerIcon="/img/checkin.png"
+                content={props =>
+                  <NewAchievement
+                    basicsOnly
+                    {...{ subject, id, achievedValue, targetValue, unit, ...props }}
+                  />}
+                arrow="right"
+              />
+            </Permissible>)}
+          {type !== OKRType.KR && <div className={styles.toolSpace} />}
           <Permissible entity={owner}>
             {({ permitted }) => (
               <DropdownMenu
