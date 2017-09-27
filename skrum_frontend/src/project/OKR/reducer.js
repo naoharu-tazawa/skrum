@@ -9,6 +9,7 @@ export default (state = {
   isPostingOkr: false,
   isPutting: false,
   isChangingParentOkr: false,
+  isPostingAchievement: false,
   isSettingRatios: false,
   isDeletingOkr: false,
   isDeletingKR: false,
@@ -85,6 +86,28 @@ export default (state = {
       const okrs = basics.okrs.map(okr =>
         (okr.okrId === okrId ? { ...okr, ...objective, parentOkr } : okr));
       return { ...state, [subject]: { ...basics, okrs }, isChangingParentOkr: false, error: null };
+    }
+
+    case Action.REQUEST_BASICS_POST_ACHIEVEMENT:
+      return { ...state, isPostingAchievement: true };
+
+    case Action.FINISH_BASICS_POST_ACHIEVEMENT: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isPostingAchievement: false, error: { message: payload.message } };
+      }
+      const { subject, parentOkr, targetOkr } = payload.data;
+      const { okrId: parentOkrId, achievementRate } = parentOkr || {};
+      const { okrId, ...update } = targetOkr;
+      const { [subject]: basics } = state;
+      const okrs = basics.okrs.map(okr =>
+        (okr.okrId === parentOkrId ? {
+          ...okr,
+          achievementRate,
+          keyResults: (okr.keyResults || []).map(kr =>
+            ({ ...kr, ...(kr.okrId === okrId ? update : {}) })),
+        } : okr));
+      return { ...state, [subject]: { ...basics, okrs }, isPostingAchievement: false, error: null };
     }
 
     case Action.REQUEST_BASICS_SET_RATIOS:

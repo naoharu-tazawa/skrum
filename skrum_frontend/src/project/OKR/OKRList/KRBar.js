@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import { join } from 'lodash';
 import { okrPropTypes, keyResultPropTypes } from './propTypes';
 import Permissible from '../../../components/Permissible';
 import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntityLink from '../../../components/EntityLink';
+import Dropdown from '../../../components/Dropdown';
 import DropdownMenu from '../../../components/DropdownMenu';
-import { replacePath } from '../../../util/RouteUtil';
+import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
 import { withModal } from '../../../util/ModalUtil';
 import { changeKROwnerDialog, changeKRDisclosureTypeDialog, deleteKRPrompt } from '../../OKRDetails/dialogs';
 import styles from './KRBar.css';
@@ -16,6 +16,7 @@ class KRBar extends Component {
 
   static propTypes = {
     display: PropTypes.oneOf(['expanded', 'collapsed']).isRequired,
+    subject: PropTypes.string.isRequired,
     okr: okrPropTypes.isRequired,
     keyResult: keyResultPropTypes.isRequired,
     onAddParentedOkr: PropTypes.func.isRequired,
@@ -34,7 +35,7 @@ class KRBar extends Component {
   };
 
   render() {
-    const { display, okr, keyResult, onAddParentedOkr, dispatchChangeKROwner,
+    const { display, subject, okr, keyResult, onAddParentedOkr, dispatchChangeKROwner,
       dispatchChangeDisclosureType, dispatchDeleteKR, openModal } = this.props;
     const parentOkrOwner = okr.owner;
     const { id, name, unit, targetValue, achievedValue, achievementRate, owner,
@@ -50,12 +51,17 @@ class KRBar extends Component {
         />
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
-          <Link
-            className={styles.circle}
-            to={replacePath({ tab: 'map', aspect: 'o', aspectId: id })}
-          >
-            <img src="/img/common/inc_organization.png" alt="Map" />
-          </Link>
+          <Permissible entity={owner} fallback={<div className={styles.toolSpace} />}>
+            <Dropdown
+              triggerIcon="/img/checkin.png"
+              content={props =>
+                <NewAchievement
+                  basicsOnly
+                  {...{ subject, id, achievedValue, targetValue, unit, ...props }}
+                />}
+              arrow="right"
+            />
+          </Permissible>
           <Permissible entity={owner}>
             {({ permitted }) => (
               <DropdownMenu

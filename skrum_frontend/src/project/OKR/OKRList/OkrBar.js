@@ -60,12 +60,7 @@ class OkrBar extends Component {
         />
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
-          <Link
-            className={styles.circle}
-            to={replacePath({ tab: 'map', aspect: 'o', aspectId: id })}
-          >
-            <img src="/img/common/inc_organization.png" alt="Map" />
-          </Link>
+          <div className={styles.toolSpace} />
           <Permissible entity={owner}>
             {({ permitted }) => (
               <DropdownMenu

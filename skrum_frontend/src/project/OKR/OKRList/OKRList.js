@@ -10,6 +10,7 @@ export default class OKRList extends Component {
 
   static propTypes = {
     okrs: okrsPropTypes,
+    subject: PropTypes.string,
     onAddOkr: PropTypes.func,
     onAddParentedOkr: PropTypes.func.isRequired,
     dispatchChangeOkrOwner: PropTypes.func.isRequired,
@@ -28,9 +29,9 @@ export default class OKRList extends Component {
   }
 
   render() {
-    const { okrs = [], onAddOkr, onAddParentedOkr, dispatchChangeOkrOwner, dispatchChangeKROwner,
-      dispatchChangeParentOkr, dispatchChangeDisclosureType, dispatchSetRatios,
-      dispatchDeleteOkr, dispatchDeleteKR } = this.props;
+    const { okrs = [], subject, onAddOkr, onAddParentedOkr, dispatchChangeOkrOwner,
+      dispatchChangeKROwner, dispatchChangeParentOkr, dispatchChangeDisclosureType,
+      dispatchSetRatios, dispatchDeleteOkr, dispatchDeleteKR } = this.props;
     const { expandedKeyResults = {} } = this.state || {};
     return (
       <div className={styles.component}>
@@ -61,6 +62,7 @@ export default class OKRList extends Component {
                   key={`kr-${keyResult.id}`}
                   {...{
                     display,
+                    subject,
                     okr,
                     keyResult,
                     onAddParentedOkr,

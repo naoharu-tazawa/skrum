@@ -18,6 +18,8 @@ export const Action = {
   FINISH_BASICS_CHANGE_PARENT_OKR: 'FINISH_BASICS_CHANGE_PARENT_OKR',
   REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE: 'REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE',
   FINISH_BASICS_CHANGE_DISCLOSURE_TYPE: 'FINISH_BASICS_CHANGE_DISCLOSURE_TYPE',
+  REQUEST_BASICS_POST_ACHIEVEMENT: 'REQUEST_BASICS_POST_ACHIEVEMENT',
+  FINISH_BASICS_POST_ACHIEVEMENT: 'FINISH_BASICS_POST_ACHIEVEMENT',
   REQUEST_BASICS_SET_RATIOS: 'REQUEST_BASICS_SET_RATIOS',
   FINISH_BASICS_SET_RATIOS: 'FINISH_BASICS_SET_RATIOS',
   REQUEST_DELETE_OKR: 'REQUEST_DELETE_OKR',
@@ -42,6 +44,8 @@ const {
   finishBasicsChangeParentOkr,
   requestBasicsChangeDisclosureType,
   finishBasicsChangeDisclosureType,
+  requestBasicsPostAchievement,
+  finishBasicsPostAchievement,
   requestBasicsSetRatios,
   finishBasicsSetRatios,
   requestDeleteOkr,
@@ -57,6 +61,7 @@ const {
   [Action.FINISH_CHANGE_OKR_OWNER]: keyValueIdentity,
   [Action.FINISH_BASICS_CHANGE_PARENT_OKR]: keyValueIdentity,
   [Action.FINISH_BASICS_CHANGE_DISCLOSURE_TYPE]: keyValueIdentity,
+  [Action.FINISH_BASICS_POST_ACHIEVEMENT]: keyValueIdentity,
   [Action.FINISH_BASICS_SET_RATIOS]: keyValueIdentity,
   [Action.FINISH_DELETE_OKR]: keyValueIdentity,
   [Action.FINISH_BASICS_DELETE_KR]: keyValueIdentity,
@@ -69,6 +74,7 @@ const {
   Action.REQUEST_CHANGE_OKR_OWNER,
   Action.REQUEST_BASICS_CHANGE_PARENT_OKR,
   Action.REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE,
+  Action.REQUEST_BASICS_POST_ACHIEVEMENT,
   Action.REQUEST_BASICS_SET_RATIOS,
   Action.REQUEST_DELETE_OKR,
   Action.REQUEST_BASICS_DELETE_KR,
@@ -134,6 +140,16 @@ export const changeDisclosureType = (subject, id, disclosureType) =>
       .catch(({ message }) => dispatch(finishBasicsChangeDisclosureType(new Error(message))));
   };
 
+export const postAchievement = (subject, id, data) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.basics.isPostingAchievement) return Promise.resolve();
+    dispatch(requestBasicsPostAchievement());
+    return postJson(`/okrs/${id}/achievements.json`, state)(null, data)
+      .then(json => dispatch(finishBasicsPostAchievement('data', { subject, ...json })))
+      .catch(({ message }) => dispatch(finishBasicsPostAchievement(new Error(message))));
+  };
+
 export const setRatios = (subject, id, ratios) =>
   (dispatch, getState) => {
     const state = getState();
@@ -175,6 +191,10 @@ export const syncParentOkr = (subject, { payload, error }) =>
 export const syncNewKR = (subject, { payload, error }) =>
   dispatch => (error ? ({ payload, error }) :
     dispatch(finishPostOkr('data', { subject, ...payload.data })));
+
+export const syncAchievement = (subject, { payload, error }) =>
+  dispatch => (error ? ({ payload, error }) :
+    dispatch(finishBasicsPostAchievement('data', { subject, ...payload.data })));
 
 export const syncRatios = (subject, { payload, error }) =>
   dispatch => (error ? ({ payload, error }) :

@@ -6,7 +6,7 @@ import DialogForm from '../../../dialogs/DialogForm';
 import NumberInput from '../../../editors/NumberInput';
 import { withReduxForm, withNumberReduxField } from '../../../util/FormUtil';
 import { postAchievement } from '../../OKRDetails/action';
-import { syncOkr } from '../../OKR/action';
+import { postAchievement as postBasicsAchievement, syncAchievement } from '../../OKR/action';
 import styles from './NewAchievement.css';
 
 const formName = 'newProgress';
@@ -19,6 +19,7 @@ const validate = ({ achievedValue, targetValue } = {}) => ({
 class NewAchievement extends Component {
 
   static propTypes = {
+    basicsOnly: PropTypes.bool,
     subject: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     achievedValue: PropTypes.number.isRequired,
@@ -78,12 +79,12 @@ class NewAchievement extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch, { subject }) => {
+const mapDispatchToProps = (dispatch, { subject, basicsOnly }) => {
   const dispatchPostAchievement = (id, entry) =>
-    dispatch(postAchievement(id, entry))
-      .then(({ payload: { data: { parentOkr, targetOkr } = {}, message }, error }) =>
-        dispatch(syncOkr(subject,
-          { payload: { data: parentOkr || targetOkr || {}, message }, error })));
+    dispatch(
+      (basicsOnly ? postBasicsAchievement(subject, id, entry, basicsOnly) :
+        postAchievement(id, entry, basicsOnly)))
+      .then(({ payload, error }) => dispatch(syncAchievement(subject, { payload, error })));
   return { dispatchPostAchievement };
 };
 

@@ -15,6 +15,7 @@ class OKRListContainer extends Component {
 
   static propTypes = {
     okrs: okrsPropTypes,
+    subject: PropTypes.string,
     id: PropTypes.number,
     ownerType: PropTypes.string,
     ownerName: PropTypes.string,
@@ -31,7 +32,7 @@ class OKRListContainer extends Component {
   };
 
   render() {
-    const { okrs = [], id, ownerType, ownerName, roleLevel, groupType,
+    const { okrs = [], subject, id, ownerType, ownerName, roleLevel, groupType,
       dispatchChangeOkrOwner, dispatchChangeKROwner, dispatchChangeParentOkr,
       dispatchChangeDisclosureType, dispatchSetRatios, dispatchDeleteOkr, dispatchDeleteKR,
       openModal } = this.props;
@@ -42,6 +43,7 @@ class OKRListContainer extends Component {
           <OKRList
             {...{
               okrs,
+              subject,
               dispatchChangeOkrOwner,
               dispatchChangeKROwner,
               dispatchChangeParentOkr,
@@ -63,7 +65,7 @@ const mapBasicsStateToProps = (subject, ownerType) => (state) => {
   const okrs = (basics.okrs || []).map(okr => mapOKR({ ...okr, ownerType }));
   const { [`${subject}Id`]: id = 0, name, firstName, lastName, roleLevel, groupType } = basics[subject] || {};
   const ownerName = name || `${lastName} ${firstName}`;
-  return { okrs, id, ownerType, ownerName, roleLevel, groupType };
+  return { okrs, subject, id, ownerType, ownerName, roleLevel, groupType };
 };
 
 const mapDispatchToProps = subject => (dispatch) => {

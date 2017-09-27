@@ -105,3 +105,6 @@ button.tool {
 button.tool:focus {
   outline: 0;
 }
+.toolSpace {
+  width: 55px;
+}
