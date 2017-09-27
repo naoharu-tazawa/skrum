@@ -120,6 +120,8 @@ paths:
                         properties:
                           okrId:
                             type: integer
+                          okrType:
+                            type: string
                           okrName:
                             type: string
                           targetValue:

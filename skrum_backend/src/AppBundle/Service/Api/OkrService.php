@@ -158,6 +158,7 @@ class OkrService extends BaseService
                 // キーリザルトDTOの生成
                 $basicOkrDTOKeyResult = new BasicOkrDTO();
                 $basicOkrDTOKeyResult->setOkrId($tOkrArray[$i]['keyResult']->getOkrId());
+                $basicOkrDTOKeyResult->setOkrType($tOkrArray[$i]['keyResult']->getType());
                 $basicOkrDTOKeyResult->setOkrName($tOkrArray[$i]['keyResult']->getName());
                 $basicOkrDTOKeyResult->setTargetValue($tOkrArray[$i]['keyResult']->getTargetValue());
                 $basicOkrDTOKeyResult->setAchievedValue($tOkrArray[$i]['keyResult']->getAchievedValue());
