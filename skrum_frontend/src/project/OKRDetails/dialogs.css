@@ -56,3 +56,8 @@
 .parentEntitySubject {
   width: calc(100% - 7em);
 }
+.note li {
+  display: list-item;
+  list-style: disc outside none;
+  margin: 0.5em 0 0 2em;
+}

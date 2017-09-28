@@ -18,6 +18,7 @@ export default class OKRList extends Component {
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchSetRatios: PropTypes.func.isRequired,
+    dispatchCopyOkr: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired,
     dispatchDeleteKR: PropTypes.func.isRequired,
   };
@@ -31,7 +32,7 @@ export default class OKRList extends Component {
   render() {
     const { okrs = [], subject, onAddOkr, onAddParentedOkr, dispatchChangeOkrOwner,
       dispatchChangeKROwner, dispatchChangeParentOkr, dispatchChangeDisclosureType,
-      dispatchSetRatios, dispatchDeleteOkr, dispatchDeleteKR } = this.props;
+      dispatchSetRatios, dispatchCopyOkr, dispatchDeleteOkr, dispatchDeleteKR } = this.props;
     const { expandedKeyResults = {} } = this.state || {};
     return (
       <div className={styles.component}>
@@ -53,6 +54,7 @@ export default class OKRList extends Component {
                     dispatchChangeParentOkr,
                     dispatchChangeDisclosureType,
                     dispatchSetRatios,
+                    dispatchCopyOkr,
                     dispatchDeleteOkr,
                   }}
                   onKRClicked={() => keyResults.length && this.toggleKeyResults(id)}

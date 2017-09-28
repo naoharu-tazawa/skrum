@@ -10,6 +10,7 @@ class TimeframesDropdown extends PureComponent {
 
   static propTypes = {
     plain: PropTypes.bool,
+    excludeCurrent: PropTypes.bool,
     timeframes: PropTypes.arrayOf(PropTypes.shape({
       timeframeId: PropTypes.number.isRequired,
       timeframeName: PropTypes.string.isRequired,
@@ -53,12 +54,14 @@ class TimeframesDropdown extends PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, { excludeCurrent }) => {
   const { timeframes = [] } = state.top.data || {};
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
   const { timeframeId } = explodePath(pathname);
-  return { timeframes, timeframeId };
+  return excludeCurrent ?
+    { timeframes: timeframes.filter(tf => tf.timeframeId !== timeframeId) } :
+    { timeframes, timeframeId };
 };
 
 export default connect(

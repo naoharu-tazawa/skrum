@@ -5,6 +5,7 @@ import DialogForm from '../../dialogs/DialogForm';
 import NumberInput from '../../editors/NumberInput';
 import EntitySubject from '../../components/EntitySubject';
 import DisclosureTypeOptions from '../../components/DisclosureTypeOptions';
+import TimeframesDropdown from '../../components/TimeframesDropdown';
 import OwnerSearch from '../OwnerSearch/OwnerSearch';
 import OKRSearch from '../OKRSearch/OKRSearch';
 import styles from './dialogs.css';
@@ -216,6 +217,40 @@ const changeDisclosureTypeDialog =
                 </label>)}
             />
           </section>
+        </div>}
+    </DialogForm>);
+
+export const copyOkrDialog =
+  // eslint-disable-next-line react/prop-types
+  ({ id, name, owner, dispatch, onSuccess, onClose }) => (
+    <DialogForm
+      title="他の目標期間にコピーする"
+      submitButton="コピーする"
+      onSubmit={({ timeframeId } = {}) =>
+        dispatch(id, timeframeId).then(({ error, payload }) => {
+          if (onSuccess && !error) onSuccess({ payload });
+          return { error, payload };
+        })}
+      valid={({ timeframeId }) => timeframeId}
+      onClose={onClose}
+    >
+      {({ setFieldData, data: { timeframeId } }) =>
+        <div>
+          <EntitySubject entity={owner} heading="他の目標期間にコピーする目標" subject={name} />
+          <section>
+            <label>コピー先の目標期間</label>
+            <TimeframesDropdown
+              excludeCurrent
+              value={timeframeId}
+              onChange={({ value }) => setFieldData({ timeframeId: value })}
+              tabIndex={0}
+            />
+          </section>
+          <div className={styles.note}>
+            <ul>
+              <li>上記の目標に直接紐づいているサブ目標、および間接的に紐づいているサブ目標までの目標がコピーの対象となります。</li>
+            </ul>
+          </div>
         </div>}
     </DialogForm>);
 

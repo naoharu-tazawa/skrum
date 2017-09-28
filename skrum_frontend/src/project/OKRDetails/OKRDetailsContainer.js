@@ -28,6 +28,7 @@ class OKRDetailsContainer extends Component {
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchSetRatios: PropTypes.func.isRequired,
+    dispatchCopyOkr: PropTypes.func.isRequired, // passed from OKRContainer
     dispatchDeleteOkr: PropTypes.func.isRequired, // passed from OKRContainer
     dispatchDeleteKR: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
@@ -59,8 +60,8 @@ class OKRDetailsContainer extends Component {
   render() {
     const { isFetching, parentOkr, okr, progressSeries = [], subject,
       dispatchPutOKR, dispatchChangeKROwner, dispatchChangeParentOkr,
-      dispatchDeleteOkr, dispatchChangeOkrOwner, dispatchChangeDisclosureType,
-      dispatchSetRatios, dispatchDeleteKR, openModal } = this.props;
+      dispatchCopyOkr, dispatchDeleteOkr, dispatchChangeOkrOwner,
+      dispatchChangeDisclosureType, dispatchSetRatios, dispatchDeleteKR, openModal } = this.props;
     if (isFetching || !okr) {
       return null; // <div className={`${styles.container} ${styles.spinner}`} />;
     }
@@ -79,6 +80,7 @@ class OKRDetailsContainer extends Component {
                 dispatchChangeParentOkr,
                 dispatchChangeDisclosureType,
                 dispatchSetRatios,
+                dispatchCopyOkr,
                 dispatchDeleteOkr,
               }}
             />

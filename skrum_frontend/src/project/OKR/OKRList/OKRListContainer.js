@@ -9,7 +9,7 @@ import { withModal } from '../../../util/ModalUtil';
 import { mapOKR } from '../../../util/OKRUtil';
 import { EntityType } from '../../../util/EntityUtil';
 import { groupTypePropType } from '../../../util/GroupUtil';
-import { changeOkrOwner, changeParentOkr, changeDisclosureType, setRatios, deleteOkr, deleteKR } from '../action';
+import { changeOkrOwner, changeParentOkr, changeDisclosureType, setRatios, copyOkr, deleteOkr, deleteKR } from '../action';
 
 class OKRListContainer extends Component {
 
@@ -26,6 +26,7 @@ class OKRListContainer extends Component {
     dispatchChangeParentOkr: PropTypes.func.isRequired,
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchSetRatios: PropTypes.func.isRequired,
+    dispatchCopyOkr: PropTypes.func.isRequired,
     dispatchDeleteOkr: PropTypes.func.isRequired,
     dispatchDeleteKR: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
@@ -34,8 +35,8 @@ class OKRListContainer extends Component {
   render() {
     const { okrs = [], subject, id, ownerType, ownerName, roleLevel, groupType,
       dispatchChangeOkrOwner, dispatchChangeKROwner, dispatchChangeParentOkr,
-      dispatchChangeDisclosureType, dispatchSetRatios, dispatchDeleteOkr, dispatchDeleteKR,
-      openModal } = this.props;
+      dispatchChangeDisclosureType, dispatchSetRatios, dispatchCopyOkr, dispatchDeleteOkr,
+      dispatchDeleteKR, openModal } = this.props;
     const onAddOkr = () => openModal(NewOKR, { type: 'Okr', ownerName });
     return (
       <Permissible entity={{ id, type: ownerType, roleLevel, groupType }}>
@@ -49,6 +50,7 @@ class OKRListContainer extends Component {
               dispatchChangeParentOkr,
               dispatchChangeDisclosureType,
               dispatchSetRatios,
+              dispatchCopyOkr,
               dispatchDeleteOkr,
               dispatchDeleteKR,
             }}
@@ -79,6 +81,8 @@ const mapDispatchToProps = subject => (dispatch) => {
     dispatch(changeDisclosureType(subject, id, disclosureType));
   const dispatchSetRatios = (id, ratios) =>
     dispatch(setRatios(subject, id, ratios));
+  const dispatchCopyOkr = (id, timeframeId) =>
+    dispatch(copyOkr(subject, id, timeframeId));
   const dispatchDeleteOkr = id =>
     dispatch(deleteOkr(subject, id));
   const dispatchDeleteKR = id =>
@@ -89,6 +93,7 @@ const mapDispatchToProps = subject => (dispatch) => {
     dispatchChangeParentOkr,
     dispatchChangeDisclosureType,
     dispatchSetRatios,
+    dispatchCopyOkr,
     dispatchDeleteOkr,
     dispatchDeleteKR,
   };

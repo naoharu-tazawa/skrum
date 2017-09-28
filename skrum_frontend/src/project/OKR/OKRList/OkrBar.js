@@ -10,7 +10,7 @@ import DropdownMenu from '../../../components/DropdownMenu';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
 import { replacePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
-import { changeOkrOwnerDialog, changeOkrParentDialog, changeOkrDisclosureTypeDialog,
+import { copyOkrDialog, changeOkrOwnerDialog, changeOkrParentDialog, changeOkrDisclosureTypeDialog,
   setRatiosDialog, deleteOkrPrompt } from '../../OKRDetails/dialogs';
 import styles from './OkrBar.css';
 
@@ -24,18 +24,19 @@ class OkrBar extends Component {
     okr: okrPropTypes,
     onKRClicked: PropTypes.func,
     onAddParentedOkr: PropTypes.func,
-    dispatchChangeOkrOwner: PropTypes.func,
     dispatchChangeParentOkr: PropTypes.func,
     dispatchChangeDisclosureType: PropTypes.func,
     dispatchSetRatios: PropTypes.func,
+    dispatchChangeOkrOwner: PropTypes.func,
+    dispatchCopyOkr: PropTypes.func,
     dispatchDeleteOkr: PropTypes.func,
     openModal: PropTypes.func.isRequired,
   };
 
   render() {
-    const { header, subject, okr, onKRClicked, onAddParentedOkr, dispatchChangeOkrOwner,
-      dispatchChangeParentOkr, dispatchChangeDisclosureType, dispatchSetRatios,
-      dispatchDeleteOkr, openModal } = this.props;
+    const { header, subject, okr, onKRClicked, onAddParentedOkr,
+      dispatchChangeOkrOwner, dispatchChangeParentOkr, dispatchChangeDisclosureType,
+      dispatchSetRatios, dispatchCopyOkr, dispatchDeleteOkr, openModal } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -64,7 +65,7 @@ class OkrBar extends Component {
         <EntityLink componentClassName={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
           {keyResults.length === 0 && (
-            <Permissible entity={owner}>
+            <Permissible entity={owner} fallback={<div className={styles.toolSpace} />}>
               <Dropdown
                 triggerIcon="/img/checkin.png"
                 content={props =>
@@ -95,6 +96,9 @@ class OkrBar extends Component {
                   ...permitted && keyResults.length > 0 && [{ caption: '影響度設定',
                     onClick: () => openModal(setRatiosDialog,
                       { id, name, owner, keyResults, dispatch: dispatchSetRatios }) }],
+                  { caption: 'コピー',
+                    onClick: () => openModal(copyOkrDialog,
+                      { id, name, owner, dispatch: dispatchCopyOkr }) },
                   ...permitted && [{ caption: '削除',
                     onClick: () => openModal(deleteOkrPrompt,
                       { id, name, owner, dispatch: dispatchDeleteOkr }) }],

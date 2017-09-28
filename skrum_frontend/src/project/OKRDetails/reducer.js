@@ -8,9 +8,9 @@ export default (state = {
   isPutting: false,
   isPostingKR: false,
   isChangingParentOkr: false,
+  isPostingAchievement: false,
   isSettingRatios: false,
   isDeletingKR: false,
-  isPostingAchievement: false,
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_OKR_DETAILS:

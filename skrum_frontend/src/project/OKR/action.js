@@ -22,6 +22,8 @@ export const Action = {
   FINISH_BASICS_POST_ACHIEVEMENT: 'FINISH_BASICS_POST_ACHIEVEMENT',
   REQUEST_BASICS_SET_RATIOS: 'REQUEST_BASICS_SET_RATIOS',
   FINISH_BASICS_SET_RATIOS: 'FINISH_BASICS_SET_RATIOS',
+  REQUEST_COPY_OKR: 'REQUEST_COPY_OKR',
+  FINISH_COPY_OKR: 'FINISH_COPY_OKR',
   REQUEST_DELETE_OKR: 'REQUEST_DELETE_OKR',
   FINISH_DELETE_OKR: 'FINISH_DELETE_OKR',
   REQUEST_BASICS_DELETE_KR: 'REQUEST_BASICS_DELETE_KR',
@@ -48,6 +50,8 @@ const {
   finishBasicsPostAchievement,
   requestBasicsSetRatios,
   finishBasicsSetRatios,
+  requestCopyOkr,
+  finishCopyOkr,
   requestDeleteOkr,
   finishDeleteOkr,
   requestBasicsDeleteKr,
@@ -63,6 +67,7 @@ const {
   [Action.FINISH_BASICS_CHANGE_DISCLOSURE_TYPE]: keyValueIdentity,
   [Action.FINISH_BASICS_POST_ACHIEVEMENT]: keyValueIdentity,
   [Action.FINISH_BASICS_SET_RATIOS]: keyValueIdentity,
+  [Action.FINISH_COPY_OKR]: keyValueIdentity,
   [Action.FINISH_DELETE_OKR]: keyValueIdentity,
   [Action.FINISH_BASICS_DELETE_KR]: keyValueIdentity,
   [Action.SYNC_BASICS_DETAILS]: keyValueIdentity,
@@ -76,6 +81,7 @@ const {
   Action.REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE,
   Action.REQUEST_BASICS_POST_ACHIEVEMENT,
   Action.REQUEST_BASICS_SET_RATIOS,
+  Action.REQUEST_COPY_OKR,
   Action.REQUEST_DELETE_OKR,
   Action.REQUEST_BASICS_DELETE_KR,
 );
@@ -158,6 +164,16 @@ export const setRatios = (subject, id, ratios) =>
     return putJson(`/okrs/${id}/setratio.json`, state)(null, ratios)
       .then(json => dispatch(finishBasicsSetRatios('data', { subject, ...json, ratios })))
       .catch(({ message }) => dispatch(finishBasicsSetRatios(new Error(message))));
+  };
+
+export const copyOkr = (subject, id, timeframeId) =>
+  (dispatch, getState) => {
+    const state = getState();
+    if (state.basics.isCopyingOkr) return Promise.resolve();
+    dispatch(requestCopyOkr());
+    return postJson(`/okrs/${id}/clone.json`, state)(null, { timeframeId })
+      .then(json => dispatch(finishCopyOkr('data', { subject, ...json })))
+      .catch(({ message }) => dispatch(finishCopyOkr(new Error(message))));
   };
 
 export const deleteOkr = (subject, id) =>

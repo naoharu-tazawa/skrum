@@ -11,6 +11,7 @@ export default (state = {
   isChangingParentOkr: false,
   isPostingAchievement: false,
   isSettingRatios: false,
+  isCopyingOkr: false,
   isDeletingOkr: false,
   isDeletingKR: false,
 }, action) => {
@@ -136,6 +137,17 @@ export default (state = {
             ({ ...kr, ...ratiosById[kr.okrId], ratioLockedFlg: ratiosById[kr.okrId] ? 1 : 0 })),
         } : okr));
       return { ...state, [subject]: { ...basics, okrs }, isSettingRatios: false, error: null };
+    }
+
+    case Action.REQUEST_COPY_OKR:
+      return { ...state, isCopyingOkr: true };
+
+    case Action.FINISH_COPY_OKR: {
+      const { payload, error } = action;
+      if (error) {
+        return { ...state, isCopyingOkr: false, error: { message: payload.message } };
+      }
+      return { ...state, isCopyingOkr: false, error: null };
     }
 
     case Action.REQUEST_DELETE_OKR:
