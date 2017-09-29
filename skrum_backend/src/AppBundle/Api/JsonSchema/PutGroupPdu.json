@@ -11,7 +11,7 @@
     "mission": {
       "title": "ミッション",
       "type": "string",
-      "maxLength": 255
+      "maxLength": 750
     }
   },
   "additionalProperties": false

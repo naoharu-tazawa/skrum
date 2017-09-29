@@ -5,13 +5,13 @@
     "okrName": {
       "title": "OKR名",
       "type": "string",
-      "maxLength": 255,
+      "maxLength": 360,
       "minLength": 1
     },
     "okrDetail": {
       "title": "OKR詳細",
       "type": "string",
-      "maxLength": 255
+      "maxLength": 750
     },
     "startDate": {
       "title": "目標開始日",

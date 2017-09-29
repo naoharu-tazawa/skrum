@@ -43,12 +43,12 @@
     "okrName": {
       "title": "OKR名",
       "type": "string",
-      "maxLength": 255
+      "maxLength": 360
     },
     "okrDetail": {
       "title": "OKR詳細",
       "type": "string",
-      "maxLength": 255
+      "maxLength": 750
     },
     "targetValue": {
       "title": "目標値",
@@ -64,7 +64,7 @@
     "parentOkrId": {
       "title": "紐付け先OKRID",
       "type": "integer",
-      "maxLength": 255
+      "maxLength": 11
     },
     "disclosureType": {
       "title": "OKR公開種別",
