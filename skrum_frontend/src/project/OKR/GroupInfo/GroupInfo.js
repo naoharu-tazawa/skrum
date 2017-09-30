@@ -47,7 +47,7 @@ export default class GroupInfo extends Component {
           <div className={`${styles.nav_info} ${styles.cf}`}>
             <EntityLink
               className={styles.leader_info}
-              entity={{ id: leaderUserId, name: leaderName, type: EntityType.USER }}
+              entity={leaderUserId && { id: leaderUserId, name: leaderName, type: EntityType.USER }}
               title="リーダー"
             />
             <Link

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { toNumber } from 'lodash';
 import { groupMembersPropTypes } from './propTypes';
 import GroupMemberList from './GroupMemberList';
 import { addGroupMember, deleteGroupMember } from '../action';
@@ -37,16 +38,13 @@ const mapStateToProps = (state) => {
   const { roleLevel } = state.auth || {};
   const { group, members = [] } = state.groupManagement.group || {};
   const { groupId, name: groupName } = group || {};
-  const items = members.map((member) => {
-    const { userId, name, position, achievementRate, lastLogin } = member;
-    return {
-      id: userId,
-      name,
-      position,
-      achievementRate,
-      lastLogin,
-    };
-  });
+  const items = members.map(({ userId, name, position, achievementRate, lastLogin }) => ({
+    id: userId,
+    name,
+    position,
+    achievementRate: toNumber(achievementRate),
+    lastLogin,
+  }));
   return { groupId, groupName, roleLevel, items };
 };
 

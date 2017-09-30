@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { toNumber } from 'lodash';
 import { userGroupsPropTypes } from './propTypes';
 import UserGroupList from './UserGroupList';
 import { joinGroup, leaveGroup } from '../action';
@@ -30,14 +31,11 @@ class UserGroupListContainer extends Component {
 const mapStateToProps = (state) => {
   const { user, groups = [] } = state.groupManagement.user || {};
   const { userId, lastName, firstName, roleLevel } = user || {};
-  const items = groups.map((group) => {
-    const { groupId, groupName, achievementRate } = group;
-    return {
-      id: groupId,
-      name: groupName,
-      achievementRate,
-    };
-  });
+  const items = groups.map(({ groupId, groupName, achievementRate }) => ({
+    id: groupId,
+    name: groupName,
+    achievementRate: toNumber(achievementRate),
+  }));
   return { userId, userName: `${lastName} ${firstName}`, roleLevel, items };
 };
 

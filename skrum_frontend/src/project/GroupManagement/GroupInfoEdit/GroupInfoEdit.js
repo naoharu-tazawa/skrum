@@ -119,7 +119,7 @@ class GroupInfoEdit extends Component {
             </div>
             <EntityLink
               className={styles.leader}
-              entity={{ id: leaderUserId, type: EntityType.USER }}
+              entity={leaderUserId && { id: leaderUserId, type: EntityType.USER }}
               title="リーダー"
               local
               editor={

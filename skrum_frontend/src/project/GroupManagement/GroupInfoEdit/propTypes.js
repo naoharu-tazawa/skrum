@@ -10,7 +10,7 @@ export const groupPropTypes = PropTypes.shape({
       name: PropTypes.string.isRequired,
     })).isRequired,
   })).isRequired,
-  mission: PropTypes.string.isRequired,
+  mission: PropTypes.string,
   leaderName: PropTypes.string,
 });
 
