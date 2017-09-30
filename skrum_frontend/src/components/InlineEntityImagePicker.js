@@ -38,7 +38,7 @@ export default class InlineEntityImagePicker extends PureComponent {
         />);
     return (
       <InlineEditor
-        componentClassName={`${styles.editor} ${readonly && styles.readonly}`}
+        className={`${styles.editor} ${readonly && styles.readonly}`}
         {...{ value: {}, ...inlineEditorProps }}
         formatter={content}
         preProcess={({ dataUrl } = {}) => dataUrl &&

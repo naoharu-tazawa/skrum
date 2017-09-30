@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { omitBy, isUndefined } from 'lodash';
+import { toNumber, omitBy, isUndefined, isNumber, sum, round, fromPairs } from 'lodash';
 import { mapOwner } from './OwnerUtil';
 
 export const OKRType = {
@@ -22,14 +22,14 @@ export const mapObjective =
     unit,
     targetValue,
     achievedValue,
-    achievementRate,
+    achievementRate: toNumber(achievementRate),
     startDate,
     endDate,
     owner: mapOwner(others),
     status,
     disclosureType,
     ratioLockedFlg,
-    weightedAverageRatio,
+    weightedAverageRatio: toNumber(weightedAverageRatio),
   }, isUndefined);
 
 export const mapOKR = (okr, keyResults = okr.keyResults, parentOkr = okr.parentOkr) =>
@@ -38,3 +38,30 @@ export const mapOKR = (okr, keyResults = okr.keyResults, parentOkr = okr.parentO
     keyResults: (keyResults && keyResults.map(mapObjective)) || [],
     parentOkr: parentOkr && mapObjective(parentOkr),
   }, isUndefined);
+
+export const deriveRatios = (keyResults, overrides = {}) => {
+  const ratioFallback = (ratio, krLocked, krRatio, fallback) => {
+    if (isNumber(ratio)) return ratio;
+    if (ratio === null) return fallback;
+    return krLocked ? krRatio : fallback;
+  };
+  const lockedRatios = keyResults.map(({ id, weightedAverageRatio, ratioLockedFlg }) =>
+    ratioFallback(overrides[id], ratioLockedFlg, weightedAverageRatio, null))
+    .filter(ratio => isNumber(ratio));
+  const lockedRatiosSum = sum(lockedRatios);
+  const unlockedCount = keyResults.length - lockedRatios.length;
+  const unlockedRatio = round((100 - lockedRatiosSum) / unlockedCount, 1);
+  return {
+    lockedRatiosSum,
+    unlockedCount,
+    unlockedRatio,
+    ratios: fromPairs(
+      keyResults.map(({ id, weightedAverageRatio, ratioLockedFlg }) => (
+        [id, {
+          weightedAverageRatio:
+            ratioFallback(overrides[id], ratioLockedFlg, weightedAverageRatio, unlockedRatio),
+          ratioLockedFlg: overrides[id] !== null && (overrides[id] || ratioLockedFlg) ? 1 : 0,
+        }]
+      ))),
+  };
+};

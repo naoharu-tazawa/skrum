@@ -73,7 +73,7 @@ export default class OKRAlignmentsInfo extends Component {
             {details.map(({ ownerType, name, userId, groupId, companyId, numberOfOkrs }, index) => (
               <div key={index} className={styles.detail}>
                 <EntityLink
-                  componentClassName={styles.group}
+                  className={styles.group}
                   entity={{ id: userId || groupId || companyId, name, type: ownerType }}
                 />
                 <div className={styles.numberOfOkrs}>{numberOfOkrs}</div>

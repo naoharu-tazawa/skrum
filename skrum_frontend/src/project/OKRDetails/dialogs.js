@@ -1,5 +1,5 @@
 import React from 'react';
-import { toNumber, isNumber, sum, round, fromPairs, toPairs, isEmpty } from 'lodash';
+import { toNumber, toPairs, isEmpty } from 'lodash';
 import ConfirmationPrompt from '../../dialogs/ConfirmationPrompt';
 import DialogForm from '../../dialogs/DialogForm';
 import NumberInput from '../../editors/NumberInput';
@@ -8,33 +8,8 @@ import DisclosureTypeOptions from '../../components/DisclosureTypeOptions';
 import TimeframesDropdown from '../../components/TimeframesDropdown';
 import OwnerSearch from '../OwnerSearch/OwnerSearch';
 import OKRSearch from '../OKRSearch/OKRSearch';
+import { deriveRatios } from '../../util/OKRUtil';
 import styles from './dialogs.css';
-
-const overrideKeyResults = (keyResults, data) => {
-  const ratioFallback = (ratio, krLocked, krRatio, fallback) => {
-    if (isNumber(ratio)) return ratio;
-    if (ratio === null) return fallback;
-    return krLocked ? toNumber(krRatio) : fallback;
-  };
-  const lockedRatios = keyResults.map(({ id, weightedAverageRatio, ratioLockedFlg }) =>
-    ratioFallback(data[id], ratioLockedFlg, weightedAverageRatio, null))
-    .filter(ratio => isNumber(ratio));
-  const lockedRatiosSum = sum(lockedRatios);
-  const unlockedCount = keyResults.length - lockedRatios.length;
-  const unlockedRatio = round((100 - lockedRatiosSum) / unlockedCount, 1);
-  return {
-    lockedRatiosSum,
-    unlockedCount,
-    overrides: fromPairs(
-      keyResults.map(({ id, weightedAverageRatio, ratioLockedFlg }) => (
-        [id, {
-          weightedAverageRatio:
-            ratioFallback(data[id], ratioLockedFlg, weightedAverageRatio, unlockedRatio),
-          ratioLockedFlg: data[id] !== null && (isNumber(data[id]) || ratioLockedFlg) ? 1 : 0,
-        }]
-      ))),
-  };
-};
 
 export const setRatiosDialog =
   // eslint-disable-next-line react/prop-types
@@ -43,33 +18,38 @@ export const setRatiosDialog =
       title="サブ目標の目標への影響度合い設定"
       submitButton="設定"
       constrainHeight
-      onSubmit={data => (!data ? Promise.resolve() :
-        dispatch(id,
-          toPairs(overrideKeyResults(keyResults, data).overrides)
+      onSubmit={(data) => {
+        if (!data) return Promise.resolve();
+        const { ratios, unlockedRatio } = deriveRatios(keyResults, data);
+        return dispatch(
+          id,
+          toPairs(ratios)
             .filter(([, { ratioLockedFlg }]) => ratioLockedFlg)
             .map(([keyResultId, { weightedAverageRatio }]) =>
-              ({ keyResultId: toNumber(keyResultId), weightedAverageRatio }))))
-      }
+              ({ keyResultId: toNumber(keyResultId), weightedAverageRatio })),
+          unlockedRatio,
+        );
+      }}
       onClose={onClose}
     >
       {({ setFieldData, data }) => {
-        const { lockedRatiosSum, /* unlockedCount, */overrides } =
-          overrideKeyResults(keyResults, data);
-        // console.log({ data, overrides });
+        const { lockedRatiosSum, /* unlockedCount, */ratios } =
+          deriveRatios(keyResults, data);
+        // console.log({ data, ratios });
         return (
           <div>
             <EntitySubject entity={owner} heading="対象目標" subject={name} />
             {keyResults.map((kr) => {
               const {
-                weightedAverageRatio: ratio = toNumber(kr.weightedAverageRatio),
+                weightedAverageRatio: ratio = kr.weightedAverageRatio,
                 ratioLockedFlg: locked = kr.ratioLockedFlg,
-              } = overrides[kr.id] || {};
+              } = ratios[kr.id] || {};
               const maxRatio = (100 - lockedRatiosSum) + (locked ? ratio : 0);
               // console.log({ id: kr.id, locked, ratio });
               return (<EntitySubject
                 key={kr.id}
                 plain
-                componentClassName={styles.ratioBar}
+                className={styles.ratioBar}
                 entityClassName={styles.ratioEntity}
                 entity={kr.owner}
                 entityStyle={{ width: '10em' }}
@@ -161,7 +141,7 @@ const changeParentDialog =
               entity={parentOkr.owner}
               heading={childHeading}
               subject={parentOkr.name}
-              componentClassName={styles.parentEntitySubject}
+              className={styles.parentEntitySubject}
             />
           </div>
           <section>

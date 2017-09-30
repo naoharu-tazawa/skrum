@@ -66,7 +66,7 @@ class GroupMemberBar extends Component {
         <span className={styles.position}>{position}</span>
         {!isBasic && (
           <ProgressPercentage
-            componentClassName={styles.progress}
+            className={styles.progress}
             achievementRate={achievementRate}
           />)}
         <span className={isBasic ? styles.update : styles.updateAdmin}>

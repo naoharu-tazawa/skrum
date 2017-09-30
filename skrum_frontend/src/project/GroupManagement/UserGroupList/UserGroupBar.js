@@ -50,7 +50,7 @@ class UserGroupBar extends Component {
           <EntityLink entity={{ id, name, type: EntityType.GROUP }} route={{ tab: 'objective' }} />
         </div>
         <ProgressPercentage
-          componentClassName={styles.progress}
+          className={styles.progress}
           achievementRate={achievementRate}
         />
         <Permissible entity={entity}>

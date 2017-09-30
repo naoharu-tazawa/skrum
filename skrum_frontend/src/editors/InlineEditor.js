@@ -23,7 +23,7 @@ export default class InlineEditor extends PureComponent {
     formatter: PropTypes.func,
     preProcess: PropTypes.func,
     children: PropTypes.func,
-    componentClassName: PropTypes.string,
+    className: PropTypes.string,
     style: PropTypes.shape({}),
   };
 
@@ -59,7 +59,7 @@ export default class InlineEditor extends PureComponent {
 
   render() {
     const { value: defaultValue = '', readonly = false, placeholder = '\u00A0', fluid, multiline,
-      dropdown, formatter = v => v, children, componentClassName, style } = this.props;
+      dropdown, formatter = v => v, children, className, style } = this.props;
     const { isEditing = false, value = defaultValue, submitValue, error } = this.state || {};
     const displayValue = formatter(submitValue !== undefined ? submitValue : value);
     return (
@@ -73,7 +73,7 @@ export default class InlineEditor extends PureComponent {
           ${isEditing && styles.editing}
           ${submitValue !== undefined && !error && styles.submitting}
           ${error && styles.error}
-          ${componentClassName || ''}
+          ${className || ''}
         `}
         style={style}
         onMouseUp={() => !readonly && submitValue === undefined && this.setEditing()}

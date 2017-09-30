@@ -156,13 +156,13 @@ export const postAchievement = (subject, id, data) =>
       .catch(({ message }) => dispatch(finishBasicsPostAchievement(new Error(message))));
   };
 
-export const setRatios = (subject, id, ratios) =>
+export const setRatios = (subject, id, ratios, unlockedRatio) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.basics.isSettingRatios) return Promise.resolve();
     dispatch(requestBasicsSetRatios());
     return putJson(`/okrs/${id}/setratio.json`, state)(null, ratios)
-      .then(json => dispatch(finishBasicsSetRatios('data', { subject, ...json, ratios })))
+      .then(json => dispatch(finishBasicsSetRatios('data', { subject, ...json, ratios, unlockedRatio })))
       .catch(({ message }) => dispatch(finishBasicsSetRatios(new Error(message))));
   };
 

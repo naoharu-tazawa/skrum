@@ -61,7 +61,7 @@ class SectionItem extends Component {
     const iconSize = '36px';
     return (
       <EntityLink
-        componentClassName={linkStyle}
+        className={linkStyle}
         entity={{ id, name: title, type }}
         avatarSize={iconSize}
       />);

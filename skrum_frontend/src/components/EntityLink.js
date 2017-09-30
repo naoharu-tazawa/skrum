@@ -20,12 +20,12 @@ class EntityLink extends Component {
     avatarOnly: PropTypes.bool,
     avatarSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     avatarTick: PropTypes.number,
-    componentClassName: PropTypes.string,
+    className: PropTypes.string,
   };
 
   render() {
     const { companyId, entity = {}, title, editor, local, route, fluid, avatarOnly,
-      avatarSize = fluid ? '100%' : '40px', avatarTick, componentClassName } = this.props;
+      avatarSize = fluid ? '100%' : '40px', avatarTick, className } = this.props;
     const { imageError } = this.state || {};
     const { id, name, type } = entity;
     const imgSrc = imageError ? dummyImagePath(type) :
@@ -59,7 +59,7 @@ class EntityLink extends Component {
         ${editor && styles.hasEditor}
         ${fluid && styles.fluid}
         ${imageError && styles.imageError}
-        ${componentClassName || ''}`}
+        ${className || ''}`}
       >
         {(local || !id) && <div className={styles.noLink}>{avatarContent}{nameContent}</div>}
         {!local && id && (

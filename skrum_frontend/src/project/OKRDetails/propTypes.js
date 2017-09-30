@@ -16,7 +16,7 @@ const objectiveBase = {
   unit: PropTypes.string.isRequired,
   targetValue: PropTypes.number.isRequired,
   achievedValue: PropTypes.number.isRequired,
-  achievementRate: PropTypes.string.isRequired,
+  achievementRate: PropTypes.number.isRequired,
   owner: ownerPropTypes.isRequired,
   status: PropTypes.string.isRequired,
   disclosureType: PropTypes.string.isRequired,
@@ -27,7 +27,7 @@ export const objectivePropTypes = PropTypes.shape(objectiveBase);
 export const keyResultPropTypes = PropTypes.shape({
   ...objectiveBase,
   ratioLockedFlg: PropTypes.number.isRequired,
-  weightedAverageRatio: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  weightedAverageRatio: PropTypes.number.isRequired,
 });
 
 export const keyResultsPropTypes = PropTypes.arrayOf(keyResultPropTypes);
@@ -39,7 +39,7 @@ export const okrPropTypes = PropTypes.shape({
 
 export const ProgressPropTypes = PropTypes.shape({
   datetime: PropTypes.string.isRequired,
-  achievementRate: PropTypes.string.isRequired,
+  achievementRate: PropTypes.number.isRequired,
 });
 
 export const ProgressSeriesPropTypes = PropTypes.arrayOf(ProgressPropTypes);

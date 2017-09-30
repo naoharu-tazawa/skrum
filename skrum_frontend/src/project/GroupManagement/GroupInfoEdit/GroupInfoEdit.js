@@ -118,7 +118,7 @@ class GroupInfoEdit extends Component {
               </div>
             </div>
             <EntityLink
-              componentClassName={styles.leader}
+              className={styles.leader}
               entity={{ id: leaderUserId, type: EntityType.USER }}
               title="リーダー"
               local

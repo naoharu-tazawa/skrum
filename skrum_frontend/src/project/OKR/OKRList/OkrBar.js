@@ -59,10 +59,10 @@ class OkrBar extends Component {
           </Link>
         </div>
         <ProgressPercentage
-          componentClassName={styles.progressColumn}
+          className={styles.progressColumn}
           {...{ unit, targetValue, achievedValue, achievementRate }}
         />
-        <EntityLink componentClassName={styles.ownerBox} entity={owner} />
+        <EntityLink className={styles.ownerBox} entity={owner} />
         <div className={styles.action}>
           {keyResults.length === 0 && (
             <Permissible entity={owner} fallback={<div className={styles.toolSpace} />}>

@@ -54,7 +54,7 @@ class OkrDetails extends Component {
           </div>
           {parentOkr && (
             <EntityLink
-              componentClassName={`${styles.parent_owner_info} ${styles.floatR}`}
+              className={`${styles.parent_owner_info} ${styles.floatR}`}
               entity={parentOkr.owner}
             />)}
         </div>
@@ -85,7 +85,7 @@ class OkrDetails extends Component {
               </Permissible>
             </div>
             <ProgressPercentage
-              componentClassName={`${styles.bar_top_bottom} ${styles.cf}`}
+              className={`${styles.bar_top_bottom} ${styles.cf}`}
               {...{ unit, targetValue, achievedValue, achievementRate }}
               fluid
             >
@@ -117,7 +117,7 @@ class OkrDetails extends Component {
               </span>
             </ProgressPercentage>
             <div className={`${styles.nav_info} ${styles.cf}`}>
-              <EntityLink componentClassName={styles.owner_info} entity={owner} />
+              <EntityLink className={styles.owner_info} entity={owner} />
               <div className={styles.floatR}>
                 {keyResults.length === 0 && (
                   <Permissible entity={owner}>

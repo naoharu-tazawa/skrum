@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import { RadialChart } from 'react-vis';
 import { okrPropTypes, keyResultPropTypes } from '../propTypes';
 import InlineTextArea from '../../../editors/InlineTextArea';
 import InlineDateInput from '../../../editors/InlineDateInput';
@@ -38,7 +39,8 @@ class KRDetailsBar extends Component {
     if (header) {
       return (
         <div className={styles.header}>
-          <div className={styles.okr}>サブ目標</div>
+          <div className={styles.kr}>サブ目標</div>
+          <div className={styles.ratio}>影響度</div>
           <div className={styles.progress}>進捗</div>
           <div className={styles.owner}>担当者</div>
           <div className={styles.action}>アクション</div>
@@ -46,10 +48,10 @@ class KRDetailsBar extends Component {
     }
     const parentOkrOwner = parentOkr.owner;
     const { id, type, name, detail, unit, targetValue, achievedValue, achievementRate,
-      startDate, endDate, owner, disclosureType } = keyResult;
+      weightedAverageRatio, startDate, endDate, owner, disclosureType } = keyResult;
     return (
       <div className={styles.component}>
-        <div className={styles.name}>
+        <div className={styles.kr}>
           <Permissible entity={owner}>
             {({ permitted }) => (
               <InlineTextArea
@@ -73,8 +75,21 @@ class KRDetailsBar extends Component {
             </Permissible>
           </div>
         </div>
+        <div className={styles.ratio}>
+          <RadialChart
+            width={32}
+            height={32}
+            radius={16}
+            stroke="transparent"
+            colorType="literal"
+            data={[
+              { color: '#4674c1', angle: weightedAverageRatio },
+              { color: '#deebf6', angle: 100 - weightedAverageRatio },
+            ]}
+          />
+        </div>
         <ProgressPercentage
-          componentClassName={styles.progressColumn}
+          className={styles.progress}
           {...{ unit, targetValue, achievedValue, achievementRate }}
         >
           <div className={styles.txt_date}>
@@ -104,7 +119,7 @@ class KRDetailsBar extends Component {
             </div>
           </div>
         </ProgressPercentage>
-        <EntityLink componentClassName={styles.ownerBox} entity={owner} />
+        <EntityLink className={styles.owner} entity={owner} />
         <div className={styles.action}>
           {type === OKRType.KR && (
             <Permissible entity={owner} fallback={<div className={styles.toolSpace} />}>

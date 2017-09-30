@@ -25,7 +25,7 @@ const renderField = ({ input, type, label, placeholder, meta: { touched, error }
 // eslint-disable-next-line react/prop-types
 const renderSelect = ({ input: { name }, meta: { touched, error } }) => (
   <span>
-    {withSelectReduxField(UserRolesDropdown, name, { componentClassName: styles.select })}
+    {withSelectReduxField(UserRolesDropdown, name, { className: styles.select })}
     {touched && error && <div className={styles.warning}>{error}</div>}
   </span>
 );

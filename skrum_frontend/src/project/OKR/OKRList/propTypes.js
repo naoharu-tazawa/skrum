@@ -20,7 +20,7 @@ const objectiveBase = {
   unit: PropTypes.string.isRequired,
   targetValue: PropTypes.number.isRequired,
   achievedValue: PropTypes.number.isRequired,
-  achievementRate: PropTypes.string.isRequired,
+  achievementRate: PropTypes.number.isRequired,
   status: PropTypes.string.isRequired,
   disclosureType: PropTypes.string.isRequired,
 };
@@ -28,7 +28,7 @@ const objectiveBase = {
 export const keyResultPropTypes = PropTypes.shape({
   ...objectiveBase,
   ratioLockedFlg: PropTypes.number,
-  weightedAverageRatio: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  weightedAverageRatio: PropTypes.number.isRequired,
 });
 
 export const keyResultsPropTypes = PropTypes.arrayOf(keyResultPropTypes);

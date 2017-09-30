@@ -16,8 +16,11 @@
   background-color: #fff;
   border-bottom: 1px solid #d8dfe5;
 }
-.okr {
+.kr {
   width: 38%;
+}
+.ratio {
+  width: 60px;
 }
 .progress {
   width: 25%;
@@ -25,9 +28,8 @@
 .owner {
   width: 19%;
 }
-.name {
+.component .kr {
   position: relative;
-  width: 38%;
   /*white-space: nowrap;*/
   /*overflow: hidden;*/
   /*text-overflow: ellipsis;*/
@@ -37,8 +39,11 @@
   font-size: smaller;
   margin-top: 1em;
 }
-.progressColumn {
-  width: 25%;
+.component .ratio {
+  margin: auto 0;
+  height: 100%;
+}
+.component .progress {
   margin: 10px 0;
   height: 100%;
 }
@@ -47,9 +52,6 @@
 }
 .txt_date p {
   margin-top: 0.75em;
-}
-.ownerBox {
-  width: 19%;
 }
 .action {
   display: flex;

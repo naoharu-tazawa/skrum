@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { toNumber } from 'lodash';
 import { okrPropTypes, ProgressSeriesPropTypes } from './propTypes';
 import OkrDetails from './OkrDetails';
 import KRDetailsList from './KRDetailsList/KRDetailsList';
@@ -120,7 +121,8 @@ const mapStateToProps = (state) => {
     ...basicProps,
     parentOkr: parentOkr === null ? undefined : mapOKR(parentOkr, []),
     okr: mapOKR(objective, keyResults),
-    progressSeries: chart,
+    progressSeries: chart.map(({ datetime, achievementRate }) =>
+      ({ datetime, achievementRate: toNumber(achievementRate) })),
   };
 };
 
@@ -139,8 +141,8 @@ const mapDispatchToProps = (dispatch, { subject }) => {
   const dispatchChangeDisclosureType = (id, disclosureType) =>
     dispatch(changeDisclosureType(id, disclosureType))
       .then(result => dispatch(syncOkr(subject, result)));
-  const dispatchSetRatios = (id, ratios) =>
-    dispatch(setRatios(id, ratios))
+  const dispatchSetRatios = (id, ratios, unlockedRatio) =>
+    dispatch(setRatios(id, ratios, unlockedRatio))
       .then(result => dispatch(syncRatios(subject, result)));
   const dispatchDeleteKR = id =>
     dispatch(deleteKR(id));

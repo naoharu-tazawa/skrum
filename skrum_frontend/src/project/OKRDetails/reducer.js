@@ -1,6 +1,7 @@
 import { values, fromPairs } from 'lodash';
 import { Action } from './action';
 import { mergeUpdateById } from '../../util/ActionUtil';
+import { mapObjective, deriveRatios } from '../../util/OKRUtil';
 import { toUtcDate } from '../../util/DatetimeUtil';
 
 export default (state = {
@@ -36,7 +37,9 @@ export default (state = {
       const { targetOkr: keyResult, parentOkr } = payload.data;
       const { okrId: parentOkrId, achievementRate } = parentOkr;
       const objective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
-      const keyResults = [...state.keyResults, keyResult];
+      const newKeyResults = [...state.keyResults, keyResult];
+      const { ratios } = deriveRatios(newKeyResults.map(mapObjective));
+      const keyResults = newKeyResults.map(kr => ({ ...kr, ...ratios[kr.okrId] }));
       const datetime = toUtcDate(new Date());
       const chart = parentOkrId !== state.objective.okrId ? state.chart :
         [...state.chart, { datetime, achievementRate }];
@@ -83,7 +86,9 @@ export default (state = {
       const { id, parentOkr } = payload.data;
       const { okrId: parentOkrId, achievementRate } = parentOkr;
       const objective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
-      const keyResults = state.keyResults.filter(({ okrId }) => okrId !== id);
+      const newKeyResults = state.keyResults.filter(({ okrId }) => okrId !== id);
+      const { ratios } = deriveRatios(newKeyResults.map(mapObjective));
+      const keyResults = newKeyResults.map(kr => ({ ...kr, ...ratios[kr.okrId] }));
       const datetime = toUtcDate(new Date());
       const chart = parentOkrId !== state.objective.okrId ? state.chart :
         [...state.chart, { datetime, achievementRate }];
@@ -120,13 +125,16 @@ export default (state = {
       if (error) {
         return { ...state, isSettingRatios: false, error: { message: payload.message } };
       }
-      const { parentOkr, ratios } = payload.data;
+      const { parentOkr, ratios, unlockedRatio } = payload.data;
       const { okrId: parentOkrId, achievementRate } = parentOkr;
       const objective = mergeUpdateById(state.objective, 'okrId', { achievementRate }, parentOkrId);
       const ratiosById = fromPairs(ratios.map(({ keyResultId, weightedAverageRatio }) =>
         ([keyResultId, { weightedAverageRatio }])));
       const keyResults = state.keyResults.map(kr =>
-        ({ ...kr, ...ratiosById[kr.okrId], ratioLockedFlg: ratiosById[kr.okrId] ? 1 : 0 }));
+        ({ ...kr,
+          weightedAverageRatio: unlockedRatio,
+          ...ratiosById[kr.okrId],
+          ratioLockedFlg: ratiosById[kr.okrId] ? 1 : 0 }));
       const datetime = toUtcDate(new Date());
       const chart = parentOkrId !== state.objective.okrId ? state.chart :
         [...state.chart, { datetime, achievementRate }];

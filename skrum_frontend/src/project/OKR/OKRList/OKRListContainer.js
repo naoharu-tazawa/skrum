@@ -79,8 +79,8 @@ const mapDispatchToProps = subject => (dispatch) => {
     dispatch(changeParentOkr(subject, id, newParentOkrId));
   const dispatchChangeDisclosureType = (id, disclosureType) =>
     dispatch(changeDisclosureType(subject, id, disclosureType));
-  const dispatchSetRatios = (id, ratios) =>
-    dispatch(setRatios(subject, id, ratios));
+  const dispatchSetRatios = (id, ratios, unlockedRatio) =>
+    dispatch(setRatios(subject, id, ratios, unlockedRatio));
   const dispatchCopyOkr = (id, timeframeId) =>
     dispatch(copyOkr(subject, id, timeframeId));
   const dispatchDeleteOkr = id =>

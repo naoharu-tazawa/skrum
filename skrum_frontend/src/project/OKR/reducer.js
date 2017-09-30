@@ -124,7 +124,7 @@ export default (state = {
       if (error) {
         return { ...state, isSettingRatios: false, error: { message: payload.message } };
       }
-      const { subject, parentOkr, ratios } = payload.data;
+      const { subject, parentOkr, ratios, unlockedRatio } = payload.data;
       const { okrId: parentOkrId, achievementRate } = parentOkr;
       const ratiosById = fromPairs(ratios.map(({ keyResultId, weightedAverageRatio }) =>
         ([keyResultId, { weightedAverageRatio }])));
@@ -134,7 +134,10 @@ export default (state = {
           ...okr,
           achievementRate,
           keyResults: (okr.keyResults || []).map(kr =>
-            ({ ...kr, ...ratiosById[kr.okrId], ratioLockedFlg: ratiosById[kr.okrId] ? 1 : 0 })),
+            ({ ...kr,
+              weightedAverageRatio: unlockedRatio,
+              ...ratiosById[kr.okrId],
+              ratioLockedFlg: ratiosById[kr.okrId] ? 1 : 0 })),
         } : okr));
       return { ...state, [subject]: { ...basics, okrs }, isSettingRatios: false, error: null };
     }

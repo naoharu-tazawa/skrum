@@ -11,7 +11,7 @@ class UserRolesDropdown extends PureComponent {
   static propTypes = {
     companyId: PropTypes.number.isRequired,
     roles: rolesPropTypes.isRequired,
-    componentClassName: PropTypes.string,
+    className: PropTypes.string,
     value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
@@ -25,7 +25,7 @@ class UserRolesDropdown extends PureComponent {
   }
 
   render() {
-    const { roles, value: dirtyValue, componentClassName, onChange, onFocus, onBlur } = this.props;
+    const { roles, value: dirtyValue, className, onChange, onFocus, onBlur } = this.props;
     const options = roles.map(({ id: value, name: label }) => ({ value, label }));
     const getOptionStyle = id => `${styles.item} ${id === dirtyValue ? styles.current : ''}`;
     const optionRenderer = ({ value: id, label }) => (
@@ -34,7 +34,7 @@ class UserRolesDropdown extends PureComponent {
       </div>);
     return (
       <Select
-        className={`${styles.select} ${componentClassName}`}
+        className={`${styles.select} ${className}`}
         options={options}
         optionRenderer={optionRenderer}
         value={dirtyValue}

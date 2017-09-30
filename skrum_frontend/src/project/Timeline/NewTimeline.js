@@ -33,7 +33,7 @@ class NewTimeline extends Component {
         <h1 className={styles.ttl_section}>新規投稿作成</h1>
         <div className={styles.cont_box}>
           <EntityLink
-            componentClassName={styles.current_user}
+            className={styles.current_user}
             entity={{ id: currentUserId, type: EntityType.USER }}
             local
           />

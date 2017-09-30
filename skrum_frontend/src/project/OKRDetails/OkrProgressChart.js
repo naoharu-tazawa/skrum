@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, makeWidthFlexible, LineMarkSeries, Hint } from 'react-vis';
-import { toNumber } from 'lodash';
 import { ProgressSeriesPropTypes } from './propTypes';
 import ChartHighlightOverlay from '../../components/ChartHighlightOverlay';
 import { formatDate, formatDateTime, fromUtcDate } from '../../util/DatetimeUtil';
@@ -17,7 +16,7 @@ export default class OkrProgressChart extends PureComponent {
   render() {
     const { progressSeries = [] } = this.props;
     const progressData = progressSeries.map(({ datetime, achievementRate }) =>
-      ({ x: fromUtcDate(datetime), y: toNumber(achievementRate) }));
+      ({ x: fromUtcDate(datetime), y: achievementRate }));
     const { lastDrawLocation, hint } = this.state || {};
     return (
       <div className={styles.component}>

@@ -17,20 +17,20 @@ export default class EntitySubject extends Component {
     aspectRoute: routePropTypes,
     plain: PropTypes.bool,
     avatarSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    componentClassName: PropTypes.string,
+    className: PropTypes.string,
     entityClassName: PropTypes.string,
   };
 
   render() {
     const { entity, entityClassName = '', heading, subject,
       local = !this.props.route, route, aspectRoute,
-      plain, avatarSize, componentClassName } = this.props;
+      plain, avatarSize, className } = this.props;
     return (
-      <div className={`${!plain && styles.component} ${componentClassName || ''}`}>
+      <div className={`${!plain && styles.component} ${className || ''}`}>
         {heading && <div className={styles.heading}>{heading}</div>}
         <div className={styles.subjectArea}>
           <EntityLink
-            componentClassName={`${styles.entity} ${entityClassName}`}
+            className={`${styles.entity} ${entityClassName}`}
             {...{ entity, local, route, avatarSize }}
           />
           {subject && aspectRoute && (
