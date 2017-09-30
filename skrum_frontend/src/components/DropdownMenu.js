@@ -40,9 +40,17 @@ export default class DropdownMenu extends PureComponent {
             />)}
         </DropdownTrigger>
         <DropdownContent style={style}>
-          {options.map(({ caption, onClick, path }, index) => (
+          {options.map(({ caption, onClick, path, target }, index) => (
             onClick
-              ? <a key={index} onMouseUp={() => this.hide() && onClick()}>{caption}</a>
+              ? (
+                <a
+                  key={index}
+                  onMouseUp={() => this.hide() && onClick()}
+                  href={path}
+                  target={target}
+                >
+                  {caption}
+                </a>)
               : <Link key={index} to={path} onClick={this.hide.bind(this)}>{caption}</Link>
           ))}
         </DropdownContent>

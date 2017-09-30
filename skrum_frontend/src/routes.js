@@ -17,6 +17,7 @@ import PasswordChangeContainer from './project/PasswordChange/PasswordChangeCont
 import PreregisterContainer from './auth/container/PreregisterContainer';
 import NewUserContainer from './auth/container/NewUserContainer';
 import AdditionalUserContainer from './auth/container/AdditionalUserContainer';
+import HelpContainer from './help/HelpContainer';
 
 const topPage = '/o/u';
 const loginPage = '/login';
@@ -76,6 +77,7 @@ export default (
     <Route path="/preregister" component={PreregisterContainer} />
     <Route path="/new_user_registration" component={NewUserContainer} />
     <Route path="/additional_user_registration" component={AdditionalUserContainer} />
+    <Route path="/help" component={HelpContainer} />
     <Route path="/login" component={AnonymousRegion} />
     <IndexRoute component={RedirectRoute} />
     <Route path="*" component={RedirectRoute} />

@@ -1,0 +1,46 @@
+.container {
+  height: 100%
+}
+.container:before {
+  content: " ";
+  height: 48px;
+  width: 100%;
+  background: #094f97 url(/img/skrum_logo.png) no-repeat 8px;
+  background-origin: border-box;
+  background-size: contain;
+  /*left: 0;*/
+  /*color: inherit;*/
+  position: absolute;
+  /*speak: none;*/
+}
+.list {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+.list .ttl {
+  padding: 7px;
+  box-shadow: 1px 0px 1px 1px rgba(0,0,0,0.12);
+}
+.list .ttl nav ul li {
+  display: inline-block;
+  margin-right: 25px;
+  font-size: 14px;
+}
+.list .ttl nav ul li a {
+  display: block;
+  padding: 6px 20px;
+  border-radius: 20px;
+}
+.list .ttl nav ul li a.active,
+.list .ttl nav ul li a:hover {
+  background-color: #8e9aa6;
+  color: #fff;
+}
+.guide {
+  flex: 1;
+}

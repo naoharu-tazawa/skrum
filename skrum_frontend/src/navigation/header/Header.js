@@ -79,6 +79,7 @@ class SubMenu extends Component {
           options={[
             { caption: isSetting ? '設定完了' : '設定',
               path: isSetting ? '/o/u' : settingLink },
+            { caption: 'ヘルプ', path: '/help', target: '_blank', onClick: () => {} },
             { caption: 'ログアウト', onClick: handleLogoutSubmit },
           ]}
           align="right"
