@@ -68,6 +68,7 @@ class KRBar extends Component {
           <Permissible entity={owner}>
             {({ permitted }) => (
               <DropdownMenu
+                align="right"
                 options={[
                   { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(keyResult) },
                   ...permitted && [{ caption: '担当者変更',

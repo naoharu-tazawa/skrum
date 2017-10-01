@@ -61,6 +61,7 @@
 .action {
   display: flex;
   margin: auto 0;
+  padding-right: 42px;
 }
 .circle {
   width: 40px;

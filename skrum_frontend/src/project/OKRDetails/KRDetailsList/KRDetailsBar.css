@@ -17,7 +17,7 @@
   border-bottom: 1px solid #d8dfe5;
 }
 .kr {
-  width: 38%;
+  width: 30%;
 }
 .header .ratio {
   width: 60px;
@@ -28,10 +28,16 @@
   width: 60px;
 }
 .progress {
-  width: 25%;
+  width: 28%;
 }
 .owner {
-  width: 19%;
+  width: 20%;
+}
+.action {
+  display: flex;
+  margin: auto 0;
+  height: 100%;
+  width: 16%;
 }
 .component .kr {
   position: relative;
@@ -57,12 +63,6 @@
 }
 .txt_date p {
   margin-top: 0.75em;
-}
-.action {
-  display: flex;
-  margin: auto 0;
-  height: 100%;
-  width: 22%;
 }
 .tool {
   min-width: 40px;

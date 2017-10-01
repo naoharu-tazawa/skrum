@@ -84,7 +84,7 @@ class KRDetailsBar extends Component {
             colorType="literal"
             data={[
               { color: '#4674c1', angle: weightedAverageRatio },
-              { color: '#deebf6', angle: 100 - weightedAverageRatio },
+              { color: '#d8dfe5', angle: 100 - weightedAverageRatio },
             ]}
           />
         </div>
@@ -141,6 +141,7 @@ class KRDetailsBar extends Component {
           </Link>
           <Permissible entity={owner}>
             <DropdownMenu
+              align="right"
               options={[
                 { caption: '担当者変更',
                   onClick: () => openModal(changeKROwnerDialog,
