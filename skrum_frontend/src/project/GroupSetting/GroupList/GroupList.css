@@ -17,11 +17,6 @@
   font-size: 14px;
   margin-top: 100px;
 }
-.cont_box {
-  background: #fff;
-  margin-bottom: 1em;
-  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12);
-}
 .title {
   font-size: 18px;
 }
@@ -29,7 +24,6 @@
   width: 400px;
   height: 30px;
   margin-top: 0.5em;
-  margin-bottom: 30px;
 }
 .fetching {
   display: inline-block;
@@ -41,6 +35,17 @@
   height: 30px;
   background: url(/img/rolling.svg) center no-repeat;
   background-size: contain;
+}
+.count {
+  font-size: 18px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  text-align: right;
+}
+.cont_box {
+  background: #fff;
+  margin-bottom: 1em;
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.12);
 }
 .paging {
   display: table;

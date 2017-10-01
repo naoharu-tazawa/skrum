@@ -40,6 +40,9 @@ export default class GroupList extends PureComponent {
           onChange={({ target }) => this.handleTextChange(target.value)}
         />
         {isFetchingGroups && <div className={styles.fetching} />}
+        <div className={styles.count}>
+          {isFetchingGroups ? '\u00A0' : `検索結果：${count}件`}
+        </div>
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <GroupBar header />
           {groups.map(group =>

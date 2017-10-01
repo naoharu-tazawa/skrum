@@ -44,6 +44,9 @@ export default class UserList extends PureComponent {
           onChange={({ target }) => this.handleTextChange(target.value)}
         />
         {isFetchingUsers && <div className={styles.fetching} />}
+        <div className={styles.count}>
+          {isFetchingUsers ? '\u00A0' : `検索結果：${count}件`}
+        </div>
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <UserBar header />
           {users.map(user =>
