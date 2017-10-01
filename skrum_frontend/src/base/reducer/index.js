@@ -19,6 +19,7 @@ import userSettingReducer from '../../project/UserSetting/reducer';
 import groupSettingReducer from '../../project/GroupSetting/reducer';
 import companyProfileReducer from '../../project/CompanyProfile/reducer';
 import timeframeSettingReducer from '../../project/TimeframeSetting/reducer';
+import initialDataReducer from '../../project/InitialDataUpload/reducer';
 import emailSettingReducer from '../../project/EmailSetting/reducer';
 import passwordChangeReducer from '../../project/PasswordChange/reducer';
 import { Action } from '../../project/PasswordChange/action';
@@ -41,6 +42,7 @@ const rootReducer = combineReducers({
   groupSetting: groupSettingReducer,
   companySetting: companyProfileReducer,
   timeframeSetting: timeframeSettingReducer,
+  initialData: initialDataReducer,
   emailSetting: emailSettingReducer,
   setting: passwordChangeReducer,
   routing: routerReducer,

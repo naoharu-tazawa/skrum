@@ -1,0 +1,94 @@
+@charset "UTF-8";
+  /* ====================================================
+  共通
+  ==================================================== */
+.floatL {
+  float: left;
+}
+.title {
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+.upload {
+  display: flex;
+  margin-bottom: 2em;
+}
+.filename {
+  min-width: 50%;
+  margin: auto 1em;
+  line-height: 38px;
+}
+.btn {
+  vertical-align: bottom;
+  padding: 0;
+  background: none;
+  border: 0px;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  width: 150px;
+  height: 38px;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 19px;
+  background-color: #2562b2;
+}
+.dropzone .btn {
+  background-color: #7f7f7f;
+}
+.btn button:hover {
+  opacity: .7;
+}
+.disable_btn {
+  height: 50px;
+  width: 150px;
+  background: url(/img/rolling.svg) center no-repeat;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 30px 60px;
+  overflow-y: auto;
+}
+.spinner {
+  height: 100%;
+  width: 100%;
+  background: url(/img/rolling.svg) center no-repeat;
+}
+.error {
+  margin-top: 2em;
+  color: red;
+}
+.note {
+  margin-top: 2em;
+  line-height: 1.5;
+  border: .5pt solid windowtext;
+  padding: 0.5em;
+}
+.note li {
+  display: list-item;
+  list-style: disc outside none;
+  margin: 0.5em 0 0 1.5em;
+}
+.double {
+  line-height: 3;
+}
+.note table {
+  font-size: smaller;
+  margin-left: 2em;
+}
+.note table li {
+  margin-top: 0;
+}
+.note tr:first-child td {
+  border: .5pt solid windowtext;
+  background: #d0cece;
+}
+.note tr td {
+  border: .5pt solid windowtext;
+  background: white;
+}

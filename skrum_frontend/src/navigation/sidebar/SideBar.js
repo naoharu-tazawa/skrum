@@ -156,6 +156,8 @@ export default class SideBar extends Component {
           <SecttingItem subject="company" title="会社情報変更" {...{ pathname, isExpanded }} />)}
         {isSetting && isSuperRole(roleLevel) && (
           <SecttingItem subject="timeframe" title="目標期間設定" {...{ pathname, isExpanded }} />)}
+        {isSetting && isSuperRole(roleLevel) && (
+          <SecttingItem subject="csv" title="CSV登録" {...{ pathname, isExpanded }} />)}
         {isSetting && isBasicRoleAndAbove(roleLevel) && (
           <SecttingItem subject="email" title="メール設定" {...{ pathname, isExpanded }} />)}
         {isSetting && isBasicRoleAndAbove(roleLevel) && (

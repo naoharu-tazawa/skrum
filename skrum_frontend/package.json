@@ -54,6 +54,7 @@
   "dependencies": {
     "aphrodite": "^1.1.0",
     "async": "^2.5.0",
+    "base64-js": "^1.2.1",
     "d3": "^4.9.1",
     "focus-trap-react": "^3.0.3",
     "lodash": "^4.17.2",
