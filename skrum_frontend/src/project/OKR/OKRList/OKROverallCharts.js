@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Surface, Pie } from 'recharts';
-import { toNumber, mean, isNaN, toPairs, countBy, orderBy } from 'lodash';
+import { mean, isNaN, floor, toPairs, countBy, orderBy } from 'lodash';
 import { okrsPropTypes } from './propTypes';
 import styles from './OKROverallCharts.css';
 
@@ -12,10 +12,8 @@ export default class OKROverallCharts extends Component {
 
   render() {
     const { okrs = [] } = this.props;
-    const rates = okrs.map(({ achievementRate }) => toNumber(achievementRate));
+    const rates = okrs.map(({ achievementRate }) => achievementRate);
     const overallProgress = mean(rates);
-    const overallProgressLabel = isNaN(overallProgress) ? '－' :
-      `${overallProgress.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`;
     const progressData = [
       { value: overallProgress, fill: '#626A7E' },
       { value: 100 - overallProgress, fill: '#D8DFE5' },
@@ -40,7 +38,7 @@ export default class OKROverallCharts extends Component {
               全体進捗
             </text>
             <text x={chartRadius} y={chartRadius + 10} textAnchor="middle" dominantBaseline="middle">
-              {overallProgressLabel}
+              {isNaN(overallProgress) ? '－' : `${floor(overallProgress)}%`}
             </text>
             <Pie
               isAnimationActive={false}
