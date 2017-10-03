@@ -437,10 +437,11 @@ export default class D3Tree extends Component {
     // プログレスバーを生成
     this.createProgressBar(nodeUpdate, reductionRatio);
 
-    nodeUpdate.select('text.oname')
-      .style('font-size', `${0.8 * reductionRatio}em`)
-      // .html((d) => { return this.leftLinebreak(d.data.okrName); });
-      .each(D3Tree.wrapOKRName);
+    // SKM_1-66 マップ機能で、展開の順序によって文字がかぶってしまう。詳細は添付を参照。
+    // nodeUpdate.select('text.oname')
+    //   .style('font-size', `${0.8 * reductionRatio}em`)
+    //   // .html((d) => { return this.leftLinebreak(d.data.okrName); });
+    //   .each(D3Tree.wrapOKRName);
 
     nodeUpdate.select('text.arate')
       .attr('y', `${-65 * reductionRatio}px`)
