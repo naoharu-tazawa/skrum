@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { partial, floor } from 'lodash';
 import { d3treePropTypes } from './propTypes';
 import { imagePath, dummyImagePathForD3 } from '../../../util/ImageUtil';
 import { EntityType } from '../../../util/EntityUtil';
@@ -212,7 +212,7 @@ export default class D3Tree extends Component {
   collapse(self, d) {
     if (d.children) {
       d._children = d.children;
-      d._children.forEach(_.partial(self.collapse, self));
+      d._children.forEach(partial(self.collapse, self));
       d.children = null;
     }
   }
@@ -370,7 +370,7 @@ export default class D3Tree extends Component {
       .attr('fill', '#333333')
       .style('text-anchor', 'start')
       .style('font-size', `${0.8 * reductionRatio}em`)
-      .text((d) => { return `${d.data.achievementRate}%`; })
+      .text((d) => { return `${floor(d.data.achievementRate)}%`; })
       .style('display', (d) => {
         return d.data.hidden ? 'none' : '';
       });
@@ -446,7 +446,7 @@ export default class D3Tree extends Component {
       .attr('y', `${-65 * reductionRatio}px`)
       .attr('x', `${-87 * reductionRatio}px`)
       .style('font-size', `${0.8 * reductionRatio}em`)
-      .text((d) => { return `${d.data.achievementRate}%`; });
+      .text((d) => { return `${floor(d.data.achievementRate)}%`; });
 
     nodeUpdate.select('text.uname')
       .attr('y', `${-26 * reductionRatio}px`)
@@ -570,7 +570,7 @@ export default class D3Tree extends Component {
     // Collapse after the second level
     const { children = [] } = this.root;
     if (children.length > 0) {
-      children.forEach(_.partial(this.collapse, this));
+      children.forEach(partial(this.collapse, this));
       this.update(this.root, tree, svg, i, duration);
     } else {
       this.update(this.root, tree, svg, i, duration);

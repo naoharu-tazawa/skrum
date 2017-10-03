@@ -30,5 +30,5 @@ export const parseDataUrl = (dataUrl) => {
   return { image, mimeType };
 };
 
-export const loadImageSrc = ({ preview }) =>
-  loadImageDataUrl(preview).then(parseDataUrl);
+export const loadImage = ({ preview }) =>
+  loadImageDataUrl({ preview }).then(parseDataUrl);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { floor } from 'lodash';
 import styles from './ProgressPercentage.css';
 
 export default class ProgressPercentage extends Component {
@@ -25,7 +26,7 @@ export default class ProgressPercentage extends Component {
       <div className={className}>
         <div className={`${styles.progressBox} ${fluid && styles.fluid}`}>
           <div className={styles.progressPercent}>
-            {achievementRate}%
+            {floor(achievementRate)}%
           </div>
           <div className={styles.progressDetails}>
             <div className={`${styles.progressBar} ${(hasConstituents || children) && styles.spaced}`}>

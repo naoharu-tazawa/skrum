@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { toastr } from 'react-redux-toastr';
-import { fromByteArray } from 'base64-js';
 import { errorType } from '../../util/PropUtil';
+import { loadImage } from '../../util/ImageUtil';
 import { postCsv } from './action';
 import styles from './InitialDataUploadContainer.css';
 
@@ -15,6 +15,49 @@ function SubmitButton() {
 function DisabledButton() {
   return <div className={styles.disable_btn} />;
 }
+
+const csvFormat = [
+  {
+    field: '通し番号',
+    required: true,
+    remarks: '行数を半角数字にて1から連番で入力。',
+  }, {
+    field: '名前(姓)',
+    required: true,
+  }, {
+    field: '名前(名)',
+    required: true,
+  }, {
+    field: 'ユーザ権限',
+    required: true,
+    remarks: (
+      <ul>
+        次のいずれかの値を指定します。
+        <li>一般ユーザ　　　　　：1</li>
+        <li>管理者ユーザ　　　　：2</li>
+        <li>スーパー管理者ユーザ：3</li>
+      </ul>
+    ),
+  }, {
+    field: '役職',
+    required: true,
+  }, {
+    field: 'Eメールアドレス',
+    required: true,
+  }, {
+    field: '電話番号',
+  }, {
+    field: '所属部署名1',
+  }, {
+    field: '所属部署名2',
+  }, {
+    field: '所属部署名3',
+  }, {
+    field: '所属部署名4',
+  }, {
+    field: '所属部署名5',
+  },
+];
 
 class InitialDataUploadContainer extends Component {
 
@@ -43,9 +86,7 @@ class InitialDataUploadContainer extends Component {
   }
 
   handleSubmit(csv) {
-    return fetch(csv.preview)
-      .then(({ body }) => body.getReader().read()
-        .then(({ value }) => this.props.dispatchPostCsv(fromByteArray(value))));
+    return loadImage(csv).then(({ image }) => this.props.dispatchPostCsv(image));
   }
 
   renderError() {
@@ -77,7 +118,7 @@ class InitialDataUploadContainer extends Component {
         <div className={styles.upload}>
           <Dropzone
             className={styles.dropzone}
-            onDrop={([file]) => this.setState({ csv: file })}
+            onDrop={([accepted], [rejected]) => this.setState({ csv: accepted || rejected })}
             accept="text/csv"
             multiple={false}
           >
@@ -110,8 +151,8 @@ class InitialDataUploadContainer extends Component {
               }}
             >
               <colgroup>
-                <col width={120} span={3} />
-                <col width={260} />
+                <col width={128} span={3} />
+                <col width={256} />
               </colgroup>
               <tbody>
                 <tr>
@@ -120,85 +161,13 @@ class InitialDataUploadContainer extends Component {
                   <td>必須項目</td>
                   <td>備考</td>
                 </tr>
-                <tr>
-                  <td>1</td>
-                  <td>通し番号</td>
-                  <td>必須</td>
-                  <td>行数を半角数字にて1から連番で入力。</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>名前(姓)</td>
-                  <td>必須</td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>名前(名)</td>
-                  <td>必須</td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>ユーザ権限</td>
-                  <td>必須</td>
-                  <td>
-                    次のいずれかの値を指定します。
-                    <ul>
-                      <li>一般ユーザ　　　　　：1</li>
-                      <li>管理者ユーザ　　　　：2</li>
-                      <li>スーパー管理者ユーザ：3</li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <td>5</td>
-                  <td>役職</td>
-                  <td>必須</td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>6</td>
-                  <td>Eメールアドレス</td>
-                  <td>必須</td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>7</td>
-                  <td>電話番号</td>
-                  <td>任意</td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>8</td>
-                  <td>所属部署名1</td>
-                  <td>任意</td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>9</td>
-                  <td>所属部署名2</td>
-                  <td>任意</td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>10</td>
-                  <td>所属部署名3</td>
-                  <td>任意</td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>11</td>
-                  <td>所属部署名4</td>
-                  <td>任意</td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>12</td>
-                  <td>所属部署名5</td>
-                  <td>任意</td>
-                  <td>&nbsp;</td>
-                </tr>
+                {csvFormat.map(({ field, required, remarks }, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{field}</td>
+                    <td>{required ? '必須' : '任意'}</td>
+                    <td>{remarks}</td>
+                  </tr>))}
               </tbody>
             </table>
             <li>所属部署登録について
