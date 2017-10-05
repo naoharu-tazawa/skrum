@@ -10,6 +10,8 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOneOnOne;
 use AppBundle\Entity\TOneOnOneTo;
 use AppBundle\Api\ResponseDTO\OneOnOneDTO;
+use AppBundle\Api\ResponseDTO\OneOnOneDialogDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\OneOnOneHeaderDTO;
 
 /**
  * 1on1サービスクラス
@@ -191,7 +193,7 @@ class OneOnOneService extends BaseService
      * @param string $keyword 検索ワード
      * @param string $startDate 開始日（検索）
      * @param string $endDate 終了日（検索）
-     * @param string $before 取得基準日時（検索）
+     * @param string $before 取得基準日時
      * @return array
      */
     public function getNewOneOnOnes(Auth $auth, string $keyword = null, string $startDate = null, string $endDate = null, string $before = null): array
@@ -248,5 +250,133 @@ class OneOnOneService extends BaseService
         }
 
         return $oneOnOneDTOArray;
+    }
+
+    /**
+     * 1on1送受信履歴取得処理
+     *
+     * @param Auth $auth 認証情報
+     * @param string $oneOnOneType 1on1種別
+     * @param string $before 取得基準日時
+     * @return array
+     */
+    public function getOneOnOneHistory(Auth $auth, string $oneOnOneType, string $before = null): array
+    {
+        if ($before === null) {
+            $before = DateUtility::getMaxDatetimeString();
+        }
+
+        $tOneOnOneRepos = $this->getTOneOnOneRepository();
+        $tOneOnOneArray = $tOneOnOneRepos->getOneOnOneHistory($auth, $oneOnOneType, $before);
+
+        // DTOに詰め替える
+        $tOneOnOneToRepos = $this->getTOneOnOneToRepository();
+        $mUserRepos = $this->getMUserRepository();
+        $oneOnOneDTOArray = array();
+        foreach ($tOneOnOneArray as $tOneOnOne) {
+            // 新着の本文を取得
+            $oneOnOneStream = $tOneOnOneRepos->getOneOnOneStream($tOneOnOne['id']);
+            if ($oneOnOneStream[1] !== null) {
+                $newArrivalText = $oneOnOneStream[count($oneOnOneStream) - 1]->getBody();
+            } else {
+                $newArrivalText = $oneOnOneStream[count($oneOnOneStream) - 2]->getBody();
+            }
+            $partOfNewArrivalText = mb_substr($newArrivalText, 0, 15);
+
+            // toNamesを作成
+            $toNames = null;
+            $mUserArray = $tOneOnOneToRepos->getAllToUsers($tOneOnOne['id']);
+            foreach ($mUserArray as $mUser) {
+                $toNames .= ', ' . $mUser->getLastName() . $mUser->getFirstName();
+            }
+
+            $oneOnOneDTO = new OneOnOneDTO();
+            $oneOnOneDTO->setOneOnOneId($tOneOnOne['id']);
+            $oneOnOneDTO->setOneOnOneType($tOneOnOne['one_on_one_type']);
+            $oneOnOneDTO->setSenderUserId($tOneOnOne['sender_user_id']);
+            $oneOnOneDTO->setFromName($tOneOnOne['last_name'] . $tOneOnOne['first_name']);
+            $oneOnOneDTO->setImageVersion($tOneOnOne['image_version']);
+            $oneOnOneDTO->setToNames($toNames);
+            if ($tOneOnOne['interviewee_user_id'] !== null) {
+                $intervieweeEntity = $mUserRepos->find($tOneOnOne['interviewee_user_id']);
+                $oneOnOneDTO->setIntervieweeUserName($intervieweeEntity->getLastName() . $intervieweeEntity->getFirstName());
+            }
+            $oneOnOneDTO->setLastUpdate(DateUtility::transIntoDatetime($tOneOnOne['new_arrival_datetime']));
+            $oneOnOneDTO->setPartOfText($partOfNewArrivalText);
+
+            $oneOnOneDTOArray[] = $oneOnOneDTO;
+        }
+
+        return $oneOnOneDTOArray;
+    }
+
+    /**
+     * 1on1ダイアログ取得処理
+     *
+     * @param integer $oneOnOneId 1on1ID
+     * @return OneOnOneDialogDTO
+     */
+    public function getOneOnOneDialog(int $oneOnOneId): OneOnOneDialogDTO
+    {
+        $tOneOnOneRepos = $this->getTOneOnOneRepository();
+        $tOneOnOneArray = $tOneOnOneRepos->getOneOnOneStream($oneOnOneId);
+
+        // DTOに詰め替える
+        $oneOnOneDialogDTO = new OneOnOneDialogDTO();
+        $tOneOnOneToRepos = $this->getTOneOnOneToRepository();
+        $mUserRepos = $this->getMUserRepository();
+        $oneOnOneDTOArray = array();
+        foreach ($tOneOnOneArray as $tOneOnOne) {
+            // リプライコメントがない場合nullなので処理終了
+            if ($tOneOnOne === null) break;
+
+            if ($tOneOnOne->getOkrId() !== null) {
+                $tOkrRepos = $this->getTOkrRepository();
+                $tOkr = $tOkrRepos->find($tOneOnOne->getOkrId());
+
+                $oneOnOneHeaderDTO = new OneOnOneHeaderDTO();
+                $oneOnOneHeaderDTO->setOkrId($tOkr->getOkrId());
+                $oneOnOneHeaderDTO->setOkrName($tOkr->getName());
+
+                $oneOnOneDialogDTO->setHeader($oneOnOneHeaderDTO);
+            }
+
+            // toNamesを作成
+            $toNames = null;
+            $mUserArray = $tOneOnOneToRepos->getAllToUsers($tOneOnOne->getId());
+            foreach ($mUserArray as $mUser) {
+                $toNames .= ', ' . $mUser->getLastName() . $mUser->getFirstName();
+            }
+
+            $oneOnOneDTO = new OneOnOneDTO();
+            $oneOnOneDTO->setOneOnOneId($tOneOnOne->getId());
+            $oneOnOneDTO->setOneOnOneType($tOneOnOne->getOneOnOneType());
+            $oneOnOneDTO->setSenderUserId($tOneOnOne->getSenderUserId());
+            $fromUserEntity = $mUserRepos->find($tOneOnOne->getSenderUserId());
+            $oneOnOneDTO->setFromName($fromUserEntity->getLastName() . $fromUserEntity->getFirstName());
+            $oneOnOneDTO->setImageVersion($fromUserEntity->getImageVersion());
+            $oneOnOneDTO->setToNames($toNames);
+            if ($tOneOnOne->getTargetDate() !== null) {
+                $oneOnOneDTO->setTargetDate($tOneOnOne->getTargetDate());
+            }
+            if ($tOneOnOne->getDueDate() !== null) {
+                $oneOnOneDTO->setDueDate($tOneOnOne->getDueDate());
+            }
+            if ($tOneOnOne->getFeedbackType() !== null) {
+                $oneOnOneDTO->setFeedbackType($tOneOnOne->getFeedbackType());
+            }
+            if ($tOneOnOne->getIntervieweeUserId() !== null) {
+                $intervieweeEntity = $mUserRepos->find($tOneOnOne->getIntervieweeUserId());
+                $oneOnOneDTO->setIntervieweeUserName($intervieweeEntity->getLastName() . $intervieweeEntity->getFirstName());
+            }
+            $oneOnOneDTO->setLastUpdate($tOneOnOne->getUpdatedAt());
+            $oneOnOneDTO->setText($tOneOnOne->getBody());
+
+            $oneOnOneDTOArray[] = $oneOnOneDTO;
+        }
+
+        $oneOnOneDialogDTO->setDialog($oneOnOneDTOArray);
+
+        return $oneOnOneDialogDTO;
     }
 }

@@ -1,0 +1,89 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /users/{userId}/oneonones/{oneOnOneId}.json:
+    get:
+      description: 1on1ダイアログ取得
+      parameters:
+        -
+          name: userId
+          in: paths
+          type: string
+          description: ユーザID
+          required: true
+        -
+          name: oneOnOneId
+          in: paths
+          type: string
+          description: 1on1ID
+          required: true
+      responses:
+        200:
+          description: 1on1ダイアログ
+          schema:
+            type: object
+            properties:
+              header:
+                type: object
+                properties:
+                  okrId:
+                    type: integer
+                  okrName:
+                    type: string
+                required:
+                  - okrId
+                  - okrName
+              dialog:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    oneOnOneId:
+                      type: integer
+                    oneOnOneType:
+                      type: string
+                    senderUserId:
+                      type: integer
+                    fromName:
+                      type: string
+                    imamgeVersion:
+                      type: integer
+                    toNames:
+                      type: string
+                    targetDate:
+                      type: string
+                    dueDate:
+                      type: string
+                    feedbackType:
+                      type: string
+                    intervieweeUserName:
+                      type: string
+                    lastUpdate:
+                      type: string
+                    text:
+                      type: string
+                  required:
+                    - oneOnOneId
+                    - oneOnOneType
+                    - senderUserId
+                    - fromName
+                    - imamgeVersion
+                    - lastUpdate
+                    - text
+        400:
+          description: JSONスキーマ不正
+        401:
+          description: 認証エラー
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

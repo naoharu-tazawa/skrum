@@ -9,6 +9,7 @@ use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\OneOnOneDialogDTO;
 
 /**
  * 1on1コントローラ
@@ -238,24 +239,12 @@ class OneOnOneController extends BaseController
     public function getUserOneononesAction(Request $request, int $userId): array
     {
         // リクエストパラメータを取得
-        $keyword = $request->get('q');
-        $startDate = $request->get('sdate');
-        $endDate = $request->get('edate');
+        $oneOnOneType = $request->get('oootype');
         $before = $request->get('before');
 
         // リクエストパラメータのバリデーション
-        if ($keyword !== null) {
-            $keywordErrors = $this->checkSearchKeyword($keyword);
-            if($keywordErrors) throw new InvalidParameterException("検索キーワードが不正です", $keywordErrors);
-        }
-        if ($startDate !== null) {
-            $startDateErrors = $this->checkDatetimeString($startDate);
-            if($startDateErrors) throw new InvalidParameterException("開始日が不正です", $startDateErrors);
-        }
-        if ($endDate !== null) {
-            $endDateErrors = $this->checkDatetimeString($endDate);
-            if($endDateErrors) throw new InvalidParameterException("終了日が不正です", $endDateErrors);
-        }
+        $oneOnOneTypeErrors = $this->checkNumeric($oneOnOneType);
+        if($oneOnOneTypeErrors) throw new InvalidParameterException("1on1種別が不正です", $oneOnOneTypeErrors);
         if ($before !== null) {
             $beforeErrors = $this->checkDatetimeString($before);
             if($beforeErrors) throw new InvalidParameterException("取得基準日時が不正です", $beforeErrors);
@@ -271,8 +260,34 @@ class OneOnOneController extends BaseController
 
         // 1on1送受信履歴取得処理
         $oneOnOneService = $this->getOneOnOneService();
-        $oneOnOneDTOArray = $oneOnOneService->getOneOnOneHistory($auth, $keyword, $startDate, $endDate, $before);
+        $oneOnOneDTOArray = $oneOnOneService->getOneOnOneHistory($auth, $oneOnOneType, $before);
 
         return $oneOnOneDTOArray;
+    }
+
+    /**
+     * 1on1ダイアログ取得
+     *
+     * @Rest\Get("/v1/users/{userId}/oneonones/{oneOnOneId}.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param integer $userId ユーザID
+     * @param integer $oneOnOneId 1on1ID
+     * @return OneOnOneDialogDTO
+     */
+    public function getUserOneononeAction(Request $request, int $userId, int $oneOnOneId): OneOnOneDialogDTO
+    {
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 権限チェック（ユーザIDの一致をチェック）
+        if ($userId !== $auth->getUserId()) {
+            throw new PermissionException('ユーザIDが存在しません');
+        }
+
+        // 1on1ダイアログ取得処理
+        $oneOnOneService = $this->getOneOnOneService();
+        $oneOnOneDialogDTO = $oneOnOneService->getOneOnOneDialog($oneOnOneId);
+
+        return $oneOnOneDialogDTO;
     }
 }

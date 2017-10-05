@@ -40,7 +40,7 @@ class OkrInfoDTO
     }
 
     /**
-     * Get $targetOkr
+     * Get targetOkr
      *
      * @return \AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO
      */

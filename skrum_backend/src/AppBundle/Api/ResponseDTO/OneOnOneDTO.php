@@ -37,6 +37,13 @@ class OneOnOneDTO
      *
      * @JSON\Type("string")
      */
+    private $fromName;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
     private $fromToNames;
 
     /**
@@ -45,6 +52,41 @@ class OneOnOneDTO
      * @JSON\Type("integer")
      */
     private $imageVersion;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $toNames;
+
+    /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d'>")
+     */
+    private $targetDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d'>")
+     */
+    private $dueDate;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $feedbackType;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $intervieweeUserName;
 
     /**
      * @var \DateTime
@@ -59,6 +101,13 @@ class OneOnOneDTO
      * @JSON\Type("string")
      */
     private $partOfText;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $text;
 
     /**
      * Set oneOnOneId
@@ -133,6 +182,30 @@ class OneOnOneDTO
     }
 
     /**
+     * Set fromName
+     *
+     * @param string $fromName
+     *
+     * @return OneOnOneDTO
+     */
+    public function setFromName($fromName)
+    {
+        $this->fromName = $fromName;
+
+        return $this;
+    }
+
+    /**
+     * Get fromName
+     *
+     * @return string
+     */
+    public function getFromName()
+    {
+        return $this->fromName;
+    }
+
+    /**
      * Set fromToNames
      *
      * @param string $fromToNames
@@ -181,6 +254,126 @@ class OneOnOneDTO
     }
 
     /**
+     * Set toNames
+     *
+     * @param string $toNames
+     *
+     * @return OneOnOneDTO
+     */
+    public function setToNames($toNames)
+    {
+        $this->toNames = $toNames;
+
+        return $this;
+    }
+
+    /**
+     * Get toNames
+     *
+     * @return string
+     */
+    public function getToNames()
+    {
+        return $this->toNames;
+    }
+
+    /**
+     * Set targetDate
+     *
+     * @param \DateTime $targetDate
+     *
+     * @return OneOnOneDTO
+     */
+    public function setTargetDate($targetDate)
+    {
+        $this->targetDate = $targetDate;
+
+        return $this;
+    }
+
+    /**
+     * Get targetDate
+     *
+     * @return \DateTime
+     */
+    public function getTargetDate()
+    {
+        return $this->targetDate;
+    }
+
+    /**
+     * Set dueDate
+     *
+     * @param \DateTime $dueDate
+     *
+     * @return OneOnOneDTO
+     */
+    public function setDueDate($dueDate)
+    {
+        $this->dueDate = $dueDate;
+
+        return $this;
+    }
+
+    /**
+     * Get dueDate
+     *
+     * @return \DateTime
+     */
+    public function getDueDate()
+    {
+        return $this->dueDate;
+    }
+
+    /**
+     * Set feedbackType
+     *
+     * @param string $feedbackType
+     *
+     * @return OneOnOneDTO
+     */
+    public function setFeedbackType($feedbackType)
+    {
+        $this->feedbackType = $feedbackType;
+
+        return $this;
+    }
+
+    /**
+     * Get feedbackType
+     *
+     * @return string
+     */
+    public function getFeedbackType()
+    {
+        return $this->feedbackType;
+    }
+
+    /**
+     * Set intervieweeUserName
+     *
+     * @param string $intervieweeUserName
+     *
+     * @return OneOnOneDTO
+     */
+    public function setIntervieweeUserName($intervieweeUserName)
+    {
+        $this->intervieweeUserName = $intervieweeUserName;
+
+        return $this;
+    }
+
+    /**
+     * Get intervieweeUserName
+     *
+     * @return string
+     */
+    public function getIntervieweeUserName()
+    {
+        return $this->intervieweeUserName;
+    }
+
+    /**
      * Set lastUpdate
      *
      * @param \DateTime $lastUpdate
@@ -226,5 +419,29 @@ class OneOnOneDTO
     public function getPartOfText()
     {
         return $this->partOfText;
+    }
+
+    /**
+     * Set text
+     *
+     * @param string $text
+     *
+     * @return OneOnOneDTO
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+
+        return $this;
+    }
+
+    /**
+     * Get text
+     *
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
     }
 }

@@ -10,9 +10,9 @@ produces:
 basePath: /v1
 
 paths:
-  /users/{userId}/newoneonones.json?{q}&{sdate}&{edate}&{before}:
+  /users/{userId}/oneonones.json?{oootype}&{before}:
     get:
-      description: 1on1新着履歴取得
+      description: 1on1送受信履歴取得
       parameters:
         -
           name: userId
@@ -21,23 +21,11 @@ paths:
           description: ユーザID
           required: true
         -
-          name: q
+          name: oootype
           in: paths
           type: string
-          description: 検索ワード（ユーザ名）
-          required: false
-        -
-          name: sdate
-          in: paths
-          type: string
-          description: 開始日（検索）
-          required: false
-        -
-          name: edate
-          in: paths
-          type: string
-          description: 終了日（検索）
-          required: false
+          description: 1on1種別
+          required: true
         -
           name: before
           in: paths
@@ -46,7 +34,7 @@ paths:
           required: false
       responses:
         200:
-          description: 1on1新着履歴
+          description: 1on1送受信履歴
           schema:
             type: object
             properties:
@@ -56,10 +44,14 @@ paths:
                 type: string
               senderUserId:
                 type: integer
-              fromToNames:
+              fromName:
                 type: string
               imamgeVersion:
                 type: integer
+              toNames:
+                type: string
+              intervieweeUserName:
+                type: string
               lastUpdate:
                 type: string
               partOfText:
@@ -68,7 +60,7 @@ paths:
               - oneOnOneId
               - oneOnOneType
               - senderUserId
-              - fromToNames
+              - fromName
               - imamgeVersion
               - lastUpdate
               - partOfText
