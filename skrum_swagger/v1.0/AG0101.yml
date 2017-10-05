@@ -1,0 +1,123 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /users/{userId}/posts.json?{before}:
+    get:
+      description: タイムライン取得（ユーザ）
+      parameters:
+        -
+          name: userId
+          in: path
+          type: integer
+          description: グループID
+          required: true
+        -
+          name: before
+          in: path
+          type: string
+          description: 取得基準投稿Id
+      responses:
+        200:
+          description: タイムライン（ユーザ）
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                postId:
+                  type: integer
+                posterType:
+                  type: string
+                posterUserId:
+                  type: integer
+                posterUserName:
+                  type: string
+                posterUserRoleLevel:
+                  type: integer
+                posterGroupId:
+                  type: integer
+                posterGroupName:
+                  type: string
+                posterGroupType:
+                  type: string
+                post:
+                  type: string
+                postedDatetime:
+                  type: string
+                autoShare:
+                  type: object
+                  properties:
+                    autoPost:
+                      type: string
+                    okrId:
+                      type: integer
+                    okrName:
+                      type: string
+                    ownerType:
+                      type: string
+                    ownerUserId:
+                      type: integer
+                    ownerUserName:
+                      type: string
+                    ownerGroupId:
+                      type: integer
+                    ownerGroupName:
+                      type: string
+                    ownerCompanyId:
+                      type: integer
+                    ownerCompanyName:
+                      type: string
+                  required:
+                    - okrId
+                    - okrName
+                    - ownerType
+                likesCount:
+                  type: integer
+                likedFlg:
+                  type: integer
+                disclosureType:
+                  type: string
+                replies:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      postId:
+                        type: integer
+                      posterUserId:
+                        type: integer
+                      posterUserName:
+                        type: string
+                      post:
+                        type: string
+                      postedDatetime:
+                        type: string
+                    required:
+                      - postId
+                      - posterUserId
+                      - posterUserName
+                      - post
+                      - postedDatetime
+              required:
+                - postId
+                - posterType
+                - post
+                - postedDatetime
+                - likesCount
+                - likedFlg
+                - disclosureType
+        400:
+          description: パラメータ不正
+        401:
+          description: 認証エラー
+        500:
+          description: サーバーエラー
