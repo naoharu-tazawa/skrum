@@ -1,0 +1,52 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /oneonones/{oneononeId}/replies.json:
+    post:
+      description: 1on1返信コメント
+      parameters:
+        -
+          name: oneononeId
+          in: paths
+          type: string
+          description: 1on1ID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description: 返信コメント
+          required: true
+          schema:
+            type: object
+            properties:
+              reply:
+                type: string
+            required:
+              - reply
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        401:
+          description: 認証エラー
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

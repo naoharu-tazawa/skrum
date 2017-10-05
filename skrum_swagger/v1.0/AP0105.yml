@@ -1,0 +1,81 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /users/{userId}/newoneonones.json?{q}&{sdate}&{edate}&{before}:
+    get:
+      description: 1on1新着履歴取得
+      parameters:
+        -
+          name: userId
+          in: paths
+          type: string
+          description: ユーザID
+          required: true
+        -
+          name: q
+          in: paths
+          type: string
+          description: 検索ワード（ユーザ名）
+          required: false
+        -
+          name: sdate
+          in: paths
+          type: string
+          description: 開始日（検索）
+          required: false
+        -
+          name: edate
+          in: paths
+          type: string
+          description: 終了日（検索）
+          required: false
+        -
+          name: before
+          in: paths
+          type: string
+          description: 取得基準日時
+          required: false
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              oneOnOneId:
+                type: integer
+              oneOnOneType:
+                type: string
+              senderUserId:
+                type: integer
+              fromToNames:
+                type: string
+              imamgeVersion:
+                type: integer
+              lastUpdate:
+                type: string
+              partOfText:
+                type: string
+            required:
+              - oneOnOneType
+              - senderUserId
+              - fromToNames
+              - imamgeVersion
+              - lastUpdate
+              - partOfText
+        400:
+          description: JSONスキーマ不正
+        401:
+          description: 認証エラー
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

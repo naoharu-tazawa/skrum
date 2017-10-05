@@ -1,0 +1,47 @@
+{
+  "title": "フィードバック/ヒアリング送信",
+  "type": "object",
+  "properties": {
+    "oneOnOneType": {
+      "title": "1on1種別",
+      "enum": ["3", "4"]
+    },
+    "dueDate": {
+      "title": "期限日",
+      "type": "string",
+      "format": "date-time"
+    },
+    "feedbackType": {
+      "title": "フィードバック種別",
+      "enum": ["1", "2", "3", "4"]
+    },
+    "to": {
+      "title": "宛先配列",
+      "type": "array",
+      "items": {
+        "title": "宛先ユーザ情報",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "title": "ユーザID",
+            "type": "integer",
+            "maxLength": 11
+          }
+        },
+        "required": ["userId"],
+        "additionalProperties": false
+      }
+    },
+    "okrId": {
+      "title": "OKRID",
+      "type": "integer",
+      "maxLength": 11
+    },
+    "body": {
+      "title": "本文",
+      "type": "string"
+    }
+  },
+  "required": ["oneOnOneType", "to", "body"],
+  "additionalProperties": false
+}

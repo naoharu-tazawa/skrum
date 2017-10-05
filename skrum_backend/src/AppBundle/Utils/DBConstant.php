@@ -160,6 +160,51 @@ class DBConstant
     const POSTER_TYPE_COMPANY = '3';
 
     /**
+     * 1on1種別（日報）
+     */
+    const ONE_ON_ONE_TYPE_DAILY_REPORT = '1';
+
+    /**
+     * 1on1種別（進捗報告）
+     */
+    const ONE_ON_ONE_TYPE_PROGRESS_REPORT = '2';
+
+    /**
+     * 1on1種別（フィードバック）
+     */
+    const ONE_ON_ONE_TYPE_FEEDBACK = '3';
+
+    /**
+     * 1on1種別（ヒアリング）
+     */
+    const ONE_ON_ONE_TYPE_HEARING = '4';
+
+    /**
+     * 1on1種別（面談メモ）
+     */
+    const ONE_ON_ONE_TYPE_INTERVIEW_NOTE = '5';
+
+    /**
+     * フィードバック種別（課題点）
+     */
+    const FEEDBACK_TYPE_ISSUE = '1';
+
+    /**
+     * フィードバック種別（アドバイス）
+     */
+    const FEEDBACK_TYPE_ADVICE = '2';
+
+    /**
+     * フィードバック種別（グッジョブ）
+     */
+    const FEEDBACK_TYPE_GOOD_JOB = '3';
+
+    /**
+     * フィードバック種別（感謝）
+     */
+    const FEEDBACK_TYPE_THANKS = '4';
+
+    /**
      * ロールID（一般ユーザ（スタンダードプラン））
      */
     const ROLE_ID_NORMAL_STANDARD = 'A001';

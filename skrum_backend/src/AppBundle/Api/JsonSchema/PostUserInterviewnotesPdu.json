@@ -1,0 +1,44 @@
+{
+  "title": "面談メモ送信",
+  "type": "object",
+  "properties": {
+    "oneOnOneType": {
+      "title": "1on1種別",
+      "enum": ["5"]
+    },
+    "intervieweeUserId": {
+      "title": "面談相手ユーザID",
+      "type": "integer",
+      "maxLength": 11
+    },
+    "interviewDate": {
+      "title": "期限日",
+      "type": "string",
+      "format": "date-time"
+    },
+    "to": {
+      "title": "宛先配列",
+      "type": "array",
+      "items": {
+        "title": "宛先ユーザ情報",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "title": "ユーザID",
+            "type": "integer",
+            "maxLength": 11
+          }
+        },
+        "required": ["userId"],
+        "additionalProperties": false
+      }
+    },
+    "body": {
+      "title": "本文",
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": ["oneOnOneType", "intervieweeUserId", "interviewDate", "body"],
+  "additionalProperties": false
+}

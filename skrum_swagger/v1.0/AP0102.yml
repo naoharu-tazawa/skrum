@@ -1,0 +1,69 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /users/{userId}/feedbacks.json:
+    post:
+      description: フィードバック/ヒアリング送信
+      parameters:
+        -
+          name: userId
+          in: paths
+          type: string
+          description: ユーザID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description: 1on1種別、回答期限、フィードバック種別、宛先、紐付けOKRID、本文
+          required: true
+          schema:
+            type: object
+            properties:
+              oneOnOneType:
+                type: string
+              dueDate:
+                type: string
+              feedbackType:
+                type: string
+              to:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: integer
+              okrId:
+                type: integer
+              body:
+                type: string
+            required:
+              - oneOnOneType
+              - to
+              - body
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        401:
+          description: 認証エラー
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

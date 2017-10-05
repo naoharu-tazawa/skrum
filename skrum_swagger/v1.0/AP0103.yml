@@ -1,0 +1,68 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /users/{userId}/interviewnotes.json:
+    post:
+      description: 面談メモ送信
+      parameters:
+        -
+          name: userId
+          in: paths
+          type: string
+          description: ユーザID
+          required: true
+        -
+          name: JsonRequest
+          in: body
+          description: 1on1種別、面談相手、面談日、宛先（メモ共有先）、本文
+          required: true
+          schema:
+            type: object
+            properties:
+              oneOnOneType:
+                type: string
+              intervieweeUserId:
+                type: integer
+              interviewDate:
+                type: string
+              to:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: integer
+              body:
+                type: string
+            required:
+              - oneOnOneType
+              - intervieweeUserId
+              - interviewDate
+              - body
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        401:
+          description: 認証エラー
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

@@ -1,0 +1,21 @@
+[Request URL]
+HTTP METHOD: POST
+http://company1.localhost:8000/v1/users/{userId}/interviewnotes.json
+
+[Request Json Schema]
+送信先：あり：
+{
+  "oneOnOneType": "5",
+  "intervieweeUserId": 3,
+  "interviewDate": "2013-04-04T00:00:00Z",
+  "to": [{"userId": 3}, {"userId": 5}, {"userId": 8}],
+  "body": "アイウエオ"
+}
+
+送信先：なし：
+{
+  "oneOnOneType": "5",
+  "intervieweeUserId": 3,
+  "interviewDate": "2013-04-04T00:00:00Z",
+  "body": "アイウエオ"
+}

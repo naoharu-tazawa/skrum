@@ -1,0 +1,13 @@
+{
+  "title": "1on1返信コメント",
+  "type": "object",
+  "properties": {
+    "reply": {
+      "title": "返信コメント",
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": ["reply"],
+  "additionalProperties": false
+}

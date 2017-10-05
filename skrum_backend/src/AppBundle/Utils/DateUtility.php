@@ -22,6 +22,16 @@ class DateUtility
     const MAX_DATE = '9999-12-31';
 
     /**
+     * 最小年月日時分秒
+     */
+    const MIN_DATETIME = '1970-01-01 00:00:00';
+
+    /**
+     * 最小年月日
+     */
+    const MIN_DATE = '1970-01-01';
+
+    /**
      * 年月日時分秒フォーマット
      */
     const DATETIME_FORMAT = 'Y-m-d H:i:s';
@@ -112,6 +122,16 @@ class DateUtility
     }
 
     /**
+     * 最小年月日時分秒（string型）を取得
+     *
+     * @return string 最小年月日時分秒
+     */
+    public static function getMinDatetimeString(): string
+    {
+        return self::MIN_DATETIME;
+    }
+
+    /**
      * 今月１日を取得
      *
      * @return string 今月１日
@@ -176,7 +196,7 @@ class DateUtility
     }
 
     /**
-     * 翌日の0時0分0秒を取得
+     * 明日の0時0分0秒を取得
      *
      * @return string 翌日0時0分0秒
      */
@@ -218,6 +238,19 @@ class DateUtility
     }
 
     /**
+     * 指定年月の翌日を取得
+     *
+     * @param integer $year 指定年
+     * @param integer $month 指定月
+     * @param integer $plus Xヶ月後
+     * @return string 指定年月のXヶ月後の月末日
+     */
+    public static function getNextDayDatetimeString(int $year, int $month, int $day): string
+    {
+        return date(self::DATETIME_FORMAT, mktime(0, 0, 0, $month, $day + 1, $year));
+    }
+
+    /**
      * 指定年月のXヶ月後の１日を取得
      *
      * @param integer $year 指定年
@@ -246,12 +279,12 @@ class DateUtility
     /**
      * string型の年月日をDateTime型に変換
      *
-     * @param string $dateString 年月日時分秒
+     * @param string $datetimeString 年月日時分秒
      * @return \DateTime
      */
-    public static function transIntoDatetime(string $dateString): \DateTime
+    public static function transIntoDatetime(string $datetimeString): \DateTime
     {
-        return new \DateTime($dateString);
+        return new \DateTime($datetimeString);
     }
 
     /**

@@ -8,6 +8,7 @@ use AppBundle\Entity\MRoleAssignment;
 use AppBundle\Entity\MUser;
 use AppBundle\Entity\TGroupTree;
 use AppBundle\Entity\TOkr;
+use AppBundle\Entity\TOneOnOne;
 use AppBundle\Entity\TPost;
 use AppBundle\Entity\TTimeframe;
 
@@ -223,5 +224,28 @@ class DBExistanceLogic extends BaseLogic
         }
 
         return $mRoleAssignmentArray[0];
+    }
+
+    /**
+     * 1on1存在チェック
+     *
+     * @param string $targetOneOnOneId チェック対象1on1ID
+     * @param integer $companyId 会社ID
+     * @return TOneOnOne 1on1エンティティ
+     */
+    public function checkOneOnOneExistance(string $targetOneOnOneId, int $companyId): TOneOnOne
+    {
+        // 数字チェック
+        if (!is_numeric($targetOneOnOneId)) {
+            throw new NoDataException('1on1が存在しません');
+        }
+
+        $tOneOnOneRepos = $this->getTOneOnOneRepository();
+        $tOneOnOneArray = $tOneOnOneRepos->getOneOnOne($targetOneOnOneId, $companyId);
+        if (count($tOneOnOneArray) === 0) {
+            throw new NoDataException('1on1が存在しません');
+        }
+
+        return $tOneOnOneArray[0];
     }
 }

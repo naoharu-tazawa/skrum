@@ -325,6 +325,17 @@ class BaseController extends FOSRestController
     }
 
     /**
+     * バリデーション（datetime型文字列）
+     *
+     * @param string $item チェック対象datetime型文字列
+     * @return boolean バリデーションチェック結果
+     */
+    protected function checkDatetimeString(string $item = null): array
+    {
+        return $this->validateDatetime($item);
+    }
+
+    /**
      * バリデーション（検索値文字列）
      *
      * @param string $item チェック対象検索ワード
@@ -461,6 +472,11 @@ class BaseController extends FOSRestController
     protected function getOkrSettingService()
     {
         return $this->get('api.okr_setting_service');
+    }
+
+    protected function getOneOnOneService()
+    {
+        return $this->get('api.one_on_one_service');
     }
 
     protected function getPaymentService()

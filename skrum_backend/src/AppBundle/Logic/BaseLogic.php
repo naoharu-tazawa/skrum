@@ -373,6 +373,11 @@ class BaseLogic
         return $this->entityManager->getRepository('AppBundle:TOkr');
     }
 
+    protected function getTOneOnOneRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TOneOnOne');
+    }
+
     protected function getTPaymentRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TPayment');

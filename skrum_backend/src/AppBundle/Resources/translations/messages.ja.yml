@@ -41,3 +41,5 @@ parameters:
     feedback_target_reason_achievement_registration: '%%d日以上進捗登録がありません'
 
     feedback_target_reason_low_achievement_rate: '目標進捗率が予定進捗率に対して芳しくありません'
+
+    one_on_one_hearing_auto_message: "【自動メッセージ】\n%%sさんが仕事状況の報告を求めています。"

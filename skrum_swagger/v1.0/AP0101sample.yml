@@ -1,0 +1,29 @@
+[Request URL]
+HTTP METHOD: POST
+http://company1.localhost:8000/v1/users/{userId}/reports.json
+
+[Request Json Schema]
+日報の場合：
+{
+  "oneOnOneType": "1",
+  "reportDate": "2013-04-04T00:00:00Z",
+  "to": [{"userId": 3}, {"userId": 5}, {"userId": 8}],
+  "body": "アイウエオ"
+}
+
+進捗報告の場合　（送信先：あり）：
+{
+  "oneOnOneType": "2",
+  "reportDate": "2013-04-04T00:00:00Z",
+  "to": [{"userId": 3}, {"userId": 5}, {"userId": 8}],
+  "okrId": 3,
+  "body": "アイウエオ"
+}
+
+進捗報告の場合　（送信先：なし）：
+{
+  "oneOnOneType": "2",
+  "reportDate": "2013-04-04T00:00:00Z",
+  "okrId": 3,
+  "body": "アイウエオ"
+}

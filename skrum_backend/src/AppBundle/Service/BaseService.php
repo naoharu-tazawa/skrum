@@ -422,6 +422,16 @@ class BaseService
         return $this->entityManager->getRepository('AppBundle:TOkr');
     }
 
+    protected function getTOneOnOneRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TOneOnOne');
+    }
+
+    protected function getTOneOnOneToRepository()
+    {
+        return $this->entityManager->getRepository('AppBundle:TOneOnOneTo');
+    }
+
     protected function getTPaymentRepository()
     {
         return $this->entityManager->getRepository('AppBundle:TPayment');

@@ -114,6 +114,10 @@ services:
         class: AppBundle\Service\Api\OkrSettingService
         arguments: ['@service_container']
 
+    api.one_on_one_service:
+        class: AppBundle\Service\Api\OneOnOneService
+        arguments: ['@service_container']
+
     api.payment_service:
         class: AppBundle\Service\Api\PaymentService
         arguments: ['@service_container']
