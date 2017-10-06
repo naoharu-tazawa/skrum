@@ -48,7 +48,6 @@ class GroupService extends BaseService
             $mGroup->setCompany($mCompany);
             $mGroup->setGroupName($data['groupName']);
             $mGroup->setGroupType($data['groupType']);
-            $mGroup->setLeaderUserId($auth->getUserId());
             $this->persist($mGroup);
             $this->flush();
 
