@@ -27,10 +27,10 @@ class OkrOperationService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param TOkr $tOkr 紐付け先変更対象OKRエンティティ
-     * @param TOkr $newParentOkr 紐付け先OKRエンティティ
+     * @param TOkr $newParentOkr 紐付け先OKRエンティティ（紐付け先解除の場合はnull）
      * @return OkrDetailsDTO
      */
-    public function changeParent(Auth $auth, TOkr $tOkr, TOkr $newParentOkr): OkrDetailsDTO
+    public function changeParent(Auth $auth, TOkr $tOkr, TOkr $newParentOkr = null): OkrDetailsDTO
     {
         // 紐付け先変更対象OKRがキーリザルトの場合、紐付け先変更不可
         if ($tOkr->getType() === DBConstant::OKR_TYPE_KEY_RESULT) {
@@ -38,8 +38,10 @@ class OkrOperationService extends BaseService
         }
 
         // タイムフレームIDの一致チェック
-        if ($tOkr->getTimeframe()->getTimeframeId() !== $newParentOkr->getTimeframe()->getTimeframeId()) {
-            throw new ApplicationException('異なるタイムフレームのOKRには紐付けできません');
+        if ($newParentOkr !== null) {
+            if ($tOkr->getTimeframe()->getTimeframeId() !== $newParentOkr->getTimeframe()->getTimeframeId()) {
+                throw new ApplicationException('異なるタイムフレームのOKRには紐付けできません');
+            }
         }
 
         // 紐付け先チェック
@@ -47,8 +49,10 @@ class OkrOperationService extends BaseService
         $groupId = null;
         if ($tOkr->getOwnerUser() !== null) $userId = $tOkr->getOwnerUser()->getUserId();
         if ($tOkr->getOwnerGroup() !== null) $groupId = $tOkr->getOwnerGroup()->getGroupId();
-        $okrOperationLogic = $this->getOkrOperationLogic();
-        $okrOperationLogic->checkAlignment($tOkr->getType(), $tOkr->getOwnerType(), $userId, $groupId, $newParentOkr);
+        if ($newParentOkr !== null) {
+            $okrOperationLogic = $this->getOkrOperationLogic();
+            $okrOperationLogic->checkAlignment($tOkr->getType(), $tOkr->getOwnerType(), $userId, $groupId, $newParentOkr);
+        }
 
         // 現在の紐付け先OKRを取得
         $currentParentOkr = $tOkr->getParentOkr();
@@ -65,23 +69,36 @@ class OkrOperationService extends BaseService
             $tOkrActivity->setOkr($tOkr);
             $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
 
-            if ($currentParentOkr == null) {
+            if ($currentParentOkr === null) {
                 /* 新規紐付け */
+
+                // 紐付け先が無い状態で紐付け先解除をしようとした場合、更新処理を行わない
+                if ($newParentOkr === null) {
+                    $this->rollback();
+                    return new OkrDetailsDTO();
+                }
 
                 $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ALIGN);
                 $tOkrActivity->setNewParentOkrId($newParentOkr->getOkrId());
             } else {
-                /* 紐付け先変更 */
+                if ($newParentOkr !== null) {
+                    /* 紐付け先変更 */
 
-                // 現在の紐付け先OKRと変更後紐付け先OKRが同一の場合、更新処理を行わない
-                if ($currentParentOkr->getOkrId() == $newParentOkr->getOkrId()) {
-                    $this->rollback();
-                    return;
+                    // 現在の紐付け先OKRと変更後紐付け先OKRが同一の場合、更新処理を行わない
+                    if ($currentParentOkr->getOkrId() == $newParentOkr->getOkrId()) {
+                        $this->rollback();
+                        return new OkrDetailsDTO();
+                    }
+
+                    $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ALIGN_CHANGE);
+                    $tOkrActivity->setPreviousParentOkrId($currentParentOkr->getOkrId());
+                    $tOkrActivity->setNewParentOkrId($newParentOkr->getOkrId());
+                } else {
+                    /* 紐付け先解除 */
+
+                    $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ALIGN_CHANGE);
+                    $tOkrActivity->setPreviousParentOkrId($currentParentOkr->getOkrId());
                 }
-
-                $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ALIGN_CHANGE);
-                $tOkrActivity->setPreviousParentOkrId($currentParentOkr->getOkrId());
-                $tOkrActivity->setNewParentOkrId($newParentOkr->getOkrId());
             }
 
             $this->persist($tOkrActivity);
@@ -89,7 +106,7 @@ class OkrOperationService extends BaseService
 
             // 旧紐付け先の達成率を再計算
             $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
-            if ($currentParentOkr != null) {
+            if ($currentParentOkr !== null) {
                 $okrAchievementRateLogic->recalculateFromParent($auth, $currentParentOkr, true);
             }
 
@@ -97,8 +114,14 @@ class OkrOperationService extends BaseService
             $okrAchievementRateLogic->recalculate($auth, $tOkr, true);
 
             // 入れ子集合モデルの右値と左値を再計算
-            $okrNestedIntervalsLogic = $this->getOkrNestedIntervalsLogic();
-            $okrNestedIntervalsLogic->recalculate($tOkr, $auth->getCompanyId());
+            if ($newParentOkr !== null) {
+                $okrNestedIntervalsLogic = $this->getOkrNestedIntervalsLogic();
+                $okrNestedIntervalsLogic->recalculate($tOkr, $auth->getCompanyId());
+            } else {
+                // 紐付け先解除の場合は右値と左値にnullをセット
+                $tOkrRepos = $this->getTOkrRepository();
+                $tOkrRepos->resetAllLeftRightValues($tOkr->getTreeLeft(), $tOkr->getTreeRight(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
+            }
 
             $this->flush();
             $this->commit();
@@ -109,7 +132,7 @@ class OkrOperationService extends BaseService
 
         // 会社名を取得
         $companyName = null;
-        if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY || $newParentOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY) {
+        if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY || ($newParentOkr !== null && $newParentOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_COMPANY)) {
             $mCompanyRepos = $this->getMCompanyRepository();
             $mCompany = $mCompanyRepos->find($auth->getCompanyId());
             $companyName = $mCompany->getCompanyName();
@@ -117,10 +140,10 @@ class OkrOperationService extends BaseService
 
         // レスポンス用DTO生成
         $targetOkr = $this->repackDTOWithOkrEntity($tOkr, $companyName);
-        $parentOkr = $this->repackDTOWithOkrEntity($newParentOkr, $companyName);
+        if ($newParentOkr !== null) $parentOkr = $this->repackDTOWithOkrEntity($newParentOkr, $companyName);
         $okrDetailsDTO = new OkrDetailsDTO();
         $okrDetailsDTO->setObjective($targetOkr);
-        $okrDetailsDTO->setParentOkr($parentOkr);
+        if ($newParentOkr !== null) $okrDetailsDTO->setParentOkr($parentOkr);
 
         return $okrDetailsDTO;
     }

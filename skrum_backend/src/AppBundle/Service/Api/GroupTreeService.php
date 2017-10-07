@@ -26,7 +26,7 @@ class GroupTreeService extends BaseService
      * @param MGroup $mGroup グループエンティティ
      * @param string $groupTreePath グループツリーパス
      * @param string $groupTreePathName グループツリーパス名
-     * @return void
+     * @return GroupPathDTO
      */
     public function createGroupPath(Auth $auth, MGroup $mGroup, string $groupTreePath, string $groupTreePathName): GroupPathDTO
     {

@@ -12,6 +12,7 @@ use AppBundle\Entity\MUser;
 use AppBundle\Entity\TEmailReservation;
 use AppBundle\Entity\TEmailSettings;
 use AppBundle\Entity\TGroupMember;
+use AppBundle\Entity\TGroupTree;
 use AppBundle\Entity\TUpload;
 use AppBundle\Entity\TUploadControl;
 
@@ -40,12 +41,13 @@ class AdditionalUsersBulkRegistrationService extends BaseService
     /**
      * ユーザ/グループ登録
      *
+     * @param TUpload $tUpload アップロードエンティティ
      * @param MCompany $mCompany 会社エンティティ
-     * @param string $companyId 会社ID
+     * @param MGroup $mGroupOfCompany 会社のグループエンティティ
      * @param array $roleAssignmentEntityArray ロール割当エンティティ配列
      * @return boolean 登録結果
      */
-    private function registerUserAndGroups(TUpload $tUpload, MCompany $mCompany, array $roleAssignmentEntityArray): bool
+    private function registerUserAndGroups(TUpload $tUpload, MCompany $mCompany, MGroup $mGroupOfCompany, array $roleAssignmentEntityArray): bool
     {
         // CSV1行分のデータを取得
         $line = $tUpload->getLineData();
@@ -65,7 +67,7 @@ class AdditionalUsersBulkRegistrationService extends BaseService
             $mUser = $mUserRepos->findOneBy(array('emailAddress' => $items[5], 'archivedFlg' => DBConstant::FLG_FALSE));
 
             // グループテーブルに登録
-            $this->registerGroups($items, $mUser, $mCompany);
+            $this->registerGroups($items, $mUser, $mCompany, $mGroupOfCompany);
 
             // メール通知設定テーブルにレコード追加
             $this->registerEmailSettings($mUser);
@@ -176,9 +178,10 @@ class AdditionalUsersBulkRegistrationService extends BaseService
      * @param array $items CSV1行分の要素配列
      * @param MUser $mUser ユーザエンティティ
      * @param MCompany $mCompany 会社エンティティ
+     * @param MGroup $mGroupOfCompany 会社のグループエンティティ
      * @return void
      */
-    private function registerGroups(array $items, MUser $mUser, MCompany $mCompany)
+    private function registerGroups(array $items, MUser $mUser, MCompany $mCompany, MGroup $mGroupOfCompany)
     {
         // 所属部署名を配列に格納
         $departmentArray = array(
@@ -190,9 +193,15 @@ class AdditionalUsersBulkRegistrationService extends BaseService
         );
 
         // グループ名でグループ存在検索
+        $departmentIdArray = array();
         $mGroupRepos = $this->getMGroupRepository();
-        foreach ($departmentArray as $departmentName) {
+        foreach ($departmentArray as $key => $departmentName) {
             if ($departmentName !== null) {
+                // グループ名に'/'(スラッシュ)が入っている場合除外する。また、先頭および末尾にある半角スペースを取り除く。
+                $departmentName = str_replace('/', '', $departmentName);
+                $departmentName = trim($departmentName);
+                $departmentArray[$key] = $departmentName;
+
                 $mGroupArray = $mGroupRepos->findBy(array('company' => $mCompany->getCompanyId(), 'groupName' => $departmentName), array('groupId' => 'ASC'), 1);
 
                 // グループが存在しない場合は新規登録
@@ -205,21 +214,62 @@ class AdditionalUsersBulkRegistrationService extends BaseService
                     $mGroup->setCompanyFlg(DBConstant::FLG_FALSE);
                     $this->persist($mGroup);
                     $this->flush();
+
+                    $departmentIdArray[] = $mGroup->getGroupId();
+                } else {
+                    $mGroup = $mGroupArray[0];
+
+                    $departmentIdArray[] = $mGroupArray[0]->getGroupId();
                 }
 
                 // グループメンバーテーブルにレコード追加
                 $tGroupMember = new TGroupMember();
-                if (empty($mGroupArray)) {
-                    $tGroupMember->setGroup($mGroup);
-                } else {
-                    $tGroupMember->setGroup($mGroupArray[0]);
-                }
+                $tGroupMember->setGroup($mGroup);
                 $tGroupMember->setUser($mUser);
                 $this->persist($tGroupMember);
 
                 $this->flush();
+
+                // グループツリー登録
+                $this->registerGroupPath($mGroup, $mGroupOfCompany, $departmentArray, $departmentIdArray);
             }
         }
+    }
+
+    /**
+     * グループツリー登録
+     *
+     * @param MGroup $mGroup グループエンティティ
+     * @param MGroup $mGroupOfCompany 会社のグループエンティティ
+     * @param array $departmentArray 部署名配列
+     * @param array $departmentIdArray 部署ID配列
+     * @return void
+     */
+    private function registerGroupPath(MGroup $mGroup, MGroup $mGroupOfCompany, array $departmentArray, array $departmentIdArray)
+    {
+        // 登録グループツリーパス
+        $newGroupTreePath = $mGroupOfCompany->getGroupId() . '/';
+        $newGroupTreePathName = $mGroupOfCompany->getGroupName() . '/';
+        foreach ($departmentIdArray as $key => $departmentId) {
+            $newGroupTreePath .= $departmentId . '/';
+            $newGroupTreePathName .= $departmentArray[$key] . '/';
+        }
+
+        // 登録するグループツリーパスが既に登録されているかチェック
+        $tGroupTreeRepos = $this->getTGroupTreeRepository();
+        $tGroupTree = $tGroupTreeRepos->getByGroupTreePath($newGroupTreePath);
+        if ($tGroupTree != null) {
+            return;
+        }
+
+        // グループツリー登録
+        $tGroupTree = new TGroupTree();
+        $tGroupTree->setGroup($mGroup);
+        $tGroupTree->setGroupTreePath($newGroupTreePath);
+        $tGroupTree->setGroupTreePathName($newGroupTreePathName);
+        $this->persist($tGroupTree);
+
+        $this->flush();
     }
 
     /**
@@ -425,6 +475,10 @@ class AdditionalUsersBulkRegistrationService extends BaseService
                 $mCompanyRepos = $this->getMCompanyRepository();
                 $mCompany = $mCompanyRepos->find($tUploadControl->getCompanyId());
 
+                // 会社のグループIDを取得
+                $mGroupRepos = $this->getMGroupRepository();
+                $mGroupOfCompany = $mGroupRepos->findOneBy(array('company' => $mCompany->getCompanyId(), 'companyFlg' => DBConstant::FLG_TRUE));
+
                 // ロール割当IDを取得
                 $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
                 $mRoleAssignmentArray = $mRoleAssignmentRepos->findBy(array('companyId' => $mCompany->getCompanyId()));
@@ -449,7 +503,7 @@ class AdditionalUsersBulkRegistrationService extends BaseService
 
                     try {
                         // CSV1行分の情報（新規ユーザ情報・所属グループ情報）登録
-                        $registrationResult = $this->registerUserAndGroups($tUpload, $mCompany, $roleAssignmentEntityArray);
+                        $registrationResult = $this->registerUserAndGroups($tUpload, $mCompany, $mGroupOfCompany, $roleAssignmentEntityArray);
 
                         if (!$registrationResult) {
                             $this->rollback();

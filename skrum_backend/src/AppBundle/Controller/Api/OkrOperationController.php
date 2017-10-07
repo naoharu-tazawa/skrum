@@ -35,9 +35,12 @@ class OkrOperationController extends BaseController
         // 認証情報を取得
         $auth = $request->get('auth_token');
 
-        // OKR存在チェック
+        // OKR存在チェック（newParentOkrIdが0の場合は紐付け先解除なのでチェックしない）
         $tOkr = $this->getDBExistanceLogic()->checkOkrExistance($okrId, $auth->getCompanyId());
-        $newParentOkr = $this->getDBExistanceLogic()->checkOkrExistance($data['newParentOkrId'], $auth->getCompanyId());
+        $newParentOkr = null;
+        if ($data['newParentOkrId'] !== 0) {
+            $newParentOkr = $this->getDBExistanceLogic()->checkOkrExistance($data['newParentOkrId'], $auth->getCompanyId());
+        }
 
         // ユーザ/グループ/会社操作権限一括チェック
         $permissionLogic = $this->getPermissionLogic();
