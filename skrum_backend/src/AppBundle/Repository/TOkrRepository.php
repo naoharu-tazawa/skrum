@@ -1225,7 +1225,7 @@ SQL;
     }
 
     /**
-     * 指定OKRとそれに紐づくOKRを全て削除
+     * 指定OKRの全てのサブ目標の持分比率ロックフラグをリセット
      *
      * @param integer $okrId OKRID
      * @param integer $timeframeId タイムフレームID
@@ -1248,6 +1248,37 @@ SQL;
         $params['companyId'] = $companyId;
         $params['timeframeId'] = $timeframeId;
         $params['parentOkrId'] = $okrId;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute($params);
+    }
+
+    /**
+     * 指定OKRとそれに紐づく全てのOKRの左値・右値にnullをセット
+     *
+     * @param $treeLeft 入れ子区間モデルの左値
+     * @param $treeRight 入れ子区間モデルの右値
+     * @param integer $timeframeId タイムフレームID
+     * @param integer $companyId 会社ID
+     * @return void
+     */
+    public function resetAllLeftRightValues($treeLeft, $treeRight, int $timeframeId, int $companyId)
+    {
+        $sql = <<<SQL
+        UPDATE t_okr AS t0_
+        INNER JOIN t_timeframe AS t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
+        SET t0_.tree_left = NULL, t0_.tree_right = NULL, t0_.updated_at = NOW()
+        WHERE (t1_.company_id = :companyId
+                AND t0_.timeframe_id = :timeframeId
+                AND t0_.tree_left >= :treeLeft
+                AND t0_.tree_left <= :treeRight)
+                AND (t0_.deleted_at IS NULL);
+SQL;
+
+        $params['companyId'] = $companyId;
+        $params['timeframeId'] = $timeframeId;
+        $params['treeLeft'] = $treeLeft;
+        $params['treeRight'] = $treeRight;
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->execute($params);
