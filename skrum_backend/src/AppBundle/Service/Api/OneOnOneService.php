@@ -11,6 +11,7 @@ use AppBundle\Entity\TOneOnOne;
 use AppBundle\Entity\TOneOnOneTo;
 use AppBundle\Api\ResponseDTO\OneOnOneDTO;
 use AppBundle\Api\ResponseDTO\OneOnOneDialogDTO;
+use AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\OneOnOneHeaderDTO;
 
 /**
@@ -378,5 +379,29 @@ class OneOnOneService extends BaseService
         $oneOnOneDialogDTO->setDialog($oneOnOneDTOArray);
 
         return $oneOnOneDialogDTO;
+    }
+
+    /**
+     * 前回送信先ユーザリスト取得処理
+     *
+     * @param integer $userId ユーザID
+     * @param string $oneOnOneType 1on1種別
+     * @return array
+     */
+    public function getDefaultDestinations(int $userId, string $oneOnOneType): array
+    {
+        $tOneOnOneToRepos = $this->getTOneOnOneToRepository();
+        $userInfoArray = $tOneOnOneToRepos->getPreviousDestinations($userId, $oneOnOneType);
+
+        $basicUserInfoDTOArray = array();
+        foreach ($userInfoArray as $userInfo) {
+            $basicUserInfoDTO = new BasicUserInfoDTO();
+            $basicUserInfoDTO->setUserId($userInfo['user_id']);
+            $basicUserInfoDTO->setName($userInfo['last_name'] . $userInfo['first_name']);
+
+            $basicUserInfoDTOArray[] = $basicUserInfoDTO;
+        }
+
+        return $basicUserInfoDTOArray;
     }
 }

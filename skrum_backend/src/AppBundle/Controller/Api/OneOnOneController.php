@@ -290,4 +290,36 @@ class OneOnOneController extends BaseController
 
         return $oneOnOneDialogDTO;
     }
+
+    /**
+     * 前回送信先ユーザリスト取得
+     *
+     * @Rest\Get("/v1/users/{userId}/defaultdestinations.{_format}")
+     * @param Request $request リクエストオブジェクト
+     * @param integer $userId ユーザID
+     * @return array
+     */
+    public function getUserDefaultdestinationsAction(Request $request, int $userId): array
+    {
+        // リクエストパラメータを取得
+        $oneOnOneType = $request->get('oootype');
+
+        // リクエストパラメータのバリデーション
+        $oneOnOneTypeErrors = $this->checkNumeric($oneOnOneType);
+        if($oneOnOneTypeErrors) throw new InvalidParameterException("1on1種別が不正です", $oneOnOneTypeErrors);
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // 権限チェック（ユーザIDの一致をチェック）
+        if ($userId !== $auth->getUserId()) {
+            throw new PermissionException('ユーザIDが存在しません');
+        }
+
+        // 1on1ダイアログ取得処理
+        $oneOnOneService = $this->getOneOnOneService();
+        $basicUserInfoDTOArray = $oneOnOneService->getDefaultDestinations($userId, $oneOnOneType);
+
+        return $basicUserInfoDTOArray;
+    }
 }

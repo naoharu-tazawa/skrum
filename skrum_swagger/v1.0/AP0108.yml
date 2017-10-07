@@ -1,0 +1,51 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /users/{userId}/defaultdestinations.json&{oootype}:
+    get:
+      description: 前回送信先ユーザリスト取得
+      parameters:
+        -
+          name: userId
+          in: paths
+          type: string
+          description: ユーザID
+          required: true
+        -
+          name: oootype
+          in: paths
+          type: string
+          description: 1on1種別
+          required: true
+      responses:
+        200:
+          description: 前回送信先ユーザリスト
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                userId:
+                  type: integer
+                name:
+                  type: string
+              required:
+                - userId
+                - name
+        400:
+          description: JSONスキーマ不正
+        401:
+          description: 認証エラー
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー
