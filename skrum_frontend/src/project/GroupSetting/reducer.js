@@ -16,8 +16,8 @@ export default (state = {
       if (error) {
         return { ...state, isFetchingGroups: false, error: { message: payload.message } };
       }
-      const { count, results: groups } = payload.data;
-      return { ...state, isFetchingGroups: false, count, groups, error: null };
+      const { keyword, pageNo, count, results: groups } = payload.data;
+      return { ...state, isFetchingGroups: false, keyword, pageNo, count, groups, error: null };
     }
 
     case Action.REQUEST_CREATE_GROUP:

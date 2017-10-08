@@ -7,6 +7,9 @@ import { createGroup } from '../action';
 class CreateGroupContainer extends Component {
 
   static propTypes = {
+    keyword: PropTypes.string,
+    pageNo: PropTypes.number,
+    dispatchFetchGroups: PropTypes.func.isRequired,
     isPostingGroup: PropTypes.bool.isRequired,
     roleLevel: PropTypes.number.isRequired,
     dispatchCreateGroup: PropTypes.func.isRequired,
@@ -24,9 +27,10 @@ const mapStateToProps = (state) => {
   return { isPostingGroup, roleLevel };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, { keyword = '', pageNo = 1, dispatchFetchGroups }) => {
   const dispatchCreateGroup = group =>
-    dispatch(createGroup(group));
+    dispatch(createGroup(group)).then(({ error }) =>
+      (error ? { error } : dispatchFetchGroups(keyword, pageNo)));
   return {
     dispatchCreateGroup,
   };

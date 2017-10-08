@@ -34,7 +34,7 @@ export const fetchGroups = (keyword, pageNo) =>
     if (state.userSetting.isFetchingGroups) return Promise.resolve();
     dispatch(requestFetchGroups());
     return getJson('/groups/pagesearch.json', state)({ q: keyword, p: pageNo })
-      .then(json => dispatch(finishFetchGroups('data', json)))
+      .then(json => dispatch(finishFetchGroups('data', { keyword, pageNo, ...json })))
       .catch(({ message }) => dispatch(finishFetchGroups(new Error(message))));
   };
 
