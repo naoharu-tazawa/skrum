@@ -28,13 +28,14 @@ class TimelineService extends BaseService
      * タイムライン取得（ユーザ）
      *
      * @param Auth $auth 認証情報
+     * @param integer $userId ユーザID
      * @param string $before 取得基準投稿ID
      * @return array
      */
-    public function getUserTimeline(Auth $auth, int $before = null): array
+    public function getUserTimeline(Auth $auth, int $userId, int $before = null): array
     {
         $tPostRepos = $this->getTPostRepository();
-        $postInfoArray = $tPostRepos->getMyPosts($auth->getUserId(), $before);
+        $postInfoArray = $tPostRepos->getMyPosts($userId, $before);
 
         // 返却DTO配列を生成
         $disclosureLogic = $this->getDisclosureLogic();
@@ -125,7 +126,7 @@ class TimelineService extends BaseService
             if (count($postDTOArray) < 5) {
                 $before = $postInfoArray[count($postInfoArray) - 1]['post']->getId();
 
-                $postInfoArray = $tPostRepos->getMyPosts($auth->getUserId(), $before);
+                $postInfoArray = $tPostRepos->getMyPosts($userId, $before);
                 if (count($postInfoArray) === 0) {
                     break;
                 }

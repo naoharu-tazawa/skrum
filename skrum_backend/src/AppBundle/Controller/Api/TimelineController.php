@@ -44,7 +44,7 @@ class TimelineController extends BaseController
 
         // タイムライン取得処理
         $timelineService = $this->getTimelineService();
-        $postDTOArray = $timelineService->getUserTimeline($auth, $before);
+        $postDTOArray = $timelineService->getUserTimeline($auth, $userId, $before);
 
         return $postDTOArray;
     }

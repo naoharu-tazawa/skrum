@@ -64,6 +64,7 @@ export default class CreateGroup extends Component {
             </button>)}
           {isPostingGroup && <div className={styles.disable_btn} />}
         </div>
+        <div className={styles.search_notice}>※会社に直接所属させる場合は会社名で検索してください</div>
       </section>
     );
   }
