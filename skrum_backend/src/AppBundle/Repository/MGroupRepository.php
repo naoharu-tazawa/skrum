@@ -94,11 +94,12 @@ class MGroupRepository extends BaseRepository
      * @param integer $userId ユーザID
      * @param string $keyword 検索ワード
      * @param integer $companyId 会社ID
+     * @param string $groupType グループ種別
      * @return array
      */
-    public function searchAdditionalGroup(int $userId, string $keyword, int $companyId): array
+    public function searchAdditionalGroup(int $userId, string $keyword, int $companyId, string $groupType = null): array
     {
-        $sql = <<<SQL
+        $sql1 = <<<SQL
         SELECT m0_.group_id AS groupId, m0_.group_name AS groupName
         FROM m_group m0_
         LEFT OUTER JOIN (
@@ -108,15 +109,27 @@ class MGroupRepository extends BaseRepository
             ) t1_ ON (m0_.group_id = t1_.group_id) AND (t1_.deleted_at IS NULL)
         WHERE (
                 m0_.company_id = :companyId
+SQL;
+        $sql2 = null;
+        if ($groupType !== null) {
+            $sql2 = <<<SQL
+                AND m0_.group_type = :groupType
+SQL;
+        }
+
+        $sql3 = <<<SQL
                 AND m0_.company_flg = :companyFlg
                 AND m0_.archived_flg = :archivedFlg
-                AND t1_.group_id is NULL
+                AND t1_.group_id IS NULL
                 AND m0_.group_name LIKE :groupName
               ) AND (m0_.deleted_at IS NULL);
 SQL;
 
+        $sql = $sql1 . $sql2 . $sql3;
+
         $params['userId'] = $userId;
         $params['companyId'] = $companyId;
+        if ($groupType !== null) $params['groupType'] = $groupType;
         $params['companyFlg'] = DBConstant::FLG_FALSE;
         $params['archivedFlg'] = DBConstant::FLG_FALSE;
         $params['groupName'] = $keyword . '%';
