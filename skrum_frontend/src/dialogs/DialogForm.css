@@ -114,6 +114,10 @@
   display: flex;
   margin-bottom: 1em;
 }
+.form section > section {
+  display: block;
+  width: 100%;
+}
 .form label {
   margin: 8px 1em auto 1em;
   white-space: nowrap;

@@ -52,7 +52,7 @@ export default class CreateGroup extends Component {
           {!isPostingGroup && (
             <button
               className={styles.btn}
-              disabled={!groupName || !groupType}
+              disabled={!groupName || !groupType || !groupPathId}
               onClick={() => dispatchCreateGroup({ groupName, groupType, groupPathId })
                 .then(({ error /* , payload: { message } = {} */ } = {}) => {
                   if (error) { toastr.error('グループ作成に失敗しました'); }
