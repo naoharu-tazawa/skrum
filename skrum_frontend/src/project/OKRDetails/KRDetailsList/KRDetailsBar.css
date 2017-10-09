@@ -53,6 +53,10 @@
 .component .ratio {
   margin: auto 0;
   height: 100%;
+  outline: 0;
+}
+.component .editable.ratio {
+  cursor: pointer;
 }
 .component .progress {
   margin: 10px 0;
