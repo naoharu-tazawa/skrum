@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { find/* , mapValues, values, some */ } from 'lodash';
+import { find, mapValues, values, some } from 'lodash';
 import NavigationContainer from '../../navigation/NavigationContainer';
 import { isPathFinal, explodePath, implodePath } from '../../util/RouteUtil';
 import { logout } from '../action';
@@ -56,7 +56,7 @@ const mapStateToProps = (state) => {
   const { timeframeId } = find(timeframes, { defaultFlg: 1 }) || {};
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
-  const toRelogin = false; // some(values(mapValues(state, 'error')), ['message', 'ログインしてください。']);
+  const toRelogin = some(values(mapValues(state, 'error')), ['message', 'ログインしてください。']);
   return { toRelogin, pathname, isAuthorized, currentUserId, timeframeId };
 };
 
