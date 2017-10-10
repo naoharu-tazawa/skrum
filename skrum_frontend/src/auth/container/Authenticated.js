@@ -12,7 +12,7 @@ class Authenticated extends Component {
     top: PropTypes.string.isRequired,
     login: PropTypes.string.isRequired,
     toRelogin: PropTypes.bool.isRequired,
-    pathname: PropTypes.string.isRequired,
+    pathname: PropTypes.string,
     isAuthorized: PropTypes.bool,
     currentUserId: PropTypes.number,
     timeframeId: PropTypes.number,
