@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { groupsPropTypes } from './propTypes';
-import { fetchGroups, deleteGroup } from '../action';
+import { deleteGroup } from '../action';
 import GroupList from './GroupList';
 
 class GroupListContainer extends Component {
 
   static propTypes = {
+    keyword: PropTypes.string,
+    pageNo: PropTypes.number,
     isFetchingGroups: PropTypes.bool.isRequired,
     count: PropTypes.number.isRequired,
     groups: groupsPropTypes.isRequired,
@@ -17,11 +19,11 @@ class GroupListContainer extends Component {
   };
 
   render() {
-    const { isFetchingGroups, count, groups, currentRoleLevel,
+    const { keyword, pageNo, isFetchingGroups, count, groups, currentRoleLevel,
       dispatchFetchGroups, dispatchDeleteGroup } = this.props;
     return (
       <GroupList
-        {...{ isFetchingGroups, count, groups, currentRoleLevel }}
+        {...{ keyword, pageNo, isFetchingGroups, count, groups, currentRoleLevel }}
         {...{ dispatchFetchGroups, dispatchDeleteGroup }}
       />);
   }
@@ -29,22 +31,19 @@ class GroupListContainer extends Component {
 
 const mapStateToProps = (state) => {
   const { roleLevel: currentRoleLevel } = state.auth || {};
-  const { isFetchingGroups, count, groups: items = [] } = state.groupSetting || {};
+  const { keyword, pageNo, isFetchingGroups, count, groups: items = [] } = state.groupSetting || {};
   const groups = items.map(({ groupId, groupName, groupType }) => ({
     id: groupId,
     name: groupName,
     type: groupType,
   }));
-  return { isFetchingGroups, count, groups, currentRoleLevel };
+  return { keyword, pageNo, isFetchingGroups, count, groups, currentRoleLevel };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const dispatchFetchGroups = (keyword, pageNo) =>
-    dispatch(fetchGroups(keyword, pageNo));
   const dispatchDeleteGroup = id =>
     dispatch(deleteGroup(id));
   return {
-    dispatchFetchGroups,
     dispatchDeleteGroup,
   };
 };

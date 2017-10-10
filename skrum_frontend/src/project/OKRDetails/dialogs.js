@@ -13,7 +13,7 @@ import styles from './dialogs.css';
 
 export const setRatiosDialog =
   // eslint-disable-next-line react/prop-types
-  ({ id, name, owner, keyResults, dispatch, onClose }) => (
+  ({ id, name, owner, keyResults, selected, dispatch, onClose }) => (
     <DialogForm
       title="サブ目標の目標への影響度合い設定"
       submitButton="設定"
@@ -31,6 +31,7 @@ export const setRatiosDialog =
         );
       }}
       onClose={onClose}
+      lastTabIndex={selected && 100}
     >
       {({ setFieldData, data }) => {
         const { lockedRatiosSum, /* unlockedCount, */ratios } =
@@ -39,7 +40,7 @@ export const setRatiosDialog =
         return (
           <div>
             <EntitySubject entity={owner} heading="対象目標" subject={name} />
-            {keyResults.map((kr) => {
+            {keyResults.map((kr, index) => {
               const {
                 weightedAverageRatio: ratio = kr.weightedAverageRatio,
                 ratioLockedFlg: locked = kr.ratioLockedFlg,
@@ -68,10 +69,14 @@ export const setRatiosDialog =
                           setFieldData({
                             [kr.id]: Math.min(Math.max(toNumber(e.target.value), 0), maxRatio),
                           })}
+                        tabIndex={selected && (index >= selected ?
+                          (index * 2) + 1 : (index * 2) + 201)}
                       />
                       <span>%</span>
                       <button
                         type="button"
+                        tabIndex={selected && (index >= selected ?
+                          (index * 2) + 2 : (index * 2) + 202)}
                         onClick={() =>
                           setFieldData({ [kr.id]: locked ? null : ratio })}
                       >

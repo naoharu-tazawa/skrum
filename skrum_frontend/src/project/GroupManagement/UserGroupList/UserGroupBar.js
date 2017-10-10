@@ -7,6 +7,8 @@ import ProgressPercentage from '../../../components/ProgressPercentage';
 import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { withModal } from '../../../util/ModalUtil';
+import { isBasicRole } from '../../../util/UserUtil';
+import { GroupType } from '../../../util/GroupUtil';
 import styles from './UserGroupBar.css';
 
 class UserGroupBar extends Component {
@@ -42,8 +44,9 @@ class UserGroupBar extends Component {
           <div className={styles.delete} />
         </div>);
     }
-    const { id, name, achievementRate } = group;
+    const { id, name, type, achievementRate } = group;
     const entity = { id: userId, type: EntityType.USER, roleLevel };
+    const isBasic = isBasicRole(roleLevel);
     return (
       <div className={styles.row}>
         <div className={styles.name}>
@@ -53,14 +56,15 @@ class UserGroupBar extends Component {
           className={styles.progress}
           achievementRate={achievementRate}
         />
-        <Permissible entity={entity}>
-          <button
-            className={styles.delete}
-            onClick={() => openModal(this.leaveGroupPrompt, { userId, userName, id, name })}
-          >
-            <img src="/img/delete.png" alt="" />
-          </button>
-        </Permissible>
+        {(!isBasic || type === GroupType.TEAM) && (
+          <Permissible entity={entity}>
+            <button
+              className={styles.delete}
+              onClick={() => openModal(this.leaveGroupPrompt, { userId, userName, id, name })}
+            >
+              <img src="/img/delete.png" alt="" />
+            </button>
+          </Permissible>)}
       </div>);
   }
 }

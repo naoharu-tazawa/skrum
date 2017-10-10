@@ -137,32 +137,31 @@ class OkrDetails extends Component {
                   <img src="/img/common/inc_organization.png" alt="Map" />
                 </Link>
                 <Permissible entity={owner}>
-                  {({ permitted }) => (
-                    <DropdownMenu
-                      options={[
-                        ...permitted && [{ caption: '担当者変更',
-                          onClick: () => openModal(changeOkrOwnerDialog,
-                            { id, name, owner, parentOkrOwner: (parentOkr || {}).owner,
-                              dispatch: dispatchChangeOkrOwner, onSuccess: pushToBasic }) }],
-                        ...permitted && [{ caption: '紐付け先設定',
-                          onClick: () => openModal(changeOkrParentDialog,
-                            { id, parentOkr, okr, dispatch: dispatchChangeParentOkr }) }],
-                        ...permitted && [{ caption: '公開範囲設定',
-                          onClick: () => openModal(changeOkrDisclosureTypeDialog,
-                            { id, name, owner, disclosureType,
-                              dispatch: dispatchChangeDisclosureType }) }],
-                        ...permitted && keyResults.length > 0 && [{ caption: '影響度設定',
-                          onClick: () => openModal(setRatiosDialog,
-                            { id, name, owner, keyResults, dispatch: dispatchSetRatios }) }],
-                        { caption: 'コピー',
-                          onClick: () => openModal(copyOkrDialog,
-                            { id, name, owner, dispatch: dispatchCopyOkr }) },
-                        ...permitted && [{ caption: '削除',
-                          onClick: () => openModal(deleteOkrPrompt,
-                            { id, name, owner, dispatch: dispatchDeleteOkr,
-                              onSuccess: replaceAsBasic }) }],
-                      ]}
-                    />)}
+                  <DropdownMenu
+                    options={[
+                      { caption: '担当者変更',
+                        onClick: () => openModal(changeOkrOwnerDialog,
+                          { id, name, owner, parentOkrOwner: (parentOkr || {}).owner,
+                            dispatch: dispatchChangeOkrOwner, onSuccess: pushToBasic }) },
+                      { caption: '紐付け先設定',
+                        onClick: () => openModal(changeOkrParentDialog,
+                          { id, parentOkr, okr, dispatch: dispatchChangeParentOkr }) },
+                      { caption: '公開範囲設定',
+                        onClick: () => openModal(changeOkrDisclosureTypeDialog,
+                          { id, name, owner, disclosureType,
+                            dispatch: dispatchChangeDisclosureType }) },
+                      ...keyResults.length > 0 && [{ caption: '影響度設定',
+                        onClick: () => openModal(setRatiosDialog,
+                          { id, name, owner, keyResults, dispatch: dispatchSetRatios }) }],
+                      { caption: 'コピー',
+                        onClick: () => openModal(copyOkrDialog,
+                          { id, name, owner, dispatch: dispatchCopyOkr }) },
+                      { caption: '削除',
+                        onClick: () => openModal(deleteOkrPrompt,
+                          { id, name, owner, dispatch: dispatchDeleteOkr,
+                            onSuccess: replaceAsBasic }) },
+                    ]}
+                  />
                 </Permissible>
               </div>
             </div>

@@ -99,6 +99,7 @@ class OKRDetailsContainer extends Component {
             onAdd={() => openModal(NewOKR, { type: 'KR', parentOkr: okr })}
             {...{
               subject,
+              dispatchSetRatios,
               dispatchPutOKR,
               dispatchChangeKROwner,
               dispatchChangeParentOkr,

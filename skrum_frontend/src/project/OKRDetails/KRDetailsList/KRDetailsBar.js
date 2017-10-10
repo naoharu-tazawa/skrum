@@ -25,6 +25,7 @@ class KRDetailsBar extends Component {
     parentOkr: okrPropTypes,
     keyResult: keyResultPropTypes,
     subject: PropTypes.string,
+    onRatioClick: PropTypes.func,
     dispatchPutOKR: PropTypes.func,
     dispatchChangeKROwner: PropTypes.func,
     dispatchChangeParentOkr: PropTypes.func,
@@ -34,8 +35,9 @@ class KRDetailsBar extends Component {
   };
 
   render() {
-    const { header, parentOkr, keyResult, subject, dispatchPutOKR, dispatchChangeKROwner,
-      dispatchChangeDisclosureType, dispatchDeleteKR, openModal } = this.props;
+    const { header, parentOkr, keyResult, subject, onRatioClick, dispatchPutOKR,
+      dispatchChangeKROwner, dispatchChangeDisclosureType, dispatchDeleteKR,
+      openModal } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -75,7 +77,11 @@ class KRDetailsBar extends Component {
             </Permissible>
           </div>
         </div>
-        <div className={styles.ratio}>
+        <a
+          className={`${styles.ratio} ${onRatioClick && styles.editable}`}
+          onClick={onRatioClick}
+          tabIndex={0}
+        >
           <RadialChart
             width={32}
             height={32}
@@ -87,7 +93,7 @@ class KRDetailsBar extends Component {
               { color: '#d8dfe5', angle: 100 - weightedAverageRatio },
             ]}
           />
-        </div>
+        </a>
         <ProgressPercentage
           className={styles.progress}
           {...{ unit, targetValue, achievedValue, achievementRate }}

@@ -163,9 +163,15 @@ class SearchService extends BaseService
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
 
+        // 一般ユーザはチームのみ検索可
+        $groupType = null;
+        if ($auth->getRoleLevel() < DBConstant::ROLE_LEVEL_ADMIN) {
+            $groupType = DBConstant::GROUP_TYPE_TEAM;
+        }
+
         // 参加グループ検索
         $mGroupRepos = $this->getMGroupRepository();
-        $groupInfoArray = $mGroupRepos->searchAdditionalGroup($userId, $escapedKeyword, $auth->getCompanyId());
+        $groupInfoArray = $mGroupRepos->searchAdditionalGroup($userId, $escapedKeyword, $auth->getCompanyId(), $groupType);
 
         // DTOに詰め替える
         $groupSearchDTOArray = array();

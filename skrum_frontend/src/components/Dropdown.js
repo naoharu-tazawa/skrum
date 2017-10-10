@@ -29,6 +29,7 @@ export default class extends PureComponent {
         style={{ position: 'relative' }}
         onShow={() => this.setState({ activeContent:
           activeContent || content({ onClose: this.hide.bind(this) }) })}
+        onHide={() => this.setState({ activeContent: undefined })}
       >
         <DropdownTrigger>
           {trigger || (

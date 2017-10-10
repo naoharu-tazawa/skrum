@@ -53,6 +53,10 @@
 .component .ratio {
   margin: auto 0;
   height: 100%;
+  outline: 0;
+}
+.component .editable.ratio {
+  cursor: pointer;
 }
 .component .progress {
   margin: 10px 0;
@@ -85,7 +89,7 @@ button.tool:focus {
   outline: 0;
 }
 .toolSpace {
-  width: 55px;
+  min-width: 55px;
 }
 .circle_small {
   width: 27px;

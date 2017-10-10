@@ -9,6 +9,8 @@ import styles from './GroupList.css';
 export default class GroupList extends PureComponent {
 
   static propTypes = {
+    keyword: PropTypes.string,
+    pageNo: PropTypes.number,
     isFetchingGroups: PropTypes.bool.isRequired,
     count: PropTypes.number.isRequired,
     groups: groupsPropTypes.isRequired,
@@ -19,18 +21,17 @@ export default class GroupList extends PureComponent {
 
   componentDidMount() {
     this.props.dispatchFetchGroups('', 1);
-    this.handleTextChange = debounce(text =>
-      this.setState({ text, page: 1 }, () => this.props.dispatchFetchGroups(text, 1)), 1000);
+    this.handleTextChange = debounce(keyword => this.props.dispatchFetchGroups(keyword, 1), 1000);
   }
 
   handlePageClick = ({ selected }) => {
-    const { text = '' } = this.state || {};
-    this.setState({ page: selected + 1 }, () =>
-      this.props.dispatchFetchGroups(text, selected + 1));
+    const { keyword = '' } = this.props;
+    this.props.dispatchFetchGroups(keyword, selected + 1);
   };
 
   render() {
-    const { isFetchingGroups, count, groups, currentRoleLevel, dispatchDeleteGroup } = this.props;
+    const { pageNo = 1, isFetchingGroups, count, groups, currentRoleLevel,
+      dispatchDeleteGroup } = this.props;
     return (
       <section className={styles.group_list}>
         <div className={styles.title}>グループ検索</div>
@@ -55,6 +56,7 @@ export default class GroupList extends PureComponent {
               nextLabel="次のページ ＞"
               breakLabel={<a href="">...</a>}
               breakClassName="break-me"
+              forcePage={pageNo - 1}
               pageCount={Math.ceil(count / 20)}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}

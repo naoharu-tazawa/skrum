@@ -188,17 +188,21 @@ class NewOKR extends Component {
             <label>期限日*</label>
             {withReduxField(DatePickerInput, 'endDate', { tabIndex: 16 })}
           </section>
-          {!parentOkr && timeframeId && <section>
-            <label>紐付け先検索</label>
-            {withItemisedReduxField(
-              OKRSearch,
-              'alignment',
-              { tabIndex: 17,
-                owner: owner || defaultOwner,
-                timeframeId,
-                disabled: isEmpty(owner) && !ownerName },
-            )}
-          </section>}
+          {!parentOkr && timeframeId && (
+            <section>
+              <label>紐付け先検索</label>
+              <section>
+                {withItemisedReduxField(
+                  OKRSearch,
+                  'alignment',
+                  { tabIndex: 17,
+                    owner: owner || defaultOwner,
+                    timeframeId,
+                    disabled: isEmpty(owner) && !ownerName },
+                )}
+                <small>※会社/部署/チーム/個人名または目標名で検索してください</small>
+              </section>
+            </section>)}
         </div>
       </Form>);
     return okrForm(type === 'Okr' ? OkrDialogForm : KRDialogForm);

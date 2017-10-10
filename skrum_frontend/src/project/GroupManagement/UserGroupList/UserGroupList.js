@@ -17,7 +17,7 @@ class UserGroupList extends Component {
     userId: PropTypes.number.isRequired,
     userName: PropTypes.string.isRequired,
     roleLevel: PropTypes.number.isRequired,
-    items: userGroupsPropTypes.isRequired,
+    groups: userGroupsPropTypes.isRequired,
     dispatchJoinGroup: PropTypes.func.isRequired,
     dispatchLeaveGroup: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
@@ -46,14 +46,14 @@ class UserGroupList extends Component {
     </DialogForm>);
 
   render() {
-    const { userId, userName, roleLevel, items, dispatchLeaveGroup, openModal } = this.props;
+    const { userId, userName, roleLevel, groups, dispatchLeaveGroup, openModal } = this.props;
     const entity = { id: userId, type: EntityType.USER, roleLevel };
     return (
       <section className={styles.group_list}>
         <h1 className={styles.ttl_setion}>所属グループ一覧</h1>
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <UserGroupBar header />
-          {items.map(group =>
+          {groups.map(group =>
             <UserGroupBar
               key={group.id}
               {...{ userId, userName, roleLevel, group, dispatchLeaveGroup }}
