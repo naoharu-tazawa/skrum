@@ -38,6 +38,13 @@ class TEmailSettings
     /**
      * @var string
      *
+     * @ORM\Column(name="one_on_one", type="string", length=2, nullable=false)
+     */
+    private $oneOnOne = '1';
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="okr_deadline_reminder", type="string", length=2, nullable=false)
      */
     private $okrDeadlineReminder = '1';
@@ -181,6 +188,30 @@ class TEmailSettings
     public function getOkrTimeline()
     {
         return $this->okrTimeline;
+    }
+
+    /**
+     * Set oneOnOne
+     *
+     * @param string $oneOnOne
+     *
+     * @return TEmailSettings
+     */
+    public function setOneOnOne($oneOnOne)
+    {
+        $this->oneOnOne = $oneOnOne;
+
+        return $this;
+    }
+
+    /**
+     * Get oneOnOne
+     *
+     * @return string
+     */
+    public function getOneOnOne()
+    {
+        return $this->oneOnOne;
     }
 
     /**

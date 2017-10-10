@@ -315,9 +315,14 @@ class DBConstant
     const EMAIL_OKR_ACHIEVEMENT = '1';
 
     /**
-     * メール通知設定オン（投稿通知メール）
+     * メール通知設定オン（タイムライン投稿通知メール）
      */
     const EMAIL_OKR_TIMELINE = '1';
+
+    /**
+     * メール通知設定オン（1on1投稿通知メール）
+     */
+    const EMAIL_ONE_ON_ONE = '1';
 
     /**
      * メール通知設定オン（目標期限日リマインドメール）

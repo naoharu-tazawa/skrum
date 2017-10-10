@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * TOneOnOne
  *
- * @ORM\Table(name="t_one_on_one", indexes={@ORM\Index(name="fk_one_on_one_parent_id_idx", columns={"parent_id"})})
+ * @ORM\Table(name="t_one_on_one", indexes={@ORM\Index(name="idx_one_on_one_01", columns={"parent_id"}), @ORM\Index(name="idx_one_on_one_02", columns={"sender_user_id"}), @ORM\Index(name="idx_one_on_one_03", columns={"new_arrival_datetime"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TOneOnOneRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */

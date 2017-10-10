@@ -78,4 +78,29 @@ class Constant
      * 入れ子区間モデルのルートノードの右値
      */
     const ROOT_NODE_RIGHT_VALUE = 1;
+
+    /**
+     * 1on1種別（日報）
+     */
+    const ONE_ON_ONE_TYPE_DAILY_REPORT = '日報';
+
+    /**
+     * 1on1種別ラベル（進捗報告）
+     */
+    const ONE_ON_ONE_TYPE_LABEL_PROGRESS_REPORT = '進捗報告';
+
+    /**
+     * 1on1種別（フィードバック）
+     */
+    const ONE_ON_ONE_TYPE_LABEL_FEEDBACK = 'フィードバック';
+
+    /**
+     * 1on1種別（ヒアリング）
+     */
+    const ONE_ON_ONE_TYPE_LABEL_HEARING = 'ヒアリング';
+
+    /**
+     * 1on1種別（面談メモ）
+     */
+    const ONE_ON_ONE_TYPE_LABEL_INTERVIEW_NOTE = '面談メモ';
 }

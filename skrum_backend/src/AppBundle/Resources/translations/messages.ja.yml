@@ -10,6 +10,8 @@ parameters:
 
     post_notice: '【Skrum】タイムライン投稿通知メール'
 
+    one_on_one_notice: '【Skrum】1on1投稿通知メール'
+
     okr_deadline_reminder: '【Skrum】目標期限日リマインドメール'
 
     achievement_registration_reminder: '【Skrum】進捗登録リマインドメール'

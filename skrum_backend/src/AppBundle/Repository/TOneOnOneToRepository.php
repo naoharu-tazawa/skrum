@@ -20,7 +20,7 @@ class TOneOnOneToRepository extends BaseRepository
     public function getAllToUsers(int $oneOnOneId): array
     {
         $qb = $this->createQueryBuilder('tooot');
-        $qb->select('mu')
+        $qb->select('tooot AS tOneOnOneTo', 'mu AS mUser')
             ->innerJoin('AppBundle:MUser', 'mu', 'WITH', 'tooot.userId = mu.userId')
             ->where('tooot.oneOnOne = :oneOnOneId')
             ->setParameter('oneOnOneId', $oneOnOneId);

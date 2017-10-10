@@ -110,6 +110,13 @@ class OneOnOneDTO
     private $text;
 
     /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $readFlg;
+
+    /**
      * Set oneOnOneId
      *
      * @param integer $oneOnOneId
@@ -443,5 +450,29 @@ class OneOnOneDTO
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * Get readFlg
+     *
+     * @return integer
+     */
+    public function getReadFlg()
+    {
+        return $this->readFlg;
+    }
+
+    /**
+     * Set readFlg
+     *
+     * @param string $readFlg
+     *
+     * @return OneOnOneDTO
+     */
+    public function setReadFlg($readFlg)
+    {
+        $this->readFlg = $readFlg;
+
+        return $this;
     }
 }

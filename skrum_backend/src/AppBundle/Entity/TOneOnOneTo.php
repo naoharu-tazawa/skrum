@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * TOneOnOneTo
  *
- * @ORM\Table(name="t_one_on_one_to", indexes={@ORM\Index(name="fk_one_on_one_to_one_on_one_id_idx", columns={"one_on_one_id"})})
+ * @ORM\Table(name="t_one_on_one_to", indexes={@ORM\Index(name="idx_one_on_one_to_01", columns={"one_on_one_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TOneOnOneToRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
@@ -20,6 +20,13 @@ class TOneOnOneTo
      * @ORM\Column(name="user_id", type="integer", nullable=false)
      */
     private $userId;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="read_flg", type="boolean", nullable=false)
+     */
+    private $readFlg = '0';
 
     /**
      * @var \DateTime
@@ -87,6 +94,30 @@ class TOneOnOneTo
     public function getUserId()
     {
         return $this->userId;
+    }
+
+    /**
+     * Set readFlg
+     *
+     * @param boolean $readFlg
+     *
+     * @return TOneOnOneTo
+     */
+    public function setReadFlg($readFlg)
+    {
+        $this->readFlg = $readFlg;
+
+        return $this;
+    }
+
+    /**
+     * Get readFlg
+     *
+     * @return boolean
+     */
+    public function getReadFlg()
+    {
+        return $this->readFlg;
     }
 
     /**

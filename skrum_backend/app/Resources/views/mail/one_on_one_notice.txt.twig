@@ -1,9 +1,10 @@
 {{ data.userName }}さん、こんにちは。
 
 
-{{ data.posterUserName }}さんが {{ data.groupName }} のタイムラインに投稿しました。
+{{ data.senderUserName }}さんから以下の【{{ data.oneOnOneTypeLabel }}】を受け取りました。
 
-ログインして確認してみましょう。
+  {{ data.content }}
+
 https://{{ subdomain }}.skrum.jp/login
 
 
@@ -13,6 +14,6 @@ https://{{ subdomain }}.skrum.jp/login
  1. 下記URLからログインをしてください。
  2. ヘッダーの一番右のユーザ画像ボタンを押して、「設定」ボタンを押してください。
  3. サイドバーの「メール配信」タブを押してください。
- 4. 「タイムライン投稿通知メール」を「受信しない」に設定し、「保存する」ボタンを押してください。
+ 4. 「1on1投稿通知メール」を「受信しない」に設定し、「保存する」ボタンを押してください。
  5. 以上で設定完了です。
  https://{{ subdomain }}.skrum.jp/login

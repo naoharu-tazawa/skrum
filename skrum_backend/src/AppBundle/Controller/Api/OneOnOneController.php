@@ -286,7 +286,7 @@ class OneOnOneController extends BaseController
 
         // 1on1ダイアログ取得処理
         $oneOnOneService = $this->getOneOnOneService();
-        $oneOnOneDialogDTO = $oneOnOneService->getOneOnOneDialog($oneOnOneId);
+        $oneOnOneDialogDTO = $oneOnOneService->getOneOnOneDialog($auth, $oneOnOneId);
 
         return $oneOnOneDialogDTO;
     }

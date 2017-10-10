@@ -64,6 +64,8 @@ paths:
                 type: string
               partOfText:
                 type: string
+              readFlg:
+                type: integer
             required:
               - oneOnOneId
               - oneOnOneType
@@ -72,6 +74,7 @@ paths:
               - imamgeVersion
               - lastUpdate
               - partOfText
+              - readFlg
         400:
           description: JSONスキーマ不正
         401:
