@@ -8,6 +8,7 @@ import EntitySubject from '../../../components/EntitySubject';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
 import { withModal } from '../../../util/ModalUtil';
 import { isBasicRole } from '../../../util/UserUtil';
+import { GroupType } from '../../../util/GroupUtil';
 import styles from './UserGroupBar.css';
 
 class UserGroupBar extends Component {
@@ -43,7 +44,7 @@ class UserGroupBar extends Component {
           <div className={styles.delete} />
         </div>);
     }
-    const { id, name, achievementRate } = group;
+    const { id, name, type, achievementRate } = group;
     const entity = { id: userId, type: EntityType.USER, roleLevel };
     const isBasic = isBasicRole(roleLevel);
     return (
@@ -55,7 +56,7 @@ class UserGroupBar extends Component {
           className={styles.progress}
           achievementRate={achievementRate}
         />
-        {!isBasic && (
+        {(!isBasic || type === GroupType.TEAM) && (
           <Permissible entity={entity}>
             <button
               className={styles.delete}
