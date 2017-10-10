@@ -271,11 +271,38 @@ class PostLogic extends BaseLogic
                 // 自動投稿内容の主語を取得
                 $subject = $mGroup[0]->getGroupName();
             } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
-                // 操作対象OKRのオーナーがユーザの場合、ユーザ所属グループ（共有設定しているグループのみ）を投稿先グループに入れる
+                // 操作対象OKRのオーナーがユーザの場合
+                // 親OKRまたは祖父母OKRのオーナーがグループの場合、そのグループを投稿先グループに入れる（posterGroupIdとする）
+                if ($tOkr->getParentOkr() !== null) {
+                    $parentAndGrandParentOkr = $tOkrRepos->getParentOkr($tOkr->getParentOkr()->getOkrId(), $tOkr->getTimeframe()->getTimeframeId(), $auth->getCompanyId());
+                    if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
+                        if (!empty($parentAndGrandParentOkr[0]['childOkr'])) {
+                            if ($parentAndGrandParentOkr[0]['childOkr']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                                $groupIdArray[] = $parentAndGrandParentOkr[0]['childOkr']->getOwnerGroup()->getGroupId();
+                            }
+                        }
+                    } else {
+                        if (!empty($parentAndGrandParentOkr[1]['parentOkr'])) {
+                            if ($parentAndGrandParentOkr[1]['parentOkr']->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
+                                $groupIdArray[] = $parentAndGrandParentOkr[1]['parentOkr']->getOwnerGroup()->getGroupId();
+                            }
+                        }
+                    }
+                }
+
+                // ユーザ所属グループ（共有設定しているグループのみ）を投稿先グループに入れる
                 $tGroupMemberRepos = $this->getTGroupMemberRepository();
-                $tGroupMemberArray = $tGroupMemberRepos->findBy(array('user' => $tOkr->getOwnerUser()->getUserId(), 'postShareFlg' => DBConstant::FLG_TRUE));
+                $tGroupMemberArray = $tGroupMemberRepos->findBy(array('user' => $tOkr->getOwnerUser()->getUserId(), 'postShareFlg' => DBConstant::FLG_TRUE), array('group' => 'DESC'));
+
                 foreach ($tGroupMemberArray as $tGroupMember) {
-                    $groupIdArray[] = $tGroupMember->getGroup()->getGroupId();
+                    if ($tOkr->getParentOkr() !== null) {
+                        if ($groupIdArray[0] !== $tGroupMember->getGroup()->getGroupId()) {
+                            $groupIdArray[] = $tGroupMember->getGroup()->getGroupId();
+                        }
+                    } else {
+                        $groupIdArray[] = $tGroupMember->getGroup()->getGroupId();
+                    }
+
                 }
 
                 // 自動投稿内容の主語を取得
