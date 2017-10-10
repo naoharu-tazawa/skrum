@@ -22,18 +22,19 @@ export default (state = {
           error: { message: payload.message },
         };
       }
-      const { jwt } = payload.data;
-      const splitedJwt = jwt.split('.');
-      const jwtPayload = JSON.parse(window.atob(splitedJwt[1]));
+      const { jwt: token } = payload.data;
+      const splitJwt = token.split('.');
+      const jwt = JSON.parse(window.atob(splitJwt[1]));
+      const { uid: userId, cid: companyId, rid: roleId, rlv: roleLevel, permissions } = jwt;
       return {
         ...state,
         isAuthorized: true,
-        token: jwt,
-        userId: jwtPayload.uid,
-        companyId: jwtPayload.cid,
-        roleId: jwtPayload.rid,
-        roleLevel: jwtPayload.rlv,
-        permissions: jwtPayload.permissions,
+        token,
+        userId,
+        companyId,
+        roleId,
+        roleLevel,
+        permissions,
         error: null,
       };
     }

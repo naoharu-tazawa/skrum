@@ -34,8 +34,7 @@ class NavigationContainer extends Component {
   render() {
     const { top, pathname, currentUserId, roleLevel, isFetching,
       companyName, userName } = this.props;
-    if (isFetching) return null;
-    return (
+    return isFetching ? null : (
       <div className={styles.layoutBase}>
         {!companyName && <CompanySetupContainer />}
         {companyName && !userName && <UserSetupContainer />}

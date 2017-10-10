@@ -1,5 +1,5 @@
-import persistentState from 'redux-localstorage';
+import persistState from 'redux-localstorage';
 
-export default persistentState(['auth'], {
+export default persistState(['auth'], {
   key: 'SKRM',
 });
