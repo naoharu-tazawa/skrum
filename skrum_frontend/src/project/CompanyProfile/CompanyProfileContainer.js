@@ -5,6 +5,7 @@ import InlineEntityImagePicker from '../../components/InlineEntityImagePicker';
 import InlineTextInput from '../../editors/InlineTextInput';
 import InlineTextArea from '../../editors/InlineTextArea';
 import { fetchCompany, putCompany, postCompanyImage } from './action';
+import { touchUserTop } from '../../navigation/action';
 import { EntityType } from '../../util/EntityUtil';
 import { errorType } from '../../util/PropUtil';
 import styles from './CompanyProfileContainer.css';
@@ -106,7 +107,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchCompany = companyId => dispatch(fetchCompany(companyId));
   const dispatchPutCompany = (companyId, data) =>
-    dispatch(putCompany(companyId, data));
+    dispatch(putCompany(companyId, data))
+      .then(({ error }) => !error && dispatch(touchUserTop()));
   const dispatchPostCompanyImage = (companyId, image, mimeType) =>
     dispatch(postCompanyImage(companyId, image, mimeType));
   return { dispatchFetchCompany, dispatchPutCompany, dispatchPostCompanyImage };

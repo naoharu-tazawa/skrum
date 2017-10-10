@@ -208,6 +208,10 @@ export const syncNewKR = (subject, { payload, error }) =>
   dispatch => (error ? ({ payload, error }) :
     dispatch(finishPostOkr('data', { subject, ...payload.data })));
 
+export const syncDeletedKR = (subject, { payload, error }) =>
+  dispatch => (error ? ({ payload, error }) :
+    dispatch(finishBasicsDeleteKr('data', { subject, ...payload.data })));
+
 export const syncAchievement = (subject, { payload, error }) =>
   dispatch => (error ? ({ payload, error }) :
     dispatch(finishBasicsPostAchievement('data', { subject, ...payload.data })));

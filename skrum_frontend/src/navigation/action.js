@@ -5,6 +5,7 @@ import { getJson, postJson } from '../util/ApiUtil';
 export const Action = {
   REQUEST_FETCH_USER_TOP: 'REQUEST_FETCH_USER_TOP',
   FINISH_FETCH_USER_TOP: 'FINISH_FETCH_USER_TOP',
+  REQUIRE_FETCH_USER_TOP: 'REQUIRE_FETCH_USER_TOP',
   REQUEST_SETUP_COMPANY: 'REQUEST_SETUP_COMPANY',
   FINISH_SETUP_COMPANY: 'FINISH_SETUP_COMPANY',
   REQUEST_SETUP_USER: 'REQUEST_SETUP_USER',
@@ -16,6 +17,7 @@ export const Action = {
 const {
   requestFetchUserTop,
   finishFetchUserTop,
+  requireFetchUserTop,
   requestSetupCompany,
   finishSetupCompany,
   requestSetupUser,
@@ -30,6 +32,7 @@ const {
   [Action.REMOVE_GROUP]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_USER_TOP,
+  Action.REQUIRE_FETCH_USER_TOP,
   Action.REQUEST_SETUP_COMPANY,
   Action.REQUEST_SETUP_USER,
 );
@@ -43,6 +46,9 @@ export const fetchUserTop = userId =>
       .then(json => dispatch(finishFetchUserTop('data', json)))
       .catch(({ message }) => dispatch(finishFetchUserTop(new Error(message))));
   };
+
+export const touchUserTop = () =>
+  dispatch => dispatch(requireFetchUserTop());
 
 export const setupCompany = (companyId, setup) =>
   (dispatch, getState) => {

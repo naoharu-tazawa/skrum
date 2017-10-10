@@ -2,13 +2,14 @@ import { Action } from './action';
 import { GroupType } from '../util/GroupUtil';
 
 export default (state = {
+  needsFetching: true,
   isFetching: false,
   isPosting: false,
   data: {},
 }, action) => {
   switch (action.type) {
     case Action.REQUEST_FETCH_USER_TOP:
-      return { ...state, isFetching: true };
+      return { ...state, needsFetching: false, isFetching: true };
 
     case Action.FINISH_FETCH_USER_TOP: {
       const { payload, error } = action;
@@ -17,6 +18,9 @@ export default (state = {
       }
       return { ...state, isFetching: false, data: payload.data, error: null };
     }
+
+    case Action.REQUIRE_FETCH_USER_TOP:
+      return { ...state, needsFetching: true };
 
     case Action.REQUEST_SETUP_COMPANY:
     case Action.REQUEST_SETUP_USER:
