@@ -524,6 +524,9 @@ class OkrService extends BaseService
         if (array_key_exists('endDate', $data) && !empty($data['endDate'])) {
             $tOkr->setEndDate(DateUtility::transIntoDatetime($data['endDate']));
         }
+        if (array_key_exists('unit', $data) && !empty($data['unit'])) {
+            $tOkr->setUnit($data['unit']);
+        }
 
         try {
             $this->flush();
