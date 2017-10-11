@@ -72,7 +72,8 @@ export default (state = {
       if (error) {
         return { ...state, isChangingParentOkr: false, error: { message: payload.message } };
       }
-      return { ...state, ...payload.data, isChangingParentOkr: false, error: null };
+      const update = { parentOkr: null, ...payload.data };
+      return { ...state, ...update, isChangingParentOkr: false, error: null };
     }
 
     case Action.REQUEST_DELETE_KR:

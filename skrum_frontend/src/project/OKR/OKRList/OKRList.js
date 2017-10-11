@@ -36,47 +36,42 @@ export default class OKRList extends Component {
     const { expandedKeyResults = {} } = this.state || {};
     return (
       <div className={styles.component}>
-        <div className={styles.header}>
-          <OkrBar header />
-        </div>
-        <div className={styles.bars}>
-          {flatten(okrs.map((okr) => {
-            const { id, keyResults } = okr;
-            const display = expandedKeyResults[id] ? 'expanded' : 'collapsed';
-            return [
-              (<div key={`okr-${id}`}>
-                <OkrBar
-                  {...{
-                    subject,
-                    okr,
-                    onAddParentedOkr,
-                    dispatchChangeOkrOwner,
-                    dispatchChangeParentOkr,
-                    dispatchChangeDisclosureType,
-                    dispatchSetRatios,
-                    dispatchCopyOkr,
-                    dispatchDeleteOkr,
-                  }}
-                  onKRClicked={() => keyResults.length && this.toggleKeyResults(id)}
-                />
-              </div>),
-              ...keyResults.map(keyResult =>
-                <KRBar
-                  key={`kr-${keyResult.id}`}
-                  {...{
-                    display,
-                    subject,
-                    okr,
-                    keyResult,
-                    onAddParentedOkr,
-                    dispatchChangeKROwner,
-                    dispatchChangeDisclosureType,
-                    dispatchDeleteKR,
-                  }}
-                />),
-            ];
-          }))}
-        </div>
+        <OkrBar header />
+        {flatten(okrs.map((okr) => {
+          const { id, keyResults } = okr;
+          const display = expandedKeyResults[id] ? 'expanded' : 'collapsed';
+          return [
+            <OkrBar
+              key={`okr${id}`}
+              {...{
+                subject,
+                okr,
+                onAddParentedOkr,
+                dispatchChangeOkrOwner,
+                dispatchChangeParentOkr,
+                dispatchChangeDisclosureType,
+                dispatchSetRatios,
+                dispatchCopyOkr,
+                dispatchDeleteOkr,
+              }}
+              onKRClicked={() => keyResults.length && this.toggleKeyResults(id)}
+            />,
+            ...keyResults.map(keyResult =>
+              <KRBar
+                key={`kr${keyResult.id}`}
+                {...{
+                  display,
+                  subject,
+                  okr,
+                  keyResult,
+                  onAddParentedOkr,
+                  dispatchChangeKROwner,
+                  dispatchChangeDisclosureType,
+                  dispatchDeleteKR,
+                }}
+              />),
+          ];
+        }))}
         {onAddOkr && (
           <div className={`${styles.footer} ${styles.alignC}`}>
             <button className={styles.addOkr} onClick={onAddOkr}>
