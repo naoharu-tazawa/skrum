@@ -24,22 +24,22 @@ export default class OKRList extends Component {
   };
 
   toggleKeyResults(id) {
-    const { expandedKeyResults = {} } = this.state || {};
-    const { [id]: expanded = false } = expandedKeyResults;
-    this.setState({ expandedKeyResults: { ...expandedKeyResults, [id]: !expanded } });
+    const { collapsedKeyResults = {} } = this.state || {};
+    const { [id]: expanded = false } = collapsedKeyResults;
+    this.setState({ collapsedKeyResults: { ...collapsedKeyResults, [id]: !expanded } });
   }
 
   render() {
     const { okrs = [], subject, onAddOkr, onAddParentedOkr, dispatchChangeOkrOwner,
       dispatchChangeKROwner, dispatchChangeParentOkr, dispatchChangeDisclosureType,
       dispatchSetRatios, dispatchCopyOkr, dispatchDeleteOkr, dispatchDeleteKR } = this.props;
-    const { expandedKeyResults = {} } = this.state || {};
+    const { collapsedKeyResults = {} } = this.state || {};
     return (
       <div className={styles.component}>
         <OkrBar header />
         {flatten(okrs.map((okr) => {
           const { id, keyResults } = okr;
-          const display = expandedKeyResults[id] ? 'expanded' : 'collapsed';
+          const display = collapsedKeyResults[id] ? 'collapsed' : 'expanded';
           return [
             <OkrBar
               key={`okr${id}`}

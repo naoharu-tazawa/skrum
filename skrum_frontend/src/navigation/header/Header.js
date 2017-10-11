@@ -80,6 +80,7 @@ class SubMenu extends Component {
             { caption: isSetting ? '設定完了' : '設定',
               path: isSetting ? '/o/u' : settingLink },
             { caption: 'ヘルプ', path: '/help', target: '_blank', onClick: () => {} },
+            { caption: 'お問い合わせ', path: 'https://goo.gl/forms/LFqIvk4RcpfFqopl2', target: '_blank', onClick: () => {} },
             { caption: 'ログアウト', onClick: handleLogoutSubmit },
           ]}
           align="right"
