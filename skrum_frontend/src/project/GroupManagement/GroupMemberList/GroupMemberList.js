@@ -17,7 +17,7 @@ class GroupMemberList extends Component {
     groupId: PropTypes.number.isRequired,
     groupName: PropTypes.string.isRequired,
     roleLevel: PropTypes.number.isRequired,
-    items: groupMembersPropTypes.isRequired,
+    members: groupMembersPropTypes.isRequired,
     dispatchAddGroupMember: PropTypes.func.isRequired,
     dispatchDeleteGroupMember: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
@@ -47,14 +47,14 @@ class GroupMemberList extends Component {
     </DialogForm>);
 
   render() {
-    const { groupId, groupName, roleLevel, items,
+    const { groupId, groupName, roleLevel, members,
       dispatchDeleteGroupMember, openModal } = this.props;
     return (
       <section className={styles.member_list}>
         <h1 className={styles.ttl_setion}>メンバー一覧</h1>
         <div className={`${styles.cont_box} ${styles.cf}`}>
           <GroupMemberBar header roleLevel={roleLevel} />
-          {items.map(member =>
+          {members.map(member =>
             <GroupMemberBar
               key={member.id}
               {...{ roleLevel, groupId, groupName, member, dispatchDeleteGroupMember }}
