@@ -130,18 +130,19 @@ const changeParentDialog =
     <DialogForm
       title={title}
       submitButton="変更"
-      onSubmit={({ changedParent } = {}) => dispatch(id, changedParent.id)}
-      valid={({ changedParent }) => !isEmpty(changedParent)}
+      onSubmit={({ unset, changedParent } = {}) => dispatch(id, unset ? 0 : changedParent.id)}
+      valid={({ unset, changedParent }) => unset || !isEmpty(changedParent)}
       onClose={onClose}
+      lastTabIndex={10}
     >
-      {({ setFieldData }) =>
+      {({ setFieldData, data: { unset } }) =>
         <div>
           <EntitySubject
             entity={okr.owner}
             heading={parentHeading}
             subject={okr.name}
           />
-          <div className={styles.parentOkrToChange}>
+          <div className={`${styles.parentOkrToChange} ${unset && styles.unset}`}>
             <EntitySubject
               entity={parentOkr.owner}
               heading={childHeading}
@@ -151,12 +152,27 @@ const changeParentDialog =
           </div>
           <section>
             <label>紐付け先検索</label>
-            <OKRSearch
-              owner={okr.owner}
-              exclude={[parentOkr.id]}
-              onChange={value => setFieldData({ changedParent: value })}
-            />
+            <section>
+              <OKRSearch
+                owner={okr.owner}
+                exclude={[parentOkr.id]}
+                disabled={unset}
+                onChange={value => setFieldData({ changedParent: value })}
+                tabIndex={1} // eslint-disable-line jsx-a11y/tabindex-no-positive
+              />
+              <small>※会社/部署/チーム/個人名または目標名で検索してください</small>
+            </section>
           </section>
+          {parentOkr.owner && (
+            <label className={styles.unsetParentOkr}>
+              <input
+                name="unset"
+                type="checkbox"
+                onChange={() => setFieldData({ unset: !unset })}
+                tabIndex={21} // eslint-disable-line jsx-a11y/tabindex-no-positive
+              />
+              解除
+            </label>)}
         </div>}
     </DialogForm>);
 

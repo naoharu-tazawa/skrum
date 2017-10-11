@@ -38,6 +38,15 @@
   margin-left: 1em;
   cursor: pointer;
 }
+.unsetParentOkr {
+  position: relative;
+  top: -116px;
+  font-size: small;
+  left: -12px;
+}
+.unsetParentOkr input {
+  margin-right: 4px;
+}
 .parentOkrToChange {
   display: flex;
 }
@@ -53,8 +62,16 @@
   margin-top: -1em;
   display: block;
 }
+.unset:before {
+  border-bottom-style: dotted;
+  border-left-style: dotted;
+  color: lightsalmon;
+}
 .parentEntitySubject {
   width: calc(100% - 7em);
+}
+.unset .parentEntitySubject {
+  opacity: 0.25;
 }
 .note li {
   display: list-item;
