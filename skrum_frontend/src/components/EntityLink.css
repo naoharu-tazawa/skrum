@@ -50,3 +50,6 @@
 .component:not(.hasEditor) a, .component:not(.hasEditor) .name {
   overflow: hidden;
 }
+.fluid a {
+  width: 100%;
+}

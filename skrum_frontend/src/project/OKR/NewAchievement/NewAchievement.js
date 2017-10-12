@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import DialogForm from '../../../dialogs/DialogForm';
 import NumberInput from '../../../editors/NumberInput';
+import InlineTextInput from '../../../editors/InlineTextInput';
 import { withReduxForm, withNumberReduxField } from '../../../util/FormUtil';
-import { postAchievement } from '../../OKRDetails/action';
-import { postAchievement as postBasicsAchievement, syncAchievement } from '../../OKR/action';
+import { postAchievement, putOKR } from '../../OKRDetails/action';
+import { postAchievement as postBasicsAchievement, syncAchievement, syncOkr } from '../../OKR/action';
 import styles from './NewAchievement.css';
 
 const formName = 'newProgress';
@@ -26,7 +27,8 @@ class NewAchievement extends Component {
     targetValue: PropTypes.number.isRequired,
     unit: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
-    dispatchPostAchievement: PropTypes.func,
+    dispatchPostAchievement: PropTypes.func.isRequired,
+    dispatchPutOKR: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -49,7 +51,7 @@ class NewAchievement extends Component {
   }
 
   render() {
-    const { unit, onClose } = this.props;
+    const { basicsOnly, id, unit, onClose, dispatchPutOKR } = this.props;
     const { isSubmitting = false } = this.state || {};
     const Form = this.form;
     return (
@@ -71,7 +73,13 @@ class NewAchievement extends Component {
               <span className={styles.title}>目標値</span>
               {withNumberReduxField(NumberInput, 'targetValue', { min: 0 })}
             </div>
-            <span className={styles.label}>{unit}</span>
+            <InlineTextInput
+              className={styles.unit}
+              value={unit}
+              required
+              readonly={basicsOnly}
+              onSubmit={value => dispatchPutOKR(id, { unit: value })}
+            />
           </div>
           <Field component="textarea" name="post" placeholder="コメント（任意）" maxLength={2000} />
         </div>
@@ -85,7 +93,10 @@ const mapDispatchToProps = (dispatch, { subject, basicsOnly }) => {
       (basicsOnly ? postBasicsAchievement(subject, id, entry) :
         postAchievement(id, entry, basicsOnly)))
       .then(({ payload, error }) => dispatch(syncAchievement(subject, { payload, error })));
-  return { dispatchPostAchievement };
+  const dispatchPutOKR = (id, data) =>
+    dispatch(putOKR(id, data))
+      .then(result => dispatch(syncOkr(subject, result)));
+  return { dispatchPostAchievement, dispatchPutOKR };
 };
 
 export default connect(

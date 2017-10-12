@@ -24,7 +24,12 @@ export default class UserInfoEdit extends Component {
     const groupsLink = departments.map(({ groupId, groupName }, index) =>
       <span key={groupId}>
         {index ? '・' : ''}
-        <Link to={replacePath({ subject: 'group', id: groupId })} className={styles.groupLink}>{groupName}</Link>
+        <Link
+          to={replacePath({ tab: 'objective', subject: 'group', id: groupId })}
+          className={styles.groupLink}
+        >
+          {groupName}
+        </Link>
       </span>);
     const entity = { id: userId, type: EntityType.USER, roleLevel };
     return (

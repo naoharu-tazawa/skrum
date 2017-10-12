@@ -7,6 +7,12 @@
 .label:first-child {
   margin-left: 0;
 }
+.unit {
+  margin: auto 1em 0 1em;
+  min-height: 22px;
+  line-height: 12px;
+  height: 100%;
+}
 .dialog textarea {
   display: block;
   width: 30em;
@@ -26,6 +32,7 @@
 }
 .title {
   margin: 0 auto 4px auto;
+  cursor: default;
   font-size: small;
   text-align: center;
 }

@@ -130,4 +130,5 @@
   display: block;
   margin: 4px 0 0 0;
   font-size: xx-small;
+  cursor: default;
 }
