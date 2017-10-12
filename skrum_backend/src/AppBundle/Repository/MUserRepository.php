@@ -377,4 +377,25 @@ SQL;
 
         return $stmt->fetchAll();
     }
+
+    /**
+     * サービスお知らせメール対象者を取得（バッチ）
+     *
+     * @return array
+     */
+    public function getUsersForServiceNotificationEmail(): array
+    {
+        $qb = $this->createQueryBuilder('mu');
+        $qb->select('mu')
+            ->innerJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
+            ->innerJoin('AppBundle:TEmailSettings', 'tes', 'WITH', 'mu.userId = tes.userId')
+            ->where('mu.archivedFlg = :archivedFlg')
+            ->andWhere('mra.roleLevel >= :roleLevel')
+            ->andWhere('tes.serviceNotification = :serviceNotification')
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
+            ->setParameter('roleLevel', DBConstant::ROLE_LEVEL_SUPERADMIN)
+            ->setParameter('serviceNotification', DBConstant::EMAIL_SERVICE_NOTIFICATION);
+
+        return $qb->getQuery()->getResult();
+    }
 }

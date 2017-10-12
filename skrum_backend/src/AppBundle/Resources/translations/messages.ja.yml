@@ -20,6 +20,8 @@ parameters:
 
     feedback_target_report: '【Skrum】フィードバック対象者自動抽出レポート'
 
+    service_notification: '【Skrum】サービスお知らせメール'
+
     file_registration_error: '【Skrum】CSVファイル登録エラー'
 
     file_registration_success: '【Skrum】CSVファイル登録成功データ'

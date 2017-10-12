@@ -169,3 +169,7 @@ services:
     batch.okr_deadline_reminder_email_service:
         class: AppBundle\Service\Batch\OkrDeadlineReminderEmailService
         arguments: ['@service_container']
+
+    batch.service_notification_email_service:
+        class: AppBundle\Service\Batch\ServiceNotificationEmailService
+        arguments: ['@service_container']
