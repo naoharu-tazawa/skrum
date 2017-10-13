@@ -4,14 +4,13 @@ namespace AppBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
-use Aws\S3\Exception\S3Exception;
 use AppBundle\Controller\BaseController;
 use AppBundle\Exception\ApplicationException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
-use AppBundle\Exception\SystemException;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Utils\Constant;
+use AppBundle\Api\ResponseDTO\ImageVersionDTO;
 
 /**
  * 画像アップロードコントローラ
@@ -26,9 +25,9 @@ class ImageUploadController extends BaseController
      * @Rest\Post("/v1/users/{userId}/images.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param string $userId ユーザID
-     * @return array
+     * @return ImageVersionDTO
      */
-    public function postUserImagesAction(Request $request, int $userId): array
+    public function postUserImagesAction(Request $request, int $userId): ImageVersionDTO
     {
         // JSONから画像ファイルを取得
         $data = $this->getImageFromJson($request);
@@ -46,47 +45,11 @@ class ImageUploadController extends BaseController
             throw new PermissionException('ユーザ操作権限がありません');
         }
 
-        // Amazon S3クライアントを取得
-        $client = $this->get('aws.s3');
-
-        // アップロード先のS3内のファイルパスを指定
-        $filePathInS3 = 'c/' . $auth->getCompanyId() . '/u/' . $userId . '/image1';
-
-        // 実行環境によってバケットを選択
-        $bucket = null;
-        if ($this->get('kernel')->getEnvironment() === 'prod') {
-            $bucket = Constant::S3_BUCKET_PROD;
-        } elseif ($this->get('kernel')->getEnvironment() === 'test') {
-            $bucket = Constant::S3_BUCKET_TEST;
-        } elseif ($this->get('kernel')->getEnvironment() === 'dev') {
-            $bucket = Constant::S3_BUCKET_DEV;
-        }
-
-        // Upload an object to Amazon S3
-        try {
-            $result = $client->putObject(array(
-                    'Bucket'     => $bucket,
-                    'Key'        => $filePathInS3,
-                    'Metadata'   => array(
-                            'mime-type' => $data['mimeType']
-                    ),
-                    'Body'       => $data['image']
-            ));
-        } catch (S3Exception $e) {
-            throw new SystemException($e->getMessage());
-        }
-
-        // イメージバージョンを1に更新
-        // Ver1.1リリース後はこの3行コードを削除
+        // 画像アップロード処理
         $imageUploadService = $this->getImageUploadService();
-        $imageUploadService->imageVersion1(Constant::SUBJECT_TYPE_USER, $userId, null, null);
+        $imageVersionDTO = $imageUploadService->uploadImage($data, Constant::SUBJECT_TYPE_USER, $userId, null, $auth->getCompanyId());
 
-        // ToDo: リリースVer1.1の時、下記コメントアウトを除去し、画像バージョンを導入
-        // 画像バージョンを更新
-        // $imageUploadService = $this->getImageUploadService();
-        // $imageUploadService->incrementImageVersion(Constant::SUBJECT_TYPE_USER, $userId, null, null);
-
-        return array('result' => 'OK');
+        return $imageVersionDTO;
     }
 
     /**
@@ -97,7 +60,7 @@ class ImageUploadController extends BaseController
      * @param string $groupId グループID
      * @return array
      */
-    public function postGroupImagesAction(Request $request, int $groupId): array
+    public function postGroupImagesAction(Request $request, int $groupId): ImageVersionDTO
     {
         // JSONから画像ファイルを取得
         $data = $this->getImageFromJson($request);
@@ -115,47 +78,11 @@ class ImageUploadController extends BaseController
             throw new PermissionException('グループ操作権限がありません');
         }
 
-        // Amazon S3クライアントを取得
-        $client = $this->get('aws.s3');
-
-        // アップロード先のS3内のファイルパスを指定
-        $filePathInS3 = 'c/' . $auth->getCompanyId() . '/g/' . $groupId . '/image1';
-
-        // 実行環境によってバケットを選択
-        $bucket = null;
-        if ($this->get('kernel')->getEnvironment() === 'prod') {
-            $bucket = Constant::S3_BUCKET_PROD;
-        } elseif ($this->get('kernel')->getEnvironment() === 'test') {
-            $bucket = Constant::S3_BUCKET_TEST;
-        } elseif ($this->get('kernel')->getEnvironment() === 'dev') {
-            $bucket = Constant::S3_BUCKET_DEV;
-        }
-
-        // Upload an object to Amazon S3
-        try {
-            $result = $client->putObject(array(
-                    'Bucket'     => $bucket,
-                    'Key'        => $filePathInS3,
-                    'Metadata'   => array(
-                            'mime-type' => $data['mimeType']
-                    ),
-                    'Body'       => $data['image']
-            ));
-        } catch (S3Exception $e) {
-            throw new SystemException($e->getMessage());
-        }
-
-        // イメージバージョンを1に更新
-        // Ver1.1リリース後はこの3行コードを削除
+        // 画像アップロード処理
         $imageUploadService = $this->getImageUploadService();
-        $imageUploadService->imageVersion1(Constant::SUBJECT_TYPE_GROUP, null, $groupId, null);
+        $imageVersionDTO = $imageUploadService->uploadImage($data, Constant::SUBJECT_TYPE_GROUP, null, $groupId, $auth->getCompanyId());
 
-        // ToDo: リリースVer1.1の時、下記コメントアウトを除去し、画像バージョンを導入
-        // 画像バージョンを更新
-        // $imageUploadService = $this->getImageUploadService();
-        // $imageUploadService->incrementImageVersion(Constant::SUBJECT_TYPE_GROUP, null, $groupId, null);
-
-        return array('result' => 'OK');
+        return $imageVersionDTO;
     }
 
     /**
@@ -166,7 +93,7 @@ class ImageUploadController extends BaseController
      * @param string $companyId 会社ID
      * @return array
      */
-    public function postCompanyImagesAction(Request $request, int $companyId): array
+    public function postCompanyImagesAction(Request $request, int $companyId): ImageVersionDTO
     {
         // JSONから画像ファイルを取得
         $data = $this->getImageFromJson($request);
@@ -184,47 +111,11 @@ class ImageUploadController extends BaseController
             throw new PermissionException('スーパー管理者ユーザのみ操作可能です');
         }
 
-        // Amazon S3クライアントを取得
-        $client = $this->get('aws.s3');
-
-        // アップロード先のS3内のファイルパスを指定
-        $filePathInS3 = 'c/' . $companyId . '/image1';
-
-        // 実行環境によってバケットを選択
-        $bucket = null;
-        if ($this->get('kernel')->getEnvironment() === 'prod') {
-            $bucket = Constant::S3_BUCKET_PROD;
-        } elseif ($this->get('kernel')->getEnvironment() === 'test') {
-            $bucket = Constant::S3_BUCKET_TEST;
-        } elseif ($this->get('kernel')->getEnvironment() === 'dev') {
-            $bucket = Constant::S3_BUCKET_DEV;
-        }
-
-        // Upload an object to Amazon S3
-        try {
-            $result = $client->putObject(array(
-                    'Bucket'     => $bucket,
-                    'Key'        => $filePathInS3,
-                    'Metadata'   => array(
-                            'mime-type' => $data['mimeType']
-                    ),
-                    'Body'       => $data['image']
-            ));
-        } catch (S3Exception $e) {
-            throw new SystemException($e->getMessage());
-        }
-
-        // イメージバージョンを1に更新
-        // Ver1.1リリース後はこの3行コードを削除
+        // 画像アップロード処理
         $imageUploadService = $this->getImageUploadService();
-        $imageUploadService->imageVersion1(Constant::SUBJECT_TYPE_COMPANY, null, null, $companyId);
+        $imageVersionDTO = $imageUploadService->uploadImage($data, Constant::SUBJECT_TYPE_COMPANY, null, null, $companyId);
 
-        // ToDo: リリースVer1.1の時、下記コメントアウトを除去し、画像バージョンを導入
-        // 画像保存済みフラグを更新
-        // $imageUploadService = $this->getImageUploadService();
-        // $imageUploadService->incrementImageVersion(Constant::SUBJECT_TYPE_COMPANY, null, null, $companyId);
-
-        return array('result' => 'OK');
+        return $imageVersionDTO;
     }
 
     /**
