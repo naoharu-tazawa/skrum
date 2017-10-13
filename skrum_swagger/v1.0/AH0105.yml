@@ -51,6 +51,8 @@ paths:
                     type: integer
                   name:
                     type: string
+                  imageVersion:
+                    type: integer
                   position:
                     type: string
                   achievementRate:
@@ -60,6 +62,7 @@ paths:
                 required:
                   - userId
                   - name
+                  - imageVersion
                   - position
                   - achievementRate
               group:
@@ -69,6 +72,8 @@ paths:
                     type: integer
                   groupName:
                     type: string
+                  imageVersion:
+                    type: integer
                   groupType:
                     type: string
                   achievementRate:
@@ -76,6 +81,7 @@ paths:
                 required:
                   - groupId
                   - groupName
+                  - imageVersion
                   - achievementRate
             required:
               - user

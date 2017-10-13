@@ -30,6 +30,13 @@ class UserSearchDTO
      *
      * @JSON\Type("integer")
      */
+    private $imageVersion;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $roleAssignmentId;
 
     /**
@@ -92,6 +99,30 @@ class UserSearchDTO
     public function getUserName()
     {
         return $this->userName;
+    }
+
+    /**
+     * Set imageVersion
+     *
+     * @param integer $imageVersion
+     *
+     * @return UserSearchDTO
+     */
+    public function setImageVersion($imageVersion)
+    {
+        $this->imageVersion = $imageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get imageVersion
+     *
+     * @return integer
+     */
+    public function getImageVersion()
+    {
+        return $this->imageVersion;
     }
 
     /**

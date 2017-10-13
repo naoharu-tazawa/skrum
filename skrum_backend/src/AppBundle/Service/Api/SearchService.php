@@ -44,6 +44,7 @@ class SearchService extends BaseService
             $userSearchDTO = new UserSearchDTO();
             $userSearchDTO->setUserId($mUser['userId']);
             $userSearchDTO->setUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
+            $userSearchDTO->setImageVersion($mUser['imageVersion']);
 
             $userSearchDTOArray[] = $userSearchDTO;
         }
@@ -74,6 +75,7 @@ class SearchService extends BaseService
             $userSearchDTO = new UserSearchDTO();
             $userSearchDTO->setUserId($mUser['userId']);
             $userSearchDTO->setUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
+            $userSearchDTO->setImageVersion($mUser['imageVersion']);
 
             $userSearchDTOArray[] = $userSearchDTO;
         }
@@ -105,6 +107,7 @@ class SearchService extends BaseService
             $userSearchDTO = new UserSearchDTO();
             $userSearchDTO->setUserId($mUser['user_id']);
             $userSearchDTO->setUserName($mUser['last_name'] . ' ' . $mUser['first_name']);
+            $userSearchDTO->setImageVersion($mUser['image_version']);
             $userSearchDTO->setRoleAssignmentId($mUser['role_assignment_id']);
             $userSearchDTO->setRoleLevel($mUser['role_level']);
             if ($mUser['login_datetime'] !== null) {
@@ -143,6 +146,7 @@ class SearchService extends BaseService
             $groupSearchDTO = new GroupSearchDTO();
             $groupSearchDTO->setGroupId($groupInfo['groupId']);
             $groupSearchDTO->setGroupName($groupInfo['groupName']);
+            $groupSearchDTO->setImageVersion($groupInfo['imageVersion']);
 
             $groupSearchDTOArray[] = $groupSearchDTO;
         }
@@ -179,6 +183,7 @@ class SearchService extends BaseService
             $groupSearchDTO = new GroupSearchDTO();
             $groupSearchDTO->setGroupId($groupInfo['groupId']);
             $groupSearchDTO->setGroupName($groupInfo['groupName']);
+            $groupSearchDTO->setImageVersion($groupInfo['imageVersion']);
 
             $groupSearchDTOArray[] = $groupSearchDTO;
         }
@@ -209,8 +214,9 @@ class SearchService extends BaseService
         foreach ($mGroupArray as $mGroup) {
             $groupSearchDTO = new GroupSearchDTO();
             $groupSearchDTO->setGroupId($mGroup['groupId']);
-            $groupSearchDTO->setGroupType($mGroup['groupType']);
             $groupSearchDTO->setGroupName($mGroup['groupName']);
+            $groupSearchDTO->setImageVersion($mGroup['imageVersion']);
+            $groupSearchDTO->setGroupType($mGroup['groupType']);
 
             $groupSearchDTOArray[] = $groupSearchDTO;
         }
@@ -246,6 +252,7 @@ class SearchService extends BaseService
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_USER);
             $ownerSearchDTO->setOwnerUserId($mUser['userId']);
             $ownerSearchDTO->setOwnerUserName($mUser['lastName'] . ' ' . $mUser['firstName']);
+            $ownerSearchDTO->setOwnerUserImageVersion($mUser['imageVersion']);
             $ownerSearchDTO->setOwnerUserRoleLevel($mUser['roleLevel']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
@@ -261,6 +268,7 @@ class SearchService extends BaseService
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_GROUP);
             $ownerSearchDTO->setOwnerGroupId($mGroup['groupId']);
             $ownerSearchDTO->setOwnerGroupName($mGroup['groupName']);
+            $ownerSearchDTO->setOwnerGroupImageVersion($mGroup['imageVersion']);
             $ownerSearchDTO->setOwnerGroupType($mGroup['groupType']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
@@ -276,6 +284,7 @@ class SearchService extends BaseService
             $ownerSearchDTO->setOwnerType(DBConstant::OKR_OWNER_TYPE_COMPANY);
             $ownerSearchDTO->setOwnerCompanyId($mCompany['companyId']);
             $ownerSearchDTO->setOwnerCompanyName($mCompany['companyName']);
+            $ownerSearchDTO->setOwnerCompanyImageVersion($mCompany['imageVersion']);
 
             $ownerSearchDTOArray[] = $ownerSearchDTO;
         }
@@ -381,12 +390,15 @@ class SearchService extends BaseService
             if ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_USER) {
                 $okrSearchDTO->setOwnerUserId($tOkr['user_id']);
                 $okrSearchDTO->setOwnerUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
+                $okrSearchDTO->setOwnerUserImageVersion($tOkr['userImageVersion']);
             } elseif ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
                 $okrSearchDTO->setOwnerGroupId($tOkr['group_id']);
                 $okrSearchDTO->setOwnerGroupName($tOkr['group_name']);
+                $okrSearchDTO->setOwnerGroupImageVersion($tOkr['groupImageVersion']);
             } else {
                 $okrSearchDTO->setOwnerCompanyId($tOkr['company_id']);
                 $okrSearchDTO->setOwnerCompanyName($tOkr['company_name']);
+                $okrSearchDTO->setOwnerCompanyImageVersion($tOkr['companyImageVersion']);
             }
 
             $okrSearchDTOArray[] = $okrSearchDTO;
@@ -426,12 +438,15 @@ class SearchService extends BaseService
             if ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_USER) {
                 $okrSearchDTO->setOwnerUserId($tOkr['user_id']);
                 $okrSearchDTO->setOwnerUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
+                $okrSearchDTO->setOwnerUserImageVersion($tOkr['userImageVersion']);
             } elseif ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
                 $okrSearchDTO->setOwnerGroupId($tOkr['group_id']);
                 $okrSearchDTO->setOwnerGroupName($tOkr['group_name']);
+                $okrSearchDTO->setOwnerGroupImageVersion($tOkr['groupImageVersion']);
             } else {
                 $okrSearchDTO->setOwnerCompanyId($tOkr['company_id']);
                 $okrSearchDTO->setOwnerCompanyName($tOkr['company_name']);
+                $okrSearchDTO->setOwnerCompanyImageVersion($tOkr['companyImageVersion']);
             }
 
             $okrSearchDTOArray[] = $okrSearchDTO;
@@ -471,12 +486,15 @@ class SearchService extends BaseService
             if ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_USER) {
                 $okrSearchDTO->setOwnerUserId($tOkr['user_id']);
                 $okrSearchDTO->setOwnerUserName($tOkr['last_name'] . ' ' . $tOkr['first_name']);
+                $okrSearchDTO->setOwnerUserImageVersion($tOkr['userImageVersion']);
             } elseif ($tOkr['owner_type'] == DBConstant::OKR_OWNER_TYPE_GROUP) {
                 $okrSearchDTO->setOwnerGroupId($tOkr['group_id']);
                 $okrSearchDTO->setOwnerGroupName($tOkr['group_name']);
+                $okrSearchDTO->setOwnerGroupImageVersion($tOkr['groupImageVersion']);
             } else {
                 $okrSearchDTO->setOwnerCompanyId($tOkr['company_id']);
                 $okrSearchDTO->setOwnerCompanyName($tOkr['company_name']);
+                $okrSearchDTO->setOwnerCompanyImageVersion($tOkr['companyImageVersion']);
             }
 
             $okrSearchDTOArray[] = $okrSearchDTO;

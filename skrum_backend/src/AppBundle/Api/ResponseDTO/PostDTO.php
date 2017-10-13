@@ -44,6 +44,13 @@ class PostDTO
      *
      * @JSON\Type("integer")
      */
+    private $posterUserImageVersion;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $posterUserRoleLevel;
 
     /**
@@ -59,6 +66,13 @@ class PostDTO
      * @JSON\Type("string")
      */
     private $posterGroupName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $posterGroupImageVersion;
 
     /**
      * @var string
@@ -80,6 +94,13 @@ class PostDTO
      * @JSON\Type("string")
      */
     private $posterCompanyName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $posterCompanyImageVersion;
 
     /**
      * @var string
@@ -227,6 +248,30 @@ class PostDTO
     }
 
     /**
+     * Set posterUserImageVersion
+     *
+     * @param integer $posterUserImageVersion
+     *
+     * @return PostDTO
+     */
+    public function setPosterUserImageVersion($posterUserImageVersion)
+    {
+        $this->posterUserImageVersion = $posterUserImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get posterUserImageVersion
+     *
+     * @return integer
+     */
+    public function getPosterUserImageVersion()
+    {
+        return $this->posterUserImageVersion;
+    }
+
+    /**
      * Set posterUserRoleLevel
      *
      * @param integer $posterUserRoleLevel
@@ -299,6 +344,30 @@ class PostDTO
     }
 
     /**
+     * Set posterGroupImageVersion
+     *
+     * @param integer $posterGroupImageVersion
+     *
+     * @return PostDTO
+     */
+    public function setPosterGroupImageVersion($posterGroupImageVersion)
+    {
+        $this->posterGroupImageVersion = $posterGroupImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get posterGroupImageVersion
+     *
+     * @return integer
+     */
+    public function getPosterGroupImageVersion()
+    {
+        return $this->posterGroupImageVersion;
+    }
+
+    /**
      * Set posterGroupType
      *
      * @param string $posterGroupType
@@ -368,6 +437,30 @@ class PostDTO
     public function getPosterCompanyName()
     {
         return $this->posterCompanyName;
+    }
+
+    /**
+     * Set posterCompanyImageVersion
+     *
+     * @param integer $posterCompanyImageVersion
+     *
+     * @return PostDTO
+     */
+    public function setPosterCompanyImageVersion($posterCompanyImageVersion)
+    {
+        $this->posterCompanyImageVersion = $posterCompanyImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get posterCompanyImageVersion
+     *
+     * @return integer
+     */
+    public function getPosterCompanyImageVersion()
+    {
+        return $this->posterCompanyImageVersion;
     }
 
     /**

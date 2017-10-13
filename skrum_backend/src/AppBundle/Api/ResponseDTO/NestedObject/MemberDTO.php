@@ -26,6 +26,13 @@ class MemberDTO
     private $name;
 
     /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $imageVersion;
+
+    /**
      * @var string
      *
      * @JSON\Type("string")
@@ -92,6 +99,30 @@ class MemberDTO
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set imageVersion
+     *
+     * @param integer $imageVersion
+     *
+     * @return MemberDTO
+     */
+    public function setImageVersion($imageVersion)
+    {
+        $this->imageVersion = $imageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get imageVersion
+     *
+     * @return integer
+     */
+    public function getImageVersion()
+    {
+        return $this->imageVersion;
     }
 
     /**

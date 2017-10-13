@@ -41,7 +41,7 @@ class TimelineService extends BaseService
         $disclosureLogic = $this->getDisclosureLogic();
         $tLikeRepos = $this->getTLikeRepository();
         $postDTOArray = array();
-        $companyName = null;
+        $mCompany = null;
         while (count($postDTOArray) < 5) {
             if (count($postInfoArray) === 0) {
                 break;
@@ -60,6 +60,7 @@ class TimelineService extends BaseService
                     $postDTOPost->setPosterType($postInfo['post']->getPosterType());
                     $postDTOPost->setPosterUserId($postInfo['post']->getPosterUserId());
                     $postDTOPost->setPosterUserName($postInfo['lastName'] . ' ' . $postInfo['firstName']);
+                    $postDTOPost->setPosterUserImageVersion($postInfo['imageVersion']);
                     $postDTOPost->setPosterUserRoleLevel($postInfo['roleLevel']);
                     $postDTOPost->setPost($postInfo['post']->getPost());
                     $postDTOPost->setPostedDatetime($postInfo['post']->getPostedDatetime());
@@ -74,17 +75,19 @@ class TimelineService extends BaseService
                         if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                             $autoShare->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
                             $autoShare->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+                            $autoShare->setOwnerUserImageVersion($tOkr->getOwnerUser()->getImageVersion());
                         } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                             $autoShare->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
                             $autoShare->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+                            $autoShare->setOwnerGroupImageVersion($tOkr->getOwnerGroup()->getImageVersion());
                         } else {
                             $autoShare->setOwnerCompanyId($tOkr->getOwnerCompanyId());
-                            if ($companyName === null) {
+                            if ($mCompany === null) {
                                 $mCompanyRepos = $this->getMCompanyRepository();
                                 $mCompany = $mCompanyRepos->find($auth->getCompanyId());
-                                $companyName = $mCompany->getCompanyName();
                             }
-                            $autoShare->setOwnerCompanyName($companyName);
+                            $autoShare->setOwnerCompanyName($mCompany->getCompanyName());
+                            $autoShare->setOwnerCompanyImageVersion($mCompany->getImageVersion());
                         }
                         $postDTOPost->setAutoShare($autoShare);
                     }
@@ -112,6 +115,7 @@ class TimelineService extends BaseService
                             $postDTOReply->setPostId($replyInfo['reply']->getId());
                             $postDTOReply->setPosterUserId($replyInfo['reply']->getPosterUserId());
                             $postDTOReply->setPosterUserName($replyInfo['lastName'] . ' ' . $replyInfo['firstName']);
+                            $postDTOReply->setPosterUserImageVersion($replyInfo['imageVersion']);
                             $postDTOReply->setPost($replyInfo['reply']->getPost());
                             $postDTOReply->setPostedDatetime($replyInfo['reply']->getPostedDatetime());
                             $postDTOReplyArray[] = $postDTOReply;
@@ -153,7 +157,7 @@ class TimelineService extends BaseService
         $disclosureLogic = $this->getDisclosureLogic();
         $tLikeRepos = $this->getTLikeRepository();
         $postDTOArray = array();
-        $companyName = null;
+        $mCompany = null;
         while (count($postDTOArray) < 5) {
             if (count($postInfoArray) === 0) {
                 break;
@@ -173,14 +177,17 @@ class TimelineService extends BaseService
                     if ($postInfo['post']->getPosterType() === DBConstant::POSTER_TYPE_USER) {
                         $postDTOPost->setPosterUserId($postInfo['post']->getPosterUserId());
                         $postDTOPost->setPosterUserName($postInfo['lastName'] . ' ' . $postInfo['firstName']);
+                        $postDTOPost->setPosterUserImageVersion($postInfo['userImageVersion']);
                         $postDTOPost->setPosterUserRoleLevel($postInfo['roleLevel']);
                     } elseif ($postInfo['post']->getPosterType() === DBConstant::POSTER_TYPE_GROUP) {
                         $postDTOPost->setPosterGroupId($postInfo['post']->getPosterGroupId());
                         $postDTOPost->setPosterGroupName($postInfo['groupName']);
+                        $postDTOPost->setPosterGroupImageVersion($postInfo['groupImageVersion']);
                         $postDTOPost->setPosterGroupType($postInfo['groupType']);
                     } else {
                         $postDTOPost->setPosterCompanyId($postInfo['post']->getPosterCompanyId());
                         $postDTOPost->setPosterCompanyName($postInfo['companyName']);
+                        $postDTOPost->setPosterCompanyImageVersion($postInfo['companyImageVersion']);
                     }
                     $postDTOPost->setPost($postInfo['post']->getPost());
                     $postDTOPost->setPostedDatetime($postInfo['post']->getPostedDatetime());
@@ -195,17 +202,19 @@ class TimelineService extends BaseService
                         if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                             $autoShare->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
                             $autoShare->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+                            $autoShare->setOwnerUserImageVersion($tOkr->getOwnerUser()->getImageVersion());
                         } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                             $autoShare->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
                             $autoShare->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+                            $autoShare->setOwnerGroupImageVersion($tOkr->getOwnerGroup()->getImageVersion());
                         } else {
                             $autoShare->setOwnerCompanyId($tOkr->getOwnerCompanyId());
-                            if ($companyName === null) {
+                            if ($mCompany === null) {
                                 $mCompanyRepos = $this->getMCompanyRepository();
                                 $mCompany = $mCompanyRepos->find($auth->getCompanyId());
-                                $companyName = $mCompany->getCompanyName();
                             }
-                            $autoShare->setOwnerCompanyName($companyName);
+                            $autoShare->setOwnerCompanyName($mCompany->getCompanyName());
+                            $autoShare->setOwnerCompanyImageVersion($mCompany->getImageVersion());
                         }
                         $postDTOPost->setAutoShare($autoShare);
                     }
@@ -233,6 +242,7 @@ class TimelineService extends BaseService
                             $postDTOReply->setPostId($replyInfo['reply']->getId());
                             $postDTOReply->setPosterUserId($replyInfo['reply']->getPosterUserId());
                             $postDTOReply->setPosterUserName($replyInfo['lastName'] . ' ' . $replyInfo['firstName']);
+                            $postDTOReply->setPosterUserImageVersion($replyInfo['imageVersion']);
                             $postDTOReply->setPost($replyInfo['reply']->getPost());
                             $postDTOReply->setPostedDatetime($replyInfo['reply']->getPostedDatetime());
                             $postDTOReplyArray[] = $postDTOReply;
@@ -320,6 +330,7 @@ class TimelineService extends BaseService
         $postDTO->setPosterType($tPost->getPosterType());
         $postDTO->setPosterUserId($tPost->getPosterUserId());
         $postDTO->setPosterUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $postDTO->setPosterUserImageVersion($mUser->getImageVersion());
         $postDTO->setPost($tPost->getPost());
         $postDTO->setPostedDatetime($tPost->getPostedDatetime());
         $postDTO->setLikesCount(0);
@@ -434,6 +445,7 @@ class TimelineService extends BaseService
         $postDTO->setPostId($tPostReply->getId());
         $postDTO->setPosterUserId($tPostReply->getPosterUserId());
         $postDTO->setPosterUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $postDTO->setPosterUserImageVersion($mUser->getImageVersion());
         $postDTO->setPost($tPostReply->getPost());
         $postDTO->setPostedDatetime($tPostReply->getPostedDatetime());
 

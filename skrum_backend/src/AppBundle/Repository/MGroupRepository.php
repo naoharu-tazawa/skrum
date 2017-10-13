@@ -75,7 +75,7 @@ class MGroupRepository extends BaseRepository
     public function searchGroup(string $keyword, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mg');
-        $qb->select('mg.groupId', 'mg.groupName', 'mg.groupType')
+        $qb->select('mg.groupId', 'mg.groupName', 'mg.imageVersion', 'mg.groupType')
             ->where('mg.company = :companyId')
             ->andWhere('mg.companyFlg = :companyFlg')
             ->andWhere('mg.archivedFlg = :archivedFlg')
@@ -100,7 +100,7 @@ class MGroupRepository extends BaseRepository
     public function searchAdditionalGroup(int $userId, string $keyword, int $companyId, string $groupType = null): array
     {
         $sql1 = <<<SQL
-        SELECT m0_.group_id AS groupId, m0_.group_name AS groupName
+        SELECT m0_.group_id AS groupId, m0_.group_name AS groupName, m0_.image_version AS imageVersion
         FROM m_group m0_
         LEFT OUTER JOIN (
             SELECT DISTINCT t0_.group_id, t0_.deleted_at
@@ -177,7 +177,7 @@ SQL;
     public function pagesearchGroup(int $page, string $keyword = null, int $perPage, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mg');
-        $qb->select('mg.groupId', 'mg.groupType', 'mg.groupName')
+        $qb->select('mg.groupId', 'mg.groupType', 'mg.groupName', 'mg.imageVersion')
             ->where('mg.company = :companyId')
             ->andWhere('mg.companyFlg = :companyFlg')
             ->andWhere('mg.archivedFlg = :archivedFlg')

@@ -85,18 +85,6 @@ paths:
                 type: integer
               okrType:
                 type: string
-              ownerType:
-                type: string
-              ownerUserId:
-                type: integer
-              ownerGroupId:
-                type: integer
-              ownerCompanyId:
-                type: integer
-              startDate:
-                type: string
-              endDate:
-                type: string
               okrName:
                 type: string
               okrDetail:
@@ -105,33 +93,58 @@ paths:
                 type: integer
               achievedValue:
                 type: integer
+              unit:
+                type: string
               achievementRate:
                 type: number
-              unit:
+              ownerType:
+                type: string
+              ownerUserId:
+                type: integer
+              ownerUserName:
+                type: string
+              ownerUserImageVersion:
+                type: integer
+              ownerGroupId:
+                type: integer
+              ownerGroupName:
+                type: string
+              ownerGroupImageVersion:
+                type: integer
+              ownerCompanyId:
+                type: integer
+              ownerCompanyName:
+                type: string
+              ownerCompanyImageVersion:
+                type: integer
+              startDate:
+                type: string
+              endDate:
                 type: string
               parentOkrId:
                 type: integer
-              disclosureType:
-                type: string
               status:
+                type: string
+              disclosureType:
                 type: string
               weightedAverageRatio:
                 type: number
               ratioLockedFlg:
                 type: integer
             required:
-              - ownerType
-              - startDate
-              - endDate
+              - okrId
+              - okrType
               - okrName
               - okrDetail
               - targetValue
               - achievedValue
-              - achievementRate
               - unit
-              - disclosureType
+              - achievementRate
+              - ownerType
+              - startDate
+              - endDate
               - status
-              - weightedAverageRatio
+              - disclosureType
               - ratioLockedFlg
         400:
           description: JSONスキーマ不正

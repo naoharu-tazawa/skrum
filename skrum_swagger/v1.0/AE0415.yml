@@ -32,18 +32,24 @@ paths:
                 type: integer
               ownerUserName:
                 type: string
+              ownerUserImageVersion:
+                type: integer
               ownerUserRoleLevel:
                 type: string
               ownerGroupId:
                 type: integer
               ownerGroupName:
                 type: string
+              ownerGroupImageVersion:
+                type: integer
               ownerGroupType:
                 type: string
               ownerCompanyId:
                 type: integer
               ownerCompanyName:
                 type: string
+              ownerCompanyImageVersion:
+                type: integer
             required:
               - ownerType
         400:

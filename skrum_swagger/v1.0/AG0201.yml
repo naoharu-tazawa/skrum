@@ -41,12 +41,16 @@ paths:
                   type: integer
                 posterUserName:
                   type: string
+                posterUserImageVersion:
+                  type: integer
                 posterUserRoleLevel:
                   type: integer
                 posterGroupId:
                   type: integer
                 posterGroupName:
                   type: string
+                posterGroupImageVersion:
+                  type: integer
                 posterGroupType:
                   type: string
                 post:
@@ -68,14 +72,20 @@ paths:
                       type: integer
                     ownerUserName:
                       type: string
+                    ownerUserImageVersion:
+                      type: integer
                     ownerGroupId:
                       type: integer
                     ownerGroupName:
                       type: string
+                    ownerGroupImageVersion:
+                      type: integer
                     ownerCompanyId:
                       type: integer
                     ownerCompanyName:
                       type: string
+                    ownerCompanyImageVersion:
+                      type: integer
                   required:
                     - okrId
                     - okrName
@@ -97,6 +107,8 @@ paths:
                         type: integer
                       posterUserName:
                         type: string
+                      posterUserImageVersion:
+                        type: integer
                       post:
                         type: string
                       postedDatetime:

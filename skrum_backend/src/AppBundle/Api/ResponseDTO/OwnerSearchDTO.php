@@ -37,6 +37,13 @@ class OwnerSearchDTO
      *
      * @JSON\Type("integer")
      */
+    private $ownerUserImageVersion;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $ownerUserRoleLevel;
 
     /**
@@ -52,6 +59,13 @@ class OwnerSearchDTO
      * @JSON\Type("string")
      */
     private $ownerGroupName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $ownerGroupImageVersion;
 
     /**
      * @var string
@@ -73,6 +87,13 @@ class OwnerSearchDTO
      * @JSON\Type("string")
      */
     private $ownerCompanyName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $ownerCompanyImageVersion;
 
     /**
      * Set ownerType
@@ -144,6 +165,30 @@ class OwnerSearchDTO
     public function getOwnerUserName()
     {
         return $this->ownerUserName;
+    }
+
+    /**
+     * Set ownerUserImageVersion
+     *
+     * @param integer $ownerUserImageVersion
+     *
+     * @return OwnerSearchDTO
+     */
+    public function setOwnerUserImageVersion($ownerUserImageVersion)
+    {
+        $this->ownerUserImageVersion = $ownerUserImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerUserImageVersion
+     *
+     * @return integer
+     */
+    public function getOwnerUserImageVersion()
+    {
+        return $this->ownerUserImageVersion;
     }
 
     /**
@@ -219,6 +264,30 @@ class OwnerSearchDTO
     }
 
     /**
+     * Set ownerGroupImageVersion
+     *
+     * @param integer $ownerGroupImageVersion
+     *
+     * @return OwnerSearchDTO
+     */
+    public function setOwnerGroupImageVersion($ownerGroupImageVersion)
+    {
+        $this->ownerGroupImageVersion = $ownerGroupImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerGroupImageVersion
+     *
+     * @return integer
+     */
+    public function getOwnerGroupImageVersion()
+    {
+        return $this->ownerGroupImageVersion;
+    }
+
+    /**
      * Set ownerGroupType
      *
      * @param string $ownerGroupType
@@ -288,5 +357,29 @@ class OwnerSearchDTO
     public function getOwnerCompanyName()
     {
         return $this->ownerCompanyName;
+    }
+
+    /**
+     * Set ownerCompanyImageVersion
+     *
+     * @param integer $ownerCompanyImageVersion
+     *
+     * @return OwnerSearchDTO
+     */
+    public function setOwnerCompanyImageVersion($ownerCompanyImageVersion)
+    {
+        $this->ownerCompanyImageVersion = $ownerCompanyImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerCompanyImageVersion
+     *
+     * @return integer
+     */
+    public function getOwnerCompanyImageVersion()
+    {
+        return $this->ownerCompanyImageVersion;
     }
 }

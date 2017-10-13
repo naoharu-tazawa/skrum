@@ -26,14 +26,20 @@ paths:
           schema:
             type: object
             properties:
+              companyId:
+                type: integer
               name:
                 type: string
+              imageVersion:
+                type: integer
               vision:
                 type: string
               mission:
                 type: string
             required:
-              - companyName
+              - companyId
+              - name
+              - imageVersion
               - vision
               - mission
         400:

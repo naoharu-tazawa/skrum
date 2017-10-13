@@ -48,9 +48,9 @@ class MUserRepository extends BaseRepository
     public function searchUser(string $keyword, int $companyId): array
     {
         $sql = <<<SQL
-        SELECT m2_.userId, m2_.lastName, m2_.firstName, m2_.roleLevel
+        SELECT m2_.userId, m2_.lastName, m2_.firstName, m2_.imageVersion, m2_.roleLevel
         FROM (
-            SELECT m0_.user_id AS userId, m0_.last_name AS lastName, m0_.first_name AS firstName, CONCAT(m0_.last_name, m0_.first_name) AS name, m1_.role_level AS roleLevel
+            SELECT m0_.user_id AS userId, m0_.last_name AS lastName, m0_.first_name AS firstName, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.image_version AS imageVersion, m1_.role_level AS roleLevel
             FROM m_user m0_
             INNER JOIN m_role_assignment m1_ ON m0_.role_assignment_id = m1_.role_assignment_id
             WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
@@ -79,9 +79,9 @@ SQL;
     public function searchAdditionalUser(int $groupId, string $keyword, int $companyId): array
     {
         $sql = <<<SQL
-        SELECT m1_.userId, m1_.lastName, m1_.firstName
+        SELECT m1_.userId, m1_.lastName, m1_.firstName, m1_.imageVersion
         FROM (
-            SELECT m0_.user_id AS userId, m0_.last_name AS lastName, m0_.first_name AS firstName, CONCAT(m0_.last_name, m0_.first_name) AS name
+            SELECT m0_.user_id AS userId, m0_.last_name AS lastName, m0_.first_name AS firstName, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.image_version AS imageVersion
             FROM m_user m0_
             WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
             ) AS m1_
@@ -145,9 +145,9 @@ SQL;
     public function pagesearchUser(int $page, string $keyword = null, int $perPage, int $companyId): array
     {
         $sql = <<<SQL
-        SELECT m1_.user_id, m1_.last_name, m1_.first_name, m1_.role_assignment_id, m2_.role_level, t0_.login_datetime
+        SELECT m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version, m1_.role_assignment_id, m2_.role_level, t0_.login_datetime
         FROM (
-            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.role_assignment_id
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.image_version, m0_.role_assignment_id
             FROM m_user m0_
             WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
             ) AS m1_

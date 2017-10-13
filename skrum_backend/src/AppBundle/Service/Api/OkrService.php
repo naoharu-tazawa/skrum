@@ -440,9 +440,11 @@ class OkrService extends BaseService
         if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
             $basicOkrDTOTargetOkr->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
             $basicOkrDTOTargetOkr->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+            $basicOkrDTOTargetOkr->setOwnerUserImageVersion($tOkr->getOwnerUser()->getImageVersion());
         } elseif ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
             $basicOkrDTOTargetOkr->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
             $basicOkrDTOTargetOkr->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+            $basicOkrDTOTargetOkr->setOwnerGroupImageVersion($tOkr->getOwnerGroup()->getImageVersion());
         } else {
             // 会社エンティティを取得
             $mCompanyRepos = $this->getMCompanyRepository();
@@ -450,6 +452,7 @@ class OkrService extends BaseService
 
             $basicOkrDTOTargetOkr->setOwnerCompanyId($tOkr->getOwnerCompanyId());
             $basicOkrDTOTargetOkr->setOwnerCompanyName($mCompany->getCompanyName());
+            $basicOkrDTOTargetOkr->setOwnerCompanyImageVersion($mCompany->getImageVersion());
         }
         $basicOkrDTOTargetOkr->setTargetValue($tOkr->getTargetValue());
         $basicOkrDTOTargetOkr->setAchievedValue($tOkr->getAchievedValue());

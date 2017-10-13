@@ -514,6 +514,7 @@ class UserSettingService extends BaseService
             $userSearchDTO = new UserSearchDTO();
             $userSearchDTO->setUserId($mUser->getUserId());
             $userSearchDTO->setUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+            $userSearchDTO->setImageVersion($mUser->getImageVersion());
             $userSearchDTO->setRoleAssignmentId($mUser->getRoleAssignment()->getRoleAssignmentId());
             $userSearchDTO->setRoleLevel($mUser->getRoleAssignment()->getRoleLevel());
             $lastLogin = $tLoginRepos->getLastLogin($mUser->getUserId());
@@ -557,6 +558,7 @@ class UserSettingService extends BaseService
         $userSearchDTO = new UserSearchDTO();
         $userSearchDTO->setUserId($mUser->getUserId());
         $userSearchDTO->setUserName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $userSearchDTO->setImageVersion($mUser->getImageVersion());
         $userSearchDTO->setRoleAssignmentId($mUser->getRoleAssignment()->getRoleAssignmentId());
         $userSearchDTO->setRoleLevel($mUser->getRoleAssignment()->getRoleLevel());
         $lastLogin = $tLoginRepos->getLastLogin($mUser->getUserId());

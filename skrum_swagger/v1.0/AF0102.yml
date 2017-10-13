@@ -61,14 +61,20 @@ paths:
                       type: integer
                     ownerUserName:
                       type: string
+                    ownerUserImageVersion:
+                      type: integer
                     ownerGroupId:
                       type: integer
                     ownerGroupName:
                       type: string
+                    ownerGroupImageVersion:
+                      type: integer
                     ownerCompanyId:
                       type: integer
                     ownerCompanyName:
                       type: string
+                    ownerCompanyImageVersion:
+                      type: integer
                     status:
                       type: string
                     children:
