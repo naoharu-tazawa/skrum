@@ -26,6 +26,13 @@ class BasicGroupInfoDTO
     private $name;
 
     /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $imageVersion;
+
+    /**
      * @var array
      *
      * @JSON\Type("array")
@@ -106,6 +113,30 @@ class BasicGroupInfoDTO
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set imageVersion
+     *
+     * @param integer $imageVersion
+     *
+     * @return BasicGroupInfoDTO
+     */
+    public function setImageVersion($imageVersion)
+    {
+        $this->imageVersion = $imageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get imageVersion
+     *
+     * @return integer
+     */
+    public function getImageVersion()
+    {
+        return $this->imageVersion;
     }
 
     /**

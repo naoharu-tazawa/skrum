@@ -41,6 +41,10 @@ paths:
                     type: string
                   firstName:
                     type: string
+                  imageVersion:
+                    type: integer
+                  roleLevel:
+                    type: integer
                   departments:
                     type: array
                     items:
@@ -62,6 +66,8 @@ paths:
                   - userId
                   - lastName
                   - firstName
+                  - imageVersion
+                  - roleLevel
                   - position
                   - emailAddress
               okrs:
@@ -76,6 +82,8 @@ paths:
                     ownerUserId:
                       type: integer
                     ownerUserName:
+                      type: integer
+                    ownerUserImageVersion:
                       type: integer
                     ownerUserRoleLevel:
                       type: integer
@@ -104,13 +112,19 @@ paths:
                           type: integer
                         ownerUserName:
                           type: integer
+                        ownerUserImageVersion:
+                          type: integer
                         ownerGroupId:
                           type: integer
                         ownerGroupName:
                           type: integer
+                        ownerGroupImageVersion:
+                          type: integer
                         ownerCompanyId:
                           type: integer
                         ownerCompanyName:
+                          type: integer
+                        ownerCompanyImageVersion:
                           type: integer
                       required:
                         - okrId
@@ -141,18 +155,24 @@ paths:
                             type: integer
                           ownerUserName:
                             type: string
+                          ownerUserImageVersion:
+                            type: integer
                           ownerUserRoleLevel:
                             type: integer
                           ownerGroupId:
                             type: integer
                           ownerGroupName:
                             type: string
+                          ownerGroupImageVersion:
+                            type: integer
                           ownerGroupType:
                             type: string
                           ownerCompanyId:
                             type: integer
                           ownerCompanyName:
                             type: string
+                          ownerCompanyImageVersion:
+                            type: integer
                           status:
                             type: string
                           disclosureType:
@@ -177,6 +197,9 @@ paths:
                     - okrId
                     - okrName
                     - ownerUserId
+                    - ownerUserName
+                    - ownerUserImageVersion
+                    - ownerUserRoleLevel
                     - targetValue
                     - achievedValue
                     - unit
@@ -197,6 +220,8 @@ paths:
                           type: integer
                         name:
                           type: string
+                        imageVersion:
+                          type: integer
                         numberOfOkrs:
                           type: integer
                     group:
@@ -206,6 +231,8 @@ paths:
                           type: integer
                         name:
                           type: string
+                        imageVersion:
+                          type: integer
                         numberOfOkrs:
                           type: integer
                     company:
@@ -215,6 +242,8 @@ paths:
                           type: integer
                         name:
                           type: string
+                        imageVersion:
+                          type: integer
                         numberOfOkrs:
                           type: integer
                   required:

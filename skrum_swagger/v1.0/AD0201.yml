@@ -39,6 +39,8 @@ paths:
                     type: integer
                   name:
                     type: string
+                  imageVersion:
+                    type: integer
                   groupPaths:
                     type: array
                     items:
@@ -61,6 +63,7 @@ paths:
                 required:
                   - groupId
                   - name
+                  - imageVersion
               okrs:
                 type: array
                 items:
@@ -74,6 +77,8 @@ paths:
                       type: integer
                     ownerGroupName:
                       type: string
+                    ownerGroupImageVersion:
+                      type: integer
                     ownerGroupType:
                       type: string
                     targetValue:
@@ -101,13 +106,19 @@ paths:
                           type: integer
                         ownerUserName:
                           type: integer
+                        ownerUserImageVersion:
+                          type: integer
                         ownerGroupId:
                           type: integer
                         ownerGroupName:
                           type: integer
+                        ownerGroupImageVersion:
+                          type: integer
                         ownerCompanyId:
                           type: integer
                         ownerCompanyName:
+                          type: integer
+                        ownerCompanyImageVersion:
                           type: integer
                       required:
                         - okrId
@@ -138,18 +149,24 @@ paths:
                             type: integer
                           ownerUserName:
                             type: string
+                          ownerUserImageVersion:
+                            type: integer
                           ownerUserRoleLevel:
                             type: integer
                           ownerGroupId:
                             type: integer
                           ownerGroupName:
                             type: string
+                          ownerGroupImageVersion:
+                            type: integer
                           ownerGroupType:
                             type: string
                           ownerCompanyId:
                             type: integer
                           ownerCompanyName:
                             type: string
+                          ownerCompanyImageVersion:
+                            type: integer
                           status:
                             type: string
                           disclosureType:
@@ -173,7 +190,10 @@ paths:
                   required:
                     - okrId
                     - okrName
-                    - ownerUserId
+                    - ownerGroupId
+                    - ownerGroupName
+                    - ownerGroupImageVersion
+                    - ownerGroupType
                     - targetValue
                     - achievedValue
                     - unit
@@ -194,6 +214,8 @@ paths:
                           type: integer
                         name:
                           type: string
+                        imageVersion:
+                          type: integer
                         numberOfOkrs:
                           type: integer
                     group:
@@ -203,6 +225,8 @@ paths:
                           type: integer
                         name:
                           type: string
+                        imageVersion:
+                          type: integer
                         numberOfOkrs:
                           type: integer
                     company:
@@ -212,6 +236,8 @@ paths:
                           type: integer
                         name:
                           type: string
+                        imageVersion:
+                          type: integer
                         numberOfOkrs:
                           type: integer
                   required:

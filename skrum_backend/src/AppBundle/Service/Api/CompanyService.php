@@ -33,6 +33,7 @@ class CompanyService extends BaseService
         $basicCompanyInfoDTO = new BasicCompanyInfoDTO();
         $basicCompanyInfoDTO->setCompanyId($mCompany->getCompanyId());
         $basicCompanyInfoDTO->setName($mCompany->getCompanyName());
+        $basicCompanyInfoDTO->setImageVersion($mCompany->getImageVersion());
         $basicCompanyInfoDTO->setVision($mCompany->getVision());
         $basicCompanyInfoDTO->setMission($mCompany->getMission());
 

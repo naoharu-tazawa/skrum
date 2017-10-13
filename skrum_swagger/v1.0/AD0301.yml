@@ -39,6 +39,8 @@ paths:
                     type: integer
                   name:
                     type: string
+                  imageVersion:
+                    type: integer
                   vision:
                     type: string
                   mission:
@@ -48,6 +50,7 @@ paths:
                 required:
                   - companyId
                   - name
+                  - imageVersion
               okrs:
                 type: array
                 items:
@@ -63,6 +66,8 @@ paths:
                       type: integer
                     ownerCompanyName:
                       type: string
+                    ownerCompanyImageVersion:
+                      type: integer
                     targetValue:
                       type: integer
                     achievedValue:
@@ -88,13 +93,19 @@ paths:
                           type: integer
                         ownerUserName:
                           type: integer
+                        ownerUserImageVersion:
+                          type: integer
                         ownerGroupId:
                           type: integer
                         ownerGroupName:
                           type: integer
+                        ownerGroupImageVersion:
+                          type: integer
                         ownerCompanyId:
                           type: integer
                         ownerCompanyName:
+                          type: integer
+                        ownerCompanyImageVersion:
                           type: integer
                       required:
                         - okrId
@@ -123,18 +134,24 @@ paths:
                             type: integer
                           ownerUserName:
                             type: string
+                          ownerUserImageVersion:
+                            type: integer
                           ownerUserRoleLevel:
                             type: integer
                           ownerGroupId:
                             type: integer
                           ownerGroupName:
                             type: string
+                          ownerGroupImageVersion:
+                            type: integer
                           ownerGroupType:
                             type: string
                           ownerCompanyId:
                             type: integer
                           ownerCompanyName:
                             type: string
+                          ownerCompanyImageVersion:
+                            type: integer
                           status:
                             type: string
                           disclosureType:
@@ -158,7 +175,9 @@ paths:
                   required:
                     - okrId
                     - okrName
-                    - ownerUserId
+                    - ownerCompanyId
+                    - ownerCompanyName
+                    - ownerCompanyImageVersion
                     - targetValue
                     - achievedValue
                     - unit

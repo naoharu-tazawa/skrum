@@ -49,6 +49,7 @@ class UserService extends BaseService
         $basicUserInfoDTO->setUserId($mUserArray[0]->getUserId());
         $basicUserInfoDTO->setLastName($mUserArray[0]->getLastName());
         $basicUserInfoDTO->setFirstName($mUserArray[0]->getFirstName());
+        $basicUserInfoDTO->setImageVersion($mUserArray[0]->getImageVersion());
         $basicUserInfoDTO->setDepartments($groupDTOArray);
         $basicUserInfoDTO->setPosition($mUserArray[0]->getPosition());
         $basicUserInfoDTO->setPhoneNumber($mUserArray[0]->getPhoneNumber());

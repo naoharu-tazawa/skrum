@@ -87,14 +87,17 @@ class OkrService extends BaseService
                 if ($tOkrArray[$i]['objective']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                     $basicOkrDTOObjective->setOwnerUserId($tOkrArray[$i]['objective']->getOwnerUser()->getUserId());
                     $basicOkrDTOObjective->setOwnerUserName($tOkrArray[$i]['objective']->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['objective']->getOwnerUser()->getFirstName());
+                    $basicOkrDTOObjective->setOwnerUserImageVersion($tOkrArray[$i]['objective']->getOwnerUser()->getImageVersion());
                     $basicOkrDTOObjective->setOwnerUserRoleLevel($tOkrArray[$i]['objective']->getOwnerUser()->getRoleAssignment()->getRoleLevel());
                 } elseif ($tOkrArray[$i]['objective']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $basicOkrDTOObjective->setOwnerGroupId($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupId());
                     $basicOkrDTOObjective->setOwnerGroupName($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupName());
+                    $basicOkrDTOObjective->setOwnerGroupImageVersion($tOkrArray[$i]['objective']->getOwnerGroup()->getImageVersion());
                     $basicOkrDTOObjective->setOwnerGroupType($tOkrArray[$i]['objective']->getOwnerGroup()->getGroupType());
                 } else {
                     $basicOkrDTOObjective->setOwnerCompanyId($tOkrArray[$i]['objective']->getOwnerCompanyId());
                     $basicOkrDTOObjective->setOwnerCompanyName($mCompany->getCompanyName());
+                    $basicOkrDTOObjective->setOwnerCompanyImageVersion($mCompany->getImageVersion());
                 }
                 $basicOkrDTOObjective->setTargetValue($tOkrArray[$i]['objective']->getTargetValue());
                 $basicOkrDTOObjective->setAchievedValue($tOkrArray[$i]['objective']->getAchievedValue());
@@ -112,12 +115,15 @@ class OkrService extends BaseService
                     if ($tOkrArray[$i]['objective']->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                         $basicOkrDTOParentOkr->setOwnerUserId($tOkrArray[$i]['objective']->getParentOkr()->getOwnerUser()->getUserId());
                         $basicOkrDTOParentOkr->setOwnerUserName($tOkrArray[$i]['objective']->getParentOkr()->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['objective']->getParentOkr()->getOwnerUser()->getFirstName());
+                        $basicOkrDTOParentOkr->setOwnerUserImageVersion($tOkrArray[$i]['objective']->getParentOkr()->getOwnerUser()->getImageVersion());
                     } elseif ($tOkrArray[$i]['objective']->getParentOkr()->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                         $basicOkrDTOParentOkr->setOwnerGroupId($tOkrArray[$i]['objective']->getParentOkr()->getOwnerGroup()->getGroupId());
                         $basicOkrDTOParentOkr->setOwnerGroupName($tOkrArray[$i]['objective']->getParentOkr()->getOwnerGroup()->getGroupName());
+                        $basicOkrDTOParentOkr->setOwnerGroupImageVersion($tOkrArray[$i]['objective']->getParentOkr()->getOwnerGroup()->getImageVersion());
                     } else {
                         $basicOkrDTOParentOkr->setOwnerCompanyId($tOkrArray[$i]['objective']->getParentOkr()->getOwnerCompanyId());
                         $basicOkrDTOParentOkr->setOwnerCompanyName($mCompany->getCompanyName());
+                        $basicOkrDTOParentOkr->setOwnerCompanyImageVersion($mCompany->getImageVersion());
                     }
 
                     $basicOkrDTOObjective->setParentOkr($basicOkrDTOParentOkr);
@@ -168,14 +174,17 @@ class OkrService extends BaseService
                 if ($tOkrArray[$i]['keyResult']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
                     $basicOkrDTOKeyResult->setOwnerUserId($tOkrArray[$i]['keyResult']->getOwnerUser()->getUserId());
                     $basicOkrDTOKeyResult->setOwnerUserName($tOkrArray[$i]['keyResult']->getOwnerUser()->getLastName() . ' ' . $tOkrArray[$i]['keyResult']->getOwnerUser()->getFirstName());
+                    $basicOkrDTOKeyResult->setOwnerUserImageVersion($tOkrArray[$i]['keyResult']->getOwnerUser()->getImageVersion());
                     $basicOkrDTOKeyResult->setOwnerUserRoleLevel($tOkrArray[$i]['keyResult']->getOwnerUser()->getRoleAssignment()->getRoleLevel());
                 } elseif ($tOkrArray[$i]['keyResult']->getOwnerType() === DBConstant::OKR_OWNER_TYPE_GROUP) {
                     $basicOkrDTOKeyResult->setOwnerGroupId($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupId());
                     $basicOkrDTOKeyResult->setOwnerGroupName($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupName());
+                    $basicOkrDTOKeyResult->setOwnerGroupImageVersion($tOkrArray[$i]['keyResult']->getOwnerGroup()->getImageVersion());
                     $basicOkrDTOKeyResult->setOwnerGroupType($tOkrArray[$i]['keyResult']->getOwnerGroup()->getGroupType());
                 } else {
                     $basicOkrDTOKeyResult->setOwnerCompanyId($tOkrArray[$i]['keyResult']->getOwnerCompanyId());
                     $basicOkrDTOKeyResult->setOwnerCompanyName($tOkrArray[$i]['companyName']);
+                    $basicOkrDTOKeyResult->setOwnerCompanyImageVersion($tOkrArray[$i]['imageVersion']);
                 }
                 $basicOkrDTOKeyResult->setStatus($tOkrArray[$i]['keyResult']->getStatus());
                 $basicOkrDTOKeyResult->setDisclosureType($tOkrArray[$i]['keyResult']->getDisclosureType());
@@ -231,6 +240,7 @@ class OkrService extends BaseService
             $userAlignmentsDTO = new UserAlignmentsDTO();
             $userAlignmentsDTO->setUserId($userAlignmentsInfo['userId']);
             $userAlignmentsDTO->setName($userAlignmentsInfo['lastName'] . ' ' . $userAlignmentsInfo['firstName']);
+            $userAlignmentsDTO->setImageVersion($userAlignmentsInfo['imageVersion']);
             $userAlignmentsDTO->setNumberOfOkrs($userAlignmentsInfo['numberOfOkrs']);
 
             $alignmentsInfoDTO = new AlignmentsInfoDTO();
@@ -245,6 +255,7 @@ class OkrService extends BaseService
             $groupAlignmentsDTO = new GroupAlignmentsDTO();
             $groupAlignmentsDTO->setGroupId($groupAlignmentsInfo['groupId']);
             $groupAlignmentsDTO->setName($groupAlignmentsInfo['groupName']);
+            $groupAlignmentsDTO->setImageVersion($groupAlignmentsInfo['imageVersion']);
             $groupAlignmentsDTO->setNumberOfOkrs($groupAlignmentsInfo['numberOfOkrs']);
 
             $alignmentsInfoDTO = new AlignmentsInfoDTO();
@@ -259,6 +270,7 @@ class OkrService extends BaseService
             $companyAlignmentsDTO = new CompanyAlignmentsDTO();
             $companyAlignmentsDTO->setCompanyId($companyAlignmentsInfo['companyId']);
             $companyAlignmentsDTO->setName($companyAlignmentsInfo['companyName']);
+            $companyAlignmentsDTO->setImageVersion($companyAlignmentsInfo['imageVersion']);
             $companyAlignmentsDTO->setNumberOfOkrs($companyAlignmentsInfo['numberOfOkrs']);
 
             $alignmentsInfoDTO = new AlignmentsInfoDTO();
