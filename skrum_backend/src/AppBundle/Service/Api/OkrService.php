@@ -21,6 +21,7 @@ use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\CompanyAlignmentsDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\GroupAlignmentsDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\UserAlignmentsDTO;
+use AppBundle\Entity\TOneOnOne;
 
 /**
  * OKRサービスクラス
@@ -629,6 +630,19 @@ class OkrService extends BaseService
 
             // 自動投稿登録（◯%達成時）
             $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkr, $tOkrActivity);
+
+            // 1on1進捗メモ登録
+            if (array_key_exists('post', $data)) {
+                $tOneOnOne = new TOneOnOne();
+                $tOneOnOne->setOneOnOneType(DBConstant::ONE_ON_ONE_TYPE_PROGRESS_REPORT);
+                $tOneOnOne->setSenderUserId($auth->getUserId());
+                $tOneOnOne->setTargetDate(DateUtility::getCurrentDatetime());
+                $tOneOnOne->setOkrId($tOkr->getOkrId());
+                $tOneOnOne->setOkrActivityId($tOkrActivity->getId());
+                $tOneOnOne->setBody($data['post']);
+                $tOneOnOne->setNewArrivalDatetime(DateUtility::getCurrentDatetime());
+                $this->persist($tOneOnOne);
+            }
 
             // 達成率を再計算
             $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();

@@ -64,6 +64,13 @@ class TOneOnOne
     private $okrId;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="okr_activity_id", type="bigint", nullable=true)
+     */
+    private $okrActivityId;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="body", type="text", length=65535, nullable=false)
@@ -287,6 +294,30 @@ class TOneOnOne
     public function getOkrId()
     {
         return $this->okrId;
+    }
+
+    /**
+     * Set okrActivityId
+     *
+     * @param integer $okrActivityId
+     *
+     * @return TOneOnOne
+     */
+    public function setOkrActivityId($okrActivityId)
+    {
+        $this->okrActivityId = $okrActivityId;
+
+        return $this;
+    }
+
+    /**
+     * Get okrActivityId
+     *
+     * @return integer
+     */
+    public function getOkrActivityId()
+    {
+        return $this->okrActivityId;
     }
 
     /**
