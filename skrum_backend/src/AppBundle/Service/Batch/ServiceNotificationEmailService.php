@@ -91,6 +91,8 @@ class ServiceNotificationEmailService extends BaseService
                 $this->logAlert('DB登録エラーが発生したためロールバックします');
                 return DBConstant::EXIT_CODE_ERROR;
             }
+
+            unlink(__DIR__ . '/../../../../app/service_notification_email/email.txt');
         }
 
         return $exitCode;
