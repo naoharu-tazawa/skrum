@@ -41,14 +41,17 @@ paths:
                   properties:
                     groupId:
                       type: integer
-                    groupType:
-                      type: string
                     groupName:
+                      type: string
+                    imageVersion:
+                      type: integer
+                    groupType:
                       type: string
                   required:
                     - groupId
-                    - groupType
                     - groupName
+                    - imageVersion
+                    - groupType
         400:
           description: JSONスキーマ不正
         409:

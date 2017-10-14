@@ -51,6 +51,13 @@ class OkrSearchDTO
      *
      * @JSON\Type("integer")
      */
+    private $ownerUserImageVersion;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $ownerGroupId;
 
     /**
@@ -65,6 +72,13 @@ class OkrSearchDTO
      *
      * @JSON\Type("integer")
      */
+    private $ownerGroupImageVersion;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $ownerCompanyId;
 
     /**
@@ -73,6 +87,13 @@ class OkrSearchDTO
      * @JSON\Type("string")
      */
     private $ownerCompanyName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $ownerCompanyImageVersion;
 
     /**
      * Set okrId
@@ -195,6 +216,30 @@ class OkrSearchDTO
     }
 
     /**
+     * Set ownerUserImageVersion
+     *
+     * @param integer $ownerUserImageVersion
+     *
+     * @return OkrSearchDTO
+     */
+    public function setOwnerUserImageVersion($ownerUserImageVersion)
+    {
+        $this->ownerUserImageVersion = $ownerUserImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerUserImageVersion
+     *
+     * @return integer
+     */
+    public function getOwnerUserImageVersion()
+    {
+        return $this->ownerUserImageVersion;
+    }
+
+    /**
      * Set ownerGroupId
      *
      * @param integer $ownerGroupId
@@ -243,6 +288,30 @@ class OkrSearchDTO
     }
 
     /**
+     * Set ownerGroupImageVersion
+     *
+     * @param integer $ownerGroupImageVersion
+     *
+     * @return OkrSearchDTO
+     */
+    public function setOwnerGroupImageVersion($ownerGroupImageVersion)
+    {
+        $this->ownerGroupImageVersion = $ownerGroupImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerGroupImageVersion
+     *
+     * @return integer
+     */
+    public function getOwnerGroupImageVersion()
+    {
+        return $this->ownerGroupImageVersion;
+    }
+
+    /**
      * Set ownerCompanyId
      *
      * @param integer $ownerCompanyId
@@ -288,5 +357,29 @@ class OkrSearchDTO
     public function getOwnerCompanyName()
     {
         return $this->ownerCompanyName;
+    }
+
+    /**
+     * Set ownerCompanyImageVersion
+     *
+     * @param integer $ownerCompanyImageVersion
+     *
+     * @return OkrSearchDTO
+     */
+    public function setOwnerCompanyImageVersion($ownerCompanyImageVersion)
+    {
+        $this->ownerCompanyImageVersion = $ownerCompanyImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerCompanyImageVersion
+     *
+     * @return integer
+     */
+    public function getOwnerCompanyImageVersion()
+    {
+        return $this->ownerCompanyImageVersion;
     }
 }

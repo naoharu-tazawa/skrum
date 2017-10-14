@@ -9,6 +9,7 @@ import HeaderContainer from './header/HeaderContainer';
 import styles from './NavigationContainer.css';
 import { fetchUserTop } from './action';
 import { logout } from '../auth/action';
+import { isPathSetting } from '../util/RouteUtil';
 
 class NavigationContainer extends Component {
 
@@ -18,17 +19,29 @@ class NavigationContainer extends Component {
     pathname: PropTypes.string.isRequired,
     currentUserId: PropTypes.number.isRequired,
     roleLevel: PropTypes.number.isRequired,
+    needsFetching: PropTypes.bool,
     isFetching: PropTypes.bool,
     companyName: PropTypes.string,
     userName: PropTypes.string,
-    dispatchFetchUserInfo: PropTypes.func.isRequired,
+    dispatchFetchUserTop: PropTypes.func.isRequired,
     dispatchForceLogout: PropTypes.func.isRequired,
   };
 
   componentWillMount() {
-    const { dispatchFetchUserInfo, currentUserId, dispatchForceLogout } = this.props;
-    dispatchFetchUserInfo(currentUserId)
-      .then(({ error } = {}) => error && dispatchForceLogout());
+    this.fetchUserTopIfNeeded(this.props);
+  }
+
+  componentWillReceiveProps(next) {
+    this.fetchUserTopIfNeeded(next);
+  }
+
+  fetchUserTopIfNeeded(props) {
+    const { pathname, userName, needsFetching } = props;
+    if (needsFetching && (!userName || !isPathSetting(pathname))) {
+      const { dispatchFetchUserTop, currentUserId, dispatchForceLogout } = props;
+      dispatchFetchUserTop(currentUserId)
+        .then(({ error } = {}) => error && dispatchForceLogout());
+    }
   }
 
   render() {
@@ -51,18 +64,19 @@ const mapStateToProps = (state) => {
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
   const { userId: currentUserId, roleLevel } = state.auth;
-  const { isFetching, data = {} } = state.top || {};
+  const { needsFetching, isFetching, data = {} } = state.top || {};
   const { company = {}, users = [] } = data;
   const { name: companyName } = company;
   const [{ name: userName } = {}] = users;
-  return { pathname, currentUserId, roleLevel, isFetching, companyName, userName: trim(userName) };
+  return { ...{ pathname, currentUserId, roleLevel },
+    ...{ needsFetching, isFetching, companyName, userName: trim(userName) } };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const dispatchFetchUserInfo = userId => dispatch(fetchUserTop(userId));
+  const dispatchFetchUserTop = userId => dispatch(fetchUserTop(userId));
   const dispatchForceLogout = () => dispatch(logout());
   return {
-    dispatchFetchUserInfo,
+    dispatchFetchUserTop,
     dispatchForceLogout,
   };
 };

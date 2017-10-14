@@ -11,6 +11,7 @@ use AppBundle\Entity\TOkrActivity;
 use AppBundle\Api\ResponseDTO\OkrDetailsDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\AchievementRateChartDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicOkrDTO;
+use AppBundle\Entity\MCompany;
 
 /**
  * OKR詳細サービスクラス
@@ -48,7 +49,6 @@ class OkrDetailsService extends BaseService
         // 会社名を取得
         $mCompanyRepos = $this->getMCompanyRepository();
         $mCompany = $mCompanyRepos->find($auth->getCompanyId());
-        $companyName = $mCompany->getCompanyName();
 
         // DTOに詰め替える
         $disclosureLogic = $this->getDisclosureLogic();
@@ -62,7 +62,7 @@ class OkrDetailsService extends BaseService
                     if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkr['childrenOkr'])) {
                         continue;
                     }
-                    $basicOkrDTO = $this->repackDTOWithOkrEntity($tOkr['childrenOkr'], $companyName);
+                    $basicOkrDTO = $this->repackDTOWithOkrEntity($tOkr['childrenOkr'], $mCompany);
                     $childrenOkrs[] = $basicOkrDTO;
                 }
             } elseif (array_key_exists('parentOkr', $tOkr)) {
@@ -71,7 +71,7 @@ class OkrDetailsService extends BaseService
                     if (!$disclosureLogic->checkOkr($auth->getUserId(), $auth->getRoleLevel(), $tOkr['parentOkr'])) {
                         continue;
                     }
-                    $basicOkrDTO = $this->repackDTOWithOkrEntity($tOkr['parentOkr'], $companyName);
+                    $basicOkrDTO = $this->repackDTOWithOkrEntity($tOkr['parentOkr'], $mCompany);
                     $okrDetailsDTO->setParentOkr($basicOkrDTO);
                 }
             } else {
@@ -81,7 +81,7 @@ class OkrDetailsService extends BaseService
                         $chartSetFlg = false;
                         continue;
                     }
-                    $basicOkrDTO = $this->repackDTOWithOkrEntity($tOkr['selectedOkr'], $companyName);
+                    $basicOkrDTO = $this->repackDTOWithOkrEntity($tOkr['selectedOkr'], $mCompany);
                     $okrDetailsDTO->setObjective($basicOkrDTO);
                 }
             }
@@ -111,10 +111,10 @@ class OkrDetailsService extends BaseService
      * OKRエンティティをDTOに詰め替える
      *
      * @param TOkr $tOkr OKRエンティティ
-     * @param string $companyName 会社名
+     * @param MCompany $mCompany 会社エンティティ
      * @return BasicOkrDTO
      */
-    private function repackDTOWithOkrEntity(TOkr $tOkr, string $companyName = null): BasicOkrDTO
+    private function repackDTOWithOkrEntity(TOkr $tOkr, MCompany $mCompany = null): BasicOkrDTO
     {
         $basicOkrDTO = new BasicOkrDTO();
         $basicOkrDTO->setOkrId($tOkr->getOkrId());
@@ -129,14 +129,17 @@ class OkrDetailsService extends BaseService
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $basicOkrDTO->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
             $basicOkrDTO->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+            $basicOkrDTO->setOwnerUserImageVersion($tOkr->getOwnerUser()->getImageVersion());
             $basicOkrDTO->setOwnerUserRoleLevel($tOkr->getOwnerUser()->getRoleAssignment()->getRoleLevel());
         } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
             $basicOkrDTO->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
             $basicOkrDTO->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+            $basicOkrDTO->setOwnerGroupImageVersion($tOkr->getOwnerGroup()->getImageVersion());
             $basicOkrDTO->setOwnerGroupType($tOkr->getOwnerGroup()->getGroupType());
         } else {
             $basicOkrDTO->setOwnerCompanyId($tOkr->getOwnerCompanyId());
-            $basicOkrDTO->setOwnerCompanyName($companyName);
+            $basicOkrDTO->setOwnerCompanyName($mCompany->getCompanyName());
+            $basicOkrDTO->setOwnerCompanyImageVersion($mCompany->getImageVersion());
         }
         $basicOkrDTO->setStartDate($tOkr->getStartDate());
         $basicOkrDTO->setEndDate($tOkr->getEndDate());

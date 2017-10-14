@@ -10,7 +10,7 @@ produces:
 basePath: /v1
 
 paths:
-  /parentokrs/search.json?{tfid}&{oid}&{q}:
+  /parentokrs/search.json?{tfid}&{oid}&{wtype}&{wid}&{q}:
     get:
       description: 紐付け先OKR検索（新規目標登録時・紐付け先変更時(対象:Objective)兼用）
       parameters:
@@ -60,14 +60,20 @@ paths:
                 type: integer
               ownerUserName:
                 type: string
+              ownerUserImageVersion:
+                type: integer
               ownerGroupId:
                 type: integer
               ownerGroupName:
                 type: string
+              ownerGroupImageVersion:
+                type: integer
               ownerCompanyId:
                 type: integer
               ownerCompanyName:
                 type: string
+              ownerCompanyImageVersion:
+                type: integer
         400:
           description: JSONスキーマ不正
         409:

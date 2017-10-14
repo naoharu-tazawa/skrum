@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { timeframesPropTypes } from './propTypes';
 import { putTimeframe, defaultTimeframe, deleteTimeframe } from '../action';
+import { touchUserTop } from '../../../navigation/action';
 import TimeframeList from './TimeframeList';
 
 class TimeframeListContainer extends Component {
@@ -41,7 +42,8 @@ const mapDispatchToProps = (dispatch) => {
   const dispatchPutTimeframe = (id, data) =>
     dispatch(putTimeframe(id, data));
   const dispatchDefaultTimeframe = id =>
-    dispatch(defaultTimeframe(id));
+    dispatch(defaultTimeframe(id))
+      .then(({ error }) => !error && dispatch(touchUserTop()));
   const dispatchDeleteTimeframe = id =>
     dispatch(deleteTimeframe(id));
   return { dispatchPutTimeframe, dispatchDefaultTimeframe, dispatchDeleteTimeframe };

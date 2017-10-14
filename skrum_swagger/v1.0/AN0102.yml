@@ -34,14 +34,14 @@ paths:
                 type: string
       responses:
         200:
-          description: 成功
+          description: 画像バージョン
           schema:
             type: object
             properties:
-              result:
-                type: string
+              imageVersion:
+                type: integer
             required:
-              - result
+              - imageVersion
         400:
           description: JSONスキーマ不正
         409:

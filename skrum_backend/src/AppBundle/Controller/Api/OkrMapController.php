@@ -46,7 +46,7 @@ class OkrMapController extends BaseController
     }
 
     /**
-     * ユーザ目標取得
+     * ユーザ目標取得（D3.js用）
      *
      * @Rest\Get("/v1/users/{userId}/okrs.{_format}")
      * @param Request $request リクエストオブジェクト
@@ -100,7 +100,7 @@ class OkrMapController extends BaseController
     }
 
     /**
-     * グループ目標取得
+     * グループ目標取得（D3.js用）
      *
      * @Rest\Get("/v1/groups/{groupId}/okrs.{_format}")
      * @param Request $request リクエストオブジェクト
@@ -159,7 +159,7 @@ class OkrMapController extends BaseController
     }
 
     /**
-     * 会社目標取得
+     * 会社目標取得（D3.js用）
      *
      * @Rest\Get("/v1/companies/{companyId}/okrs.{_format}")
      * @param Request $request リクエストオブジェクト
@@ -218,7 +218,7 @@ class OkrMapController extends BaseController
     }
 
     /**
-     * 単一OKRマップ取得
+     * 単一OKRマップ取得（D3.js用）
      *
      * @Rest\Get("/v1/okrs/{okrId}/descendants.{_format}")
      * @param Request $request リクエストオブジェクト

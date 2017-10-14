@@ -46,11 +46,11 @@ class TOkrRepository extends BaseRepository
     public function searchOkr(string $keyword, int $timeframeId = null, int $companyId): array
     {
         $sql = <<<SQL
-        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
         FROM t_okr t0_
         INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
         LEFT OUTER JOIN (
-            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
             FROM m_user m0_
             WHERE (m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
             ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -67,11 +67,11 @@ class TOkrRepository extends BaseRepository
               )
               AND (t0_.deleted_at IS NULL)
         UNION
-        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
         FROM t_okr t0_
         INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
         LEFT OUTER JOIN (
-            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
             FROM m_user m0_
             WHERE (m0_.deleted_at IS NULL)
             ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -85,11 +85,11 @@ class TOkrRepository extends BaseRepository
               )
               AND (t0_.deleted_at IS NULL)
         UNION
-        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+        SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
         FROM t_okr t0_
         INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
         LEFT OUTER JOIN (
-            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+            SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
             FROM m_user m0_
             WHERE (m0_.deleted_at IS NULL)
             ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -137,11 +137,11 @@ SQL;
     {
         if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
             $sql = <<<SQL
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -159,11 +159,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -178,11 +178,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -199,11 +199,11 @@ SQL;
 SQL;
         } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
             $sql = <<<SQL
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -221,11 +221,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -240,11 +240,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -261,11 +261,11 @@ SQL;
 SQL;
         } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY) {
             $sql = <<<SQL
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -283,11 +283,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -302,11 +302,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -371,11 +371,11 @@ SQL;
     {
         if ($ownerType === DBConstant::OKR_OWNER_TYPE_USER) {
             $sql = <<<SQL
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -393,11 +393,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -412,11 +412,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -433,11 +433,11 @@ SQL;
 SQL;
         } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_GROUP) {
             $sql = <<<SQL
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -455,11 +455,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -474,11 +474,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -495,11 +495,11 @@ SQL;
 SQL;
         } elseif ($ownerType === DBConstant::OKR_OWNER_TYPE_COMPANY) {
             $sql = <<<SQL
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -517,11 +517,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -536,11 +536,11 @@ SQL;
                   )
                   AND (t0_.deleted_at IS NULL)
             UNION
-            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m2_.group_id, m2_.group_name, m3_.company_id, m3_.company_name
+            SELECT t0_.okr_id, t0_.name, t0_.owner_type, m1_.user_id, m1_.last_name, m1_.first_name, m1_.image_version AS userImageVersion, m2_.group_id, m2_.group_name, m2_.image_version AS groupImageVersion, m3_.company_id, m3_.company_name, m3_.image_version AS companyImageVersion
             FROM t_okr t0_
             INNER JOIN t_timeframe t1_ ON (t0_.timeframe_id = t1_.timeframe_id) AND (t1_.deleted_at IS NULL)
             LEFT OUTER JOIN (
-                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS userName
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, m0_.image_version, CONCAT(m0_.last_name, m0_.first_name) AS userName
                 FROM m_user m0_
                 WHERE (m0_.deleted_at IS NULL)
                 ) AS m1_ ON (t0_.owner_user_id = m1_.user_id)
@@ -813,7 +813,7 @@ SQL;
     public function getCompanyObjectivesAndKeyResults(int $companyId, int $timeframeId): array
     {
         $qb = $this->createQueryBuilder('to1');
-        $qb->select('to1 as objective', 'to2 as keyResult', 'mc1.companyName')
+        $qb->select('to1 as objective', 'to2 as keyResult', 'mc1.companyName', 'mc1.imageVersion')
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
@@ -925,7 +925,7 @@ SQL;
     public function getUserAlignmentsInfoForUser(int $userId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
-        $qb->select('IDENTITY(to2.ownerUser) AS userId', 'mu1.lastName', 'mu1.firstName', 'COUNT(to2.ownerUser) AS numberOfOkrs')
+        $qb->select('IDENTITY(to2.ownerUser) AS userId', 'mu1.lastName', 'mu1.firstName', 'mu1.imageVersion', 'COUNT(to2.ownerUser) AS numberOfOkrs')
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
@@ -956,7 +956,7 @@ SQL;
     public function getGroupAlignmentsInfoForUser(int $userId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
-        $qb->select('IDENTITY(to2.ownerGroup) AS groupId', 'mg1.groupName', 'COUNT(to2.ownerGroup) AS numberOfOkrs')
+        $qb->select('IDENTITY(to2.ownerGroup) AS groupId', 'mg1.groupName', 'mg1.imageVersion', 'COUNT(to2.ownerGroup) AS numberOfOkrs')
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
@@ -987,7 +987,7 @@ SQL;
     public function getCompanyAlignmentsInfoForUser(int $userId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
-        $qb->select('to2.ownerCompanyId AS companyId', 'mc2.companyName', 'COUNT(to2.ownerCompanyId) AS numberOfOkrs')
+        $qb->select('to2.ownerCompanyId AS companyId', 'mc2.companyName', 'mc2.imageVersion', 'COUNT(to2.ownerCompanyId) AS numberOfOkrs')
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
@@ -1018,7 +1018,7 @@ SQL;
     public function getUserAlignmentsInfoForGroup(int $groupId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
-        $qb->select('IDENTITY(to2.ownerUser) AS userId', 'mu1.lastName', 'mu1.firstName', 'COUNT(to2.ownerUser) AS numberOfOkrs')
+        $qb->select('IDENTITY(to2.ownerUser) AS userId', 'mu1.lastName', 'mu1.firstName', 'mu1.imageVersion', 'COUNT(to2.ownerUser) AS numberOfOkrs')
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
@@ -1049,7 +1049,7 @@ SQL;
     public function getGroupAlignmentsInfoForGroup(int $groupId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
-        $qb->select('IDENTITY(to2.ownerGroup) AS groupId', 'mg1.groupName', 'COUNT(to2.ownerGroup) AS numberOfOkrs')
+        $qb->select('IDENTITY(to2.ownerGroup) AS groupId', 'mg1.groupName', 'mg1.imageVersion', 'COUNT(to2.ownerGroup) AS numberOfOkrs')
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')
@@ -1080,7 +1080,7 @@ SQL;
     public function getCompanyAlignmentsInfoForGroup(int $groupId, int $timeframeId, int $companyId): array
     {
         $qb = $this->createQueryBuilder('to1');
-        $qb->select('to2.ownerCompanyId AS companyId', 'mc2.companyName', 'COUNT(to2.ownerCompanyId) AS numberOfOkrs')
+        $qb->select('to2.ownerCompanyId AS companyId', 'mc2.companyName', 'mc2.imageVersion', 'COUNT(to2.ownerCompanyId) AS numberOfOkrs')
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.parentOkr = to2.okrId')

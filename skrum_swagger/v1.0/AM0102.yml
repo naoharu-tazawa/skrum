@@ -43,6 +43,8 @@ paths:
                       type: integer
                     userName:
                       type: string
+                    imageVersion:
+                      type: integer
                     roleAssignmentId:
                       type: integer
                     roleLevel:
@@ -52,6 +54,7 @@ paths:
                   required:
                     - userId
                     - userName
+                    - imageVersion
                     - roleAssignmentId
                     - roleLevel
         400:

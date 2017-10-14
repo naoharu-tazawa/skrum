@@ -175,7 +175,7 @@ export default (state = {
       if (error) {
         return { ...state, isDeletingKR: false, error: { message: payload.message } };
       }
-      const { subject, id, parentOkr } = payload.data;
+      const { subject, id = payload.data.okrId, parentOkr } = payload.data;
       const { okrId: parentOkrId, achievementRate } = parentOkr;
       const { [subject]: basics } = state;
       const okrs = basics.okrs.map(okr =>

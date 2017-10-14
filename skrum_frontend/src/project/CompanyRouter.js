@@ -10,7 +10,7 @@ export default class CompanyRouter extends Component {
   static propTypes = {
     params: PropTypes.shape({
       companyId: PropTypes.string.isRequired,
-      timeframeId: PropTypes.string.isRequired,
+      timeframeId: PropTypes.string,
       tab: tabPropType.isRequired,
       okrId: PropTypes.string,
     }),

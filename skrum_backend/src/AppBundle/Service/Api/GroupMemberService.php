@@ -53,6 +53,7 @@ class GroupMemberService extends BaseService
         $memberDTO = new MemberDTO();
         $memberDTO->setUserId($mUser->getUserId());
         $memberDTO->setName($mUser->getLastName() . ' ' . $mUser->getFirstName());
+        $memberDTO->setImageVersion($mUser->getImageVersion());
         $memberDTO->setPosition($mUser->getPosition());
         $userAchievementRateArray = array();
         foreach ($userOkrsArray as $userOkr) {
@@ -73,6 +74,7 @@ class GroupMemberService extends BaseService
         $groupDTO = new GroupDTO();
         $groupDTO->setGroupId($mGroup->getGroupId());
         $groupDTO->setGroupName($mGroup->getGroupName());
+        $groupDTO->setImageVersion($mGroup->getImageVersion());
         $groupDTO->setGroupType($mGroup->getGroupType());
         $groupAchievementRateArray = array();
         foreach ($groupOkrsArray as $groupOkr) {
@@ -114,6 +116,7 @@ class GroupMemberService extends BaseService
                 $memberDTO = new MemberDTO();
                 $memberDTO->setUserId($userInfoArray[$i]['userId']);
                 $memberDTO->setName($userInfoArray[$i]['lastName'] . ' ' . $userInfoArray[$i]['firstName']);
+                $memberDTO->setImageVersion($userInfoArray[$i]['imageVersion']);
                 $memberDTO->setPosition($userInfoArray[$i]['position']);
                 $lastLogin = $tLoginRepos->getLastLogin($userInfoArray[$i]['userId']);
                 if ($lastLogin !== null) {
@@ -139,6 +142,7 @@ class GroupMemberService extends BaseService
                     $memberDTO = new MemberDTO();
                     $memberDTO->setUserId($userInfoArray[$i]['userId']);
                     $memberDTO->setName($userInfoArray[$i]['lastName'] . ' ' . $userInfoArray[$i]['firstName']);
+                    $memberDTO->setImageVersion($userInfoArray[$i]['imageVersion']);
                     $memberDTO->setPosition($userInfoArray[$i]['position']);
                     $lastLogin = $tLoginRepos->getLastLogin($userInfoArray[$i]['userId']);
                     if ($lastLogin !== null) {
@@ -180,6 +184,7 @@ class GroupMemberService extends BaseService
             $memberDTO = new MemberDTO();
             $memberDTO->setUserId($possibleLeader->getUserId());
             $memberDTO->setName($possibleLeader->getLastName() . ' ' . $possibleLeader->getFirstName());
+            $memberDTO->setImageVersion($possibleLeader->getImageVersion());
             $possibleLeaders[] = $memberDTO;
         }
 
@@ -257,6 +262,7 @@ class GroupMemberService extends BaseService
                 $groupDTO = new GroupDTO();
                 $groupDTO->setGroupId($groupInfoArray[$i]['groupId']);
                 $groupDTO->setGroupName($groupInfoArray[$i]['groupName']);
+                $groupDTO->setImageVersion($groupInfoArray[$i]['imageVersion']);
                 $groupDTO->setGroupType($groupInfoArray[$i]['groupType']);
 
                 $achievementRateArray = array();
@@ -278,6 +284,7 @@ class GroupMemberService extends BaseService
                     $groupDTO = new GroupDTO();
                     $groupDTO->setGroupId($groupInfoArray[$i]['groupId']);
                     $groupDTO->setGroupName($groupInfoArray[$i]['groupName']);
+                    $groupDTO->setImageVersion($groupInfoArray[$i]['imageVersion']);
                     $groupDTO->setGroupType($groupInfoArray[$i]['groupType']);
 
                     $achievementRateArray = array();

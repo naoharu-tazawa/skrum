@@ -52,8 +52,10 @@ class Authenticated extends Component {
 
 const mapStateToProps = (state) => {
   const { isAuthorized, userId: currentUserId } = state.auth;
-  const { timeframes = [] } = state.top.data || {};
-  const { timeframeId } = find(timeframes, { defaultFlg: 1 }) || {};
+  const { needsFetching, isFetching, data: topData } = state.top || {};
+  const { timeframes = [] } = topData || {};
+  const { timeframeId } = needsFetching || isFetching ? 0 :
+    find(timeframes, { defaultFlg: 1 }) || {};
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
   const toRelogin = some(values(mapValues(state, 'error')), ['message', 'ログインしてください。']);

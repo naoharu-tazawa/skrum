@@ -30,6 +30,13 @@ class UserAlignmentsDTO
      *
      * @JSON\Type("integer")
      */
+    private $imageVersion;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $numberOfOkrs;
 
     /**
@@ -78,6 +85,30 @@ class UserAlignmentsDTO
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set imageVersion
+     *
+     * @param integer $imageVersion
+     *
+     * @return UserAlignmentsDTO
+     */
+    public function setImageVersion($imageVersion)
+    {
+        $this->imageVersion = $imageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get imageVersion
+     *
+     * @return integer
+     */
+    public function getImageVersion()
+    {
+        return $this->imageVersion;
     }
 
     /**

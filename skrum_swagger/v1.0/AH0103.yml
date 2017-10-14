@@ -30,6 +30,8 @@ paths:
                 type: integer
               groupName:
                 type: string
+              imageVersion:
+                type: integer
         400:
           description: JSONスキーマ不正
         409:

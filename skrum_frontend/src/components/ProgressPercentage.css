@@ -1,6 +1,7 @@
 .progressBox {
   display: flex;
   /*width: 150px;*/
+  margin: auto 0;
 }
 .progressPercent {
   margin-right: 8px;

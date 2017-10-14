@@ -41,6 +41,8 @@ paths:
                     type: string
                   firstName:
                     type: string
+                  imageVersion:
+                    type: integer
                   departments:
                     type: array
                     items:
@@ -67,6 +69,8 @@ paths:
                       type: integer
                     groupName:
                       type: string
+                    imageVersion:
+                      type: integer
                     groupType:
                       type: string
                     achievementRate:

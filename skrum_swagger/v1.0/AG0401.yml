@@ -38,10 +38,14 @@ paths:
             properties:
               postId:
                 type: integer
-              posterId:
-                type: integer
-              posterName:
+              posterType:
                 type: string
+              posterUserId:
+                type: integer
+              posterUserName:
+                type: string
+              posterUserImageVersion:
+                type: integer
               post:
                 type: string
               postedDatetime:

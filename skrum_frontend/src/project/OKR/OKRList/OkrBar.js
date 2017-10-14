@@ -55,7 +55,7 @@ class OkrBar extends Component {
             to={replacePath({ aspect: 'o', aspectId: id })}
             onMouseUp={e => e.stopPropagation()}
           >
-            {name}
+            <span>{name}</span>
           </Link>
         </div>
         <ProgressPercentage
@@ -119,4 +119,4 @@ class OkrBar extends Component {
   }
 }
 
-export default withModal(OkrBar);
+export default withModal(OkrBar, { wrapperClassName: styles.wrapper });

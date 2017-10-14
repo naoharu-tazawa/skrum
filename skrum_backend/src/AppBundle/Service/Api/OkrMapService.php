@@ -80,7 +80,7 @@ class OkrMapService extends BaseService
     {
         // 目標を取得
         $tOkrRepos = $this->getTOkrRepository();
-        $companyName = null;
+        $mCompany = null;
         if ($subjectType == Constant::SUBJECT_TYPE_USER) {
             $objectiveArray = $tOkrRepos->getUserObjectives($userId, $timeframeId, $companyId);
         } elseif ($subjectType == Constant::SUBJECT_TYPE_GROUP) {
@@ -91,7 +91,6 @@ class OkrMapService extends BaseService
             // 会社名を取得
             $mCompanyRepos = $this->getMCompanyRepository();
             $mCompany = $mCompanyRepos->find($companyId);
-            $companyName = $mCompany->getCompanyName();
         }
 
         $okrOperationLogic = $this->getOkrOperationLogic();
@@ -107,7 +106,7 @@ class OkrMapService extends BaseService
             }
 
             // 階層構造に変換
-            $okrMapDTO = $okrOperationLogic->tree($auth, $tOkrArray, $companyName);
+            $okrMapDTO = $okrOperationLogic->tree($auth, $tOkrArray, $mCompany);
 
             // トップのOKRに閲覧制限がかかっている場合、スキップ
             if ($okrMapDTO->getOkrId() === null) {
@@ -148,11 +147,10 @@ class OkrMapService extends BaseService
         // 会社名を取得
         $mCompanyRepos = $this->getMCompanyRepository();
         $mCompany = $mCompanyRepos->find($auth->getCompanyId());
-        $companyName = $mCompany->getCompanyName();
 
         // 階層構造に変換
         $okrOperationLogic = $this->getOkrOperationLogic();
-        $okrMapDTO = $okrOperationLogic->tree($auth, $tOkrArray, $companyName);
+        $okrMapDTO = $okrOperationLogic->tree($auth, $tOkrArray, $mCompany);
 
         return $okrMapDTO;
     }

@@ -26,20 +26,6 @@ class BasicUserInfoDTO
     private $name;
 
     /**
-     * @var integer
-     *
-     * @JSON\Type("integer")
-     */
-    private $roleLevel;
-
-    /**
-     * @var integer
-     *
-     * @JSON\Type("integer")
-     */
-    private $imageVersion;
-
-    /**
      * @var string
      *
      * @JSON\Type("string")
@@ -52,6 +38,20 @@ class BasicUserInfoDTO
      * @JSON\Type("string")
      */
     private $firstName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $imageVersion;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $roleLevel;
 
     /**
      * @var array
@@ -137,54 +137,6 @@ class BasicUserInfoDTO
     }
 
     /**
-     * Set roleLevel
-     *
-     * @param integer $roleLevel
-     *
-     * @return BasicUserInfoDTO
-     */
-    public function setRoleLevel($roleLevel)
-    {
-        $this->roleLevel = $roleLevel;
-
-        return $this;
-    }
-
-    /**
-     * Get roleLevel
-     *
-     * @return integer
-     */
-    public function getRoleLevel()
-    {
-        return $this->roleLevel;
-    }
-
-    /**
-     * Set imageVersion
-     *
-     * @param integer $imageVersion
-     *
-     * @return BasicUserInfoDTO
-     */
-    public function setImageVersion($imageVersion)
-    {
-        $this->imageVersion = $imageVersion;
-
-        return $this;
-    }
-
-    /**
-     * Get imageVersion
-     *
-     * @return integer
-     */
-    public function getImageVersion()
-    {
-        return $this->imageVersion;
-    }
-
-    /**
      * Set lastName
      *
      * @param string $lastName
@@ -230,6 +182,54 @@ class BasicUserInfoDTO
     public function getFirstName()
     {
         return $this->firstName;
+    }
+
+    /**
+     * Set imageVersion
+     *
+     * @param integer $imageVersion
+     *
+     * @return BasicUserInfoDTO
+     */
+    public function setImageVersion($imageVersion)
+    {
+        $this->imageVersion = $imageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get imageVersion
+     *
+     * @return integer
+     */
+    public function getImageVersion()
+    {
+        return $this->imageVersion;
+    }
+
+    /**
+     * Set roleLevel
+     *
+     * @param integer $roleLevel
+     *
+     * @return BasicUserInfoDTO
+     */
+    public function setRoleLevel($roleLevel)
+    {
+        $this->roleLevel = $roleLevel;
+
+        return $this;
+    }
+
+    /**
+     * Get roleLevel
+     *
+     * @return integer
+     */
+    public function getRoleLevel()
+    {
+        return $this->roleLevel;
     }
 
     /**

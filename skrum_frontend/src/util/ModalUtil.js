@@ -7,7 +7,7 @@ export const withBasicModalDialog = (WrappedForm, onClose, formProps = {}, dialo
     <WrappedForm {...{ onClose, ...formProps }} />
   </BasicModalDialog>;
 
-export const withModal = WrappedComponent => class extends Component {
+export const withModal = (WrappedComponent, { wrapperClassName } = {}) => class extends Component {
 
   openModal = (modal, props) => this.setState({ activeModal:
     props || isFunction(modal) ? withBasicModalDialog(modal, this.closeActiveModal, props) :
@@ -16,7 +16,7 @@ export const withModal = WrappedComponent => class extends Component {
   closeActiveModal = () => this.setState({ activeModal: null });
 
   render = () => (
-    <div>
+    <div className={wrapperClassName || 'modalWrapper'}>
       <WrappedComponent
         openModal={this.openModal}
         closeActiveModal={this.closeActiveModal}

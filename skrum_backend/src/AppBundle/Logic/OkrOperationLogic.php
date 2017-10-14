@@ -3,10 +3,11 @@
 namespace AppBundle\Logic;
 
 use AppBundle\Exception\ApplicationException;
+use AppBundle\Utils\Auth;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Entity\MCompany;
 use AppBundle\Entity\TOkr;
 use AppBundle\Api\ResponseDTO\OkrMapDTO;
-use AppBundle\Utils\Auth;
 
 /**
  * OKR操作ロジッククラス
@@ -64,10 +65,10 @@ class OkrOperationLogic extends BaseLogic
      *
      * @param Auth $auth 認証情報
      * @param array $tOkrArray 操作対象OKRエンティティ配列
-     * @param string $companyName 会社名
+     * @param MCompany $mCompany 会社エンティティ
      * @return OkrMapDTO
      */
-    public function tree(Auth $auth, array $tOkrArray, string $companyName = null): OkrMapDTO
+    public function tree(Auth $auth, array $tOkrArray, MCompany $mCompany = null): OkrMapDTO
     {
         $disclosureLogic = $this->getDisclosureLogic();
 
@@ -77,7 +78,7 @@ class OkrOperationLogic extends BaseLogic
         }
 
         // 親OKRをDTOに詰め替える
-        $okrMapDTO = $this->repackDTOWithOkrEntity($tOkrArray[0], $companyName);
+        $okrMapDTO = $this->repackDTOWithOkrEntity($tOkrArray[0], $mCompany);
 
         // 子OKRを同じ親OKRIDで配列にまとめる
         $childrenOkrs = array();
@@ -89,7 +90,7 @@ class OkrOperationLogic extends BaseLogic
             }
 
             // DTOに詰め替える
-            $childOkrMapDTO = $this->repackDTOWithOkrEntity($tOkrArray[$i], $companyName);
+            $childOkrMapDTO = $this->repackDTOWithOkrEntity($tOkrArray[$i], $mCompany);
 
             if (empty($tOkrArray[$i]->getParentOkr())) {
                 $childrenOkrs[][] = $childOkrMapDTO;
@@ -128,10 +129,10 @@ class OkrOperationLogic extends BaseLogic
      * OKRエンティティをDTOに詰め替える
      *
      * @param TOkr $tOkr OKRエンティティ
-     * @param string $companyName 会社名
+     * @param MCompany $mCompany 会社エンティティ
      * @return OkrMapDTO
      */
-    private function repackDTOWithOkrEntity(TOkr $tOkr, string $companyName = null): OkrMapDTO
+    private function repackDTOWithOkrEntity(TOkr $tOkr, MCompany $mCompany = null): OkrMapDTO
     {
         $okrMapDTO = new OkrMapDTO();
         $okrMapDTO->setOkrId($tOkr->getOkrId());
@@ -144,12 +145,15 @@ class OkrOperationLogic extends BaseLogic
         if ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_USER) {
             $okrMapDTO->setOwnerUserId($tOkr->getOwnerUser()->getUserId());
             $okrMapDTO->setOwnerUserName($tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName());
+            $okrMapDTO->setOwnerUserImageVersion($tOkr->getOwnerUser()->getImageVersion());
         } elseif ($tOkr->getOwnerType() == DBConstant::OKR_OWNER_TYPE_GROUP) {
             $okrMapDTO->setOwnerGroupId($tOkr->getOwnerGroup()->getGroupId());
             $okrMapDTO->setOwnerGroupName($tOkr->getOwnerGroup()->getGroupName());
+            $okrMapDTO->setOwnerGroupImageVersion($tOkr->getOwnerGroup()->getImageVersion());
         } else {
             $okrMapDTO->setOwnerCompanyId($tOkr->getOwnerCompanyId());
-            $okrMapDTO->setOwnerCompanyName($companyName);
+            $okrMapDTO->setOwnerCompanyName($mCompany->getCompanyName());
+            $okrMapDTO->setOwnerCompanyImageVersion($mCompany->getImageVersion());
         }
         $okrMapDTO->setStatus($tOkr->getStatus());
 

@@ -21,7 +21,7 @@ class MCompanyRepository extends BaseRepository
     public function searchCompany(string $keyword, int $companyId): array
     {
         $qb = $this->createQueryBuilder('mc');
-        $qb->select('mc.companyId', 'mc.companyName')
+        $qb->select('mc.companyId', 'mc.companyName', 'mc.imageVersion')
             ->where('mc.companyId = :companyId')
             ->andWhere('mc.companyName LIKE :companyName')
             ->setParameter('companyId', $companyId)

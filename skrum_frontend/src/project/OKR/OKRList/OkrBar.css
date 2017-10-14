@@ -1,5 +1,9 @@
+.wrapper {
+  display: flex;
+}
 .component {
   display: flex;
+  width: 100%;
   font-size: small;
   padding: 15px 65px;
   background-color: #fff;
@@ -27,19 +31,29 @@
 .name {
   position: relative;
   width: 40%;
-  height: 100%;
+  height: calc(100% + 2 * 15px);
   /*white-space: nowrap;*/
   /*text-overflow: ellipsis;*/
-  margin: auto 0;
+  margin: -15px 0;
   padding-right: 10px;
 }
 .name a {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.name a:hover {
+  text-decoration: underline;
+}
+.name a > span {
+  margin: auto 0;
 }
 .progressColumn {
+  display: flex;
+  flex-direction: column;
   width: 25%;
   margin: auto 0;
-  height: 100%;
+  /*height: 100%;*/
 }
 .ownerBox {
   width: 19%;

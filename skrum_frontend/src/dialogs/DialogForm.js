@@ -13,6 +13,7 @@ export default class DialogForm extends Component {
     constrainHeight: PropTypes.bool,
     cancelButton: PropTypes.string,
     submitButton: PropTypes.string,
+    auxiliaryButton: PropTypes.func,
     handleSubmit: PropTypes.func, // for redux-form
     onSubmit: PropTypes.func.isRequired,
     onClose: PropTypes.func,
@@ -60,7 +61,7 @@ export default class DialogForm extends Component {
 
   render() {
     const { title, message, compact, constrainHeight,
-      cancelButton = 'キャンセル', submitButton = 'OK',
+      cancelButton = 'キャンセル', submitButton = 'OK', auxiliaryButton,
       onClose, lastTabIndex, children, valid = true, error } = this.props;
     const { data = {}, isSubmitting = false, submissionError } = this.state || {};
     return (
@@ -91,11 +92,13 @@ export default class DialogForm extends Component {
               >
                 {cancelButton}
               </button>)}
+            {auxiliaryButton && auxiliaryButton(
+              { className: styles.cancelButton, tabIndex: lastTabIndex + 2 })}
             <button
               type="submit"
               className={styles.submitButton}
               disabled={isFunction(valid) ? !valid(data) : !valid}
-              tabIndex={lastTabIndex && `${lastTabIndex + 2}`}
+              tabIndex={lastTabIndex && `${lastTabIndex + 3}`}
             >
               {submitButton}
             </button>

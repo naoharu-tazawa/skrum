@@ -58,7 +58,7 @@ class TGroupMemberRepository extends BaseRepository
     public function getAllGroupMembersWithAchievementRate(int $groupId, int $timeframeId): array
     {
         $qb = $this->createQueryBuilder('tgm');
-        $qb->select('mu.userId', 'mu.lastName', 'mu.firstName', 'mu.position', 'to.achievementRate')
+        $qb->select('mu.userId', 'mu.lastName', 'mu.firstName', 'mu.imageVersion', 'mu.position', 'to.achievementRate')
             ->innerJoin('AppBundle:MUser', 'mu', 'WITH', 'tgm.user = mu.userId')
             ->leftJoin('AppBundle:TOkr', 'to', 'WITH', '(mu.userId = to.ownerUser) AND (to.timeframe = :timeframeId OR to.timeframe is NULL)')
             ->where('tgm.group = :groupId')
@@ -123,7 +123,7 @@ class TGroupMemberRepository extends BaseRepository
     public function getAllGroupsWithAchievementRate(int $userId, int $timeframeId): array
     {
         $qb = $this->createQueryBuilder('tgm');
-        $qb->select('mg.groupId', 'mg.groupName', 'mg.groupType', 'to.achievementRate')
+        $qb->select('mg.groupId', 'mg.groupName', 'mg.imageVersion', 'mg.groupType', 'to.achievementRate')
             ->innerJoin('AppBundle:MGroup', 'mg', 'WITH', 'tgm.group = mg.groupId')
             ->leftJoin('AppBundle:TOkr', 'to', 'WITH', '(mg.groupId = to.ownerGroup) AND (to.timeframe = :timeframeId OR to.timeframe is NULL)')
             ->where('tgm.user = :userId')

@@ -8,7 +8,7 @@ import KRDetailsList from './KRDetailsList/KRDetailsList';
 import OkrProgressChart from './OkrProgressChart';
 import NewOKR from '../OKR/NewOKR/NewOKR';
 import { fetchOKRDetails, putOKR, changeKROwner, changeParentOkr, changeDisclosureType, setRatios, deleteKR } from './action';
-import { syncOkr, syncParentOkr, syncRatios } from '../OKR/action';
+import { syncOkr, syncParentOkr, syncRatios, syncDeletedKR } from '../OKR/action';
 import { explodePath, isPathFinal } from '../../util/RouteUtil';
 import { mapOKR } from '../../util/OKRUtil';
 import { withModal } from '../../util/ModalUtil';
@@ -146,7 +146,8 @@ const mapDispatchToProps = (dispatch, { subject }) => {
     dispatch(setRatios(id, ratios, unlockedRatio))
       .then(result => dispatch(syncRatios(subject, result)));
   const dispatchDeleteKR = id =>
-    dispatch(deleteKR(id));
+    dispatch(deleteKR(id))
+      .then(result => dispatch(syncDeletedKR(subject, result)));
   return {
     dispatchFetchOKRDetails,
     dispatchPutOKR,

@@ -42,7 +42,7 @@ class TPostRepository extends BaseRepository
     public function getMyPosts(int $userId, int $before = null): array
     {
         $qb = $this->createQueryBuilder('tp');
-        $qb->select('tp AS post', 'mu.lastName', 'mu.firstName', 'mra.roleLevel')
+        $qb->select('tp AS post', 'mu.lastName', 'mu.firstName', 'mu.imageVersion', 'mra.roleLevel')
             ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
             ->leftJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
             ->where('tp.posterType = :posterType')
@@ -71,7 +71,7 @@ class TPostRepository extends BaseRepository
     public function getMyReplies(int $postId): array
     {
         $qb = $this->createQueryBuilder('tp');
-        $qb->select('tp AS reply', 'mu.lastName', 'mu.firstName')
+        $qb->select('tp AS reply', 'mu.lastName', 'mu.firstName', 'mu.imageVersion')
             ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
             ->where('tp.parent = :parentId')
             ->setParameter('parentId', $postId)
@@ -90,7 +90,7 @@ class TPostRepository extends BaseRepository
     public function getPosts(int $groupId, int $before = null): array
     {
         $qb = $this->createQueryBuilder('tp');
-        $qb->select('tp AS post', 'mu.lastName', 'mu.firstName', 'mra.roleLevel', 'mg.groupName', 'mg.groupType', 'mc.companyName')
+        $qb->select('tp AS post', 'mu.lastName', 'mu.firstName', 'mu.imageVersion as userImageVersion', 'mra.roleLevel', 'mg.groupName', 'mg.imageVersion AS groupImageVersion', 'mg.groupType', 'mc.companyName', 'mc.imageVersion AS companyImageVersion')
             ->innerJoin('AppBundle:TPostTo', 'tpt', 'WITH', 'tp.id = tpt.post')
             ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
             ->leftJoin('AppBundle:MRoleAssignment', 'mra', 'WITH', 'mu.roleAssignment = mra.roleAssignmentId')
@@ -120,7 +120,7 @@ class TPostRepository extends BaseRepository
     public function getReplies(int $postId): array
     {
         $qb = $this->createQueryBuilder('tp');
-        $qb->select('tp AS reply', 'mu.lastName', 'mu.firstName')
+        $qb->select('tp AS reply', 'mu.lastName', 'mu.firstName', 'mu.imageVersion')
             ->leftJoin('AppBundle:MUser', 'mu', 'WITH', 'tp.posterUserId = mu.userId')
             ->where('tp.parent = :parentId')
             ->setParameter('parentId', $postId)

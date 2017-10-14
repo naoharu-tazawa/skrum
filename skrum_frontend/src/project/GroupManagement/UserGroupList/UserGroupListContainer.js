@@ -50,11 +50,14 @@ const mapDispatchToProps = (dispatch) => {
   return { dispatchJoinGroup, dispatchLeaveGroup };
 };
 
-const mergeProps = (state, { dispatchJoinGroup, dispatchLeaveGroup }, props) => ({
+const mergeProps = (state, {
+  dispatchJoinGroup,
+  dispatchLeaveGroup,
+}, { timeframeId, ...props }) => ({
   ...state,
   ...props,
   dispatchJoinGroup: (userId, groupId) =>
-    dispatchJoinGroup(props.timeframeId, userId, groupId),
+    dispatchJoinGroup(timeframeId, userId, groupId),
   dispatchLeaveGroup,
 });
 

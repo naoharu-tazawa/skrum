@@ -45,10 +45,10 @@
   margin: auto 1em auto 50px;
   height: 100%;
 }
-.group_search_box {
+.group_search_box input {
   width: 600px;
   height: 30px;
-  margin: auto 0;
+  margin-top: 3px;
 }
 .radio {
   margin-left: 30px;
@@ -60,6 +60,6 @@
   font-size: 18px;
 }
 .search_notice {
-  margin: 2px 0px 0px 258px;
+  margin-left: 258px;
   font-size: xx-small;
 }

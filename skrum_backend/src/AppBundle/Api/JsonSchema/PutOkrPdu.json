@@ -22,6 +22,12 @@
       "title": "目標終了日",
       "type": "string",
       "format": "date-time"
+    },
+    "unit": {
+      "title": "単位",
+      "type": "string",
+      "maxLength": 45,
+      "minLength": 1
     }
   },
   "additionalProperties": false

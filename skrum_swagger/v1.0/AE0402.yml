@@ -36,6 +36,8 @@ paths:
                 type: string
               endDate:
                 type: string
+              unit:
+                type: string
       responses:
         200:
           description: 成功

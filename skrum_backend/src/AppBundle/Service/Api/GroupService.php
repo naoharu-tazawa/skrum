@@ -143,6 +143,7 @@ class GroupService extends BaseService
         $basicGroupInfoDTO = new BasicGroupInfoDTO();
         $basicGroupInfoDTO->setGroupId($mGroupArray['mGroup']->getGroupId());
         $basicGroupInfoDTO->setName($mGroupArray['mGroup']->getGroupName());
+        $basicGroupInfoDTO->setImageVersion($mGroupArray['mGroup']->getImageVersion());
         $basicGroupInfoDTO->setGroupPaths($groupPathArray);
         $basicGroupInfoDTO->setMission($mGroupArray['mGroup']->getMission());
         if ($mGroupArray['mGroup']->getLeaderUserId() !== null) {

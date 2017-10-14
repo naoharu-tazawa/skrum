@@ -64,6 +64,7 @@ class SectionItem extends Component {
         className={linkStyle}
         entity={{ id, name: title, type }}
         avatarSize={iconSize}
+        fluid
       />);
   }
 }

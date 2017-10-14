@@ -48,7 +48,7 @@ class GroupPathLinks extends Component {
           <li key={id} className={styles.path}>
             {local ? name : (
               <Link
-                to={replacePath({ subject: !index ? 'company' : 'group', id })}
+                to={replacePath({ tab: 'objective', subject: !index ? 'company' : 'group', id })}
                 className={styles.groupLink}
               >
                 {name}

@@ -41,20 +41,53 @@ paths:
                   type: integer
                 posterUserName:
                   type: string
+                posterUserImageVersion:
+                  type: integer
                 posterUserRoleLevel:
                   type: integer
                 posterCompanyId:
                   type: integer
                 posterCompanyName:
                   type: string
+                posterCompanyImageVersion:
+                  type: integer
                 post:
                   type: string
                 postedDatetime:
                   type: string
-                okrId:
-                  type: integer
-                okrName:
-                  type: string
+                autoShare:
+                  type: object
+                  properties:
+                    autoPost:
+                      type: string
+                    okrId:
+                      type: integer
+                    okrName:
+                      type: string
+                    ownerType:
+                      type: string
+                    ownerUserId:
+                      type: integer
+                    ownerUserName:
+                      type: string
+                    ownerUserImageVersion:
+                      type: integer
+                    ownerGroupId:
+                      type: integer
+                    ownerGroupName:
+                      type: string
+                    ownerGroupImageVersion:
+                      type: integer
+                    ownerCompanyId:
+                      type: integer
+                    ownerCompanyName:
+                      type: string
+                    ownerCompanyImageVersion:
+                      type: integer
+                  required:
+                    - okrId
+                    - okrName
+                    - ownerType
                 likesCount:
                   type: integer
                 likedFlg:
@@ -72,6 +105,8 @@ paths:
                         type: integer
                       posterUserName:
                         type: string
+                      posterUserImageVersion:
+                        type: integer
                       post:
                         type: string
                       postedDatetime:

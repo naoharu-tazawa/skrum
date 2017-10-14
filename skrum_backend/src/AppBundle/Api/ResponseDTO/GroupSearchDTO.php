@@ -23,14 +23,21 @@ class GroupSearchDTO
      *
      * @JSON\Type("string")
      */
-    private $groupType;
+    private $groupName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $imageVersion;
 
     /**
      * @var string
      *
      * @JSON\Type("string")
      */
-    private $groupName;
+    private $groupType;
 
     /**
      * Set groupId
@@ -57,30 +64,6 @@ class GroupSearchDTO
     }
 
     /**
-     * Set groupType
-     *
-     * @param string $groupType
-     *
-     * @return GroupSearchDTO
-     */
-    public function setGroupType($groupType)
-    {
-        $this->groupType = $groupType;
-
-        return $this;
-    }
-
-    /**
-     * Get groupType
-     *
-     * @return string
-     */
-    public function getGroupType()
-    {
-        return $this->groupType;
-    }
-
-    /**
      * Set groupName
      *
      * @param string $groupName
@@ -102,5 +85,53 @@ class GroupSearchDTO
     public function getGroupName()
     {
         return $this->groupName;
+    }
+
+    /**
+     * Set imageVersion
+     *
+     * @param integer $imageVersion
+     *
+     * @return GroupSearchDTO
+     */
+    public function setImageVersion($imageVersion)
+    {
+        $this->imageVersion = $imageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get imageVersion
+     *
+     * @return integer
+     */
+    public function getImageVersion()
+    {
+        return $this->imageVersion;
+    }
+
+    /**
+     * Set groupType
+     *
+     * @param string $groupType
+     *
+     * @return GroupSearchDTO
+     */
+    public function setGroupType($groupType)
+    {
+        $this->groupType = $groupType;
+
+        return $this;
+    }
+
+    /**
+     * Get groupType
+     *
+     * @return string
+     */
+    public function getGroupType()
+    {
+        return $this->groupType;
     }
 }

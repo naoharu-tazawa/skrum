@@ -93,6 +93,13 @@ class BasicOkrDTO
      *
      * @JSON\Type("integer")
      */
+    private $ownerUserImageVersion;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $ownerUserRoleLevel;
 
     /**
@@ -108,6 +115,13 @@ class BasicOkrDTO
      * @JSON\Type("string")
      */
     private $ownerGroupName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $ownerGroupImageVersion;
 
     /**
      * @var string
@@ -129,6 +143,13 @@ class BasicOkrDTO
      * @JSON\Type("string")
      */
     private $ownerCompanyName;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
+    private $ownerCompanyImageVersion;
 
     /**
      * @var \DateTime
@@ -458,6 +479,30 @@ class BasicOkrDTO
     }
 
     /**
+     * Set ownerUserImageVersion
+     *
+     * @param integer $ownerUserImageVersion
+     *
+     * @return BasicOkrDTO
+     */
+    public function setOwnerUserImageVersion($ownerUserImageVersion)
+    {
+        $this->ownerUserImageVersion = $ownerUserImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerUserImageVersion
+     *
+     * @return integer
+     */
+    public function getOwnerUserImageVersion()
+    {
+        return $this->ownerUserImageVersion;
+    }
+
+    /**
      * Set ownerUserRoleLevel
      *
      * @param integer $ownerUserRoleLevel
@@ -530,6 +575,30 @@ class BasicOkrDTO
     }
 
     /**
+     * Set ownerGroupImageVersion
+     *
+     * @param integer $ownerGroupImageVersion
+     *
+     * @return BasicOkrDTO
+     */
+    public function setOwnerGroupImageVersion($ownerGroupImageVersion)
+    {
+        $this->ownerGroupImageVersion = $ownerGroupImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerGroupImageVersion
+     *
+     * @return integer
+     */
+    public function getOwnerGroupImageVersion()
+    {
+        return $this->ownerGroupImageVersion;
+    }
+
+    /**
      * Set ownerGroupType
      *
      * @param string $ownerGroupType
@@ -599,6 +668,30 @@ class BasicOkrDTO
     public function getOwnerCompanyName()
     {
         return $this->ownerCompanyName;
+    }
+
+    /**
+     * Set ownerCompanyImageVersion
+     *
+     * @param integer $ownerCompanyImageVersion
+     *
+     * @return BasicOkrDTO
+     */
+    public function setOwnerCompanyImageVersion($ownerCompanyImageVersion)
+    {
+        $this->ownerCompanyImageVersion = $ownerCompanyImageVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get ownerCompanyImageVersion
+     *
+     * @return integer
+     */
+    public function getOwnerCompanyImageVersion()
+    {
+        return $this->ownerCompanyImageVersion;
     }
 
     /**

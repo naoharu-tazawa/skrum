@@ -89,6 +89,9 @@ export const comparePath = (pathname1, pathname2, options = {}) =>
 export const isPathFinal = path =>
   isEmpty(pickBy(explodePath(path), isUndefined));
 
+export const isPathSetting = path =>
+  explodePath(path).tab === 'setting';
+
 export const pushToBasic = () =>
   browserHistory.push(toBasicPath(location.pathname));
 
