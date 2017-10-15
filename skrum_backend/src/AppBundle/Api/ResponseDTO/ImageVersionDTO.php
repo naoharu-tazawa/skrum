@@ -21,13 +21,13 @@ class ImageVersionDTO
     /**
      * Set imageVersion
      *
-     * @param integer imageVersion
+     * @param integer $imageVersion
      *
      * @return ImageVersionDTO
      */
     public function setImageVersion($imageVersion)
     {
-        $this->$imageVersion = $imageVersion;
+        $this->imageVersion = $imageVersion;
 
         return $this;
     }

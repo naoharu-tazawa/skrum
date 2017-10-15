@@ -25,9 +25,9 @@ class ImageUploadService extends BaseService
      * @param integer $userId ユーザID
      * @param integer $groupId グループID
      * @param integer $companyId 会社ID
-     * @return void
+     * @return ImageVersionDTO
      */
-    public function uploadImage(array $data, string $subjectType, int $userId = null, int $groupId = null, int $companyId = null)
+    public function uploadImage(array $data, string $subjectType, int $userId = null, int $groupId = null, int $companyId = null): ImageVersionDTO
     {
         // Amazon S3クライアントを取得
         $client = $this->getContainer()->get('aws.s3');
