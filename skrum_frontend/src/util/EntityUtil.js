@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { toPairs, flatten, capitalize, omitBy, isUndefined } from 'lodash';
+import { toPairs, flatten, omitBy, isUndefined } from 'lodash';
 import { groupTypePropType } from './GroupUtil';
 
 export const EntityType = {
@@ -12,6 +12,18 @@ export const EntityTypeName = {
   [EntityType.USER]: 'user',
   [EntityType.GROUP]: 'group',
   [EntityType.COMPANY]: 'company',
+};
+
+export const EntityTypeProperName = {
+  [EntityType.USER]: 'User',
+  [EntityType.GROUP]: 'Group',
+  [EntityType.COMPANY]: 'Company',
+};
+
+export const EntityTypePluralName = {
+  [EntityType.USER]: 'users',
+  [EntityType.GROUP]: 'groups',
+  [EntityType.COMPANY]: 'companies',
 };
 
 export const entityTypePropType = PropTypes.oneOf(flatten(toPairs(EntityType)));
@@ -35,7 +47,7 @@ export const getEntityTypeId = (subject) => {
 
 export const mapEntity = (data, prefix) => {
   const { [`${prefix}Type`]: type } = data;
-  const subject = `${prefix}${capitalize(EntityTypeName[type])}`;
+  const subject = `${prefix}${EntityTypeProperName[type]}`;
   const { [`${subject}Id`]: id, [`${subject}Name`]: name } = data;
   const { [`${subject}RoleLevel`]: roleLevel } = data;
   const { [`${prefix}GroupType`]: groupType } = data;
@@ -45,9 +57,9 @@ export const mapEntity = (data, prefix) => {
 export const mapEntityOutbound = ({ type, id, name, roleLevel, groupType }, prefix) =>
   omitBy({
     [`${prefix}Type`]: type,
-    [`${prefix}${capitalize(EntityTypeName[type])}Id`]: id,
-    [`${prefix}${capitalize(EntityTypeName[type])}Name`]: name,
-    [`${prefix}${capitalize(EntityTypeName[type])}RoleLevel`]: roleLevel,
+    [`${prefix}${EntityTypeProperName[type]}Id`]: id,
+    [`${prefix}${EntityTypeProperName[type]}Name`]: name,
+    [`${prefix}${EntityTypeProperName[type]}RoleLevel`]: roleLevel,
     [`${prefix}GroupType`]: groupType,
   }, isUndefined);
 

@@ -28,8 +28,8 @@ export default (state = {
       if (error) {
         return { ...state, isPutting: false, error: { message: payload.message } };
       }
-      const { id, ...items } = payload.data;
-      const newCompanyData = mergeUpdateById(state.data, 'companyId', items, id);
+      const { companyId, ...items } = payload.data;
+      const newCompanyData = mergeUpdateById(state.data, 'companyId', items, companyId);
       return { ...state, data: newCompanyData, isPutting: false, error: null };
     }
 

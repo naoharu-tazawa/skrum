@@ -9,7 +9,7 @@ import { EntityType } from '../../util/EntityUtil';
 import { compareDates, formatUtcDate, toUtcDate, isValidDate } from '../../util/DatetimeUtil';
 import { postUserImage } from '../../project/GroupManagement/action';
 import { postCompanyImage } from '../../project/CompanyProfile/action';
-import { setupCompany } from '../action';
+import { setupCompany, touchUserTop } from '../action';
 import styles from './Setup.css';
 
 class CompanySetupContainer extends Component {
@@ -272,7 +272,8 @@ const mapDispatchToProps = (dispatch) => {
   const dispatchPostCompanyImage = (companyId, image, mimeType) =>
     dispatch(postCompanyImage(companyId, image, mimeType));
   const dispatchSetupCompany = (companyId, setup) =>
-    dispatch(setupCompany(companyId, setup));
+    dispatch(setupCompany(companyId, setup))
+      .then(({ error }) => !error && dispatch(touchUserTop()));
   return { dispatchPostUserImage, dispatchPostCompanyImage, dispatchSetupCompany };
 };
 

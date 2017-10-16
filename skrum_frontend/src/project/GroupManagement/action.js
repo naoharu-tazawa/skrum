@@ -108,43 +108,43 @@ export const fetchGroupMembers = (groupId, timeframeId) =>
       .catch(({ message }) => dispatch(finishFetchGroupMembers(new Error(message))));
   };
 
-export const putUser = (id, data) =>
+export const putUser = (userId, data) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.groupManagement.isPutting) return Promise.resolve();
     dispatch(requestPutUser());
-    return putJson(`/users/${id}.json`, state)(null, data)
-      .then(() => dispatch(finishPutUser('data', { id, ...data })))
+    return putJson(`/users/${userId}.json`, state)(null, data)
+      .then(() => dispatch(finishPutUser('data', { userId, ...data })))
       .catch(({ message }) => dispatch(finishPutUser(new Error(message))));
   };
 
-export const putGroup = (id, data) =>
+export const putGroup = (groupId, data) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.groupManagement.isPutting) return Promise.resolve();
     dispatch(requestPutGroup());
-    return putJson(`/groups/${id}.json`, state)(null, data)
-      .then(() => dispatch(finishPutGroup('data', { id, ...data })))
+    return putJson(`/groups/${groupId}.json`, state)(null, data)
+      .then(() => dispatch(finishPutGroup('data', { groupId, ...data })))
       .catch(({ message }) => dispatch(finishPutGroup(new Error(message))));
   };
 
-export const postUserImage = (id, image, mimeType) =>
+export const postUserImage = (userId, image, mimeType) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.groupManagement.isPostingImage) return Promise.resolve();
     dispatch(requestPostUserImage());
-    return postJson(`/users/${id}/images.json`, state)(null, { image, mimeType })
-      .then(json => dispatch(finishPostUserImage('data', json)))
+    return postJson(`/users/${userId}/images.json`, state)(null, { image, mimeType })
+      .then(json => dispatch(finishPostUserImage('data', { userId, ...json })))
       .catch(({ message }) => dispatch(finishPostUserImage(new Error(message))));
   };
 
-export const postGroupImage = (id, image, mimeType) =>
+export const postGroupImage = (groupId, image, mimeType) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.groupManagement.isPostingImage) return Promise.resolve();
     dispatch(requestPostGroupImage());
-    return postJson(`/groups/${id}/images.json`, state)(null, { image, mimeType })
-      .then(json => dispatch(finishPostGroupImage('data', json)))
+    return postJson(`/groups/${groupId}/images.json`, state)(null, { image, mimeType })
+      .then(json => dispatch(finishPostGroupImage('data', { groupId, ...json })))
       .catch(({ message }) => dispatch(finishPostGroupImage(new Error(message))));
   };
 

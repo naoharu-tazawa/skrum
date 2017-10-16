@@ -38,22 +38,22 @@ export const fetchCompany = companyId =>
       .catch(({ message }) => dispatch(finishFetchCompany(new Error(message))));
   };
 
-export const putCompany = (id, data) =>
+export const putCompany = (companyId, data) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.companySetting.isPutting) return Promise.resolve();
     dispatch(requestPutCompany());
-    return putJson(`/companies/${id}.json`, state)(null, data)
-      .then(() => dispatch(finishPutCompany('data', { id: Number(id), ...data })))
+    return putJson(`/companies/${companyId}.json`, state)(null, data)
+      .then(() => dispatch(finishPutCompany('data', { companyId, ...data })))
       .catch(({ message }) => dispatch(finishPutCompany(new Error(message))));
   };
 
-export const postCompanyImage = (id, image, mimeType) =>
+export const postCompanyImage = (companyId, image, mimeType) =>
   (dispatch, getState) => {
     const state = getState();
     if (state.companySetting.isPostingImage) return Promise.resolve();
     dispatch(requestPostCompanyImage());
-    return postJson(`/companies/${id}/images.json`, state)(null, { image, mimeType })
-      .then(json => dispatch(finishPostCompanyImage('data', json)))
+    return postJson(`/companies/${companyId}/images.json`, state)(null, { image, mimeType })
+      .then(json => dispatch(finishPostCompanyImage('data', { companyId, ...json })))
       .catch(({ message }) => dispatch(finishPostCompanyImage(new Error(message))));
   };

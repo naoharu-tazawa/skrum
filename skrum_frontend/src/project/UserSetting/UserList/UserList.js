@@ -21,9 +21,10 @@ export default class UserList extends PureComponent {
   };
 
   componentDidMount() {
-    this.props.dispatchFetchUsers('', 1);
+    const { count, dispatchFetchUsers } = this.props;
+    if (!count) dispatchFetchUsers('', 1);
     this.handleTextChange = debounce(text =>
-      this.setState({ text, page: 1 }, () => this.props.dispatchFetchUsers(text, 1)), 1000);
+      this.setState({ text, page: 1 }, () => dispatchFetchUsers(text, 1)), 1000);
   }
 
   handlePageClick = ({ selected }) => {

@@ -46,9 +46,9 @@ export default (state = {
       if (error) {
         return { ...state, isPutting: false, error: { message: payload.message } };
       }
-      const { id, ...data } = payload.data;
+      const { userId, ...data } = payload.data;
       const { user, groups } = state.user;
-      const newUser = mergeUpdateById(user, 'userId', data, id);
+      const newUser = mergeUpdateById(user, 'userId', data, userId);
       return { ...state, user: { user: newUser, groups }, isPutting: false, error: null };
     }
 
@@ -60,9 +60,9 @@ export default (state = {
       if (error) {
         return { ...state, isPutting: false, error: { message: payload.message } };
       }
-      const { id, ...data } = payload.data;
+      const { groupId, ...data } = payload.data;
       const { group, members } = state.group;
-      const newGroup = mergeUpdateById(group, 'groupId', data, id);
+      const newGroup = mergeUpdateById(group, 'groupId', data, groupId);
       return { ...state, group: { group: newGroup, members }, isPutting: false, error: null };
     }
 

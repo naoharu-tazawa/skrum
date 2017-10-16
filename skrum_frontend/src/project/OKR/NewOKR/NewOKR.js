@@ -179,7 +179,7 @@ class NewOKR extends Component {
             <label>単位</label>
             <div>
               <Field component="input" name="unit" placeholder="例)円、件、時間、回" props={{ tabIndex: 14 }} />
-              <small>※途中で変更不可。空欄の場合は%</small>
+              <small>※空欄の場合は%</small>
             </div>
           </section>
           <section>

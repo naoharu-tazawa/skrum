@@ -6,12 +6,12 @@ import { getEntityTypeSubject } from './EntityUtil';
 
 const { bucket } = config;
 
-export const imagePath = (entityType, companyId, id) => `
+export const imagePath = (entityType, companyId, id, version = 1) => `
   ${bucket}
   /c
   /${companyId}
   ${implodeSubject(entityType) === 'c' ? '' : `/${implodeSubject(entityType)}/${id}`}
-  /image1
+  /image${version}
   `.replace(/[\s\n]/g, '');
 
 export const dummyImagePath = entityType =>

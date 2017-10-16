@@ -2,6 +2,8 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import { reducer as formReducer } from 'redux-form';
 import { reducer as toastrReducer } from 'react-redux-toastr';
+import { isArray, isObject, values, every, isEmpty } from 'lodash';
+import baseReducer from '../container/reducer';
 import authReducer from '../../auth/reducer';
 import navigationReducer from '../../navigation/reducer';
 import okrReducer from '../../project/OKR/reducer';
@@ -22,9 +24,12 @@ import timeframeSettingReducer from '../../project/TimeframeSetting/reducer';
 import initialDataReducer from '../../project/InitialDataUpload/reducer';
 import emailSettingReducer from '../../project/EmailSetting/reducer';
 import passwordChangeReducer from '../../project/PasswordChange/reducer';
-import { Action } from '../../project/PasswordChange/action';
+import { Action as BaseAction } from '../container/action';
+import { Action as AuthAction } from '../../auth/action';
+import { Action as PasswordChangeAction } from '../../project/PasswordChange/action';
 
 const appReducer = combineReducers({
+  base: baseReducer,
   auth: authReducer,
   top: navigationReducer,
   basics: okrReducer,
@@ -49,7 +54,7 @@ const appReducer = combineReducers({
   form: formReducer.plugin({
     form: (state, action) => {
       switch (action.type) {
-        case Action.FINISH_PUT_USER_CHANGEPASSWORD:
+        case PasswordChangeAction.FINISH_PUT_USER_CHANGEPASSWORD:
           return undefined;
         default:
           return state;
@@ -59,8 +64,51 @@ const appReducer = combineReducers({
   toastr: toastrReducer,
 });
 
+const extractImagesVersion = (images = { companies: {}, groups: {}, users: {} }, data) => {
+  const { imageVersion } = data;
+  if (imageVersion !== undefined) {
+    const { companyId: coId, groupId, userId } = data;
+    if (coId) images = { ...images, companies: { ...images.companies, [coId]: imageVersion } };
+    if (groupId) images = { ...images, groups: { ...images.groups, [groupId]: imageVersion } };
+    if (userId) images = { ...images, users: { ...images.users, [userId]: imageVersion } };
+  }
+  const prefixes = ['owner', 'poster'];
+  prefixes.forEach((prefix) => {
+    const {
+      [`${prefix}CompanyImageVersion`]: companyImageVersion,
+      [`${prefix}GroupImageVersion`]: groupImageVersion,
+      [`${prefix}UserImageVersion`]: userImageVersion,
+    } = data;
+    const version = companyImageVersion || groupImageVersion || userImageVersion;
+    if (version !== undefined) {
+      const {
+        [`${prefix}CompanyId`]: coId,
+        [`${prefix}GroupId`]: groupId,
+        [`${prefix}UserId`]: userId,
+      } = data;
+      if (coId) images = { ...images, companies: { ...images.companies, [coId]: version } };
+      if (groupId) images = { ...images, groups: { ...images.groups, [groupId]: version } };
+      if (userId) images = { ...images, users: { ...images.users, [userId]: version } };
+    }
+  });
+  const objects = isArray(data) ? data : values(data).filter(isObject);
+  // console.log({ data, images, objects });
+  return objects.length ? objects.reduce(extractImagesVersion, images) : images;
+};
+
 // https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store
-const rootReducer = (state, action) =>
-  appReducer(action.type === 'REQUEST_LOGOUT' ? undefined : state, action);
+const rootReducer = (state, action) => {
+  // console.log({ state, action });
+  const { payload } = action;
+  if (payload) {
+    const images = extractImagesVersion(undefined, payload);
+    if (!every(values(images), isEmpty)) {
+      // console.log({ type: action.type, payload, images });
+      state = appReducer(state,
+        { type: BaseAction.REFLECT_IMAGES_VERSION, payload: { images } });
+    }
+  }
+  return appReducer(action.type === AuthAction.REQUEST_LOGOUT ? undefined : state, action);
+};
 
 export default rootReducer;
