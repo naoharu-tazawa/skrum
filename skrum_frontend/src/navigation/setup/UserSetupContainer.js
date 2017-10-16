@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 import InlineEntityImagePicker from '../../components/InlineEntityImagePicker';
 import { EntityType } from '../../util/EntityUtil';
 import { postUserImage } from '../../project/GroupManagement/action';
-import { setupUser } from '../action';
+import { setupUser, touchUserTop } from '../action';
 import styles from './Setup.css';
 
 class UserSetupContainer extends Component {
@@ -96,7 +96,8 @@ const mapDispatchToProps = (dispatch) => {
   const dispatchPostUserImage = (id, image, mimeType) =>
     dispatch(postUserImage(id, image, mimeType));
   const dispatchSetupUser = (userId, setup) =>
-    dispatch(setupUser(userId, setup));
+    dispatch(setupUser(userId, setup))
+      .then(({ error }) => !error && dispatch(touchUserTop()));
   return { dispatchPostUserImage, dispatchSetupUser };
 };
 

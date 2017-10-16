@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { entityPropTypes, getEntityTypeSubject, EntityType, getEntityTypeId } from '../util/EntityUtil';
+import { isEmpty } from 'lodash';
+import { entityPropTypes, getEntityTypeSubject, EntityType, EntityTypePluralName, getEntityTypeId } from '../util/EntityUtil';
 import { routePropTypes, explodePath, replacePath } from '../util/RouteUtil';
 import { imagePath, dummyImagePath } from '../util/ImageUtil';
 import styles from './EntityLink.css';
@@ -12,6 +13,7 @@ class EntityLink extends Component {
   static propTypes = {
     companyId: PropTypes.number.isRequired,
     entity: entityPropTypes,
+    version: PropTypes.number,
     title: PropTypes.string,
     editor: PropTypes.node,
     local: PropTypes.bool,
@@ -19,26 +21,28 @@ class EntityLink extends Component {
     fluid: PropTypes.bool,
     avatarOnly: PropTypes.bool,
     avatarSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    avatarTick: PropTypes.number,
     className: PropTypes.string,
   };
 
   render() {
-    const { companyId, entity = {}, title, editor, local, route, fluid, avatarOnly,
-      avatarSize = fluid ? '100%' : '40px', avatarTick, className } = this.props;
+    const { companyId, entity = {}, version, title, editor, local, route, fluid,
+      avatarOnly, avatarSize = fluid ? '100%' : '40px', className } = this.props;
     const { imageError } = this.state || {};
     const { id, name, type } = entity;
-    const imgSrc = imageError ? dummyImagePath(type) :
-      `${imagePath(type, companyId, id)}${avatarTick ? `?t=${avatarTick}` : ''}`;
+    const imgSrc = version !== 0 && !imageError && imagePath(type, companyId, id, version);
     const avatarContent = (
       <div
         className={styles.avatar}
         title={name}
-        style={{ width: avatarSize, height: avatarSize }}
+        style={{
+          ...{ minWidth: avatarSize, minHeight: avatarSize },
+          ...{ maxWidth: avatarSize, maxHeight: avatarSize },
+        }}
       >
         {id && (
           <img
-            src={imgSrc}
+            className={!imgSrc && styles.dummyImage}
+            src={imgSrc || dummyImagePath(type)}
             alt={name}
             onError={() => this.setState({ imageError: true })}
             width={avatarSize}
@@ -58,7 +62,6 @@ class EntityLink extends Component {
         ${nameContent && styles.hasName}
         ${editor && styles.hasEditor}
         ${fluid && styles.fluid}
-        ${imageError && styles.imageError}
         ${className || ''}`}
       >
         {(local || !id) && <div className={styles.noLink}>{avatarContent}{nameContent}</div>}
@@ -72,13 +75,16 @@ class EntityLink extends Component {
 }
 
 const mapStateToProps = (state, { local, route, entity }) => {
-  const { companyId } = state.auth || {};
-  if (local !== undefined || route) return { companyId, local: local || !route };
-  const { id: entityId, type } = entity || {};
+  const { companyId } = state.auth;
+  const { images } = state.base;
+  const { type, id } = entity || {};
+  const version = isEmpty(images) ? 0 : type && images[EntityTypePluralName[type]][id];
+  if (local !== undefined || route) return { companyId, local: local || !route, version };
   const { locationBeforeTransitions } = state.routing || {};
   const { pathname } = locationBeforeTransitions || {};
-  const { subject, id } = explodePath(pathname);
-  return { companyId, local: getEntityTypeSubject(type) === subject && id === entityId };
+  const { subject, id: subjectId } = explodePath(pathname);
+  const defaultLocal = getEntityTypeSubject(type) === subject && subjectId === id;
+  return { companyId, local: defaultLocal, version };
 };
 
 export default connect(

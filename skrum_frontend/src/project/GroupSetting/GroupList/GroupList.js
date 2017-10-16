@@ -20,8 +20,9 @@ export default class GroupList extends PureComponent {
   };
 
   componentDidMount() {
-    this.props.dispatchFetchGroups('', 1);
-    this.handleTextChange = debounce(keyword => this.props.dispatchFetchGroups(keyword, 1), 1000);
+    const { dispatchFetchGroups } = this.props;
+    dispatchFetchGroups('', 1);
+    this.handleTextChange = debounce(keyword => dispatchFetchGroups(keyword, 1), 1000);
   }
 
   handlePageClick = ({ selected }) => {

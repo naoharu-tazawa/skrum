@@ -6,13 +6,12 @@ export default (state = {
   isFetching: false,
   isPosting: false,
   data: {},
-}, action) => {
-  switch (action.type) {
+}, { type, payload, error }) => {
+  switch (type) {
     case Action.REQUEST_FETCH_USER_TOP:
       return { ...state, needsFetching: false, isFetching: true };
 
     case Action.FINISH_FETCH_USER_TOP: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isFetching: false, error: { message: payload.message } };
       }
@@ -28,7 +27,6 @@ export default (state = {
 
     case Action.FINISH_SETUP_COMPANY:
     case Action.FINISH_SETUP_USER: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPosting: false, error: { message: payload.message } };
       }
@@ -36,10 +34,7 @@ export default (state = {
     }
 
     case Action.ADD_GROUP: {
-      const { payload, error } = action;
-      if (error) {
-        return state;
-      }
+      if (error) return state;
       const { groupId, groupName, groupType } = payload.data.group;
       const { teams, departments, ...others } = state.data;
       const group = { groupId, groupName };
@@ -52,10 +47,7 @@ export default (state = {
     }
 
     case Action.REMOVE_GROUP: {
-      const { payload, error } = action;
-      if (error) {
-        return state;
-      }
+      if (error) return state;
       const { groupId } = payload.data;
       const { teams, departments, ...others } = state.data;
       const data = {

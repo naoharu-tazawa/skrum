@@ -26,7 +26,7 @@
   right: 0;
   bottom: 0;
 }
-.imageError .avatar > img {
+.dummyImage {
   background-color: #8e9aa6;
   padding: 5%;
 }
