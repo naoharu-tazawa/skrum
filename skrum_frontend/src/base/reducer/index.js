@@ -3,7 +3,7 @@ import { routerReducer } from 'react-router-redux';
 import { reducer as formReducer } from 'redux-form';
 import { reducer as toastrReducer } from 'react-redux-toastr';
 import { isArray, isObject, values, every, isEmpty } from 'lodash';
-import baseReducer from '../reducer';
+import baseReducer from '../container/reducer';
 import authReducer from '../../auth/reducer';
 import navigationReducer from '../../navigation/reducer';
 import okrReducer from '../../project/OKR/reducer';
@@ -24,7 +24,7 @@ import timeframeSettingReducer from '../../project/TimeframeSetting/reducer';
 import initialDataReducer from '../../project/InitialDataUpload/reducer';
 import emailSettingReducer from '../../project/EmailSetting/reducer';
 import passwordChangeReducer from '../../project/PasswordChange/reducer';
-import { Action as BaseAction } from '../action';
+import { Action as BaseAction } from '../container/action';
 import { Action as AuthAction } from '../../auth/action';
 import { Action as PasswordChangeAction } from '../../project/PasswordChange/action';
 

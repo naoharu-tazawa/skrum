@@ -1,5 +1,5 @@
 import { createActions } from 'redux-actions';
-import { keyValueIdentity } from '../util/ActionUtil';
+import { keyValueIdentity } from '../../util/ActionUtil';
 
 export const Action = {
   REFLECT_IMAGES_VERSION: 'REFLECT_IMAGES_VERSION',
