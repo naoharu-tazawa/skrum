@@ -44,8 +44,8 @@ class OkrDetails extends Component {
     return (
       <div>
         <div className={`${styles.content} ${styles.txt_top} ${styles.cf}`}>
-          <p className={`${styles.alignment} ${styles.floatL}`}>紐付け先目標</p>
-          <div className={`${styles.txt_content_top} ${styles.floatL} ${styles.clear}`}>
+          <div className={styles.txt_content_top}>
+            <p className={styles.alignment}>紐付け先目標</p>
             {parentOkr && (
               <Link to={replacePath({ aspect: 'o', aspectId: parentOkr.id })}>
                 {parentOkr.name}
@@ -54,7 +54,7 @@ class OkrDetails extends Component {
           </div>
           {parentOkr && (
             <EntityLink
-              className={`${styles.parent_owner_info} ${styles.floatR}`}
+              className={styles.parent_owner_info}
               entity={parentOkr.owner}
             />)}
         </div>

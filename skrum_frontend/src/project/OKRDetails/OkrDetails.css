@@ -21,7 +21,7 @@
 
 .alignment {
   font-size: 12px;
-  margin-bottom: 4px;
+  margin: -2px 0 2px 0;
   color: #8e9aa6;
 }
 .txt {
@@ -64,18 +64,31 @@ button.tool:focus {
   padding: 30px 65px; }
 
 .txt_top {
+  display: flex;
   background: #F0F4F5;
-  padding: 14px 65px !important; }
-  .txt_top .txt_content_top {
-    font-size: 12px;
-    line-height: 1.4;
-    width: 72%; }
-  .txt_top .parent_owner_info {
-    position: relative;
-    top: -10px;
-    padding-left: 10px;
-    font-size: 12px;
-    width: 28%; }
+  padding: 14px 65px !important;
+}
+.txt_top .txt_content_top {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  line-height: 1.4;
+  width: 72%;
+}
+.txt_top .txt_content_top a {
+  height: 100%;
+}
+.txt_top .txt_content_top a:hover {
+  text-decoration: underline;
+}
+.txt_top .parent_owner_info {
+  margin: 6px 0;
+  position: relative;
+  /*top: -10px;*/
+  padding-left: 10px;
+  font-size: 12px;
+  width: 28%;
+}
 
 .boxInfo {
   width: 100% !important; }
