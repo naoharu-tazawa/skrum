@@ -79,7 +79,10 @@ export default class DialogForm extends Component {
                 children({ setFieldData: this.setFieldData.bind(this), data }) :
                 children}
             </div>
-            <div className={styles.error}>{error || submissionError || <span>&nbsp;</span>}</div>
+            {(!compact || error || submissionError) && (
+              <div className={styles.error}>
+                {error || submissionError || <span>&nbsp;</span>}
+              </div>)}
           </div>
           <div className={`${styles.buttons} ${compact && styles.compact}`}>
             <div className={styles.filler} />

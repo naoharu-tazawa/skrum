@@ -24,7 +24,6 @@
 }
 .progressConstituents, .dateRangeBox, .alignmentBox {
   display: flex;
-  margin: 1em 0 0 0;
 }
 .inputWithTitle {
   display: flex;
