@@ -1,0 +1,375 @@
+@charset "UTF-8";
+
+/* 共通スタイル */
+*{
+    box-sizing: border-box;
+}
+
+/* スクロールバーWebkit系のみ有効 */
+*{
+    scrollbar-base-color:#626A7F;
+}
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, .1);
+}
+::-webkit-scrollbar-thumb {
+    background-color: #626A7F;
+    border-radius: 10px;
+    box-shadow:0 0 0 1px rgba(255, 255, 255, .3);
+}
+
+/* ページヘッダー */
+.page_header{
+    height: 2.5em;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+.page_header .left{
+    flex-basis: 175px;
+    background-color: #27588F;
+    border-right: 2px solid #396494;
+    border-bottom: 2px solid #3F6088;
+}
+.page_header .main{
+    flex-basis: calc(100% - 175px);
+    background-color: #004D99;
+    border-bottom: 2px solid #6492C1;
+}
+
+/* メインコンテンツ */
+.top_flex_container{
+    overflow: hidden;
+    position: relative;
+    height: calc(100vh - 2.5em);
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+
+/* 左サイドバー */
+.left_sidebar{
+    background-color: #626A7F;
+    border-right: 2px solid #7A8193;
+    flex-basis: 175px;
+    width: 175px;
+    min-width: 175px;
+}
+
+/* 右コンテンツ */
+.right_area{
+    padding: 2em 3em;
+    background-color: #F0F3F4;
+    flex-basis: calc(100% - 175px);
+    
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+/* 右側可変サイドバー */
+.right_bar{
+    color: #626A7F;
+    position: absolute;
+    width: 480px;
+    background-color: #FFF;
+    right: -480px;
+    /* right: 0px; */
+    flex-shrink: 0;
+    height: calc(100vh - 2.5em);
+}
+/* 右側サイドバー表示ボタン */
+.right_bar_show{
+    position: absolute;
+    width: 1.5em;
+    right: 0;
+    flex-shrink: 0;
+    height: 2em;
+    background-color: #626A7F;
+    cursor: pointer;
+    padding: 0.3em 0px 0px 0em;
+    border-radius: 0.8em 0em 0em 0.8em;
+}
+/* クローズバー */
+.right_bar > nav{
+    background-color: #626A7F;
+    cursor: pointer;
+    padding: 0.3em 1.5em;
+    height: 2em;
+}
+.right_bar > nav button{
+    cursor: pointer;
+}
+.right_bar .close_bar, .right_bar_show .close_bar{
+    background-color: transparent;
+    color: #FFF;
+    border-style: none;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+/* メイン部分 */
+.right_bar .body{
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+/* ヘッダー */
+.right_bar .body > header{
+    margin: 1em 2em;
+    border: 1px solid #626A7F;
+    flex-basis: 1.6em;
+    overflow: hidden;
+    border-radius: 1em;
+    text-align: center;
+}
+.right_bar .body > header > span{
+    font-size: 0.75em;
+    vertical-align: middle;
+    width: 33.33%;
+    display: inline-block;
+    height: 2.2em;
+    padding-top: 0.4em;
+    background-color: #FFF;
+}
+
+/* 検索部分 */
+.right_bar .body .search_box{
+    border-bottom: 1px solid #DDE3E8;
+    padding-bottom: 1em;
+}
+
+.right_bar .search_line{
+    padding-bottom: 0.4em;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+.right_bar .search_line input[type=date]{
+    height: 2.29em;
+}
+
+.right_bar .search_line .title{
+    flex-basis: 8em;
+    font-size: 0.75em;
+    text-align: right;
+    padding-right: 1.5em;
+    padding-top: 1.0em;
+}
+.right_bar .search_line .input{
+    flex-basis: calc(100% - 8em - 3em);
+    padding-top: 0.0em;
+}
+.right_bar .search_line .input > input{
+    width: 100%;
+    color: #626A7F;
+    font-size: 0.9em;
+    padding: 0.5em;
+    box-shadow: 3px 3px 3px 3px rgba(128,128,128,0.15);
+    border: 1px solid #EEE;
+}
+.right_bar .search_line .button{
+    flex-basis: 3em;
+    padding-left: 1em;
+}
+.right_bar .search_line .button img{
+    cursor: pointer;
+}
+
+/* To */
+.right_bar .body .to{
+    flex-basis: 2em;
+    border-bottom: 1px solid #DDE3E8;
+    padding: 0.3em 0px 0px 2em;
+}
+.right_bar .body .to input{
+    border-style: none;
+    padding-left: 1em;
+}
+
+/* コメント欄 */
+.right_bar .body .comment{
+    border-style: none;
+    color: #626A7F;
+    font-size: 0.8em;
+    padding: 1em 2.5em;
+}
+
+/* 送信欄 */
+.right_bar .body .send{
+    border-top: 1px solid #DDE3E8;
+    flex-basis: 5em;
+}
+.right_bar .body .send .message_box, .right_bar .body .send .button_box{
+    display: inline-block;
+}
+.right_bar .body .send .message_box{
+    width: calc(100% - 15em);
+    padding: 2em 0px 0px 3em;
+    text-indent: -1em;
+    font-size: 0.8em;
+}
+.right_bar .body .send .button_box{
+    width: 10em;
+    text-align: left;
+    vertical-align: top;
+    padding-top: 1.5em;
+}
+.right_bar .body .send .button_box button{
+    color: #8E9AA6;
+    background-color: transparent;
+    border: 1px #8E9AA6 solid;
+    width: 10em;
+    padding: 0.7em 0.5em;
+    border-radius: 3em;
+    font-size: 0.75em;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+/* ページ毎の設定 */
+/* 進捗 */
+.right_bar .body.progress .search_box{
+    flex-basis: 3.8em;
+}
+.right_bar .body.progress .comment{
+    flex-basis: calc(
+        (
+            100vh /* 画面高さ */
+            - 2.5em /*ページヘッダー*/
+            - 2em /* closeバー*/
+            - 1.6em - 2em /* ヘッダー */
+            - 3.8em + 0.4em /* サーチボックス */
+            - 2em /* TO */
+            - 5em /* 送信 */
+        ) * 0.8 /* フォントサイズ */
+    );
+}
+
+/* フィードバック */
+.right_bar .body.feedback > header > .feedback{
+    background-color: #626A7F;
+    color: #FFF;
+}
+.right_bar .body.feedback .search_line{
+    border-bottom: 1px solid #DDE3E8;    
+}
+.right_bar .body.feedback .search_line.type{
+    margin: 0.7em 5% 0px;
+    border-style: none;
+}
+.right_bar .body.feedback .search_line.type > label{
+    width: 24.5%;
+    text-align: center;
+    font-size: 0.8em;
+}
+.right_bar .body.feedback .search_line.type input{
+    margin-right: 0.5em;
+    margin-top: 0.1em;
+    vertical-align: top;
+}
+.right_bar .body.feedback .search_box{
+    flex-basis: 5.0em;
+    padding-bottom: 0;
+}
+.right_bar .body.feedback .comment{
+    flex-basis: calc(
+        (
+            100vh /* 画面高さ */
+            - 2.5em /*ページヘッダー*/
+            - 2em /* closeバー*/
+            - 1.6em - 2em /* ヘッダー */
+            - 5.0em - 1em /* サーチボックス */
+            - 2em /* TO */
+            - 5em /* 送信 */
+        ) * 0.8 /* フォントサイズ */
+    );
+}
+
+/* ヒアリング */
+.right_bar .body.hearing > header > .hearing{
+    background-color: #626A7F;
+    color: #FFF;
+}
+.right_bar .body.hearing .search_box{
+    flex-basis: 6.2em;
+}
+.right_bar .body.hearing .comment{
+    flex-basis: calc(
+        (
+            100vh /* 画面高さ */
+            - 2.5em /*ページヘッダー*/
+            - 2em /* closeバー*/
+            - 1.6em - 2em /* ヘッダー */
+            - 6.2em - 1em /* サーチボックス */
+            - 2em /* TO */
+            - 5em /* 送信 */
+        ) * 0.8 /* フォントサイズ */
+    );
+}
+
+
+/* 面談メモ */
+.right_bar .body.surgery_memo > header > .surgery_memo{
+    background-color: #626A7F;
+    color: #FFF;
+}
+.right_bar .body.surgery_memo .search_box{
+    flex-basis: 8.4em;
+}
+.right_bar .body.surgery_memo .search_line.memo_share .input{
+    padding-top: 0.65em;
+}
+.right_bar .body.surgery_memo .search_line.memo_share > label{
+    width: 50%;
+    text-align: center;
+    font-size: 0.8em;
+}
+.right_bar .body.surgery_memo .search_line.memo_share input{
+    margin-right: 0.5em;
+    margin-top: 0.1em;
+    vertical-align: top;
+}
+.right_bar .body.surgery_memo .comment{
+    flex-basis: calc(
+        (
+            100vh /* 画面高さ */
+            - 2.5em /*ページヘッダー*/
+            - 2em /* closeバー*/
+            - 1.6em - 2em /* ヘッダー */
+            - 8.4em - 1em /* サーチボックス */
+            - 5em /* 送信 */
+        ) * 0.8 /* フォントサイズ */
+    );
+}
+

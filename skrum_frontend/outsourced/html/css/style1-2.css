@@ -1,0 +1,427 @@
+@charset "UTF-8";
+
+/* 共通スタイル */
+*{
+    box-sizing: border-box;
+}
+
+/* スクロールバーWebkit系のみ有効 */
+*{
+    scrollbar-base-color:#626A7F;
+}
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, .1);
+}
+::-webkit-scrollbar-thumb {
+    background-color: #626A7F;
+    border-radius: 10px;
+    box-shadow:0 0 0 1px rgba(255, 255, 255, .3);
+}
+
+/* ページヘッダー */
+.page_header{
+    height: 2.5em;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+.page_header .left{
+    flex-basis: 175px;
+    background-color: #27588F;
+    border-right: 2px solid #396494;
+    border-bottom: 2px solid #3F6088;
+}
+.page_header .main{
+    flex-basis: calc(100% - 175px);
+    background-color: #004D99;
+    border-bottom: 2px solid #6492C1;
+}
+
+/* メインコンテンツ */
+.top_flex_container{
+    overflow: hidden;
+    position: relative;
+    height: calc(100vh - 2.5em);
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+
+/* 左サイドバー */
+.left_sidebar{
+    background-color: #626A7F;
+    border-right: 2px solid #7A8193;
+    flex-basis: 175px;
+    width: 175px;
+    min-width: 175px;
+}
+
+/* 右コンテンツ */
+.right_area{
+    padding: 2em 3em;
+    background-color: #F0F3F4;
+    flex-basis: calc(100% - 175px);
+    
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+
+/* 中央コンテンツ */
+.right_area .main{
+    background-color: #FFF;
+    flex-basis: calc(100% - 230px - 1.5em);
+    margin-right: 1.5em;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+/* メニュー */
+.right_area .main nav{
+    padding: 3em 0px;
+    border-right: 3px solid #FCFCFD;
+    flex-basis: 200px;
+    font-size: 0.8em;
+    box-shadow: 3px 3px 3px 3px rgba(128,128,128,0.1);
+}
+.right_area .main nav ul{
+    list-style-type: none;
+    color: #626A7F;
+    margin: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+.right_area .main nav li{
+    padding: 0.8em 0em 0.8em 2.5em;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+/* 選択中のメニュー */
+.right_area .main nav li.selected{
+    background-color: #F0F4F6;
+}
+.right_area .main nav .text{
+    flex-basis: calc(100% - 2em - 1.5em);
+}
+/* 通知数？ */
+.right_area .main nav .countbox{
+    flex-basis: 2em;
+    margin-right: 1.5em;
+}
+.right_area .main nav .count{
+    border-radius: 50%;
+    background-color: #8E9AA6;
+    color: #FFF;
+    width: 1.2em;
+    display: block;
+    margin-right: auto;
+    text-align: center;
+    height: 1.2em;
+    padding: 0.1em;
+}
+/* リスト */
+.right_area .main .list{
+    flex-basis: calc(100% - 200px);
+    overflow: auto;
+    padding-top: 1.5em;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+
+.right_area .main .list .list_item{
+    border-bottom: 1px solid #D8DFE5;
+    padding: 1em 2%;
+}
+.right_area .main .list .icon{
+    width: 4em;
+    padding: 0.0em 0.5em;
+    display: inline-block;
+    vertical-align: top;
+}
+/* 画像のくりぬき */
+.right_area .main .list .image_clip{
+    overflow: hidden;
+    border-radius: 50%;
+    display: inline-block;
+}
+.right_area .main .list .icon img{
+    vertical-align: middle;
+}
+
+.right_area .main .list .list_item .text{
+    width: calc(100% - 4em - 16px);
+    display: inline-block;
+}
+.right_area .main .list .list_item .text header{
+    color: #8E9AA6;
+    font-size: 0.7em;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+.right_area .main .list .list_item .text header .title{
+    margin-right: auto;
+}
+.right_area .main .list .list_item .text header .date{
+    margin-left: auto;
+}
+
+.right_area .main .list .list_item .text .body{
+    color: #626A7F;
+    font-size: 0.8em;
+    padding-top: 0.2em;
+}
+.right_area .main .list > header{
+    position: relative;
+    border-bottom: 1px solid #D8DFE5;
+    padding-bottom: 1em;
+}
+.right_area .main .list > header h1{
+    font-size: 1em;
+    color: #626A7F;
+    text-align: center;
+    position: relative;
+}
+.right_area .main .list > header h1 span{
+    position: relative;
+}
+.right_area .main .list > header button{
+    position: absolute;
+    color: #8E9AA6;
+    margin: 1em auto 0px;
+    background-color: transparent;
+    border: 1px #8E9AA6 solid;
+    width: 10em;
+    padding: 0.7em 0.5em;
+    display: block;
+    border-radius: 3em;
+    top: -1.6em;
+    left: -12.5em;
+    font-size: 0.75em;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.right_area .main .list > footer{
+    margin-top: auto;
+    background-color: #F7F9FA;
+    padding: 1em 5% 1em 2%;
+}
+.right_area .main .list > footer > div{
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+
+.right_area .main .list > footer textarea{
+    border: #E1E6EB 1px solid;
+    flex-basis: calc(100% - 4em);
+    height: 8em;
+}
+.right_area .main .list > footer button{
+    color: #8E9AA6;
+    margin: 1em auto 0px;
+    background-color: transparent;
+    border: 1px #8E9AA6 solid;
+    width: 10em;
+    padding: 0.7em 0.5em;
+    display: block;
+    border-radius: 3em;
+    font-size: 0.75em;
+    text-align: center;
+    cursor: pointer;
+    margin-right: 0px;
+}
+
+
+/* 右側のバー */
+.right_bar{
+    background-color: #626A7F;
+    flex-basis: 230px;
+    border: solid 2px #ABB1BB;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+
+/* 検索 */
+.right_bar .search{
+    padding: 1.2em;
+    color: #FFF;
+    border-bottom: 1px solid #82868C;
+}
+.right_bar .search input{
+    color:#626A7F;
+    padding: 0.2em;
+    border: solid 1px #979A9C;
+    font-size: 0.8em;
+}
+.right_bar .search input.from, .right_bar .search input.to{
+    width: 45%;
+}
+.right_bar .search .span{
+    width: 10%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+}
+.right_bar .search .user{
+    width: 100%;
+    margin-top: 1em;
+}
+
+.right_bar .search .narrowing{
+    color: #FFF;
+    margin: 1em auto 0px;
+    background-color: transparent;
+    border: 1px #FFF solid;
+    width: 9em;
+    padding: 0.5em 2em;
+    display: block;
+    border-radius: 2em;
+    cursor: pointer;
+}
+
+/* リスト */
+.right_bar .list_box{
+    overflow: auto;
+}
+.right_bar .list{
+    border-bottom: 1px solid #82868C;
+    padding: 1em 1.5em;
+    font-size: 0.8em;
+    color: #FFF;
+}
+/* 選択中 */
+.right_bar .list.current{
+    background-color: #708090;
+}
+.right_bar .list header{
+        display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+}
+.right_bar .list header .icon{
+    flex-basis: 2.2em;
+    display: inline-block;
+    padding: 0em 1em 0em 0px;
+}
+/* 画像のくりぬき */
+.right_bar .list header .icon .image_clip{
+    overflow: hidden;
+    border-radius: 50%;
+    display: inline-block;
+}
+.right_bar .list header .text{
+    flex-basis: calc(100% - 2.2em);
+    display: inline-block;
+    width: calc(100% - 3em);
+}
+.right_bar .list header .text .type_time{
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap:         nowrap;
+    font-size: 0.8em;
+    padding-top: 0.3em;
+}
+.right_bar .list header .text .type_time .type{
+    margin-left: auto;
+    flex-basis: 10em;
+    text-align: center;
+    border-radius: 1em;
+    margin-bottom: 0.2em;
+}
+.right_bar .list header .text .type_time .type.daily_report{
+    background-color: #F2B230;
+}
+.right_bar .list header .text .type_time .type.surgery_memo{
+    background-color: #B1E43E;
+}
+.right_bar .list header .text .type_time .type.hearing{
+    background-color: #FF4DFF;
+}
+.right_bar .list header .text .type_time .type.feedback{
+    background-color: #36B374;
+}
+.right_bar .list header .text .type_time .type.progress{
+    background-color: #2EB9FE;
+}
+.right_bar .list header .text .type_time .time{
+    margin-right: auto;
+    flex-basis: calc(100% - 5.5em);
+    text-align: right;
+}
+.right_bar .list header .text .name{
+    padding-top: 0.3em;
+    font-size: 0.8em;
+}
+.right_bar .list .body{
+    padding-top: 0.5em;
+    font-size: 0.8em;
+}

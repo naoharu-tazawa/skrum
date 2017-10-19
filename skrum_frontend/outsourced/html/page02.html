@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="./css/normalize.css">
+		<link rel="stylesheet" href="./css/style1-2.css">
+	</head>
+	<body>
+		<header class="page_header">
+			<div class="left"></div>
+			<nav class="main"></nav>
+		</header>
+		<section class="top_flex_container">
+			<aside class="left_sidebar"></aside>
+			<article class="right_area">
+				<section class="main">
+					<nav>
+						<ul>
+							<li class="selected">
+								<span class="text">日報</span><span class="countbox"><span class="count">1</span></span>
+							</li>
+							<li>
+								<span class="text">ヒヤリング</span><span class="countbox"><span class="count">1</span></span>
+							</li>
+							<li>
+								<span class="text">フィードバック</span>
+							</li>
+							<li>
+								<span class="text">進捗報告</span>
+							</li>
+							<li>
+								<span class="text">面談メモ</span>
+							</li>
+						</ul>
+					</nav>
+					<section class="list">
+						<header>
+							<h1>
+								<span>
+									<button>←履歴一覧へ戻る</button>
+									対象目標： 9/30までに仕様書、デザイン完成
+								</span>
+							</h1>
+						</header>
+						<section class="list_item">
+							<section class="icon"><span class="image_clip"><img src="img/icon_tazawa.png"/></span></section>
+							<section class="text">
+								<header>
+									<div class="title">田澤尚治　｜　To: 自分、○○○○、○○○○</div>
+									<div class="date">2017年9月27日22:57　2時間前</div>
+								</header>
+								<section class="body">
+									以下文章ダミーになります。転折や縦 画においてのコブ法帖をみると、<br/>
+									鋭すぎて筆では表せない起筆や収筆が見られる。これは筆で書いた後、刀匠が彫る際、デザイン的に刀意を加えたため<br/>
+									遠くから筆を導き、落筆を高くして運筆し、収筆からはまた高く筆をあげ、<br/>
+									ゆっくりと大きく時間をかけて次の筆画に進む
+								</section>
+							</section>
+						</section>
+						<section class="list_item">
+							<section class="icon"><span class="image_clip"><img src="img/icon_tanba.png"/></span></section>
+							<section class="text">
+								<header>
+									<div class="title">丹羽彩子</div>
+									<div class="date">2017年9月27日22:57　2時間前</div>
+								</header>
+								<section class="body">
+									以下文章ダミーになります。転折や縦 画においてのコブ法帖をみると、鋭すぎて筆では表せない起筆や<br/>
+									収筆が見られる。これは筆で書いた後、刀匠が彫る際、デザイン的に刀意を加えたため。
+								</section>
+							</section>
+						</section>
+						<section class="list_item">
+							<section class="icon"><span class="image_clip"><img src="img/icon_tazawa.png"/></span>
+							</section>
+							<section class="text">
+								<header>
+									<div class="title">田澤尚治</div>
+									<div class="date">2017年9月27日22:57　2時間前</div>
+								</header>
+								<section class="body">
+									以下文章ダミーになります。転折や縦 画においてのコブ法帖をみると、鋭すぎて筆では表せない起筆や<br/>
+									収筆が見られる。これは筆で書いた後、刀匠が彫る際、デザイン的に刀意を加えたため。
+								</section>
+							</section>
+						</section>
+						<footer>
+							<div>
+								<section class="icon">
+									<span class="image_clip"><img src="img/icon_tanba.png"/></span>
+								</section>
+								<textarea placeholder="コメントをする …"></textarea>
+							</div>
+							<button>コメントする</button>
+						</footer>
+					</section>
+				</section>
+				<aside class="right_bar">
+					<header class="search">
+						<!--
+							type=dateだと、webkit系のブラウザではみ出す
+							type=dateを使う場合のvalueの区切り文字は対応しているブラウザ(Webkit系、Edge)では「-」それ以外では「/」
+							<input class="from" type="date" value="2017-10-10" /><span class="span">～</span><input class="to" type="date" value="2017-10-10" />
+						-->
+						<input class="from" type="text" value="2017/10/10" /><span class="span">～</span><input class="to" type="text" value="2017/10/10" />
+						<input class="user" type="text" value="" placeholder="ユーザーを検索" />
+						<input class="narrowing" type="button" value="絞り込む" />
+					</header>
+					<section class="list_box">
+						<section class="list current">
+							<header>
+								<div class="icon"><span class="image_clip"><img src="img/icon_tazawa.png"/></span></div>
+								<div class="text">
+									<div class="type_time">
+										<div class="type daily_report">
+											日報
+										</div>
+										<div class="time">
+											10:10
+										</div>
+									</div>
+									<div class="name">
+										自分, 田中太郎, 鈴木太…
+									</div>
+								</div>
+							</header>
+							<section class="body">
+								以下最新のやりとりが入ります。以下最新のやりとりが入ります。
+							</section>
+						</section>
+						<section class="list ">
+							<header>
+								<div class="icon"><span class="image_clip"><img src="img/icon_tazawa.png"/></span></div>
+								<div class="text">
+									<div class="type_time">
+										<div class="type surgery_memo">
+											面談メモ
+										</div>
+										<div class="time">
+											10:10
+										</div>
+									</div>
+									<div class="name">
+										田澤 尚治, Adrian Khong
+									</div>
+								</div>
+							</header>
+							<section class="body">
+								以下最新のやりとりが入ります。以下最新のやりとりが入ります。
+							</section>
+						</section>
+						<section class="list ">
+							<header>
+								<div class="icon"><span class="image_clip"><img src="img/icon_tazawa.png"/></span></div>
+								<div class="text">
+									<div class="type_time">
+										<div class="type hearing">
+											ヒヤリング
+										</div>
+										<div class="time">
+											10:10
+										</div>
+									</div>
+									<div class="name">
+										田澤 尚治, 自分
+									</div>
+								</div>
+							</header>
+							<section class="body">
+								以下最新のやりとりが入ります。以下最新のやりとりが入ります。
+							</section>
+						</section>
+						<section class="list ">
+							<header>
+								<div class="icon"><span class="image_clip"><img src="img/icon_tazawa.png"/></span></div>
+								<div class="text">
+									<div class="type_time">
+										<div class="type feedback">
+											フィードバック
+										</div>
+										<div class="time">
+											10:10
+										</div>
+									</div>
+									<div class="name">
+										田澤 尚治
+									</div>
+								</div>
+							</header>
+							<section class="body">
+								以下最新のやりとりが入ります。以下最新のやりとりが入ります。
+							</section>
+						</section>
+						<section class="list ">
+							<header>
+								<div class="icon"><span class="image_clip"><img src="img/icon_tazawa.png"/></span></div>
+								<div class="text">
+									<div class="type_time">
+										<div class="type progress">
+											進捗報告
+										</div>
+										<div class="time">
+											10:10
+										</div>
+									</div>
+									<div class="name">
+										田澤 尚治
+									</div>
+								</div>
+							</header>
+							<section class="body">
+								以下最新のやりとりが入ります。以下最新のやりとりが入ります。
+							</section>
+						</section>
+						<section class="list ">
+							<header>
+								<div class="icon"><span class="image_clip"><img src="img/icon_tazawa.png"/></span></div>
+								<div class="text">
+									<div class="type_time">
+										<div class="type daily_report">
+											日報
+										</div>
+										<div class="time">
+											10:10
+										</div>
+									</div>
+									<div class="name">
+										田澤 尚治
+									</div>
+								</div>
+							</header>
+							<section class="body">
+								以下最新のやりとりが入ります。以下最新のやりとりが入ります。
+							</section>
+						</section>
+						<section class="list ">
+							<header>
+								<div class="icon"><span class="image_clip"><img src="img/icon_tazawa.png"/></span></div>
+								<div class="text">
+									<div class="type_time">
+										<div class="type daily_report">
+											日報
+										</div>
+										<div class="time">
+											10:10
+										</div>
+									</div>
+									<div class="name">
+										田澤 尚治
+									</div>
+								</div>
+							</header>
+							<section class="body">
+								以下最新のやりとりが入ります。以下最新のやりとりが入ります。
+							</section>
+						</section>
+						<section class="list ">
+							<header>
+								<div class="icon"><span class="image_clip"><img src="img/icon_tazawa.png"/></span></div>
+								<div class="text">
+									<div class="type_time">
+										<div class="type daily_report">
+											日報
+										</div>
+										<div class="time">
+											10:10
+										</div>
+									</div>
+									<div class="name">
+										田澤 尚治
+									</div>
+								</div>
+							</header>
+							<section class="body">
+								以下最新のやりとりが入ります。以下最新のやりとりが入ります。
+							</section>
+						</section>
+					</section>
+				</aside>
+			</article>
+		</section>
+		<script src="./js/jquery-3.2.1.min.js">
+		</script>
+	</body>
+</html>
