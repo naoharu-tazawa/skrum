@@ -424,13 +424,27 @@ class OneOnOneService extends BaseService
             // リプライコメントがない場合nullなので処理終了
             if ($tOneOnOne === null) break;
 
-            if ($tOneOnOne->getOkrId() !== null) {
-                $tOkrRepos = $this->getTOkrRepository();
-                $tOkr = $tOkrRepos->find($tOneOnOne->getOkrId());
-
+            if ($key1 === 0) {
                 $oneOnOneHeaderDTO = new OneOnOneHeaderDTO();
-                $oneOnOneHeaderDTO->setOkrId($tOkr->getOkrId());
-                $oneOnOneHeaderDTO->setOkrName($tOkr->getName());
+                if ($tOneOnOne->getTargetDate() !== null) {
+                    $oneOnOneHeaderDTO->setTargetDate($tOneOnOne->getTargetDate());
+                }
+                if ($tOneOnOne->getDueDate() !== null) {
+                    $oneOnOneHeaderDTO->setDueDate($tOneOnOne->getDueDate());
+                }
+                if ($tOneOnOne->getFeedbackType() !== null) {
+                    $oneOnOneHeaderDTO->setFeedbackType($tOneOnOne->getFeedbackType());
+                }
+                if ($tOneOnOne->getIntervieweeUserId() !== null) {
+                    $intervieweeEntity = $mUserRepos->find($tOneOnOne->getIntervieweeUserId());
+                    $oneOnOneHeaderDTO->setIntervieweeUserName($intervieweeEntity->getLastName() . $intervieweeEntity->getFirstName());
+                }
+                if ($tOneOnOne->getOkrId() !== null) {
+                    $tOkrRepos = $this->getTOkrRepository();
+                    $tOkr = $tOkrRepos->find($tOneOnOne->getOkrId());
+                    $oneOnOneHeaderDTO->setOkrId($tOkr->getOkrId());
+                    $oneOnOneHeaderDTO->setOkrName($tOkr->getName());
+                }
 
                 $oneOnOneDialogDTO->setHeader($oneOnOneHeaderDTO);
             }
@@ -463,19 +477,6 @@ class OneOnOneService extends BaseService
             $oneOnOneDTO->setFromName($fromUserEntity->getLastName() . $fromUserEntity->getFirstName());
             $oneOnOneDTO->setImageVersion($fromUserEntity->getImageVersion());
             $oneOnOneDTO->setToNames($toNames);
-            if ($tOneOnOne->getTargetDate() !== null) {
-                $oneOnOneDTO->setTargetDate($tOneOnOne->getTargetDate());
-            }
-            if ($tOneOnOne->getDueDate() !== null) {
-                $oneOnOneDTO->setDueDate($tOneOnOne->getDueDate());
-            }
-            if ($tOneOnOne->getFeedbackType() !== null) {
-                $oneOnOneDTO->setFeedbackType($tOneOnOne->getFeedbackType());
-            }
-            if ($tOneOnOne->getIntervieweeUserId() !== null) {
-                $intervieweeEntity = $mUserRepos->find($tOneOnOne->getIntervieweeUserId());
-                $oneOnOneDTO->setIntervieweeUserName($intervieweeEntity->getLastName() . $intervieweeEntity->getFirstName());
-            }
             $oneOnOneDTO->setLastUpdate($tOneOnOne->getUpdatedAt());
             $oneOnOneDTO->setText($tOneOnOne->getBody());
 

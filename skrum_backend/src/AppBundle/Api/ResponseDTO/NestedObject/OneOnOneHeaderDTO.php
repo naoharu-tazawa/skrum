@@ -12,6 +12,34 @@ use JMS\Serializer\Annotation as JSON;
 class OneOnOneHeaderDTO
 {
     /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d'>")
+     */
+    private $targetDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d'>")
+     */
+    private $dueDate;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $feedbackType;
+
+    /**
+     * @var string
+     *
+     * @JSON\Type("string")
+     */
+    private $intervieweeUserName;
+
+    /**
      * @var integer
      *
      * @JSON\Type("integer")
@@ -24,6 +52,102 @@ class OneOnOneHeaderDTO
      * @JSON\Type("string")
      */
     private $okrName;
+
+    /**
+     * Set targetDate
+     *
+     * @param \DateTime $targetDate
+     *
+     * @return OneOnOneHeaderDTO
+     */
+    public function setTargetDate($targetDate)
+    {
+        $this->targetDate = $targetDate;
+
+        return $this;
+    }
+
+    /**
+     * Get targetDate
+     *
+     * @return \DateTime
+     */
+    public function getTargetDate()
+    {
+        return $this->targetDate;
+    }
+
+    /**
+     * Set dueDate
+     *
+     * @param \DateTime $dueDate
+     *
+     * @return OneOnOneHeaderDTO
+     */
+    public function setDueDate($dueDate)
+    {
+        $this->dueDate = $dueDate;
+
+        return $this;
+    }
+
+    /**
+     * Get dueDate
+     *
+     * @return \DateTime
+     */
+    public function getDueDate()
+    {
+        return $this->dueDate;
+    }
+
+    /**
+     * Set feedbackType
+     *
+     * @param string $feedbackType
+     *
+     * @return OneOnOneHeaderDTO
+     */
+    public function setFeedbackType($feedbackType)
+    {
+        $this->feedbackType = $feedbackType;
+
+        return $this;
+    }
+
+    /**
+     * Get feedbackType
+     *
+     * @return string
+     */
+    public function getFeedbackType()
+    {
+        return $this->feedbackType;
+    }
+
+    /**
+     * Set intervieweeUserName
+     *
+     * @param string $intervieweeUserName
+     *
+     * @return OneOnOneHeaderDTO
+     */
+    public function setIntervieweeUserName($intervieweeUserName)
+    {
+        $this->intervieweeUserName = $intervieweeUserName;
+
+        return $this;
+    }
+
+    /**
+     * Get intervieweeUserName
+     *
+     * @return string
+     */
+    public function getIntervieweeUserName()
+    {
+        return $this->intervieweeUserName;
+    }
 
     /**
      * Set okrId

@@ -40,7 +40,7 @@ class OneOnOneController extends BaseController
             if (empty($data['to'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }
-        } elseif ($data['oneOnOneType'] === DBConstant::ONE_ON_ONE_TYPE_PROGRESS_REPORT) {
+        } elseif ($data['oneOnOneType'] === DBConstant::ONE_ON_ONE_TYPE_PROGRESS_MEMO) {
             if (empty($data['okrId'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }

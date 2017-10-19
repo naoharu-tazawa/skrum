@@ -35,13 +35,18 @@ paths:
               header:
                 type: object
                 properties:
+                  targetDate:
+                    type: string
+                  dueDate:
+                    type: string
+                  feedbackType:
+                    type: string
+                  intervieweeUserName:
+                    type: string
                   okrId:
                     type: integer
                   okrName:
                     type: string
-                required:
-                  - okrId
-                  - okrName
               dialog:
                 type: array
                 items:
@@ -58,14 +63,6 @@ paths:
                     imamgeVersion:
                       type: integer
                     toNames:
-                      type: string
-                    targetDate:
-                      type: string
-                    dueDate:
-                      type: string
-                    feedbackType:
-                      type: string
-                    intervieweeUserName:
                       type: string
                     lastUpdate:
                       type: string

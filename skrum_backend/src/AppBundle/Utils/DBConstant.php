@@ -165,9 +165,9 @@ class DBConstant
     const ONE_ON_ONE_TYPE_DAILY_REPORT = '1';
 
     /**
-     * 1on1種別（進捗報告）
+     * 1on1種別（進捗メモ）
      */
-    const ONE_ON_ONE_TYPE_PROGRESS_REPORT = '2';
+    const ONE_ON_ONE_TYPE_PROGRESS_MEMO = '2';
 
     /**
      * 1on1種別（フィードバック）
@@ -180,14 +180,14 @@ class DBConstant
     const ONE_ON_ONE_TYPE_HEARING = '4';
 
     /**
-     * 1on1種別（面談メモ）
+     * 1on1種別（面談ノート）
      */
     const ONE_ON_ONE_TYPE_INTERVIEW_NOTE = '5';
 
     /**
-     * フィードバック種別（課題点）
+     * フィードバック種別（サンクス）
      */
-    const FEEDBACK_TYPE_ISSUE = '1';
+    const FEEDBACK_TYPE_THANKS = '1';
 
     /**
      * フィードバック種別（アドバイス）
@@ -200,9 +200,9 @@ class DBConstant
     const FEEDBACK_TYPE_GOOD_JOB = '3';
 
     /**
-     * フィードバック種別（感謝）
+     * フィードバック種別（課題点）
      */
-    const FEEDBACK_TYPE_THANKS = '4';
+    const FEEDBACK_TYPE_ISSUE = '4';
 
     /**
      * ロールID（一般ユーザ（スタンダードプラン））
