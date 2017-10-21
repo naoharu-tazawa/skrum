@@ -4,8 +4,8 @@
 {% for group in data %}
 
 ■ {{ group.groupName }}
-    (  前日  )    ( 前々日 )    (前々日比)
-      {{ group.achievementRateToday }}%        {{ group.achievementRateYesterday }}%        {% if (group.achievementRateToday - group.achievementRateYesterday) >= 0 %}+{% else %}-{% endif %}{{ group.achievementRateToday - group.achievementRateYesterday }}%
+    (  前日  )    (前々日比)
+      {{ group.achievementRateToday }}%        {% if (group.achievementRateToday - group.achievementRateYesterday) >= 0 %}+{% else %}-{% endif %}{{ group.achievementRateToday - group.achievementRateYesterday }}%
 
 {% endfor %}
 {% if data == null %}◯本日のレポート対象グループはありません。{% endif %}
