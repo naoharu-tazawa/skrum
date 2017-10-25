@@ -30,13 +30,15 @@ parameters:
 
     auto_post_type_generate_kr: 'さんのサブ目標が作成されました。'
 
-    auto_post_type_achievement_o: 'さんの目標達成値が%%s%%sから%%s%%sに進捗しました。（%%s%%s%%s）'
+    auto_post_type_achievement_o: 'さんの目標達成値が %%s%%s から %%s%%s に進捗しました。（%%s%%s%%s）'
 
-    auto_post_type_achievement_kr: 'さんのサブ目標達成値が%%s%%sから%%s%%sに進捗しました。（%%s%%s%%s）'
+    auto_post_type_achievement_kr: 'さんのサブ目標達成値が %%s%%s から %%s%%s に進捗しました。（%%s%%s%%s）'
 
-    auto_post_type_achievement_rate_o: 'さんが目標進捗率%%d%%%を達成しました。'
+    auto_post_type_achievement_rate_o: 'さんが目標進捗率 %%d%%% を達成しました。'
 
-    auto_post_type_achievement_rate_kr: 'さんがサブ目標進捗率%%d%%%を達成しました。'
+    auto_post_type_achievement_rate_kr: 'さんがサブ目標進捗率 %%d%%% を達成しました。'
+
+    auto_post_type_achievement_rate: 'その結果、この目標の進捗率は %%d%%% を達成しました。'
 
     feedback_target_reason_login: '%%d日以上ログインしていません'
 

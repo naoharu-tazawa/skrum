@@ -98,9 +98,9 @@ class OkrAchievementRateLogic extends BaseLogic
             $this->flush();
 
             // 自動投稿登録（◯%達成時）
-            if ($achievementRate != 0) {
-                $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkrArray[0]['parentOkr'], $tOkrActivity);
-            }
+//             if ($achievementRate != 0) {
+//                 $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkrArray[0]['parentOkr'], $tOkrActivity);
+//             }
 
             // 親OKRを$tOkrに代入
             $tOkr = $tOkrArray[0]['parentOkr'];
@@ -191,10 +191,10 @@ class OkrAchievementRateLogic extends BaseLogic
         $this->flush();
 
         // 自動投稿登録（◯%達成時）
-        if ($achievementRate != 0) {
-            $postLogic = $this->getPostLogic();
-            $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkrArray[0]['parentOkr'], $tOkrActivity);
-        }
+//         if ($achievementRate != 0) {
+//             $postLogic = $this->getPostLogic();
+//             $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkrArray[0]['parentOkr'], $tOkrActivity);
+//         }
 
         $this->recalculate($auth, $tOkr, $auth->getCompanyId(), $weightedAverageRatioFlg);
     }
