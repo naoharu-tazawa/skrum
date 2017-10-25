@@ -622,6 +622,22 @@ class OkrService extends BaseService
                     number_format($balanceAmount),
                     $unit);
 
+            // 追加自動投稿文面作成（◯%達成時）
+            $format = $this->getParameter('auto_post_type_achievement_rate');
+            $autoPost = null;
+            if ($achievementRate >= 100 && $previousAchievementRate < 100) {
+                $autoPost = sprintf($format, 100);
+            } elseif ($achievementRate >= 70 && $previousAchievementRate < 70) {
+                $autoPost = sprintf($format, 70);
+            } elseif ($achievementRate >= 50 && $previousAchievementRate < 50) {
+                $autoPost = sprintf($format, 50);
+            } elseif ($achievementRate >= 30 && $previousAchievementRate < 30) {
+                $autoPost = sprintf($format, 30);
+            }
+            if ($autoPost !== null) {
+                $autoPostAchievement .= "\n" . $autoPost;
+            }
+
             // 手動投稿登録
             $postLogic = $this->getPostLogic();
             $manualPost = null;
@@ -629,7 +645,7 @@ class OkrService extends BaseService
             $postLogic->manualPost($auth, $manualPost, $autoPostAchievement, $tOkr, $tOkrActivity);
 
             // 自動投稿登録（◯%達成時）
-            $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkr, $tOkrActivity);
+//             $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkr, $tOkrActivity);
 
             // 1on1進捗メモ登録
             if (array_key_exists('post', $data)) {
