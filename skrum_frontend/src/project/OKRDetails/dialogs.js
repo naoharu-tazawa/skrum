@@ -17,7 +17,7 @@ export const setRatiosDialog =
     <DialogForm
       title="サブ目標の目標への影響度合い設定"
       submitButton="設定"
-      constrainHeight
+      constrainedHeight
       onSubmit={(data) => {
         if (!data) return Promise.resolve();
         const { ratios, unlockedRatio } = deriveRatios(keyResults, data);

@@ -9,6 +9,7 @@ ReactModal2.getApplicationElement = () => document.getElementById('root');
 export default class BasicModalDialog extends Component {
 
   static propTypes = {
+    modeless: PropTypes.bool,
     onClose: PropTypes.func,
     closeOnEsc: PropTypes.bool,
     closeOnBackdropClick: PropTypes.bool,
@@ -16,13 +17,20 @@ export default class BasicModalDialog extends Component {
   };
 
   render() {
-    const { onClose, closeOnEsc = true, closeOnBackdropClick = false, children } = this.props;
+    const { modeless, onClose, closeOnEsc = true, closeOnBackdropClick, children } = this.props;
+    if (modeless) {
+      return (
+        <Gateway into="global">
+          {children}
+        </Gateway>
+      );
+    }
     return (
-      <Gateway into="modal">
+      <Gateway into="global">
         <ReactModal2
           onClose={onClose}
           closeOnEsc={closeOnEsc}
-          closeOnBackdropClick={closeOnBackdropClick}
+          closeOnBackdropClick={!!closeOnBackdropClick}
           backdropClassName={styles.backdrop}
           modalClassName={styles.modal}
         >

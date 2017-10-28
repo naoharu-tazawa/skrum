@@ -9,8 +9,10 @@ export default class DialogForm extends Component {
   static propTypes = {
     title: PropTypes.string,
     message: PropTypes.string,
+    plain: PropTypes.bool,
     compact: PropTypes.bool,
-    constrainHeight: PropTypes.bool,
+    modeless: PropTypes.bool,
+    constrainedHeight: PropTypes.bool,
     cancelButton: PropTypes.string,
     submitButton: PropTypes.string,
     auxiliaryButton: PropTypes.func,
@@ -21,6 +23,7 @@ export default class DialogForm extends Component {
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     valid: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     error: PropTypes.string,
+    className: PropTypes.string,
   };
 
   componentWillUnmount() {
@@ -60,29 +63,32 @@ export default class DialogForm extends Component {
   }
 
   render() {
-    const { title, message, compact, constrainHeight,
+    const { title, message, plain, compact, modeless, constrainedHeight,
       cancelButton = 'キャンセル', submitButton = 'OK', auxiliaryButton,
-      onClose, lastTabIndex, children, valid = true, error } = this.props;
+      onClose, lastTabIndex, children, valid = true, error, className = '' } = this.props;
     const { data = {}, isSubmitting = false, submissionError } = this.state || {};
     return (
       <form
-        className={`${styles.form} ${isSubmitting ? styles.submitting : ''}`}
+        className={`${styles.form} ${className} ${plain && styles.plain} ${isSubmitting ? styles.submitting : ''}`}
         onSubmit={this.submissionHandler()}
         disabled={isSubmitting}
       >
         {title && <div className={styles.title}>{title}</div>}
         {message && <div className={styles.message}>{message}</div>}
-        <FocusTrap active={!compact}>
+        <FocusTrap
+          active={!modeless}
+          style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+        >
           <div className={`${styles.content} ${compact && styles.compact}`}>
-            <div className={constrainHeight && styles.constrainedHeight}>
+            <div className={constrainedHeight ? styles.constrainedHeight : styles.fullHeight}>
               {isFunction(children) ?
                 children({ setFieldData: this.setFieldData.bind(this), data }) :
                 children}
             </div>
             {(!compact || error || submissionError) && (
-              <div className={styles.error}>
+              <section className={styles.error}>
                 {error || submissionError || <span>&nbsp;</span>}
-              </div>)}
+              </section>)}
           </div>
           <div className={`${styles.buttons} ${compact && styles.compact}`}>
             <div className={styles.filler} />

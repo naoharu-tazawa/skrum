@@ -22,7 +22,7 @@ export default class EntitySubject extends Component {
   };
 
   render() {
-    const { entity, entityClassName = '', heading, subject,
+    const { entity, entityClassName, heading, subject,
       local = !this.props.route, route, aspectRoute,
       plain, avatarSize, className } = this.props;
     return (
@@ -30,7 +30,7 @@ export default class EntitySubject extends Component {
         {heading && <div className={styles.heading}>{heading}</div>}
         <div className={styles.subjectArea}>
           <EntityLink
-            className={`${styles.entity} ${entityClassName}`}
+            className={`${styles.entity} ${entityClassName || ''}`}
             {...{ entity, local, route, avatarSize }}
           />
           {subject && aspectRoute && (

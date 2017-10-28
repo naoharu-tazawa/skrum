@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isFunction } from 'lodash';
 import BasicModalDialog from '../dialogs/BasicModalDialog';
 
 export const withBasicModalDialog = (WrappedForm, onClose, formProps = {}, dialogProps = {}) =>
@@ -9,20 +8,23 @@ export const withBasicModalDialog = (WrappedForm, onClose, formProps = {}, dialo
 
 export const withModal = (WrappedComponent, { wrapperClassName } = {}) => class extends Component {
 
-  openModal = (modal, props) => this.setState({ activeModal:
-    props || isFunction(modal) ? withBasicModalDialog(modal, this.closeActiveModal, props) :
-      modal });
+  openModal = (modal, props) => this.setState({
+    active: withBasicModalDialog(modal, this.closeActive, props) });
 
-  closeActiveModal = () => this.setState({ activeModal: null });
+  openModeless = (modeless, props) => this.setState({
+    active: withBasicModalDialog(modeless, this.closeActive, props, { modeless: true }) });
+
+  closeActive = () => this.setState({ active: null });
 
   render = () => (
     <div className={wrapperClassName || 'modalWrapper'}>
       <WrappedComponent
         openModal={this.openModal}
-        closeActiveModal={this.closeActiveModal}
+        openModeless={this.openModeless}
+        closeActive={this.closeActive}
         {...this.props}
       />
-      {(this.state || {}).activeModal}
+      {(this.state || {}).active}
     </div>
   );
 };
