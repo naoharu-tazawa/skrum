@@ -39,6 +39,9 @@
   height: 100%;
   width: 16%;
 }
+.action > *:not(:last-child) {
+  margin-right: 15px;
+}
 .component .kr {
   position: relative;
   /*white-space: nowrap;*/
@@ -73,12 +76,10 @@
   height: 40px;
   border: 1px solid #8e9aa6;
   border-radius: 50%;
-  /*overflow: hidden;*/
   display: inline-block;
   line-height: 35px;
   text-align: center;
   vertical-align: middle;
-  margin-right: 15px;
   cursor: pointer;
 }
 button.tool {
@@ -89,30 +90,8 @@ button.tool:focus {
   outline: 0;
 }
 .toolSpace {
-  min-width: 55px;
+  min-width: 40px;
 }
-.circle_small {
-  width: 27px;
-  height: 27px;
-  font-size: 10px;
-  line-height: 27px;
-}
-.circle_plus {
-  background-color: #8e9aa6;
-  color: #fff;
-}
-.floatL {
-  float: left; }
-.user_info .avatar {
-  margin-right: 10px; }
-.user_info .info {
-  display: table-cell;
-  vertical-align: middle; }
-.user_info .user_name {
-  margin-top: 14px;
-  color: #333333;
-  font-size: 14px; }
-
 .parentOkrToChange {
   display: flex;
 }

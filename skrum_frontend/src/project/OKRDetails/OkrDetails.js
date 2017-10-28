@@ -118,7 +118,7 @@ class OkrDetails extends Component {
             </ProgressPercentage>
             <div className={`${styles.nav_info} ${styles.cf}`}>
               <EntityLink className={styles.owner_info} entity={owner} />
-              <div className={styles.floatR}>
+              <div className={`${styles.action} ${styles.floatR}`}>
                 {keyResults.length === 0 && (
                   <Permissible entity={owner}>
                     <Dropdown
@@ -161,6 +161,7 @@ class OkrDetails extends Component {
                           { id, name, owner, dispatch: dispatchDeleteOkr,
                             onSuccess: replaceAsBasic }) },
                     ]}
+                    align="right"
                   />
                 </Permissible>
               </div>
