@@ -660,7 +660,7 @@ class OkrService extends BaseService
                     $tOneOnOne->setTargetDate(DateUtility::getCurrentDatetime());
                     $tOneOnOne->setOkrId($tOkr->getOkrId());
                     $tOneOnOne->setOkrActivityId($tOkrActivity->getId());
-                    $tOneOnOne->setBody($data['post']);
+                    $tOneOnOne->setBody('【自動投稿】' . $tOkr->getOwnerUser()->getLastName() . ' ' . $tOkr->getOwnerUser()->getFirstName() . $autoPostAchievement . "\n\n" . $data['post']);
                     $tOneOnOne->setNewArrivalDatetime(DateUtility::getCurrentDatetime());
                     $this->persist($tOneOnOne);
                 }
