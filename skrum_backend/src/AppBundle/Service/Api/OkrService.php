@@ -650,7 +650,7 @@ class OkrService extends BaseService
             // 1on1進捗メモ登録
             if (array_key_exists('post', $data)) {
                 $tOneOnOne = new TOneOnOne();
-                $tOneOnOne->setOneOnOneType(DBConstant::ONE_ON_ONE_TYPE_PROGRESS_REPORT);
+                $tOneOnOne->setOneOnOneType(DBConstant::ONE_ON_ONE_TYPE_PROGRESS_MEMO);
                 $tOneOnOne->setSenderUserId($auth->getUserId());
                 $tOneOnOne->setTargetDate(DateUtility::getCurrentDatetime());
                 $tOneOnOne->setOkrId($tOkr->getOkrId());

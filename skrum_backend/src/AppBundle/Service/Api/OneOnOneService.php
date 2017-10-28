@@ -236,7 +236,7 @@ class OneOnOneService extends BaseService
         $data['senderUserName'] = $senderEntity->getLastName() . $senderEntity->getFirstName();
         if ($oneOnOneType === DBConstant::ONE_ON_ONE_TYPE_DAILY_REPORT) {
             $data['oneOnOneTypeLabel'] = Constant::ONE_ON_ONE_TYPE_DAILY_REPORT;
-        } elseif ($oneOnOneType === DBConstant::ONE_ON_ONE_TYPE_PROGRESS_REPORT) {
+        } elseif ($oneOnOneType === DBConstant::ONE_ON_ONE_TYPE_PROGRESS_MEMO) {
             $data['oneOnOneTypeLabel'] = Constant::ONE_ON_ONE_TYPE_LABEL_PROGRESS_REPORT;
         } elseif ($oneOnOneType === DBConstant::ONE_ON_ONE_TYPE_FEEDBACK) {
             $data['oneOnOneTypeLabel'] = Constant::ONE_ON_ONE_TYPE_LABEL_FEEDBACK;
