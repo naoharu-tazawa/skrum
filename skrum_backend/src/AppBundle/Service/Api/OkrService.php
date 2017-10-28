@@ -573,6 +573,9 @@ class OkrService extends BaseService
         // 前回の達成値を取得
         $previousAchievedValue = $tOkr->getAchievedValue();
 
+        // 前回の目標値を取得
+        $previousTargetValue = $tOkr->getTargetValue();
+
         // 前回進捗登録時の達成率を取得
         $previousAchievementRate = $tOkr->getAchievementRate();
 
@@ -588,86 +591,89 @@ class OkrService extends BaseService
             $tOkr->setTargetValue($data['targetValue']);
             $tOkr->setAchievementRate($achievementRate);
 
-            // OKRアクティビティ登録
-            $tOkrActivity = new TOkrActivity();
-            $tOkrActivity->setOkr($tOkr);
-            $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ACHIEVEMENT);
-            $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
-            $tOkrActivity->setTargetValue($data['targetValue']);
-            $tOkrActivity->setAchievedValue($data['achievedValue']);
-            $tOkrActivity->setAchievementRate($achievementRate);
-            $tOkrActivity->setChangedPercentage($achievementRate - $previousAchievementRate);
-            $this->persist($tOkrActivity);
+            // 達成値が0のままで目標値だけを変更する場合はアクティビティ登録、タイムライン投稿は行わない
+            if (!($data['achievedValue'] == 0 && $data['targetValue'] != $previousTargetValue)) {
+                // OKRアクティビティ登録
+                $tOkrActivity = new TOkrActivity();
+                $tOkrActivity->setOkr($tOkr);
+                $tOkrActivity->setType(DBConstant::OKR_OPERATION_TYPE_ACHIEVEMENT);
+                $tOkrActivity->setActivityDatetime(DateUtility::getCurrentDatetime());
+                $tOkrActivity->setTargetValue($data['targetValue']);
+                $tOkrActivity->setAchievedValue($data['achievedValue']);
+                $tOkrActivity->setAchievementRate($achievementRate);
+                $tOkrActivity->setChangedPercentage($achievementRate - $previousAchievementRate);
+                $this->persist($tOkrActivity);
 
-            // 自動投稿（進捗登録時）文面作成
-            $balanceAmount = $data['achievedValue'] - $previousAchievedValue;
-            if ($balanceAmount >= 0) {
-                $mathSymbol = '+';
-            } else {
-                $mathSymbol = null;
-            }
-            $unit = $tOkr->getUnit();
-            if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
-                $format = $this->getParameter('auto_post_type_achievement_o');
-            } elseif ($tOkr->getType() === DBConstant::OKR_TYPE_KEY_RESULT) {
-                $format = $this->getParameter('auto_post_type_achievement_kr');
-            }
-            $autoPostAchievement = sprintf(
-                    $format,
-                    number_format($previousAchievedValue),
-                    $unit,
-                    number_format($data['achievedValue']),
-                    $unit,
-                    $mathSymbol,
-                    number_format($balanceAmount),
-                    $unit);
+                // 自動投稿（進捗登録時）文面作成
+                $balanceAmount = $data['achievedValue'] - $previousAchievedValue;
+                if ($balanceAmount >= 0) {
+                    $mathSymbol = '+';
+                } else {
+                    $mathSymbol = null;
+                }
+                $unit = $tOkr->getUnit();
+                if ($tOkr->getType() === DBConstant::OKR_TYPE_OBJECTIVE) {
+                    $format = $this->getParameter('auto_post_type_achievement_o');
+                } elseif ($tOkr->getType() === DBConstant::OKR_TYPE_KEY_RESULT) {
+                    $format = $this->getParameter('auto_post_type_achievement_kr');
+                }
+                $autoPostAchievement = sprintf(
+                        $format,
+                        number_format($previousAchievedValue),
+                        $unit,
+                        number_format($data['achievedValue']),
+                        $unit,
+                        $mathSymbol,
+                        number_format($balanceAmount),
+                        $unit);
 
-            // 追加自動投稿文面作成（◯%達成時）
-            $format = $this->getParameter('auto_post_type_achievement_rate');
-            $autoPost = null;
-            if ($achievementRate >= 100 && $previousAchievementRate < 100) {
-                $autoPost = sprintf($format, 100);
-            } elseif ($achievementRate >= 70 && $previousAchievementRate < 70) {
-                $autoPost = sprintf($format, 70);
-            } elseif ($achievementRate >= 50 && $previousAchievementRate < 50) {
-                $autoPost = sprintf($format, 50);
-            } elseif ($achievementRate >= 30 && $previousAchievementRate < 30) {
-                $autoPost = sprintf($format, 30);
-            }
-            if ($autoPost !== null) {
-                $autoPostAchievement .= "\n" . $autoPost;
-            }
+                // 追加自動投稿文面作成（◯%達成時）
+                $format = $this->getParameter('auto_post_type_achievement_rate');
+                $autoPost = null;
+                if ($achievementRate >= 100 && $previousAchievementRate < 100) {
+                    $autoPost = sprintf($format, 100);
+                } elseif ($achievementRate >= 70 && $previousAchievementRate < 70) {
+                    $autoPost = sprintf($format, 70);
+                } elseif ($achievementRate >= 50 && $previousAchievementRate < 50) {
+                    $autoPost = sprintf($format, 50);
+                } elseif ($achievementRate >= 30 && $previousAchievementRate < 30) {
+                    $autoPost = sprintf($format, 30);
+                }
+                if ($autoPost !== null) {
+                    $autoPostAchievement .= "\n" . $autoPost;
+                }
 
-            // 手動投稿登録
-            $postLogic = $this->getPostLogic();
-            $manualPost = null;
-            if (array_key_exists('post', $data)) $manualPost = $data['post'];
-            $postLogic->manualPost($auth, $manualPost, $autoPostAchievement, $tOkr, $tOkrActivity);
+                // 手動投稿登録
+                $postLogic = $this->getPostLogic();
+                $manualPost = null;
+                if (array_key_exists('post', $data)) $manualPost = $data['post'];
+                $postLogic->manualPost($auth, $manualPost, $autoPostAchievement, $tOkr, $tOkrActivity);
 
-            // 自動投稿登録（◯%達成時）
-//             $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkr, $tOkrActivity);
+                // 自動投稿登録（◯%達成時）
+//                 $postLogic->autoPostAboutAchievement($auth, $achievementRate, $previousAchievementRate, $tOkr, $tOkrActivity);
 
-            // 1on1進捗メモ登録
-            if (array_key_exists('post', $data)) {
-                $tOneOnOne = new TOneOnOne();
-                $tOneOnOne->setOneOnOneType(DBConstant::ONE_ON_ONE_TYPE_PROGRESS_MEMO);
-                $tOneOnOne->setSenderUserId($auth->getUserId());
-                $tOneOnOne->setTargetDate(DateUtility::getCurrentDatetime());
-                $tOneOnOne->setOkrId($tOkr->getOkrId());
-                $tOneOnOne->setOkrActivityId($tOkrActivity->getId());
-                $tOneOnOne->setBody($data['post']);
-                $tOneOnOne->setNewArrivalDatetime(DateUtility::getCurrentDatetime());
-                $this->persist($tOneOnOne);
-            }
+                // 1on1進捗メモ登録
+                if (array_key_exists('post', $data)) {
+                    $tOneOnOne = new TOneOnOne();
+                    $tOneOnOne->setOneOnOneType(DBConstant::ONE_ON_ONE_TYPE_PROGRESS_MEMO);
+                    $tOneOnOne->setSenderUserId($auth->getUserId());
+                    $tOneOnOne->setTargetDate(DateUtility::getCurrentDatetime());
+                    $tOneOnOne->setOkrId($tOkr->getOkrId());
+                    $tOneOnOne->setOkrActivityId($tOkrActivity->getId());
+                    $tOneOnOne->setBody($data['post']);
+                    $tOneOnOne->setNewArrivalDatetime(DateUtility::getCurrentDatetime());
+                    $this->persist($tOneOnOne);
+                }
 
-            // 達成率を再計算
-            $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
-            $okrAchievementRateLogic->recalculate($auth, $tOkr, false);
+                // 達成率を再計算
+                $okrAchievementRateLogic = $this->getOkrAchievementRateLogic();
+                $okrAchievementRateLogic->recalculate($auth, $tOkr, false);
 
-            // メール送信予約
-            if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
-                $mUser = $tOkr->getOwnerUser();
-                $this->reserveEmails($tOkr, $achievementRate, $previousAchievementRate, $tOkr->getDisclosureType(), $mUser->getCompany()->getSubdomain());
+                // メール送信予約
+                if ($tOkr->getOwnerType() === DBConstant::OKR_OWNER_TYPE_USER) {
+                    $mUser = $tOkr->getOwnerUser();
+                    $this->reserveEmails($tOkr, $achievementRate, $previousAchievementRate, $tOkr->getDisclosureType(), $mUser->getCompany()->getSubdomain());
+                }
             }
 
             $this->flush();
