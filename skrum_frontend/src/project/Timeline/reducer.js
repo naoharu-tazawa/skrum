@@ -12,8 +12,8 @@ export default (state = {
   isDeletingLike: false,
   isPostingReply: false,
   posts: [],
-}, action) => {
-  switch (action.type) {
+}, { type: actionType, payload, error }) => {
+  switch (actionType) {
     case Action.REQUEST_FETCH_USER_POSTS:
     case Action.REQUEST_FETCH_GROUP_POSTS:
     case Action.REQUEST_FETCH_COMPANY_POSTS:
@@ -22,7 +22,6 @@ export default (state = {
     case Action.FINISH_FETCH_USER_POSTS:
     case Action.FINISH_FETCH_GROUP_POSTS:
     case Action.FINISH_FETCH_COMPANY_POSTS: {
-      const { payload, error } = action;
       if (error) {
         const { message } = payload;
         return { ...state, posts: [], isFetching: false, hasMorePosts: false, error: { message } };
@@ -39,7 +38,6 @@ export default (state = {
     case Action.FINISH_MORE_USER_POSTS:
     case Action.FINISH_MORE_GROUP_POSTS:
     case Action.FINISH_MORE_COMPANY_POSTS: {
-      const { payload, error } = action;
       if (error) {
         const { message } = payload;
         return { ...state, isFetchingMore: false, hasMorePosts: false, error: { message } };
@@ -55,7 +53,6 @@ export default (state = {
 
     case Action.FINISH_POST_GROUP_POST:
     case Action.FINISH_POST_COMPANY_POST: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPosting: false, error: { message: payload.message } };
       }
@@ -66,7 +63,6 @@ export default (state = {
       return { ...state, isChangingDisclosureType: true };
 
     case Action.FINISH_CHANGE_POST_DISCLOSURE_TYPE: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isChangingDisclosureType: false, error: { message: payload.message } };
       }
@@ -79,7 +75,6 @@ export default (state = {
       return { ...state, isDeleting: true };
 
     case Action.FINISH_DELETE_POST: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isDeleting: false, error: { message: payload.message } };
       }
@@ -92,7 +87,6 @@ export default (state = {
       return { ...state, isPostingLike: true };
 
     case Action.FINISH_POST_LIKE: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPostingLike: false, error: { message: payload.message } };
       }
@@ -106,7 +100,6 @@ export default (state = {
       return { ...state, isDeletingLike: true };
 
     case Action.FINISH_DELETE_LIKE: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isDeletingLike: false, error: { message: payload.message } };
       }
@@ -120,7 +113,6 @@ export default (state = {
       return { ...state, isPostingReply: true };
 
     case Action.FINISH_POST_REPLY: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPostingReply: false, error: { message: payload.message } };
       }

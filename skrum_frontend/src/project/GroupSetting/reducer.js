@@ -6,13 +6,12 @@ export default (state = {
   isDeletingGroup: false,
   count: 0,
   groups: [],
-}, action) => {
-  switch (action.type) {
+}, { type: actionType, payload, error }) => {
+  switch (actionType) {
     case Action.REQUEST_FETCH_GROUPS:
       return { ...state, isFetchingGroups: true };
 
     case Action.FINISH_FETCH_GROUPS: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isFetchingGroups: false, error: { message: payload.message } };
       }
@@ -24,7 +23,6 @@ export default (state = {
       return { ...state, isPostingGroup: true };
 
     case Action.FINISH_CREATE_GROUP: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPostingGroup: false, error: { message: payload.message } };
       }
@@ -35,7 +33,6 @@ export default (state = {
       return { ...state, isDeletingGroup: true };
 
     case Action.FINISH_DELETE_GROUP: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isDeletingGroup: false, error: { message: payload.message } };
       }

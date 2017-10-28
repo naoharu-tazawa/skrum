@@ -14,8 +14,8 @@ export default (state = {
   isCopyingOkr: false,
   isDeletingOkr: false,
   isDeletingKR: false,
-}, action) => {
-  switch (action.type) {
+}, { type: actionType, payload, error }) => {
+  switch (actionType) {
     case Action.REQUEST_FETCH_USER_BASICS:
     case Action.REQUEST_FETCH_GROUP_BASICS:
     case Action.REQUEST_FETCH_COMPANY_BASICS:
@@ -24,7 +24,6 @@ export default (state = {
     case Action.FINISH_FETCH_USER_BASICS:
     case Action.FINISH_FETCH_GROUP_BASICS:
     case Action.FINISH_FETCH_COMPANY_BASICS: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isFetching: false, error: { message: payload.message } };
       }
@@ -35,7 +34,6 @@ export default (state = {
       return { ...state, isPostingOkr: true };
 
     case Action.FINISH_POST_OKR: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPostingOkr: false, error: { message: payload.message } };
       }
@@ -58,7 +56,6 @@ export default (state = {
     case Action.FINISH_CHANGE_OKR_OWNER:
     case Action.FINISH_BASICS_CHANGE_DISCLOSURE_TYPE:
     case Action.SYNC_BASICS_DETAILS: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPutting: false, error: { message: payload.message } };
       }
@@ -77,7 +74,6 @@ export default (state = {
       return { ...state, isChangingParentOkr: true };
 
     case Action.FINISH_BASICS_CHANGE_PARENT_OKR: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isChangingParentOkr: false, error: { message: payload.message } };
       }
@@ -93,7 +89,6 @@ export default (state = {
       return { ...state, isPostingAchievement: true };
 
     case Action.FINISH_BASICS_POST_ACHIEVEMENT: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPostingAchievement: false, error: { message: payload.message } };
       }
@@ -120,7 +115,6 @@ export default (state = {
       return { ...state, isSettingRatios: true };
 
     case Action.FINISH_BASICS_SET_RATIOS: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isSettingRatios: false, error: { message: payload.message } };
       }
@@ -146,7 +140,6 @@ export default (state = {
       return { ...state, isCopyingOkr: true };
 
     case Action.FINISH_COPY_OKR: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isCopyingOkr: false, error: { message: payload.message } };
       }
@@ -157,7 +150,6 @@ export default (state = {
       return { ...state, isDeletingOkr: true };
 
     case Action.FINISH_DELETE_OKR: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isDeletingOkr: false, error: { message: payload.message } };
       }
@@ -171,7 +163,6 @@ export default (state = {
       return { ...state, isDeletingKR: true };
 
     case Action.FINISH_BASICS_DELETE_KR: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isDeletingKR: false, error: { message: payload.message } };
       }

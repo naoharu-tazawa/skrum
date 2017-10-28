@@ -6,13 +6,12 @@ export default (state = {
   isPutting: false,
   isPostingImage: false,
   data: {},
-}, action) => {
-  switch (action.type) {
+}, { type: actionType, payload, error }) => {
+  switch (actionType) {
     case Action.REQUEST_FETCH_COMPANY:
       return { ...state, isFetching: true };
 
     case Action.FINISH_FETCH_COMPANY: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isFetching: false, error: { message: payload.message } };
       }
@@ -24,7 +23,6 @@ export default (state = {
     }
 
     case Action.FINISH_PUT_COMPANY: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPutting: false, error: { message: payload.message } };
       }
@@ -37,7 +35,6 @@ export default (state = {
       return { ...state, isPostingImage: true };
 
     case Action.FINISH_POST_COMPANY_IMAGE: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPostingImage: false, error: { message: payload.message } };
       }
