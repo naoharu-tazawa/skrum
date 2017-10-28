@@ -4,13 +4,12 @@ export default (state = {
   isFetching: false,
   isPutting: false,
   data: {},
-}, action) => {
-  switch (action.type) {
+}, { type: actionType, payload, error }) => {
+  switch (actionType) {
     case Action.REQUEST_FETCH_EMAIL_SETTINGS:
       return { ...state, isFetching: true };
 
     case Action.FINISH_FETCH_EMAIL_SETTINGS: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isFetching: false, error: { message: payload.message } };
       }
@@ -22,7 +21,6 @@ export default (state = {
     }
 
     case Action.FINISH_CHANGE_EMAIL_SETTINGS: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPutting: false, error: { message: payload.message } };
       }

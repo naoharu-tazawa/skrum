@@ -41,12 +41,6 @@
 .hyphen {
   margin-left: 44px;
 }
-.circle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  overflow: hidden;
-}
 .check {
   background: #2562b2 url(/img/check.svg) no-repeat center;
   background-size: 16px 16px, cover;

@@ -8,13 +8,12 @@ export default (state = {
   isDefaulting: false,
   isDeleting: false,
   data: [],
-}, action) => {
-  switch (action.type) {
+}, { type: actionType, payload, error }) => {
+  switch (actionType) {
     case Action.REQUEST_FETCH_COMPANY_TIMEFRAMES:
       return { ...state, isFetching: true };
 
     case Action.FINISH_FETCH_COMPANY_TIMEFRAMES: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isFetching: false, error: { message: payload.message } };
       }
@@ -26,7 +25,6 @@ export default (state = {
     }
 
     case Action.FINISH_PUT_TIMEFRAME: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPutting: false, error: { message: payload.message } };
       }
@@ -39,7 +37,6 @@ export default (state = {
       return { ...state, isPosting: true };
 
     case Action.FINISH_POST_TIMEFRAME: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPosting: false, error: { message: payload.message } };
       }
@@ -52,7 +49,6 @@ export default (state = {
     }
 
     case Action.FINISH_DEFAULT_TIMEFRAME: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isDefaulting: false, error: { message: payload.message } };
       }
@@ -67,7 +63,6 @@ export default (state = {
       return { ...state, isDeleting: true };
 
     case Action.FINISH_DELETE_TIMEFRAME: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isDeleting: false, error: { message: payload.message } };
       }

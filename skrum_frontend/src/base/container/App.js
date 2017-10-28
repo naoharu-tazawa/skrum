@@ -11,10 +11,8 @@ export default class App extends Component {
     return (
       <GatewayProvider>
         <div>
-          <div>
-            {this.props.children}
-          </div>
-          <GatewayDest name="modal" className="modal-container" />
+          {this.props.children}
+          <GatewayDest name="global" component="section" />
         </div>
       </GatewayProvider>
     );

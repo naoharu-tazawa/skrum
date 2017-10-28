@@ -10,6 +10,7 @@ export default class extends PureComponent {
     triggerIcon: PropTypes.string,
     content: PropTypes.func.isRequired,
     arrow: PropTypes.oneOf(['left', 'center', 'right']),
+    className: PropTypes.string,
   };
 
   hide() {
@@ -18,11 +19,12 @@ export default class extends PureComponent {
   }
 
   render() {
-    const { trigger, triggerIcon, content, arrow = 'center' } = this.props;
+    const { trigger, triggerIcon, content, arrow = 'center', className } = this.props;
     const { activeContent } = this.state || {};
-    let style = {}; // left
-    if (arrow === 'center') style = { left: '50%', transform: 'translate(-50%, 0)' };
-    else if (arrow === 'right') style = { right: 0 };
+    const style = {
+      ...arrow === 'center' && { left: '50%', transform: 'translate(-50%, 0)' },
+      ...arrow === 'right' && { right: 0 },
+    };
     return (
       <Dropdown
         ref={(dropdown) => { this.dropdown = dropdown; }}
@@ -30,6 +32,7 @@ export default class extends PureComponent {
         onShow={() => this.setState({ activeContent:
           activeContent || content({ onClose: this.hide.bind(this) }) })}
         onHide={() => this.setState({ activeContent: undefined })}
+        className={className || ''}
       >
         <DropdownTrigger>
           {trigger || (

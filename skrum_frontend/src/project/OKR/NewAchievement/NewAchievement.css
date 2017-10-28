@@ -19,9 +19,6 @@
   max-width: 30em;
   margin-top: 1em;
 }
-.dialog input[type=number] {
-  text-align: right;
-}
 .progressConstituents, .dateRangeBox, .alignmentBox {
   display: flex;
 }

@@ -11,13 +11,12 @@ export default (state = {
   roles: [],
   count: 0,
   users: [],
-}, action) => {
-  switch (action.type) {
+}, { type: actionType, payload, error }) => {
+  switch (actionType) {
     case Action.REQUEST_FETCH_COMPANY_ROLES:
       return { ...state, isFetchingRoles: true };
 
     case Action.FINISH_FETCH_COMPANY_ROLES: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isFetchingRoles: false, error: { message: payload.message } };
       }
@@ -28,7 +27,6 @@ export default (state = {
       return { ...state, isFetchingUsers: true };
 
     case Action.FINISH_FETCH_USERS: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isFetchingUsers: false, error: { message: payload.message } };
       }
@@ -40,7 +38,6 @@ export default (state = {
       return { ...state, isPostingInvite: true };
 
     case Action.FINISH_POST_INVITE: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isPostingInvite: false, error: { message: payload.message } };
       }
@@ -51,7 +48,6 @@ export default (state = {
       return { ...state, isResettingPassword: true };
 
     case Action.FINISH_RESET_PASSWORD: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isResettingPassword: false, error: { message: payload.message } };
       }
@@ -62,7 +58,6 @@ export default (state = {
       return { ...state, isAssigningRole: true };
 
     case Action.FINISH_ASSIGN_ROLE: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isAssigningRole: false, error: { message: payload.message } };
       }
@@ -75,7 +70,6 @@ export default (state = {
       return { ...state, isDeletingUser: true };
 
     case Action.FINISH_DELETE_USER: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, isDeletingUser: false, error: { message: payload.message } };
       }

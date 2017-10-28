@@ -34,7 +34,7 @@ class UserRolesDropdown extends PureComponent {
       </div>);
     return (
       <Select
-        className={`${styles.select} ${className}`}
+        className={`${styles.select} ${className || ''}`}
         options={options}
         optionRenderer={optionRenderer}
         value={dirtyValue}

@@ -6,8 +6,8 @@ export default (state = {
   isFetching: false,
   isPosting: false,
   data: {},
-}, { type, payload, error }) => {
-  switch (type) {
+}, { type: actionType, payload, error }) => {
+  switch (actionType) {
     case Action.REQUEST_FETCH_USER_TOP:
       return { ...state, needsFetching: false, isFetching: true };
 

@@ -35,7 +35,7 @@ class NewAchievement extends Component {
     super(props);
     const { id, achievedValue, targetValue } = props;
     this.form = withReduxForm(
-      formProps => <DialogForm compact {...formProps} />,
+      formProps => <DialogForm compact modeless {...formProps} />,
       `${formName}-${id}`,
       { initialValues: { achievedValue, targetValue }, validate },
     );

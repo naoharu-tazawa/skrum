@@ -2,8 +2,8 @@ import { Action } from './action';
 
 export default (state = {
   isAuthorized: false,
-}, action) => {
-  switch (action.type) {
+}, { type: actionType, payload, error }) => {
+  switch (actionType) {
     case Action.REQUEST_LOGIN:
     case Action.REQUEST_USER_SIGN_UP:
     case Action.REQUEST_USER_JOIN:
@@ -13,7 +13,6 @@ export default (state = {
     case Action.FINISH_LOGIN:
     case Action.FINISH_USER_SIGN_UP:
     case Action.FINISH_USER_JOIN: {
-      const { payload, error } = action;
       if (error) {
         return {
           ...state,
@@ -40,10 +39,9 @@ export default (state = {
     }
 
     case Action.REQUEST_LOGOUT:
-      return { ...state, isAuthorized: false, token: null, error: action.error };
+      return { ...state, isAuthorized: false, token: null, error };
 
     case Action.FINISH_PREREGISTER: {
-      const { payload, error } = action;
       if (error) {
         return { ...state, error: { message: payload.message } };
       }

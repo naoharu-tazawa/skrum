@@ -69,12 +69,14 @@
 .action a:focus {
   outline: none;
 }
+.action > *:not(:last-child) {
+  margin-right: 15px;
+}
 .circle {
   width: 40px;
   height: 40px;
   border: 1px solid #fff;
   border-radius: 50%;
-  /*overflow: hidden;*/
 }
 .circle {
   display: inline-block;
@@ -82,7 +84,6 @@
   line-height: 35px;
   text-align: center;
   vertical-align: middle;
-  margin-right: 15px;
 }
 .circle_small {
   width: 27px;
@@ -109,7 +110,6 @@
   line-height: 35px;
   text-align: center;
   vertical-align: middle;
-  margin-right: 15px;
   cursor: pointer;
 }
 button.tool {
@@ -120,5 +120,5 @@ button.tool:focus {
   outline: 0;
 }
 .toolSpace {
-  width: 55px;
+  width: 40px;
 }
