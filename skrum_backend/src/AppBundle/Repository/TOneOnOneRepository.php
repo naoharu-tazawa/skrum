@@ -106,6 +106,28 @@ SQL;
     }
 
     /**
+     * 1on1種別ごとの未読件数を取得
+     *
+     * @param integer $userId ユーザID
+     * @param string $oneOnOneType 1on1種別
+     * @return array
+     */
+    public function getUnreadFlgCount(int $userId, string $oneOnOneType): int
+    {
+        $qb = $this->createQueryBuilder('tooo');
+        $qb->select('COUNT(tooo.id)')
+            ->innerJoin('AppBundle:TOneOnOneTo', 'tooot', 'WITH', 'tooo.id = tooot.oneOnOne')
+            ->where('tooo.oneOnOneType = :oneOnOneType')
+            ->andWhere('tooot.userId = :userId')
+            ->andWhere('tooot.readFlg = :readFlg')
+            ->setParameter('oneOnOneType', $oneOnOneType)
+            ->setParameter('userId', $userId)
+            ->setParameter('readFlg', DBConstant::FLG_FALSE);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      * 1on1送受信履歴を取得
      *
      * @param Auth $auth 認証情報

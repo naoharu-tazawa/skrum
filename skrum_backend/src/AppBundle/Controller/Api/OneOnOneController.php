@@ -9,6 +9,7 @@ use AppBundle\Exception\InvalidParameterException;
 use AppBundle\Exception\JsonSchemaException;
 use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
+use AppBundle\Api\ResponseDTO\NewOneOnOnesDTO;
 use AppBundle\Api\ResponseDTO\OneOnOneDialogDTO;
 
 /**
@@ -84,12 +85,12 @@ class OneOnOneController extends BaseController
         $data = $this->getRequestJsonAsArray($request);
 
         // 1on1種別に応じて必要なJsonSchemaのプロパティをチェック
-        if ($data['oneOnOneType'] === DBConstant::ONE_ON_ONE_TYPE_FEEDBACK) {
-            if (empty($data['feedbackType'])) {
+        if ($data['oneOnOneType'] === DBConstant::ONE_ON_ONE_TYPE_HEARING) {
+            if (empty($data['dueDate'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }
-        } elseif ($data['oneOnOneType'] === DBConstant::ONE_ON_ONE_TYPE_HEARING) {
-            if (empty($data['dueDate'])) {
+        } elseif ($data['oneOnOneType'] === DBConstant::ONE_ON_ONE_TYPE_FEEDBACK) {
+            if (empty($data['feedbackType'])) {
                 throw new JsonSchemaException("リクエストJSONスキーマが不正です");
             }
         }
@@ -185,9 +186,9 @@ class OneOnOneController extends BaseController
      * @Rest\Get("/v1/users/{userId}/newoneonones.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param integer $userId ユーザID
-     * @return array
+     * @return NewOneOnOnesDTO
      */
-    public function getUserNewoneononesAction(Request $request, int $userId): array
+    public function getUserNewoneononesAction(Request $request, int $userId): NewOneOnOnesDTO
     {
         // リクエストパラメータを取得
         $keyword = $request->get('q');
@@ -223,9 +224,9 @@ class OneOnOneController extends BaseController
 
         // 1on1送受信履歴取得処理
         $oneOnOneService = $this->getOneOnOneService();
-        $oneOnOneDTOArray = $oneOnOneService->getNewOneOnOnes($auth, $keyword, $startDate, $endDate, $before);
+        $newOneOnOnesDTO = $oneOnOneService->getNewOneOnOnes($auth, $keyword, $startDate, $endDate, $before);
 
-        return $oneOnOneDTOArray;
+        return $newOneOnOnesDTO;
     }
 
     /**

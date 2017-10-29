@@ -50,31 +50,57 @@ paths:
           schema:
             type: object
             properties:
-              oneOnOneId:
-                type: integer
-              oneOnOneType:
-                type: string
-              senderUserId:
-                type: integer
-              fromToNames:
-                type: string
-              imamgeVersion:
-                type: integer
-              lastUpdate:
-                type: string
-              partOfText:
-                type: string
-              readFlg:
-                type: integer
+              unreadFlgCounts:
+                type: object
+                properties:
+                  dailyReport:
+                    type: integer
+                  progressMemo:
+                    type: integer
+                  hearing:
+                    type: integer
+                  feedback:
+                    type: integer
+                  interviewNote:
+                    type: integer
+                required:
+                  - dailyReport
+                  - progressMemo
+                  - hearing
+                  - feedback
+                  - interviewNote
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    oneOnOneId:
+                      type: integer
+                    oneOnOneType:
+                      type: string
+                    senderUserId:
+                      type: integer
+                    fromToNames:
+                      type: string
+                    imamgeVersion:
+                      type: integer
+                    lastUpdate:
+                      type: string
+                    partOfText:
+                      type: string
+                    readFlg:
+                      type: integer
+                  required:
+                    - oneOnOneId
+                    - oneOnOneType
+                    - senderUserId
+                    - fromToNames
+                    - imamgeVersion
+                    - lastUpdate
+                    - partOfText
+                    - readFlg
             required:
-              - oneOnOneId
-              - oneOnOneType
-              - senderUserId
-              - fromToNames
-              - imamgeVersion
-              - lastUpdate
-              - partOfText
-              - readFlg
+              - data
         400:
           description: JSONスキーマ不正
         401:

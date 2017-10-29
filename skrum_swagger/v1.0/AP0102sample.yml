@@ -3,26 +3,9 @@ HTTP METHOD: POST
 http://company1.localhost:8000/v1/users/{userId}/feedbacks.json
 
 [Request Json Schema]
-フィードバックの場合　（紐付けOKR：なし）：
-{
-  "oneOnOneType": "3",
-  "feedbackType": "1",
-  "to": [{"userId": 3}, {"userId": 5}, {"userId": 8}],
-  "body": "アイウエオ"
-}
-
-フィードバックの場合　（紐付けOKR：あり）：
-{
-  "oneOnOneType": "3",
-  "feedbackType": "1",
-  "to": [{"userId": 3}, {"userId": 5}, {"userId": 8}],
-  "okrId": 3,
-  "body": "アイウエオ"
-}
-
 ヒアリングの場合　（紐付けOKR：なし）：
 {
-  "oneOnOneType": "4",
+  "oneOnOneType": "3",
   "dueDate": "2013-04-04T00:00:00Z",
   "to": [{"userId": 3}, {"userId": 5}, {"userId": 8}],
   "body": "アイウエオ"
@@ -30,8 +13,25 @@ http://company1.localhost:8000/v1/users/{userId}/feedbacks.json
 
 ヒアリングの場合　（紐付けOKR：あり）：
 {
-  "oneOnOneType": "4",
+  "oneOnOneType": "3",
   "dueDate": "2013-04-04T00:00:00Z",
+  "to": [{"userId": 3}, {"userId": 5}, {"userId": 8}],
+  "okrId": 3,
+  "body": "アイウエオ"
+}
+
+フィードバックの場合　（紐付けOKR：なし）：
+{
+  "oneOnOneType": "4",
+  "feedbackType": "1",
+  "to": [{"userId": 3}, {"userId": 5}, {"userId": 8}],
+  "body": "アイウエオ"
+}
+
+フィードバックの場合　（紐付けOKR：あり）：
+{
+  "oneOnOneType": "4",
+  "feedbackType": "1",
   "to": [{"userId": 3}, {"userId": 5}, {"userId": 8}],
   "okrId": 3,
   "body": "アイウエオ"

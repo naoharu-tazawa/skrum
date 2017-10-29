@@ -10,6 +10,7 @@ use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TEmailReservation;
 use AppBundle\Entity\TOneOnOne;
 use AppBundle\Entity\TOneOnOneTo;
+use AppBundle\Api\ResponseDTO\NewOneOnOnesDTO;
 use AppBundle\Api\ResponseDTO\OneOnOneDTO;
 use AppBundle\Api\ResponseDTO\OneOnOneDialogDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO;
@@ -271,9 +272,9 @@ class OneOnOneService extends BaseService
      * @param string $startDate 開始日（検索）
      * @param string $endDate 終了日（検索）
      * @param string $before 取得基準日時
-     * @return array
+     * @return NewOneOnOnesDTO
      */
-    public function getNewOneOnOnes(Auth $auth, string $keyword = null, string $startDate = null, string $endDate = null, string $before = null): array
+    public function getNewOneOnOnes(Auth $auth, string $keyword = null, string $startDate = null, string $endDate = null, string $before = null): NewOneOnOnesDTO
     {
         // 検索ワードエスケープ処理
         $escapedKeyword = addslashes($keyword);
@@ -293,6 +294,16 @@ class OneOnOneService extends BaseService
 
         $tOneOnOneRepos = $this->getTOneOnOneRepository();
         $tOneOnOneArray = $tOneOnOneRepos->getNewArrivalOneOnOne($auth, $startDate, $endDate, $before, $escapedKeyword);
+
+        // 検索ワードと取得基準日時がnullの場合、未読フラグ件数を取得
+        $unreadFlgCounts = array();
+        if ($keyword === null && $before === DateUtility::getMaxDatetimeString()) {
+            $unreadFlgCounts['dailyReport'] = $tOneOnOneRepos->getUnreadFlgCount($auth->getUserId(), DBConstant::ONE_ON_ONE_TYPE_DAILY_REPORT);
+            $unreadFlgCounts['progressMemo'] = $tOneOnOneRepos->getUnreadFlgCount($auth->getUserId(), DBConstant::ONE_ON_ONE_TYPE_PROGRESS_MEMO);
+            $unreadFlgCounts['hearing'] = $tOneOnOneRepos->getUnreadFlgCount($auth->getUserId(), DBConstant::ONE_ON_ONE_TYPE_HEARING);
+            $unreadFlgCounts['feedback'] = $tOneOnOneRepos->getUnreadFlgCount($auth->getUserId(), DBConstant::ONE_ON_ONE_TYPE_FEEDBACK);
+            $unreadFlgCounts['interviewNote'] = $tOneOnOneRepos->getUnreadFlgCount($auth->getUserId(), DBConstant::ONE_ON_ONE_TYPE_INTERVIEW_NOTE);
+        }
 
         // DTOに詰め替える
         $tOneOnOneToRepos = $this->getTOneOnOneToRepository();
@@ -334,7 +345,11 @@ class OneOnOneService extends BaseService
             $oneOnOneDTOArray[] = $oneOnOneDTO;
         }
 
-        return $oneOnOneDTOArray;
+        $newOneOnOnesDTO = new NewOneOnOnesDTO();
+        if (!empty($unreadFlgCounts)) $newOneOnOnesDTO->setUnreadFlgCounts($unreadFlgCounts);
+        $newOneOnOnesDTO->setData($oneOnOneDTOArray);
+
+        return $newOneOnOnesDTO;
     }
 
     /**

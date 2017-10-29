@@ -170,14 +170,14 @@ class DBConstant
     const ONE_ON_ONE_TYPE_PROGRESS_MEMO = '2';
 
     /**
-     * 1on1種別（フィードバック）
-     */
-    const ONE_ON_ONE_TYPE_FEEDBACK = '3';
-
-    /**
      * 1on1種別（ヒアリング）
      */
-    const ONE_ON_ONE_TYPE_HEARING = '4';
+    const ONE_ON_ONE_TYPE_HEARING = '3';
+
+    /**
+     * 1on1種別（フィードバック）
+     */
+    const ONE_ON_ONE_TYPE_FEEDBACK = '4';
 
     /**
      * 1on1種別（面談ノート）
