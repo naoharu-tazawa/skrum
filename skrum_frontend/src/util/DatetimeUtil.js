@@ -18,8 +18,11 @@ export const DateFormat = {
 // export const convertToTimestamp = date =>
 // toNumber(moment(date, 'YYYY-MM-DD HH:mm:ss').format('X'));
 
+export const getDate = () =>
+  moment();
+
 export const isValidDate = date =>
-date && moment(date, DateFormat.YMDHM).isValid();
+  date && moment(date, DateFormat.YMDHM).isValid();
 
 export const toUtcDate = (date, { format = DateFormat.YMDHM } = {}) =>
   moment(date, format).local().format();

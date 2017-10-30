@@ -9,8 +9,10 @@ import styles from './OKRList.css';
 export default class OKRList extends Component {
 
   static propTypes = {
-    okrs: okrsPropTypes,
+    currentUserId: PropTypes.number,
+    userId: PropTypes.number,
     subject: PropTypes.string,
+    okrs: okrsPropTypes,
     onAddOkr: PropTypes.func,
     onAddParentedOkr: PropTypes.func.isRequired,
     dispatchChangeOkrOwner: PropTypes.func.isRequired,
@@ -30,9 +32,10 @@ export default class OKRList extends Component {
   }
 
   render() {
-    const { okrs = [], subject, onAddOkr, onAddParentedOkr, dispatchChangeOkrOwner,
-      dispatchChangeKROwner, dispatchChangeParentOkr, dispatchChangeDisclosureType,
-      dispatchSetRatios, dispatchCopyOkr, dispatchDeleteOkr, dispatchDeleteKR } = this.props;
+    const { currentUserId, userId, subject, okrs = [], onAddOkr,
+      onAddParentedOkr, dispatchChangeOkrOwner, dispatchChangeKROwner, dispatchChangeParentOkr,
+      dispatchChangeDisclosureType, dispatchSetRatios, dispatchCopyOkr,
+      dispatchDeleteOkr, dispatchDeleteKR } = this.props;
     const { collapsedKeyResults = {} } = this.state || {};
     return (
       <div className={styles.component}>
@@ -44,6 +47,8 @@ export default class OKRList extends Component {
             <OkrBar
               key={`okr${id}`}
               {...{
+                currentUserId,
+                userId,
                 subject,
                 okr,
                 onAddParentedOkr,
@@ -61,6 +66,8 @@ export default class OKRList extends Component {
                 key={`kr${keyResult.id}`}
                 {...{
                   display,
+                  currentUserId,
+                  userId,
                   subject,
                   okr,
                   keyResult,

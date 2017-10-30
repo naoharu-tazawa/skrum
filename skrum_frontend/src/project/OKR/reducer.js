@@ -10,6 +10,7 @@ export default (state = {
   isPutting: false,
   isChangingParentOkr: false,
   isPostingAchievement: false,
+  isPostingOneOnOne: false,
   isSettingRatios: false,
   isCopyingOkr: false,
   isDeletingOkr: false,
@@ -109,6 +110,16 @@ export default (state = {
           ...update,
         } : okr));
       return { ...state, [subject]: { ...basics, okrs }, isPostingAchievement: false, error: null };
+    }
+
+    case Action.REQUEST_BASICS_POST_ONE_ON_ONE:
+      return { ...state, isPostingOneOnOne: true };
+
+    case Action.FINISH_BASICS_POST_ONE_ON_ONE: {
+      if (error) {
+        return { ...state, isPostingOneOnOne: false, error: { message: payload.message } };
+      }
+      return { ...state, isPostingOneOnOne: false, error: null };
     }
 
     case Action.REQUEST_BASICS_SET_RATIOS:

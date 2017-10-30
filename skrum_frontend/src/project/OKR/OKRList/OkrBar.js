@@ -8,18 +8,19 @@ import EntityLink from '../../../components/EntityLink';
 import Dropdown from '../../../components/Dropdown';
 import DropdownMenu from '../../../components/DropdownMenu';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
+import NewOneOnOne from '../../OKR/NewOneOnOne/NewOneOnOne';
 import { replacePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
 import { copyOkrDialog, changeOkrOwnerDialog, changeOkrParentDialog, changeOkrDisclosureTypeDialog,
   setRatiosDialog, deleteOkrPrompt } from '../../OKRDetails/dialogs';
 import styles from './OkrBar.css';
 
-/* eslint-disable object-property-newline */
-
 class OkrBar extends Component {
 
   static propTypes = {
     header: PropTypes.bool,
+    currentUserId: PropTypes.number,
+    userId: PropTypes.number,
     subject: PropTypes.string,
     okr: okrPropTypes,
     onKRClicked: PropTypes.func,
@@ -31,12 +32,14 @@ class OkrBar extends Component {
     dispatchCopyOkr: PropTypes.func,
     dispatchDeleteOkr: PropTypes.func,
     openModal: PropTypes.func.isRequired,
+    openModeless: PropTypes.func.isRequired,
   };
 
   render() {
-    const { header, subject, okr, onKRClicked, onAddParentedOkr,
+    const { header, currentUserId, userId, subject, okr, onKRClicked, onAddParentedOkr,
       dispatchChangeOkrOwner, dispatchChangeParentOkr, dispatchChangeDisclosureType,
-      dispatchSetRatios, dispatchCopyOkr, dispatchDeleteOkr, openModal } = this.props;
+      dispatchSetRatios, dispatchCopyOkr, dispatchDeleteOkr,
+      openModal, openModeless } = this.props;
     if (header) {
       return (
         <div className={styles.header}>
@@ -48,6 +51,7 @@ class OkrBar extends Component {
     }
     const { id, name, unit, targetValue, achievedValue, achievementRate,
       owner, disclosureType, keyResults, parentOkr } = okr;
+    const reportImage = currentUserId === userId ? '/img/memo.png' : '/img/feedback.png';
     return (
       <div className={styles.component}>
         <div className={styles.name}>
@@ -77,6 +81,12 @@ class OkrBar extends Component {
               />
             </Permissible>)}
           {keyResults.length !== 0 && <div className={styles.toolSpace} />}
+          {userId && (
+            <button
+              className={styles.tool}
+              style={{ background: `url(${reportImage}) no-repeat center` }}
+              onClick={() => openModeless(NewOneOnOne, { userId, okr })}
+            />)}
           <Permissible entity={owner}>
             {({ permitted }) => (
               <DropdownMenu
@@ -85,14 +95,14 @@ class OkrBar extends Component {
                   { caption: 'この目標に紐付ける', onClick: () => onAddParentedOkr(okr) },
                   ...permitted && [{ caption: '担当者変更',
                     onClick: () => openModal(changeOkrOwnerDialog,
-                      { id, name, owner, parentOkrOwner: (parentOkr || {}).owner,
+                      { ...{ id, name, owner, parentOkrOwner: (parentOkr || {}).owner },
                         dispatch: dispatchChangeOkrOwner }) }],
                   ...permitted && [{ caption: '紐付け先設定',
                     onClick: () => openModal(changeOkrParentDialog,
                       { id, parentOkr, okr, dispatch: dispatchChangeParentOkr }) }],
                   ...permitted && [{ caption: '公開範囲設定',
                     onClick: () => openModal(changeOkrDisclosureTypeDialog,
-                      { id, name, owner, disclosureType,
+                      { ...{ id, name, owner, disclosureType },
                         dispatch: dispatchChangeDisclosureType }) }],
                   ...permitted && keyResults.length > 0 && [{ caption: '影響度設定',
                     onClick: () => openModal(setRatiosDialog,

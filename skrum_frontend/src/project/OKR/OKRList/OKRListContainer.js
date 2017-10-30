@@ -14,8 +14,9 @@ import { changeOkrOwner, changeParentOkr, changeDisclosureType, setRatios, copyO
 class OKRListContainer extends Component {
 
   static propTypes = {
-    okrs: okrsPropTypes,
+    currentUserId: PropTypes.number,
     subject: PropTypes.string,
+    okrs: okrsPropTypes,
     id: PropTypes.number,
     ownerType: PropTypes.string,
     ownerName: PropTypes.string,
@@ -33,7 +34,7 @@ class OKRListContainer extends Component {
   };
 
   render() {
-    const { okrs = [], subject, id, ownerType, ownerName, roleLevel, groupType,
+    const { currentUserId, subject, okrs = [], id, ownerType, ownerName, roleLevel, groupType,
       dispatchChangeOkrOwner, dispatchChangeKROwner, dispatchChangeParentOkr,
       dispatchChangeDisclosureType, dispatchSetRatios, dispatchCopyOkr, dispatchDeleteOkr,
       dispatchDeleteKR, openModal } = this.props;
@@ -43,8 +44,10 @@ class OKRListContainer extends Component {
         {({ permitted }) => (
           <OKRList
             {...{
-              okrs,
+              currentUserId,
+              userId: subject === 'user' ? id : undefined,
               subject,
+              okrs,
               dispatchChangeOkrOwner,
               dispatchChangeKROwner,
               dispatchChangeParentOkr,
@@ -63,11 +66,12 @@ class OKRListContainer extends Component {
 }
 
 const mapBasicsStateToProps = (subject, ownerType) => (state) => {
+  const { userId: currentUserId } = state.auth || {};
   const { [subject]: basics = {} } = state.basics || {};
   const okrs = (basics.okrs || []).map(okr => mapOKR({ ...okr, ownerType }));
   const { [`${subject}Id`]: id = 0, name, firstName, lastName, roleLevel, groupType } = basics[subject] || {};
   const ownerName = name || `${lastName} ${firstName}`;
-  return { okrs, subject, id, ownerType, ownerName, roleLevel, groupType };
+  return { currentUserId, subject, okrs, id, ownerType, ownerName, roleLevel, groupType };
 };
 
 const mapDispatchToProps = subject => (dispatch) => {

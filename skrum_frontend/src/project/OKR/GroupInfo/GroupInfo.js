@@ -50,12 +50,6 @@ export default class GroupInfo extends Component {
               entity={leaderUserId && { id: leaderUserId, name: leaderName, type: EntityType.USER }}
               title="リーダー"
             />
-            <Link
-              className={`${styles.btn} ${styles.btn_arrow_r}`}
-              to={replacePath({ tab: 'control' })}
-            >
-              メンバー一覧
-            </Link>
           </div>
         </div>
       </div>
