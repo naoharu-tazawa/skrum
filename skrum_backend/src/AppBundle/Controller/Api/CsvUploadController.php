@@ -38,7 +38,35 @@ class CsvUploadController extends BaseController
 
         // DB登録
         $csvUploadService = $this->getCsvUploadService();
-        $result = $csvUploadService->registerCsv($auth, $data['content']);
+        $result = $csvUploadService->registerAdditionalusersCsv($auth, $data['content']);
+
+        return $result;
+    }
+
+    /**
+     * OKR登録ファイルアップロード
+     *
+     * @Rest\Post("/v1/csv/okrs.{_format}")
+     * Permission(value="csv_upload")
+     * @param Request $request リクエストオブジェクト
+     * @return array
+     */
+    public function postCsvOkrsAction(Request $request): array
+    {
+        // JSONからCSVファイルを取得
+        $data = $this->getCSVFromJson($request);
+
+        // MIMEタイプチェック
+        if ($data['mimeType'] !== 'text/csv') {
+            return array('error' => 'CSVファイルではありません');
+        }
+
+        // 認証情報を取得
+        $auth = $request->get('auth_token');
+
+        // DB登録
+        $csvUploadService = $this->getCsvUploadService();
+        $result = $csvUploadService->registerOkrsCsv($auth, $data['content']);
 
         return $result;
     }

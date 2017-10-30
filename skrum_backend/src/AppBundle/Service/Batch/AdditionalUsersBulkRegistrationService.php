@@ -72,7 +72,7 @@ class AdditionalUsersBulkRegistrationService extends BaseService
             // メール通知設定テーブルにレコード追加
             $this->registerEmailSettings($mUser);
         } catch (\Exception $e) {
-            $this->message = $this->message . 'DBエラーが発生しました。';
+            $this->message = $this->message . 'DB登録エラーが発生しました。';
             $this->result = DBConstant::FLG_TRUE;
             $this->exitCode = DBConstant::EXIT_CODE_RETRY;
 

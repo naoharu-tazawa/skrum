@@ -4,6 +4,7 @@ namespace AppBundle\Repository;
 
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
+use Doctrine\ORM\Query;
 
 /**
  * TOkrリポジトリクラス
@@ -760,6 +761,7 @@ SQL;
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
+            ->leftJoin('AppBundle:TOkr', 'to3', 'WITH', 'to1.parentOkr = to3.okrId')
             ->where('to1.timeframe = :timeframeId1')
             ->andWhere('to1.type = :type1')
             ->andWhere('to1.ownerType = :ownerType1')
@@ -769,7 +771,11 @@ SQL;
             ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
             ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_USER)
             ->setParameter('ownerUserId1', $userId)
-            ->setParameter('companyId1', $companyId);
+            ->setParameter('companyId1', $companyId)
+            ->orderBy('to3.ownerType', 'DESC')
+            ->addOrderBy('to3.ownerGroup', 'ASC')
+            ->addOrderBy('to3.ownerUser', 'ASC')
+            ->addOrderBy('to1.okrId', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
@@ -789,6 +795,7 @@ SQL;
             ->innerJoin('AppBundle:TTimeframe', 'tt1', 'WITH', 'to1.timeframe = tt1.timeframeId')
             ->innerJoin('AppBundle:MCompany', 'mc1', 'WITH', 'tt1.company = mc1.companyId')
             ->leftJoin('AppBundle:TOkr', 'to2', 'WITH', 'to1.okrId = to2.parentOkr')
+            ->leftJoin('AppBundle:TOkr', 'to3', 'WITH', 'to1.parentOkr = to3.okrId')
             ->where('to1.timeframe = :timeframeId1')
             ->andWhere('to1.type = :type1')
             ->andWhere('to1.ownerType = :ownerType1')
@@ -798,7 +805,11 @@ SQL;
             ->setParameter('type1', DBConstant::OKR_TYPE_OBJECTIVE)
             ->setParameter('ownerType1', DBConstant::OKR_OWNER_TYPE_GROUP)
             ->setParameter('ownerGroupId1', $groupId)
-            ->setParameter('companyId1', $companyId);
+            ->setParameter('companyId1', $companyId)
+            ->orderBy('to3.ownerType', 'DESC')
+            ->addOrderBy('to3.ownerGroup', 'ASC')
+            ->addOrderBy('to3.ownerUser', 'ASC')
+            ->addOrderBy('to1.okrId', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
