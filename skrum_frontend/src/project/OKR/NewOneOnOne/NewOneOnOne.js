@@ -110,7 +110,7 @@ class NewOneOnOne extends Component {
               className={styles.close}
               onClick={onClose}
             >
-              <img src="/img/delete.png" alt="" />
+              <img src="/img/delete_grey.png" alt="" />
             </button>
           </nav>
           <header>
@@ -156,7 +156,7 @@ class NewOneOnOne extends Component {
             <section>
               {withSelectReduxField(Options,
                 'feedbackType',
-                { map: { 1: '課題共有', 2: 'アドバイス', 3: 'グッジョブ', 4: '感謝' },
+                { map: { 1: 'ありがとう', 2: 'アドバイス', 3: 'グッジョブ', 4: '課題点' },
                   renderer: ({ value, label }) => (
                     <label key={value}>
                       <Field name="feedbackType" component="input" type="radio" value={value} />

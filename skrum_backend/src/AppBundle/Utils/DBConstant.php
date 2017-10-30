@@ -185,7 +185,7 @@ class DBConstant
     const ONE_ON_ONE_TYPE_INTERVIEW_NOTE = '5';
 
     /**
-     * フィードバック種別（サンクス）
+     * フィードバック種別（ありがとう）
      */
     const FEEDBACK_TYPE_THANKS = '1';
 

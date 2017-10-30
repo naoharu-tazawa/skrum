@@ -15,7 +15,7 @@
   margin: 0 2.5em 1em 2.5em;
 }
 .close {
-  background: white;
+  background: none;
   cursor: pointer;
   border: none;
   outline: 0;
