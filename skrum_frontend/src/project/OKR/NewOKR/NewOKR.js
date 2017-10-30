@@ -198,7 +198,7 @@ class NewOKR extends Component {
                   { tabIndex: 17,
                     owner: owner || defaultOwner,
                     timeframeId,
-                    disabled: isEmpty(owner) && !ownerName },
+                    disabled: !owner && !ownerName },
                 )}
                 <small>※会社/部署/チーム/個人名または目標名で検索してください</small>
               </section>
@@ -214,7 +214,7 @@ const mapStateToProps = (state) => {
   const { pathname } = locationBeforeTransitions || {};
   const { subject, id } = explodePath(pathname);
   const { owner, timeframeId } = getFormValues(formName)(state) || {};
-  return { subject, id, owner, timeframeId };
+  return { subject, id, owner: isEmpty(owner) ? undefined : owner, timeframeId };
 };
 
 const mapDispatchToProps = (dispatch) => {

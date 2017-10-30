@@ -8,15 +8,17 @@ export const ownerPropTypes = PropTypes.shape({
   type: entityTypePropType.isRequired,
 });
 
-const referenceBase = {
+const objectiveReference = {
   id: PropTypes.number.isRequired,
   // type: okrTypePropType.isRequired,
   name: PropTypes.string.isRequired,
   owner: ownerPropTypes.isRequired,
 };
 
+export const objectiveReferencePropTypes = PropTypes.shape(objectiveReference);
+
 const objectiveBase = {
-  ...referenceBase,
+  ...objectiveReference,
   unit: PropTypes.string.isRequired,
   targetValue: PropTypes.number.isRequired,
   achievedValue: PropTypes.number.isRequired,
@@ -24,6 +26,8 @@ const objectiveBase = {
   status: PropTypes.string.isRequired,
   disclosureType: PropTypes.string.isRequired,
 };
+
+export const objectivePropTypes = PropTypes.shape(objectiveBase);
 
 export const keyResultPropTypes = PropTypes.shape({
   ...objectiveBase,
@@ -36,7 +40,7 @@ export const keyResultsPropTypes = PropTypes.arrayOf(keyResultPropTypes);
 export const okrPropTypes = PropTypes.shape({
   ...objectiveBase,
   keyResults: keyResultsPropTypes.isRequired,
-  parentOkr: referenceBase.isRequired,
+  parentOkr: objectiveReferencePropTypes,
 });
 
 export const okrsPropTypes = PropTypes.arrayOf(okrPropTypes);

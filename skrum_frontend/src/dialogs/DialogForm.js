@@ -13,6 +13,7 @@ export default class DialogForm extends Component {
     compact: PropTypes.bool,
     modeless: PropTypes.bool,
     constrainedHeight: PropTypes.bool,
+    footerContent: PropTypes.node,
     cancelButton: PropTypes.string,
     submitButton: PropTypes.string,
     auxiliaryButton: PropTypes.func,
@@ -64,7 +65,7 @@ export default class DialogForm extends Component {
 
   render() {
     const { title, message, plain, compact, modeless, constrainedHeight,
-      cancelButton = 'キャンセル', submitButton = 'OK', auxiliaryButton,
+      footerContent, cancelButton = 'キャンセル', submitButton = 'OK', auxiliaryButton,
       onClose, lastTabIndex, children, valid = true, error, className = '' } = this.props;
     const { data = {}, isSubmitting = false, submissionError } = this.state || {};
     return (
@@ -91,7 +92,7 @@ export default class DialogForm extends Component {
               </section>)}
           </div>
           <div className={`${styles.buttons} ${compact && styles.compact}`}>
-            <div className={styles.filler} />
+            <div className={styles.filler}>{footerContent}</div>
             {cancelButton && (
               <button
                 type="button"

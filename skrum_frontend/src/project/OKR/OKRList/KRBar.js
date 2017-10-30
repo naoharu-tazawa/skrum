@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { join } from 'lodash';
 import { okrPropTypes, keyResultPropTypes } from './propTypes';
 import Permissible from '../../../components/Permissible';
 import ProgressPercentage from '../../../components/ProgressPercentage';
@@ -8,6 +7,7 @@ import EntityLink from '../../../components/EntityLink';
 import Dropdown from '../../../components/Dropdown';
 import DropdownMenu from '../../../components/DropdownMenu';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
+import NewOneOnOne from '../../OKR/NewOneOnOne/NewOneOnOne';
 import { OKRType } from '../../../util/OKRUtil';
 import { withModal } from '../../../util/ModalUtil';
 import { changeKROwnerDialog, changeKRDisclosureTypeDialog, deleteKRPrompt } from '../../OKRDetails/dialogs';
@@ -17,6 +17,8 @@ class KRBar extends Component {
 
   static propTypes = {
     display: PropTypes.oneOf(['expanded', 'collapsed']).isRequired,
+    currentUserId: PropTypes.number.isRequired,
+    userId: PropTypes.number,
     subject: PropTypes.string.isRequired,
     okr: okrPropTypes.isRequired,
     keyResult: keyResultPropTypes.isRequired,
@@ -25,22 +27,19 @@ class KRBar extends Component {
     dispatchChangeDisclosureType: PropTypes.func.isRequired,
     dispatchDeleteKR: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
+    openModeless: PropTypes.func.isRequired,
   };
 
-  getBaseStyles = (display) => {
-    const baseStyles = [
-      styles.component,
-      ...[display === 'collapsed' ? [styles.collapsed] : []],
-    ];
-    return join(baseStyles, ' ');
-  };
+  getBaseStyles = display => `${styles.component} ${display === 'collapsed' ? styles.collapsed : ''}`;
 
   render() {
-    const { display, subject, okr, keyResult, onAddParentedOkr, dispatchChangeKROwner,
-      dispatchChangeDisclosureType, dispatchDeleteKR, openModal } = this.props;
+    const { display, currentUserId, userId, subject, okr, keyResult,
+      onAddParentedOkr, dispatchChangeKROwner, dispatchChangeDisclosureType, dispatchDeleteKR,
+      openModal, openModeless } = this.props;
     const parentOkrOwner = okr.owner;
     const { id, type, name, unit, targetValue, achievedValue, achievementRate, owner,
       disclosureType } = keyResult;
+    const reportImage = currentUserId === userId ? '/img/memo.png' : '/img/feedback.png';
     return (
       <div className={this.getBaseStyles(display)}>
         <div className={styles.name}>
@@ -65,6 +64,12 @@ class KRBar extends Component {
               />
             </Permissible>)}
           {type !== OKRType.KR && <div className={styles.toolSpace} />}
+          {userId && (
+            <button
+              className={styles.tool}
+              style={{ background: `url(${reportImage}) no-repeat center` }}
+              onClick={() => openModeless(NewOneOnOne, { userId, okr: keyResult })}
+            />)}
           <Permissible entity={owner}>
             {({ permitted }) => (
               <DropdownMenu

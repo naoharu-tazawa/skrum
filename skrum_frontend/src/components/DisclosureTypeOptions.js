@@ -1,9 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { toPairs } from 'lodash';
-import Select from 'react-select';
+import Options from './Options';
 import { entityTypePropType, EntityType } from '../util/EntityUtil';
-import styles from './DisclosureTypeOptions.css';
 
 export const disclosureTypesForUserAndGroup = {
   1: '全体',
@@ -30,28 +28,16 @@ export default class DisclosureTypeOptions extends PureComponent {
   };
 
   render() {
-    const getOptionStyle = (id, currentId) =>
-      `${styles.item} ${id === currentId ? styles.current : ''}`;
     const { entityType, renderer, disclosureType,
-      value: dirtyValue, onChange, onFocus, onBlur } = this.props;
-    const options = toPairs(entityType === EntityType.COMPANY ?
-      disclosureTypesForCompany : disclosureTypesForUserAndGroup)
-      .map(([id, label]) => ({ value: `${id}`, label }));
-    if (renderer) {
-      return <div className={styles.component}>{options.map(renderer)}</div>;
-    }
+      value, onChange, onFocus, onBlur } = this.props;
+    const map = entityType === EntityType.COMPANY ?
+      disclosureTypesForCompany : disclosureTypesForUserAndGroup;
     return (
-      <Select
-        className={styles.select}
-        options={options}
-        optionRenderer={({ value: id, label }) =>
-          <div className={getOptionStyle(id, disclosureType)}>{label}</div>}
-        value={dirtyValue || disclosureType}
-        {...{ onChange, onFocus, onBlur }}
-        placeholder=""
-        clearable={false}
-        searchable={false}
-      />);
+      <Options
+        {...{ renderer, map, defaultValue: disclosureType }}
+        {...{ value, onChange, onFocus, onBlur }}
+      />
+    );
   }
 }
 

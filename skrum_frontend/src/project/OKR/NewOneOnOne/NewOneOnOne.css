@@ -1,0 +1,103 @@
+.form {
+  position: absolute;
+  top: 43px;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+}
+.nav {
+  background-color: #626a7f;
+  padding: 0.3em 1.5em;
+  text-align: right;
+}
+.okr {
+  margin: 0 2.5em 1em 2.5em;
+}
+.close {
+  background: white;
+  cursor: pointer;
+  border: none;
+  outline: 0;
+}
+.dialog {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.tab {
+  border: none;
+  outline: none;
+  background: none;
+  width: 33.33%;
+  font-size: 1em;
+  display: inline-block;
+  margin: 0 !important;
+}
+.tab input {
+  display: none;
+}
+.tab.selectable {
+  cursor: pointer;
+}
+.tab.active {
+  background-color: #626a7f;
+  color: white;
+}
+.tab.disabled {
+  color: lightgray;
+  cursor: default;
+}
+.form {
+  width: 480px;
+}
+.form header {
+  margin: 1em 2.5em;
+  border: 1px solid #626a7f;
+  overflow: hidden;
+  border-radius: 1em;
+  text-align: center;
+  line-height: 1.75;
+}
+.form label {
+  margin: 8px 1em auto 1em;
+  white-space: nowrap;
+  cursor: default;
+}
+.form label:first-child {
+  margin-left: 0;
+}
+.form section {
+  padding: 0 2.5em;
+}
+.form section > label {
+  min-width: 4em;
+}
+.form input {
+  padding: 4px;
+}
+.form textarea {
+  display: block;
+  resize: none;
+  flex: 1;
+  padding: 1em 2.5em;
+  border: none;
+  border-top: 1px solid #dde3e8;
+  border-bottom: 1px solid #dde3e8;
+}
+.form button[type="submit"] {
+  color: #8e9aa6;
+  background-color: transparent;
+  border: 1px #8e9aa6 solid;
+  width: 10em;
+  padding: 0.7em 0.5em;
+  border-radius: 3em;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.form button:disabled {
+  color: lightgray;
+  border-color: lightgray;
+  cursor: default;
+}

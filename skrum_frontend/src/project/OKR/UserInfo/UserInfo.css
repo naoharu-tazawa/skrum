@@ -44,42 +44,6 @@
 .user_info .info_data {
   margin-left: 8px;
 }
-
-.btn {
-  padding: 10px 20px;
-  border: 1px solid #8e9aa6;
-  border-radius: 50px;
-  color: #8e9aa6;
-  font-size: 14px;
-  display: inline-table;
-  margin: auto 0 4px auto;
-}
-.btn_arrow_r {
-  padding: 6px 10px 3px 15px;
-  height: 100%;
-  display: inline;
-}
-.btn_arrow_r:after {
-  display: inline-block;
-  width: 25px;
-  height: 25px;
-  padding-right: 6px;
-  background: transparent url(/img/common/inc_arrow_r.png) no-repeat 9px -2px;
-  vertical-align: middle;
-  content: "";
-}
-.btn-arrow-l {
-  padding: 6px 15px 6px 10px;
-}
-.btn-arrow-l:before {
-  display: inline-block;
-  width: 25px;
-  height: 25px;
-  padding-right: 6px;
-  background: transparent url(/img/common/inc_arrow_l.png) no-repeat -2px 0px;
-  vertical-align: middle;
-  content: "";
-}
 .percent {
   display: inline-block;
   width: 40px;
@@ -156,6 +120,25 @@
 }
 .content {
   padding: 30px 65px;
+}
+.tool {
+  min-width: 40px;
+  height: 40px;
+  border: 1px solid #8e9aa6;
+  border-radius: 50%;
+  display: inline-block;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  margin: auto 0 4px auto;
+}
+button.tool {
+  background-color: inherit;
+  padding: 0;
+}
+button.tool:focus {
+  outline: 0;
 }
 
 /*# sourceMappingURL=timeManagement1.css.map */
