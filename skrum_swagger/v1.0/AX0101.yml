@@ -1,0 +1,44 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: skrum.jp
+schemes:
+  - https
+produces:
+  - application/json
+basePath: /v1
+
+paths:
+  /csv/okrs.json:
+    post:
+      description: 目標一括登録CSVアップロード
+      parameters:
+        -
+          name: JsonRequest
+          in: body
+          description: アップロードCSV（BASE64）
+          required: true
+          schema:
+            type: object
+            properties:
+              mimeType:
+                type: string
+              content:
+                type: string
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+            required:
+              - result
+        400:
+          description: JSONスキーマ不正
+        409:
+          description: 排他エラー
+        500:
+          description: サーバーエラー

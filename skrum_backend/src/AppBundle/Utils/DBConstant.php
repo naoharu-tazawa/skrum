@@ -250,6 +250,11 @@ class DBConstant
     const UPLOAD_TYPE_ADDITIONNAL_USERS = '1';
 
     /**
+     * アップロード種別（OKR登録）
+     */
+    const UPLOAD_TYPE_OKRS = '2';
+
+    /**
      * アップロード後バッチ実行ステータス（未実行）
      */
     const BATCH_EXECUTION_STATUS_NOT_EXECUTED = '0';
