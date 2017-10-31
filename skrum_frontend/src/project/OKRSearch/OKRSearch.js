@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isEmpty, partial, includes } from 'lodash';
+import { isEmpty, partial, flatten, includes } from 'lodash';
 import SearchDropdown from '../../editors/SearchDropdown';
 import EntitySubject from '../../components/EntitySubject';
-import { entityPropTypes } from '../../util/EntityUtil';
+import { EntityType, EntityTypeName, entityPropTypes, entityTypePropType } from '../../util/EntityUtil';
 import { mapOKR } from '../../util/OKRUtil';
 import { explodePath } from '../../util/RouteUtil';
 import { searchOkr, searchParentOkr } from './action';
@@ -25,7 +25,10 @@ class OKRSearch extends PureComponent {
   static propTypes = {
     timeframeId: PropTypes.number.isRequired,
     owner: entityPropTypes,
+    defaultOKRs: PropTypes.arrayOf(okrPropType),
+    keyword: PropTypes.string,
     exclude: PropTypes.arrayOf(PropTypes.number),
+    loadBasicsOKRs: entityTypePropType,
     okrsFound: PropTypes.arrayOf(okrPropType),
     value: PropTypes.oneOfType([okrPropType, PropTypes.shape({}), PropTypes.string]),
     onChange: PropTypes.func,
@@ -39,20 +42,22 @@ class OKRSearch extends PureComponent {
   };
 
   render() {
-    const { timeframeId, owner, okrsFound = [], value, onChange, onFocus, onBlur, disabled,
+    const { timeframeId, owner, defaultOKRs, keyword, okrsFound,
+      value, onChange, onFocus, onBlur, disabled,
       tabIndex, dispatchSearchOkr, dispatchSearchParentOkr, isSearching } = this.props;
-    const { currentInput = (value || {}).name } = this.state || {};
+    const currentName = (value || {}).name; // || (find(defaultOKRs, value) || {}).name
+    const { currentInput = currentName || '' } = this.state || {};
     const dispatcher = owner ? partial(dispatchSearchParentOkr, owner) : dispatchSearchOkr;
     return (
       <SearchDropdown
-        items={isEmpty(currentInput) ? [] : okrsFound}
+        items={(keyword !== currentInput ? defaultOKRs : okrsFound) || []}
         labelPropName="name"
         renderItem={okr =>
           <EntitySubject entity={okr.owner} subject={okr.name} local plain avatarSize={20} />}
         onChange={({ target }) => this.setState({ currentInput: target.value })}
-        onSearch={keyword => !isEmpty(keyword) && dispatcher(timeframeId, keyword)}
+        onSearch={q => !isEmpty(q) && dispatcher(timeframeId, q)}
         onSelect={onChange}
-        {...(!isEmpty(currentInput) && value)}
+        {...(!isEmpty(currentInput) && { value: { name: currentName, ...value } })}
         {...{ onFocus, onBlur, disabled }}
         tabIndex={`${tabIndex}`}
         isSearching={isSearching}
@@ -61,11 +66,17 @@ class OKRSearch extends PureComponent {
   }
 }
 
-const mapStateToProps = (state, { timeframeId, exclude = [] }) => {
-  const { isSearching, data = [] } = state.okrsFound || {};
+const mapStateToProps = (state, { timeframeId, exclude = [], loadBasicsOKRs }) => {
+  const basicsOKRs = loadBasicsOKRs && EntityTypeName[loadBasicsOKRs];
+  const defaultOKRs = !loadBasicsOKRs ? [] :
+    flatten((state.basics[basicsOKRs].okrs || [])
+      .map(okr => mapOKR({ ...okr, ownerType: EntityType.USER }))
+      .map(okr => [okr, ...okr.keyResults]));
+  const { isSearching, keyword, data } = state.okrsFound || {};
   const stateProps = {
-    isSearching,
-    okrsFound: data.map(okr => mapOKR(okr)).filter(({ id }) => !includes(exclude, id)),
+    ...{ isSearching, keyword, defaultOKRs },
+    okrsFound: !data ? defaultOKRs : data.map(okr => mapOKR(okr))
+      .filter(({ id }) => !includes(exclude, id)),
   };
   if (timeframeId) return stateProps;
   const { locationBeforeTransitions } = state.routing || {};

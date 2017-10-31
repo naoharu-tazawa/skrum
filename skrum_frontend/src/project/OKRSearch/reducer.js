@@ -11,7 +11,7 @@ export default (state = {
       if (error) {
         return { ...state, isSearching: false, error: { message: payload.message } };
       }
-      return { ...state, isSearching: false, data: payload.data, error: null };
+      return { ...state, isSearching: false, ...payload.data, error: null };
     }
 
     default:

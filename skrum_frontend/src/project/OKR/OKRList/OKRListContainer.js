@@ -7,7 +7,7 @@ import NewOKR from '../NewOKR/NewOKR';
 import Permissible from '../../../components/Permissible';
 import { withModal } from '../../../util/ModalUtil';
 import { mapOKR } from '../../../util/OKRUtil';
-import { EntityType } from '../../../util/EntityUtil';
+import { entityTypePropType, EntityType } from '../../../util/EntityUtil';
 import { groupTypePropType } from '../../../util/GroupUtil';
 import { changeOkrOwner, changeParentOkr, changeDisclosureType, setRatios, copyOkr, deleteOkr, deleteKR } from '../action';
 
@@ -18,7 +18,7 @@ class OKRListContainer extends Component {
     subject: PropTypes.string,
     okrs: okrsPropTypes,
     id: PropTypes.number,
-    ownerType: PropTypes.string,
+    ownerType: entityTypePropType,
     ownerName: PropTypes.string,
     roleLevel: PropTypes.number,
     groupType: groupTypePropType,

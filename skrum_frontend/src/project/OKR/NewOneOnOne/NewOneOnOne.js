@@ -5,12 +5,12 @@ import { Field } from 'redux-form';
 import { isEmpty } from 'lodash';
 import { objectiveReferencePropTypes } from '../OKRList/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
-import EntitySubject from '../../../components/EntitySubject';
 import DatePickerInput from '../../../editors/DatePickerInput';
+import OKRSearch from '../../OKRSearch/OKRSearch';
 import UserSearch from '../../UserSearch/UserSearch';
 import Options from '../../../components/Options';
 import { postOneOnOne } from '../action';
-// import { EntityType } from '../../../util/EntityUtil';
+import { EntityType } from '../../../util/EntityUtil';
 import { withReduxForm, withReduxField, withSelectReduxField, withItemisedReduxField } from '../../../util/FormUtil';
 import { isValidDate, getDate, formatDate, toUtcDate } from '../../../util/DatetimeUtil';
 import styles from './NewOneOnOne.css';
@@ -49,8 +49,8 @@ class NewOneOnOne extends Component {
     const to = {}; // { type: EntityType.USER, id: 2, name: '田中 一郎' }; // TODO call API
     const { id: okrId } = okr || {};
     const initialValues = {
-      ...{ oneOnOneType, reportDate, dueDate, feedbackType: '1' },
-      ...{ interviewDate, interviewee, to, okrId } };
+      ...{ oneOnOneType, okr, reportDate, dueDate, feedbackType: '1' },
+      ...{ interviewDate, interviewee, to } };
     this.form = withReduxForm(
       formProps => <DialogForm plain compact modeless className={styles.form} {...formProps} />,
       `${formName}-${userId}-${okrId}`,
@@ -62,7 +62,7 @@ class NewOneOnOne extends Component {
     const { currentUserId, onClose, dispatchPostOneOnOne } = this.props;
     this.setState({ isSubmitting: true });
     const { oneOnOneType, reportDate, dueDate, feedbackType, interviewDate, interviewee,
-      okrId, to, body = '' } = entry;
+      okr, to, body = '' } = entry;
     const report = {
       oneOnOneType,
       ...(oneOnOneType === '1' || oneOnOneType === '2') && { reportDate: toUtcDate(reportDate) },
@@ -71,7 +71,7 @@ class NewOneOnOne extends Component {
       ...oneOnOneType === '5' && { intervieweeUserId: interviewee.id },
       ...oneOnOneType === '5' && { interviewDate: toUtcDate(interviewDate) },
       ...to.id && { to: [{ userId: to.id }] }, // FIXME
-      ...okrId && { okrId },
+      ...okr && { okrId: okr.id },
       body,
     };
     return dispatchPostOneOnOne(currentUserId, report).then(({ error, payload }) => {
@@ -135,12 +135,10 @@ class NewOneOnOne extends Component {
             )}
           </header>
           {okr && (
-            <EntitySubject
-              className={styles.okr}
-              heading="対象目標"
-              entity={okr.owner}
-              subject={okr.name}
-            />)}
+            <section>
+              <label>対象目標</label>
+              {withItemisedReduxField(OKRSearch, 'okr', { loadBasicsOKRs: EntityType.USER })}
+            </section>)}
           {activeTab === 'report' && (
             <section>
               <label>日付</label>

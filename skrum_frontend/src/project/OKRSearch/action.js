@@ -22,7 +22,7 @@ export const searchOkr = (timeframeId, keyword) =>
     if (state.okrsFound.isSearching) return Promise.resolve();
     dispatch(requestSearchOkr());
     return getJson('/okrs/search.json', state)({ tfid: timeframeId, q: keyword })
-      .then(json => dispatch(finishSearchOkr('data', json)))
+      .then(json => dispatch(finishSearchOkr('data', { keyword, data: json })))
       .catch(({ message }) => dispatch(finishSearchOkr(new Error(message))));
   };
 
