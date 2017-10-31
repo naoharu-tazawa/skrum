@@ -23,7 +23,7 @@ const validate =
     dueDate: !isValidDate(dueDate) && '回答期限を入力してください',
     interviewDate: !isValidDate(interviewDate) && '面談日を入力してください',
     interviewee: isEmpty(interviewee) && '面談相手を入力してください',
-    to: isEmpty(to) && 'ＴＯを入力してください',
+    to: oneOnOneType !== '2' && oneOnOneType !== '5' && isEmpty(to) && 'ＴＯを入力してください',
     body: oneOnOneType !== '3' && !body && 'コメントを入力してください',
   });
 
@@ -62,7 +62,7 @@ class NewOneOnOne extends Component {
     const { currentUserId, onClose, dispatchPostOneOnOne } = this.props;
     this.setState({ isSubmitting: true });
     const { oneOnOneType, reportDate, dueDate, feedbackType, interviewDate, interviewee,
-      okrId, to, body } = entry;
+      okrId, to, body = '' } = entry;
     const report = {
       oneOnOneType,
       ...(oneOnOneType === '1' || oneOnOneType === '2') && { reportDate: toUtcDate(reportDate) },
@@ -70,9 +70,9 @@ class NewOneOnOne extends Component {
       ...oneOnOneType === '4' && { feedbackType },
       ...oneOnOneType === '5' && { intervieweeUserId: interviewee.id },
       ...oneOnOneType === '5' && { interviewDate: toUtcDate(interviewDate) },
-      to: [{ userId: to.id }], // FIXME
-      okrId,
-      body: body || '',
+      ...to.id && { to: [{ userId: to.id }] }, // FIXME
+      ...okrId && { okrId },
+      body,
     };
     return dispatchPostOneOnOne(currentUserId, report).then(({ error, payload }) => {
       this.setState({ isSubmitting: false }, () => !error && onClose());
@@ -101,7 +101,6 @@ class NewOneOnOne extends Component {
         onSubmit={this.submit.bind(this)}
         isSubmitting={isSubmitting}
         onClose={onClose}
-        activeTab={activeTab}
       >
         <div className={styles.dialog}>
           <nav className={styles.nav}>

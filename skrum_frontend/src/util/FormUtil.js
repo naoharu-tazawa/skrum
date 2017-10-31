@@ -11,30 +11,34 @@ export const withLoadedReduxForm = (WrappedForm, form, stateToInitialValues, red
     state => ({ initialValues: stateToInitialValues ? stateToInitialValues(state) : {} }),
   )(withReduxForm(WrappedForm, form, reduxFormProps));
 
-export const withReduxField = (WrappedComponent, name, fieldProps = {}) =>
+export const withReduxField = (WrappedComponent, name, props, fieldProps) =>
   <Field
-    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...fieldProps} />}
+    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...props} />}
     name={name}
+    {...fieldProps}
   />;
 
-export const withItemisedReduxField = (WrappedComponent, name, fieldProps = {}) =>
+export const withItemisedReduxField = (WrappedComponent, name, props, fieldProps) =>
   <Field
-    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...fieldProps} />}
+    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...props} />}
     name={name}
     // format={item => (item || {}).name}
     normalize={(value, previousValue) => (isObject(value) ? value : previousValue)}
+    {...fieldProps}
   />;
 
-export const withSelectReduxField = (WrappedComponent, name, fieldProps = {}) =>
+export const withSelectReduxField = (WrappedComponent, name, props, fieldProps) =>
   <Field
-    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...fieldProps} />}
+    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...props} />}
     name={name}
     normalize={value => (isObject(value) ? value.value : value)}
+    {...fieldProps}
   />;
 
-export const withNumberReduxField = (WrappedComponent, name, fieldProps = {}) =>
+export const withNumberReduxField = (WrappedComponent, name, props, fieldProps) =>
   <Field
-    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...fieldProps} />}
+    component={({ input, meta }) => <WrappedComponent {...{ ...input, meta }} {...props} />}
     name={name}
     normalize={value => toNumber(value.replace(/,/g, ''))}
+    {...fieldProps}
   />;
