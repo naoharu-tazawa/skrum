@@ -1,6 +1,8 @@
 {{ data.userName }}さん、こんにちは。
+{% if data.onlySuperUser == 1 %}
 
 ※本メールは {{ data.companyName }} 様の スーパー管理者ユーザ の方のみに送信しています。
+{% endif %}
 
 
 {{ data.body }}

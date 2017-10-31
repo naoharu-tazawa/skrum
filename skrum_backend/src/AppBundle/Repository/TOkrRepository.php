@@ -4,7 +4,6 @@ namespace AppBundle\Repository;
 
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TOkr;
-use Doctrine\ORM\Query;
 
 /**
  * TOkrリポジトリクラス
@@ -775,7 +774,7 @@ SQL;
             ->orderBy('to3.ownerType', 'DESC')
             ->addOrderBy('to3.ownerGroup', 'ASC')
             ->addOrderBy('to3.ownerUser', 'ASC')
-            ->addOrderBy('to1.okrId', 'ASC');
+            ->addOrderBy('to3.okrId', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

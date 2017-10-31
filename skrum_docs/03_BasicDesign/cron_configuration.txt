@@ -16,8 +16,11 @@
 # BB0106 フィードバック対象者報告メール
 0 5 * * 1 cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0106 --env=prod --bulk_size=1000
 
-# BB0107 サービスお知らせメール
-0 12 * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0107 --env=prod --bulk_size=1000
+# BB0107 サービスお知らせメール（対象：全ユーザ）
+0 11 * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0107 --env=prod --only_super_user=0 --bulk_size=1000
+
+# BB0107 サービスお知らせメール（対象：スーパー管理者ユーザのみ）
+0 12 * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0107 --env=prod --only_super_user=1 --bulk_size=1000
 
 # BB0108 メール送信
 * * * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0108 --env=prod --bulk_size=1000

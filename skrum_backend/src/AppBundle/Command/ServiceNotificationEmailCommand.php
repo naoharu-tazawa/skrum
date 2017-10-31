@@ -20,6 +20,7 @@ class ServiceNotificationEmailCommand extends BaseCommand
         $this->setName('BB0107')
             ->setDescription('サービスお知らせメールバッチ')
             ->setDefinition(array(
+                new InputOption('only_super_user', null, InputOption::VALUE_REQUIRED, '送信対象設定(スーパー管理者のみ→1、全ユーザ→0)'),
                 new InputOption('bulk_size', null, InputOption::VALUE_REQUIRED, 'バルクサイズ')
             ));
     }
@@ -29,7 +30,7 @@ class ServiceNotificationEmailCommand extends BaseCommand
         $this->logDebug('----------BB0107 サービスお知らせメールバッチ 開始----------');
 
         $serviceNotificationEmailService = $this->getServiceNotificationEmailService();
-        $exitCode = $serviceNotificationEmailService->run($input->getOption('bulk_size'));
+        $exitCode = $serviceNotificationEmailService->run($input->getOption('only_super_user'), $input->getOption('bulk_size'));
 
         if ($exitCode === DBConstant::EXIT_CODE_SUCCESS) {
             $this->logDebug('----------BB0107 サービスお知らせメールバッチ 正常終了----------');

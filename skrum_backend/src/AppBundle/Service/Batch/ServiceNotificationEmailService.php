@@ -22,13 +22,15 @@ class ServiceNotificationEmailService extends BaseService
      * @param MUser $mUser ユーザエンティティ
      * @param string $body 送信メール本文
      * @param MCompany $mCompany 会社エンティティ
+     * @param integer $onlySuperUser スーパー管理者ユーザのみフラグ
      * @return void
      */
-    private function createEmail(MUser $mUser, string $body, MCompany $mCompany)
+    private function createEmail(MUser $mUser, string $body, MCompany $mCompany, int $onlySuperUser)
     {
         // メール本文記載変数
         $data = array();
         $data['userName'] = $mUser->getLastName() . $mUser->getFirstName();
+        $data['onlySuperUser'] = $onlySuperUser;
         $data['companyName'] = $mCompany->getCompanyName();
         $data['body'] = $body;
 
@@ -45,16 +47,23 @@ class ServiceNotificationEmailService extends BaseService
     /**
      * サービスお知らせメール
      *
+     * @param integer $onlySuperUser スーパー管理者ユーザのみフラグ
      * @param integer $bulkSize バルクサイズ
      * @return int EXITコード
      */
-    public function run(int $bulkSize): int
+    public function run(int $onlySuperUser, int $bulkSize): int
     {
         $exitCode = DBConstant::EXIT_CODE_SUCCESS;
 
         // 送信するサービスお知らせメールを取得
         try {
-            $body = file_get_contents(__DIR__ . '/../../../../app/service_notification_email/email.txt');
+            if ($onlySuperUser === DBConstant::FLG_TRUE) {
+                $body = file_get_contents(__DIR__ . '/../../../../app/service_notification_email/email_super.txt');
+            } elseif ($onlySuperUser === DBConstant::FLG_FALSE) {
+                $body = file_get_contents(__DIR__ . '/../../../../app/service_notification_email/email_all.txt');
+            } else {
+                $body = null;
+            }
         } catch (\Exception $e) {
             $body = null;
         }
@@ -63,7 +72,7 @@ class ServiceNotificationEmailService extends BaseService
         if ($body) {
             // メール送信対象者を取得
             $mUserRepos = $this->getMUserRepository();
-            $mUserArray = $mUserRepos->getUsersForServiceNotificationEmail();
+            $mUserArray = $mUserRepos->getUsersForServiceNotificationEmail($onlySuperUser);
 
             // トランザクション開始
             $this->beginTransaction();
@@ -71,7 +80,7 @@ class ServiceNotificationEmailService extends BaseService
             try {
                 foreach ($mUserArray as $key => $mUser) {
                     // メール作成・登録
-                    $this->createEmail($mUser, $body, $mUser->getCompany());
+                    $this->createEmail($mUser, $body, $mUser->getCompany(), $onlySuperUser);
 
                     // バルクインサート
                     if (($key + 1) % $bulkSize === 0) {
@@ -92,7 +101,11 @@ class ServiceNotificationEmailService extends BaseService
                 return DBConstant::EXIT_CODE_ERROR;
             }
 
-            unlink(__DIR__ . '/../../../../app/service_notification_email/email.txt');
+            if ($onlySuperUser === DBConstant::FLG_TRUE) {
+                unlink(__DIR__ . '/../../../../app/service_notification_email/email_super.txt');
+            } elseif ($onlySuperUser === DBConstant::FLG_FALSE) {
+                unlink(__DIR__ . '/../../../../app/service_notification_email/email_all.txt');
+            }
         }
 
         return $exitCode;
