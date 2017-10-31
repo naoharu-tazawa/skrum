@@ -3,7 +3,6 @@
 namespace AppBundle\Command;
 
 use AppBundle\Command\BaseCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Utils\DBConstant;
