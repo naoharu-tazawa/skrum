@@ -16,6 +16,7 @@ use AppBundle\Api\ResponseDTO\OneOnOneDialogDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\OneOnOneHeaderDTO;
 use AppBundle\Utils\Constant;
+use AppBundle\Api\ResponseDTO\NestedObject\OneOnOneDefaultDestinationDTO;
 
 /**
  * 1on1サービスクラス
@@ -501,6 +502,47 @@ class OneOnOneService extends BaseService
         $oneOnOneDialogDTO->setDialog($oneOnOneDTOArray);
 
         return $oneOnOneDialogDTO;
+    }
+
+    /**
+     * 前回送信先ユーザリスト取得処理
+     *
+     * @param integer $userId ユーザID
+     * @return array
+     */
+    public function getDefaultDestinationsArray(int $userId): array
+    {
+        // 1on1種別配列
+        $oneOnOneTypeArray = array(
+                DBConstant::ONE_ON_ONE_TYPE_DAILY_REPORT,
+                DBConstant::ONE_ON_ONE_TYPE_PROGRESS_MEMO,
+                DBConstant::ONE_ON_ONE_TYPE_HEARING,
+                DBConstant::ONE_ON_ONE_TYPE_FEEDBACK,
+                DBConstant::ONE_ON_ONE_TYPE_INTERVIEW_NOTE
+        );
+
+        $tOneOnOneToRepos = $this->getTOneOnOneToRepository();
+        $oneOnOneDefaultDestinationDTOArray = array();
+        foreach ($oneOnOneTypeArray as $oneOnOneType) {
+            $userInfoArray = $tOneOnOneToRepos->getPreviousDestinations($userId, $oneOnOneType);
+
+            $basicUserInfoDTOArray = array();
+            foreach ($userInfoArray as $userInfo) {
+                $basicUserInfoDTO = new BasicUserInfoDTO();
+                $basicUserInfoDTO->setUserId($userInfo['user_id']);
+                $basicUserInfoDTO->setName($userInfo['last_name'] . $userInfo['first_name']);
+
+                $basicUserInfoDTOArray[] = $basicUserInfoDTO;
+            }
+
+            $oneOnOneDefaultDestinationDTO = new OneOnOneDefaultDestinationDTO();
+            $oneOnOneDefaultDestinationDTO->setType($oneOnOneType);
+            $oneOnOneDefaultDestinationDTO->setTo($basicUserInfoDTOArray);
+
+            $oneOnOneDefaultDestinationDTOArray[] = $oneOnOneDefaultDestinationDTO;
+        }
+
+        return $oneOnOneDefaultDestinationDTOArray;
     }
 
     /**

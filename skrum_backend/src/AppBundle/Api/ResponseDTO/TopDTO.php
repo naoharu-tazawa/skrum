@@ -47,6 +47,13 @@ class TopDTO
     private $users;
 
     /**
+     * @var array
+     *
+     * @JSON\Type("array")
+     */
+    private $oneOnOne;
+
+    /**
      * Set timeframes
      *
      * @param array $timeframes
@@ -164,5 +171,29 @@ class TopDTO
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * Set oneOnOne
+     *
+     * @param array $oneOnOne
+     *
+     * @return TopDTO
+     */
+    public function setOneOnOne($oneOnOne)
+    {
+        $this->oneOnOne = $oneOnOne;
+
+        return $this;
+    }
+
+    /**
+     * Get oneOnOne
+     *
+     * @return array
+     */
+    public function getOneOnOne()
+    {
+        return $this->oneOnOne;
     }
 }

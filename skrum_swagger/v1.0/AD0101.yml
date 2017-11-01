@@ -88,10 +88,27 @@ paths:
                       type: string
                     imageVersion:
                       type: integer
+              oneOnOne:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: integer
+                    to:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          userId:
+                            type: integer
+                          name:
+                            type: string
             required:
               - timeframes
               - company
               - users
+              - oneOnOne
         400:
           description: JSONスキーマ不正
         409:

@@ -317,7 +317,7 @@ class OneOnOneController extends BaseController
             throw new PermissionException('ユーザIDが存在しません');
         }
 
-        // 1on1ダイアログ取得処理
+        // 前回送信先ユーザリスト取得処理
         $oneOnOneService = $this->getOneOnOneService();
         $basicUserInfoDTOArray = $oneOnOneService->getDefaultDestinations($userId, $oneOnOneType);
 

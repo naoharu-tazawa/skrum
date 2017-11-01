@@ -61,6 +61,10 @@ class BasicInfoController extends BaseController
         $userService = $this->getUserService();
         $users = $userService->getSideBarUsers($userId, $auth->getCompanyId());
 
+        // 前回送信先ユーザリスト取得処理
+        $oneOnOneService = $this->getOneOnOneService();
+        $oneOnOneDefaultDestinationDTOArray = $oneOnOneService->getDefaultDestinationsArray($userId);
+
         // 返却DTOをセット
         $topDTO = new TopDTO();
         $topDTO->setTimeframes($timeframeDTOArray);
@@ -68,6 +72,7 @@ class BasicInfoController extends BaseController
         $topDTO->setDepartments($groups['departments']);
         $topDTO->setCompany($basicCompanyInfoDTO);
         $topDTO->setUsers($users);
+        $topDTO->setOneOnOne($oneOnOneDefaultDestinationDTOArray);
 
         return $topDTO;
     }
