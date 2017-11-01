@@ -10,12 +10,14 @@ class D3TreeContainer extends Component {
   static propTypes = {
     map: d3treePropTypes.isRequired,
     companyId: PropTypes.number.isRequired,
+    images: PropTypes.shape({}).isRequired,
   };
 
   render() {
+    const { map, companyId, images } = this.props;
     return (
       <div className={styles.container}>
-        <D3Tree map={this.props.map} companyId={this.props.companyId} />
+        <D3Tree {...{ map, companyId, images }} />
       </div>);
   }
 }
@@ -23,7 +25,8 @@ class D3TreeContainer extends Component {
 const mapStateToProps = subject => (state) => {
   const { [subject]: map = {} } = state.map || {};
   const { companyId } = state.auth;
-  return { map, companyId };
+  const { images } = state.base;
+  return { map, companyId, images };
 };
 
 export const UserD3TreeContainer = connect(
