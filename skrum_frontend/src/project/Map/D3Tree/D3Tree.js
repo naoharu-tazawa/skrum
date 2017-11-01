@@ -6,17 +6,16 @@ import { d3treePropTypes } from './propTypes';
 import { imagePath, dummyImagePathForD3 } from '../../../util/ImageUtil';
 import { EntityType } from '../../../util/EntityUtil';
 
-let companyId;
-
 export default class D3Tree extends Component {
 
   static propTypes = {
     map: d3treePropTypes.isRequired,
     companyId: PropTypes.number.isRequired,
+    images: PropTypes.shape({}).isRequired,
   };
 
-  static root;
-  static isHidden = false;
+  static companyId;
+  static images;
 
   static splitByLength(str, length) {
     const resultArr = [];
@@ -60,34 +59,60 @@ export default class D3Tree extends Component {
   }
 
   // S3から画像取得するURLを生成
-  static getImageDummyUrl(data) {
-    return dummyImagePathForD3(data.ownerType);
+  static getImageDummyUrl({ ownerType }) {
+    return dummyImagePathForD3(ownerType);
+  }
+
+  static getImageVersion({ ownerType, ownerUserId, ownerGroupId, ownerCompanyId }) {
+    const { users = {}, groups = {}, companies = {} } = D3Tree.images;
+    switch (ownerType) {
+      case EntityType.USER:
+        return users[ownerUserId] || 0;
+      case EntityType.GROUP:
+        return groups[ownerGroupId] || 0;
+      case EntityType.COMPANY:
+        return companies[ownerCompanyId] || 0;
+      default:
+        return 0;
+    }
   }
 
   // S3から画像取得するURLを生成
-  static getImageFromS3(data) {
-    let url = null;
-    if (data.ownerType === EntityType.USER) {
-      url = imagePath(data.ownerType, companyId, data.ownerUserId);
-    } else if (data.ownerType === EntityType.GROUP) {
-      url = imagePath(data.ownerType, companyId, data.ownerGroupId);
-    } else if (data.ownerType === EntityType.COMPANY) {
-      url = imagePath(data.ownerType, companyId, data.ownerCompanyId);
+  static getImageFromS3({ ownerType, ownerUserId, ownerGroupId, ownerCompanyId }, version) {
+    const companyId = D3Tree.companyId;
+    switch (ownerType) {
+      case EntityType.USER:
+        return imagePath(ownerType, companyId, ownerUserId, version);
+      case EntityType.GROUP:
+        return imagePath(ownerType, companyId, ownerGroupId, version);
+      case EntityType.COMPANY:
+        return imagePath(ownerType, companyId, ownerCompanyId, version);
+      default:
+        return null;
     }
-    return url;
   }
 
   static setImageUrl(d) {
     const node = this;
+    const version = D3Tree.getImageVersion(d.data);
     d3.select(node).attr('xlink:href', () => D3Tree.getImageDummyUrl(d.data));
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.src = D3Tree.getImageFromS3(d.data);
-      img.onload = () => {
-        d3.select(node).attr('xlink:href', () => img.src);
-      };
-      resolve(img.src);
-    });
+    if (version !== 0) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = D3Tree.getImageFromS3(d.data, version);
+        img.onload = () => {
+          d3.select(node).attr('xlink:href', () => img.src);
+        };
+        resolve(img.src);
+      });
+    }
+  }
+
+  constructor(props) {
+    super(props);
+    const { companyId, images } = props;
+    D3Tree.companyId = companyId;
+    D3Tree.images = images;
   }
 
   componentDidMount() {
@@ -386,12 +411,15 @@ export default class D3Tree extends Component {
       .style('text-anchor', 'start')
       .style('font-size', `${0.8 * reductionRatio}em`)
       .text((d) => {
-        if (d.data.ownerType === '1') {
-          return d.data.ownerUserName;
-        } else if (d.data.ownerType === '2') {
-          return d.data.ownerGroupName;
-        } else if (d.data.ownerType === '3') {
-          return d.data.ownerCompanyName;
+        switch (d.data.ownerType) {
+          case EntityType.USER:
+            return d.data.ownerUserName;
+          case EntityType.GROUP:
+            return d.data.ownerGroupName;
+          case EntityType.COMPANY:
+            return d.data.ownerCompanyName;
+          default:
+            return '';
         }
       })
       .style('display', (d) => {
@@ -454,12 +482,15 @@ export default class D3Tree extends Component {
       .attr('x', `${-46 * reductionRatio}px`)
       .style('font-size', `${0.8 * reductionRatio}em`)
       .text((d) => {
-        if (d.data.ownerType === '1') {
-          return d.data.ownerUserName;
-        } else if (d.data.ownerType === '2') {
-          return d.data.ownerGroupName;
-        } else if (d.data.ownerType === '3') {
-          return d.data.ownerCompanyName;
+        switch (d.data.ownerType) {
+          case EntityType.USER:
+            return d.data.ownerUserName;
+          case EntityType.GROUP:
+            return d.data.ownerGroupName;
+          case EntityType.COMPANY:
+            return d.data.ownerCompanyName;
+          default:
+            return '';
         }
       });
 
@@ -523,11 +554,9 @@ export default class D3Tree extends Component {
     });
   }
 
-
   renderTree(treeData, svgDomNode) {
     // hidden setting
     this.isHidden = (treeData.hidden !== undefined);
-    companyId = this.props.companyId;
 
     // Set the dimensions and margins of the diagram
     const marginTop = this.isHidden ? -20 : 180;
