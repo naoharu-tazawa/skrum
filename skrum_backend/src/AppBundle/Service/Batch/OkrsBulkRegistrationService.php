@@ -123,10 +123,18 @@ class OkrsBulkRegistrationService extends BaseService
         if ($items[8] !== '') $tOkr->setUnit($items[8]);
         $tOkr->setOwnerType($ownerType);
         $tOkr->setOwnerUser($mUser);
-        $tOkr->setStartDate($tTimeframe->getStartDate());
-        $tOkr->setEndDate($tTimeframe->getEndDate());
+        if ($items[9] !== '') {
+            $tOkr->setStartDate(DateUtility::transIntoDatetime($items[9]));
+        } else {
+            $tOkr->setStartDate($tTimeframe->getStartDate());
+        }
+        if ($items[10] !== '') {
+            $tOkr->setEndDate(DateUtility::transIntoDatetime($items[10]));
+        } else {
+            $tOkr->setEndDate($tTimeframe->getEndDate());
+        }
         $tOkr->setStatus(DBConstant::OKR_STATUS_OPEN);
-        $tOkr->setDisclosureType($items[9]);
+        $tOkr->setDisclosureType($items[11]);
         if ($items[5] === DBConstant::OKR_TYPE_KEY_RESULT) $tOkr->setRatioLockedFlg(DBConstant::FLG_FALSE);
         $this->persist($tOkr);
 
