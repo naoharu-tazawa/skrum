@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
-import { isEmpty } from 'lodash';
+import { isEmpty, head } from 'lodash';
+import { oneOnOneSettingsPropTypes } from './propTypes';
 import { objectiveReferencePropTypes } from '../OKRList/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
 import DatePickerInput from '../../../editors/DatePickerInput';
@@ -10,6 +11,7 @@ import OKRSearch from '../../OKRSearch/OKRSearch';
 import UserSearch from '../../UserSearch/UserSearch';
 import Options from '../../../components/Options';
 import { postOneOnOne } from '../action';
+import { syncOneOnOne } from '../../../navigation/action';
 import { EntityType } from '../../../util/EntityUtil';
 import { withReduxForm, withReduxField, withSelectReduxField, withItemisedReduxField } from '../../../util/FormUtil';
 import { isValidDate, getDate, formatDate, toUtcDate } from '../../../util/DatetimeUtil';
@@ -30,6 +32,7 @@ const validate =
 class NewOneOnOne extends Component {
 
   static propTypes = {
+    oneOnOne: oneOnOneSettingsPropTypes.isRequired,
     currentUserId: PropTypes.number.isRequired,
     userId: PropTypes.number.isRequired,
     okr: objectiveReferencePropTypes,
@@ -39,18 +42,20 @@ class NewOneOnOne extends Component {
 
   constructor(props) {
     super(props);
-    const { currentUserId, userId, okr } = props;
+    const { oneOnOne, currentUserId, userId, okr } = props;
     const isSelf = currentUserId === userId;
     const oneOnOneType = (isSelf && (!okr ? '1' : '2')) || '3';
     const reportDate = formatDate(getDate());
     const dueDate = formatDate(getDate().add(3, 'd'));
     const interviewee = {}; // type: EntityType.USER, id: 3, name: '田中 二郎' }; // TODO call API
     const interviewDate = formatDate(getDate());
-    const to = {}; // { type: EntityType.USER, id: 2, name: '田中 一郎' }; // TODO call API
+    const toUserEntity = ({ userId: id, name }) => (id ? { type: EntityType.USER, id, name } : {});
+    const oneOnOneTos = oneOnOne.reduce((tos, { type, to }) =>
+      ({ ...tos, [`to${type}`]: toUserEntity(head(to) || {}) }), {});
     const { id: okrId } = okr || {};
     const initialValues = {
       ...{ oneOnOneType, okr, reportDate, dueDate, feedbackType: '1' },
-      ...{ interviewDate, interviewee, to } };
+      ...{ interviewDate, interviewee, ...oneOnOneTos } };
     this.form = withReduxForm(
       formProps => <DialogForm plain compact modeless className={styles.form} {...formProps} />,
       `${formName}-${userId}-${okrId}`,
@@ -62,7 +67,7 @@ class NewOneOnOne extends Component {
     const { currentUserId, onClose, dispatchPostOneOnOne } = this.props;
     this.setState({ isSubmitting: true });
     const { oneOnOneType, reportDate, dueDate, feedbackType, interviewDate, interviewee,
-      okr, to, body = '' } = entry;
+      okr, [`to${oneOnOneType}`]: to, body = '' } = entry;
     const report = {
       oneOnOneType,
       ...(oneOnOneType === '1' || oneOnOneType === '2') && { reportDate: toUtcDate(reportDate) },
@@ -74,23 +79,20 @@ class NewOneOnOne extends Component {
       ...okr && { okrId: okr.id },
       body,
     };
-    return dispatchPostOneOnOne(currentUserId, report).then(({ error, payload }) => {
-      this.setState({ isSubmitting: false }, () => !error && onClose());
-      return { error, payload };
-    });
+    return dispatchPostOneOnOne(currentUserId, report, { oneOnOneType, to: [to] }) // FIXME
+      .then(({ error, payload }) => {
+        this.setState({ isSubmitting: false }, () => !error && onClose());
+        return { error, payload };
+      });
   }
 
   render() {
     const { currentUserId, userId, okr, onClose } = this.props;
     const isSelf = currentUserId === userId;
-    const { activeTab = isSelf ? 'report' : 'hearing', isSubmitting = false } = this.state || {};
+    const { activeTab = isSelf ? 'report' : 'hearing',
+      oneOnOneType = (isSelf && (!okr ? '1' : '2')) || '3', isSubmitting = false } = this.state || {};
     const selectableTabStyle = tab =>
       `${styles.tab} ${styles.selectable} ${activeTab === tab ? styles.active : ''} ${okr && tab === 'interview' && styles.disabled}`;
-    const tabs = {
-      hearing: 'ヒアリング',
-      feedback: 'フィードバック',
-      interview: '面談メモ',
-    };
     const Form = this.form;
     return (
       <Form
@@ -116,7 +118,7 @@ class NewOneOnOne extends Component {
             {isSelf && <span className={styles.tab}>{!okr ? '日報' : '進捗報告'}</span>}
             {!isSelf && withSelectReduxField(Options,
               'oneOnOneType',
-              { map: tabs,
+              { map: { hearing: 'ヒアリング', feedback: 'フィードバック', interview: '面談メモ' },
                 renderer: ({ value: tab, label }, index) => (
                   <label key={tab} className={selectableTabStyle(tab)}>
                     <Field
@@ -126,7 +128,7 @@ class NewOneOnOne extends Component {
                       value={index + 3}
                       props={{
                         disabled: okr && tab === 'interview',
-                        onClick: () => this.setState({ activeTab: tab }),
+                        onClick: () => this.setState({ activeTab: tab, oneOnOneType: `${index + 3}` }),
                       }}
                     />
                     {label}
@@ -174,7 +176,7 @@ class NewOneOnOne extends Component {
             </section>)}
           <section>
             <label>ＴＯ</label>
-            {withItemisedReduxField(UserSearch, 'to')}
+            {withItemisedReduxField(UserSearch, `to${oneOnOneType}`)}
           </section>
           <Field
             component="textarea"
@@ -189,12 +191,15 @@ class NewOneOnOne extends Component {
 
 const mapStateToProps = (state) => {
   const { userId: currentUserId } = state.auth || {};
-  return { currentUserId };
+  const { data: topData } = state.top || {};
+  const { oneOnOne = [] } = topData || {};
+  return { oneOnOne, currentUserId };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const dispatchPostOneOnOne = (userId, entry) =>
-    dispatch(postOneOnOne(userId, entry));
+  const dispatchPostOneOnOne = (userId, entry, sync) =>
+    dispatch(postOneOnOne(userId, entry))
+      .then(result => dispatch(syncOneOnOne({ ...result, payload: { data: sync } })));
   return { dispatchPostOneOnOne };
 };
 

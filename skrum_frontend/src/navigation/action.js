@@ -12,6 +12,7 @@ export const Action = {
   FINISH_SETUP_USER: 'FINISH_SETUP_USER',
   ADD_GROUP: 'ADD_GROUP',
   REMOVE_GROUP: 'REMOVE_GROUP',
+  UPDATE_ONE_ON_ONE: 'UPDATE_ONE_ON_ONE',
 };
 
 const {
@@ -24,12 +25,14 @@ const {
   finishSetupUser,
   addGroup,
   removeGroup,
+  updateOneOnOne,
 } = createActions({
   [Action.FINISH_FETCH_USER_TOP]: keyValueIdentity,
   [Action.FINISH_SETUP_COMPANY]: keyValueIdentity,
   [Action.FINISH_SETUP_USER]: keyValueIdentity,
   [Action.ADD_GROUP]: keyValueIdentity,
   [Action.REMOVE_GROUP]: keyValueIdentity,
+  [Action.UPDATE_ONE_ON_ONE]: keyValueIdentity,
 },
   Action.REQUEST_FETCH_USER_TOP,
   Action.REQUIRE_FETCH_USER_TOP,
@@ -79,3 +82,8 @@ export const syncLeaveGroup = ({ payload, error }) =>
   dispatch => (!error ?
     dispatch(removeGroup('data', payload.data)) :
     dispatch(removeGroup(new Error(payload.message))));
+
+export const syncOneOnOne = ({ payload, error }) =>
+  dispatch => (!error ?
+    dispatch(updateOneOnOne('data', payload.data)) :
+    dispatch(updateOneOnOne(new Error(payload.message))));

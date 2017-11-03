@@ -1,3 +1,4 @@
+import { toNumber } from 'lodash';
 import { Action } from './action';
 import { GroupType } from '../util/GroupUtil';
 
@@ -54,6 +55,20 @@ export default (state = {
         teams: teams.filter(team => team.groupId !== groupId),
         departments: departments.filter(dept => dept.groupId !== groupId),
         ...others,
+      };
+      return { ...state, data };
+    }
+
+    case Action.UPDATE_ONE_ON_ONE: {
+      if (error) return state;
+      const { oneOnOneType, to } = payload.data;
+      const { oneOnOne, ...others } = state.data;
+      const data = {
+        ...others,
+        oneOnOne: [
+          ...oneOnOne.filter(({ type }) => type !== toNumber(oneOnOneType)),
+          { type: toNumber(oneOnOneType), to: to.map(({ id, name }) => ({ userId: id, name })) },
+        ],
       };
       return { ...state, data };
     }
