@@ -6,6 +6,7 @@ use AppBundle\Service\BaseService;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\Auth;
 use AppBundle\Utils\Constant;
+use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TUpload;
 use AppBundle\Entity\TUploadControl;
@@ -266,9 +267,9 @@ class CsvUploadService extends BaseService
      */
     private function checkOkrsCsv(Auth $auth, array $items, int $number, MUserRepository $mUserRepos): bool
     {
-        // 1行9項目あるかチェック
-        if (count($items) !== 10) {
-            $this->message = $number . '行目：1行には10項目必要です';
+        // 1行12項目あるかチェック
+        if (count($items) !== 12) {
+            $this->message = $number . '行目：1行には12項目必要です';
 
             return false;
         }
@@ -305,7 +306,7 @@ class CsvUploadService extends BaseService
 
         // タイムフレーム存在チェック
         try {
-            $this->getDBExistanceLogic()->checkTimeframeExistance($items[4], $auth->getCompanyId());
+            $tTimeframe = $this->getDBExistanceLogic()->checkTimeframeExistance($items[4], $auth->getCompanyId());
         } catch (\Exception $e) {
             $this->message = $number . '行目：タイムフレームが存在しません';
 
@@ -336,9 +337,47 @@ class CsvUploadService extends BaseService
             return false;
         }
 
+        // 開始日の妥当性チェック
+        if ($items[9] !== '') {
+            $startDate = str_replace('/', '-', $items[9]);
+            $startDateArray = DateUtility::analyzeDate($startDate);
+            if (!checkdate($startDateArray[1], $startDateArray[2], $startDateArray[0])) {
+                $this->message = $number . '行目：開始日が不正です';
+
+                return false;
+            }
+        }
+
+        // 期限日の妥当性チェック
+        if ($items[10] !== '') {
+            $endDate = str_replace('/', '-', $items[10]);
+            $endDateArray = DateUtility::analyzeDate($endDate);
+            if (!checkdate($endDateArray[1], $endDateArray[2], $endDateArray[0])) {
+                $this->message = $number . '行目：期限日が不正です';
+
+                return false;
+            }
+        }
+
+        // 開始日と期限日の妥当性チェック
+        if ($items[9] !== '' || $items[10] !== '') {
+            if ($items[9] === '') {
+                $startDate = DateUtility::transIntoDateString($tTimeframe->getStartDate());
+            }
+            if ($items[10] === '') {
+                $endDate = DateUtility::transIntoDateString($tTimeframe->getEndDate());
+            }
+
+            if (strtotime($startDate) > strtotime($endDate)) {
+                $this->message = $number . '行目：期限日は開始日以降に設定してください';
+
+                return false;
+            }
+        }
+
         // OKR公開種別が正しいかチェック（全体公開＝'1'、グループ公開＝'2'、管理者公開＝'3'、グループ管理者公開＝'4'）
-        if ($items[9] !== DBConstant::OKR_DISCLOSURE_TYPE_OVERALL && $items[9] !== DBConstant::OKR_DISCLOSURE_TYPE_GROUP
-                && $items[9] !== DBConstant::OKR_DISCLOSURE_TYPE_ADMIN && $items[9] !== DBConstant::OKR_DISCLOSURE_TYPE_GROUP_ADMIN) {
+        if ($items[11] !== DBConstant::OKR_DISCLOSURE_TYPE_OVERALL && $items[11] !== DBConstant::OKR_DISCLOSURE_TYPE_GROUP
+                && $items[11] !== DBConstant::OKR_DISCLOSURE_TYPE_ADMIN && $items[11] !== DBConstant::OKR_DISCLOSURE_TYPE_GROUP_ADMIN) {
             $this->message = $number . '行目：OKR公開種別が不正です';
 
             return false;
