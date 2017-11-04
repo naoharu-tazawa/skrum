@@ -44,7 +44,7 @@ paths:
                 type: string
               senderUserId:
                 type: integer
-              fromName:
+              senderUserName:
                 type: string
               imamgeVersion:
                 type: integer
@@ -62,7 +62,7 @@ paths:
               - oneOnOneId
               - oneOnOneType
               - senderUserId
-              - fromName
+              - senderUserName
               - imamgeVersion
               - lastUpdate
               - partOfText

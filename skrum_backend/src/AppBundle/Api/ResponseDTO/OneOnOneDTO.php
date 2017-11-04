@@ -37,7 +37,7 @@ class OneOnOneDTO
      *
      * @JSON\Type("string")
      */
-    private $fromName;
+    private $senderUserName;
 
     /**
      * @var string
@@ -51,7 +51,7 @@ class OneOnOneDTO
      *
      * @JSON\Type("integer")
      */
-    private $imageVersion;
+    private $senderUserImageVersion;
 
     /**
      * @var string
@@ -189,27 +189,27 @@ class OneOnOneDTO
     }
 
     /**
-     * Set fromName
+     * Set senderUserName
      *
-     * @param string $fromName
+     * @param string $senderUserName
      *
      * @return OneOnOneDTO
      */
-    public function setFromName($fromName)
+    public function setSenderUserName($senderUserName)
     {
-        $this->fromName = $fromName;
+        $this->senderUserName = $senderUserName;
 
         return $this;
     }
 
     /**
-     * Get fromName
+     * Get senderUserName
      *
      * @return string
      */
-    public function getFromName()
+    public function getSenderUserName()
     {
-        return $this->fromName;
+        return $this->senderUserName;
     }
 
     /**
@@ -237,27 +237,27 @@ class OneOnOneDTO
     }
 
     /**
-     * Set imageVersion
+     * Set senderUserImageVersion
      *
-     * @param integer $imageVersion
+     * @param integer $senderUserImageVersion
      *
      * @return OneOnOneDTO
      */
-    public function setImageVersion($imageVersion)
+    public function setSenderUserImageVersion($senderUserImageVersion)
     {
-        $this->imageVersion = $imageVersion;
+        $this->senderUserImageVersion = $senderUserImageVersion;
 
         return $this;
     }
 
     /**
-     * Get imageVersion
+     * Get senderUserImageVersion
      *
      * @return integer
      */
-    public function getImageVersion()
+    public function getSenderUserImageVersion()
     {
-        return $this->imageVersion;
+        return $this->senderUserImageVersion;
     }
 
     /**

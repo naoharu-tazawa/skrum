@@ -217,7 +217,7 @@ class OneOnOneService extends BaseService
     }
 
     /**
-     * タイムライン投稿通知メール送信予約
+     * 1on1投稿通知メール送信予約
      *
      * @param integer $userId 宛先ユーザID
      * @param integer $senderUserId 送信者ユーザID
@@ -338,7 +338,7 @@ class OneOnOneService extends BaseService
             $oneOnOneDTO->setOneOnOneType($tOneOnOne['one_on_one_type']);
             $oneOnOneDTO->setSenderUserId($tOneOnOne['sender_user_id']);
             $oneOnOneDTO->setFromToNames($fromToNames);
-            $oneOnOneDTO->setImageVersion($tOneOnOne['image_version']);
+            $oneOnOneDTO->setSenderUserImageVersion($tOneOnOne['image_version']);
             $oneOnOneDTO->setLastUpdate(DateUtility::transIntoDatetime($tOneOnOne['new_arrival_datetime']));
             $oneOnOneDTO->setPartOfText($partOfNewArrivalText);
             $oneOnOneDTO->setReadFlg($readFlg);
@@ -402,8 +402,8 @@ class OneOnOneService extends BaseService
             $oneOnOneDTO->setOneOnOneId($tOneOnOne['id']);
             $oneOnOneDTO->setOneOnOneType($tOneOnOne['one_on_one_type']);
             $oneOnOneDTO->setSenderUserId($tOneOnOne['sender_user_id']);
-            $oneOnOneDTO->setFromName($tOneOnOne['last_name'] . $tOneOnOne['first_name']);
-            $oneOnOneDTO->setImageVersion($tOneOnOne['image_version']);
+            $oneOnOneDTO->setSenderUserName($tOneOnOne['last_name'] . $tOneOnOne['first_name']);
+            $oneOnOneDTO->setSenderUserImageVersion($tOneOnOne['image_version']);
             $oneOnOneDTO->setToNames($toNames);
             if ($tOneOnOne['interviewee_user_id'] !== null) {
                 $intervieweeEntity = $mUserRepos->find($tOneOnOne['interviewee_user_id']);
@@ -490,8 +490,8 @@ class OneOnOneService extends BaseService
             $oneOnOneDTO->setOneOnOneType($tOneOnOne->getOneOnOneType());
             $oneOnOneDTO->setSenderUserId($tOneOnOne->getSenderUserId());
             $fromUserEntity = $mUserRepos->find($tOneOnOne->getSenderUserId());
-            $oneOnOneDTO->setFromName($fromUserEntity->getLastName() . $fromUserEntity->getFirstName());
-            $oneOnOneDTO->setImageVersion($fromUserEntity->getImageVersion());
+            $oneOnOneDTO->setSenderUserName($fromUserEntity->getLastName() . $fromUserEntity->getFirstName());
+            $oneOnOneDTO->setSenderUserImageVersion($fromUserEntity->getImageVersion());
             $oneOnOneDTO->setToNames($toNames);
             $oneOnOneDTO->setLastUpdate($tOneOnOne->getUpdatedAt());
             $oneOnOneDTO->setText($tOneOnOne->getBody());

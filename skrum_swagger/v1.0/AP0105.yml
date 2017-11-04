@@ -80,10 +80,10 @@ paths:
                       type: string
                     senderUserId:
                       type: integer
+                    senderUserImamgeVersion:
+                      type: integer
                     fromToNames:
                       type: string
-                    imamgeVersion:
-                      type: integer
                     lastUpdate:
                       type: string
                     partOfText:
@@ -95,7 +95,7 @@ paths:
                     - oneOnOneType
                     - senderUserId
                     - fromToNames
-                    - imamgeVersion
+                    - senderUserImamgeVersion
                     - lastUpdate
                     - partOfText
                     - readFlg
