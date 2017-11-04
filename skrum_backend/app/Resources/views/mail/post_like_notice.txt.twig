@@ -3,7 +3,13 @@
 
 {{ data.posterUserName }}さんがあなたの以下の投稿にいいね！しています。
 
+{% if data.post != null %}
 「{{ data.post }}」
+{% endif %}
+{% if data.autoPost != null %}
+[自動投稿] {{ data.autoPost }}
+{% endif %}
+
 
 ログインはこちら。
 https://{{ subdomain }}.skrum.jp/login

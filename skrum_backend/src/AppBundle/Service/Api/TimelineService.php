@@ -532,7 +532,7 @@ class TimelineService extends BaseService
             $mUserRepos = $this->getMUserRepository();
             $mUser = $mUserRepos->find($userId);
             $originalPosterEntity = $mUserRepos->find($tPost->getPosterUserId());
-            $this->reserveEmailsForLike($mUser, $tPost->getPost(), $originalPosterEntity, $mUser->getCompany()->getSubdomain());
+            $this->reserveEmailsForLike($mUser, $tPost->getPost(), $tPost->getAutoPost(), $originalPosterEntity, $mUser->getCompany()->getSubdomain());
 
             $this->flush();
             $this->commit();
@@ -547,11 +547,12 @@ class TimelineService extends BaseService
      *
      * @param MUser $mUser リプライ投稿者ユーザエンティティ
      * @param string $post 投稿内容
+     * @param string $autoPost 自動投稿内容
      * @param MUser $originalPosterEntity リプライ対象の投稿者ユーザエンティティ
      * @param string $subdomain サブドメイン
      * @return void
      */
-    private function reserveEmailsForLike(MUser $mUser, string $post, MUser $originalPosterEntity, string $subdomain)
+    private function reserveEmailsForLike(MUser $mUser, string $post = null, string $autoPost = null, MUser $originalPosterEntity, string $subdomain)
     {
         $tEmailSettingsRepos = $this->getTEmailSettingsRepository();
 
@@ -560,6 +561,7 @@ class TimelineService extends BaseService
         $data['userName'] = $originalPosterEntity->getLastName() . $originalPosterEntity->getFirstName();
         $data['posterUserName'] = $mUser->getLastName() . $mUser->getFirstName();
         $data['post'] = $post;
+        $data['autoPost'] = $autoPost;
 
         // メール配信設定取得
         $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $originalPosterEntity->getUserId()));
