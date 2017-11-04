@@ -290,9 +290,10 @@ class TimelineService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param integer $groupId グループID
+     * @param integer $companyId 会社ID
      * @return PostDTO
      */
-    public function postComment(Auth $auth, array $data, int $groupId): PostDTO
+    public function postComment(Auth $auth, array $data, int $groupId, int $companyId = null): PostDTO
     {
         $this->beginTransaction();
 
@@ -315,7 +316,7 @@ class TimelineService extends BaseService
             // メール送信予約
             $mUserRepos = $this->getMUserRepository();
             $mUser = $mUserRepos->find($tPost->getPosterUserId());
-            $this->reserveEmails($groupId, $mUser, $data['disclosureType'], $mUser->getCompany()->getSubdomain());
+            $this->reserveEmails($groupId, $data['post'], $mUser, $data['disclosureType'], $mUser->getCompany()->getSubdomain(), $companyId);
 
             $this->flush();
             $this->commit();
@@ -354,23 +355,30 @@ class TimelineService extends BaseService
         $mGroupRepos = $this->getMGroupRepository();
         $mGroup = $mGroupRepos->findBy(array('company' => $companyId, 'groupType' => DBConstant::GROUP_TYPE_COMPANY));
 
-        return $this->postComment($auth, $data, $mGroup[0]->getGroupId());
+        return $this->postComment($auth, $data, $mGroup[0]->getGroupId(), $companyId);
     }
 
     /**
      * タイムライン投稿通知メール送信予約
      *
      * @param integer $timelineOwnerGroupId タイムラインオーナーグループID
+     * @param string $post 投稿内容
      * @param MUser $posterEntity 投稿者ユーザエンティティ
      * @param string $disclosureType 公開種別
      * @param string $subdomain サブドメイン
+     * @param integer $companyId 会社ID
      * @return void
      */
-    private function reserveEmails(int $timelineOwnerGroupId, MUser $posterEntity, string $disclosureType, string $subdomain)
+    private function reserveEmails(int $timelineOwnerGroupId, string $post, MUser $posterEntity, string $disclosureType, string $subdomain, int $companyId = null)
     {
         // グループメンバーを取得
-        $tGroupMemberRepos = $this->getTGroupMemberRepository();
-        $mUserArray = $tGroupMemberRepos->getAllGroupMembers($timelineOwnerGroupId);
+        if ($companyId === null) {
+            $tGroupMemberRepos = $this->getTGroupMemberRepository();
+            $mUserArray = $tGroupMemberRepos->getAllGroupMembers($timelineOwnerGroupId);
+        } else {
+            $mUserRepos = $this->getMUserRepository();
+            $mUserArray = $mUserRepos->findBy(array('company' => $companyId));
+        }
 
         // タイムラインのグループ名を取得
         $mGroupRepos = $this->getMGroupRepository();
@@ -391,6 +399,7 @@ class TimelineService extends BaseService
             $data['groupName'] = $mGroup->getGroupName();
             $data['userName'] = $mUser->getLastName() . $mUser->getFirstName();
             $data['posterUserName'] = $posterEntity->getLastName() . $posterEntity->getFirstName();
+            $data['post'] = $post;
 
             // メール配信設定取得
             $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $mUser->getUserId()));
@@ -430,6 +439,12 @@ class TimelineService extends BaseService
             $tPostReply->setParent($tPost);
             $this->persist($tPostReply);
 
+            // メール送信予約
+            $mUserRepos = $this->getMUserRepository();
+            $mUser = $mUserRepos->find($auth->getUserId());
+            $originalPosterEntity = $mUserRepos->find($tPost->getPosterUserId());
+            $this->reserveEmailsForReply($mUser, $data['post'], $originalPosterEntity, $mUser->getCompany()->getSubdomain());
+
             $this->flush();
             $this->commit();
         } catch (\Exception $e) {
@@ -438,9 +453,6 @@ class TimelineService extends BaseService
         }
 
         // レスポンスデータ生成
-        $mUserRepos = $this->getMUserRepository();
-        $mUser = $mUserRepos->find($tPostReply->getPosterUserId());
-
         $postDTO = new PostDTO();
         $postDTO->setPostId($tPostReply->getId());
         $postDTO->setPosterUserId($tPostReply->getPosterUserId());
@@ -450,6 +462,40 @@ class TimelineService extends BaseService
         $postDTO->setPostedDatetime($tPostReply->getPostedDatetime());
 
         return $postDTO;
+    }
+
+    /**
+     * タイムラインリプライ投稿通知メール送信予約
+     *
+     * @param MUser $mUser リプライ投稿者ユーザエンティティ
+     * @param string $post 投稿内容
+     * @param MUser $originalPosterEntity リプライ対象の投稿者ユーザエンティティ
+     * @param string $subdomain サブドメイン
+     * @return void
+     */
+    private function reserveEmailsForReply(MUser $mUser, string $post, MUser $originalPosterEntity, string $subdomain)
+    {
+        $tEmailSettingsRepos = $this->getTEmailSettingsRepository();
+
+        // メール本文記載変数
+        $data = array();
+        $data['userName'] = $originalPosterEntity->getLastName() . $originalPosterEntity->getFirstName();
+        $data['posterUserName'] = $mUser->getLastName() . $mUser->getFirstName();
+        $data['post'] = $post;
+
+        // メール配信設定取得
+        $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $originalPosterEntity->getUserId()));
+
+        // メール送信予約テーブルに登録
+        if ($originalPosterEntity->getUserId() !== $mUser->getUserId() && $tEmailSettings->getOkrTimeline() === DBConstant::EMAIL_OKR_TIMELINE) {
+            $tEmailReservation = new TEmailReservation();
+            $tEmailReservation->setToEmailAddress($originalPosterEntity->getEmailAddress());
+            $tEmailReservation->setTitle($this->getParameter('post_notice'));
+            $tEmailReservation->setBody($this->renderView('mail/post_reply_notice.txt.twig', ['data' => $data, 'subdomain' => $subdomain]));
+            $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
+            $tEmailReservation->setSendingReservationDatetime(DateUtility::getCurrentDatetime());
+            $this->persist($tEmailReservation);
+        }
     }
 
     /**
@@ -473,16 +519,60 @@ class TimelineService extends BaseService
             throw new DoubleOperationException('既にいいねが押されています');
         }
 
-        // いいね登録
-        $tLike = new TLike();
-        $tLike->setUserId($userId);
-        $tLike->setPostId($tPost->getId());
+        $this->beginTransaction();
 
         try {
+            // いいね登録
+            $tLike = new TLike();
+            $tLike->setUserId($userId);
+            $tLike->setPostId($tPost->getId());
             $this->persist($tLike);
+
+            // メール送信予約
+            $mUserRepos = $this->getMUserRepository();
+            $mUser = $mUserRepos->find($userId);
+            $originalPosterEntity = $mUserRepos->find($tPost->getPosterUserId());
+            $this->reserveEmailsForLike($mUser, $tPost->getPost(), $originalPosterEntity, $mUser->getCompany()->getSubdomain());
+
             $this->flush();
+            $this->commit();
         } catch (\Exception $e) {
+            $this->rollback();
             throw new SystemException($e->getMessage());
+        }
+    }
+
+    /**
+     * タイムラインいいね通知メール送信予約
+     *
+     * @param MUser $mUser リプライ投稿者ユーザエンティティ
+     * @param string $post 投稿内容
+     * @param MUser $originalPosterEntity リプライ対象の投稿者ユーザエンティティ
+     * @param string $subdomain サブドメイン
+     * @return void
+     */
+    private function reserveEmailsForLike(MUser $mUser, string $post, MUser $originalPosterEntity, string $subdomain)
+    {
+        $tEmailSettingsRepos = $this->getTEmailSettingsRepository();
+
+        // メール本文記載変数
+        $data = array();
+        $data['userName'] = $originalPosterEntity->getLastName() . $originalPosterEntity->getFirstName();
+        $data['posterUserName'] = $mUser->getLastName() . $mUser->getFirstName();
+        $data['post'] = $post;
+
+        // メール配信設定取得
+        $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $originalPosterEntity->getUserId()));
+
+        // メール送信予約テーブルに登録
+        if ($originalPosterEntity->getUserId() !== $mUser->getUserId() && $tEmailSettings->getOkrTimeline() === DBConstant::EMAIL_OKR_TIMELINE) {
+            $tEmailReservation = new TEmailReservation();
+            $tEmailReservation->setToEmailAddress($originalPosterEntity->getEmailAddress());
+            $tEmailReservation->setTitle($this->getParameter('post_notice'));
+            $tEmailReservation->setBody($this->renderView('mail/post_like_notice.txt.twig', ['data' => $data, 'subdomain' => $subdomain]));
+            $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
+            $tEmailReservation->setSendingReservationDatetime(DateUtility::getCurrentDatetime());
+            $this->persist($tEmailReservation);
         }
     }
 
