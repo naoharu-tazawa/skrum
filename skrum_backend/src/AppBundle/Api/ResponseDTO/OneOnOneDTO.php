@@ -40,13 +40,6 @@ class OneOnOneDTO
     private $senderUserName;
 
     /**
-     * @var string
-     *
-     * @JSON\Type("string")
-     */
-    private $fromToNames;
-
-    /**
      * @var integer
      *
      * @JSON\Type("integer")
@@ -210,30 +203,6 @@ class OneOnOneDTO
     public function getSenderUserName()
     {
         return $this->senderUserName;
-    }
-
-    /**
-     * Set fromToNames
-     *
-     * @param string $fromToNames
-     *
-     * @return OneOnOneDTO
-     */
-    public function setFromToNames($fromToNames)
-    {
-        $this->fromToNames = $fromToNames;
-
-        return $this;
-    }
-
-    /**
-     * Get fromToNames
-     *
-     * @return string
-     */
-    public function getFromToNames()
-    {
-        return $this->fromToNames;
     }
 
     /**

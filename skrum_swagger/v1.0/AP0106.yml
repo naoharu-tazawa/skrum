@@ -46,7 +46,7 @@ paths:
                 type: integer
               senderUserName:
                 type: string
-              imamgeVersion:
+              senderUserImamgeVersion:
                 type: integer
               toNames:
                 type: string
@@ -63,7 +63,7 @@ paths:
               - oneOnOneType
               - senderUserId
               - senderUserName
-              - imamgeVersion
+              - senderUserImamgeVersion
               - lastUpdate
               - partOfText
               - readFlg

@@ -317,11 +317,11 @@ class OneOnOneService extends BaseService
             } else {
                 $newArrivalText = $oneOnOneStream[count($oneOnOneStream) - 2]->getBody();
             }
-            $partOfNewArrivalText = mb_substr($newArrivalText, 0, 15);
+            $partOfNewArrivalText = mb_substr($newArrivalText, 0, 60);
 
-            // fromToNamesを作成
+            // toNamesを作成
             $readFlg = DBConstant::FLG_TRUE;
-            $fromToNames = $tOneOnOne['last_name'] . $tOneOnOne['first_name'];
+            $toNames = null;
             $oneOnOneInfoArray = $tOneOnOneToRepos->getAllToUsers($tOneOnOne['id']);
             foreach ($oneOnOneInfoArray as $key => $oneOnOneInfo) {
                 if ($key % 2 === 0) {
@@ -329,7 +329,11 @@ class OneOnOneService extends BaseService
                         $readFlg = $oneOnOneInfo['tOneOnOneTo']->getReadFlg();
                     }
                 } else {
-                    $fromToNames .= ', ' . $oneOnOneInfo['mUser']->getLastName() . $oneOnOneInfo['mUser']->getFirstName();
+                    if ($key === 1) {
+                        $toNames .= $oneOnOneInfo['mUser']->getLastName() . $oneOnOneInfo['mUser']->getFirstName();
+                    } else {
+                        $toNames .= ', ' . $oneOnOneInfo['mUser']->getLastName() . $oneOnOneInfo['mUser']->getFirstName();
+                    }
                 }
             }
 
@@ -337,7 +341,8 @@ class OneOnOneService extends BaseService
             $oneOnOneDTO->setOneOnOneId($tOneOnOne['id']);
             $oneOnOneDTO->setOneOnOneType($tOneOnOne['one_on_one_type']);
             $oneOnOneDTO->setSenderUserId($tOneOnOne['sender_user_id']);
-            $oneOnOneDTO->setFromToNames($fromToNames);
+            $oneOnOneDTO->setSenderUserName($tOneOnOne['last_name'] . $tOneOnOne['first_name']);
+            $oneOnOneDTO->setToNames($toNames);
             $oneOnOneDTO->setSenderUserImageVersion($tOneOnOne['image_version']);
             $oneOnOneDTO->setLastUpdate(DateUtility::transIntoDatetime($tOneOnOne['new_arrival_datetime']));
             $oneOnOneDTO->setPartOfText($partOfNewArrivalText);
@@ -375,14 +380,14 @@ class OneOnOneService extends BaseService
         $mUserRepos = $this->getMUserRepository();
         $oneOnOneDTOArray = array();
         foreach ($tOneOnOneArray as $tOneOnOne) {
-            // 新着の本文を取得
+            // 送受信履歴の本文を取得
             $oneOnOneStream = $tOneOnOneRepos->getOneOnOneStream($tOneOnOne['id']);
             if ($oneOnOneStream[1] !== null) {
-                $newArrivalText = $oneOnOneStream[count($oneOnOneStream) - 1]->getBody();
+                $body = $oneOnOneStream[count($oneOnOneStream) - 1]->getBody();
             } else {
-                $newArrivalText = $oneOnOneStream[count($oneOnOneStream) - 2]->getBody();
+                $body = $oneOnOneStream[count($oneOnOneStream) - 2]->getBody();
             }
-            $partOfNewArrivalText = mb_substr($newArrivalText, 0, 15);
+            $partOfText = mb_substr($body, 0, 200);
 
             // toNamesを作成
             $readFlg = DBConstant::FLG_TRUE;
@@ -394,7 +399,11 @@ class OneOnOneService extends BaseService
                         $readFlg = $oneOnOneInfo['tOneOnOneTo']->getReadFlg();
                     }
                 } else {
-                    $toNames .= ', ' . $oneOnOneInfo['mUser']->getLastName() . $oneOnOneInfo['mUser']->getFirstName();
+                    if ($key === 1) {
+                        $toNames .= $oneOnOneInfo['mUser']->getLastName() . $oneOnOneInfo['mUser']->getFirstName();
+                    } else {
+                        $toNames .= ', ' . $oneOnOneInfo['mUser']->getLastName() . $oneOnOneInfo['mUser']->getFirstName();
+                    }
                 }
             }
 
@@ -409,8 +418,8 @@ class OneOnOneService extends BaseService
                 $intervieweeEntity = $mUserRepos->find($tOneOnOne['interviewee_user_id']);
                 $oneOnOneDTO->setIntervieweeUserName($intervieweeEntity->getLastName() . $intervieweeEntity->getFirstName());
             }
-            $oneOnOneDTO->setLastUpdate(DateUtility::transIntoDatetime($tOneOnOne['new_arrival_datetime']));
-            $oneOnOneDTO->setPartOfText($partOfNewArrivalText);
+            $oneOnOneDTO->setLastUpdate(DateUtility::transIntoDatetime($tOneOnOne['created_at']));
+            $oneOnOneDTO->setPartOfText($partOfText);
             $oneOnOneDTO->setReadFlg($readFlg);
 
             $oneOnOneDTOArray[] = $oneOnOneDTO;
@@ -480,7 +489,11 @@ class OneOnOneService extends BaseService
                             }
                         }
                     } else {
-                        $toNames .= ', ' . $oneOnOneInfo['mUser']->getLastName() . $oneOnOneInfo['mUser']->getFirstName();
+                        if ($key2 === 1) {
+                            $toNames .= $oneOnOneInfo['mUser']->getLastName() . $oneOnOneInfo['mUser']->getFirstName();
+                        } else {
+                            $toNames .= ', ' . $oneOnOneInfo['mUser']->getLastName() . $oneOnOneInfo['mUser']->getFirstName();
+                        }
                     }
                 }
             }

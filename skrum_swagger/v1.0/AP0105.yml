@@ -80,9 +80,11 @@ paths:
                       type: string
                     senderUserId:
                       type: integer
-                    senderUserImamgeVersion:
+                    senderUserName:
+                      type: string
+                    senderUserImageVersion:
                       type: integer
-                    fromToNames:
+                    toNames:
                       type: string
                     lastUpdate:
                       type: string
@@ -94,8 +96,8 @@ paths:
                     - oneOnOneId
                     - oneOnOneType
                     - senderUserId
-                    - fromToNames
-                    - senderUserImamgeVersion
+                    - senderUserName
+                    - senderUserImageVersion
                     - lastUpdate
                     - partOfText
                     - readFlg

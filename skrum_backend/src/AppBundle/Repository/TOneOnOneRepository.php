@@ -88,7 +88,7 @@ class TOneOnOneRepository extends BaseRepository
         )
 
         ORDER BY new_arrival_datetime DESC
-        LIMIT 5;
+        LIMIT 8;
 SQL;
 
         $params['companyId'] = $auth->getCompanyId();
@@ -139,7 +139,7 @@ SQL;
     {
         $sql = <<<SQL
         (
-        SELECT t0_.id, t0_.one_on_one_type, t0_.sender_user_id, t0_.target_date, t0_.due_date, t0_.feedback_type, t0_.interviewee_user_id, t0_.okr_id, t0_.new_arrival_datetime, m2_.user_id, m2_.last_name, m2_.first_name, m2_.image_version
+        SELECT t0_.id, t0_.one_on_one_type, t0_.sender_user_id, t0_.target_date, t0_.due_date, t0_.feedback_type, t0_.interviewee_user_id, t0_.okr_id, t0_.created_at, m2_.user_id, m2_.last_name, m2_.first_name, m2_.image_version
         FROM t_one_on_one t0_
         INNER JOIN m_user m2_
         ON (t0_.sender_user_id = m2_.user_id) AND (m2_.deleted_at IS NULL)
@@ -152,7 +152,7 @@ SQL;
         ON (t0_.sender_user_id = m1_.user_id AND m1_.user_id = :userId)
         WHERE (
             t0_.one_on_one_type = :oneOnOneType
-            AND t0_.new_arrival_datetime < :before
+            AND t0_.created_at < :before
             AND t0_.parent_id IS NULL)
             AND (t0_.deleted_at IS NULL)
         )
@@ -160,7 +160,7 @@ SQL;
         UNION
 
         (
-        SELECT t0_.id, t0_.one_on_one_type, t0_.sender_user_id, t0_.target_date, t0_.due_date, t0_.feedback_type, t0_.interviewee_user_id, t0_.okr_id, t0_.new_arrival_datetime, m2_.user_id, m2_.last_name, m2_.first_name, m2_.image_version
+        SELECT t0_.id, t0_.one_on_one_type, t0_.sender_user_id, t0_.target_date, t0_.due_date, t0_.feedback_type, t0_.interviewee_user_id, t0_.okr_id, t0_.created_at, m2_.user_id, m2_.last_name, m2_.first_name, m2_.image_version
         FROM t_one_on_one t0_
         INNER JOIN m_user m2_
         ON (t0_.sender_user_id = m2_.user_id) AND (m2_.deleted_at IS NULL)
@@ -173,13 +173,13 @@ SQL;
         ON (t1_.user_id = m1_.user_id AND m1_.user_id = :userId)
         WHERE (
             t0_.one_on_one_type = :oneOnOneType
-            AND t0_.new_arrival_datetime < :before
+            AND t0_.created_at < :before
             AND t0_.parent_id IS NULL)
             AND (t0_.deleted_at IS NULL)
         )
 
-        ORDER BY new_arrival_datetime DESC
-        LIMIT 5;
+        ORDER BY created_at DESC
+        LIMIT 10;
 SQL;
 
         $params['companyId'] = $auth->getCompanyId();
