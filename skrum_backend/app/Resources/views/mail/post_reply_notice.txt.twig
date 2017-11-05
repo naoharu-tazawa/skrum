@@ -1,7 +1,7 @@
 {{ data.userName }}さん、こんにちは。
 
 
-{{ data.posterUserName }}さんがあなたの投稿に以下のリプライをしました。
+{{ data.posterUserName }}さんが{% if data.userId == data.originalPosterId %}あなたの{% else %}{% if data.posterId != data.originalPosterId %}{{ data.originalPosterUserName }}さんの{% else %}自分の{% endif %}{% endif %}投稿に以下のリプライをしました。
 
 「{{ data.post }}」
 

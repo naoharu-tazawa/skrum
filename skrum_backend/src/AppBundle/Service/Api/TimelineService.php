@@ -443,7 +443,7 @@ class TimelineService extends BaseService
             $mUserRepos = $this->getMUserRepository();
             $mUser = $mUserRepos->find($auth->getUserId());
             $originalPosterEntity = $mUserRepos->find($tPost->getPosterUserId());
-            $this->reserveEmailsForReply($mUser, $data['post'], $originalPosterEntity, $mUser->getCompany()->getSubdomain());
+            $this->reserveEmailsForReply($mUser, $data['post'], $originalPosterEntity, $tPost, $mUser->getCompany()->getSubdomain());
 
             $this->flush();
             $this->commit();
@@ -470,31 +470,57 @@ class TimelineService extends BaseService
      * @param MUser $mUser リプライ投稿者ユーザエンティティ
      * @param string $post 投稿内容
      * @param MUser $originalPosterEntity リプライ対象の投稿者ユーザエンティティ
+     * @param TPost $tPost 投稿エンティティ
      * @param string $subdomain サブドメイン
      * @return void
      */
-    private function reserveEmailsForReply(MUser $mUser, string $post, MUser $originalPosterEntity, string $subdomain)
+    private function reserveEmailsForReply(MUser $mUser, string $post, MUser $originalPosterEntity, TPost $tPost, string $subdomain)
     {
+        // Eメール宛先メンバーを取得
+        $tPostRepos = $this->getTPostRepository();
+        $mUserRepos = $this->getMUserRepository();
+        $replyInfoArray = $tPostRepos->getReplies($tPost->getId());
+        $userIdArray = array();
+        foreach ($replyInfoArray as $replyInfo) {
+            if (array_key_exists('reply', $replyInfo)) {
+                $userIdArray[] = $replyInfo['reply']->getPosterUserId();
+            }
+        }
+        $userIdArray = array_unique($userIdArray);
+
+        $mUserArray = array($originalPosterEntity);
+        foreach ($userIdArray as $userId) {
+            $replyUserEnity = $mUserRepos->find($userId);
+
+            $mUserArray[] = $replyUserEnity;
+        }
+
         $tEmailSettingsRepos = $this->getTEmailSettingsRepository();
 
-        // メール本文記載変数
-        $data = array();
-        $data['userName'] = $originalPosterEntity->getLastName() . $originalPosterEntity->getFirstName();
-        $data['posterUserName'] = $mUser->getLastName() . $mUser->getFirstName();
-        $data['post'] = $post;
+        foreach ($mUserArray as $userEntity) {
+            // メール本文記載変数
+            $data = array();
+            $data['userId'] = $userEntity->getUserId();
+            $data['userName'] = $userEntity->getLastName() . $userEntity->getFirstName();
+            $data['posterId'] = $mUser->getUserId();
+            $data['posterUserName'] = $mUser->getLastName() . $mUser->getFirstName();
+            $data['originalPosterId'] = $originalPosterEntity->getUserId();
+            $data['originalPosterUserName'] = $originalPosterEntity->getLastName() . $originalPosterEntity->getFirstName();
+            $data['post'] = $post;
 
-        // メール配信設定取得
-        $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $originalPosterEntity->getUserId()));
+            // メール配信設定取得
+            $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $userEntity->getUserId()));
 
-        // メール送信予約テーブルに登録
-        if ($originalPosterEntity->getUserId() !== $mUser->getUserId() && $tEmailSettings->getOkrTimeline() === DBConstant::EMAIL_OKR_TIMELINE) {
-            $tEmailReservation = new TEmailReservation();
-            $tEmailReservation->setToEmailAddress($originalPosterEntity->getEmailAddress());
-            $tEmailReservation->setTitle($this->getParameter('post_notice'));
-            $tEmailReservation->setBody($this->renderView('mail/post_reply_notice.txt.twig', ['data' => $data, 'subdomain' => $subdomain]));
-            $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
-            $tEmailReservation->setSendingReservationDatetime(DateUtility::getCurrentDatetime());
-            $this->persist($tEmailReservation);
+            // メール送信予約テーブルに登録
+            if ($userEntity->getUserId() !== $mUser->getUserId() && $tEmailSettings->getOkrTimeline() === DBConstant::EMAIL_OKR_TIMELINE) {
+                $tEmailReservation = new TEmailReservation();
+                $tEmailReservation->setToEmailAddress($userEntity->getEmailAddress());
+                $tEmailReservation->setTitle($this->getParameter('post_notice'));
+                $tEmailReservation->setBody($this->renderView('mail/post_reply_notice.txt.twig', ['data' => $data, 'subdomain' => $subdomain]));
+                $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
+                $tEmailReservation->setSendingReservationDatetime(DateUtility::getCurrentDatetime());
+                $this->persist($tEmailReservation);
+            }
         }
     }
 
