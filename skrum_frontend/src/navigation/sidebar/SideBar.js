@@ -115,10 +115,11 @@ export default class SideBar extends Component {
       companyId, companyName } = this.props;
     const { isExpanded = true } = this.state || {};
     const { tab } = explodePath(pathname);
+    const is1on1 = tab === '1on1';
     const isSetting = tab === 'setting';
     const showUser = !isSetting;
-    const showGroups = !isSetting;
-    const showCompany = !isSetting && companyId && /^(objective|map|timeline)$/.test(tab);
+    const showGroups = !is1on1 && !isSetting;
+    const showCompany = !is1on1 && !isSetting && companyId && /^(objective|map|timeline)$/.test(tab);
     return (
       <div className={this.getBaseStyles(isExpanded)}>
         <div className={`${styles.header} ${isExpanded && styles.isExpanded}`}>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { userPropTypes } from './propTypes';
 import EntityLink, { EntityType } from '../../../components/EntityLink';
-import NewOneOnOne from '../../OKR/NewOneOnOne/NewOneOnOne';
+import NewOneOnOneNote from '../../OneOnOne/NewOneOnOneNote/NewOneOnOneNote';
 import { replacePath } from '../../../util/RouteUtil';
 import { toRelativeTimeText } from '../../../util/DatetimeUtil';
 import { withModal } from '../../../util/ModalUtil';
@@ -58,7 +58,7 @@ class UserInfo extends Component {
             <button
               className={styles.tool}
               style={{ background: `url(${reportImage}) no-repeat center` }}
-              onClick={() => openModeless(NewOneOnOne, { userId })}
+              onClick={() => openModeless(NewOneOnOneNote, { userId })}
             />
           </div>
         </div>

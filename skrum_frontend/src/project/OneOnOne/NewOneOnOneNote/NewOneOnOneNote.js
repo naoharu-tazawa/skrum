@@ -4,18 +4,18 @@ import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import { isEmpty, head } from 'lodash';
 import { oneOnOneSettingsPropTypes } from './propTypes';
-import { objectiveReferencePropTypes } from '../OKRList/propTypes';
+import { objectiveReferencePropTypes } from '../../OKR/OKRList/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
 import DatePickerInput from '../../../editors/DatePickerInput';
 import OKRSearch from '../../OKRSearch/OKRSearch';
 import UserSearch from '../../UserSearch/UserSearch';
 import Options from '../../../components/Options';
-import { postOneOnOne } from '../action';
+import { postOneOnOneNote } from '../action';
 import { syncOneOnOne } from '../../../navigation/action';
 import { EntityType } from '../../../util/EntityUtil';
 import { withReduxForm, withReduxField, withSelectReduxField, withItemisedReduxField } from '../../../util/FormUtil';
 import { isValidDate, getDate, formatDate, toUtcDate } from '../../../util/DatetimeUtil';
-import styles from './NewOneOnOne.css';
+import styles from './NewOneOnOneNote.css';
 
 const formName = 'newOneOnOne';
 
@@ -29,7 +29,7 @@ const validate =
     body: oneOnOneType !== '3' && !body && 'コメントを入力してください',
   });
 
-class NewOneOnOne extends Component {
+class NewOneOnOneNote extends Component {
 
   static propTypes = {
     oneOnOne: oneOnOneSettingsPropTypes.isRequired,
@@ -37,7 +37,7 @@ class NewOneOnOne extends Component {
     userId: PropTypes.number.isRequired,
     okr: objectiveReferencePropTypes,
     onClose: PropTypes.func.isRequired,
-    dispatchPostOneOnOne: PropTypes.func.isRequired,
+    dispatchPostOneOnOneNote: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -64,7 +64,7 @@ class NewOneOnOne extends Component {
   }
 
   submit(entry) {
-    const { currentUserId, onClose, dispatchPostOneOnOne } = this.props;
+    const { currentUserId, onClose, dispatchPostOneOnOneNote } = this.props;
     this.setState({ isSubmitting: true });
     const { oneOnOneType, reportDate, dueDate, feedbackType, interviewDate, interviewee,
       okr, [`to${oneOnOneType}`]: to, body = '' } = entry;
@@ -79,7 +79,7 @@ class NewOneOnOne extends Component {
       ...okr && { okrId: okr.id },
       body,
     };
-    return dispatchPostOneOnOne(currentUserId, report, { oneOnOneType, to: [to] }) // FIXME
+    return dispatchPostOneOnOneNote(currentUserId, report, { oneOnOneType, to: [to] }) // FIXME
       .then(({ error, payload }) => {
         this.setState({ isSubmitting: false }, () => !error && onClose());
         return { error, payload };
@@ -197,13 +197,13 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const dispatchPostOneOnOne = (userId, entry, sync) =>
-    dispatch(postOneOnOne(userId, entry))
+  const dispatchPostOneOnOneNote = (userId, entry, sync) =>
+    dispatch(postOneOnOneNote(userId, entry))
       .then(result => dispatch(syncOneOnOne({ ...result, payload: { data: sync } })));
-  return { dispatchPostOneOnOne };
+  return { dispatchPostOneOnOneNote };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(NewOneOnOne);
+)(NewOneOnOneNote);

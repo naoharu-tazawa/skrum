@@ -24,9 +24,10 @@ export default class DropdownMenu extends PureComponent {
 
   render() {
     const { trigger, triggerIcon, options, align = 'left' } = this.props;
-    let style = {}; // left
-    if (align === 'center') style = { left: '50%', transform: 'translate(-50%, 0)' };
-    else if (align === 'right') style = { right: 0 };
+    const alignmentStyle = {
+      center: { left: '50%', transform: 'translate(-50%, 0)' },
+      right: { right: 0 },
+    };
     return (
       <Dropdown
         ref={(dropdown) => { this.dropdown = dropdown; }}
@@ -39,7 +40,7 @@ export default class DropdownMenu extends PureComponent {
               style={{ background: `url(${triggerIcon || '/img/common/inc_link.png'}) no-repeat center` }}
             />)}
         </DropdownTrigger>
-        <DropdownContent style={style}>
+        <DropdownContent style={alignmentStyle[align]}>
           {options.map(({ caption, onClick, path, target }, index) => (
             onClick
               ? (

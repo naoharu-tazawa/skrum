@@ -1,0 +1,23 @@
+@charset "UTF-8";
+.notesBox {
+  flex-basis: calc(100% - 200px);
+  overflow: auto;
+  padding-top: 1.5em;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+.spinner {
+  margin: auto;
+  height: 38px;
+  background: url(/img/rolling.svg) center no-repeat;
+  background-size: contain;
+  width: 100%;
+}

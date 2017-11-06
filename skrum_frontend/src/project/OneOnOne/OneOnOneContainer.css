@@ -1,0 +1,74 @@
+@charset "UTF-8";
+.container {
+  width: 100%;
+  padding: 2em 3em;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+.container .main {
+  background-color: #fff;
+  flex-basis: calc(100% - 230px - 1.5em);
+  margin-right: 1.5em;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+.container nav {
+  padding: 3em 0;
+  border-right: 3px solid #fcfcfd;
+  flex-basis: 200px;
+  font-size: 0.8em;
+  box-shadow: 3px 3px 3px 3px rgba(128,128,128,0.1);
+}
+.container nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.container nav ul li a {
+  padding: 0.8em 0 0.8em 2.5em;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  color: #626a7f;
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+}
+.container nav ul li a.selected {
+  background-color: #f0f4f6;
+}
+.container nav .type {
+  flex-basis: calc(100% - 2em - 1.5em);
+}
+.container nav .countBox {
+  flex-basis: 2em;
+  margin-right: 1.5em;
+}
+.container nav .count {
+  border-radius: 50%;
+  background-color: #8e9aa6;
+  color: #fff;
+  width: 1.2em;
+  display: block;
+  margin-right: auto;
+  text-align: center;
+  height: 1.2em;
+  padding: 0.1em;
+}

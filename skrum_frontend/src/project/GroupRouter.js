@@ -26,7 +26,7 @@ export default class GroupRouter extends Component {
         return <MapContainer subject="group" />;
       case 'timeline':
         return <TimelineContainer subject="group" id={groupId} />;
-      case 'control':
+      case 'group':
         return <GroupManagementContainer subject="group" />;
       default:
         return null;

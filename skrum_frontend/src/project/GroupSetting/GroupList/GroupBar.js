@@ -61,7 +61,7 @@ class GroupBar extends Component {
               { caption: '目標を見る',
                 path: implodePath({ tab: 'objective', subject: 'group', id }) },
               { caption: '所属メンバーを見る',
-                path: implodePath({ tab: 'control', subject: 'group', id }) },
+                path: implodePath({ tab: 'group', subject: 'group', id }) },
               ...allowManaging && [{ caption: 'グループ削除',
                 onClick: () => openModal(this.deleteGroupPrompt,
                   { id, name }) }],

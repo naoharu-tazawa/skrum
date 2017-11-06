@@ -1,0 +1,65 @@
+@charset "UTF-8";
+.queryBox {
+  background-color: #626a7f;
+  flex-basis: 230px;
+  border: solid 2px #abb1bb;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+.search {
+  padding: 1.2em;
+  border-bottom: 1px solid #82868c;
+}
+.search input {
+  color: #626a7f;
+  padding: 0.2em;
+  border: solid 1px #979a9c;
+  font-size: 0.8em;
+}
+.search .date {
+  width: 45%;
+}
+.search .date input {
+  max-width: 100%;
+}
+.search .span {
+  color: #fff;
+  width: 10%;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+}
+.search .user {
+  width: 100%;
+  margin-top: 1em;
+}
+.search .narrowing {
+  color: #fff;
+  margin: 1em auto 0;
+  background-color: transparent;
+  border: 1px #fff solid;
+  width: 9em;
+  padding: 0.25em 2em;
+  display: block;
+  border-radius: 2em;
+  line-height: 1.5em;
+  font-size: 0.85em;
+  cursor: pointer;
+  outline: none;
+}
+.search .spinner {
+  /*height: 24px;*/
+  background: url(/img/rolling.svg) center no-repeat;
+  background-size: contain;
+}
+.list {
+  overflow: auto;
+}

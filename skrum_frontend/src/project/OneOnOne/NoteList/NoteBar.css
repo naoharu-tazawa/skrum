@@ -1,0 +1,38 @@
+@charset "UTF-8";
+.content {
+  border-bottom: 1px solid #d8dfe5;
+  padding: 1em 2%;
+}
+.content .icon {
+  width: 4em;
+  padding: 0 0.5em;
+  display: inline-block;
+  vertical-align: top;
+}
+.content .text {
+  width: calc(100% - 4em - 16px);
+  display: inline-block;
+}
+.content .text header {
+  color: #8e9aa6;
+  font-size: 0.7em;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+.content .text .title {
+  margin-right: auto;
+}
+.content .text .date {
+  margin-left: auto;
+}
+.content .text .body {
+  color: #626a7f;
+  font-size: 0.8em;
+  padding-top: 0.2em;
+}

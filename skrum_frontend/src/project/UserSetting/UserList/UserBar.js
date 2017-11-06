@@ -107,7 +107,7 @@ class UserBar extends Component {
               { caption: '目標を見る',
                 path: implodePath({ tab: 'objective', subject: 'user', id }) },
               { caption: '所属グループを見る',
-                path: implodePath({ tab: 'control', subject: 'user', id }) },
+                path: implodePath({ tab: 'group', subject: 'user', id }) },
               ...allowManaging && [{ caption: 'パスワードリセット',
                 onClick: () => openModal(this.resetPasswordPrompt,
                   { id, name }) }],

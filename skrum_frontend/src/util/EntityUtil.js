@@ -29,9 +29,9 @@ export const EntityTypePluralName = {
 export const entityTypePropType = PropTypes.oneOf(flatten(toPairs(EntityType)));
 
 export const entityPropTypes = PropTypes.shape({
+  type: entityTypePropType.isRequired,
   id: PropTypes.number.isRequired,
   name: PropTypes.string,
-  type: entityTypePropType.isRequired,
   roleLevel: PropTypes.number,
   groupType: groupTypePropType,
 });
@@ -45,8 +45,8 @@ export const getEntityTypeId = (subject) => {
   }
 };
 
-export const mapEntity = (data, prefix) => {
-  const { [`${prefix}Type`]: type } = data;
+export const mapEntity = (data, prefix, entityType) => {
+  const { [`${prefix}Type`]: type = entityType } = data;
   const subject = `${prefix}${EntityTypeProperName[type]}`;
   const { [`${subject}Id`]: id, [`${subject}Name`]: name } = data;
   const { [`${subject}RoleLevel`]: roleLevel } = data;
