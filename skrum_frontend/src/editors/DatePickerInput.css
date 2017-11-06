@@ -16,6 +16,13 @@
   -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, .15);
   box-shadow: 0 2px 5px rgba(0, 0, 0, .15);
 }
+.overlay.center {
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+.overlay.right {
+  right: 0;
+}
 
 /* DayPicker styles */
 

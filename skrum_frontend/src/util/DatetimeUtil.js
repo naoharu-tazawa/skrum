@@ -38,6 +38,9 @@ export const toDate = dateString => moment(dateString).locale('ja');
 export const formatDate = (date, { format = DateFormat.YMD } = {}) =>
   moment(date).format(format);
 
+export const formatTime = date =>
+  moment(date).format('HH:mm');
+
 export const formatDateTime = (date, { format = DateFormat.YMDHM } = {}) =>
   moment(date).format(format);
 
@@ -54,6 +57,8 @@ export const compareDates = (date1, date2) => {
   if (timestamp1 > timestamp2) return 1;
   return 0;
 };
+
+export const toUrlDateParam = date => `${fromUtcDate(date).format('YYYY-MM-DD')} 00:00:00`;
 
 const businessHour = 8;
 

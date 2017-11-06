@@ -6,11 +6,12 @@ import { isArray, isObject, values, every, isEmpty } from 'lodash';
 import baseReducer from '../container/reducer';
 import authReducer from '../../auth/reducer';
 import navigationReducer from '../../navigation/reducer';
-import okrReducer from '../../project/OKR/reducer';
+import okrBasicsReducer from '../../project/OKR/reducer';
+import okrDetailsReducer from '../../project/OKRDetails/reducer';
 import mapReducer from '../../project/Map/reducer';
 import timelineReducer from '../../project/Timeline/reducer';
+import oneOnOneReducer from '../../project/OneOnOne/reducer';
 import groupManagementReducer from '../../project/GroupManagement/reducer';
-import okrDetailsReducer from '../../project/OKRDetails/reducer';
 import okrSearchReducer from '../../project/OKRSearch/reducer';
 import userGroupSearchReducer from '../../project/UserGroupSearch/reducer';
 import groupUserSearchReducer from '../../project/GroupUserSearch/reducer';
@@ -33,11 +34,12 @@ const appReducer = combineReducers({
   base: baseReducer,
   auth: authReducer,
   top: navigationReducer,
-  basics: okrReducer,
-  map: mapReducer,
-  groupManagement: groupManagementReducer,
-  timeline: timelineReducer,
+  basics: okrBasicsReducer,
   okr: okrDetailsReducer,
+  map: mapReducer,
+  timeline: timelineReducer,
+  oneOnOne: oneOnOneReducer,
+  groupManagement: groupManagementReducer,
   okrsFound: okrSearchReducer,
   userGroupsFound: userGroupSearchReducer,
   groupUsersFound: groupUserSearchReducer,
@@ -74,7 +76,7 @@ const extractImagesVersion = (images = { companies: {}, groups: {}, users: {} },
     if (groupId) images = { ...images, groups: { ...images.groups, [groupId]: imageVersion } };
     if (userId) images = { ...images, users: { ...images.users, [userId]: imageVersion } };
   }
-  const prefixes = ['owner', 'poster'];
+  const prefixes = ['owner', 'poster', 'sender'];
   prefixes.forEach((prefix) => {
     const {
       [`${prefix}CompanyImageVersion`]: companyImageVersion,

@@ -13,6 +13,7 @@ export default class DatePickerInput extends Component {
     containerClass: PropTypes.string,
     wrapperClass: PropTypes.string,
     overlayClass: PropTypes.string,
+    align: PropTypes.oneOf(['left', 'center', 'right']),
     value: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.shape({ target: PropTypes.shape({ value: PropTypes.string }) }),
@@ -29,8 +30,8 @@ export default class DatePickerInput extends Component {
   };
 
   render() {
-    const { containerClass, wrapperClass, overlayClass, value, onChange, onFocus, onBlur,
-      tabIndex, onDayChange, onKeyPress, meta } = this.props;
+    const { containerClass, wrapperClass, overlayClass, align = 'left',
+      value, onChange, onFocus, onBlur, tabIndex, onDayChange, onKeyPress, meta } = this.props;
     const { target: { value: targetValue } = {} } = value || {};
     // const { hasOverlay = false } = this.state || {};
     const locale = 'ja';
@@ -42,12 +43,13 @@ export default class DatePickerInput extends Component {
     //     classNames={styles}
     //   />
     // );
+    const overlay = `${styles.overlay} ${align === 'center' ? styles.center : ''} ${align === 'right' ? styles.right : ''}`;
     return (
       <DayPickerInput
         classNames={{
           container: `${styles.inputContainer} ${containerClass}`,
           overlayWrapper: `${styles.overlayWrapper} ${wrapperClass}`,
-          overlay: `${styles.overlay} ${overlayClass}`,
+          overlay: `${overlay} ${overlayClass}`,
         }}
         format={DateFormat.YMD}
         // onClick={() => this.setState({ hasOverlay: true })}

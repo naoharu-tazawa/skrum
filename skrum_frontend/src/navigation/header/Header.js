@@ -4,7 +4,7 @@ import { Link, browserHistory } from 'react-router';
 import TimeframesDropdown from '../../components/TimeframesDropdown';
 import DropdownMenu from '../../components/DropdownMenu';
 import EntityLink, { EntityType } from '../../components/EntityLink';
-import { tabPropType, explodePath, implodePath, replacePath } from '../../util/RouteUtil';
+import { tabPropType, subjectPropType, explodePath, implodePath, replacePath } from '../../util/RouteUtil';
 import { isBasicRole } from '../../util/UserUtil';
 import styles from './Header.css';
 
@@ -13,6 +13,8 @@ class Tab extends Component {
     title: PropTypes.string.isRequired,
     name: tabPropType.isRequired,
     pathname: PropTypes.string.isRequired,
+    subject: subjectPropType,
+    id: PropTypes.number,
     local: PropTypes.bool,
   };
 
@@ -23,11 +25,9 @@ class Tab extends Component {
   }
 
   getPath() {
-    const { pathname, name: tab } = this.props;
-    const { subject, ...others } = explodePath(pathname);
-    // if (/^(user|group|company)$/.test(subject)) {
-    return implodePath({ ...others, tab, subject }, { basicOnly: true });
-    // }
+    const { subject: pathSubject, id: pathId, ...others } = explodePath(this.props.pathname);
+    const { name: tab, subject = pathSubject, id = pathId } = this.props;
+    return implodePath({ ...others, tab, subject, id }, { basicOnly: true });
   }
 
   render() {
@@ -109,7 +109,8 @@ export default class Header extends Component {
         {!isSetting && <Tab title="目標管理" name="objective" pathname={pathname} />}
         {!isSetting && <Tab title="マップ" name="map" pathname={pathname} />}
         {!isSetting && <Tab title="タイムライン" name="timeline" pathname={pathname} />}
-        {!isSetting && subject !== 'company' && <Tab title="グループ管理" name="control" pathname={pathname} />}
+        {!isSetting && <Tab title="１ｏｎ１" name="1on1" pathname={pathname} subject="user" id={currentUserId} />}
+        {!isSetting && subject !== 'company' && <Tab title="グループ管理" name="group" pathname={pathname} />}
         <div className={styles.rightArea}>
           <SubMenu {...{ isSetting, currentUserId, roleLevel, onAdd, handleLogoutSubmit }} />
         </div>

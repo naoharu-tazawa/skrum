@@ -7,7 +7,7 @@ import EntityLink from '../../../components/EntityLink';
 import Dropdown from '../../../components/Dropdown';
 import DropdownMenu from '../../../components/DropdownMenu';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
-import NewOneOnOne from '../../OKR/NewOneOnOne/NewOneOnOne';
+import NewOneOnOneNote from '../../OneOnOne/NewOneOnOneNote/NewOneOnOneNote';
 import { OKRType } from '../../../util/OKRUtil';
 import { withModal } from '../../../util/ModalUtil';
 import { changeKROwnerDialog, changeKRDisclosureTypeDialog, deleteKRPrompt } from '../../OKRDetails/dialogs';
@@ -68,7 +68,7 @@ class KRBar extends Component {
             <button
               className={styles.tool}
               style={{ background: `url(${reportImage}) no-repeat center` }}
-              onClick={() => openModeless(NewOneOnOne, { userId, okr: keyResult })}
+              onClick={() => openModeless(NewOneOnOneNote, { userId, okr: keyResult })}
             />)}
           <Permissible entity={owner}>
             {({ permitted }) => (

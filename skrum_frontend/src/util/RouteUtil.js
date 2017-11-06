@@ -7,7 +7,8 @@ const tabs = {
   o: 'objective',
   m: 'map',
   t: 'timeline',
-  c: 'control',
+  n: '1on1',
+  g: 'group',
   s: 'setting',
 };
 

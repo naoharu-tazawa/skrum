@@ -8,7 +8,7 @@ import EntityLink from '../../../components/EntityLink';
 import Dropdown from '../../../components/Dropdown';
 import DropdownMenu from '../../../components/DropdownMenu';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
-import NewOneOnOne from '../../OKR/NewOneOnOne/NewOneOnOne';
+import NewOneOnOneNote from '../../OneOnOne/NewOneOnOneNote/NewOneOnOneNote';
 import { replacePath } from '../../../util/RouteUtil';
 import { withModal } from '../../../util/ModalUtil';
 import { copyOkrDialog, changeOkrOwnerDialog, changeOkrParentDialog, changeOkrDisclosureTypeDialog,
@@ -85,7 +85,7 @@ class OkrBar extends Component {
             <button
               className={styles.tool}
               style={{ background: `url(${reportImage}) no-repeat center` }}
-              onClick={() => openModeless(NewOneOnOne, { userId, okr })}
+              onClick={() => openModeless(NewOneOnOneNote, { userId, okr })}
             />)}
           <Permissible entity={owner}>
             {({ permitted }) => (

@@ -1,0 +1,63 @@
+@charset "UTF-8";
+.content {
+  border-bottom: 1px solid #82868c;
+  padding: 1em 1.5em;
+  font-size: 0.8em;
+  color: #fff;
+  cursor: pointer;
+}
+.content.current {
+  background-color: #708090;
+}
+.content header {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+.content .icon {
+  flex-basis: 2.2em;
+  display: inline-block;
+  padding: 0 1em 0 0;
+}
+.content .text {
+  flex-basis: calc(100% - 2.2em);
+  display: inline-block;
+  width: calc(100% - 3em);
+}
+.content .text .typeTime {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  font-size: 0.8em;
+  padding-top: 0.3em;
+}
+.content .text .type {
+  margin-left: auto;
+  flex-basis: 10em;
+  text-align: center;
+  border-radius: 1em;
+  margin-bottom: 0.2em;
+}
+.content .text .time {
+  margin-right: auto;
+  flex-basis: calc(100% - 5.5em);
+  text-align: right;
+}
+.content .text .name {
+  padding-top: 0.3em;
+  font-size: 0.8em;
+}
+.content .body {
+  padding-top: 0.5em;
+  font-size: 0.8em;
+}

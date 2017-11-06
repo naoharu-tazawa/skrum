@@ -20,8 +20,6 @@ export const Action = {
   FINISH_BASICS_CHANGE_DISCLOSURE_TYPE: 'FINISH_BASICS_CHANGE_DISCLOSURE_TYPE',
   REQUEST_BASICS_POST_ACHIEVEMENT: 'REQUEST_BASICS_POST_ACHIEVEMENT',
   FINISH_BASICS_POST_ACHIEVEMENT: 'FINISH_BASICS_POST_ACHIEVEMENT',
-  REQUEST_BASICS_POST_ONE_ON_ONE: 'REQUEST_BASICS_POST_ONE_ON_ONE',
-  FINISH_BASICS_POST_ONE_ON_ONE: 'FINISH_BASICS_POST_ONE_ON_ONE',
   REQUEST_BASICS_SET_RATIOS: 'REQUEST_BASICS_SET_RATIOS',
   FINISH_BASICS_SET_RATIOS: 'FINISH_BASICS_SET_RATIOS',
   REQUEST_COPY_OKR: 'REQUEST_COPY_OKR',
@@ -50,8 +48,6 @@ const {
   finishBasicsChangeDisclosureType,
   requestBasicsPostAchievement,
   finishBasicsPostAchievement,
-  requestBasicsPostOneOnOne,
-  finishBasicsPostOneOnOne,
   requestBasicsSetRatios,
   finishBasicsSetRatios,
   requestCopyOkr,
@@ -70,7 +66,6 @@ const {
   [Action.FINISH_BASICS_CHANGE_PARENT_OKR]: keyValueIdentity,
   [Action.FINISH_BASICS_CHANGE_DISCLOSURE_TYPE]: keyValueIdentity,
   [Action.FINISH_BASICS_POST_ACHIEVEMENT]: keyValueIdentity,
-  [Action.FINISH_BASICS_POST_ONE_ON_ONE]: keyValueIdentity,
   [Action.FINISH_BASICS_SET_RATIOS]: keyValueIdentity,
   [Action.FINISH_COPY_OKR]: keyValueIdentity,
   [Action.FINISH_DELETE_OKR]: keyValueIdentity,
@@ -85,7 +80,6 @@ const {
   Action.REQUEST_BASICS_CHANGE_PARENT_OKR,
   Action.REQUEST_BASICS_CHANGE_DISCLOSURE_TYPE,
   Action.REQUEST_BASICS_POST_ACHIEVEMENT,
-  Action.REQUEST_BASICS_POST_ONE_ON_ONE,
   Action.REQUEST_BASICS_SET_RATIOS,
   Action.REQUEST_COPY_OKR,
   Action.REQUEST_DELETE_OKR,
@@ -160,18 +154,6 @@ export const postAchievement = (subject, id, data) =>
     return postJson(`/okrs/${id}/achievements.json`, state)(null, data)
       .then(json => dispatch(finishBasicsPostAchievement('data', { subject, ...json })))
       .catch(({ message }) => dispatch(finishBasicsPostAchievement(new Error(message))));
-  };
-
-export const postOneOnOne = (userId, { oneOnOneType, ...entry }) =>
-  (dispatch, getState) => {
-    const state = getState();
-    if (state.basics.isPostingOneOnOne) return Promise.resolve();
-    dispatch(requestBasicsPostOneOnOne());
-    const apiMap = { 1: 'reports', 2: 'reports', 3: 'feedbacks', 4: 'feedbacks', 5: 'interviewnotes' };
-    const apiName = apiMap[oneOnOneType];
-    return postJson(`/users/${userId}/${apiName}.json`, state)(null, { oneOnOneType, ...entry })
-      .then(json => dispatch(finishBasicsPostOneOnOne('data', json)))
-      .catch(({ message }) => dispatch(finishBasicsPostOneOnOne(new Error(message))));
   };
 
 export const setRatios = (subject, id, ratios, unlockedRatio) =>

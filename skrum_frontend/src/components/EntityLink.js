@@ -49,10 +49,10 @@ class EntityLink extends Component {
             height={avatarSize}
           />)}
       </div>);
-    const nameContent = (title || editor || name || !id) && (
+    const nameContent = !avatarOnly && (title || editor || name || !id) && (
       <div className={styles.name} title={name}>
         {title && <p className={styles.title}>{title}</p>}
-        {editor || (!avatarOnly && name) || (!id && <span>➖</span>)}
+        {editor || name || (!id && <span>➖</span>)}
       </div>);
     return (
       <div

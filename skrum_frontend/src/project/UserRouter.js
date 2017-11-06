@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import OKRContainer from './OKR/OKRContainer';
 import MapContainer from './Map/MapContainer';
 import TimelineContainer from './Timeline/TimelineContainer';
+import OneOnOneContainer from './OneOnOne/OneOnOneContainer';
 import GroupManagementContainer from './GroupManagement/GroupManagementContainer';
 import { tabPropType, explodeTab } from '../util/RouteUtil';
 import styles from './GroupRouter.css';
@@ -26,7 +27,9 @@ export default class UserRouter extends Component {
         return <MapContainer subject="user" />;
       case 'timeline':
         return <TimelineContainer subject="user" id={userId} />;
-      case 'control':
+      case '1on1':
+        return <OneOnOneContainer />;
+      case 'group':
         return <GroupManagementContainer subject="user" />;
       default:
         return null;
