@@ -63,7 +63,7 @@ class TPostRepository extends BaseRepository
     }
 
     /**
-     * 指定ユーザIDが投稿者のタイムライン（リプライ投稿のみ）を取得
+     * 指定投稿IDのタイムライン（リプライ投稿のみ）を取得
      *
      * @param integer $postId 投稿ID
      * @return array
@@ -112,7 +112,7 @@ class TPostRepository extends BaseRepository
     }
 
     /**
-     * 指定グループIDのタイムライン（リプライ投稿のみ）を取得
+     * 指定投稿IDのタイムライン（リプライ投稿のみ）を取得
      *
      * @param integer $postId 投稿ID
      * @return array
