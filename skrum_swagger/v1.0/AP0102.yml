@@ -55,10 +55,33 @@ paths:
           schema:
             type: object
             properties:
-              result:
+              oneOnOneId:
+                type: integer
+              oneOnOneType:
                 type: string
+              senderUserId:
+                type: integer
+              senderUserName:
+                type: string
+              senderUserImageVersion:
+                type: integer
+              toNames:
+                type: string
+              lastUpdate:
+                type: string
+              partOfText:
+                type: string
+              readFlg:
+                type: integer
             required:
-              - result
+              - oneOnOneId
+              - oneOnOneType
+              - senderUserId
+              - senderUserName
+              - senderUserImageVersion
+              - lastUpdate
+              - partOfText
+              - readFlg
         400:
           description: JSONスキーマ不正
         401:

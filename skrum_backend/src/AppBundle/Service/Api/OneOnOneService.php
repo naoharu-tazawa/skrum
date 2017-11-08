@@ -5,6 +5,7 @@ namespace AppBundle\Service\Api;
 use AppBundle\Service\BaseService;
 use AppBundle\Exception\SystemException;
 use AppBundle\Utils\Auth;
+use AppBundle\Utils\Constant;
 use AppBundle\Utils\DateUtility;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Entity\TEmailReservation;
@@ -15,7 +16,6 @@ use AppBundle\Api\ResponseDTO\OneOnOneDTO;
 use AppBundle\Api\ResponseDTO\OneOnOneDialogDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\BasicUserInfoDTO;
 use AppBundle\Api\ResponseDTO\NestedObject\OneOnOneHeaderDTO;
-use AppBundle\Utils\Constant;
 use AppBundle\Api\ResponseDTO\NestedObject\OneOnOneDefaultDestinationDTO;
 
 /**
@@ -30,9 +30,9 @@ class OneOnOneService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
-     * @return void
+     * @return OneOnOneDTO
      */
-    public function submitReport(Auth $auth, array $data)
+    public function submitReport(Auth $auth, array $data): OneOnOneDTO
     {
         // トランザクション開始
         $this->beginTransaction();
@@ -49,8 +49,10 @@ class OneOnOneService extends BaseService
             $this->persist($tOneOnOne);
 
             // 1on1送信先登録
+            $mUserRepos = $this->getMUserRepository();
+            $toNames = null;
             if (!empty($data['to'])) {
-                foreach ($data['to'] as $value) {
+                foreach ($data['to'] as $key => $value) {
                     $tOneOnOneTo = new TOneOnOneTo();
                     $tOneOnOneTo->setOneOnOne($tOneOnOne);
                     $tOneOnOneTo->setUserId($value['userId']);
@@ -58,6 +60,14 @@ class OneOnOneService extends BaseService
 
                     // メール送信予約
                     $this->reserveEmails($value['userId'], $auth->getUserId(), $data['oneOnOneType'], $data['body'], $auth->getSubdomain());
+
+                    // $toNamesを生成
+                    $mUser = $mUserRepos->find($value['userId']);
+                    if ($key === 0) {
+                        $toNames .= $mUser->getLastName() . $mUser->getFirstName();
+                    } else {
+                        $toNames .= ', ' . $mUser->getLastName() . $mUser->getFirstName();
+                    }
                 }
             }
 
@@ -67,6 +77,21 @@ class OneOnOneService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // 返却DTOを生成
+        $oneOnOneDTO = new OneOnOneDTO();
+        $oneOnOneDTO->setOneOnOneId($tOneOnOne->getId());
+        $oneOnOneDTO->setOneOnOneType($tOneOnOne->getOneOnOneType());
+        $oneOnOneDTO->setSenderUserId($tOneOnOne->getSenderUserId());
+        $senderUserEntity = $mUserRepos->find($tOneOnOne->getSenderUserId());
+        $oneOnOneDTO->setSenderUserName($senderUserEntity->getLastName() . $senderUserEntity->getFirstName());
+        $oneOnOneDTO->setSenderUserImageVersion($senderUserEntity->getImageVersion());
+        $oneOnOneDTO->setToNames($toNames);
+        $oneOnOneDTO->setLastUpdate($tOneOnOne->getCreatedAt());
+        $oneOnOneDTO->setPartOfText(mb_substr($tOneOnOne->getBody(), 0, 200));
+        $oneOnOneDTO->setReadFlg(DBConstant::FLG_TRUE);
+
+        return $oneOnOneDTO;
     }
 
     /**
@@ -74,15 +99,16 @@ class OneOnOneService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
-     * @return void
+     * @return OneOnOneDTO
      */
-    public function submitFeedback(Auth $auth, array $data)
+    public function submitFeedback(Auth $auth, array $data): OneOnOneDTO
     {
         // トランザクション開始
         $this->beginTransaction();
 
         try {
             // 1on1登録
+            $mUserRepos = $this->getMUserRepository();
             $tOneOnOne = new TOneOnOne();
             $tOneOnOne->setOneOnOneType($data['oneOnOneType']);
             $tOneOnOne->setSenderUserId($auth->getUserId());
@@ -91,7 +117,6 @@ class OneOnOneService extends BaseService
             if (!empty($data['okrId'])) $tOneOnOne->setOkrId($data['okrId']);
             if ($data['oneOnOneType'] === DBConstant::ONE_ON_ONE_TYPE_HEARING && empty($data['body'])) {
                 // ヒアリングの場合で、かつ本文が空の場合は、自動メッセージを登録
-                $mUserRepos = $this->getMUserRepository();
                 $mUser = $mUserRepos->find($auth->getUserId());
 
                 $autoMessage = sprintf(
@@ -105,7 +130,8 @@ class OneOnOneService extends BaseService
             $this->persist($tOneOnOne);
 
             // 1on1送信先登録
-            foreach ($data['to'] as $value) {
+            $toNames = null;
+            foreach ($data['to'] as $key => $value) {
                 $tOneOnOneTo = new TOneOnOneTo();
                 $tOneOnOneTo->setOneOnOne($tOneOnOne);
                 $tOneOnOneTo->setUserId($value['userId']);
@@ -113,6 +139,14 @@ class OneOnOneService extends BaseService
 
                 // メール送信予約
                 $this->reserveEmails($value['userId'], $auth->getUserId(), $data['oneOnOneType'], $data['body'], $auth->getSubdomain());
+
+                // $toNamesを生成
+                $mUser = $mUserRepos->find($value['userId']);
+                if ($key === 0) {
+                    $toNames .= $mUser->getLastName() . $mUser->getFirstName();
+                } else {
+                    $toNames .= ', ' . $mUser->getLastName() . $mUser->getFirstName();
+                }
             }
 
             $this->flush();
@@ -121,6 +155,21 @@ class OneOnOneService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // 返却DTOを生成
+        $oneOnOneDTO = new OneOnOneDTO();
+        $oneOnOneDTO->setOneOnOneId($tOneOnOne->getId());
+        $oneOnOneDTO->setOneOnOneType($tOneOnOne->getOneOnOneType());
+        $oneOnOneDTO->setSenderUserId($tOneOnOne->getSenderUserId());
+        $senderUserEntity = $mUserRepos->find($tOneOnOne->getSenderUserId());
+        $oneOnOneDTO->setSenderUserName($senderUserEntity->getLastName() . $senderUserEntity->getFirstName());
+        $oneOnOneDTO->setSenderUserImageVersion($senderUserEntity->getImageVersion());
+        $oneOnOneDTO->setToNames($toNames);
+        $oneOnOneDTO->setLastUpdate($tOneOnOne->getCreatedAt());
+        $oneOnOneDTO->setPartOfText(mb_substr($tOneOnOne->getBody(), 0, 200));
+        $oneOnOneDTO->setReadFlg(DBConstant::FLG_TRUE);
+
+        return $oneOnOneDTO;
     }
 
     /**
@@ -128,9 +177,9 @@ class OneOnOneService extends BaseService
      *
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
-     * @return void
+     * @return OneOnOneDTO
      */
-    public function submitInterviewnote(Auth $auth, array $data)
+    public function submitInterviewnote(Auth $auth, array $data): OneOnOneDTO
     {
         // トランザクション開始
         $this->beginTransaction();
@@ -147,8 +196,10 @@ class OneOnOneService extends BaseService
             $this->persist($tOneOnOne);
 
             // 1on1送信先登録
+            $mUserRepos = $this->getMUserRepository();
+            $toNames = null;
             if (!empty($data['to'])) {
-                foreach ($data['to'] as $value) {
+                foreach ($data['to'] as $key => $value) {
                     $tOneOnOneTo = new TOneOnOneTo();
                     $tOneOnOneTo->setOneOnOne($tOneOnOne);
                     $tOneOnOneTo->setUserId($value['userId']);
@@ -156,6 +207,14 @@ class OneOnOneService extends BaseService
 
                     // メール送信予約
                     $this->reserveEmails($value['userId'], $auth->getUserId(), $data['oneOnOneType'], $data['body'], $auth->getSubdomain());
+
+                    // $toNamesを生成
+                    $mUser = $mUserRepos->find($value['userId']);
+                    if ($key === 0) {
+                        $toNames .= $mUser->getLastName() . $mUser->getFirstName();
+                    } else {
+                        $toNames .= ', ' . $mUser->getLastName() . $mUser->getFirstName();
+                    }
                 }
             }
 
@@ -165,6 +224,21 @@ class OneOnOneService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // 返却DTOを生成
+        $oneOnOneDTO = new OneOnOneDTO();
+        $oneOnOneDTO->setOneOnOneId($tOneOnOne->getId());
+        $oneOnOneDTO->setOneOnOneType($tOneOnOne->getOneOnOneType());
+        $oneOnOneDTO->setSenderUserId($tOneOnOne->getSenderUserId());
+        $senderUserEntity = $mUserRepos->find($tOneOnOne->getSenderUserId());
+        $oneOnOneDTO->setSenderUserName($senderUserEntity->getLastName() . $senderUserEntity->getFirstName());
+        $oneOnOneDTO->setSenderUserImageVersion($senderUserEntity->getImageVersion());
+        $oneOnOneDTO->setToNames($toNames);
+        $oneOnOneDTO->setLastUpdate($tOneOnOne->getCreatedAt());
+        $oneOnOneDTO->setPartOfText(mb_substr($tOneOnOne->getBody(), 0, 200));
+        $oneOnOneDTO->setReadFlg(DBConstant::FLG_TRUE);
+
+        return $oneOnOneDTO;
     }
 
     /**
@@ -342,8 +416,8 @@ class OneOnOneService extends BaseService
             $oneOnOneDTO->setOneOnOneType($tOneOnOne['one_on_one_type']);
             $oneOnOneDTO->setSenderUserId($tOneOnOne['sender_user_id']);
             $oneOnOneDTO->setSenderUserName($tOneOnOne['last_name'] . $tOneOnOne['first_name']);
-            $oneOnOneDTO->setToNames($toNames);
             $oneOnOneDTO->setSenderUserImageVersion($tOneOnOne['image_version']);
+            $oneOnOneDTO->setToNames($toNames);
             $oneOnOneDTO->setLastUpdate(DateUtility::transIntoDatetime($tOneOnOne['new_arrival_datetime']));
             $oneOnOneDTO->setPartOfText($partOfNewArrivalText);
             $oneOnOneDTO->setReadFlg($readFlg);

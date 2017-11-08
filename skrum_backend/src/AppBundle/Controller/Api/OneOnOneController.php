@@ -11,6 +11,7 @@ use AppBundle\Exception\PermissionException;
 use AppBundle\Utils\DBConstant;
 use AppBundle\Api\ResponseDTO\NewOneOnOnesDTO;
 use AppBundle\Api\ResponseDTO\OneOnOneDialogDTO;
+use AppBundle\Api\ResponseDTO\OneOnOneDTO;
 
 /**
  * 1on1コントローラ
@@ -25,9 +26,9 @@ class OneOnOneController extends BaseController
      * @Rest\Post("/v1/users/{userId}/reports.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param integer $userId ユーザID
-     * @return array
+     * @return OneOnOneDTO
      */
-    public function postUserReportsAction(Request $request, int $userId): array
+    public function postUserReportsAction(Request $request, int $userId): OneOnOneDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostUserReportsPdu');
@@ -62,9 +63,9 @@ class OneOnOneController extends BaseController
 
         // 日報/進捗報告送信処理
         $oneOnOneService = $this->getOneOnOneService();
-        $oneOnOneService->submitReport($auth, $data);
+        $oneOnOneDTO = $oneOnOneService->submitReport($auth, $data);
 
-        return array('result' => 'OK');
+        return $oneOnOneDTO;
     }
 
     /**
@@ -73,9 +74,9 @@ class OneOnOneController extends BaseController
      * @Rest\Post("/v1/users/{userId}/feedbacks.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param integer $userId ユーザID
-     * @return array
+     * @return OneOnOneDTO
      */
-    public function postUserFeedbacksAction(Request $request, int $userId): array
+    public function postUserFeedbacksAction(Request $request, int $userId): OneOnOneDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostUserFeedbacksPdu');
@@ -110,9 +111,9 @@ class OneOnOneController extends BaseController
 
         // 日報/進捗報告送信処理
         $oneOnOneService = $this->getOneOnOneService();
-        $oneOnOneService->submitFeedback($auth, $data);
+        $oneOnOneDTO = $oneOnOneService->submitFeedback($auth, $data);
 
-        return array('result' => 'OK');
+        return $oneOnOneDTO;
     }
 
     /**
@@ -121,9 +122,9 @@ class OneOnOneController extends BaseController
      * @Rest\Post("/v1/users/{userId}/interviewnotes.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param integer $userId ユーザID
-     * @return array
+     * @return OneOnOneDTO
      */
-    public function postUserInterviewnotesAction(Request $request, int $userId): array
+    public function postUserInterviewnotesAction(Request $request, int $userId): OneOnOneDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostUserInterviewnotesPdu');
@@ -145,9 +146,9 @@ class OneOnOneController extends BaseController
 
         // 日報/進捗報告送信処理
         $oneOnOneService = $this->getOneOnOneService();
-        $oneOnOneService->submitInterviewnote($auth, $data);
+        $oneOnOneDTO = $oneOnOneService->submitInterviewnote($auth, $data);
 
-        return array('result' => 'OK');
+        return $oneOnOneDTO;
     }
 
     /**
