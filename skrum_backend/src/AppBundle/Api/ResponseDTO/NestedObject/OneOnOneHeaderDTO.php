@@ -26,6 +26,13 @@ class OneOnOneHeaderDTO
     private $dueDate;
 
     /**
+     * @var \DateTime
+     *
+     * @JSON\Type("DateTime<'Y-m-d'>")
+     */
+    private $interviewDate;
+
+    /**
      * @var string
      *
      * @JSON\Type("string")
@@ -99,6 +106,30 @@ class OneOnOneHeaderDTO
     public function getDueDate()
     {
         return $this->dueDate;
+    }
+
+    /**
+     * Set interviewDate
+     *
+     * @param \DateTime $interviewDate
+     *
+     * @return OneOnOneHeaderDTO
+     */
+    public function setInterviewDate($interviewDate)
+    {
+        $this->interviewDate = $interviewDate;
+
+        return $this;
+    }
+
+    /**
+     * Get interviewDate
+     *
+     * @return \DateTime
+     */
+    public function getInterviewDate()
+    {
+        return $this->interviewDate;
     }
 
     /**

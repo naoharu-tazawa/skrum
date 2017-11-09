@@ -526,7 +526,11 @@ class OneOnOneService extends BaseService
             if ($key1 === 0) {
                 $oneOnOneHeaderDTO = new OneOnOneHeaderDTO();
                 if ($tOneOnOne->getTargetDate() !== null) {
-                    $oneOnOneHeaderDTO->setTargetDate($tOneOnOne->getTargetDate());
+                    if ($tOneOnOne->getOneOnOneType() === DBConstant::ONE_ON_ONE_TYPE_INTERVIEW_NOTE) {
+                        $oneOnOneHeaderDTO->setInterviewDate($tOneOnOne->getTargetDate());
+                    } else {
+                        $oneOnOneHeaderDTO->setTargetDate($tOneOnOne->getTargetDate());
+                    }
                 }
                 if ($tOneOnOne->getDueDate() !== null) {
                     $oneOnOneHeaderDTO->setDueDate($tOneOnOne->getDueDate());
