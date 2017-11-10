@@ -2,7 +2,7 @@ import { omitBy, isUndefined } from 'lodash';
 import { EntityType, mapEntity } from './EntityUtil';
 
 export const mapOneOnOne =
-  ({ oneOnOneId, oneOnOneType, toNames, intervieweeUserName, lastUpdate, partOfText, readFlg,
+  ({ oneOnOneId, oneOnOneType, toNames, intervieweeUserName, lastUpdate, partOfText, text, readFlg,
   ...noteOthers }) =>
   omitBy({
     id: oneOnOneId,
@@ -11,7 +11,7 @@ export const mapOneOnOne =
     toNames,
     intervieweeUserName,
     lastUpdate,
-    preview: partOfText,
+    text: text || partOfText,
     read: readFlg === 1,
   }, isUndefined);
 

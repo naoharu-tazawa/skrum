@@ -85,7 +85,9 @@ class OkrBar extends Component {
             <button
               className={styles.tool}
               style={{ background: `url(${reportImage}) no-repeat center` }}
-              onClick={() => openModeless(NewOneOnOneNote, { userId, okr })}
+              onClick={() => openModeless(NewOneOnOneNote, {
+                types: currentUserId === userId ? 'progressMemo' : ['hearing', 'feedback', 'interviewNote'],
+                ...{ userId, okr } })}
             />)}
           <Permissible entity={owner}>
             {({ permitted }) => (

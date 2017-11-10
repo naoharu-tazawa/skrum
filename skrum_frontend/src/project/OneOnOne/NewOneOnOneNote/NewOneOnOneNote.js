@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
-import { isEmpty, head } from 'lodash';
+import { isEmpty, keys, head, isArray, fromPairs } from 'lodash';
+import { oneOnOneTypes, feedbackTypes } from '../propTypes';
 import { oneOnOneSettingsPropTypes } from './propTypes';
 import { objectiveReferencePropTypes } from '../../OKR/OKRList/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
@@ -20,7 +21,8 @@ import styles from './NewOneOnOneNote.css';
 const formName = 'newOneOnOne';
 
 const validate =
-  ({ oneOnOneType, reportDate, dueDate, interviewDate, interviewee, to, body } = {}) => ({
+  ({ oneOnOneType, okr, reportDate, dueDate, interviewDate, interviewee, to, body } = {}) => ({
+    okr: oneOnOneType === '2' && isEmpty(okr) && '対象目標を入力してください',
     reportDate: !isValidDate(reportDate) && '日付を入力してください',
     dueDate: !isValidDate(dueDate) && '回答期限を入力してください',
     interviewDate: !isValidDate(interviewDate) && '面談日を入力してください',
@@ -32,22 +34,26 @@ const validate =
 class NewOneOnOneNote extends Component {
 
   static propTypes = {
+    types: PropTypes.oneOfType([
+      PropTypes.oneOf(keys(oneOnOneTypes)),
+      PropTypes.arrayOf(PropTypes.oneOf(keys(oneOnOneTypes))),
+    ]).isRequired,
     oneOnOne: oneOnOneSettingsPropTypes.isRequired,
     currentUserId: PropTypes.number.isRequired,
     userId: PropTypes.number.isRequired,
-    okr: objectiveReferencePropTypes,
+    okr: PropTypes.oneOfType([objectiveReferencePropTypes, PropTypes.shape({})]),
     onClose: PropTypes.func.isRequired,
     dispatchPostOneOnOneNote: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { oneOnOne, currentUserId, userId, okr } = props;
-    const isSelf = currentUserId === userId;
-    const oneOnOneType = (isSelf && (!okr ? '1' : '2')) || '3';
+    const { oneOnOne, types, okr, userId } = props;
+    const firstType = isArray(types) ? types[0] : types;
+    const oneOnOneType = `${keys(oneOnOneTypes).indexOf(firstType) + 1}`;
     const reportDate = formatDate(getDate());
     const dueDate = formatDate(getDate().add(3, 'd'));
-    const interviewee = {}; // type: EntityType.USER, id: 3, name: '田中 二郎' }; // TODO call API
+    const interviewee = {};
     const interviewDate = formatDate(getDate());
     const toUserEntity = ({ userId: id, name }) => (id ? { type: EntityType.USER, id, name } : {});
     const oneOnOneTos = oneOnOne.reduce((tos, { type, to }) =>
@@ -63,12 +69,11 @@ class NewOneOnOneNote extends Component {
     );
   }
 
-  submit(entry) {
+  submit({ oneOnOneType, reportDate, dueDate, feedbackType, interviewDate, interviewee,
+    okr, [`to${oneOnOneType}`]: to, body = '' }) {
     const { currentUserId, onClose, dispatchPostOneOnOneNote } = this.props;
     this.setState({ isSubmitting: true });
-    const { oneOnOneType, reportDate, dueDate, feedbackType, interviewDate, interviewee,
-      okr, [`to${oneOnOneType}`]: to, body = '' } = entry;
-    const report = {
+    const entry = {
       oneOnOneType,
       ...(oneOnOneType === '1' || oneOnOneType === '2') && { reportDate: toUtcDate(reportDate) },
       ...oneOnOneType === '3' && { dueDate: toUtcDate(dueDate) },
@@ -76,10 +81,10 @@ class NewOneOnOneNote extends Component {
       ...oneOnOneType === '5' && { intervieweeUserId: interviewee.id },
       ...oneOnOneType === '5' && { interviewDate: toUtcDate(interviewDate) },
       ...to.id && { to: [{ userId: to.id }] }, // FIXME
-      ...okr && { okrId: okr.id },
+      ...!isEmpty(okr) && { okrId: okr.id },
       body,
     };
-    return dispatchPostOneOnOneNote(currentUserId, report, { oneOnOneType, to: [to] }) // FIXME
+    return dispatchPostOneOnOneNote(currentUserId, entry, { oneOnOneType, to: [to] }) // FIXME
       .then(({ error, payload }) => {
         this.setState({ isSubmitting: false }, () => !error && onClose());
         return { error, payload };
@@ -87,12 +92,15 @@ class NewOneOnOneNote extends Component {
   }
 
   render() {
-    const { currentUserId, userId, okr, onClose } = this.props;
-    const isSelf = currentUserId === userId;
-    const { activeTab = isSelf ? 'report' : 'hearing',
-      oneOnOneType = (isSelf && (!okr ? '1' : '2')) || '3', isSubmitting = false } = this.state || {};
+    const { types, okr, onClose } = this.props;
+    const firstType = isArray(types) ? types[0] : types;
+    const {
+      activeTab = firstType,
+      oneOnOneType = `${keys(oneOnOneTypes).indexOf(firstType) + 1}`,
+      isSubmitting = false,
+    } = this.state || {};
     const selectableTabStyle = tab =>
-      `${styles.tab} ${styles.selectable} ${activeTab === tab ? styles.active : ''} ${okr && tab === 'interview' && styles.disabled}`;
+      `${styles.tab} ${activeTab === tab ? styles.active : styles.selectable} ${okr && tab === 'interviewNote' && styles.disabled}`;
     const Form = this.form;
     return (
       <Form
@@ -115,20 +123,23 @@ class NewOneOnOneNote extends Component {
             </button>
           </nav>
           <header>
-            {isSelf && <span className={styles.tab}>{!okr ? '日報' : '進捗報告'}</span>}
-            {!isSelf && withSelectReduxField(Options,
+            {!isArray(types) && <span className={styles.tab}>{oneOnOneTypes[firstType]}</span>}
+            {isArray(types) && withSelectReduxField(Options,
               'oneOnOneType',
-              { map: { hearing: 'ヒアリング', feedback: 'フィードバック', interview: '面談メモ' },
-                renderer: ({ value: tab, label }, index) => (
-                  <label key={tab} className={selectableTabStyle(tab)}>
+              { map: fromPairs(types.map(type => [type, oneOnOneTypes[type]])),
+                renderer: ({ value: tab, label }) => (
+                  <label key={tab} className={selectableTabStyle(tab)} style={{ width: `${100 / types.length}%` }}>
                     <Field
                       name="oneOnOneType"
                       component="input"
                       type="radio"
-                      value={index + 3}
+                      value={`${keys(oneOnOneTypes).indexOf(tab) + 1}`}
                       props={{
-                        disabled: okr && tab === 'interview',
-                        onClick: () => this.setState({ activeTab: tab, oneOnOneType: `${index + 3}` }),
+                        disabled: okr && tab === 'interviewNote',
+                        onClick: () => this.setState({
+                          activeTab: tab,
+                          oneOnOneType: `${keys(oneOnOneTypes).indexOf(tab) + 1}`,
+                        }),
                       }}
                     />
                     {label}
@@ -136,12 +147,12 @@ class NewOneOnOneNote extends Component {
               },
             )}
           </header>
-          {okr && (
+          {okr && activeTab !== 'interviewNote' && (
             <section>
               <label>対象目標</label>
               {withItemisedReduxField(OKRSearch, 'okr', { loadBasicsOKRs: EntityType.USER })}
             </section>)}
-          {activeTab === 'report' && (
+          {activeTab === 'dailyReport' && (
             <section>
               <label>日付</label>
               {withReduxField(DatePickerInput, 'reportDate')}
@@ -155,7 +166,7 @@ class NewOneOnOneNote extends Component {
             <section>
               {withSelectReduxField(Options,
                 'feedbackType',
-                { map: { 1: 'ありがとう', 2: 'アドバイス', 3: 'グッジョブ', 4: '課題点' },
+                { map: feedbackTypes,
                   renderer: ({ value, label }) => (
                     <label key={value}>
                       <Field name="feedbackType" component="input" type="radio" value={value} />
@@ -164,12 +175,12 @@ class NewOneOnOneNote extends Component {
                 },
               )}
             </section>)}
-          {activeTab === 'interview' && (
+          {activeTab === 'interviewNote' && (
             <section>
               <label>面談相手</label>
               {withItemisedReduxField(UserSearch, 'interviewee')}
             </section>)}
-          {activeTab === 'interview' && (
+          {activeTab === 'interviewNote' && (
             <section>
               <label>面談日</label>
               {withReduxField(DatePickerInput, 'interviewDate')}

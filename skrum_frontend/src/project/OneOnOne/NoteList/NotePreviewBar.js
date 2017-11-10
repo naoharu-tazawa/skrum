@@ -1,26 +1,25 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import Linkify from 'react-linkify';
 import { notePropTypes } from '../propTypes';
 import EntityLink from '../../../components/EntityLink';
 import { formatDate, DateFormat, toRelativeTimeText } from '../../../util/DatetimeUtil';
-import { withModal } from '../../../util/ModalUtil';
-import styles from './NoteBar.css';
+import { replacePath } from '../../../util/RouteUtil';
+import styles from './NotePreviewBar.css';
 
-class NoteBar extends Component {
+export default class NotePreviewBar extends Component {
 
   static propTypes = {
     note: notePropTypes.isRequired,
-    openModal: PropTypes.func.isRequired,
   };
 
   render() {
     const { note } = this.props;
-    const { sender, toNames, lastUpdate, preview } = note;
+    const { id, sender, toNames, lastUpdate, text, read } = note;
     return (
-      <section className={styles.content}>
+      <section className={`${styles.content} ${read ? '' : styles.read}`}>
         <EntityLink className={styles.icon} avatarOnly avatarSize={34} entity={sender} route={{ tab: 'objective' }} />
-        <section className={styles.text}>
+        <Link className={styles.text} to={replacePath({ aspect: 'd', aspectId: id })}>
           <header>
             <div className={styles.title}>{sender.name}&emsp;｜&emsp;To: {toNames}</div>
             <div className={styles.date}>
@@ -30,11 +29,9 @@ class NoteBar extends Component {
             </div>
           </header>
           <section className={styles.body}>
-            <Linkify><p className={styles.preview}>{preview}</p></Linkify>
+            <Linkify><p className={styles.body}>{text}</p></Linkify>
           </section>
-        </section>
+        </Link>
       </section>);
   }
 }
-
-export default withModal(NoteBar);

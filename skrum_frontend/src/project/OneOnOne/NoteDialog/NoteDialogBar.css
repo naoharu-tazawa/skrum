@@ -1,0 +1,39 @@
+@charset "UTF-8";
+.content {
+  border-bottom: 1px solid #d8dfe5;
+  padding: 0 2%;
+}
+.icon {
+  width: 4em;
+  padding: 1em 0.5em;
+  display: inline-block;
+  vertical-align: top;
+}
+.text {
+  width: calc(100% - 4em - 16px);
+  display: inline-block;
+  padding: 1em 0;
+}
+.text header {
+  color: #8e9aa6;
+  font-size: 0.7em;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+.title {
+  margin-right: auto;
+}
+.date {
+  margin-left: auto;
+}
+.body {
+  color: #626a7f;
+  font-size: 0.9em;
+  padding-top: 0.2em;
+}

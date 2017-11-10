@@ -1,6 +1,11 @@
 @charset "UTF-8";
+.wrapper {
+  width: 100%;
+  height: 100%;
+}
 .container {
   width: 100%;
+  height: 100%;
   padding: 2em 3em;
   display: -webkit-box;
   display: -moz-box;
@@ -11,7 +16,7 @@
   -webkit-flex-wrap: nowrap;
   flex-wrap: nowrap;
 }
-.container .main {
+.main {
   background-color: #fff;
   flex-basis: calc(100% - 230px - 1.5em);
   margin-right: 1.5em;
@@ -24,19 +29,23 @@
   -webkit-flex-wrap: nowrap;
   flex-wrap: nowrap;
 }
-.container nav {
+.main > nav {
   padding: 3em 0;
   border-right: 3px solid #fcfcfd;
   flex-basis: 200px;
   font-size: 0.8em;
   box-shadow: 3px 3px 3px 3px rgba(128,128,128,0.1);
+  display: flex;
+  flex-direction: column;
+  margin-right: 6px;
 }
-.container nav ul {
+.main > nav ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  flex: 1;
 }
-.container nav ul li a {
+.main > nav ul li a {
   padding: 0.8em 0 0.8em 2.5em;
   display: -webkit-box;
   display: -moz-box;
@@ -51,17 +60,17 @@
   cursor: pointer;
   outline: none;
 }
-.container nav ul li a.selected {
+.main > nav ul li a.selected {
   background-color: #f0f4f6;
 }
-.container nav .type {
+.main > nav .type {
   flex-basis: calc(100% - 2em - 1.5em);
 }
-.container nav .countBox {
+.main > nav .countBox {
   flex-basis: 2em;
   margin-right: 1.5em;
 }
-.container nav .count {
+.main > nav .count {
   border-radius: 50%;
   background-color: #8e9aa6;
   color: #fff;
@@ -71,4 +80,49 @@
   text-align: center;
   height: 1.2em;
   padding: 0.1em;
+}
+.main > nav > footer {
+  padding-left: 2.5em;
+}
+.tool {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #8e9aa6;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-table;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.tool:not(:last-child) {
+  margin-right: 15px;
+}
+.container button.tool {
+  background-color: inherit;
+  padding: 0;
+}
+.container button.tool:focus {
+  outline: 0;
+}
+.circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #8e9aa6;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  line-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.list {
+  flex-basis: calc(100% - 200px);
+  overflow-y: auto;
+  padding-top: 1.5em;
+}
+.query {
+  flex-basis: 230px;
 }

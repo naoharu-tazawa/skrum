@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { notesPropTypes } from '../propTypes';
-import NoteList from './NoteList';
+import { oneOnOneTypePropType, notesPropTypes } from '../propTypes';
+import NotePreviewList from './NotePreviewList';
 import { mapOneOnOne } from '../../../util/OneOnOneUtil';
 
 class NoteListContainer extends Component {
 
   static propTypes = {
     notes: notesPropTypes.isRequired,
-    type: PropTypes.string.isRequired,
+    type: oneOnOneTypePropType.isRequired,
     isFetching: PropTypes.bool.isRequired,
     hasMoreNotes: PropTypes.bool.isRequired,
     isFetchingMore: PropTypes.bool.isRequired,
@@ -20,7 +20,7 @@ class NoteListContainer extends Component {
     const { type, notes, isFetching, hasMoreNotes, isFetchingMore,
       dispatchFetchMoreNotes } = this.props;
     return (
-      <NoteList
+      <NotePreviewList
         {...{ type, notes, isFetching, hasMoreNotes, isFetchingMore, dispatchFetchMoreNotes }}
       />);
   }

@@ -1,7 +1,6 @@
 @charset "UTF-8";
-.queryBox {
+.content {
   background-color: #626a7f;
-  flex-basis: 230px;
   border: solid 2px #abb1bb;
   -webkit-flex-direction: column;
   flex-direction: column;
@@ -13,6 +12,7 @@
   display: flex;
   -webkit-flex-wrap: nowrap;
   flex-wrap: nowrap;
+  height: 100%;
 }
 .search {
   padding: 1.2em;
@@ -24,24 +24,24 @@
   border: solid 1px #979a9c;
   font-size: 0.8em;
 }
-.search .date {
+.date {
   width: 45%;
 }
-.search .date input {
+.date input {
   max-width: 100%;
 }
-.search .span {
+.span {
   color: #fff;
   width: 10%;
   display: inline-block;
   text-align: center;
   vertical-align: middle;
 }
-.search .user {
+.user {
   width: 100%;
   margin-top: 1em;
 }
-.search .narrowing {
+.narrowing {
   color: #fff;
   margin: 1em auto 0;
   background-color: transparent;
@@ -55,11 +55,10 @@
   cursor: pointer;
   outline: none;
 }
-.search .spinner {
-  /*height: 24px;*/
+.spinner {
   background: url(/img/rolling.svg) center no-repeat;
   background-size: contain;
 }
 .list {
-  overflow: auto;
+  overflow-y: auto;
 }

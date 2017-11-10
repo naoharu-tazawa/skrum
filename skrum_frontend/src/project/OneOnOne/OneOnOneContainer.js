@@ -1,20 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { toPairs } from 'lodash';
-import { queryPropTypes } from './propTypes';
+import { Link } from 'react-router';
+import { toPairs, keys, toNumber } from 'lodash';
+import { oneOnOneTypePropType, queryPropTypes, oneOnOneTypes } from './propTypes';
 import NoteListContainer from './NoteList/NoteListContainer';
 import NoteQueryContainer from './NoteQuery/NoteQueryContainer';
+import NoteDialogContainer from './NoteDialog/NoteDialogContainer';
+import NewOneOnOneNote from './NewOneOnOneNote/NewOneOnOneNote';
 import { errorType } from '../../util/PropUtil';
 import { getDate, toUtcDate } from '../../util/DatetimeUtil';
-import { isPathFinal } from '../../util/RouteUtil';
+import { isPathFinal, comparePath, explodePath, implodePath } from '../../util/RouteUtil';
+import { withModal } from '../../util/ModalUtil';
 import { fetchOneOnOneNotes, fetchMoreOneOnOneNotes, queryOneOnOneNotes, queryMoreOneOnOneNotes } from './action';
 import styles from './OneOnOneContainer.css';
 
 class OneOnOneContainer extends Component {
 
   static propTypes = {
-    type: PropTypes.string.isRequired,
+    currentUserId: PropTypes.number.isRequired,
+    type: oneOnOneTypePropType.isRequired,
     query: queryPropTypes.isRequired,
     unread: PropTypes.shape({}).isRequired,
     pathname: PropTypes.string.isRequired,
@@ -22,6 +27,7 @@ class OneOnOneContainer extends Component {
     dispatchFetchMoreNotes: PropTypes.func.isRequired,
     dispatchQueryNotes: PropTypes.func.isRequired,
     dispatchQueryMoreNotes: PropTypes.func.isRequired,
+    openModeless: PropTypes.func.isRequired,
     error: errorType,
   };
 
@@ -35,50 +41,60 @@ class OneOnOneContainer extends Component {
 
   componentWillReceiveProps(next) {
     const { pathname, type, query, dispatchFetchNotes, dispatchQueryNotes } = next;
-    if (this.props.pathname !== pathname) {
+    if (!comparePath(this.props.pathname, pathname, { basicOnly: true })) {
       dispatchFetchNotes(type);
       dispatchQueryNotes(query);
     }
   }
 
   render() {
-    const { type, query, unread, dispatchFetchNotes, dispatchFetchMoreNotes,
-      dispatchQueryNotes, dispatchQueryMoreNotes } = this.props;
-    const typeMap = {
-      dailyReport: '日報',
-      progressMemo: '進捗報告',
-      hearing: 'ヒヤリング',
-      feedback: 'フィードバック',
-      interviewNote: '面談メモ',
-    };
+    const { currentUserId, type, query, unread, pathname,
+      dispatchFetchNotes, dispatchFetchMoreNotes,
+      dispatchQueryNotes, dispatchQueryMoreNotes, openModeless } = this.props;
+    const { aspect, aspectId: oooId, ...basicPath } = explodePath(pathname);
+    const showDialog = aspect === 'd' && !!oooId;
     return (
       <article className={styles.container}>
         <section className={styles.main}>
           <nav>
             <ul>
-              {toPairs(typeMap).map(([key, name], index) => (
+              {toPairs(oneOnOneTypes).map(([key, name], index) => (
                 <li key={key}>
-                  <a
+                  <Link
+                    to={implodePath(basicPath)}
                     className={`${type === `${index + 1}` ? styles.selected : ''}`}
                     onClick={() => dispatchFetchNotes(`${index + 1}`)}
-                    tabIndex={0}
                   >
                     <span className={styles.type}>{name}</span>
                     <span className={styles.countBox}>
                       {unread[key] ? <span className={styles.count}>{unread[key]}</span> : null}
                     </span>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
+            <footer>
+              <button
+                className={styles.tool}
+                onClick={() => openModeless(NewOneOnOneNote,
+                  { types: keys(oneOnOneTypes)[toNumber(type) - 1],
+                    ...{ userId: currentUserId, okr: {} } })}
+              >
+                <img src="/img/common/icn_plus.png" alt="Add" />
+              </button>
+            </footer>
           </nav>
-          <NoteListContainer
-            {...{ type, dispatchFetchMoreNotes }}
-          />
+          <article className={styles.list} style={showDialog ? { display: 'none' } : {}}>
+            <NoteListContainer {...{ type, dispatchFetchMoreNotes }} />
+          </article>
+          {showDialog && (
+            <article className={styles.list}>
+              <NoteDialogContainer />
+            </article>)}
         </section>
-        <NoteQueryContainer
-          {...{ query, dispatchQueryNotes, dispatchQueryMoreNotes }}
-        />
+        <article className={styles.query}>
+          <NoteQueryContainer {...{ query, dispatchQueryNotes, dispatchQueryMoreNotes }} />
+        </article>
       </article>);
   }
 }
@@ -110,7 +126,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mergeProps = ({ currentUserId, ...state }, {
+const mergeProps = (state, {
   dispatchFetchNotes,
   dispatchFetchMoreNotes,
   dispatchQueryNotes,
@@ -119,17 +135,17 @@ const mergeProps = ({ currentUserId, ...state }, {
   ...state,
   ...props,
   dispatchFetchNotes: type =>
-    dispatchFetchNotes(currentUserId, type),
+    dispatchFetchNotes(state.currentUserId, type),
   dispatchFetchMoreNotes: (type, before) =>
-    dispatchFetchMoreNotes(currentUserId, type, before),
+    dispatchFetchMoreNotes(state.currentUserId, type, before),
   dispatchQueryNotes: query =>
-    dispatchQueryNotes(currentUserId, query),
+    dispatchQueryNotes(state.currentUserId, query),
   dispatchQueryMoreNotes: (query, before) =>
-    dispatchQueryMoreNotes(currentUserId, query, before),
+    dispatchQueryMoreNotes(state.currentUserId, query, before),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
   mergeProps,
-)(OneOnOneContainer);
+)(withModal(OneOnOneContainer, { wrapperClassName: styles.wrapper }));

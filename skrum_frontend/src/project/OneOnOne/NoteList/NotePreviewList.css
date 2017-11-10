@@ -1,8 +1,5 @@
 @charset "UTF-8";
-.notesBox {
-  flex-basis: calc(100% - 200px);
-  overflow: auto;
-  padding-top: 1.5em;
+.content {
   -webkit-flex-direction: column;
   flex-direction: column;
   display: -webkit-box;
@@ -13,6 +10,8 @@
   display: flex;
   -webkit-flex-wrap: nowrap;
   flex-wrap: nowrap;
+  height: 100%;
+  /*overflow-y: overlay;*/
 }
 .spinner {
   margin: auto;

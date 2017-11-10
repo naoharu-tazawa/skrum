@@ -1,0 +1,100 @@
+@charset "UTF-8";
+.content {
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  height: 100%;
+}
+.content > header {
+  border-bottom: 1px solid #d8dfe5;
+  padding-bottom: 1em;
+}
+.content > header h1 {
+  font-size: 1em;
+  color: #626a7f;
+  position: relative;
+  min-height: 2em;
+  display: flex;
+}
+.backLink {
+  color: #8e9aa6;
+  border: 1px #8e9aa6 solid;
+  padding: 0.2em 1em;
+  border-radius: 3em;
+  font-size: 0.75em;
+  margin: 0 2em;
+}
+.backLink:before {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  padding-right: 6px;
+  background: transparent url(/img/common/inc_arrow_l.png) no-repeat -2px 0;
+  vertical-align: middle;
+  content: "";
+}
+.title {
+  margin: auto 0;
+}
+.spinner {
+  margin: auto;
+  height: 38px;
+  background: url(/img/rolling.svg) center no-repeat;
+  background-size: contain;
+  width: 100%;
+}
+.icon {
+  width: 4em;
+  padding: 0.0em 0.5em;
+  margin: 0 0 auto;
+}
+.content > footer {
+  margin-top: auto;
+  background-color: #f7f9fa;
+  padding: 1em 5% 1em 2%;
+}
+.content > footer > section {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+.content > footer textarea {
+  border: #e1e6eb 1px solid;
+  flex-basis: calc(100% - 4em);
+  padding: 2px 4px;
+  height: 8em;
+}
+.content > footer > button {
+  color: #8e9aa6;
+  margin: 1em 0 0 auto;
+  background-color: transparent;
+  border: 1px #8e9aa6 solid;
+  width: 10em;
+  padding: 0.5em;
+  display: block;
+  border-radius: 3em;
+  font-size: 0.75em;
+  text-align: center;
+  cursor: pointer;
+}
+.content > footer > button:disabled {
+  color: #e1e6eb;
+  cursor: default;
+}
+.spinner {
+  height: 18px;
+  background: url(/img/rolling.svg) center no-repeat;
+  background-size: contain;
+}

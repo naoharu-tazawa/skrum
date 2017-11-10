@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { last } from 'lodash';
 import Waypoint from 'react-waypoint';
-import { notesPropTypes } from '../propTypes';
-import NoteBar from './NoteBar';
-import styles from './NoteList.css';
+import { notesPropTypes, oneOnOneTypePropType } from '../propTypes';
+import NotePreviewBar from './NotePreviewBar';
+import styles from './NotePreviewList.css';
 
-export default class NoteList extends Component {
+export default class NotePreviewList extends Component {
 
   static propTypes = {
     notes: notesPropTypes.isRequired,
-    type: PropTypes.string.isRequired,
+    type: oneOnOneTypePropType.isRequired,
     isFetching: PropTypes.bool.isRequired,
     hasMoreNotes: PropTypes.bool.isRequired,
     isFetchingMore: PropTypes.bool.isRequired,
@@ -22,9 +22,9 @@ export default class NoteList extends Component {
       dispatchFetchMoreNotes } = this.props;
     const lastNote = last(notes) || {};
     return (
-      <section className={styles.notesBox}>
+      <section className={styles.content}>
         {isFetching && <span className={styles.spinner} />}
-        {!isFetching && notes.map(note => <NoteBar key={note.id} note={note} />)}
+        {!isFetching && notes.map(note => <NotePreviewBar key={note.id} note={note} />)}
         {!isFetching && !isFetchingMore && hasMoreNotes && (
           <Waypoint onEnter={() => dispatchFetchMoreNotes(type, lastNote.lastUpdate)}>
             <div className={styles.spinner} />

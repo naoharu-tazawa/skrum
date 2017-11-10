@@ -68,7 +68,9 @@ class KRBar extends Component {
             <button
               className={styles.tool}
               style={{ background: `url(${reportImage}) no-repeat center` }}
-              onClick={() => openModeless(NewOneOnOneNote, { userId, okr: keyResult })}
+              onClick={() => openModeless(NewOneOnOneNote, {
+                types: currentUserId === userId ? 'progressMemo' : ['hearing', 'feedback', 'interviewNote'],
+                ...{ userId, okr: keyResult } })}
             />)}
           <Permissible entity={owner}>
             {({ permitted }) => (

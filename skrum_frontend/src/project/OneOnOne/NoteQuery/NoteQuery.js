@@ -30,7 +30,7 @@ export default class NoteQuery extends Component {
     } = this.state || {};
     const lastNote = last(found) || {};
     return (
-      <aside className={styles.queryBox}>
+      <aside className={styles.content}>
         <header className={styles.search}>
           <DatePickerInput
             containerClass={styles.date}

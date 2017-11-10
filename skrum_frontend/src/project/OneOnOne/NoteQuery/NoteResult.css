@@ -1,10 +1,10 @@
 @charset "UTF-8";
 .content {
   border-bottom: 1px solid #82868c;
-  padding: 1em 1.5em;
+  padding: 0 1.5em;
   font-size: 0.8em;
   color: #fff;
-  cursor: pointer;
+  display: block;
 }
 .content.current {
   background-color: #708090;
@@ -19,17 +19,18 @@
   -webkit-flex-wrap: nowrap;
   flex-wrap: nowrap;
 }
-.content .icon {
+.icon {
   flex-basis: 2.2em;
   display: inline-block;
-  padding: 0 1em 0 0;
+  padding: 1em 1em 0 0;
 }
-.content .text {
+.text {
   flex-basis: calc(100% - 2.2em);
   display: inline-block;
   width: calc(100% - 3em);
+  padding-top: 1em;
 }
-.content .text .typeTime {
+.typeTime {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -41,23 +42,24 @@
   font-size: 0.8em;
   padding-top: 0.3em;
 }
-.content .text .type {
+.type {
   margin-left: auto;
   flex-basis: 10em;
   text-align: center;
   border-radius: 1em;
   margin-bottom: 0.2em;
 }
-.content .text .time {
+.time {
   margin-right: auto;
   flex-basis: calc(100% - 5.5em);
   text-align: right;
 }
-.content .text .name {
+.name {
   padding-top: 0.3em;
   font-size: 0.8em;
 }
-.content .body {
-  padding-top: 0.5em;
+.body {
+  padding: 0.5em 0 1em;
   font-size: 0.8em;
+  display: flex;
 }

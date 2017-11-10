@@ -58,16 +58,18 @@ class SubMenu extends Component {
     const settingLink = isBasicRole(roleLevel) ? '/s/g' : '/s/u';
     return (
       <div className={styles.subMenu}>
-        {!isSetting && <TimeframesDropdown
-          plain
-          tabIndex={-1}
-          onChange={({ value: timeframeId }) => browserHistory.push(replacePath({ timeframeId }))}
-        />}
-        {!isSetting && <button className={styles.addOKR} onClick={onAdd}>
-          <span className={styles.circle}>
-            <img src="/img/common/icn_add.png" alt="Add" />
-          </span>
-        </button>}
+        {!isSetting && (
+          <TimeframesDropdown
+            plain
+            tabIndex={-1}
+            onChange={({ value: timeframeId }) => browserHistory.push(replacePath({ timeframeId }))}
+          />)}
+        {!isSetting && (
+          <button className={styles.addOKR} onClick={onAdd}>
+            <span className={styles.circle}>
+              <img src="/img/common/icn_add.png" alt="Add" />
+            </span>
+          </button>)}
         <DropdownMenu
           trigger={(
             <EntityLink

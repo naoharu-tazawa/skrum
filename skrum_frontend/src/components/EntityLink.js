@@ -18,6 +18,7 @@ class EntityLink extends Component {
     editor: PropTypes.node,
     local: PropTypes.bool,
     route: routePropTypes,
+    basicRoute: PropTypes.bool,
     fluid: PropTypes.bool,
     avatarOnly: PropTypes.bool,
     avatarSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -25,7 +26,7 @@ class EntityLink extends Component {
   };
 
   render() {
-    const { companyId, entity = {}, version, title, editor, local, route, fluid,
+    const { companyId, entity = {}, version, title, editor, local, route, basicRoute, fluid,
       avatarOnly, avatarSize = fluid ? '100%' : '40px', className } = this.props;
     const { imageError } = this.state || {};
     const { id, name, type } = entity;
@@ -54,6 +55,7 @@ class EntityLink extends Component {
         {title && <p className={styles.title}>{title}</p>}
         {editor || name || (!id && <span>➖</span>)}
       </div>);
+    const basicOnly = !route || basicRoute;
     return (
       <div
         className={`
@@ -66,7 +68,7 @@ class EntityLink extends Component {
       >
         {(local || !id) && <div className={styles.noLink}>{avatarContent}{nameContent}</div>}
         {!local && id && (
-          <Link to={replacePath({ subject: type, id, ...route }, { basicOnly: !route })}>
+          <Link to={replacePath({ subject: type, id, ...route }, { basicOnly })}>
             {avatarContent}
             {nameContent}
           </Link>)}

@@ -69,6 +69,7 @@ export default (
       <Route path="/:tab/u/:userId" component={UserRouter} />
       <Route path="/:tab/u/:userId/:timeframeId" component={UserRouter} />
       <Route path="/:tab/u/:userId/:timeframeId/o/:okrId" component={UserRouter} />
+      <Route path="/:tab/u/:userId/:timeframeId/d/:dialogId" component={UserRouter} />
       <Route path="/:tab/g/:groupId" component={GroupRouter} />
       <Route path="/:tab/g/:groupId/:timeframeId" component={GroupRouter} />
       <Route path="/:tab/g/:groupId/:timeframeId/o/:okrId" component={GroupRouter} />

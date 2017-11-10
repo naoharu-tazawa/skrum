@@ -8,19 +8,20 @@
 }
 .bars {
   max-height: 100%;
-  /*overflow-y: auto;*/
-  /*
-  border-width: thin;
-  border-left-style: solid;
-  border-right-style: solid;
-  border-bottom-style: solid;
-  */
-  /*position: relative;*/
-  /*top: 30px;*/
 }
 .footer {
   background-color: #fff;
-  padding: 10px 0px;
+  padding: 10px 0;
+}
+.alignC {
+  text-align: center;
+}
+.addOkr {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  cursor: pointer;
 }
 .circle {
   width: 40px;
@@ -33,15 +34,5 @@
   text-align: center;
   vertical-align: middle;
   margin-right: 10px;
-  cursor: pointer;
-}
-.alignC {
-  text-align: center;
-}
-.addOkr {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: inherit;
   cursor: pointer;
 }
