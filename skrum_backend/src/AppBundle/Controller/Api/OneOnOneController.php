@@ -157,9 +157,9 @@ class OneOnOneController extends BaseController
      * @Rest\Post("/v1/oneonones/{oneOnOneId}/replies.{_format}")
      * @param Request $request リクエストオブジェクト
      * @param integer $oneOnOneId 1on1ID
-     * @return array
+     * @return OneOnOneDTO
      */
-    public function postOneononeRepliesAction(Request $request, int $oneOnOneId): array
+    public function postOneononeRepliesAction(Request $request, int $oneOnOneId): OneOnOneDTO
     {
         // JsonSchemaバリデーション
         $errors = $this->validateSchema($request, 'AppBundle/Api/JsonSchema/PostOneononeRepliesPdu');
@@ -176,9 +176,9 @@ class OneOnOneController extends BaseController
 
         // 1on1返信コメント処理
         $oneOnOneService = $this->getOneOnOneService();
-        $oneOnOneService->submitOneOnOneReply($auth, $data, $tOneOnOne);
+        $oneOnOneDTO = $oneOnOneService->submitOneOnOneReply($auth, $data, $tOneOnOne);
 
-        return array('result' => 'OK');
+        return $oneOnOneDTO;
     }
 
     /**

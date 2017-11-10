@@ -247,9 +247,9 @@ class OneOnOneService extends BaseService
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
      * @param TOneOnOne $tOneOnOne 返信対象1on1エンティティ
-     * @return void
+     * @return OneOnOneDTO
      */
-    public function submitOneOnOneReply(Auth $auth, array $data, TOneOnOne $tOneOnOne)
+    public function submitOneOnOneReply(Auth $auth, array $data, TOneOnOne $tOneOnOne): OneOnOneDTO
     {
         // トランザクション開始
         $this->beginTransaction();
@@ -288,6 +288,20 @@ class OneOnOneService extends BaseService
             $this->rollback();
             throw new SystemException($e->getMessage());
         }
+
+        // 返却DTO生成
+        $oneOnOneDTO = new OneOnOneDTO();
+        $oneOnOneDTO->setOneOnOneId($tOneOnOneReply->getId());
+        $oneOnOneDTO->setOneOnOneType($tOneOnOneReply->getOneOnOneType());
+        $oneOnOneDTO->setSenderUserId($tOneOnOneReply->getSenderUserId());
+        $mUserRepos = $this->getMUserRepository();
+        $mUser = $mUserRepos->find($tOneOnOneReply->getSenderUserId());
+        $oneOnOneDTO->setSenderUserName($mUser->getLastName() . $mUser->getFirstName());
+        $oneOnOneDTO->setSenderUserImageVersion($mUser->getImageVersion());
+        $oneOnOneDTO->setLastUpdate($tOneOnOneReply->getUpdatedAt());
+        $oneOnOneDTO->setText($tOneOnOneReply->getBody());
+
+        return $oneOnOneDTO;
     }
 
     /**

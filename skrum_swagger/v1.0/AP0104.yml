@@ -38,10 +38,28 @@ paths:
           schema:
             type: object
             properties:
-              result:
+              oneOnOneId:
+                type: integer
+              oneOnOneType:
+                type: string
+              senderUserId:
+                type: integer
+              senderUserName:
+                type: string
+              senderUserImamgeVersion:
+                type: integer
+              lastUpdate:
+                type: string
+              text:
                 type: string
             required:
-              - result
+              - oneOnOneId
+              - oneOnOneType
+              - senderUserId
+              - senderUserName
+              - senderUserImamgeVersion
+              - lastUpdate
+              - text
         400:
           description: JSONスキーマ不正
         401:

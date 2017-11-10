@@ -58,9 +58,9 @@ paths:
                       type: string
                     senderUserId:
                       type: integer
-                    fromName:
+                    senderUserName:
                       type: string
-                    imamgeVersion:
+                    senderUserImamgeVersion:
                       type: integer
                     toNames:
                       type: string
@@ -72,8 +72,8 @@ paths:
                     - oneOnOneId
                     - oneOnOneType
                     - senderUserId
-                    - fromName
-                    - imamgeVersion
+                    - senderUserName
+                    - senderUserImamgeVersion
                     - lastUpdate
                     - text
         400:
