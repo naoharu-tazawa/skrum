@@ -82,13 +82,15 @@ class OkrBar extends Component {
             </Permissible>)}
           {keyResults.length !== 0 && <div className={styles.toolSpace} />}
           {userId && (
-            <button
+            <a
               className={styles.tool}
-              style={{ background: `url(${reportImage}) no-repeat center` }}
+              tabIndex={0}
               onClick={() => openModeless(NewOneOnOneNote, {
                 types: currentUserId === userId ? 'progressMemo' : ['hearing', 'feedback', 'interviewNote'],
                 ...{ userId, okr } })}
-            />)}
+            >
+              <img src={reportImage} alt="OneOnOne" />
+            </a>)}
           <Permissible entity={owner}>
             {({ permitted }) => (
               <DropdownMenu

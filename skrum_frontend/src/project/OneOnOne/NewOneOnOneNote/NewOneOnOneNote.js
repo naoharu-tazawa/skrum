@@ -63,7 +63,8 @@ class NewOneOnOneNote extends Component {
       ...{ oneOnOneType, okr, reportDate, dueDate, feedbackType: '1' },
       ...{ interviewDate, interviewee, ...oneOnOneTos } };
     this.form = withReduxForm(
-      formProps => <DialogForm plain compact modeless className={styles.form} {...formProps} />,
+      formProps =>
+        <DialogForm modeless plain compact fullHeight className={styles.form} {...formProps} />,
       `${formName}-${userId}-${okrId}`,
       { initialValues, validate },
     );
@@ -114,13 +115,13 @@ class NewOneOnOneNote extends Component {
       >
         <div className={styles.dialog}>
           <nav className={styles.nav}>
-            <button
-              type="button"
+            <a
               className={styles.close}
+              tabIndex={0}
               onClick={onClose}
             >
-              <img src="/img/delete_grey.png" alt="" />
-            </button>
+              <img src="/img/delete_grey.png" alt="Close" />
+            </a>
           </nav>
           <header>
             {!isArray(types) && <span className={styles.tab}>{oneOnOneTypes[firstType]}</span>}

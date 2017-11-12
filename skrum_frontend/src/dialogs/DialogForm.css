@@ -19,11 +19,6 @@
   font-size: 12px;
   max-width: 64em;
 }
-.content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
 .content:not(.compact) {
   min-width: 48em;
 }

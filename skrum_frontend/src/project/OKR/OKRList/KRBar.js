@@ -65,13 +65,15 @@ class KRBar extends Component {
             </Permissible>)}
           {type !== OKRType.KR && <div className={styles.toolSpace} />}
           {userId && (
-            <button
+            <a
               className={styles.tool}
-              style={{ background: `url(${reportImage}) no-repeat center` }}
+              tabIndex={0}
               onClick={() => openModeless(NewOneOnOneNote, {
                 types: currentUserId === userId ? 'progressMemo' : ['hearing', 'feedback', 'interviewNote'],
                 ...{ userId, okr: keyResult } })}
-            />)}
+            >
+              <img src={reportImage} alt="OneOnOne" />
+            </a>)}
           <Permissible entity={owner}>
             {({ permitted }) => (
               <DropdownMenu

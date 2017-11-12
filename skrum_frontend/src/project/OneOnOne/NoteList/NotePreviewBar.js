@@ -33,7 +33,7 @@ export default class NotePreviewBar extends Component {
               {toRelativeTimeText(lastUpdate)}
             </div>
           </header>
-          <section className={styles.body}>
+          <section>
             <Linkify><p className={styles.body}>{text}</p></Linkify>
           </section>
         </Link>

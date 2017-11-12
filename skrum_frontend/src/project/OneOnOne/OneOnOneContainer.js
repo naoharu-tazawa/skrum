@@ -74,14 +74,15 @@ class OneOnOneContainer extends Component {
               ))}
             </ul>
             <footer>
-              <button
+              <a
                 className={styles.tool}
+                tabIndex={0}
                 onClick={() => openModeless(NewOneOnOneNote,
                   { types: keys(oneOnOneTypes)[toNumber(type) - 1],
                     ...{ userId: currentUserId, okr: {} } })}
               >
                 <img src="/img/common/icn_plus.png" alt="Add" />
-              </button>
+              </a>
             </footer>
           </nav>
           <article className={styles.list} style={showDialog ? { display: 'none' } : {}}>

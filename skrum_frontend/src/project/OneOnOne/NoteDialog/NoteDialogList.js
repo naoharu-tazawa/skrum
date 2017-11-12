@@ -70,6 +70,7 @@ export default class NoteDialogList extends Component {
             />
           </section>
           <button
+            type="button"
             disabled={!reply || isPostingReply}
             onClick={() => dispatchPostOneOnOneReply(reply)
               .then(({ error }) => !error && this.setState({ reply: '' }))}

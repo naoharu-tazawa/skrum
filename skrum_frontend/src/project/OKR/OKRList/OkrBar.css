@@ -106,11 +106,12 @@
   border: 1px solid #8e9aa6;
   border-radius: 50%;
   overflow: hidden;
-  display: inline-table;
+  /*display: inline-table;*/
   line-height: 35px;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
+  outline: none;
 }
 button.tool {
   background-color: inherit;
