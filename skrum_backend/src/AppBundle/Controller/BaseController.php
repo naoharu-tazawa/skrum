@@ -343,6 +343,9 @@ class BaseController extends FOSRestController
      */
     protected function checkSearchKeyword(string $item = null): array
     {
+        // 文字コードをSJISからUTF-8に変換
+        $item = mb_convert_encoding($item, "UTF-8", "SJIS");
+
         return $this->validateString($item, 255);
     }
 

@@ -315,12 +315,15 @@ SQL;
     {
         $qb = $this->createQueryBuilder('mu');
         $qb->select('mu', 'tooo')
+            ->innerJoin('AppBundle:TEmailSettings', 'tes', 'WITH', 'mu.userId = tes.userId')
             ->innerJoin('AppBundle:TOneOnOneTo', 'tooot', 'WITH', 'mu.userId = tooot.userId')
             ->innerJoin('AppBundle:TOneOnOne', 'tooo', 'WITH', 'tooot.oneOnOne = tooo.id')
             ->where('mu.archivedFlg = :archivedFlg')
+            ->andWhere('tes.oneOnOne = :oneOnOne')
             ->andWhere('tooo.oneOnOneType = :oneOnOneType')
             ->andWhere('tooo.dueDate = :dueDate')
             ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
+            ->setParameter('oneOnOne', DBConstant::EMAIL_ONE_ON_ONE)
             ->setParameter('oneOnOneType', DBConstant::ONE_ON_ONE_TYPE_HEARING)
             ->setParameter('dueDate', DateUtility::getCurrentDateString());
 
