@@ -111,7 +111,7 @@ export const fetchOneOnOneDialog = (userId, id) =>
     if (state.oneOnOne.isFetchingDialog) return Promise.resolve();
     dispatch(requestFetchOneOnOneDialog());
     return getJson(`/users/${userId}/oneonones/${id}.json`, state)()
-      .then(json => dispatch(finishFetchOneOnOneDialog('data', json)))
+      .then(json => dispatch(finishFetchOneOnOneDialog('data', { id, ...json })))
       .catch(({ message }) => dispatch(finishFetchOneOnOneDialog(new Error(message))));
   };
 

@@ -13,9 +13,10 @@
   width: calc(100% - 4em - 16px);
   display: inline-block;
   padding: 1em 0;
+  white-space: pre-line;
 }
 .text header {
-  color: #8e9aa6;
+  color: #90949c;
   font-size: 0.7em;
   display: -webkit-box;
   display: -moz-box;
@@ -33,7 +34,7 @@
   margin-left: auto;
 }
 .body {
-  color: #626a7f;
+  color: #333333;
   font-size: 0.9em;
   padding-top: 0.2em;
 }

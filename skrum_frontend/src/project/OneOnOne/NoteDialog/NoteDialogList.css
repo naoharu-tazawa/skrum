@@ -18,13 +18,13 @@
 }
 .content > header h1 {
   font-size: 1em;
-  color: #626a7f;
+  color: #333333;
   position: relative;
   min-height: 2em;
   display: flex;
 }
 .backLink {
-  color: #8e9aa6;
+  color: #90949c;
   border: 1px #8e9aa6 solid;
   padding: 0.2em 1em;
   border-radius: 3em;
