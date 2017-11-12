@@ -51,7 +51,7 @@ export default class NoteDialogList extends Component {
       <section className={styles.content}>
         <header>
           <h1>
-            <Link className={styles.backLink} to={backPath}>履歴一覧へ戻る</Link>
+            <Link className={styles.backLink} to={backPath}>一覧へ戻る</Link>
             <span className={styles.title}>
               {!isFetching && mapHeader(header, (key, label, text) =>
                 (label ? <p key={key}>{label}：{text}</p> : null))}

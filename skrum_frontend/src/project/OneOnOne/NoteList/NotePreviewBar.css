@@ -3,7 +3,7 @@
   border-bottom: 1px solid #d8dfe5;
   padding: 0 2%;
 }
-.content.read {
+.content.unread {
   background-color: #f7f9fa;
 }
 .icon {
@@ -18,7 +18,7 @@
   padding: 1em 0;
 }
 .text header {
-  color: #8e9aa6;
+  color: #90949c;
   font-size: 0.7em;
   display: -webkit-box;
   display: -moz-box;
@@ -36,7 +36,12 @@
   margin-left: auto;
 }
 .body {
-  color: #626a7f;
+  color: #333333;
   font-size: 0.9em;
-  padding-top: 0.2em;
+  margin-top: 0.2em;
+  height: 1.75em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }

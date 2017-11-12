@@ -15,13 +15,18 @@ export default class NotePreviewBar extends Component {
 
   render() {
     const { note } = this.props;
-    const { id, sender, toNames, lastUpdate, text, read } = note;
+    const { id, sender, toNames, intervieweeUserName, lastUpdate, text, read } = note;
     return (
-      <section className={`${styles.content} ${read ? '' : styles.read}`}>
+      <section className={`${styles.content} ${read ? '' : styles.unread}`}>
         <EntityLink className={styles.icon} avatarOnly avatarSize={34} entity={sender} route={{ tab: 'objective' }} />
         <Link className={styles.text} to={replacePath({ aspect: 'd', aspectId: id })}>
           <header>
-            <div className={styles.title}>{sender.name}&emsp;｜&emsp;To: {toNames}</div>
+            <div className={styles.title}>
+              {sender.name}
+              &emsp;｜&emsp;To: {toNames}
+              &emsp;{intervieweeUserName && '｜'}
+              &emsp;{intervieweeUserName && `面談相手: ${intervieweeUserName}`}
+            </div>
             <div className={styles.date}>
               {formatDate(lastUpdate, { format: DateFormat.YMDHM })}
               &emsp;

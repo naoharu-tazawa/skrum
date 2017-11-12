@@ -21,13 +21,13 @@ import styles from './NewOneOnOneNote.css';
 const formName = 'newOneOnOne';
 
 const validate =
-  ({ oneOnOneType, okr, reportDate, dueDate, interviewDate, interviewee, to, body } = {}) => ({
+  ({ oneOnOneType, okr, reportDate, dueDate, interviewDate, interviewee, [`to${oneOnOneType}`]: to, body } = {}) => ({
     okr: oneOnOneType === '2' && isEmpty(okr) && '対象目標を入力してください',
     reportDate: !isValidDate(reportDate) && '日付を入力してください',
     dueDate: !isValidDate(dueDate) && '回答期限を入力してください',
     interviewDate: !isValidDate(interviewDate) && '面談日を入力してください',
     interviewee: isEmpty(interviewee) && '面談相手を入力してください',
-    to: oneOnOneType !== '2' && oneOnOneType !== '5' && isEmpty(to) && 'ＴＯを入力してください',
+    [`to${oneOnOneType}`]: oneOnOneType !== '2' && oneOnOneType !== '5' && isEmpty(to) && 'ＴＯを入力してください',
     body: oneOnOneType !== '3' && !body && 'コメントを入力してください',
   });
 
@@ -147,7 +147,7 @@ class NewOneOnOneNote extends Component {
               },
             )}
           </header>
-          {okr && activeTab !== 'interviewNote' && (
+          {okr && activeTab !== 'dailyReport' && activeTab !== 'interviewNote' && (
             <section>
               <label>対象目標</label>
               {withItemisedReduxField(OKRSearch, 'okr', { loadBasicsOKRs: EntityType.USER })}

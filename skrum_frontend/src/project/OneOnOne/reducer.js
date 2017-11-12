@@ -1,4 +1,5 @@
 import { Action } from './action';
+import { oneOnOneTypeKeys } from './propTypes';
 
 export default (state = {
   notes: [],
@@ -79,7 +80,18 @@ export default (state = {
         const { message } = payload;
         return { ...state, notes: [], isFetchingDialog: false, error: { message } };
       }
-      return { ...state, ...payload.data, isFetchingDialog: false, error: null };
+      const { id, header, dialog } = payload.data;
+      const { readFlg: lastReadFlg = 1 } = [...state.notes, ...state.found]
+        .find(({ oneOnOneId }) => oneOnOneId === id);
+      const notes = state.notes.map(({ oneOnOneId, readFlg, ...note }) =>
+        ({ oneOnOneId, readFlg: id === oneOnOneId ? 1 : readFlg, ...note }));
+      const found = state.found.map(({ oneOnOneId, readFlg, ...note }) =>
+        ({ oneOnOneId, readFlg: id === oneOnOneId ? 1 : readFlg, ...note }));
+      const key = oneOnOneTypeKeys[dialog[0].oneOnOneType];
+      const unreadCount = state.unread[key];
+      const unread = { ...state.unread, [key]: unreadCount - (1 - lastReadFlg) };
+      const update = { notes, found, unread, header, dialog };
+      return { ...state, ...update, isFetchingDialog: false, error: null };
     }
 
     case Action.REQUEST_POST_ONE_ON_ONE_NOTE:

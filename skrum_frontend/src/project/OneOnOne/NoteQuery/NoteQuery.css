@@ -29,6 +29,7 @@
 }
 .date input {
   max-width: 100%;
+  font-size: 0.65em;
 }
 .span {
   color: #fff;
@@ -36,6 +37,7 @@
   display: inline-block;
   text-align: center;
   vertical-align: middle;
+  font-size: 0.65em;
 }
 .user {
   width: 100%;

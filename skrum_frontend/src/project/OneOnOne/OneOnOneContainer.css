@@ -55,7 +55,7 @@
   display: flex;
   -webkit-flex-wrap: nowrap;
   flex-wrap: nowrap;
-  color: #626a7f;
+  color: #333333;
   align-items: center;
   cursor: pointer;
   outline: none;
@@ -69,17 +69,17 @@
 .main > nav .countBox {
   flex-basis: 2em;
   margin-right: 1.5em;
+  height: 1.4em;
 }
 .main > nav .count {
   border-radius: 50%;
   background-color: #8e9aa6;
   color: #fff;
-  width: 1.2em;
+  width: 1.4em;
   display: block;
   margin-right: auto;
   text-align: center;
-  height: 1.2em;
-  padding: 0.1em;
+  padding: 0.2em;
 }
 .main > nav > footer {
   padding-left: 2.5em;

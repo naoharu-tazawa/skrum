@@ -17,12 +17,12 @@ class NoteResult extends Component {
 
   render() {
     const { note, isCurrent } = this.props;
-    const { id, type, sender, toNames, lastUpdate, text } = note;
+    const { id, type, sender, toNames, lastUpdate, text, read } = note;
     const typeNameMap = { 1: '日報', 2: '進捗報告', 3: 'ヒアリング', 4: 'フィードバック', 5: '面談メモ' };
     const typeColorMap = { 1: '#f2b230', 2: '#2eb9fe', 3: '#ff4dff', 4: '#36b374', 5: '#b1e43e' };
     const path = replacePath({ aspect: 'd', aspectId: id });
     return (
-      <section className={`${styles.content} ${isCurrent ? styles.current : ''}`}>
+      <section className={`${styles.content} ${isCurrent ? styles.current : ''} ${read ? '' : styles.unread}`}>
         <header>
           <EntityLink className={styles.icon} avatarOnly avatarSize={34} entity={sender} route={{ tab: 'objective' }} basicRoute />
           <Link className={styles.text} to={path}>
