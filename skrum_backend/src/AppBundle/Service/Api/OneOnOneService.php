@@ -598,7 +598,7 @@ class OneOnOneService extends BaseService
             $oneOnOneDTO->setSenderUserName($fromUserEntity->getLastName() . $fromUserEntity->getFirstName());
             $oneOnOneDTO->setSenderUserImageVersion($fromUserEntity->getImageVersion());
             $oneOnOneDTO->setToNames($toNames);
-            $oneOnOneDTO->setLastUpdate($tOneOnOne->getUpdatedAt());
+            $oneOnOneDTO->setLastUpdate($tOneOnOne->getCreatedAt());
             $oneOnOneDTO->setText($tOneOnOne->getBody());
 
             $oneOnOneDTOArray[] = $oneOnOneDTO;

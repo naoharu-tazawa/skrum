@@ -88,7 +88,7 @@ class TOneOnOneRepository extends BaseRepository
         )
 
         ORDER BY new_arrival_datetime DESC
-        LIMIT 8;
+        LIMIT 10;
 SQL;
 
         $params['companyId'] = $auth->getCompanyId();
@@ -179,7 +179,7 @@ SQL;
         )
 
         ORDER BY created_at DESC
-        LIMIT 10;
+        LIMIT 12;
 SQL;
 
         $params['companyId'] = $auth->getCompanyId();
