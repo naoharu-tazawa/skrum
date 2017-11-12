@@ -16,23 +16,23 @@ class OkrsBulkRegistrationCommand extends BaseCommand
 {
     protected function configure()
     {
-        $this->setName('BX0101')
+        $this->setName('BC0102')
             ->setDescription('OKR一括登録バッチ');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->logDebug('----------BX0101 OKR一括登録バッチ 開始----------');
+        $this->logDebug('----------BC0102 OKR一括登録バッチ 開始----------');
 
         $okrsBulkRegistrationService = $this->getOkrsBulkRegistrationService();
         $exitCode = $okrsBulkRegistrationService->run();
 
         if ($exitCode === DBConstant::EXIT_CODE_SUCCESS) {
-            $this->logDebug('----------BX0101 OKR一括登録バッチ 正常終了----------');
+            $this->logDebug('----------BC0102 OKR一括登録バッチ 正常終了----------');
         } elseif ($exitCode === DBConstant::EXIT_CODE_RETRY) {
-            $this->logDebug('----------BX0101 OKR一括登録バッチ リトライ終了----------');
+            $this->logDebug('----------BC0102 OKR一括登録バッチ リトライ終了----------');
         } elseif ($exitCode === DBConstant::EXIT_CODE_ERROR) {
-            $this->logDebug('----------BX0101 OKR一括登録バッチ 異常終了----------');
+            $this->logDebug('----------BC0102 OKR一括登録バッチ 異常終了----------');
         }
 
         $output->writeln($exitCode);

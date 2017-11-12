@@ -4,6 +4,9 @@
 # BB0101 目標期限日リマインダーメール
 0 6 * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0101 --env=prod --bulk_size=1000
 
+# BB0102 ヒアリング回答期限日リマインダーメール
+0 7 * * * cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0102 --env=prod --bulk_size=1000
+
 # BB0103 進捗登録リマインダーメール
 0 2 * * 5 cd /usr/local/gitrepos/skrum/skrum_backend; php app/console BB0103 --env=prod --bulk_size=1000
 

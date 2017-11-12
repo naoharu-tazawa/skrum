@@ -135,6 +135,11 @@ class BaseCommand extends ContainerAwareCommand
         return $this->getContainer()->get('batch.group_report_email_service');
     }
 
+    protected function getHearingDueDateReminderEmailService()
+    {
+        return $this->getContainer()->get('batch.hearing_due_date_reminder_email_service');
+    }
+
     protected function getMemberReportEmailService()
     {
         return $this->getContainer()->get('batch.member_report_email_service');

@@ -26,7 +26,7 @@ use AppBundle\Api\ResponseDTO\NestedObject\OneOnOneDefaultDestinationDTO;
 class OneOnOneService extends BaseService
 {
     /**
-     * 日報/進捗報告送信処理
+     * 日報/進捗メモ送信処理
      *
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列
@@ -173,7 +173,7 @@ class OneOnOneService extends BaseService
     }
 
     /**
-     * 面談メモ送信処理
+     * 面談ノート送信処理
      *
      * @param Auth $auth 認証情報
      * @param array $data リクエストJSON連想配列

@@ -21,7 +21,7 @@ use AppBundle\Api\ResponseDTO\OneOnOneDTO;
 class OneOnOneController extends BaseController
 {
     /**
-     * 日報/進捗報告送信
+     * 日報/進捗メモ送信
      *
      * @Rest\Post("/v1/users/{userId}/reports.{_format}")
      * @param Request $request リクエストオブジェクト
@@ -117,7 +117,7 @@ class OneOnOneController extends BaseController
     }
 
     /**
-     * 面談メモ送信
+     * 面談ノート送信
      *
      * @Rest\Post("/v1/users/{userId}/interviewnotes.{_format}")
      * @param Request $request リクエストオブジェクト

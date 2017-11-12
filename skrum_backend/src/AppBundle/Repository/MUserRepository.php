@@ -4,6 +4,7 @@ namespace AppBundle\Repository;
 
 use AppBundle\Utils\DBConstant;
 use \PDO;
+use AppBundle\Utils\DateUtility;
 
 /**
  * MUserリポジトリクラス
@@ -301,6 +302,27 @@ SQL;
             ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
             ->setParameter('roleLevel', DBConstant::ROLE_LEVEL_ADMIN)
             ->setParameter('reportFeedbackTarget', DBConstant::EMAIL_REPORT_FEEDBACK_TARGET);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * ヒアリング回答期限日リマインダーメール対象者を取得（バッチ）
+     *
+     * @return array
+     */
+    public function getUsersForHearingDueDateReminderEmail(): array
+    {
+        $qb = $this->createQueryBuilder('mu');
+        $qb->select('mu', 'tooo')
+            ->innerJoin('AppBundle:TOneOnOneTo', 'tooot', 'WITH', 'mu.userId = tooot.userId')
+            ->innerJoin('AppBundle:TOneOnOne', 'tooo', 'WITH', 'tooot.oneOnOne = tooo.id')
+            ->where('mu.archivedFlg = :archivedFlg')
+            ->andWhere('tooo.oneOnOneType = :oneOnOneType')
+            ->andWhere('tooo.dueDate = :dueDate')
+            ->setParameter('archivedFlg', DBConstant::FLG_FALSE)
+            ->setParameter('oneOnOneType', DBConstant::ONE_ON_ONE_TYPE_HEARING)
+            ->setParameter('dueDate', DateUtility::getCurrentDateString());
 
         return $qb->getQuery()->getResult();
     }

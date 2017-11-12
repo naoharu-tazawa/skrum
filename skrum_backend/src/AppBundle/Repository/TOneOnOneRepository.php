@@ -44,52 +44,102 @@ class TOneOnOneRepository extends BaseRepository
      */
     public function getNewArrivalOneOnOne(Auth $auth, string $startDatetime, string $endDatetime, string $before, string $keyword = null): array
     {
-        $sql = <<<SQL
-        (
-        SELECT t0_.id, t0_.one_on_one_type, t0_.sender_user_id, t0_.target_date, t0_.due_date, t0_.feedback_type, t0_.interviewee_user_id, t0_.okr_id, t0_.new_arrival_datetime, m2_.user_id, m2_.last_name, m2_.first_name, m2_.image_version
-        FROM t_one_on_one t0_
-        INNER JOIN m_user m2_
-        ON (t0_.sender_user_id = m2_.user_id) AND (m2_.deleted_at IS NULL)
-        LEFT OUTER JOIN t_one_on_one_to t1_
-        ON (t0_.id = t1_.one_on_one_id) AND (t1_.deleted_at IS NULL)
-        INNER JOIN (
-            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.image_version
-            FROM m_user m0_
-            WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)) AS m1_
-        ON (t0_.sender_user_id = m1_.user_id AND m1_.user_id = :userId)
-        WHERE (
-            (t0_.new_arrival_datetime >= :startDatetime AND t0_.new_arrival_datetime < :endDatetime)
-            AND t0_.new_arrival_datetime < :before
-            AND t0_.parent_id IS NULL
-            AND m1_.name LIKE :keyword)
-            AND (t0_.deleted_at IS NULL)
-        )
+        if (empty($keyword)) {
+            $sql = <<<SQL
+            (
+            SELECT t0_.id, t0_.one_on_one_type, t0_.sender_user_id, t0_.target_date, t0_.due_date, t0_.feedback_type, t0_.interviewee_user_id, t0_.okr_id, t0_.new_arrival_datetime, m2_.user_id, m2_.last_name, m2_.first_name, m2_.image_version
+            FROM t_one_on_one t0_
+            INNER JOIN m_user m2_
+            ON (t0_.sender_user_id = m2_.user_id) AND (m2_.deleted_at IS NULL)
+            LEFT OUTER JOIN t_one_on_one_to t1_
+            ON (t0_.id = t1_.one_on_one_id) AND (t1_.deleted_at IS NULL)
+            INNER JOIN (
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.image_version
+                FROM m_user m0_
+                WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)) AS m1_
+            ON (t0_.sender_user_id = m1_.user_id AND m1_.user_id = :userId)
+            WHERE (
+                (t0_.new_arrival_datetime >= :startDatetime AND t0_.new_arrival_datetime < :endDatetime)
+                AND t0_.new_arrival_datetime < :before
+                AND t0_.parent_id IS NULL)
+                AND (t0_.deleted_at IS NULL)
+            )
 
-        UNION
+            UNION
 
-        (
-        SELECT t0_.id, t0_.one_on_one_type, t0_.sender_user_id, t0_.target_date, t0_.due_date, t0_.feedback_type, t0_.interviewee_user_id, t0_.okr_id, t0_.new_arrival_datetime, m2_.user_id, m2_.last_name, m2_.first_name, m2_.image_version
-        FROM t_one_on_one t0_
-        INNER JOIN m_user m2_
-        ON (t0_.sender_user_id = m2_.user_id) AND (m2_.deleted_at IS NULL)
-        LEFT OUTER JOIN t_one_on_one_to t1_
-        ON (t0_.id = t1_.one_on_one_id) AND (t1_.deleted_at IS NULL)
-        INNER JOIN (
-            SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.image_version
-            FROM m_user m0_
-            WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)) AS m1_
-        ON (t1_.user_id = m1_.user_id AND m1_.user_id = :userId)
-        WHERE (
-            (t0_.new_arrival_datetime >= :startDatetime AND t0_.new_arrival_datetime < :endDatetime)
-            AND t0_.new_arrival_datetime < :before
-            AND t0_.parent_id IS NULL
-            AND m1_.name LIKE :keyword)
-            AND (t0_.deleted_at IS NULL)
-        )
+            (
+            SELECT t0_.id, t0_.one_on_one_type, t0_.sender_user_id, t0_.target_date, t0_.due_date, t0_.feedback_type, t0_.interviewee_user_id, t0_.okr_id, t0_.new_arrival_datetime, m2_.user_id, m2_.last_name, m2_.first_name, m2_.image_version
+            FROM t_one_on_one t0_
+            INNER JOIN m_user m2_
+            ON (t0_.sender_user_id = m2_.user_id) AND (m2_.deleted_at IS NULL)
+            LEFT OUTER JOIN t_one_on_one_to t1_
+            ON (t0_.id = t1_.one_on_one_id) AND (t1_.deleted_at IS NULL)
+            INNER JOIN (
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.image_version
+                FROM m_user m0_
+                WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)) AS m1_
+            ON (t1_.user_id = m1_.user_id AND m1_.user_id = :userId)
+            WHERE (
+                (t0_.new_arrival_datetime >= :startDatetime AND t0_.new_arrival_datetime < :endDatetime)
+                AND t0_.new_arrival_datetime < :before
+                AND t0_.parent_id IS NULL)
+                AND (t0_.deleted_at IS NULL)
+            )
 
-        ORDER BY new_arrival_datetime DESC
-        LIMIT 10;
+            ORDER BY new_arrival_datetime DESC
+            LIMIT 10;
 SQL;
+        } else {
+            $sql = <<<SQL
+            (
+            SELECT t0_.id, t0_.one_on_one_type, t0_.sender_user_id, t0_.target_date, t0_.due_date, t0_.feedback_type, t0_.interviewee_user_id, t0_.okr_id, t0_.new_arrival_datetime, m2_.user_id, m2_.last_name, m2_.first_name, m2_.image_version
+            FROM t_one_on_one t0_
+            INNER JOIN m_user m2_
+            ON (t0_.sender_user_id = m2_.user_id) AND (m2_.deleted_at IS NULL)
+            LEFT OUTER JOIN t_one_on_one_to t1_
+            ON (t0_.id = t1_.one_on_one_id) AND (t1_.deleted_at IS NULL)
+            INNER JOIN (
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.image_version
+                FROM m_user m0_
+                WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)) AS m1_
+            ON (t0_.sender_user_id = m1_.user_id)
+            WHERE (
+                (t0_.new_arrival_datetime >= :startDatetime AND t0_.new_arrival_datetime < :endDatetime)
+                AND t0_.new_arrival_datetime < :before
+                AND t0_.parent_id IS NULL
+                AND t1_.user_id = :userId
+                AND m1_.name LIKE :keyword)
+                AND (t0_.deleted_at IS NULL)
+            )
+
+            UNION
+
+            (
+            SELECT t0_.id, t0_.one_on_one_type, t0_.sender_user_id, t0_.target_date, t0_.due_date, t0_.feedback_type, t0_.interviewee_user_id, t0_.okr_id, t0_.new_arrival_datetime, m2_.user_id, m2_.last_name, m2_.first_name, m2_.image_version
+            FROM t_one_on_one t0_
+            INNER JOIN m_user m2_
+            ON (t0_.sender_user_id = m2_.user_id) AND (m2_.deleted_at IS NULL)
+            LEFT OUTER JOIN t_one_on_one_to t1_
+            ON (t0_.id = t1_.one_on_one_id) AND (t1_.deleted_at IS NULL)
+            INNER JOIN (
+                SELECT m0_.user_id, m0_.last_name, m0_.first_name, CONCAT(m0_.last_name, m0_.first_name) AS name, m0_.image_version
+                FROM m_user m0_
+                WHERE (m0_.company_id = :companyId AND m0_.archived_flg = :archivedFlg) AND (m0_.deleted_at IS NULL)) AS m1_
+            ON (t1_.user_id = m1_.user_id)
+            WHERE (
+                (t0_.new_arrival_datetime >= :startDatetime AND t0_.new_arrival_datetime < :endDatetime)
+                AND t0_.new_arrival_datetime < :before
+                AND t0_.parent_id IS NULL
+                AND t0_.sender_user_id = :userId
+                AND m1_.name LIKE :keyword)
+                AND (t0_.deleted_at IS NULL)
+            )
+
+            ORDER BY new_arrival_datetime DESC
+            LIMIT 10;
+SQL;
+        }
+
 
         $params['companyId'] = $auth->getCompanyId();
         $params['archivedFlg'] = DBConstant::FLG_FALSE;
@@ -97,7 +147,7 @@ SQL;
         $params['startDatetime'] = $startDatetime;
         $params['endDatetime'] = $endDatetime;
         $params['before'] = $before;
-        $params['keyword'] = $keyword . '%';
+        if (!empty($keyword)) $params['keyword'] = $keyword . '%';
 
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->execute($params);
