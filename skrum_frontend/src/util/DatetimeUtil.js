@@ -42,7 +42,7 @@ export const formatTime = date =>
   moment(date).format('HH:mm');
 
 export const isToday = date =>
-  moment(date).startOf('day').isSame(moment(date).startOf('day'));
+  moment(date).startOf('day').isSame(moment().startOf('day'));
 
 export const compactDateTime = date =>
   (isToday(date) ? formatTime(date) : moment(date).format('MMMDo'));

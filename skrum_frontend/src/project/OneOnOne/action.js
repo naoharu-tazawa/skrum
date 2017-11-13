@@ -95,8 +95,8 @@ export const queryMoreOneOnOneNotes = (userId, { startDate, endDate, keyword }, 
     if (state.oneOnOne.isQueryingMore) return Promise.resolve();
     dispatch(requestMoreOneOnOneQuery());
     const parameters = {
-      sdate: toUrlDateParam(startDate),
-      edate: toUrlDateParam(endDate),
+      ...startDate && { sdate: toUrlDateParam(startDate) },
+      ...endDate && { edate: toUrlDateParam(endDate) },
       q: keyword,
       before,
     };
