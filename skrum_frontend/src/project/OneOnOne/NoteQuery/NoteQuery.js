@@ -31,7 +31,7 @@ export default class NoteQuery extends Component {
     const lastNote = last(found) || {};
     return (
       <aside className={styles.content}>
-        <header className={styles.search}>
+        <header>
           <DatePickerInput
             containerClass={styles.date}
             value={startDate && formatUtcDate(startDate)}
@@ -54,10 +54,12 @@ export default class NoteQuery extends Component {
             onChange={({ target: { value } }) => this.setState({ keyword: value })}
           />
           <button
-            className={`${styles.narrowing} ${isQuerying ? styles.spinner : ''}`}
+            className={`${styles.search} ${isQuerying ? styles.spinner : ''}`}
             type="button"
             onClick={() => dispatchQueryNotes({ startDate, endDate, keyword })}
-            disabled={isQuerying || !isValidDate(startDate) || !isValidDate(endDate)}
+            disabled={isQuerying ||
+              (startDate && !isValidDate(startDate)) ||
+              (endDate && !isValidDate(endDate))}
           >
             {!isQuerying ? '絞り込む' : '　'}
           </button>

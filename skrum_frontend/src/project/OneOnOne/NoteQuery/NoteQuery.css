@@ -14,15 +14,14 @@
   flex-wrap: nowrap;
   height: 100%;
 }
-.search {
+.content > header {
   padding: 1.2em;
   border-bottom: 1px solid #82868c;
 }
-.search input {
+.content > header input {
   color: #626a7f;
   padding: 0.2em;
   border: solid 1px #979a9c;
-  font-size: 0.8em;
 }
 .date {
   width: 45%;
@@ -42,8 +41,9 @@
 .user {
   width: 100%;
   margin-top: 1em;
+  font-size: 0.8em;
 }
-.narrowing {
+.search {
   color: #fff;
   margin: 1em auto 0;
   background-color: transparent;
@@ -56,6 +56,9 @@
   font-size: 0.85em;
   cursor: pointer;
   outline: none;
+}
+.search:disabled {
+  color: gray;
 }
 .spinner {
   background: url(/img/rolling.svg) center no-repeat;

@@ -24,7 +24,7 @@ const mapHeader = (header, mapper) =>
     if (key === 'feedbackType') {
       return mapper(key, label, feedbackTypes[value]);
     }
-    if (isValidDate(value)) {
+    if (isValidDate(value, 'YYYY-MM-DD', true)) {
       return mapper(key, label, formatDate(value));
     }
     return mapper(key, label, value);

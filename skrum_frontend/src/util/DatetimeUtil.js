@@ -21,8 +21,8 @@ export const DateFormat = {
 export const getDate = () =>
   moment();
 
-export const isValidDate = date =>
-  date && moment(date, DateFormat.YMDHM).isValid();
+export const isValidDate = (date, format = DateFormat.YMDHM, strict = false) =>
+  date && moment(date, format, strict).isValid();
 
 export const toUtcDate = (date, { format = DateFormat.YMDHM } = {}) =>
   moment(date, format).local().format();
@@ -40,6 +40,12 @@ export const formatDate = (date, { format = DateFormat.YMD } = {}) =>
 
 export const formatTime = date =>
   moment(date).format('HH:mm');
+
+export const isToday = date =>
+  moment(date).startOf('day').isSame(moment(date).startOf('day'));
+
+export const compactDateTime = date =>
+  (isToday(date) ? formatTime(date) : moment(date).format('MMMDo'));
 
 export const formatDateTime = (date, { format = DateFormat.YMDHM } = {}) =>
   moment(date).format(format);

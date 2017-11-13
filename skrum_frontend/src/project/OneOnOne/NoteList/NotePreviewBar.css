@@ -38,8 +38,8 @@
 .body {
   color: #333333;
   font-size: 0.9em;
-  margin-top: 0.2em;
-  max-height: 1.8em;
+  padding-top: 0.2em;
+  max-height: 2em;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;

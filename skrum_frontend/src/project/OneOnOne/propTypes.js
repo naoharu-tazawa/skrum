@@ -13,6 +13,9 @@ export const oneOnOneTypes = {
 export const oneOnOneTypeKeys = fromPairs(toPairs(oneOnOneTypes)
   .map(([key], index) => [index + 1, key]));
 
+export const oneOnOneTypeNames = fromPairs(toPairs(oneOnOneTypes)
+  .map(([, name], index) => [index + 1, name]));
+
 export const oneOnOneTypePropType = PropTypes.oneOf(keys(oneOnOneTypeKeys));
 
 export const feedbackTypes = { 1: 'ありがとう', 2: 'アドバイス', 3: 'グッジョブ', 4: '課題点' };
@@ -31,7 +34,7 @@ export const notePropTypes = PropTypes.shape({
 export const notesPropTypes = PropTypes.arrayOf(notePropTypes);
 
 export const queryPropTypes = PropTypes.shape({
-  startDate: PropTypes.string.isRequired,
-  endDate: PropTypes.string.isRequired,
-  keyword: PropTypes.string.isRequired,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
+  keyword: PropTypes.string,
 });

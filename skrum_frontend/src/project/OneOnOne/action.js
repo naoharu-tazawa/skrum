@@ -80,8 +80,8 @@ export const queryOneOnOneNotes = (userId, query) =>
     dispatch(requestFetchOneOnOneQuery());
     const { startDate, endDate, keyword } = query;
     const parameters = {
-      sdate: toUrlDateParam(startDate),
-      edate: toUrlDateParam(endDate),
+      ...startDate && { sdate: toUrlDateParam(startDate) },
+      ...endDate && { edate: toUrlDateParam(endDate) },
       q: keyword,
     };
     return getJson(`/users/${userId}/newoneonones.json`, state)(parameters)

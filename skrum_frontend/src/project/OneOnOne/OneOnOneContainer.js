@@ -103,7 +103,7 @@ class OneOnOneContainer extends Component {
 const mapStateToProps = ({ auth, oneOnOne, routing }) => {
   const { userId: currentUserId } = auth;
   const today = toUtcDate(getDate());
-  const defaultQuery = { startDate: today, endDate: today, keyword: '' };
+  const defaultQuery = { endDate: today, keyword: '' };
   const { type = '1', query = defaultQuery, unread, hasMoreNotes, error } = oneOnOne;
   const { locationBeforeTransitions } = routing;
   const { pathname } = locationBeforeTransitions || {};

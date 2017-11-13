@@ -23,7 +23,7 @@
   flex-wrap: nowrap;
 }
 .icon {
-  flex-basis: 2.2em;
+  flex-basis: calc(34px + 1em);
   display: inline-block;
   padding: 1em 1em 0 0;
 }
@@ -67,7 +67,7 @@
 .body {
   margin: 0.5em 0 1em;
   font-size: 0.8em;
-  max-height: 1.9em;
+  max-height: 2em;
   overflow: hidden;
   display: flex;
   display: -webkit-box;

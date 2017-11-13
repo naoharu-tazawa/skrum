@@ -30,6 +30,7 @@
   border-radius: 3em;
   font-size: 0.75em;
   margin: 0 2em;
+  display: inline-table;
 }
 .backLink:before {
   display: inline-block;
@@ -41,7 +42,7 @@
   content: "";
 }
 .title {
-  margin: auto 0;
+  margin: auto 4em auto 0;
 }
 .spinner {
   margin: auto;
