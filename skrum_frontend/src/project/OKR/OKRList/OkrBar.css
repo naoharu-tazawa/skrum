@@ -86,7 +86,8 @@
   vertical-align: middle;
 }
 .circle_small {
-  width: 27px;
+  min-width: 27px;
+  max-width: 27px;
   height: 27px;
   font-size: 10px;
   line-height: 25px;
@@ -101,7 +102,7 @@
   cursor: default !important;
 }
 .tool {
-  width: 40px;
+  min-width: 40px;
   height: 40px;
   border: 1px solid #8e9aa6;
   border-radius: 50%;
@@ -121,5 +122,5 @@ button.tool:focus {
   outline: 0;
 }
 .toolSpace {
-  width: 40px;
+  min-width: 40px;
 }

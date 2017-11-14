@@ -77,4 +77,4 @@ class UserGroupList extends Component {
   }
 }
 
-export default withModal(UserGroupList);
+export default withModal(UserGroupList, { wrapperClassName: styles.wrapper });

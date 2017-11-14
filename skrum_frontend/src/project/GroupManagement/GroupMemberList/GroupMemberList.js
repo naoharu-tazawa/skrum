@@ -78,4 +78,4 @@ class GroupMemberList extends Component {
   }
 }
 
-export default withModal(GroupMemberList);
+export default withModal(GroupMemberList, { wrapperClassName: styles.wrapper });

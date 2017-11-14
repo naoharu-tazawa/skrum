@@ -5,7 +5,7 @@ const { host } = config;
 const getBaseUrl = sub => `${host(sub)}/v1`;
 const getUrlParam = (param) => {
   if (!param) return '';
-  const toQuery = (k, v) => `${k}=${v}`;
+  const toQuery = (k, v) => `${k}=${encodeURIComponent(v)}`;
   const params = Object.keys(param)
     .filter(key => param[key])
     .map((key) => {
