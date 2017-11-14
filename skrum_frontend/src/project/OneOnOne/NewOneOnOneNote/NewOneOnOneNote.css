@@ -25,6 +25,9 @@
   flex-direction: column;
   flex: 1;
 }
+.options {
+  display: flex;
+}
 .tab {
   border: none;
   outline: none;

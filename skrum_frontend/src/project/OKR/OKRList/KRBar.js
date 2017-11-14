@@ -72,7 +72,7 @@ class KRBar extends Component {
                 types: currentUserId === userId ? 'progressMemo' : ['hearing', 'feedback', 'interviewNote'],
                 ...{ userId, okr: keyResult } })}
             >
-              <img src={reportImage} alt="OneOnOne" />
+              <img src={reportImage} alt="1on1" />
             </a>)}
           <Permissible entity={owner}>
             {({ permitted }) => (

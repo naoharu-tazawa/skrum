@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
-import { isEmpty, keys, head, isArray, fromPairs } from 'lodash';
+import { isEmpty, keys, head, isArray, fromPairs, ceil } from 'lodash';
 import { oneOnOneTypes, feedbackTypes } from '../propTypes';
 import { oneOnOneSettingsPropTypes } from './propTypes';
 import { objectiveReferencePropTypes } from '../../OKR/OKRList/propTypes';
@@ -129,7 +129,7 @@ class NewOneOnOneNote extends Component {
               'oneOnOneType',
               { map: fromPairs(types.map(type => [type, oneOnOneTypes[type]])),
                 renderer: ({ value: tab, label }) => (
-                  <label key={tab} className={selectableTabStyle(tab)} style={{ width: `${100 / types.length}%` }}>
+                  <label key={tab} className={selectableTabStyle(tab)} style={{ width: `${ceil(100 / types.length)}%` }}>
                     <Field
                       name="oneOnOneType"
                       component="input"
@@ -145,6 +145,7 @@ class NewOneOnOneNote extends Component {
                     />
                     {label}
                   </label>),
+                className: styles.options,
               },
             )}
           </header>
