@@ -31,7 +31,7 @@ class NoteResult extends Component {
               </div>
               <div className={styles.time}>{compactDateTime(lastUpdate)}</div>
             </div>
-            <div className={styles.name}>{sender.name}, {toNames}</div>
+            <div className={styles.name}>{sender.name}{toNames && `, ${toNames}`}</div>
           </Link>
         </header>
         <Link className={styles.body} to={path}>{text}</Link>
