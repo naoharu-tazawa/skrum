@@ -58,8 +58,12 @@ class UserInfo extends Component {
             <button
               className={styles.tool}
               style={{ background: `url(${reportImage}) no-repeat center` }}
-              onClick={() => openModeless(NewOneOnOneNote,
-                { types: currentUserId === userId ? 'dailyReport' : ['hearing', 'feedback', 'interviewNote'], userId })}
+              onClick={() => openModeless(NewOneOnOneNote, {
+                types: currentUserId === userId ? 'dailyReport' : ['hearing', 'feedback', 'interviewNote'],
+                userId,
+                feedback: currentUserId === userId ? undefined :
+                  { type: EntityType.USER, id: userId, name: `${lastName}${firstName}` },
+              })}
             />
           </div>
         </div>

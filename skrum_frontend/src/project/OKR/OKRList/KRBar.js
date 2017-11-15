@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { okrPropTypes, keyResultPropTypes } from './propTypes';
 import Permissible from '../../../components/Permissible';
 import ProgressPercentage from '../../../components/ProgressPercentage';
-import EntityLink from '../../../components/EntityLink';
+import EntityLink, { EntityType } from '../../../components/EntityLink';
 import Dropdown from '../../../components/Dropdown';
 import DropdownMenu from '../../../components/DropdownMenu';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
@@ -19,6 +19,7 @@ class KRBar extends Component {
     display: PropTypes.oneOf(['expanded', 'collapsed']).isRequired,
     currentUserId: PropTypes.number.isRequired,
     userId: PropTypes.number,
+    userName: PropTypes.string,
     subject: PropTypes.string.isRequired,
     okr: okrPropTypes.isRequired,
     keyResult: keyResultPropTypes.isRequired,
@@ -33,7 +34,7 @@ class KRBar extends Component {
   getBaseStyles = display => `${styles.component} ${display === 'collapsed' ? styles.collapsed : ''}`;
 
   render() {
-    const { display, currentUserId, userId, subject, okr, keyResult,
+    const { display, currentUserId, userId, userName, subject, okr, keyResult,
       onAddParentedOkr, dispatchChangeKROwner, dispatchChangeDisclosureType, dispatchDeleteKR,
       openModal, openModeless } = this.props;
     const parentOkrOwner = okr.owner;
@@ -70,7 +71,10 @@ class KRBar extends Component {
               tabIndex={0}
               onClick={() => openModeless(NewOneOnOneNote, {
                 types: currentUserId === userId ? 'progressMemo' : ['hearing', 'feedback', 'interviewNote'],
-                ...{ userId, okr: keyResult } })}
+                ...{ userId, okr: keyResult },
+                feedback: currentUserId === userId ? undefined :
+                  { type: EntityType.USER, id: userId, name: userName },
+              })}
             >
               <img src={reportImage} alt="1on1" />
             </a>)}

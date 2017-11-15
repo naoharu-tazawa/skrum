@@ -46,6 +46,7 @@ class OKRListContainer extends Component {
             {...{
               currentUserId,
               userId: subject === 'user' ? id : undefined,
+              userName: subject === 'user' ? ownerName : undefined,
               subject,
               okrs,
               dispatchChangeOkrOwner,

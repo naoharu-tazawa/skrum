@@ -13,7 +13,7 @@ import UserSearch from '../../UserSearch/UserSearch';
 import Options from '../../../components/Options';
 import { postOneOnOneNote } from '../action';
 import { syncOneOnOne } from '../../../navigation/action';
-import { EntityType } from '../../../util/EntityUtil';
+import { EntityType, entityPropTypes } from '../../../util/EntityUtil';
 import { withReduxForm, withReduxField, withSelectReduxField, withItemisedReduxField } from '../../../util/FormUtil';
 import { isValidDate, getDate, formatDate, toUtcDate } from '../../../util/DatetimeUtil';
 import styles from './NewOneOnOneNote.css';
@@ -42,13 +42,14 @@ class NewOneOnOneNote extends Component {
     currentUserId: PropTypes.number.isRequired,
     userId: PropTypes.number.isRequired,
     okr: PropTypes.oneOfType([objectiveReferencePropTypes, PropTypes.shape({})]),
+    feedback: entityPropTypes,
     onClose: PropTypes.func.isRequired,
     dispatchPostOneOnOneNote: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { oneOnOne, types, okr, userId } = props;
+    const { oneOnOne, types, userId, okr, feedback } = props;
     const firstType = isArray(types) ? types[0] : types;
     const oneOnOneType = `${keys(oneOnOneTypes).indexOf(firstType) + 1}`;
     const reportDate = formatDate(getDate());
@@ -57,7 +58,7 @@ class NewOneOnOneNote extends Component {
     const interviewDate = formatDate(getDate());
     const toUserEntity = ({ userId: id, name }) => (id ? { type: EntityType.USER, id, name } : {});
     const oneOnOneTos = oneOnOne.reduce((tos, { type, to }) =>
-      ({ ...tos, [`to${type}`]: toUserEntity(head(to) || {}) }), {});
+      ({ ...tos, [`to${type}`]: feedback || toUserEntity(head(to) || {}) }), {});
     const { id: okrId } = okr || {};
     const initialValues = {
       ...{ oneOnOneType, okr, reportDate, dueDate, feedbackType: '1' },

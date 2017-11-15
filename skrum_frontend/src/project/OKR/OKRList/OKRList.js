@@ -11,6 +11,7 @@ export default class OKRList extends Component {
   static propTypes = {
     currentUserId: PropTypes.number,
     userId: PropTypes.number,
+    userName: PropTypes.string,
     subject: PropTypes.string,
     okrs: okrsPropTypes,
     onAddOkr: PropTypes.func,
@@ -32,7 +33,7 @@ export default class OKRList extends Component {
   }
 
   render() {
-    const { currentUserId, userId, subject, okrs = [], onAddOkr,
+    const { currentUserId, userId, userName, subject, okrs = [], onAddOkr,
       onAddParentedOkr, dispatchChangeOkrOwner, dispatchChangeKROwner, dispatchChangeParentOkr,
       dispatchChangeDisclosureType, dispatchSetRatios, dispatchCopyOkr,
       dispatchDeleteOkr, dispatchDeleteKR } = this.props;
@@ -49,6 +50,7 @@ export default class OKRList extends Component {
               {...{
                 currentUserId,
                 userId,
+                userName,
                 subject,
                 okr,
                 onAddParentedOkr,
@@ -68,6 +70,7 @@ export default class OKRList extends Component {
                   display,
                   currentUserId,
                   userId,
+                  userName,
                   subject,
                   okr,
                   keyResult,

@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { okrPropTypes } from './propTypes';
 import Permissible from '../../../components/Permissible';
 import ProgressPercentage from '../../../components/ProgressPercentage';
-import EntityLink from '../../../components/EntityLink';
+import EntityLink, { EntityType } from '../../../components/EntityLink';
 import Dropdown from '../../../components/Dropdown';
 import DropdownMenu from '../../../components/DropdownMenu';
 import NewAchievement from '../../OKR/NewAchievement/NewAchievement';
@@ -21,6 +21,7 @@ class OkrBar extends Component {
     header: PropTypes.bool,
     currentUserId: PropTypes.number,
     userId: PropTypes.number,
+    userName: PropTypes.string,
     subject: PropTypes.string,
     okr: okrPropTypes,
     onKRClicked: PropTypes.func,
@@ -36,7 +37,7 @@ class OkrBar extends Component {
   };
 
   render() {
-    const { header, currentUserId, userId, subject, okr, onKRClicked, onAddParentedOkr,
+    const { header, currentUserId, userId, userName, subject, okr, onKRClicked, onAddParentedOkr,
       dispatchChangeOkrOwner, dispatchChangeParentOkr, dispatchChangeDisclosureType,
       dispatchSetRatios, dispatchCopyOkr, dispatchDeleteOkr,
       openModal, openModeless } = this.props;
@@ -87,7 +88,10 @@ class OkrBar extends Component {
               tabIndex={0}
               onClick={() => openModeless(NewOneOnOneNote, {
                 types: currentUserId === userId ? 'progressMemo' : ['hearing', 'feedback', 'interviewNote'],
-                ...{ userId, okr } })}
+                ...{ userId, okr },
+                feedback: currentUserId === userId ? undefined :
+                  { type: EntityType.USER, id: userId, name: userName },
+              })}
             >
               <img src={reportImage} alt="1on1" />
             </a>)}
