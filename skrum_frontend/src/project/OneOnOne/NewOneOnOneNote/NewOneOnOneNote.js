@@ -54,7 +54,7 @@ class NewOneOnOneNote extends Component {
     const oneOnOneType = `${keys(oneOnOneTypes).indexOf(firstType) + 1}`;
     const reportDate = formatDate(getDate());
     const dueDate = formatDate(getDate().add(3, 'd'));
-    const interviewee = {};
+    const interviewee = feedback || {};
     const interviewDate = formatDate(getDate());
     const toUserEntity = ({ userId: id, name }) => (id ? { type: EntityType.USER, id, name } : {});
     const oneOnOneTos = oneOnOne.reduce((tos, { type, to }) =>
