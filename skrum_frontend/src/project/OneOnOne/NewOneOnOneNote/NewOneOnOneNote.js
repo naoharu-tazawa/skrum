@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
-import { isEmpty, keys, head, isArray, fromPairs, ceil } from 'lodash';
+import { isEmpty, keys, isArray, fromPairs, ceil } from 'lodash';
 import { oneOnOneTypes, feedbackTypes } from '../propTypes';
 import { oneOnOneSettingsPropTypes } from './propTypes';
 import { objectiveReferencePropTypes } from '../../OKR/OKRList/propTypes';
 import DialogForm from '../../../dialogs/DialogForm';
 import DatePickerInput from '../../../editors/DatePickerInput';
 import OKRSearch from '../../OKRSearch/OKRSearch';
-import UserSearch from '../../UserSearch/UserSearch';
+import UserSearch, { MultiUserSearch } from '../../UserSearch/UserSearch';
 import Options from '../../../components/Options';
 import { postOneOnOneNote } from '../action';
 import { syncOneOnOne } from '../../../navigation/action';
@@ -21,13 +21,13 @@ import styles from './NewOneOnOneNote.css';
 const formName = 'newOneOnOne';
 
 const validate =
-  ({ oneOnOneType, okr, reportDate, dueDate, interviewDate, interviewee, [`to${oneOnOneType}`]: to, body } = {}) => ({
+  ({ oneOnOneType, okr, reportDate, dueDate, interviewDate, interviewee, [`to${oneOnOneType}`]: to = [], body } = {}) => ({
     okr: oneOnOneType === '2' && isEmpty(okr) && '対象目標を入力してください',
     reportDate: !isValidDate(reportDate) && '日付を入力してください',
     dueDate: !isValidDate(dueDate) && '回答期限を入力してください',
     interviewDate: !isValidDate(interviewDate) && '面談日を入力してください',
     interviewee: isEmpty(interviewee) && '面談相手を入力してください',
-    [`to${oneOnOneType}`]: oneOnOneType !== '2' && oneOnOneType !== '5' && isEmpty(to) && 'ＴＯを入力してください',
+    [`to${oneOnOneType}`]: oneOnOneType !== '2' && oneOnOneType !== '5' && !to.length && 'ＴＯを入力してください',
     body: oneOnOneType !== '3' && !body && 'コメントを入力してください',
   });
 
@@ -58,7 +58,7 @@ class NewOneOnOneNote extends Component {
     const interviewDate = formatDate(getDate());
     const toUserEntity = ({ userId: id, name }) => (id ? { type: EntityType.USER, id, name } : {});
     const oneOnOneTos = oneOnOne.reduce((tos, { type, to }) =>
-      ({ ...tos, [`to${type}`]: feedback || toUserEntity(head(to) || {}) }), {});
+      ({ ...tos, [`to${type}`]: (feedback && [feedback]) || to.map(toUserEntity) }), {});
     const { id: okrId } = okr || {};
     const initialValues = {
       ...{ oneOnOneType, okr, reportDate, dueDate, feedbackType: '1' },
@@ -82,11 +82,11 @@ class NewOneOnOneNote extends Component {
       ...oneOnOneType === '4' && { feedbackType },
       ...oneOnOneType === '5' && { intervieweeUserId: interviewee.id },
       ...oneOnOneType === '5' && { interviewDate: toUtcDate(interviewDate) },
-      ...to.id && { to: [{ userId: to.id }] }, // FIXME
+      ...to && { to: to.map(({ id }) => ({ userId: id })) },
       ...!isEmpty(okr) && { okrId: okr.id },
       body,
     };
-    return dispatchPostOneOnOneNote(currentUserId, entry, { oneOnOneType, to: [to] }) // FIXME
+    return dispatchPostOneOnOneNote(currentUserId, entry, { oneOnOneType, to })
       .then(({ error, payload }) => {
         this.setState({ isSubmitting: false }, () => !error && onClose());
         return { error, payload };
@@ -190,7 +190,7 @@ class NewOneOnOneNote extends Component {
             </section>)}
           <section>
             <label>ＴＯ</label>
-            {withItemisedReduxField(UserSearch, `to${oneOnOneType}`)}
+            {withItemisedReduxField(MultiUserSearch, `to${oneOnOneType}`)}
           </section>
           <Field
             component="textarea"

@@ -1,0 +1,27 @@
+.component {
+  width: 100%;
+  position: relative;
+}
+.items {
+  pointer-events: none;
+  position: absolute;
+  margin: 4px 30px 4px 4px;
+}
+.item {
+  pointer-events: auto;
+  display: inline-block;
+  background-color: #d8dfe5;
+  padding: 2px 8px;
+  margin: 0 4px 2px 0;
+  border-radius: 1em;
+}
+.delete {
+  cursor: pointer;
+  padding-left: 4px;
+  outline: none;
+}
+.delete img {
+  width: 0.5em;
+  height: 0.5em;
+  vertical-align: unset;
+}
