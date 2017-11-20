@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { initial, last, slice, find, replace } from 'lodash';
+import { slice, find, replace } from 'lodash';
 import ResizeAware from '../components/ResizeAware';
 import styles from './MultiSelect.css';
 
@@ -26,6 +26,7 @@ export const withMultiSelect = (WrappedSearchDropdown, { labelPropName, stripSpa
   class extends PureComponent {
 
     static propTypes = {
+      padding: PropTypes.number,
       value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string])),
       onChange: PropTypes.func,
       onFocus: PropTypes.func,
@@ -34,35 +35,33 @@ export const withMultiSelect = (WrappedSearchDropdown, { labelPropName, stripSpa
     };
 
     render() {
-      const { value: items = [], onChange, onFocus, onBlur, tabIndex } = this.props;
+      const { padding = 4, value: items = [], onChange, onFocus, onBlur, tabIndex } = this.props;
       const { leftPad = 0, topPad = 0 } = this.state || {};
-      const lastItem = last(items);
       const deleteItem = index => onChange([...slice(items, 0, index), ...slice(items, index + 1)]);
       return (
         <div className={styles.component}>
-          <span className={styles.items}>
-            {initial(items).map((item, index) => (
+          <span
+            className={styles.items}
+            style={{ margin: `${padding}px` }}
+          >
+            {items.map((item, index) => (
               <Item
                 key={index}
-                onDelete={() => deleteItem(index)}
+                onDelete={() => {
+                  deleteItem(index);
+                  if (items.length === 1) this.setState({ leftPad: 0, topPad: 0 });
+                }}
               >
                 {item[labelPropName]}
               </Item>
             ))}
-            {lastItem && (
-              <ResizeAware
-                key={items.length}
-                component={Item}
-                onlyEvent
-                onResize={({ left, top, width }) =>
-                  this.setState({ leftPad: left + width, topPad: top })}
-                onDelete={() => {
-                  deleteItem(items.length - 1);
-                  if (items.length === 1) this.setState({ leftPad: 0 });
-                }}
-              >
-                {lastItem[labelPropName]}
-              </ResizeAware>)}
+            <ResizeAware
+              key={items.length}
+              component="span"
+              onlyEvent
+              onResize={({ left, top }) => this.setState({ leftPad: left, topPad: top })}
+              style={{ backgroundColor: 'transparent', width: '6em', height: '1em', display: 'inline-block' }}
+            />
           </span>
           <WrappedSearchDropdown
             onChange={({ [labelPropName]: name, ...itemOthers }) => {
@@ -75,7 +74,7 @@ export const withMultiSelect = (WrappedSearchDropdown, { labelPropName, stripSpa
               }
             }}
             {...{ onFocus, onBlur, tabIndex }}
-            inputStyle={{ paddingLeft: `${leftPad + 6}px`, paddingTop: `${topPad + 6}px` }}
+            inputStyle={{ paddingLeft: `${leftPad + padding}px`, paddingTop: `${topPad + padding + 2}px` }}
           />
         </div>);
     }

@@ -5,7 +5,6 @@
 .items {
   pointer-events: none;
   position: absolute;
-  margin: 4px 30px 4px 4px;
 }
 .item {
   pointer-events: auto;
