@@ -37,7 +37,6 @@ export const withMultiSelect = (WrappedSearchDropdown, { labelPropName, stripSpa
     render() {
       const { padding = 4, value: items = [], onChange, onFocus, onBlur, tabIndex } = this.props;
       const { leftPad = 0, topPad = 0 } = this.state || {};
-      const deleteItem = index => onChange([...slice(items, 0, index), ...slice(items, index + 1)]);
       return (
         <div className={styles.component}>
           <span
@@ -47,16 +46,12 @@ export const withMultiSelect = (WrappedSearchDropdown, { labelPropName, stripSpa
             {items.map((item, index) => (
               <Item
                 key={index}
-                onDelete={() => {
-                  deleteItem(index);
-                  if (items.length === 1) this.setState({ leftPad: 0, topPad: 0 });
-                }}
+                onDelete={() => onChange([...slice(items, 0, index), ...slice(items, index + 1)])}
               >
                 {item[labelPropName]}
               </Item>
             ))}
             <ResizeAware
-              key={items.length}
               component="span"
               onlyEvent
               onResize={({ left, top }) => this.setState({ leftPad: left, topPad: top })}
