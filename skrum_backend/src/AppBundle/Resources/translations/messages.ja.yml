@@ -12,6 +12,8 @@ parameters:
 
     one_on_one_notice: '【Skrum】1on1投稿通知メール'
 
+    one_on_one_reply_notice: '【Skrum】1on1返信通知メール'
+
     hearing_due_date_reminder: '【Skrum】ヒアリング回答期限日リマインドメール'
 
     okr_deadline_reminder: '【Skrum】目標期限日リマインドメール'

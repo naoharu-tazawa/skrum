@@ -30,6 +30,13 @@ class EmailSettingsDTO
      *
      * @JSON\Type("integer")
      */
+    private $oneOnOne;
+
+    /**
+     * @var integer
+     *
+     * @JSON\Type("integer")
+     */
     private $okrDeadlineReminder;
 
     /**
@@ -113,6 +120,30 @@ class EmailSettingsDTO
     public function getOkrTimeline()
     {
         return $this->okrTimeline;
+    }
+
+    /**
+     * Set oneOnOne
+     *
+     * @param integer $oneOnOne
+     *
+     * @return EmailSettingsDTO
+     */
+    public function setOneOnOne($oneOnOne)
+    {
+        $this->oneOnOne = $oneOnOne;
+
+        return $this;
+    }
+
+    /**
+     * Get oneOnOne
+     *
+     * @return integer
+     */
+    public function getOneOnOne()
+    {
+        return $this->oneOnOne;
     }
 
     /**

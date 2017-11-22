@@ -30,6 +30,8 @@ paths:
                 type: integer
               okrTimeline:
                 type: integer
+              oneOnOne:
+                type: integer
               okrDeadlineReminder:
                 type: integer
               okrReminder:

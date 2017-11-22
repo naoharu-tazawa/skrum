@@ -282,6 +282,42 @@ class OneOnOneService extends BaseService
                 }
             }
 
+            // メール配信設定取得
+            $tEmailSettingsRepos = $this->getTEmailSettingsRepository();
+            $tEmailSettings = $tEmailSettingsRepos->findOneBy(array('userId' => $tOneOnOneReply->getSenderUserId()));
+
+            // メール送信予約
+            if ($tOneOnOneReply->getSenderUserId() !== $tOneOnOne->getSenderUserId() && $tEmailSettings->getOneOnOne() === DBConstant::EMAIL_ONE_ON_ONE) {
+                $mUserRepos = $this->getMUserRepository();
+                $toUserEntity = $mUserRepos->find($tOneOnOne->getSenderUserId());
+                $senderEntity = $mUserRepos->find($tOneOnOneReply->getSenderUserId());
+                $oneOnOneType = $tOneOnOne->getOneOnOneType();
+
+                $data = array();
+                $data['userName'] = $toUserEntity->getLastName() . $toUserEntity->getFirstName();
+                $data['senderUserName'] = $senderEntity->getLastName() . $senderEntity->getFirstName();
+                if ($oneOnOneType === DBConstant::ONE_ON_ONE_TYPE_DAILY_REPORT) {
+                    $data['oneOnOneTypeLabel'] = Constant::ONE_ON_ONE_TYPE_DAILY_REPORT;
+                } elseif ($oneOnOneType === DBConstant::ONE_ON_ONE_TYPE_PROGRESS_MEMO) {
+                    $data['oneOnOneTypeLabel'] = Constant::ONE_ON_ONE_TYPE_LABEL_PROGRESS_REPORT;
+                } elseif ($oneOnOneType === DBConstant::ONE_ON_ONE_TYPE_FEEDBACK) {
+                    $data['oneOnOneTypeLabel'] = Constant::ONE_ON_ONE_TYPE_LABEL_FEEDBACK;
+                } elseif ($oneOnOneType === DBConstant::ONE_ON_ONE_TYPE_HEARING) {
+                    $data['oneOnOneTypeLabel'] = Constant::ONE_ON_ONE_TYPE_LABEL_HEARING;
+                } elseif ($oneOnOneType === DBConstant::ONE_ON_ONE_TYPE_INTERVIEW_NOTE) {
+                    $data['oneOnOneTypeLabel'] = Constant::ONE_ON_ONE_TYPE_LABEL_INTERVIEW_NOTE;
+                }
+                $data['content'] = $tOneOnOneReply->getBody();
+
+                $tEmailReservation = new TEmailReservation();
+                $tEmailReservation->setToEmailAddress($toUserEntity->getEmailAddress());
+                $tEmailReservation->setTitle($this->getParameter('one_on_one_reply_notice'));
+                $tEmailReservation->setBody($this->renderView('mail/one_on_one_reply_notice.txt.twig', ['data' => $data, 'subdomain' => $auth->getSubdomain()]));
+                $tEmailReservation->setReceptionDatetime(DateUtility::getCurrentDatetime());
+                $tEmailReservation->setSendingReservationDatetime(DateUtility::getCurrentDatetime());
+                $this->persist($tEmailReservation);
+            }
+
             $this->flush();
             $this->commit();
         } catch (\Exception $e) {
