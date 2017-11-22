@@ -1,5 +1,5 @@
 .select {
-  min-width: calc(11em + 6px);
+  min-width: 10em;
 }
 .select:not(.plain) {
   border: 1px solid #bfbfbf;

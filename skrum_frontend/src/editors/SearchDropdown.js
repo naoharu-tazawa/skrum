@@ -7,12 +7,13 @@ import styles from './SearchDropdown.css';
 export default class SearchDropdown extends PureComponent {
 
   static propTypes = {
+    className: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     labelPropName: PropTypes.string.isRequired,
     inputStyle: PropTypes.shape({}),
     onSearch: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
-    clearOnSelect: PropTypes.bool,
+    inputOnSelect: PropTypes.oneOf(['keep', 'clear']),
     renderItem: PropTypes.func,
     value: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
     onChange: PropTypes.func,
@@ -28,7 +29,7 @@ export default class SearchDropdown extends PureComponent {
   }
 
   render() {
-    const { items, labelPropName, inputStyle, onSelect, clearOnSelect, renderItem,
+    const { className = '', items, labelPropName, inputStyle, onSelect, inputOnSelect, renderItem,
       value, onChange, onFocus, onBlur, disabled, tabIndex, isSearching } = this.props;
     const { currentInput = isObject(value) ? value[labelPropName] : value,
       isFocused = false } = this.state || {};
@@ -49,6 +50,7 @@ export default class SearchDropdown extends PureComponent {
           </div>
         }
         wrapperProps={{ className: `${styles.component}
+          ${className}
           ${isFocused ? styles.focused : ''}
           ${isFocused && isSearching ? styles.searching : ''}
         ` }}
@@ -68,7 +70,15 @@ export default class SearchDropdown extends PureComponent {
           this.handleSearch(target.value);
         }}
         onSelect={(input, item) => {
-          this.setState({ currentInput: clearOnSelect ? '' : input });
+          switch (inputOnSelect) {
+            case 'keep':
+              break;
+            case 'clear':
+              this.setState({ currentInput: '' });
+              break;
+            default:
+              this.setState({ currentInput: input });
+          }
           onSelect(item);
         }}
         menuStyle={{

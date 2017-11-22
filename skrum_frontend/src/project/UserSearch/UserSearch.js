@@ -72,4 +72,4 @@ export default connect(
 export const MultiUserSearch = withMultiSelect(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(UserSearch({ clearOnSelect: true })), { labelPropName, stripSpace: true });
+)(UserSearch({ inputOnSelect: 'clear' })), { labelPropName, stripSpace: true });

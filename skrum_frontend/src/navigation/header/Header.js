@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
+import OwnerSearch from '../../project/OwnerSearch/OwnerSearch';
 import TimeframesDropdown from '../../components/TimeframesDropdown';
 import DropdownMenu from '../../components/DropdownMenu';
 import EntityLink, { EntityType } from '../../components/EntityLink';
@@ -58,6 +59,13 @@ class SubMenu extends Component {
     const settingLink = isBasicRole(roleLevel) ? '/s/g' : '/s/u';
     return (
       <div className={styles.subMenu}>
+        {!isSetting && (
+          <OwnerSearch
+            className={styles.search}
+            noDefaultList
+            inputOnSelect="keep"
+            onChange={({ type, id }) => id && browserHistory.push(replacePath({ tab: 'objective', subject: type, id }))}
+          />)}
         {!isSetting && (
           <TimeframesDropdown
             plain

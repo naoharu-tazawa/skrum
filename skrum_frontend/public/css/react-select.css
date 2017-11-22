@@ -71,8 +71,8 @@
   /*line-height: 34px;*/
   display: flex;
   /* margin: auto; */
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
   position: absolute;
   /* right: 0; */
   /* top: 0; */
@@ -185,7 +185,7 @@
   position: absolute;
   display: flex;
   top: calc(50% - 2px);
-  right: 6px;
+  right: 3px;
 }
 .Select-arrow {
   border-color: #fff transparent transparent;
@@ -254,7 +254,7 @@
   color: #666666;
   cursor: pointer;
   display: block;
-  padding: 8px 10px;
+  padding: 0.5em;
 }
 .Select-option:last-child {
   border-bottom-right-radius: 4px;
