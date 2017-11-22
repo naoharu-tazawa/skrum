@@ -99,9 +99,9 @@ class AdditionalUsersBulkRegistrationService extends BaseService
         if ($items[3] === Constant::ROLE_SUPERADMIN) {
             $superAdminUserCount = $mUserRepos->getSuperAdminUserCount($mCompany->getCompanyId());
 
-            // スーパー管理者ユーザが既に2人登録済みの場合、更新不可
-            if ($superAdminUserCount >= 2) {
-                $this->message = $this->message . 'スーパー管理者ユーザは2人までしか登録できません。';
+            // スーパー管理者ユーザが既に3人登録済みの場合、更新不可
+            if ($superAdminUserCount >= 3) {
+                $this->message = $this->message . 'スーパー管理者ユーザは3人までしか登録できません。';
                 $this->result = DBConstant::FLG_TRUE;
                 $this->exitCode = DBConstant::EXIT_CODE_RETRY;
 

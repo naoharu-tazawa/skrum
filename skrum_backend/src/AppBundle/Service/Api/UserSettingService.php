@@ -469,11 +469,11 @@ class UserSettingService extends BaseService
 
         // ロール一覧取得
         $mRoleAssignmentRepos = $this->getMRoleAssignmentRepository();
-        if ($superAdminUserCount < 2 && $auth->getRoleLevel() >= DBConstant::ROLE_LEVEL_SUPERADMIN) {
-            // スーパー管理者ユーザ登録数が1人の場合
+        if ($superAdminUserCount < 3 && $auth->getRoleLevel() >= DBConstant::ROLE_LEVEL_SUPERADMIN) {
+            // スーパー管理者ユーザ登録数が2人以下の場合
             $mRoleAssignmentArray = $mRoleAssignmentRepos->getRoles($companyId, true);
         } else {
-            // スーパー管理者ユーザが既に2人登録済みの場合
+            // スーパー管理者ユーザが既に3人登録済みの場合
             $mRoleAssignmentArray = $mRoleAssignmentRepos->getRoles($companyId, false);
         }
 
@@ -583,9 +583,9 @@ class UserSettingService extends BaseService
             $mUserRepos = $this->getMUserRepository();
             $superAdminUserCount = $mUserRepos->getSuperAdminUserCount($companyId);
 
-            // スーパー管理者ユーザが既に2人登録済みの場合、更新不可
-            if ($superAdminUserCount >= 2) {
-                throw new ApplicationException('スーパー管理者ユーザは2人までしか登録できません');
+            // スーパー管理者ユーザが既に3人登録済みの場合、更新不可
+            if ($superAdminUserCount >= 3) {
+                throw new ApplicationException('スーパー管理者ユーザは3人までしか登録できません');
             }
         }
     }
