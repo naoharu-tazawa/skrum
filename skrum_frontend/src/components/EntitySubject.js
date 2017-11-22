@@ -36,11 +36,13 @@ export default class EntitySubject extends Component {
           {subject && aspectRoute && (
             <Link
               to={replacePath({ subject: entity.type, id: entity.id, ...route, ...aspectRoute })}
-              className={styles.subject}
+              className={`${styles.subject} ${styles.subjectLink}`}
             >
-              {subject}
+              <span className={styles.subjectText}>{subject}</span>
             </Link>)}
-          {subject && local && <div className={styles.subject}>{subject}</div>}
+          {subject && local && <div className={styles.subject}>
+            <span className={styles.subjectText}>{subject}</span>
+          </div>}
         </div>
       </div>);
   }

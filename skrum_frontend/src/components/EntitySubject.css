@@ -17,11 +17,18 @@
   min-width: calc(40px + 1em + 6em);
 }
 .subject {
-  margin: auto 1em;
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  align-items: center;
+}
+.subjectLink:hover {
+  text-decoration: underline;
+}
+.subjectText {
+  margin: auto 0 auto 1em;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: hidden;
-  height: 100%;
-  flex: 1;
   line-height: normal;
+  overflow-x: hidden;
 }
