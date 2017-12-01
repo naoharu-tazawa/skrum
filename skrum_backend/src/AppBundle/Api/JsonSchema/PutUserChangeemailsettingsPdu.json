@@ -7,7 +7,11 @@
       "enum": [0, 1]
     },
     "okrTimeline": {
-      "title": "投稿通知メール設定",
+      "title": "タイムライン投稿通知メール設定",
+      "enum": [0, 1]
+    },
+    "oneOnOne": {
+      "title": "1on1投稿通知メール設定",
       "enum": [0, 1]
     },
     "okrDeadlineReminder": {
