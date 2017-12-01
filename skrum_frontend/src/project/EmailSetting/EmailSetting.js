@@ -7,12 +7,13 @@ import styles from './EmailSetting.css';
 const settingMapping = {
   okrAchievement: '達成率通知メール',
   okrTimeline: 'タイムライン投稿通知メール',
+  oneOnOne: '１ｏｎ１投稿通知メール',
   okrDeadlineReminder: '目標期限日通知メール',
   okrReminder: '進捗登録リマインドメール',
   reportMemberAchievement: 'メンバー進捗状況レポートメール',
+  reportGroupAchievement: 'グループ進捗状況レポートメール',
   reportFeedbackTarget: 'フィードバック対象者通知メール',
   serviceNotification: 'サービスお知らせメール',
-  reportGroupAchievement: 'グループ進捗状況レポートメール',
 };
 
 export default class EmailSetting extends Component {

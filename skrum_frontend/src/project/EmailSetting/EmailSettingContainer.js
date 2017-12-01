@@ -45,8 +45,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   const dispatchFetchEmailSettings = userId =>
     dispatch(fetchEmailSettings(userId));
-  const dispatchChangeEmailSettings = (userId, data) =>
-    dispatch(changeEmailSettings(userId, data));
+  const dispatchChangeEmailSettings = (userId, settings) =>
+    dispatch(changeEmailSettings(userId, settings));
   return { dispatchFetchEmailSettings, dispatchChangeEmailSettings };
 };
 
